@@ -20,6 +20,13 @@ namespace ElectronicRegisterAPI.Controllers
             _context = context;
         }
 
+        [HttpGet("count")]
+        [Authorize(Roles = "teacher,admin,student")]
+        public async Task<ActionResult<int>> Count()
+        {
+            return Ok(await _context.Subjects.CountAsync());
+        }
+
         [HttpGet]
         [Authorize(Roles = "teacher,admin,student")]
         public async Task<ActionResult<List<SubjectDto>>> GetAll()
