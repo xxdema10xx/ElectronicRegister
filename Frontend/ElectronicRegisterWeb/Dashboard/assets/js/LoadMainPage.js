@@ -4,10 +4,10 @@
 
 async function loadCardsData(userData) {
     const role = userData.role;
-    const studentsAmount = document.getElementById("card-1-data");
-    const teachersAmount = document.getElementById("card-2-data");
-    const gradesAmount = document.getElementById("card-3-data");
-    const usersAmount = document.getElementById("card-4-data");
+    const card1Data = document.getElementById("card-1-data");
+    const card2Data = document.getElementById("card-2-data");
+    const card3Data = document.getElementById("card-3-data");
+    const card4Data = document.getElementById("card-4-data");
     const card1Title = document.getElementById("card-1-title");
     const card2Title = document.getElementById("card-2-title");
     const card3Title = document.getElementById("card-3-title");
@@ -18,13 +18,13 @@ async function loadCardsData(userData) {
             try {
                 const studentsCount = await sendTokenForData(`${API_BASE}/api/Student/count`);
                 const teachersCount = await sendTokenForData(`${API_BASE}/api/Teacher/count`);
-                const usersCount = await sendTokenForData(`${API_BASE}/api/Users/count`);
                 const gradesCount = await sendTokenForData(`${API_BASE}/api/Grade/count`);
+                const usersCount = await sendTokenForData(`${API_BASE}/api/Users/count`);
 
-                studentsAmount.innerText = studentsCount;
-                teachersAmount.innerText = teachersCount;
-                gradesAmount.innerText = gradesCount;
-                usersAmount.innerText = usersCount;
+                card1Data.innerText = studentsCount;
+                card2Data.innerText = teachersCount;
+                card3Data.innerText = gradesCount;
+                card4Data.innerText = usersCount;
                 card1Title.innerText = "Allievi";
                 card2Title.innerText = "Insegnanti";
                 card3Title.innerText = "Voti Totali";
@@ -32,40 +32,48 @@ async function loadCardsData(userData) {
 
             } catch (err) {
                 console.error(err);
-                studentsAmount.innerText = "Errore";
-                teachersAmount.innerText = "Errore";
-                gradesAmount.innerText = "Errore";
-                usersAmount.innerText = "Errore";
+                card1Data.innerText = "Errore";
+                card2Data.innerText = "Errore";
+                card3Data.innerText = "Errore";
+                card4Data.innerText = "Errore";
             }
             break;
         case "teacher":
 
             break;
         case "student":
-            
+            try {
+                const subjectsCount = await sendTokenForData(`${API_BASE}/api/Subject/count`);
+                //const teachersCount = await sendTokenForData(`${API_BASE}/api/Teacher/count`);
+                const studentGrades = await sendTokenForData(`${API_BASE}/api/Grade`);
+                let gradesCount = 0;
+                let total = 0;
+                studentGrades.forEach(grade => {
+                    gradesCount++;
+                    total += grade.value;
+                }); 
+                const averageGrade = ( total / gradesCount ).toFixed(2);
+                //const usersCount = await sendTokenForData(`${API_BASE}/api/Users/count`);
+
+                card1Data.innerText = subjectsCount;
+                card2Data.innerText = "idk";
+                card3Data.innerText = averageGrade;
+                card4Data.innerText = "idk";
+                card1Title.innerText = "Materie";
+                card2Title.innerText = "Insegnanti";
+                card3Title.innerText = "Media Voti";
+                card4Title.innerText = "Utenti";
+
+            } catch (err) {
+                console.error(err);
+                card1Data.innerText = "Errore";
+                card2Data.innerText = "Errore";
+                card3Data.innerText = "Errore";
+                card4Data.innerText = "Errore";
+            }
             break;
         default:
             break;
-    }
-
-    try {
-
-        const studentsCount = await sendTokenForData(`${API_BASE}/api/Student/count`);
-        const teachersCount = await sendTokenForData(`${API_BASE}/api/Teacher/count`);
-        const usersCount = await sendTokenForData(`${API_BASE}/api/Users/count`);
-        const gradesCount = await sendTokenForData(`${API_BASE}/api/Grade/count`);
-
-        studentsAmount.innerText = studentsCount;
-        teachersAmount.innerText = teachersCount;
-        gradesAmount.innerText = gradesCount;
-        usersAmount.innerText = usersCount;
-
-    } catch (err) {
-        console.error(err);
-        studentsAmount.innerText = "Errore";
-        teachersAmount.innerText = "Errore";
-        gradesAmount.innerText = "Errore";
-        usersAmount.innerText = "Errore";
     }
 }
 
@@ -158,10 +166,34 @@ async function loadStudentsTable() {
     });
 }
 
-async function loadUsersTable() {
-    const tbody = document.getElementById("users-table-body");
+async function loadTopTable(title, description, tableHead, tableBody, dataToShow) {
+    const tTitle = document.getElementById("top-table-title");
+    const tDesc = document.getElementById("top-table-desc");
+    tTitle.innerText = "Utenti"; //remove
+    tDesc.innerText = "Elimina e modifica utenti." //remove
+    const thead = document.getElementById("top-table-head");
+    thead.innerHTML = `
+        <tr>
+            <th class="lead-info">
+                <h6>Email</h6>
+            </th>
+            <th class="lead-email">
+                <h6>Ruolo</h6>
+            </th>
+            <th class="lead-email">
+                <h6>Nome</h6>
+            </th>
+            <th class="lead-phone">
+                <h6>Cognome</h6>
+            </th>
+            <th>
+                <h6>Action</h6>
+            </th>
+        </tr>
+    `; //remove
+    const tbody = document.getElementById("top-table-body");
 
-    const usersData = await sendTokenForData(`${API_BASE}/api/Users`);
+    const usersData = await sendTokenForData(`${API_BASE}/api/Users`); //remove
 
     const roleOrder = {
         teacher: 1,
@@ -305,12 +337,26 @@ async function loadPage() {
             [fullName, userData.email, fullName]
         );
     }
-    await loadCardsData(userData);
-    await loadChartData();
-    await loadUsersTable();
-    await loadStudentsTable();
-    await loadTeachersTable();
-    await loadAdminsTable();
+     switch (userData.role) {
+        case "admin":
+            await loadCardsData(userData);
+            await loadChartData();
+            await loadTopTable();
+            await loadStudentsTable();
+            await loadTeachersTable();
+            await loadAdminsTable();
+        break;
+        case "teacher":
+        break;
+        case "student":
+            await loadCardsData(userData);
+            await loadChartData();
+            //await loadGradesTable(); TODO
+            // await loadStudentsTable();
+            // await loadTeachersTable();
+            // await loadAdminsTable();
+        break;
+    }
 }
 
 loadPage();
