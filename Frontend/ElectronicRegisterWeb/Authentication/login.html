@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electronic Register — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/styles/style.css"> 
+  <link rel="shortcut icon" href="assets/resources/favicon.png" type="image/x-icon">
+</head>
+<body class="login">
+
+<div class="wrapper">
+
+  <!-- LEFT -->
+  <div class="panel-left">
+    <div>
+      <div class="brand">
+        <img src="assets/resources/Logo-ITS-Umbria-Academy.jpg" 
+            alt="ITS Umbria Academy Logo"
+            class="brand-logo">
+
+        <div class="brand-name">
+          Electronic Register
+        </div>
+      </div>
+
+      <div class="panel-title">Il tuo<br /><em>registro</em><br />digitale.</div>
+      <div class="panel-desc">ITS Different</div>
+
+      <div class="roles">
+        <div class="role-badge">
+          <span class="role-dot dot-admin"></span> Admin — gestione completa
+        </div>
+        <div class="role-badge">
+          <span class="role-dot dot-teacher"></span> Teacher — inserimento voti
+        </div>
+        <div class="role-badge">
+          <span class="role-dot dot-student"></span> Student — visualizzazione voti
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="panel-right">
+      <div class="form-heading">Accedi</div>
+      <div class="form-sub">Inserisci email e password.</div>
+
+      <div class="error-msg" id="errorMsg">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm-.75 3.75a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0v-3.5zm.75 6.5a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+          </svg>
+          <span id="errorText">Credenziali non valide.</span>
+      </div>
+
+      <div class="field">
+          <label for="email">Email</label>
+          <div class="input-wrap">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M1.75 2A1.75 1.75 0 000 3.75v8.5C0 13.216.784 14 1.75 14h12.5A1.75 1.75 0 0016 12.25v-8.5A1.75 1.75 0 0014.25 2H1.75zm.55 1.5h11.4L8 8.365 2.3 3.5zM1.5 4.946l5.875 5.144a.875.875 0 001.25 0L14.5 4.946V12.25a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25V4.946z" />
+              </svg>
+              <input type="email" id="email" placeholder="ruolo_cognome.nome@itsumbria.it" autocomplete="email" />
+          </div>
+      </div>
+
+      <div class="field">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <input type="password" id="password" placeholder="••••••••••••" autocomplete="current-password" />
+          </div>
+      </div>
+
+      <button class="btn-login" id="loginBtn">
+          <span class="btn-text">Accedi</span>
+          <div class="spinner"></div>
+      </button>
+
+      <div class="success-msg" id="successMsg">
+          <div class="icon">✅</div>
+          <p><strong>Login riuscito!</strong></p>
+      </div>
+  </div>
+
+</div>
+<script src="../config.js"></script>
+<script src="assets/js/login.js"></script>
+
+</body>
+</html>
