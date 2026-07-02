@@ -229,7 +229,7 @@ function RegisterScreen({ onBack }) {
       <StatusBar barStyle="light-content" backgroundColor={C.primary} />
       <View style={s.authHeader}>
         <Text style={s.authLogo}>🎓</Text>
-        <Text style={s.authTitle}>Registro Elettronico</Text>
+        <Text style={s.authTitle}>Registro Elettronic</Text>
       </View>
       <ScrollView contentContainerStyle={s.authBody}>
         <Card>
