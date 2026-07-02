@@ -9,7 +9,7 @@ COMANDO PER AVVIARE L'API CON PORTA HTTPS
 
 -spostarsi da terminale con cd Backend/ElectronicRegisterAPI, necessario usare terminale a parte
 
-dotnet run --urls "https://localhost:7225;http://localhost:5257"
+dotnet run --launch-profile https
 
 
 COMANDI PER GITHUB: (dalla root del progetto [ElectronicRegister])
