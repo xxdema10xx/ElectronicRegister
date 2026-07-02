@@ -36,7 +36,7 @@ SE NON HAI IL PROGETTO SUL TUO PC:
 
 -su terminale: git clone https://github.com/xxdema10xx/ElectronicRegister
 
--chiudere e riaprire vs code, aprendo la cartella ElectronicRegister
+-chiudere e riaprire vs code, aprendo la cartella ElectronicRegister che si è creata in htdocs
 
 
 
