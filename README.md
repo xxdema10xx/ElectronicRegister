@@ -2,7 +2,7 @@ PRIMA COSA DA FARE QUANDO SI INIZIA A LAVORARE SUL PROGETTO:
 
 (dovunque scrivo terminale intendo terminale di vs code)
 
-git pull --no-edit   (così scarico le modifiche fatte dagli altri, sennò lavorate su una versione vecchia del progetto)
+git pull --no-edit   (così scarico le modifiche fatte dagli altri, sennò si lavora su una versione potenzialmente vecchia del progetto)
 
 
 COMANDO PER AVVIARE L'API CON PORTA HTTPS 
