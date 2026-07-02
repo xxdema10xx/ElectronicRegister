@@ -350,7 +350,7 @@
           </div>
           <!-- ========== title-wrapper end ========== -->
           <div class="row">
-            <div class="col-xl-3 col-lg-4 col-sm-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6" id="card-1">
               <div class="icon-card mb-30">
                 <div class="icon purple">
                   <i class="lni lni-graduation"></i>
@@ -363,7 +363,7 @@
               <!-- End Icon Cart -->
             </div>
             <!-- End Col -->
-            <div class="col-xl-3 col-lg-4 col-sm-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6" id="card-2">
               <div class="icon-card mb-30">
                 <div class="icon success">
                   <i class="lni lni-book"></i>
@@ -376,7 +376,7 @@
               <!-- End Icon Cart -->
             </div>
             <!-- End Col -->
-            <div class="col-xl-3 col-lg-4 col-sm-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6" id="card-3">
               <div class="icon-card mb-30">
                 <div class="icon primary">
                   <i class="lni lni-certificate"></i>
@@ -389,7 +389,7 @@
               <!-- End Icon Cart -->
             </div>
             <!-- End Col -->
-            <div class="col-xl-3 col-lg-4 col-sm-6">
+            <div class="col-lg-4 col-sm-6" id="card-4">
               <div class="icon-card mb-30">
                 <div class="icon orange">
                   <i class="lni lni-user"></i>
@@ -481,30 +481,15 @@
                   <div class="row">
                     <div class="col-lg-6">
                       <div class="card-style mb-30">
-                        <h6 class="mb-10">Allievi</h6>
-                        <p class="text-sm mb-20">
-                          Allievi frequantanti il corso Coding.
-                        </p>
+                        <h6 class="mb-10" id="center-left-table-title"></h6>
+                        <p class="text-sm mb-20" id="center-left-table-desc"></p>
                         <div class="table-wrapper table-responsive" style="max-height: 400px; overflow-y: auto;">
                           <table class="table striped-table">
-                            <thead>
-                              <tr>
-                                <th>
-                                  <h6>Id</h6>
-                                </th>
-                                <th>
-                                  <h6>Nome</h6>
-                                </th>
-                                <th>
-                                  <h6>Cognome</h6>
-                                </th>
-                                <th>
-                                  <h6>Azioni</h6>
-                                </th>
-                              </tr>
+                            <thead id="center-left-table-head">
                               <!-- end table row-->
                             </thead>
-                            <tbody id="active-students-tbody">
+                            <tbody id="center-left-table-body">
+                              <!-- end table row -->
                             </tbody>
                           </table>
                           <!-- end table -->
@@ -515,30 +500,14 @@
                     <!-- end col -->
                     <div class="col-lg-6">
                       <div class="card-style mb-30">
-                        <h6 class="mb-10">Insegnanti</h6>
-                        <p class="text-sm mb-20">
-                          Insegnanti attivi all'istituto.
-                        </p>
+                        <h6 class="mb-10" id="center-right-table-title"></h6>
+                        <p class="text-sm mb-20" id="center-right-table-desc"></p>
                         <div class="table-wrapper table-responsive" style="max-height: 400px; overflow-y: auto;">
                           <table class="table striped-table">
-                            <thead>
-                              <tr>
-                                <th>
-                                  <h6>Id</h6>
-                                </th>
-                                <th>
-                                  <h6>Nome</h6>
-                                </th>
-                                <th>
-                                  <h6>Cognome</h6>
-                                </th>
-                                <th>
-                                  <h6>Azioni</h6> 
-                                </th>
-                              </tr>
+                            <thead id="center-right-table-head">
                               <!-- end table row-->
                             </thead>
-                            <tbody id="active-teachers-tbody">
+                            <tbody id="center-right-table-body">
                               <!-- end table row -->
                             </tbody>
                           </table>
@@ -551,27 +520,17 @@
                   </div>
                   <!-- end row -->
 
-                  <div class="row">
+                  <div class="row" id="bottom-table-row">
                     <div class="col-lg-12">
                       <div class="card-style mb-30">
-                        <h6 class="mb-10">Amministratori</h6>
-                        <p class="text-sm mb-20">
-                          Amministratori di sistema.
-                        </p>
+                        <h6 class="mb-10" id="bottom-table-title"></h6>
+                        <p class="text-sm mb-20" id="bottom-table-desc"></p>
                         <div class="table-wrapper table-responsive">
                           <table class="table">
-                            <thead>
-                              <tr>
-                                <th>
-                                  <h6>Id</h6>
-                                </th>
-                                <th>
-                                  <h6>Email</h6>
-                                </th>
-                              </tr>
+                            <thead id="bottom-table-head">
                               <!-- end table row-->
                             </thead>
-                            <tbody id="admins-tbody">
+                            <tbody id="bottom-table-body">
                               
                               <!-- end table row -->
                             </tbody>

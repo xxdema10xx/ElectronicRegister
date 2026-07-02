@@ -1,6 +1,16 @@
-//checkToken() viene chiamato in assets/js/main.js all caricamento della pagina
-
-
+async function formatCardsData(requests, titles) {
+    requests.forEach(async (request, index) => {
+        try {
+            const data = await sendTokenForData(request);
+            document.getElementById(`card-${index + 1}-data`).innerText = data;
+            document.getElementById(`card-${index + 1}-title`).innerText = titles[index];
+        } catch (err) {
+            console.error(err);
+            document.getElementById(`card-${index + 1}-data`).innerText = "Errore";
+            document.getElementById(`card-${index + 1}-title`).innerText = titles[index];
+        }
+    });
+}
 
 async function loadCardsData(userData) {
     const role = userData.role;
@@ -15,36 +25,31 @@ async function loadCardsData(userData) {
 
     switch (role) {
         case "admin":
-            try {
-                const studentsCount = await sendTokenForData(`${API_BASE}/api/Student/count`);
-                const teachersCount = await sendTokenForData(`${API_BASE}/api/Teacher/count`);
-                const gradesCount = await sendTokenForData(`${API_BASE}/api/Grade/count`);
-                const usersCount = await sendTokenForData(`${API_BASE}/api/Users/count`);
-
-                card1Data.innerText = studentsCount;
-                card2Data.innerText = teachersCount;
-                card3Data.innerText = gradesCount;
-                card4Data.innerText = usersCount;
-                card1Title.innerText = "Allievi";
-                card2Title.innerText = "Insegnanti";
-                card3Title.innerText = "Voti Totali";
-                card4Title.innerText = "Utenti";
-
-            } catch (err) {
-                console.error(err);
-                card1Data.innerText = "Errore";
-                card2Data.innerText = "Errore";
-                card3Data.innerText = "Errore";
-                card4Data.innerText = "Errore";
-            }
+            formatCardsData(
+                [
+                    `${API_BASE}/api/Student/count`,
+                    `${API_BASE}/api/Teacher/count`,
+                    `${API_BASE}/api/Grade/count`,
+                    `${API_BASE}/api/Users/count`
+                ],
+                ["Allievi", "Insegnanti", "Voti Totali", "Utenti"]
+            );
             break;
         case "teacher":
-
+            formatCardsData(
+                [
+                    `${API_BASE}/api/Subject/count`,
+                    `${API_BASE}/api/Student/count`,
+                    `${API_BASE}/api/Grade/count`
+                ],
+                ["Materie", "Alunni", "Voti"]
+            );
+            const card4 = document.getElementById("card-4");
+            if (card4) card4.remove();
             break;
         case "student":
             try {
                 const subjectsCount = await sendTokenForData(`${API_BASE}/api/Subject/count`);
-                //const teachersCount = await sendTokenForData(`${API_BASE}/api/Teacher/count`);
                 const studentGrades = await sendTokenForData(`${API_BASE}/api/Grade`);
                 let gradesCount = 0;
                 let total = 0;
@@ -52,17 +57,33 @@ async function loadCardsData(userData) {
                     gradesCount++;
                     total += grade.value;
                 }); 
-                const averageGrade = ( total / gradesCount ).toFixed(2);
-                //const usersCount = await sendTokenForData(`${API_BASE}/api/Users/count`);
+                const averageGrade = ( total / gradesCount ).toFixed(1);
+
+                // Raggruppa i voti per materia e calcola la media di ciascuna
+                const subjectAverages = {};
+                studentGrades.forEach(grade => {
+                    if (!subjectAverages[grade.subjectName]) {
+                        subjectAverages[grade.subjectName] = { total: 0, count: 0 };
+                    }
+                    subjectAverages[grade.subjectName].total += grade.value;
+                    subjectAverages[grade.subjectName].count++;
+                });
+
+                const bestSubject = studentGrades.length > 0
+                    ? Object.entries(subjectAverages).reduce((best, [subject, data]) => {
+                        const avg = data.total / data.count;
+                        return avg > best.avg ? { name: subject, avg } : best;
+                    }, { name: "N/A", avg: -1 }).name
+                    : "N/A";
 
                 card1Data.innerText = subjectsCount;
-                card2Data.innerText = "idk";
+                card2Data.innerText = bestSubject;
                 card3Data.innerText = averageGrade;
-                card4Data.innerText = "idk";
+                card4Data.innerText = studentGrades.length > 0 ? Math.max(...studentGrades.map(g => g.value)).toFixed(1) : "N/A";
                 card1Title.innerText = "Materie";
-                card2Title.innerText = "Insegnanti";
+                card2Title.innerText = "Miglior Materia";
                 card3Title.innerText = "Media Voti";
-                card4Title.innerText = "Utenti";
+                card4Title.innerText = "Miglior Voto";
 
             } catch (err) {
                 console.error(err);
@@ -92,11 +113,11 @@ async function loadChartData() {
     });
 
     const averages = monthlyData.map((sum, i) => 
-        monthlyCounts[i] > 0 ? (sum / monthlyCounts[i]).toFixed(2) : 0
+        monthlyCounts[i] > 0 ? (sum / monthlyCounts[i]).toFixed(1) : 0
     );
     const yearlyAverage =
         grades.length > 0
-        ? (grades.reduce((sum, g) => sum + g.value, 0) / grades.length).toFixed(2)
+        ? (grades.reduce((sum, g) => sum + g.value, 0) / grades.length).toFixed(1)
         : 0;
 
     document.getElementById("average-yearly-grades").innerText = yearlyAverage;
@@ -104,169 +125,174 @@ async function loadChartData() {
     chart1.update();
 }
 
-async function loadTeachersTable() {
-    const tbody = document.getElementById("active-teachers-tbody");
-    const studentsData = await sendTokenForData(`${API_BASE}/api/Teacher`);
-    tbody.innerHTML = "";
-    studentsData.forEach(teacher => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-        <td>
-            <p style="color: blue;">${teacher.id}</p>
-        </td>
-        <td>
-            <p id="first-name-${teacher.id}">${teacher.firstName}</p>
-        </td>
-        <td>
-            <p id="last-name-${teacher.id}">${teacher.lastName}</p>
-        </td>
-         <td>
-            <div class="action">
-            <button class="text-success" data-id="${teacher.id}" onclick="showModal('Teacher', this.dataset.id)">
-                <i class="lni lni-pencil-alt"></i>
-            </button>
-            <button class="text-danger" data-id="${teacher.id}" onclick="deleteStudent(this.dataset.id)">
-                <i class="lni lni-trash-can"></i>
-            </button>
-            </div>
-        </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-async function loadStudentsTable() {
-    const tbody = document.getElementById("active-students-tbody");
-    const studentsData = await sendTokenForData(`${API_BASE}/api/Student`);
-    tbody.innerHTML = "";
-    studentsData.forEach(student => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-        <td>
-            <p style="color: blue;">${student.id}</p>
-        </td>
-        <td>
-            <p id="first-name-${student.id}">${student.firstName}</p>
-        </td>
-        <td>
-            <p id="last-name-${student.id}">${student.lastName}</p>
-        </td>
-        <td>
-            <div class="action">
-            <button class="text-success" data-id="${student.id}" onclick="showModal('Student', this.dataset.id)">
-                <i class="lni lni-pencil-alt"></i>
-            </button>
-            <button class="text-danger" data-id="${student.id}" onclick="deleteStudent(this.dataset.id)">
-                <i class="lni lni-trash-can"></i>
-            </button>
-            </div>
-        </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-async function loadTopTable(title, description, tableHead, tableBody, dataToShow) {
-    const tTitle = document.getElementById("top-table-title");
-    const tDesc = document.getElementById("top-table-desc");
-    tTitle.innerText = "Utenti"; //remove
-    tDesc.innerText = "Elimina e modifica utenti." //remove
-    const thead = document.getElementById("top-table-head");
-    thead.innerHTML = `
-        <tr>
-            <th class="lead-info">
-                <h6>Email</h6>
-            </th>
-            <th class="lead-email">
-                <h6>Ruolo</h6>
-            </th>
-            <th class="lead-email">
-                <h6>Nome</h6>
-            </th>
-            <th class="lead-phone">
-                <h6>Cognome</h6>
-            </th>
-            <th>
-                <h6>Action</h6>
-            </th>
-        </tr>
-    `; //remove
-    const tbody = document.getElementById("top-table-body");
-
-    const usersData = await sendTokenForData(`${API_BASE}/api/Users`); //remove
-
-    const roleOrder = {
-        teacher: 1,
-        student: 2
-    };
-
-    tbody.innerHTML = "";
+function renderUsersBodyAdmin(tbody, usersData) {
+    const roleOrder = { teacher: 1, student: 2 };
 
     usersData
         .filter(user => user.role !== "admin")
         .sort((a, b) => roleOrder[a.role] - roleOrder[b.role])
         .forEach(user => {
-        
-        if(user.role !== "admin") {
-
             const row = document.createElement("tr");
             row.innerHTML = `
-            <td class="min-width">
-                <div class="lead">
-                <div class="lead-text">
-                    <p style="color: blue;">${user.email}</p>
-                </div>
-                </div>
-            </td>
-
-            <td class="min-width">
-                <p style="${user.studentId ? 'color: green;' : 'color: orange;'}">${user.role}</p>
-            </td>
-
-            <td class="min-width">
-                <p style="color: #2f2f2f;">${user.studentId ? user.studentFirstName : user.teacherFirstName}</p>
-            </td>
-
-            <td class="min-width">
-                <p style="color: #2f2f2f;">${user.studentId ? user.studentLastName : user.teacherLastName}</p>
-            </td>
-
-            <td>
-                <div class="action">
-                <button class="text-danger" onclick="deleteUser('${user.id}')">
-                    <i class="lni lni-trash-can"></i>
-                </button>
-                </div>
-            </td>
+                <td class="min-width">
+                    <div class="lead">
+                        <div class="lead-text">
+                            <p style="color: blue;">${user.email}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="min-width">
+                    <p style="${user.studentId ? 'color: green;' : 'color: orange;'}">${user.role}</p>
+                </td>
+                <td class="min-width">
+                    <p style="color: #2f2f2f;">${user.studentId ? user.studentFirstName : user.teacherFirstName}</p>
+                </td>
+                <td class="min-width">
+                    <p style="color: #2f2f2f;">${user.studentId ? user.studentLastName : user.teacherLastName}</p>
+                </td>
+                <td>
+                    <div class="action">
+                        <button class="text-danger" onclick="deleteUser('${user.id}')">
+                            <i class="lni lni-trash-can"></i>
+                        </button>
+                    </div>
+                </td>
             `;
-
             tbody.appendChild(row);
-        }
+        });
+}
+
+function renderGradesBodyStudent(tbody, gradesData) {
+    gradesData
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .forEach(grade => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td><p style="color: blue;">${grade.subjectName}</p></td>
+            <td><p style="${grade.value >= 6 ? 'color: green;' : 'color: red;'}">${grade.value.toFixed(1)}</p></td>
+            <td><p>${grade.date}</p></td>
+        `;
+        tbody.appendChild(row);
     });
 }
 
-async function loadAdminsTable() {
-    const tbody = document.getElementById("admins-tbody");
-
-    const usersData = await sendTokenForData(`${API_BASE}/api/Users`);
-
-    tbody.innerHTML = "";
-
-    usersData
-        .filter(user => user.role == "admin")
-        .forEach(user => {
+function renderStudentsBodyAdmin(tbody, studentsData) {
+    studentsData.forEach(student => {
         const row = document.createElement("tr");
         row.innerHTML = `
-        <tr>
             <td class="min-width">
-            <p style="color: blue;">${user.id}</p>
-            <td class="min-width">
-            <p>${user.email}</p>
+                <p style="color: blue;">${student.id}</p>
             </td>
-        </tr>`;
-
+            <td class="min-width">
+                <p>${student.firstName}</p>
+            </td>
+            <td class="min-width">
+                <p>${student.lastName}</p>
+            </td>
+            <td>
+                <div class="action">
+                    <button class="text-success" data-id="${student.id}" onclick="showModal('Student', this.dataset.id)">
+                        <i class="lni lni-pencil-alt"></i>
+                    </button>
+                    <button class="text-danger" data-id="${student.id}" onclick="deleteStudent(this.dataset.id)">
+                        <i class="lni lni-trash-can"></i>
+                    </button>
+                </div>
+            </td>
+        `;
         tbody.appendChild(row);
     });
+}
+
+function renderTeachersBodyAdmin(tbody, teachersData) {
+    teachersData.forEach(teacher => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="min-width">
+                <p style="color: blue;">${teacher.id}</p>
+            </td>
+            <td class="min-width">
+                <p>${teacher.firstName}</p>
+            </td>
+            <td class="min-width">
+                <p>${teacher.lastName}</p>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderAdminsBodyAdmin(tbody, adminsData) {
+    adminsData
+    .filter(admin => admin.role === "admin")
+    .forEach(admin => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="min-width">
+                <p style="color: blue;">${admin.id}</p>
+            </td>
+            <td class="min-width">
+                <p>${admin.email}</p>
+            </td>
+            <td class="min-width">
+                <p>${admin.role}</p>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderSubjectsBodyStudent(tbody, subjectsData) {
+    subjectsData.forEach(subject => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="min-width">
+                <p style="color: blue;">${subject.name}</p>
+            </td>
+            <td class="min-width">
+                <p style="color: orange;">${subject.teacherFirstName} ${subject.teacherLastName}</p>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+async function renderSubjectAveragesBodyStudent(tbody, subjectsData) {
+    const grades = await sendTokenForData(`${API_BASE}/api/Grade`);
+    grades.forEach(grade => {
+        const subject = subjectsData.find(s => s.id === grade.subjectId);
+        if (subject) {
+            if (!subject.total) {
+                subject.total = 0;
+                subject.count = 0;
+            }
+            subject.total += grade.value;
+            subject.count++;
+        }
+    });
+    subjectsData.forEach(subject => {
+        averageGrade = subject.count > 0 ? subject.total / subject.count : 0;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="min-width">
+                <p style="color: blue;">${subject.name}</p>
+            </td>
+            <td class="min-width">
+                <p style="${averageGrade < 6 ? 'color: red;' : 'color: green;'}">${averageGrade.toFixed(1)}</p>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+async function loadTable(ids, title, description, tableHeadHtml, dataUrl, renderBody) {
+    document.getElementById(ids.title).innerText = title;
+    document.getElementById(ids.desc).innerText = description;
+    document.getElementById(ids.head).innerHTML = tableHeadHtml;
+    const tbody = document.getElementById(ids.body);
+    tbody.innerHTML = "";
+    const data = await sendTokenForData(`${API_BASE}${dataUrl}`);
+    renderBody(tbody, data);
 }
 
 const capitalize = (str = '') => {
@@ -275,7 +301,7 @@ const capitalize = (str = '') => {
         : '';
 };
 
-function populateFields(ids, values) {
+function popolateFields(ids, values) {
     ids.forEach((id, i) => {
         const element = document.getElementById(id);
         if (element) element.innerText = values[i];
@@ -285,11 +311,9 @@ function populateFields(ids, values) {
 function showModal(type, id) {
     const firstName = document.getElementById(`first-name-${id}`).textContent;
     const lastName = document.getElementById(`last-name-${id}`).textContent;
-
     document.getElementById("modal-first-name").value = firstName;
     document.getElementById("modal-last-name").value = lastName;
     document.getElementById("save-modal-btn").onclick = () => updateEntity(type, id);
-
     new bootstrap.Modal(document.getElementById("edit-entity-modal")).show();
 }
 
@@ -314,47 +338,157 @@ async function updateEntity(type, id) {
 async function loadPage() {
     const userBadgeRole = document.getElementById("user-badge-role");
     const userData = await getUserData();
-    userBadgeRole.innerText =  userData.role ?  userData.role : "ERROR"
-    let fullName = "";
-    if(userData.studentId) { 
+    userBadgeRole.innerText = capitalize(userData.role) ?? "ERROR";
+    // Determina il fullName in base al tipo di utente
+    let fullName = "Admin";
+    if (userData.studentId) {
         fullName = `${capitalize(userData.studentFirstName)} ${capitalize(userData.studentLastName)}`;
-        populateFields(
-            ["dropdown-badge-name", "dropdown-badge-email", "user-badge-name"],
-            [fullName, userData.email, fullName]
-        );
-    }
-    else if(userData.teacherId) {
+    } else if (userData.teacherId) {
         fullName = `${capitalize(userData.teacherFirstName)} ${capitalize(userData.teacherLastName)}`;
-        populateFields(
-            ["dropdown-badge-name", "dropdown-badge-email", "user-badge-name"],
-            [fullName, userData.email, fullName]
-        );
     }
-    else if(userData.role === "admin") {
-        fullName = "Admin"
-        populateFields(
-            ["dropdown-badge-name", "dropdown-badge-email", "user-badge-name"],
-            [fullName, userData.email, fullName]
-        );
-    }
-     switch (userData.role) {
+
+    popolateFields(
+        ["dropdown-badge-name", "dropdown-badge-email", "user-badge-name"],
+        [fullName, userData.email, fullName]
+    );
+
+    switch (userData.role) {
         case "admin":
             await loadCardsData(userData);
             await loadChartData();
-            await loadTopTable();
-            await loadStudentsTable();
-            await loadTeachersTable();
-            await loadAdminsTable();
+            loadTable(
+                {
+                    title: "top-table-title",
+                    desc: "top-table-desc",
+                    head: "top-table-head",
+                    body: "top-table-body"
+                },
+                "Utenti",
+                "Elimina e modifica utenti.",
+                `<tr>
+                    <th><h6>Email</h6></th>
+                    <th><h6>Ruolo</h6></th>
+                    <th><h6>Nome</h6></th>
+                    <th><h6>Cognome</h6></th>
+                    <th><h6>Action</h6></th>
+                </tr>`,
+                "/api/Users",
+                renderUsersBodyAdmin
+            );
+            loadTable(
+                {
+                    title: "center-left-table-title",
+                    desc: "center-left-table-desc",
+                    head: "center-left-table-head",
+                    body: "center-left-table-body"
+                },
+                "Allievi",
+                "Elenco di tutti gli allievi.",
+                `<tr>
+                    <th><h6>Id</h6></th>
+                    <th><h6>Nome</h6></th>
+                    <th><h6>Cognome</h6></th>
+                    <th><h6>Action</h6></th>
+                </tr>`,
+                "/api/Student",
+                renderStudentsBodyAdmin
+            );
+            loadTable(
+                {
+                    title: "center-right-table-title",
+                    desc: "center-right-table-desc",
+                    head: "center-right-table-head",
+                    body: "center-right-table-body"
+                },
+                "Docenti",
+                "Elenco di tutti i docenti.",
+                `<tr>
+                    <th><h6>Id</h6></th>
+                    <th><h6>Nome</h6></th>
+                    <th><h6>Cognome</h6></th>
+                    <th><h6>Action</h6></th>
+                </tr>`,
+                "/api/Teacher",
+                renderTeachersBodyAdmin
+            );
+            loadTable(
+                {
+                    title: "bottom-table-title",
+                    desc: "bottom-table-desc",
+                    head: "bottom-table-head",
+                    body: "bottom-table-body"
+                },
+                "Amministratori",
+                "Elenco di tutti gli amministratori.",
+                `<tr>
+                    <th><h6>Id</h6></th>
+                    <th><h6>Email</h6></th>
+                    <th><h6>Ruolo</h6></th>
+                </tr>`,
+                "/api/Users",
+                renderAdminsBodyAdmin
+            );
         break;
+
         case "teacher":
+            loadCardsData(userData);
+            loadChartData();
         break;
+
         case "student":
+            const bottomTableRow = document.getElementById("bottom-table-row");
+            if (bottomTableRow) bottomTableRow.style.display = "none";
             await loadCardsData(userData);
             await loadChartData();
-            //await loadGradesTable(); TODO
-            // await loadStudentsTable();
-            // await loadTeachersTable();
-            // await loadAdminsTable();
+            loadTable(
+                {
+                    title: "top-table-title",
+                    desc: "top-table-desc",
+                    head: "top-table-head",
+                    body: "top-table-body"
+                },
+                "Voti",
+                "Elenco di tutti i tuoi voti.",
+                `<tr>
+                    <th><h6>Materia</h6></th>
+                    <th><h6>Voto</h6></th>
+                    <th><h6>Data</h6></th>
+                </tr>`,
+                "/api/Grade",
+                renderGradesBodyStudent
+            );
+            loadTable(
+                {
+                    title: "center-left-table-title",
+                    desc: "center-left-table-desc",
+                    head: "center-left-table-head",
+                    body: "center-left-table-body"
+                },
+                "Materie",
+                "Elenco di tutte le materie.",
+                `<tr>
+                    <th><h6>Name</h6></th>
+                    <th><h6>Insegnante</h6></th>
+                </tr>`,
+                "/api/Subject",
+                renderSubjectsBodyStudent
+            );
+            loadTable(
+                {
+                    title: "center-right-table-title",
+                    desc: "center-right-table-desc",
+                    head: "center-right-table-head",
+                    body: "center-right-table-body"
+                },
+                "Media per Materia",
+                "Elenco della media dei voti per materia.",
+                `<tr>
+                    <th><h6>Materia</h6></th>
+                    <th><h6>Media</h6></th>
+                </tr>`,
+                "/api/Subject",
+                renderSubjectAveragesBodyStudent
+            );
         break;
     }
 }
