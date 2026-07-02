@@ -55,6 +55,7 @@ namespace ElectronicRegisterAPI.Controllers
                 Id = g.Id,
                 StudentId = g.StudentId,
                 SubjectId = g.SubjectId,
+                SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
                 TeacherId = g.TeacherId,
                 Value = g.Value,
                 Date = g.Date
@@ -89,6 +90,7 @@ namespace ElectronicRegisterAPI.Controllers
                 Id = grade.Id,
                 StudentId = grade.StudentId,
                 SubjectId = grade.SubjectId,
+                SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == grade.SubjectId)!.Name,
                 TeacherId = grade.TeacherId,
                 Value = grade.Value,
                 Date = grade.Date
@@ -107,6 +109,7 @@ namespace ElectronicRegisterAPI.Controllers
                 Id = g.Id,
                 StudentId = g.StudentId,
                 SubjectId = g.SubjectId,
+                SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
                 TeacherId = g.TeacherId,
                 Value = g.Value,
                 Date = g.Date
@@ -142,6 +145,7 @@ namespace ElectronicRegisterAPI.Controllers
                 Id = g.Id,
                 StudentId = g.StudentId,
                 SubjectId = g.SubjectId,
+                SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
                 TeacherId = g.TeacherId,
                 Value = g.Value,
                 Date = g.Date
@@ -175,6 +179,7 @@ namespace ElectronicRegisterAPI.Controllers
                 Id = g.Id,
                 StudentId = g.StudentId,
                 SubjectId = g.SubjectId,
+                SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
                 TeacherId = g.TeacherId,
                 Value = g.Value,
                 Date = g.Date
