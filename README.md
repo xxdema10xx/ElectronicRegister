@@ -29,6 +29,13 @@ PER REACT:
 
 npx expo start
 
+Il certificato HTTPS di sviluppo di ASP.NET Core non è pensato per essere usato da altri dispositivi.
+
+Usa un URL tipo:
+
+http://192.168.x.x:5000/api
+evita il certificato HTTPS durante lo sviluppo.
+
 
 SE NON HAI IL PROGETTO SUL TUO PC:
 
