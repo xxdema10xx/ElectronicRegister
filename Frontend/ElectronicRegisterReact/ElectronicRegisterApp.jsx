@@ -17,7 +17,7 @@ import {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const API_BASE = "https://10.10.54.33:7225/api"; // ← cambia con il tuo URL
+const API_BASE = "http://10.10.55.154:5257/api"; // ← cambia con il tuo URL
 
 // ─── COLORS ──────────────────────────────────────────────────────────────────
 const C = {
@@ -502,7 +502,6 @@ function StudentsScreen() {
               <View style={s.avatar}><Text style={s.avatarText}>{st.firstName[0]}{st.lastName[0]}</Text></View>
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>{st.firstName} {st.lastName}</Text>
-                <Text style={s.itemSub}>{st.id.slice(0, 16)}…</Text>
               </View>
               {role === "admin" && (
                 <View style={{ flexDirection: "row", gap: 8 }}>

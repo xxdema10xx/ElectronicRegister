@@ -30,6 +30,11 @@ namespace ElectronicRegisterAPI.Controllers
         [Authorize(Roles = "teacher,admin")]
         public async Task<ActionResult<int>> Count()
         {
+            if (User.IsInRole("teacher"))
+            {
+                var teacherId = Guid.Parse(User.FindFirst("teacherId")?.Value!);
+                return Ok(await _context.Grades.CountAsync(g => g.TeacherId == teacherId));
+            }
             return Ok(await _context.Grades.CountAsync());
         }
 
@@ -58,7 +63,13 @@ namespace ElectronicRegisterAPI.Controllers
                 SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
                 TeacherId = g.TeacherId,
                 Value = g.Value,
-                Date = g.Date
+                Date = g.Date,
+                Student = _context.Students.FirstOrDefault(s => s.Id == g.StudentId) != null ? new StudentDto
+                {
+                    Id = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.Id,
+                    FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,
+                    LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName
+                } : null
             }).ToListAsync();
 
             if (grades.Count == 0) return NotFound(); //AGGIUNGERE QUESTA RIGA A TUTTI GLI ALTRI CONTROLLER
@@ -93,7 +104,13 @@ namespace ElectronicRegisterAPI.Controllers
                 SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == grade.SubjectId)!.Name,
                 TeacherId = grade.TeacherId,
                 Value = grade.Value,
-                Date = grade.Date
+                Date = grade.Date,
+                Student = _context.Students.FirstOrDefault(s => s.Id == grade.StudentId) != null ? new StudentDto
+                {
+                    Id = _context.Students.FirstOrDefault(s => s.Id == grade.StudentId)!.Id,
+                    FirstName = _context.Students.FirstOrDefault(s => s.Id == grade.StudentId)!.FirstName,
+                    LastName = _context.Students.FirstOrDefault(s => s.Id == grade.StudentId)!.LastName
+                } : null
             });
         }
 
@@ -112,7 +129,13 @@ namespace ElectronicRegisterAPI.Controllers
                 SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
                 TeacherId = g.TeacherId,
                 Value = g.Value,
-                Date = g.Date
+                Date = g.Date,
+                Student = _context.Students.FirstOrDefault(s => s.Id == g.StudentId) != null ? new StudentDto
+                {
+                    Id = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.Id,
+                    FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,
+                    LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName
+                } : null
             }).ToListAsync();
             if (grades.Count == 0) return NotFound();
             return Ok(grades);
@@ -148,7 +171,13 @@ namespace ElectronicRegisterAPI.Controllers
                 SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
                 TeacherId = g.TeacherId,
                 Value = g.Value,
-                Date = g.Date
+                Date = g.Date,
+                Student = _context.Students.FirstOrDefault(s => s.Id == g.StudentId) != null ? new StudentDto
+                {
+                    Id = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.Id,
+                    FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,
+                    LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName
+                } : null
             }).ToListAsync();
 
             //7.Restituisci la lista
@@ -182,7 +211,13 @@ namespace ElectronicRegisterAPI.Controllers
                 SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
                 TeacherId = g.TeacherId,
                 Value = g.Value,
-                Date = g.Date
+                Date = g.Date,
+                Student = _context.Students.FirstOrDefault(s => s.Id == g.StudentId) != null ? new StudentDto
+                {
+                    Id = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.Id,
+                    FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,
+                    LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName
+                } : null
             }).ToListAsync();
             //6.Restituisci la lista
             if (grades.Count == 0) return NotFound();
@@ -195,6 +230,7 @@ namespace ElectronicRegisterAPI.Controllers
         { 
             var grade = await _context.Grades.FindAsync(id);
             if (grade == null) return NotFound();
+            grade.SubjectId = dto.SubjectId;
             grade.Value = dto.Value;
             grade.Date = dto.Date;
             _context.Grades.Update(grade);
