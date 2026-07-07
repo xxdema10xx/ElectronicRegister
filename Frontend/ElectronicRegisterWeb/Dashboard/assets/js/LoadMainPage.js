@@ -480,7 +480,7 @@ async function loadPage() {
     const userData = await getUserData();
     userBadgeRole.innerText = capitalize(userData.role) ?? "ERROR";
     // Determina il fullName in base al tipo di utente
-    let fullName = "Admin";
+    let fullName = userData.email; // Default to email if no name is available
     if (userData.studentId) {
         fullName = `${capitalize(userData.studentFirstName)} ${capitalize(userData.studentLastName)}`;
     } else if (userData.teacherId) {

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Text;
 using Scalar.AspNetCore;
 using ElectronicRegisterAPI.Models;
@@ -29,6 +31,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
     });
 
+// --- Autenticazione: SOLO il tuo JWT custom (invariato) ---
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -43,6 +46,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
     });
+
+builder.Services.AddAuthorization();
+
+// --- Necessario SOLO per validare il token Microsoft dentro AuthController.MicrosoftLogin ---
+var azureTenantId = builder.Configuration["AzureAd:TenantId"];
+var stsDiscoveryEndpoint = $"https://login.microsoftonline.com/{azureTenantId}/v2.0/.well-known/openid-configuration";
+
+builder.Services.AddSingleton(new ConfigurationManager<OpenIdConnectConfiguration>(
+    stsDiscoveryEndpoint,
+    new OpenIdConnectConfigurationRetriever()));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
