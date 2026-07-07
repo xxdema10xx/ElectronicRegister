@@ -1686,6 +1686,14 @@ h6,
   border-collapse: inherit;
   border-spacing: 0px;
 }
+
+.table-responsive thead tr th {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 2;
+}
+
 .table > :not(caption) > * > * {
   padding: 15px 0;
   border-bottom-color: #efefef;

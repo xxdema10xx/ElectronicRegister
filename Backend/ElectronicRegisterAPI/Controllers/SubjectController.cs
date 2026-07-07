@@ -24,6 +24,11 @@ namespace ElectronicRegisterAPI.Controllers
         [Authorize(Roles = "teacher,admin,student")]
         public async Task<ActionResult<int>> Count()
         {
+            if (User.IsInRole("teacher"))
+            {
+                var teacherId = Guid.Parse(User.FindFirst("teacherId")?.Value!);
+                return Ok(await _context.Subjects.CountAsync(s => s.TeacherId == teacherId));
+            }
             return Ok(await _context.Subjects.CountAsync());
         }
 
@@ -79,7 +84,7 @@ namespace ElectronicRegisterAPI.Controllers
 
         [HttpGet("byteacher/{id}")]
         [Authorize(Roles = "teacher,admin,student")]
-        public async Task<ActionResult<SubjectDto>> GetSubjectByTeacherId(Guid id)
+        public async Task<ActionResult<List<SubjectDto>>> GetSubjectByTeacherId(Guid id)
         {
             var subject = await _context.Subjects
                 .Include(t => t.Teacher)

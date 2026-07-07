@@ -389,7 +389,7 @@
               <!-- End Icon Cart -->
             </div>
             <!-- End Col -->
-            <div class="col-lg-4 col-sm-6" id="card-4">
+            <div class="col-xl-3 col-lg-4 col-sm-6" id="card-4">
               <div class="icon-card mb-30">
                 <div class="icon orange">
                   <i class="lni lni-user"></i>
@@ -409,7 +409,7 @@
               <div class="card-style mb-30">
                 <div class="title d-flex flex-wrap justify-content-between">
                   <div class="left">
-                    <h6 class="text-medium mb-10">Andamento Media Voti Annuale</h6>
+                    <h6 class="text-medium mb-10" id="chart-title"></h6>
                     <h3 class="text-bold" id="average-yearly-grades"></h3>
                   </div>
                 </div>
@@ -462,15 +462,15 @@
                       <div class="card-style mb-30">
                         <h6 class="mb-10" id="top-table-title"></h6>
                         <p class="text-sm mb-20" id="top-table-desc"></p>
-                        <div class="table-wrapper table-responsive" style="max-height: 400px; overflow-y: auto;">
-                          <table class="table">
-                            <thead id="top-table-head">
-                            </thead>
-                            <tbody id="top-table-body">
-                            </tbody>
-                          </table>
-                          <!-- end table -->
-                        </div>
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto; position: relative;">
+  <table class="table">
+    <thead id="top-table-head">
+    </thead>
+    <tbody id="top-table-body">
+    </tbody>
+  </table>
+  <!-- end table -->
+</div>
                       </div>
                       <!-- end card -->
                     </div>
@@ -554,7 +554,7 @@
       </section>
       <!-- ========== section end ========== -->
       <!-- ========== modal start ========== -->
-
+      <!-- ========== modal start ========== -->
       <div class="modal fade" id="edit-entity-modal" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -563,13 +563,48 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-              <div class="input-style-1">
-                <label>Nome</label>
-                <input type="text" id="modal-first-name" />
+              <!-- Campi comuni a studenti e insegnanti -->
+              <div id="student-teacher-fields">
+                <div class="input-style-1">
+                  <label>Nome</label>
+                  <input type="text" id="modal-first-name" />
+                </div>
+                <div class="input-style-1">
+                  <label>Cognome</label>
+                  <input type="text" id="modal-last-name" />
+                </div>
               </div>
-              <div class="input-style-1">
-                <label>Cognome</label>
-                <input type="text" id="modal-last-name" />
+
+              <!-- Campo materia, solo per insegnanti -->
+              <div id="teacher-fields" style="display:none;">
+                <div class="input-style-1">
+                  <label>Materia</label>
+                  <select id="modal-teacher-subject"></select>
+                </div>
+              </div>
+
+              <!-- Campi per i voti -->
+              <div id="grade-fields" style="display:none;">
+                <div class="input-style-1">
+                  <label>Materia</label>
+                  <select id="modal-subject"></select>
+                </div>
+                <div class="input-style-1">
+                  <label>Voto</label>
+                  <input type="number" id="modal-grade" step="0.5" min="0" max="10" />
+                </div>
+                <div class="input-style-1">
+                  <label>Data</label>
+                  <input type="date" id="modal-date" />
+                </div>
+              </div>
+
+              <!-- Campo email, solo per Users -->
+              <div id="user-fields" style="display:none;">
+                <div class="input-style-1">
+                  <label>Email</label>
+                  <input type="email" id="modal-email" />
+                </div>
               </div>
             </div>
             <div class="modal-footer">

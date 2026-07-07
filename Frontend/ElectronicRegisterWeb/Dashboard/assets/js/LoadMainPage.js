@@ -22,9 +22,11 @@ async function loadCardsData(userData) {
     const card2Title = document.getElementById("card-2-title");
     const card3Title = document.getElementById("card-3-title");
     const card4Title = document.getElementById("card-4-title");
+    const chartTitle = document.getElementById("chart-title");
 
     switch (role) {
         case "admin":
+            if (chartTitle) chartTitle.innerText = "Andamento Media Voti Annuale";
             formatCardsData(
                 [
                     `${API_BASE}/api/Student/count`,
@@ -36,18 +38,20 @@ async function loadCardsData(userData) {
             );
             break;
         case "teacher":
+            if (chartTitle) chartTitle.innerText = "Media annuale dei voti da te inseriti";
             formatCardsData(
                 [
                     `${API_BASE}/api/Subject/count`,
                     `${API_BASE}/api/Student/count`,
                     `${API_BASE}/api/Grade/count`
                 ],
-                ["Materie", "Alunni", "Voti"]
+                ["Le Tue Materie", "I Tuoi Alunni", "I Tuoi Voti"]
             );
             const card4 = document.getElementById("card-4");
             if (card4) card4.remove();
             break;
         case "student":
+            if (chartTitle) chartTitle.innerText = "Andamento Media Voti Annuale";
             try {
                 const subjectsCount = await sendTokenForData(`${API_BASE}/api/Subject/count`);
                 const studentGrades = await sendTokenForData(`${API_BASE}/api/Grade`);
@@ -137,7 +141,7 @@ function renderUsersBodyAdmin(tbody, usersData) {
                 <td class="min-width">
                     <div class="lead">
                         <div class="lead-text">
-                            <p style="color: blue;">${user.email}</p>
+                            <p id="email-${user.id}" style="color: blue;">${user.email}</p>
                         </div>
                     </div>
                 </td>
@@ -145,13 +149,16 @@ function renderUsersBodyAdmin(tbody, usersData) {
                     <p style="${user.studentId ? 'color: green;' : 'color: orange;'}">${user.role}</p>
                 </td>
                 <td class="min-width">
-                    <p style="color: #2f2f2f;">${user.studentId ? user.studentFirstName : user.teacherFirstName}</p>
+                    <p id="first-name-${user.id}" style="color: #2f2f2f;">${user.studentId ? user.studentFirstName : user.teacherFirstName}</p>
                 </td>
                 <td class="min-width">
-                    <p style="color: #2f2f2f;">${user.studentId ? user.studentLastName : user.teacherLastName}</p>
+                    <p id="last-name-${user.id}" style="color: #2f2f2f;">${user.studentId ? user.studentLastName : user.teacherLastName}</p>
                 </td>
                 <td>
                     <div class="action">
+                        <button class="text-success" data-id="${user.id}" onclick="showModal('Users', this.dataset.id)">
+                            <i class="lni lni-pencil-alt"></i>
+                        </button>
                         <button class="text-danger" onclick="deleteUser('${user.id}')">
                             <i class="lni lni-trash-can"></i>
                         </button>
@@ -184,10 +191,10 @@ function renderStudentsBodyAdmin(tbody, studentsData) {
                 <p style="color: blue;">${student.id}</p>
             </td>
             <td class="min-width">
-                <p>${student.firstName}</p>
+                <p id="first-name-${student.id}">${student.firstName}</p>
             </td>
             <td class="min-width">
-                <p>${student.lastName}</p>
+                <p id="last-name-${student.id}">${student.lastName}</p>
             </td>
             <td>
                 <div class="action">
@@ -285,6 +292,55 @@ async function renderSubjectAveragesBodyStudent(tbody, subjectsData) {
     });
 }
 
+function renderSubjectsBodyTeacher(tbody, subjectsData) {
+    subjectsData.forEach(subject => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="min-width">
+                <p style="color: orange;">${subject.name}</p>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderStudentsBodyTeacher(tbody, studentsData) {
+    studentsData.forEach(student => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="min-width">
+                <p>${student.firstName}</p>
+            </td>
+            <td class="min-width">
+                <p>${student.lastName}</p>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderGradesBodyTeacher(tbody, gradesData) {
+    gradesData
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .forEach(grade => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td><p id="subject-${grade.id}" style="color: blue;">${grade.subjectName}</p></td>
+            <td><p id="grade-${grade.id}" style="${grade.value >= 6 ? 'color: green;' : 'color: red;'}">${grade.value.toFixed(1)}</p></td>
+            <td><p>${grade.student?.firstName} ${grade.student?.lastName}</p></td>
+            <td><p id="date-${grade.id}">${grade.date}</p></td>
+            <td>
+                <div class="action">
+                    <button class="text-success" data-id="${grade.id}" onclick="showModal('Grade', this.dataset.id)">
+                        <i class="lni lni-pencil-alt"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
 async function loadTable(ids, title, description, tableHeadHtml, dataUrl, renderBody) {
     document.getElementById(ids.title).innerText = title;
     document.getElementById(ids.desc).innerText = description;
@@ -308,34 +364,118 @@ function popolateFields(ids, values) {
     });
 }
 
-function showModal(type, id) {
-    const firstName = document.getElementById(`first-name-${id}`).textContent;
-    const lastName = document.getElementById(`last-name-${id}`).textContent;
-    document.getElementById("modal-first-name").value = firstName;
-    document.getElementById("modal-last-name").value = lastName;
+//TODO: Implementare la funzione showModal per mostrare un modal di modifica per studenti, insegnanti e voti. 
+// La funzione dovrebbe popolare i campi del modal con i dati correnti dell'entità selezionata e impostare l'evento onclick del pulsante di salvataggio per chiamare la funzione updateEntity con i dati aggiornati.
+
+const entityFieldsConfig = {
+    Users: [
+        { key: "email",     domSuffix: "email",      inputId: "modal-email" },
+        { key: "firstName", domSuffix: "first-name",  inputId: "modal-first-name" },
+        { key: "lastName",  domSuffix: "last-name",   inputId: "modal-last-name" }
+    ],
+    Student: [
+        { key: "firstName", domSuffix: "first-name", inputId: "modal-first-name" },
+        { key: "lastName",  domSuffix: "last-name",  inputId: "modal-last-name" }
+    ],
+    Teacher: [
+        { key: "firstName", domSuffix: "first-name", inputId: "modal-first-name" },
+        { key: "lastName",  domSuffix: "last-name",  inputId: "modal-last-name" }
+    ],
+    Grade: [
+        { key: "subjectId", domSuffix: "subject", inputId: "modal-subject", type: "select" },
+        { key: "value",     domSuffix: "grade",   inputId: "modal-grade" },
+        { key: "date",      domSuffix: "date",    inputId: "modal-date" }
+    ]
+};
+
+// Popola una <select> con le materie prese dal db,
+// selezionando l'opzione il cui nome combacia con selectedName
+async function populateSubjectSelect(selectId, selectedName) {
+    const select = document.getElementById(selectId);
+    select.innerHTML = "";
+    const userData = await getUserData();
+    try {
+        const subjects = await sendTokenForData(`${API_BASE}/api/Subject/byteacher/${userData.teacherId}`);
+        subjects.forEach(subject => {
+            const option = document.createElement("option");
+            option.value = subject.id;
+            option.textContent = subject.name;
+            select.appendChild(option);
+        });
+
+        // selectedName è il NOME (letto dalla tabella), va cercato l'id corrispondente
+        const matching = subjects.find(s => s.name === selectedName);
+        if (matching) {
+            select.value = matching.id;
+        }
+    } catch (e) {
+        console.error("Errore nel recupero delle materie:", e);
+    }
+}
+
+async function showModal(type, id) {
+    const config = entityFieldsConfig[type];
+    if (!config) {
+        console.error(`Tipo di entità non supportato: ${type}`);
+        return;
+    }
+
+    document.getElementById("student-teacher-fields").style.display =
+        (type === "Student" || type === "Teacher" || type === "Users") ? "block" : "none";
+    document.getElementById("teacher-fields").style.display =
+        type === "Teacher" ? "block" : "none";
+    document.getElementById("grade-fields").style.display =
+        type === "Grade" ? "block" : "none";
+    document.getElementById("user-fields").style.display =
+        type === "Users" ? "block" : "none";
+
+    for (const field of config) {
+        if (field.skipRead) {
+            document.getElementById(field.inputId).value = "";
+            continue;
+        }
+
+        const sourceElId = `${field.domSuffix}-${id}`;
+        const sourceEl = document.getElementById(sourceElId);
+        const value = sourceEl ? sourceEl.textContent.trim() : "";
+
+        if (field.type === "select") {
+            await populateSubjectSelect(field.inputId, value);
+        } else {
+            document.getElementById(field.inputId).value = value;
+        }
+    }
+
     document.getElementById("save-modal-btn").onclick = () => updateEntity(type, id);
     new bootstrap.Modal(document.getElementById("edit-entity-modal")).show();
 }
 
 async function updateEntity(type, id) {
-    const data = {
-        firstName: document.getElementById("modal-first-name").value || null,
-        lastName: document.getElementById("modal-last-name").value || null
-    };
-    try{
+    const config = entityFieldsConfig[type];
+    if (!config) {
+        console.error(`Tipo di entità non supportato: ${type}`);
+        return;
+    }
+
+    const data = {};
+    config.forEach(field => {
+        const val = document.getElementById(field.inputId).value;
+        data[field.key] = val || null;
+    });
+
+    try {
         const res = await sendApiRequest(`${API_BASE}/api/${type}/update/${id}`, "PUT", data);
         bootstrap.Modal.getInstance(document.getElementById("edit-entity-modal")).hide();
         document.activeElement.blur();
-        if (type === "Student") await loadStudentsTable();
-        if (type === "Teacher") await loadTeachersTable();
+        loadPage();
         return res;
-    } catch(e) {
-        console.log(e);
-        console.log(e.message);
+    } catch (e) {
+        console.error(e);
     }
 }
 
 async function loadPage() {
+    const bottomTableRow = document.getElementById("bottom-table-row");
     const userBadgeRole = document.getElementById("user-badge-role");
     const userData = await getUserData();
     userBadgeRole.innerText = capitalize(userData.role) ?? "ERROR";
@@ -431,12 +571,62 @@ async function loadPage() {
         break;
 
         case "teacher":
+            if (bottomTableRow) bottomTableRow.style.display = "none";
             loadCardsData(userData);
             loadChartData();
+            loadTable(
+                {
+                    title: "top-table-title",
+                    desc: "top-table-desc",
+                    head: "top-table-head",
+                    body: "top-table-body"
+                },
+                "Voti",
+                "Elenco di tutti i voti da te inseriti.",
+                `<tr>
+                    <th><h6>Materia</h6></th>
+                    <th><h6>Voto</h6></th>
+                    <th><h6>Allievo</h6></th>
+                    <th><h6>Data</h6></th>
+                    <th><h6>Action</h6></th>
+                </tr>`,
+                "/api/Grade",
+                renderGradesBodyTeacher
+            );
+            loadTable(
+                {
+                    title: "center-left-table-title",
+                    desc: "center-left-table-desc",
+                    head: "center-left-table-head",
+                    body: "center-left-table-body"
+                },
+                "Materie",
+                "Elenco di tutte le materie da te insegnate.",
+                `<tr>
+                    <th><h6>Materia</h6></th>
+                </tr>`,
+                "/api/Subject/byteacher/" + userData.teacherId,
+                renderSubjectsBodyTeacher
+            );
+            loadTable(
+                {
+                    title: "center-right-table-title",
+                    desc: "center-right-table-desc",
+                    head: "center-right-table-head",
+                    body: "center-right-table-body"
+                },
+                "Allievi",
+                "Elenco di tutti gli allievi che hanno voti inseriti da te.",
+                `<tr>
+                    <th><h6>Nome</h6></th>
+                    <th><h6>Cognome</h6></th>
+                </tr>`,
+                "/api/Student",
+                renderStudentsBodyTeacher
+            );
         break;
 
         case "student":
-            const bottomTableRow = document.getElementById("bottom-table-row");
             if (bottomTableRow) bottomTableRow.style.display = "none";
             await loadCardsData(userData);
             await loadChartData();

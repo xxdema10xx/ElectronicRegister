@@ -78,7 +78,7 @@ namespace ElectronicRegisterAPI.Controllers
             return Ok(user);
         }
 
-        [HttpPost("update/{id}")]
+        [HttpPut("update/{id}")]
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> Update(Guid id, UpdateUserDto dto)
         {
