@@ -17,11 +17,11 @@ import {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const API_BASE = "https://10.10.54.33:7225/api"; // ← cambia con il tuo URL
+const API_BASE = "http://10.10.52.122:5257/api"; // ← cambia con il tuo URL
 
 // ─── COLORS ──────────────────────────────────────────────────────────────────
 const C = {
-  primary:    "#4F46E5",
+  primary:    "#154f78",
   primaryDk:  "#4338CA",
   secondary:  "#7C3AED",
   success:    "#10B981",
@@ -903,7 +903,7 @@ function AppNav({ token, user, onLogout }) {
   };
 
   const titleMap = {
-    dashboard: "Dashboard", grades: "Voti", students: "Studenti",
+    dashboard: "Electronic Register", grades: "Voti", students: "Studenti",
     teachers: "Professori", subjects: "Materie", users: "Utenti", profile: "Profilo",
   };
 
@@ -916,7 +916,7 @@ function AppNav({ token, user, onLogout }) {
             <Text style={{ color: C.white, fontSize: 18 }}>‹</Text>
           </TouchableOpacity>
         )}
-        <Text style={s.topBarTitle}>🎓 {titleMap[screen]}</Text>
+        <Text style={s.topBarTitle}> {titleMap[screen]}</Text>
       </View>
 
       {/* Screen */}
@@ -1015,8 +1015,8 @@ const s = StyleSheet.create({
   dashCardIcon:  { fontSize: 32, marginBottom: 8 },
   dashCardLabel: { fontSize: 14, fontWeight: "600", color: C.text, textAlign: "center" },
   // Top/Tab bar
-  topBar:        { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, paddingVertical: 14 },
-  topBarTitle:   { color: C.white, fontSize: 18, fontWeight: "700" },
+  topBar:        { flexDirection: "row", alignItems: "center", justifyContent: 'center', paddingHorizontal: 16, paddingVertical: 14 },
+  topBarTitle:   { color: C.white, fontSize: 24, fontWeight: "700" },
   tabBar:        { flexDirection: "row" },
   tab:           { flex: 1, alignItems: "center", paddingVertical: 8 },
   tabLabel:      { fontSize: 11, color: C.textLight, marginTop: 2 },
