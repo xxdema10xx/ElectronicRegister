@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/styles/style.css"> 
   <link rel="shortcut icon" href="assets/resources/favicon.png" type="image/x-icon">
+  <script src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
 </head>
 <body class="login">
 
@@ -81,6 +82,8 @@
           <div class="spinner"></div>
       </button>
 
+      <button class="btn-login" id="ms-login-btn" type="button">Accedi con Microsoft</button>
+
       <div class="success-msg" id="successMsg">
           <div class="icon">✅</div>
           <p><strong>Login riuscito!</strong></p>
@@ -90,6 +93,6 @@
 </div>
 <script src="../config.js"></script>
 <script src="assets/js/login.js"></script>
-
+<script src="assets/js/microsoft-auth.js"></script>
 </body>
 </html>
