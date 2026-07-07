@@ -66,6 +66,21 @@ namespace ElectronicRegisterAPI.Controllers
             return Ok(new { token });
         }
 
+        [HttpPost("login")]
+        public async Task<ActionResult> Login(LoginDto dto)
+        {
+            var user = await _context.Users
+                .Include(u => u.Student)
+                .Include(u => u.Teacher)
+                .FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+            if (user == null || !Bcrypt.Verify(dto.Password, user.PasswordHash))
+                return Unauthorized("Credenziali non valide");
+
+            var token = GenerateJwtToken(user);
+            return Ok(new { token });
+        }
+
         private async Task<ClaimsPrincipal> ValidateMicrosoftToken(string accessToken)
         {
             var config = await _msConfigManager.GetConfigurationAsync();
