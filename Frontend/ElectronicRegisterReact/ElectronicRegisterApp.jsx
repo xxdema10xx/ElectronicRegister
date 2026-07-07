@@ -17,7 +17,7 @@ import {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const API_BASE = "http://10.10.55.154:5257/api"; // ← cambia con il tuo URL
+const API_BASE = "http://10.10.52.108:5257/api"; // ← cambia con il tuo URL
 
 // ─── COLORS ──────────────────────────────────────────────────────────────────
 const C = {
