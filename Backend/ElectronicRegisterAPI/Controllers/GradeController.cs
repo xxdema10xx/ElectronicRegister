@@ -39,42 +39,53 @@ namespace ElectronicRegisterAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "teacher,admin,student")]
-        public async Task<ActionResult<List<GradeDto>>> GetAll()
+[Authorize(Roles = "teacher,admin,student")]
+public async Task<ActionResult<List<GradeDto>>> GetAll()
+{
+    var query = _context.Grades.AsQueryable();
+
+    if (User.IsInRole("student"))
+    {
+        var studentIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!Guid.TryParse(studentIdClaim, out var studentId))
         {
-            var query = _context.Grades.AsQueryable();
-
-            if (User.IsInRole("student"))
-            {
-                var studentId = Guid.Parse(User.FindFirst("studentId")?.Value!);
-                query = query.Where(g => g.StudentId == studentId);
-            }
-            else if (User.IsInRole("teacher"))
-            {
-                var teacherId = Guid.Parse(User.FindFirst("teacherId")?.Value!);
-                query = query.Where(g => g.TeacherId == teacherId);
-            }
-
-            var grades = await query.Select(g => new GradeDto
-            {
-                Id = g.Id,
-                StudentId = g.StudentId,
-                SubjectId = g.SubjectId,
-                SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
-                TeacherId = g.TeacherId,
-                Value = g.Value,
-                Date = g.Date,
-                Student = _context.Students.FirstOrDefault(s => s.Id == g.StudentId) != null ? new StudentDto
-                {
-                    Id = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.Id,
-                    FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,
-                    LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName
-                } : null
-            }).ToListAsync();
-
-            if (grades.Count == 0) return NotFound(); //AGGIUNGERE QUESTA RIGA A TUTTI GLI ALTRI CONTROLLER
-            return Ok(grades);
+            return Unauthorized("Claim mancante o non valido nel token.");
         }
+
+        query = query.Where(g => g.StudentId == studentId);
+    }
+    else if (User.IsInRole("teacher"))
+    {
+        var teacherIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!Guid.TryParse(teacherIdClaim, out var teacherId))
+        {
+            return Unauthorized("Claim mancante o non valido nel token.");
+        }
+
+        query = query.Where(g => g.TeacherId == teacherId);
+    }
+
+    var grades = await query.Select(g => new GradeDto
+    {
+        Id = g.Id,
+        StudentId = g.StudentId,
+        SubjectId = g.SubjectId,
+        SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
+        TeacherId = g.TeacherId,
+        Value = g.Value,
+        Date = g.Date,
+        Student = _context.Students.FirstOrDefault(s => s.Id == g.StudentId) != null ? new StudentDto
+        {
+            Id = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.Id,
+            FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,
+            LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName
+        } : null
+    }).ToListAsync();
+
+    return Ok(grades);
+}
 
         [HttpGet("{id}")]
         [Authorize(Roles = "teacher,admin,student")]

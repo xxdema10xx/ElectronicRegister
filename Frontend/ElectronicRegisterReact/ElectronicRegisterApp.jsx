@@ -10,6 +10,7 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  Image,
   Text, TextInput, TouchableOpacity,
   View,
 } from "react-native";
@@ -42,6 +43,7 @@ const C = {
   warning:    "#F59E0B",
   bg:         "#F8FAFC",
   card:       "#FFFFFF",
+  footer: "#154f78",
   border:     "#E2E8F0",
   text:       "#1E293B",
   textMuted:  "#64748B",
@@ -219,7 +221,7 @@ function FormModal({ visible, title, onClose, children }) {
 //       <StatusBar barStyle="light-content" backgroundColor={C.primary} />
 //       <View style={s.authHeader}>
 //         <Text style={s.authLogo}>🎓</Text>
-//         <Text style={s.authTitle}>Registro Elettronico</Text>
+//         <Text style={s.authTitle}>Electronic Register</Text>
 //         <Text style={s.authSubtitle}>ITS Umbria</Text>
 //       </View>
 //       <View style={s.authBody}>
@@ -308,8 +310,11 @@ function LoginScreen({ onLogin, goRegister }) {
     <SafeAreaView style={s.authBg}>
       <StatusBar barStyle="light-content" backgroundColor={C.primary} />
       <View style={s.authHeader}>
-        <Text style={s.authLogo}>🎓</Text>
-        <Text style={s.authTitle}>Registro Elettronico</Text>
+        <Image 
+          source={require('./assets/images/logoits.png')} 
+          style={{ width: 150, height: 100 }} 
+        />
+        <Text style={s.authTitle}>Electronic Register</Text>
         <Text style={s.authSubtitle}>ITS Umbria</Text>
       </View>
       <View style={s.authBody}>
@@ -357,8 +362,11 @@ function RegisterScreen({ onBack }) {
     <SafeAreaView style={s.authBg}>
       <StatusBar barStyle="light-content" backgroundColor={C.primary} />
       <View style={s.authHeader}>
-        <Text style={s.authLogo}>🎓</Text>
-        <Text style={s.authTitle}>Registro Elettronico</Text>
+        <Image 
+          source={require('./assets/images/logoits.png')} 
+          style={{ width: 150, height: 100 }} 
+        />
+        <Text style={s.authTitle}>Electronic Register</Text>
       </View>
       <ScrollView contentContainerStyle={s.authBody}>
         <Card>
@@ -414,6 +422,10 @@ function DashboardScreen({ navigate }) {
           <Text style={s.dashWelcome}>Benvenuto,</Text>
           <Text style={s.dashName}>{name} {user?.studentLastName || user?.teacherLastName || ""}</Text>
         </View>
+        <Image 
+          source={require('./assets/images/logoits.png')} 
+          style={{ width: 150, height: 100 }} 
+        />
         <Badge text={role} role={role} />
       </View>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
@@ -502,6 +514,12 @@ function GradesScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50, marginBottom: 50 }}>
+          <Image 
+            source={require('./assets/images/logoits.png')} 
+            style={{ width: 100, height: 100 }} 
+          />
+        </View>
         <SectionHeader title="Voti" action={
           (role === "teacher" || role === "admin") &&
           <Btn label="+ Voto" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
@@ -615,6 +633,12 @@ function StudentsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50, marginBottom: 50 }}>
+          <Image 
+            source={require('./assets/images/logoits.png')} 
+            style={{ width: 100, height: 100 }} 
+          />
+        </View>
         <SectionHeader title="Studenti" action={
           role === "admin" && <Btn label="+ Studente" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
         } />
@@ -705,7 +729,14 @@ function TeachersScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
-      <View style={s.screenPad}><SectionHeader title="Professori" action={
+      <View style={s.screenPad}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50, marginBottom: 50 }}>
+          <Image 
+            source={require('./assets/images/logoits.png')} 
+            style={{ width: 100, height: 100 }} 
+          />
+        </View>
+        <SectionHeader title="Professori" action={
         role === "admin" && <Btn label="+ Professore" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
       } /></View>
       {loading ? <Loader /> : teachers.length === 0 ? <EmptyState message="Nessun professore trovato" /> :
@@ -796,6 +827,12 @@ function SubjectsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50, marginBottom: 50 }}>
+          <Image 
+            source={require('./assets/images/logoits.png')} 
+            style={{ width: 100, height: 100 }} 
+          />
+        </View>
         <SectionHeader title="Materie" action={
           role === "admin" && <Btn label="+ Materia" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
         } />
@@ -989,7 +1026,7 @@ function ProfileScreen({ onLogout }) {
         {user?.teacherId && <View style={s.profileRow}><Text style={s.profileKey}>ID Docente</Text><Text style={s.profileVal}>{user.teacherId.slice(0, 16)}…</Text></View>}
       </Card>
 
-      <Btn label="✏️  Modifica profilo" onPress={() => setShowEdit(true)} style={{ marginTop: 16 }} variant="secondary" />
+      <Btn label="✏️  Modifica profilo" onPress={() => setShowEdit(true)} style={{ marginTop: 16 }} variant="primary" />
       <Btn label="🚪  Logout" onPress={onLogout} style={{ marginTop: 10 }} variant="danger" />
 
       <FormModal visible={showEdit} title="Modifica profilo" onClose={() => setShowEdit(false)}>
@@ -1054,11 +1091,11 @@ function AppNav({ token, user, onLogout }) {
       </View>
 
       {/* Bottom Tabs */}
-      <View style={[s.tabBar, { paddingBottom: insets.bottom, backgroundColor: C.card, borderTopWidth: 1, borderTopColor: C.border }]}>
+      <View style={[s.tabBar, { paddingBottom: insets.bottom, backgroundColor: C.footer, borderTopWidth: 1, borderTopColor: C.border }]}>
         {tabs.map(t => (
           <TouchableOpacity key={t.key} style={s.tab} onPress={() => setScreen(t.key)}>
             <Text style={{ fontSize: 20 }}>{t.icon}</Text>
-            <Text style={[s.tabLabel, screen === t.key && s.tabLabelActive]}>{t.label}</Text>
+            <Text style={[s.tabLabel, screen === t.key && s.tabLabelActive], { color: "white"}}>{t.label}</Text>
           </TouchableOpacity>
         ))}
       </View>
