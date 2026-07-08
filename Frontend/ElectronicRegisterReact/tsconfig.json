@@ -6,10 +6,17 @@
       "@/*": [
         "./*"
       ]
-    }
+    },
+    "allowJs": true,
+    "checkJs": false
   },
   "include": [
+    "**/*.js",
+    "**/*.jsx",
     "**/*.ts",
     "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }
