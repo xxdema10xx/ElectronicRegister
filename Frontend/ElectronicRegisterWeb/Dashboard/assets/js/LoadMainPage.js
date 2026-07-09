@@ -104,28 +104,11 @@ async function loadCardsData(userData) {
 
 
 async function loadChartData() {
-    const grades = await sendTokenForData(`${API_BASE}/api/Grade`);
-
-    // raggruppa i voti per mese e calcola la media
-    const monthlyData = Array(12).fill(0);
-    const monthlyCounts = Array(12).fill(0);
-
-    grades.forEach(g => {
-        const month = new Date(g.date).getMonth(); // 0-11
-        monthlyData[month] += g.value;
-        monthlyCounts[month]++;
-    });
-
-    const averages = monthlyData.map((sum, i) => 
-        monthlyCounts[i] > 0 ? (sum / monthlyCounts[i]).toFixed(1) : 0
-    );
-    const yearlyAverage =
-        grades.length > 0
-        ? (grades.reduce((sum, g) => sum + g.value, 0) / grades.length).toFixed(1)
-        : 0;
-
+    const statistics = await sendTokenForData(`${API_BASE}/api/Grade/statistics`);
+    const yearlyAverage = statistics.yearlyAverage;
+    const monthlyAverage = statistics.monthlyAverage.map(avg => avg !== null ? avg.toFixed(1) : 0);
     document.getElementById("average-yearly-grades").innerText = yearlyAverage;
-    chart1.data.datasets[0].data = averages;
+    chart1.data.datasets[0].data = monthlyAverage;
     chart1.update();
 }
 
