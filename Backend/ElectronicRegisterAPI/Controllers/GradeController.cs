@@ -83,7 +83,9 @@ namespace ElectronicRegisterAPI.Controllers
             });
         }
 
-        //NEW GET ALL METHOD: The following code is the new GetAll() method that includes role-based filtering for students and teachers. It replaces the old GetAll() method that was commented out below. The new method ensures that students can only see their own grades and teachers can only see grades for their own students.
+        //NEW GET ALL METHOD: The following code is the new GetAll() method that includes role-based filtering for students and teachers. 
+        // It replaces the old GetAll() method that was commented out below. 
+        // The new method ensures that students can only see their own grades and teachers can only see grades for their own students.
         [HttpGet]
         [Authorize(Roles = "teacher,admin,student")]
         public async Task<ActionResult<List<GradeDto>>> GetAll()
@@ -96,7 +98,7 @@ namespace ElectronicRegisterAPI.Controllers
 
                 if (!Guid.TryParse(studentIdClaim, out var studentId))
                 {
-                    return Unauthorized("Claim 'studentId' mancante o non valido nel token.");
+                    return Unauthorized("Token non valido.");
                 }
 
                 query = query.Where(g => g.StudentId == studentId);
@@ -107,7 +109,7 @@ namespace ElectronicRegisterAPI.Controllers
 
                 if (!Guid.TryParse(teacherIdClaim, out var teacherId))
                 {
-                    return Unauthorized("Claim 'teacherId' mancante o non valido nel token.");
+                    return Unauthorized("Token non valido.");
                 }
 
                 query = query.Where(g => g.TeacherId == teacherId);
@@ -133,89 +135,6 @@ namespace ElectronicRegisterAPI.Controllers
             // Nota: uno studente senza voti NON è un errore, è un caso normale
             return Ok(grades);
         }
-        //OLD GET ALL METHOD: The following code is commented out because it was replaced by the new GetAll() method that includes role-based filtering. It is kept here for reference and potential future use.
-        // [HttpGet]         
-        // [Authorize(Roles = "teacher,admin,student")]         
-        // public async Task<ActionResult<List<GradeDto>>> GetAll()         
-        // {             
-        //     var query = _context.Grades.AsQueryable();
-        //     if (User.IsInRole("student"))             
-        //     {                 
-        //         var studentId = Guid.Parse(User.FindFirst("studentId")?.Value!);                 
-        //         query = query.Where(g => g.StudentId == studentId);             
-        //     }             
-        //     else if (User.IsInRole("teacher"))             
-        //     {                 
-        //         var teacherId = Guid.Parse(User.FindFirst("teacherId")?.Value!);                 
-        //         query = query.Where(g => g.TeacherId == teacherId);             
-        //     }
-        //     var grades = await query.Select(g => new GradeDto             
-        //         {                 
-        //             Id = g.Id,                 
-        //             StudentId = g.StudentId,                 
-        //             SubjectId = g.SubjectId,                 
-        //             SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,                 
-        //             TeacherId = g.TeacherId,                 
-        //             Value = g.Value,                 
-        //             Date = g.Date,                 
-        //             Student = _context.Students.FirstOrDefault(s => s.Id == g.StudentId) != null ? new StudentDto                 
-        //                 {                     
-        //                     Id = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.Id,                     
-        //                     FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,                     
-        //                     LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName                 
-        //                 } : null             
-        //             }).ToListAsync();            
-        //     return Ok(grades);         
-        // }
-        //PRODUCTION CODE: The following code is commented out because it was replaced by the above GetAll() method that includes role-based filtering. It is kept here for reference and potential future use.
-        // [HttpGet]
-        // [Authorize(Roles = "teacher,admin,student")]
-        // public async Task<ActionResult<List<GradeDto>>> GetAll()
-        // {
-        //     var query = _context.Grades.AsQueryable();
-
-        //     if (User.IsInRole("student"))
-        //     {
-        //         var studentIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        //         if (!Guid.TryParse(studentIdClaim, out var studentId))
-        //         {
-        //             return Unauthorized("Claim mancante o non valido nel token.");
-        //         }
-
-        //         query = query.Where(g => g.StudentId == studentId);
-        //     }
-        //     else if (User.IsInRole("teacher"))
-        //     {
-        //         var teacherIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        //         if (!Guid.TryParse(teacherIdClaim, out var teacherId))
-        //         {
-        //             return Unauthorized("Claim mancante o non valido nel token.");
-        //         }
-
-        //         query = query.Where(g => g.TeacherId == teacherId);
-        //     }
-
-        //     var grades = await query.Select(g => new GradeDto
-        //     {
-        //         Id = g.Id,
-        //         StudentId = g.StudentId,
-        //         SubjectId = g.SubjectId,
-        //         SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
-        //         TeacherId = g.TeacherId,
-        //         Value = g.Value,
-        //         Date = g.Date,
-        //         Student = _context.Students.FirstOrDefault(s => s.Id == g.StudentId) != null ? new StudentDto
-        //         {
-        //             Id = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.Id,
-        //             FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,
-        //             LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName
-        //         } : null
-        //     }).ToListAsync();
-
-        //     return Ok(grades);
-        // }
 
         [HttpGet("{id}")]
         [Authorize(Roles = "teacher,admin,student")]
