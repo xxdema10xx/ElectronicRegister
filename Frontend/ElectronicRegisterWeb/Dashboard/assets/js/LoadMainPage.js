@@ -106,8 +106,8 @@ async function loadCardsData(userData) {
 async function loadChartData() {
     const statistics = await sendTokenForData(`${API_BASE}/api/Grade/statistics`);
     const yearlyAverage = statistics.yearlyAverage;
-    const monthlyAverage = statistics.monthlyAverage.map(avg => avg !== null ? avg.toFixed(1) : 0);
-    document.getElementById("average-yearly-grades").innerText = yearlyAverage;
+    const monthlyAverage = statistics.monthlyAverage.map(avg => avg !== null ? avg.toFixed(2) : 0);
+    document.getElementById("average-yearly-grades").innerText = yearlyAverage.toFixed(1);
     chart1.data.datasets[0].data = monthlyAverage;
     chart1.update();
 }
