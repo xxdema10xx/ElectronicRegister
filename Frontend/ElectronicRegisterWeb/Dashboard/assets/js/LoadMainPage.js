@@ -331,6 +331,7 @@ async function loadTable(ids, title, description, tableHeadHtml, dataUrl, render
     const tbody = document.getElementById(ids.body);
     tbody.innerHTML = "";
     const data = await sendTokenForData(`${API_BASE}${dataUrl}`);
+    console.log(`Data fetched for ${title}:`, data);
     renderBody(tbody, data);
 }
 
