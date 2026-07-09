@@ -39,6 +39,10 @@ namespace ElectronicRegisterAPI.Controllers
 	    Console.WriteLine("=== MICROSOFT LOGIN CHIAMATO ===");
             Console.WriteLine("TOKEN PRESENTE: " + (!string.IsNullOrEmpty(dto?.AccessToken)));
             ClaimsPrincipal principal;
+            if (dto == null || string.IsNullOrEmpty(dto.AccessToken))
+            {
+                return BadRequest("Access token is required.");
+            }
             try
             {
                 principal = await ValidateMicrosoftToken(dto.AccessToken);
