@@ -100,6 +100,125 @@ namespace ElectronicRegisterAPI.Controllers
             return principal;
         }
 
+        private static bool HasSpecialChar(string password)
+        {
+            return password.Any(c => "!@#$%^&*()_-+=<>?/[]{}".Contains(c));
+        }
+
+        private bool IsValidName(string name, int minLength)
+        {
+            return !string.IsNullOrWhiteSpace(name) && name.Length >= minLength;
+        }
+
+        [HttpPost("register")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult> Register(RegisterDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Email) ||
+                !dto.Email.StartsWith("allievo_") ||
+                !dto.Email.EndsWith("@itsumbria.it"))
+            {
+                return BadRequest("Invalid email format!");
+            }
+            // controlla se email già esiste
+            if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
+                return BadRequest("Email already registered!");
+
+            if(string.IsNullOrEmpty(dto.Password) || dto.Password.Length < 8 || !HasSpecialChar(dto.Password))
+                return BadRequest("Password is invalid!");
+
+            // student e teacher richiedono nome e cognome
+            if (!IsValidName(dto.FirstName, 3))
+                return BadRequest("Your firstname is invalid!");
+            if (!IsValidName(dto.LastName, 2))
+                return BadRequest("Your lastname is invalid!");
+            if (!IsValidName(dto.FirstName, 3) && !IsValidName(dto.LastName, 2))
+            {
+                return BadRequest("Your firstname and lastname are invalid!");
+            }
+
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                Email = dto.Email,
+                PasswordHash = Bcrypt.HashPassword(dto.Password),
+                Role = "student"
+            };
+
+            var student = new Student
+            {
+                Id = Guid.NewGuid(),
+                FirstName = dto.FirstName!,
+                LastName = dto.LastName!
+            };
+            _context.Students.Add(student);
+            user.StudentId = student.Id;
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok("Registration successful!");
+        }
+
+        [HttpPost("RegisterForAdmin")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult> RegisterForAdmin(RegisterForAdminDto dto)
+        {
+            // controlla se email già esiste
+            if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
+                return BadRequest("Email already registered!");
+
+            // valida il role
+            if (dto.Role != "admin" && dto.Role != "student" && dto.Role != "teacher")
+                return BadRequest("Invalid role!");
+
+            // student e teacher richiedono nome e cognome
+            if (dto.Role != "admin" && !IsValidName(dto.FirstName, 3))
+                return BadRequest("Your firstname is invalid!");
+            if (dto.Role != "admin" && !IsValidName(dto.LastName, 2))
+                return BadRequest("Your lastname is invalid!");
+            if (dto.Role != "admin" && !IsValidName(dto.FirstName, 3) && !IsValidName(dto.LastName, 2))
+            {
+                return BadRequest("Your firstname and lastname are invalid!");
+            }
+
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                Email = dto.Email,
+                PasswordHash = Bcrypt.HashPassword(dto.Password),
+                Role = dto.Role
+            };
+
+            if (dto.Role == "student")
+            {
+                var student = new Student
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = dto.FirstName!,
+                    LastName = dto.LastName!
+                };
+                _context.Students.Add(student);
+                user.StudentId = student.Id;
+            }
+            else if (dto.Role == "teacher")
+            {
+                var teacher = new Teacher
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = dto.FirstName!,
+                    LastName = dto.LastName!
+                };
+                _context.Teachers.Add(teacher);
+                user.TeacherId = teacher.Id;
+            }
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok("Registration successful!");
+        }
+
         [HttpGet("me")]
         [Authorize]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
