@@ -11,7 +11,7 @@ async function sendTokenForData(url) {
     if (!res.ok) {
         throw new Error("API error");
     }
-
+    console.log(await res.body);
     return await res.json();
 }
 
