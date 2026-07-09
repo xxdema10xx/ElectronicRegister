@@ -2,6 +2,7 @@
   "expo": {
     "name": "ElectronicRegister",
     "slug": "ElectronicRegister",
+    "scheme": "electronicregister",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
