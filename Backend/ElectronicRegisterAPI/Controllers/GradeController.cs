@@ -38,6 +38,38 @@ namespace ElectronicRegisterAPI.Controllers
             return Ok(await _context.Grades.CountAsync());
         }
 
+        [HttpGet("statistics")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<GradeStatisticsDto>> GetStatistics()
+        {
+            var grades = await _context.Grades.ToListAsync();
+            if (grades.Count == 0) return NotFound();
+
+            var yearlyAverage = grades.Average(g => g.Value);
+            var monthlyAverage = new decimal?[12];
+
+            for (int month = 1; month <= 12; month++)
+            {
+                var monthlyGrades = grades.Where(g => g.Date.Month == month).ToList();
+                if (monthlyGrades.Count > 0)
+                {
+                    monthlyAverage[month - 1] = monthlyGrades.Average(g => g.Value);
+                }
+                else
+                {
+                    monthlyAverage[month - 1] = null;
+                }
+            }
+
+            var statisticsDto = new GradeStatisticsDto
+            {
+                yearlyAverage = yearlyAverage,
+                monthlyAverage = monthlyAverage
+            };
+
+            return Ok(statisticsDto);
+        }
+
         [HttpGet]
         [Authorize(Roles = "teacher,admin,student")]
         public async Task<ActionResult<List<GradeDto>>> GetAll()

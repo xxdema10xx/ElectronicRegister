@@ -122,7 +122,7 @@ namespace ElectronicRegisterAPI.Controllers
             }
             // controlla se email già esiste
             if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
-                return BadRequest("Email already registered!");
+                return BadRequest("An error occurred during registration!");
 
             if(string.IsNullOrEmpty(dto.Password) || dto.Password.Length < 8 || !HasSpecialChar(dto.Password))
                 return BadRequest("Password is invalid!");

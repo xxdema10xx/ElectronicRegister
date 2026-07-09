@@ -351,22 +351,6 @@ async function loadTable(ids, title, description, tableHeadHtml, dataUrl, render
     renderBody(tbody, data);
 }
 
-const capitalize = (str = '') => {
-    return str.length
-        ? str.charAt(0).toUpperCase() + str.slice(1)
-        : '';
-};
-
-function popolateFields(ids, values) {
-    ids.forEach((id, i) => {
-        const element = document.getElementById(id);
-        if (element) element.innerText = values[i];
-    });
-}
-
-//TODO: Implementare la funzione showModal per mostrare un modal di modifica per studenti, insegnanti e voti. 
-// La funzione dovrebbe popolare i campi del modal con i dati correnti dell'entità selezionata e impostare l'evento onclick del pulsante di salvataggio per chiamare la funzione updateEntity con i dati aggiornati.
-
 const entityFieldsConfig = {
     Users: [
         { key: "email",     domSuffix: "email",      inputId: "modal-email" },
@@ -487,7 +471,7 @@ async function loadPage() {
         fullName = `${capitalize(userData.teacherFirstName)} ${capitalize(userData.teacherLastName)}`;
     }
 
-    popolateFields(
+    populateFields(
         ["dropdown-badge-name", "dropdown-badge-email", "user-badge-name"],
         [fullName, userData.email, fullName]
     );
