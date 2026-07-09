@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, useRef } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -22,7 +22,7 @@ import * as WebBrowser from 'expo-web-browser';
 
 WebBrowser.maybeCompleteAuthSession();
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const API_BASE = "http://10.10.52.122:5257/api"; // ← cambia con il tuo URL
+const API_BASE = `http://YOUR_SERVER_IP:5000/api`; // ← cambia con il tuo URL
 
 // ─── MICROSOFT AUTH CONFIG ────────────────────────────────────────────────────
 const MS_CLIENT_ID = "df405eeb-4453-4f41-86d7-2a4af11446b6";
@@ -79,7 +79,7 @@ function useAuth() { return useContext(AuthContext); }
 
 function useMicrosoftLogin() {
   const redirectUri = AuthSession.makeRedirectUri({ scheme: 'electronicregister' });
-
+  
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
       clientId: MS_CLIENT_ID,
@@ -196,62 +196,24 @@ function FormModal({ visible, title, onClose, children }) {
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// SCREENS
-// ═══════════════════════════════════════════════════════════════════════════════
-
-// ─── LOGIN SCREEN ─────────────────────────────────────────────────────────────
-// function LoginScreen({ onLogin, goRegister }) {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [loading, setLoading] = useState(false);
-
-//   async function submit() {
-//     if (!email || !password) { Alert.alert("Attenzione", "Compila tutti i campi"); return; }
-//     setLoading(true);
-//     try {
-//       const data = await api("POST", "/Auth/login", { email, password });
-//       onLogin(data.token);
-//     } catch (e) { Alert.alert("Errore login", e.message); }
-//     finally { setLoading(false); }
-//   }
-
-//   return (
-//     <SafeAreaView style={s.authBg}>
-//       <StatusBar barStyle="light-content" backgroundColor={C.primary} />
-//       <View style={s.authHeader}>
-//         <Text style={s.authLogo}>🎓</Text>
-//         <Text style={s.authTitle}>Electronic Register</Text>
-//         <Text style={s.authSubtitle}>ITS Umbria</Text>
-//       </View>
-//       <View style={s.authBody}>
-//         <Card>
-//           <Text style={s.cardTitle}>Accedi</Text>
-//           <Input label="Email" value={email} onChangeText={setEmail} keyboardType="email-address"
-//             autoCapitalize="none" placeholder="allievo_nome@itsumbria.it" />
-//           <Input label="Password" value={password} onChangeText={setPassword} secureTextEntry placeholder="••••••••" />
-//           <Btn label="Entra" onPress={submit} loading={loading} style={{ marginTop: 4 }} />
-//           <TouchableOpacity onPress={goRegister} style={{ marginTop: 14, alignItems: "center" }}>
-//             <Text style={{ color: C.primary, fontWeight: "600" }}>Non hai un account? Registrati</Text>
-//           </TouchableOpacity>
-//         </Card>
-//       </View>
-//     </SafeAreaView>
-//   );
-// }
 function LoginScreen({ onLogin, goRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [msLoading, setMsLoading] = useState(false);
 
-  // ─── Microsoft login setup ───
   const redirectUri = AuthSession.makeRedirectUri({ scheme: 'electronicregister' });
   console.log("REDIRECT URI (registra questo su Entra ID):", redirectUri);
+
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
       clientId: MS_CLIENT_ID,
-      scopes: [`api://${MS_CLIENT_ID}/access_as_user`, "openid", "profile", "offline_access"],
+      scopes: [
+        `api://${MS_CLIENT_ID}/access_as_user`,
+        "openid",
+        "profile",
+        "offline_access"
+      ],
       redirectUri,
       responseType: AuthSession.ResponseType.Code,
       usePKCE: true,
@@ -260,36 +222,96 @@ function LoginScreen({ onLogin, goRegister }) {
   );
 
   useEffect(() => {
-    if (response?.type === 'success') {
+    console.log("RESPONSE COMPLETO:", JSON.stringify(response));
+
+    if (response?.type === "success") {
       const { code } = response.params;
+
+      console.log("ENTRATO SUCCESS");
+      console.log("CODE PRESENTE:", !!code);
+      console.log("CODE VERIFIER:", request?.codeVerifier);
+      console.log("REDIRECT USATO:", redirectUri);
+
       setMsLoading(true);
 
-      AuthSession.exchangeCodeAsync(
-        {
-          clientId: MS_CLIENT_ID,
-          code,
-          redirectUri,
-          extraParams: { code_verifier: request.codeVerifier },
-        },
-        msDiscovery
-      )
-        .then((tokenResponse) => submitMicrosoftToken(tokenResponse.accessToken))
-        .catch((err) => {
-          Alert.alert("Errore login Microsoft", err.message);
+      (async () => {
+        try {
+          console.log("PRIMA EXCHANGE");
+
+          const tokenResponse = await AuthSession.exchangeCodeAsync(
+            {
+              clientId: MS_CLIENT_ID,
+              code,
+              redirectUri,
+              extraParams: {
+                code_verifier: request.codeVerifier,
+              },
+            },
+            msDiscovery
+          );
+
+          console.log("DOPO EXCHANGE ACCESS TOKEN:", !!tokenResponse.accessToken);
+          console.log("TOKEN MICROSOFT LENGTH:", tokenResponse.accessToken?.length);
+          console.log(
+            "TOKEN MICROSOFT START:",
+            tokenResponse.accessToken?.substring(0, 50)
+          );
+
+          await submitMicrosoftToken(tokenResponse.accessToken);
+
+        } catch (err) {
+          console.log("ERRORE EXCHANGE:", err);
+
+          Alert.alert(
+            "Errore login Microsoft",
+            err?.message || JSON.stringify(err)
+          );
+
           setMsLoading(false);
-        });
-    } else if (response?.type === 'error') {
-      Alert.alert("Errore login Microsoft", response.error?.message || "Login annullato");
+        }
+      })();
+
+    } else if (response?.type === "error") {
+
+      console.log("RISPOSTA ERRORE:", response.error);
+
+      Alert.alert(
+        "Errore login Microsoft",
+        response.error?.message || "Login annullato"
+      );
+
       setMsLoading(false);
     }
+
   }, [response]);
+
 
   async function submitMicrosoftToken(msAccessToken) {
     try {
-      const data = await api("POST", "/Auth/microsoft-login", { accessToken: msAccessToken });
-      onLogin(data.token); // stessa identica chiamata del login normale
+      console.log("INVIO TOKEN ALLA API");
+
+      const data = await api(
+        "POST",
+        "/Auth/microsoft-login",
+        {
+          accessToken: msAccessToken
+        }
+      );
+
+      console.log("LOGIN API OK:", data);
+
+      onLogin(data.token);
+
     } catch (e) {
-      Alert.alert("Errore login Microsoft", e.message);
+
+      console.log("ERRORE LOGIN MICROSOFT API:", e.message);
+      console.log("ERRORE COMPLETO:", e);
+
+      Alert.alert(
+        "Errore login Microsoft",
+        String(e.message)
+      );
+
     } finally {
       setMsLoading(false);
     }
@@ -332,10 +354,6 @@ function LoginScreen({ onLogin, goRegister }) {
             disabled={!request}
             style={{ marginTop: 10, backgroundColor: "#2F2F2F" }}
           />
-
-          <TouchableOpacity onPress={goRegister} style={{ marginTop: 14, alignItems: "center" }}>
-            <Text style={{ color: C.primary, fontWeight: "600" }}>Non hai un account? Registrati</Text>
-          </TouchableOpacity>
         </Card>
       </View>
     </SafeAreaView>
