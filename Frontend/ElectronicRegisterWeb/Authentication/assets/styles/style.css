@@ -412,10 +412,10 @@ input.error { border-color: var(--danger); }
 ═══════════════════════════════════════════════════════ */
 
 .btn-login,
-.btn-register {
+.btn-ms-login {
   width: 100%;
   padding: 13px;
-  background: var(--accent);
+  /*background: var(--accent);*/
   color: #0d1117;
   font-family: 'Syne', sans-serif;
   font-weight: 700;
@@ -431,14 +431,17 @@ input.error { border-color: var(--danger); }
   gap: 8px;
 }
 
+.btn-login { background: var(--accent); }
+.btn-ms-login { background: var(--accent2); }
+
 .btn-login:hover    { background: #79c0ff; }
-.btn-register:hover { background: #56d364; }
+.btn-ms-login:hover { background: #56d364; }
 
 .btn-login:active,
-.btn-register:active { transform: scale(.98); }
+.btn-ms-login:active { transform: scale(.98); }
 
 .btn-login:disabled,
-.btn-register:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.btn-ms-login:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
 /* spinner */
 .spinner {
@@ -454,10 +457,10 @@ input.error { border-color: var(--danger); }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .btn-login.loading    .spinner,
-.btn-register.loading .spinner  { display: block; }
+.btn-ms-login.loading .spinner  { display: block; }
 
 .btn-login.loading    .btn-text,
-.btn-register.loading .btn-text { display: none; }
+.btn-ms-login.loading .btn-text { display: none; }
 
 
 /* ═══════════════════════════════════════════════════════
