@@ -58,6 +58,7 @@ function handleLoginSuccess(accessToken) {
     })
     .catch((err) => {
       console.error(err);
-      showError('Accesso con Microsoft fallito: ' + err.message);
+      console.error('Accesso con Microsoft fallito: ' + err.message);
+      showError('Accesso con Microsoft fallito');
     });
 }
