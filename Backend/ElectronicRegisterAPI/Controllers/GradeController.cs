@@ -39,36 +39,50 @@ namespace ElectronicRegisterAPI.Controllers
         }
 
         [HttpGet("statistics")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,teacher,student")]
         public async Task<ActionResult<GradeStatisticsDto>> GetStatistics()
         {
-            var grades = await _context.Grades.ToListAsync();
-            if (grades.Count == 0) return NotFound();
+            IQueryable<Grade> query = _context.Grades;
 
-            var yearlyAverage = grades.Average(g => g.Value);
-            var monthlyAverage = new decimal?[12];
-
-            for (int month = 1; month <= 12; month++)
+            if (User.IsInRole("student"))
             {
-                var monthlyGrades = grades.Where(g => g.Date.Month == month).ToList();
-                if (monthlyGrades.Count > 0)
-                {
-                    monthlyAverage[month - 1] = monthlyGrades.Average(g => g.Value);
-                }
-                else
-                {
-                    monthlyAverage[month - 1] = null;
-                }
+                var studentId = Guid.Parse(User.FindFirst("studentId")!.Value);
+                query = query.Where(g => g.StudentId == studentId);
+            }
+            else if (User.IsInRole("teacher"))
+            {
+                var teacherId = Guid.Parse(User.FindFirst("teacherId")!.Value);
+                query = query.Where(g => g.TeacherId == teacherId);
             }
 
-            var statisticsDto = new GradeStatisticsDto
+            if (!await query.AnyAsync())
+                return NotFound();
+
+            var yearlyAverage = await query.AverageAsync(g => g.Value);
+
+            var monthlyData = await query
+                .GroupBy(g => g.Date.Month)
+                .Select(g => new
+                {
+                    Month = g.Key,
+                    Average = g.Average(x => x.Value)
+                })
+                .ToListAsync();
+
+            var monthlyAverage = new decimal?[12];
+
+            foreach (var item in monthlyData)
+            {
+                monthlyAverage[item.Month - 1] = item.Average;
+            }
+
+            return Ok(new GradeStatisticsDto
             {
                 yearlyAverage = yearlyAverage,
                 monthlyAverage = monthlyAverage
-            };
-
-            return Ok(statisticsDto);
+            });
         }
+
 
         [HttpGet]
         [Authorize(Roles = "teacher,admin,student")]
