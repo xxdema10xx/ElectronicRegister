@@ -36,6 +36,8 @@ namespace ElectronicRegisterAPI.Controllers
        [HttpPost("microsoft-login")]
         public async Task<ActionResult> MicrosoftLogin([FromBody] MicrosoftLoginDto dto)
         {
+	    Console.WriteLine("=== MICROSOFT LOGIN CHIAMATO ===");
+            Console.WriteLine("TOKEN PRESENTE: " + (!string.IsNullOrEmpty(dto?.AccessToken)));
             ClaimsPrincipal principal;
             try
             {
