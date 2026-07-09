@@ -1,3 +1,3 @@
 const CONFIG = {
-  API_BASE: `https://localhost:7225`
+  API_BASE: `http://YOUR_SERVER_IP:5000`
 };
