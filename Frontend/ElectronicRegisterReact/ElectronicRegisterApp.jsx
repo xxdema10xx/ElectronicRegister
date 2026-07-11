@@ -65,13 +65,59 @@ async function api(method, path, body, token) {
     ...(body ? { body: JSON.stringify(body) } : {}),
   };
   const res = await fetch(`${API_BASE}${path}`, opts);
-  if (res.status === 204) return null;
+  if (res.status === 204) {
+    console.log("STATUS:", res.status, "- Nessun contenuto (successo)"); // 👈 aggiunto
+    return null;
+  }
   const text = await res.text();
+
+  console.log("STATUS:", res.status);               // 👈 verifica sia presente
+  console.log("RAW TEXT:", JSON.stringify(text));    // 👈 verifica sia presente
+
   let data;
   try { data = JSON.parse(text); } catch { data = text; }
   if (!res.ok) throw new Error(typeof data === "string" ? data : data?.message || `Errore ${res.status}`);
   return data;
 }
+// async function api(method, path, body, token) {
+//   const opts = {
+//     method,
+//     headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+//     ...(body ? { body: JSON.stringify(body) } : {}),
+//   };
+//   const res = await fetch(`${API_BASE}${path}`, opts);
+//   if (res.status === 204) return null;
+//   const text = await res.text();
+//   let data;
+//   try { data = JSON.parse(text); } catch { data = text; }
+
+//   if (!res.ok) {
+//     console.log("ERRORE BACKEND COMPLETO:", JSON.stringify(data, null, 2)); // 👈 aggiungi questa riga
+
+//     let msg = `Errore ${res.status}`;
+//     if (typeof data === "string") msg = data;
+//     else if (data?.message) msg = data.message;
+//     else if (data?.errors) msg = Object.values(data.errors).flat().join("\n"); // 👈 gestisce ProblemDetails
+//     else if (data?.title) msg = data.title;
+
+//     throw new Error(msg);
+//   }
+//   return data;
+// }
+// async function api(method, path, body, token) {
+//   const opts = {
+//     method,
+//     headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+//     ...(body ? { body: JSON.stringify(body) } : {}),
+//   };
+//   const res = await fetch(`${API_BASE}${path}`, opts);
+//   if (res.status === 204) return null;
+//   const text = await res.text();
+//   let data;
+//   try { data = JSON.parse(text); } catch { data = text; }
+//   if (!res.ok) throw new Error(typeof data === "string" ? data : data?.message || `Errore ${res.status}`);
+//   return data;
+// }
 
 // ─── AUTH CONTEXT ─────────────────────────────────────────────────────────────
 const AuthContext = createContext(null);
@@ -436,7 +482,7 @@ function DashboardScreen({ navigate }) {
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.dashHeader}>
-        <View>
+        <View style={{ flex: 1, marginRight: 8 }}>
           <Text style={s.dashWelcome}>Benvenuto,</Text>
           <Text style={s.dashName}>{name} {user?.studentLastName || user?.teacherLastName || ""}</Text>
         </View>
@@ -502,11 +548,12 @@ function GradesScreen() {
       await api("POST", "/Grade", {
         studentId: newGrade.studentId,
         subjectId: newGrade.subjectId,
+        teacherId: newGrade.teacherId,
         value: parseFloat(newGrade.value),
         date: newGrade.date,
       }, token);
       setShowAdd(false);
-      setNewGrade({ studentId: "", subjectId: "", value: "", date: "" });
+      setNewGrade({ studentId: "", subjectId: "", teacherId: "", value: "", date: "" });
       load();
     } catch (e) { Alert.alert("Errore", e.message); }
   }
@@ -584,6 +631,7 @@ function GradesScreen() {
       <FormModal visible={showAdd} title="Aggiungi voto" onClose={() => setShowAdd(false)}>
         <Input label="ID Studente" value={newGrade.studentId} onChangeText={v => setNewGrade(f => ({ ...f, studentId: v }))} placeholder="UUID studente" />
         <Input label="ID Materia" value={newGrade.subjectId} onChangeText={v => setNewGrade(f => ({ ...f, subjectId: v }))} placeholder="UUID materia" />
+        <Input label="ID Professore" value={newGrade.teacherId} onChangeText={v => setNewGrade(f => ({ ...f, teacherId: v }))} placeholder="UUID professore" />
         <Input label="Voto (1-10)" value={newGrade.value} onChangeText={v => setNewGrade(f => ({ ...f, value: v }))} keyboardType="decimal-pad" />
         <Input label="Data (YYYY-MM-DD)" value={newGrade.date} onChangeText={v => setNewGrade(f => ({ ...f, date: v }))} />
         <Btn label="Salva" onPress={addGrade} />
@@ -930,18 +978,43 @@ function UsersScreen() {
   }
 
   async function del(id) {
-    Alert.alert("Conferma", "Eliminare utente?", [
-      { text: "Annulla" },
-      { text: "Elimina", style: "destructive", onPress: async () => {
-        try { await api("DELETE", `/Users/${id}`, null, token); load(); }
-        catch (e) { Alert.alert("Errore", e.message); }
-      }},
-    ]);
-  }
+  Alert.alert("Conferma", "Eliminare utente?", [
+    { text: "Annulla" },
+    { text: "Elimina", style: "destructive", onPress: async () => {
+      try {
+        console.log("ELIMINAZIONE UTENTE ID:", id); // 👈 aggiunto
+        await api("DELETE", `/Users/${id}`, null, token);
+        console.log("DELETE COMPLETATA CON SUCCESSO"); // 👈 aggiunto
+        load();
+      }
+      catch (e) {
+        console.log("ERRORE DELETE:", e.message); // 👈 aggiunto
+        Alert.alert("Errore", e.message);
+      }
+    }},
+  ]);
+}
+
+  // async function del(id) {
+  //   Alert.alert("Conferma", "Eliminare utente?", [
+  //     { text: "Annulla" },
+  //     { text: "Elimina", style: "destructive", onPress: async () => {
+  //       try { await api("DELETE", `/Users/${id}`, null, token); load(); }
+  //       catch (e) { Alert.alert("Errore", e.message); }
+  //     }},
+  //   ]);
+  // }
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
-      <View style={s.screenPad}><SectionHeader title="Utenti" action={
+      <View style={s.screenPad}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50, marginBottom: 50 }}>
+          <Image 
+            source={require('./assets/images/logoits.png')} 
+            style={{ width: 100, height: 100 }} 
+          />
+        </View>
+        <SectionHeader title="Utenti" action={
         <Btn label="+ Utente" onPress={() => setShowRegister(true)} style={s.smBtn} textStyle={s.smBtnText} />
       } /></View>
       {loading ? <Loader /> : users.length === 0 ? <EmptyState message="Nessun utente trovato" /> :
