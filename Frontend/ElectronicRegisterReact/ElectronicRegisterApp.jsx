@@ -22,7 +22,7 @@ import * as WebBrowser from 'expo-web-browser';
 
 WebBrowser.maybeCompleteAuthSession();
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const API_BASE = `https://YOUR_LOCAL_IP:5000/api`; // ← cambia con il tuo URL
+const API_BASE = `http://YOUR_SERVER_IP:5000/api`; // ← cambia con il tuo URL
 
 // ─── MICROSOFT AUTH CONFIG ────────────────────────────────────────────────────
 const MS_CLIENT_ID = "df405eeb-4453-4f41-86d7-2a4af11446b6";
