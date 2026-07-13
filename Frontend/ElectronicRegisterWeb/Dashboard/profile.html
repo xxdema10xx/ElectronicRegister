@@ -365,10 +365,23 @@
         });
       }
 
+      function applyNavVisibility(userData) {
+        const gestioneLink = document.querySelector('.sidebar-nav a[href="add-student.html"]');
+        const votiLink = document.querySelector('.sidebar-nav a[href="grades.html"]');
+
+        if (userData.role === "student") {
+          if (gestioneLink) gestioneLink.closest("li").style.display = "none";
+          if (votiLink) votiLink.closest("li").style.display = "none";
+        } else if (userData.role === "teacher") {
+          if (votiLink) votiLink.closest("li").style.display = "none";
+        }
+      }
+
       async function loadPage() {
         const userData = await getUserData();
         userBadgeRole.innerText =  userData.role ?  userData.role : "ERROR"
         wireHeaderSearch();
+        applyNavVisibility(userData);
         if(userData.studentId) { 
           populateFields(userData.studentFirstName, userData.studentLastName, userData.role, userData.email)
         }

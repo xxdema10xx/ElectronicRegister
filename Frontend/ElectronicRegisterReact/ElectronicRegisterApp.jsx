@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -647,40 +648,73 @@ function GradesScreen() {
   const [filterSubject, setFilterSubject] = useState("");
   const [filterDate, setFilterDate] = useState("");
   const [newGrade, setNewGrade] = useState({ studentId: "", subjectId: "", teacherId: "", value: "", date: "" });
-  // Smart loading: teniamo in memoria tutti i voti ricevuti dall'API, ma ne
-  // mostriamo solo GRADES_PAGE_SIZE alla volta, caricandone altri man mano
-  // che l'utente scorre verso il basso.
-  const [visibleCount, setVisibleCount] = useState(GRADES_PAGE_SIZE);
+  // Paginazione lato server (come sul web): carichiamo GRADES_PAGE_SIZE voti
+  // alla volta tramite /Grade/paged, aggiungendo altre pagine man mano che
+  // l'utente scorre verso il basso.
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const pageRef = useRef(0);
+  const totalRef = useRef(0);
 
-  const load = useCallback(async () => {
-    setLoading(true);
+  // Traduce i filtri (materia per nome, data) in query string per l'endpoint
+  // paginato, che accetta subjectId (guid) e date, non un nome di materia.
+  const fetchGradesPage = useCallback(async (pageNumber, subjectsList) => {
+    const params = new URLSearchParams({
+      pageNumber: String(pageNumber),
+      pageSize: String(GRADES_PAGE_SIZE),
+    });
+
+    if (filterSubject) {
+      const match = subjectsList.find(s => s.name === filterSubject.trim());
+      if (!match) return { items: [], totalCount: 0 };
+      params.set("subjectId", match.id);
+    } else if (filterDate) {
+      params.set("date", filterDate);
+    }
+
+    return api("GET", `/Grade/paged?${params.toString()}`, null, token);
+  }, [token, filterSubject, filterDate]);
+
+  const load = useCallback(async ({ isRefresh } = {}) => {
+    isRefresh ? setRefreshing(true) : setLoading(true);
     try {
-      let path = "/Grade";
-      if (filterSubject) path = `/Grade/bysubject/${filterSubject}`;
-      else if (filterDate) path = `/Grade/bydate/${filterDate}`;
-      const g = await api("GET", path, null, token);
-      setGrades(Array.isArray(g) ? g : []);
-      setVisibleCount(GRADES_PAGE_SIZE);
       const sub = await api("GET", "/Subject", null, token);
-      setSubjects(Array.isArray(sub) ? sub : []);
+      const subList = Array.isArray(sub) ? sub : [];
+      setSubjects(subList);
       if (role !== "student") {
         const st = await api("GET", "/Student", null, token);
         setStudents(Array.isArray(st) ? st : []);
         const te = await api("GET", "/Teacher", null, token);
         setTeachers(Array.isArray(te) ? te : []);
       }
+
+      const result = await fetchGradesPage(1, subList);
+      pageRef.current = 1;
+      totalRef.current = result.totalCount;
+      setGrades(result.items);
     } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setGrades([]); }
-    finally { setLoading(false); }
-  }, [token, filterSubject, filterDate, role]);
+    finally { isRefresh ? setRefreshing(false) : setLoading(false); }
+  }, [token, role, fetchGradesPage]);
 
   useEffect(() => { load(); }, [load]);
 
-  const visibleGrades = grades.slice(0, visibleCount);
-  const hasMore = visibleCount < grades.length;
+  const hasMore = grades.length < totalRef.current;
 
-  function loadMoreGrades() {
-    if (!hasMore) return;
-    setVisibleCount(c => Math.min(c + GRADES_PAGE_SIZE, grades.length));
+  async function loadMoreGrades() {
+    if (loadingMore || loading || refreshing || !hasMore) return;
+    setLoadingMore(true);
+    try {
+      const nextPage = pageRef.current + 1;
+      const result = await fetchGradesPage(nextPage, subjects);
+      pageRef.current = nextPage;
+      totalRef.current = result.totalCount;
+      setGrades(prev => prev.concat(result.items));
+    } catch (e) { Alert.alert("Errore", e.message); }
+    finally { setLoadingMore(false); }
+  }
+
+  function onRefresh() {
+    load({ isRefresh: true });
   }
 
   function subjectName(id) { return subjects.find(s => s.id === id)?.name || id?.slice(0, 8) || "—"; }
@@ -748,14 +782,18 @@ function GradesScreen() {
           </View>
         </View>
       </View>
-      {loading ? <Loader /> : grades.length === 0 ? <EmptyState message="Nessun voto trovato" /> :
+      {loading ? <Loader /> :
         <FlatList
-          data={visibleGrades}
+          data={grades}
           keyExtractor={g => g.id}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32, flexGrow: 1 }}
+          ListEmptyComponent={<EmptyState message="Nessun voto trovato" />}
           onEndReached={loadMoreGrades}
           onEndReachedThreshold={0.4}
-          ListFooterComponent={hasMore ? (
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[C.primary]} tintColor={C.primary} />
+          }
+          ListFooterComponent={loadingMore ? (
             <View style={{ paddingVertical: 16, alignItems: "center" }}>
               <ActivityIndicator size="small" color={C.primary} />
             </View>
