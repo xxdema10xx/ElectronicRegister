@@ -153,7 +153,15 @@ namespace ElectronicRegisterAPI.Controllers
             };
             _context.Subjects.Add(subject);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = subject.Id }, subject);
+
+            var result = new SubjectDto
+            {
+                Id = subject.Id,
+                Name = subject.Name,
+                TeacherId = subject.TeacherId
+            };
+
+            return CreatedAtAction(nameof(GetById), new { id = subject.Id }, result);
         }
 
         [HttpDelete("{id}")]
