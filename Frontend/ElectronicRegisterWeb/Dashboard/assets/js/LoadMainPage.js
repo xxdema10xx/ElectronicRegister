@@ -1,3 +1,15 @@
+function setSubjectNameError(show) {
+    const input = document.getElementById("modal-subject-name");
+    const error = document.getElementById("modal-subject-name-error");
+    if (!input || !error) return;
+    input.style.border = show ? "1px solid red" : "";
+    error.style.display = show ? "block" : "none";
+}
+
+document.getElementById("modal-subject-name")?.addEventListener("input", function () {
+    if (this.value.trim().length >= 5) setSubjectNameError(false);
+});
+
 async function formatCardsData(requests, titles) {
     requests.forEach(async (request, index) => {
         try {
@@ -441,8 +453,8 @@ const entityFieldsConfig = {
         { key: "date",      domSuffix: "date",    inputId: "modal-date" }
     ],
     Subject: [
-        { key: "name",      domSuffix: "name",    inputId: "modal-subject-name" },
-        { key: "teacherId", domSuffix: "teacher", inputId: "modal-subject-teacher", type: "teacherSelect", readAttr: "teacherId" }
+        { key: "name",      domSuffix: "subject-name",    inputId: "modal-subject-name" },
+        { key: "teacherId", domSuffix: "subject-teacher", inputId: "modal-subject-teacher", type: "teacherSelect", readAttr: "teacherId" }
     ]
 };
 
@@ -510,6 +522,7 @@ async function showModal(type, id) {
         type === "Users" ? "block" : "none";
     document.getElementById("subject-fields").style.display =
         type === "Subject" ? "block" : "none";
+    if (type === "Subject") setSubjectNameError(false);
 
     for (const field of config) {
         if (field.skipRead) {
@@ -541,6 +554,15 @@ async function updateEntity(type, id) {
     if (!config) {
         console.error(`Tipo di entità non supportato: ${type}`);
         return;
+    }
+
+    if (type === "Subject") {
+        const nameInput = document.getElementById("modal-subject-name");
+        if (!nameInput.value.trim()) {
+            setSubjectNameError(true);
+            return;
+        }
+        setSubjectNameError(false);
     }
 
     const data = {};
