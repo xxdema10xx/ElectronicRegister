@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon" />
-    <title>Add Student</title>
+    <title>Gestione</title>
 
     <!-- ========== All CSS files linkup ========= -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
@@ -227,7 +227,7 @@
             </a>
             <ul id="ddmenu_5" class="collapsed show dropdown-nav">
               <li>
-                <a href="add-student.html" class="active"> Add Student </a>
+                <a href="add-student.html" class="active"> Gestione </a>
               </li>
             </ul>
           </li>
@@ -484,7 +484,7 @@
             <div class="row align-items-center">
               <div class="col-md-6">
                 <div class="title">
-                  <h2>Add Student</h2>
+                  <h2 id="page-title">Gestione</h2>
                 </div>
               </div>
               <!-- end col -->
@@ -497,7 +497,7 @@
                       </li>
                       <li class="breadcrumb-item"><a href="#0">Forms</a></li>
                       <li class="breadcrumb-item active" aria-current="page">
-                        Add Student
+                        Gestione
                       </li>
                     </ol>
                   </nav>
@@ -511,188 +511,134 @@
 
           <!-- ========== form-elements-wrapper start ========== -->
           <div class="form-elements-wrapper">
-            <div class="row">
-              <div class="col-lg-6">
-                <!-- input style start -->
-                <div class="card-style mb-30">
-                  <h6 class="mb-25">Input Fields</h6>
-                  <div class="input-style-1">
-                    <label>Full Name</label>
-                    <input type="text" placeholder="Full Name" />
-                  </div>
-                  <!-- end input -->
-                  <div class="input-style-2">
-                    <input type="text" placeholder="Full Name" />
-                    <span class="icon"> <i class="lni lni-user"></i> </span>
-                  </div>
-                  <!-- end input -->
-                  <div class="input-style-3">
-                    <input type="text" placeholder="Full Name" />
-                    <span class="icon"><i class="lni lni-user"></i></span>
-                  </div>
-                  <!-- end input -->
-                </div>
-                <!-- end card -->
-                <!-- ======= input style end ======= -->
 
-                <!-- ======= select style start ======= -->
-                <div class="card-style mb-30">
-                  <h6 class="mb-25">Selects</h6>
-                  <div class="select-style-1">
-                    <label>Category</label>
-                    <div class="select-position">
-                      <select>
-                        <option value="">Select category</option>
-                        <option value="">Category one</option>
-                        <option value="">Category two</option>
-                        <option value="">Category three</option>
-                      </select>
+            <!-- ======= ADMIN: create user / subject / grade ======= -->
+            <div id="admin-section" style="display:none;">
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="card-style mb-30">
+                    <h6 class="mb-25">Crea Utente</h6>
+                    <div class="select-style-1">
+                      <label>Tipo Utente</label>
+                      <div class="select-position">
+                        <select id="new-user-role">
+                          <option value="student">Studente</option>
+                          <option value="teacher">Insegnante</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
-                  <!-- end select -->
-                  <div class="select-style-2">
-                    <div class="select-position">
-                      <select>
-                        <option value="">Select category</option>
-                        <option value="">Category one</option>
-                        <option value="">Category two</option>
-                        <option value="">Category three</option>
-                      </select>
+                    <!-- end select -->
+                    <div class="input-style-1">
+                      <label>Nome</label>
+                      <input type="text" id="new-user-firstname" placeholder="Nome" />
                     </div>
+                    <div class="input-style-1">
+                      <label>Cognome</label>
+                      <input type="text" id="new-user-lastname" placeholder="Cognome" />
+                    </div>
+                    <div class="input-style-1">
+                      <label>Email</label>
+                      <input type="email" id="new-user-email" placeholder="Email" />
+                    </div>
+                    <div class="input-style-1">
+                      <label>Password</label>
+                      <input type="password" id="new-user-password" placeholder="Password" />
+                    </div>
+                    <button type="button" class="main-btn primary-btn btn-hover" id="create-user-btn">Crea Utente</button>
+                    <p id="create-user-feedback" class="mt-10"></p>
                   </div>
-                  <!-- end select -->
                 </div>
-                <!-- end card -->
-                <!-- ======= select style end ======= -->
+                <!-- end col -->
 
-                <!-- ======= select style start ======= -->
-                <div class="card-style mb-30">
-                  <h6 class="mb-25">Time and Date</h6>
-                  <div class="input-style-1">
-                    <label>Date</label>
-                    <input type="date" />
+                <div class="col-lg-4">
+                  <div class="card-style mb-30">
+                    <h6 class="mb-25">Crea Materia</h6>
+                    <div class="input-style-1">
+                      <label>Nome Materia</label>
+                      <input type="text" id="new-subject-name" placeholder="Nome Materia" />
+                    </div>
+                    <div class="select-style-1">
+                      <label>Insegnante</label>
+                      <div class="select-position">
+                        <select id="new-subject-teacher"></select>
+                      </div>
+                    </div>
+                    <button type="button" class="main-btn primary-btn btn-hover" id="create-subject-btn">Crea Materia</button>
+                    <p id="create-subject-feedback" class="mt-10"></p>
                   </div>
-                  <!-- end input -->
-                  <div class="input-style-2">
-                    <input type="date" />
-                    <span class="icon"><i class="lni lni-chevron-down"></i></span>
-                  </div>
-                  <!-- end input -->
-                  <div class="input-style-2">
-                    <input type="time" />
-                  </div>
-                  <!-- end input -->
                 </div>
-                <!-- end card -->
-                <!-- ======= input style end ======= -->
+                <!-- end col -->
 
-                <!-- ======= input switch style start ======= -->
-                <div class="card-style mb-30">
-                  <h6 class="mb-25">Toggle switch input</h6>
-                  <div class="form-check form-switch toggle-switch mb-30">
-                    <input class="form-check-input" type="checkbox" id="toggleSwitch1" />
-                    <label class="form-check-label" for="toggleSwitch1">Default switch checkbox input</label>
-                  </div>
-                  <div class="form-check form-switch toggle-switch">
-                    <input class="form-check-input" type="checkbox" id="toggleSwitch2" checked />
-                    <label class="form-check-label" for="toggleSwitch2">Default switch checkbox input</label>
+                <div class="col-lg-4">
+                  <div class="card-style mb-30">
+                    <h6 class="mb-25">Crea Voto</h6>
+                    <div class="select-style-1">
+                      <label>Allievo</label>
+                      <div class="select-position">
+                        <select id="new-grade-student"></select>
+                      </div>
+                    </div>
+                    <div class="select-style-1">
+                      <label>Materia</label>
+                      <div class="select-position">
+                        <select id="new-grade-subject"></select>
+                      </div>
+                    </div>
+                    <div class="input-style-1">
+                      <label>Voto</label>
+                      <input type="number" id="new-grade-value" step="0.5" min="0" max="10" />
+                    </div>
+                    <div class="input-style-1">
+                      <label>Data</label>
+                      <input type="date" id="new-grade-date" />
+                    </div>
+                    <button type="button" class="main-btn primary-btn btn-hover" id="create-grade-btn">Crea Voto</button>
+                    <p id="create-grade-feedback" class="mt-10"></p>
                   </div>
                 </div>
-                <!-- ======= input switch style end ======= -->
+                <!-- end col -->
               </div>
-              <!-- end col -->
-              <div class="col-lg-6">
-                <!-- ======= textarea style start ======= -->
-                <div class="card-style mb-30">
-                  <h6 class="mb-25">Textarea</h6>
-                  <div class="input-style-1">
-                    <label>Message</label>
-                    <textarea placeholder="Message" rows="5"></textarea>
-                  </div>
-                  <!-- end textarea -->
-                  <div class="input-style-3">
-                    <textarea placeholder="Message" rows="5"></textarea>
-                    <span class="icon"><i class="lni lni-text-format"></i></span>
-                  </div>
-                  <!-- end textarea -->
-                </div>
-                <!-- ======= textarea style end ======= -->
-
-                <!-- ======= checkbox style start ======= -->
-                <div class="card-style mb-30">
-                  <h6 class="mb-25">Checkbox</h6>
-                  <div class="form-check checkbox-style mb-20">
-                    <input class="form-check-input" type="checkbox" value="" id="checkbox-1" />
-                    <label class="form-check-label" for="checkbox-1">
-                      Default Checkbox</label>
-                  </div>
-                  <!-- end checkbox -->
-                  <div class="form-check checkbox-style mb-20">
-                    <input class="form-check-input" type="checkbox" value="" id="checkbox-2" disabled />
-                    <label class="form-check-label" for="checkbox-2">
-                      Disabled Checkbox</label>
-                  </div>
-                  <!-- end checkbox -->
-                  <div class="form-check checkbox-style checkbox-success mb-20">
-                    <input class="form-check-input" type="checkbox" value="" id="checkbox-3" />
-                    <label class="form-check-label" for="checkbox-3">
-                      Success Checkbox</label>
-                  </div>
-                  <!-- end checkbox -->
-                  <div class="form-check checkbox-style checkbox-warning mb-20">
-                    <input class="form-check-input" type="checkbox" value="" id="checkbox-4" />
-                    <label class="form-check-label" for="checkbox-4">
-                      Warning Checkbox</label>
-                  </div>
-                  <!-- end checkbox -->
-                  <div class="form-check checkbox-style checkbox-danger mb-20">
-                    <input class="form-check-input" type="checkbox" value="" id="checkbox-5" />
-                    <label class="form-check-label" for="checkbox-5">
-                      Danger Checkbox</label>
-                  </div>
-                  <!-- end checkbox -->
-                </div>
-                <!-- ======= checkbox style end ======= -->
-
-                <!-- ======= radio style start ======= -->
-                <div class="card-style mb-30">
-                  <h6 class="mb-25">Radio</h6>
-                  <div class="form-check radio-style mb-20">
-                    <input class="form-check-input" type="radio" value="" id="radio-1" />
-                    <label class="form-check-label" for="radio-1">
-                      Default Radio</label>
-                  </div>
-                  <!-- end radio -->
-                  <div class="form-check radio-style mb-20">
-                    <input class="form-check-input" type="radio" value="" id="radio-2" disabled />
-                    <label class="form-check-label" for="radio-2">
-                      Disabled Radio</label>
-                  </div>
-                  <!-- end radio -->
-                  <div class="form-check radio-style radio-success mb-20">
-                    <input class="form-check-input" type="radio" value="" id="radio-3" />
-                    <label class="form-check-label" for="radio-3">
-                      Success Radio</label>
-                  </div>
-                  <!-- end radio -->
-                  <div class="form-check radio-style radio-warning mb-20">
-                    <input class="form-check-input" type="radio" value="" id="radio-4" />
-                    <label class="form-check-label" for="radio-4">
-                      Warning Radio</label>
-                  </div>
-                  <!-- end radio -->
-                  <div class="form-check radio-style radio-danger mb-20">
-                    <input class="form-check-input" type="radio" value="" id="radio-5" />
-                    <label class="form-check-label" for="radio-5">
-                      Danger Radio</label>
-                  </div>
-                  <!-- end radio -->
-                </div>
-                <!-- ======= radio style end ======= -->
-              </div>
-              <!-- end col -->
+              <!-- end row -->
             </div>
-            <!-- end row -->
+            <!-- ======= ADMIN section end ======= -->
+
+            <!-- ======= TEACHER: assign grades to students ======= -->
+            <div id="teacher-section" style="display:none;">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="card-style mb-30">
+                    <h6 class="mb-25">Inserisci Voti</h6>
+                    <div id="teacher-subject-wrapper" class="select-style-1" style="display:none;">
+                      <label>Materia</label>
+                      <div class="select-position">
+                        <select id="teacher-subject-select"></select>
+                      </div>
+                    </div>
+                    <div class="input-style-1">
+                      <label>Data</label>
+                      <input type="date" id="teacher-grade-date" />
+                    </div>
+                    <div class="table-wrapper table-responsive mt-20">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th><h6>Allievo</h6></th>
+                            <th><h6>Voto</h6></th>
+                            <th><h6>Azione</h6></th>
+                          </tr>
+                        </thead>
+                        <tbody id="teacher-students-body"></tbody>
+                      </table>
+                      <!-- end table -->
+                    </div>
+                  </div>
+                </div>
+                <!-- end col -->
+              </div>
+              <!-- end row -->
+            </div>
+            <!-- ======= TEACHER section end ======= -->
+
           </div>
           <!-- ========== form-elements-wrapper end ========== -->
         </div>
@@ -733,6 +679,9 @@
     <!-- ========= All Javascript files linkup ======== -->
     <script src="../config.js"></script>
     <script src="assets/js/Authentication.js"></script>
+    <script src="assets/js/ApiRequests.js?v=2"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/CreateEntities.js?v=3"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/Chart.min.js"></script>
     <script src="assets/js/dynamic-pie-chart.js"></script>

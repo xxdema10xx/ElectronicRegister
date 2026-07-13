@@ -43,7 +43,15 @@ async function sendApiRequest(url, method, data = null) {
         return null;
     }
 
-    return await res.json();
+    // Alcuni endpoint (es. Auth/RegisterForAdmin) rispondono con testo semplice
+    // invece che JSON: proviamo il parsing e ripieghiamo sul testo grezzo.
+    const text = await res.text();
+    if (!text) return null;
+    try {
+        return JSON.parse(text);
+    } catch {
+        return text;
+    }
 }
 
 async function getUserData() {
