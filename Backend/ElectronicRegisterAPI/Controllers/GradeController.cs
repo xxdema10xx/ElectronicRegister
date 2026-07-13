@@ -115,26 +115,28 @@ namespace ElectronicRegisterAPI.Controllers
                 query = query.Where(g => g.TeacherId == teacherId);
             }
 
-            var grades = await query.Select(g => new GradeDto
-            {
-                Id = g.Id,
-                StudentId = g.StudentId,
-                SubjectId = g.SubjectId,
-                SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
-                TeacherId = g.TeacherId,
-                Value = g.Value,
-                Date = g.Date,
-                Student = _context.Students.FirstOrDefault(s => s.Id == g.StudentId) != null ? new StudentDto
-                {
-                    Id = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.Id,
-                    FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,
-                    LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName
-                } : null
-            })
-            .OrderBy(g => g.Date)
-            .ThenBy(g => g.SubjectName)
-            .ThenBy(g => g.Value)
-            .ThenBy(g => g.StudentId)
+            var grades = await query
+                .Select(g => new GradeDto
+                    {
+                        Id = g.Id,
+                        StudentId = g.StudentId,
+                        SubjectId = g.SubjectId,
+                        SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
+                        TeacherId = g.TeacherId,
+                        Value = g.Value,
+                        Date = g.Date,
+                        Student = _context.Students.FirstOrDefault(s => s.Id == g.StudentId) != null ? new StudentDto
+                        {
+                            Id = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.Id,
+                            FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,
+                            LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName
+                        } : null
+                    }
+                    )
+                .OrderBy(g => g.Date)
+                    .ThenBy(g => g.SubjectName)
+                    .ThenBy(g => g.Value)
+                    .ThenBy(g => g.StudentId)
             .ToListAsync();
 
             // Nota: uno studente senza voti NON è un errore, è un caso normale
