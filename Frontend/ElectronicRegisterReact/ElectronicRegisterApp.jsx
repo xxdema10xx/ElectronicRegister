@@ -15,6 +15,8 @@ import {
   View,
 } from "react-native";
 
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as AuthSession from 'expo-auth-session';
@@ -133,6 +135,95 @@ function Input({ label, ...props }) {
     <View style={{ marginBottom: 14 }}>
       {label && <Text style={s.label}>{label}</Text>}
       <TextInput style={s.input} placeholderTextColor={C.textLight} {...props} />
+    </View>
+  );
+}
+
+// ─── HELPERS DATA ─────────────────────────────────────────────────────────
+function toISODate(d) {
+  // Converte un oggetto Date in stringa YYYY-MM-DD (formato atteso dal backend)
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  console.log("toISODate:", d, "->", `${y}-${m}-${day}`);
+  return `${y}-${m}-${day}`;
+}
+
+function parseISODate(str) {
+  // Converte una stringa YYYY-MM-DD in oggetto Date, senza problemi di timezone
+  if (!str) return new Date();
+  const [y, m, d] = str.split("-").map(Number);
+  if (!y || !m || !d) return new Date();
+  return new Date(y, m - 1, d);
+}
+
+function formatDateForDisplay(str) {
+  if (!str) return "";
+  const d = parseISODate(str);
+  return d.toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit", year: "numeric" });
+}
+
+// ─── DATE FIELD (calendario) ─────────────────────────────────────────────
+function DateField({ label, value, onChange, placeholder = "Seleziona data…" }) {
+  const [show, setShow] = useState(false);
+  const [tempDate, setTempDate] = useState(parseISODate(value));
+
+  function openPicker() {
+    setTempDate(parseISODate(value)); // riparte sempre dalla data attuale del campo
+    setShow(true);
+  }
+
+  function handleAndroidChange(event, selectedDate) {
+    setShow(false);
+    if (event.type === "set" && selectedDate) {
+      onChange(toISODate(selectedDate));
+    }
+  }
+
+  function confirmIOS() {
+    onChange(toISODate(tempDate));
+    setShow(false);
+  }
+
+  return (
+    <View style={{ marginBottom: 14 }}>
+      {label && <Text style={s.label}>{label}</Text>}
+      <TouchableOpacity style={s.selectBox} onPress={openPicker} activeOpacity={0.7}>
+        <Text style={{ fontSize: 15, color: value ? C.text : C.textLight, flex: 1 }}>
+          {value ? formatDateForDisplay(value) : placeholder}
+        </Text>
+        <Text style={{ color: C.textLight, fontSize: 16 }}>📅</Text>
+      </TouchableOpacity>
+
+      {show && Platform.OS === "android" && (
+        <DateTimePicker
+          value={tempDate}
+          mode="date"
+          display="calendar"
+          onChange={handleAndroidChange}
+        />
+      )}
+
+      {Platform.OS === "ios" && (
+        <Modal visible={show} animationType="slide" transparent onRequestClose={() => setShow(false)}>
+          <View style={s.modalOverlay}>
+            <View style={s.modalCard}>
+              <View style={s.modalHeader}>
+                <Text style={s.modalTitle}>{label || "Seleziona data"}</Text>
+                <TouchableOpacity onPress={() => setShow(false)}><Text style={s.modalClose}>✕</Text></TouchableOpacity>
+              </View>
+              <DateTimePicker
+                value={tempDate}
+                mode="date"
+                display="inline"
+                onChange={(event, selectedDate) => selectedDate && setTempDate(selectedDate)}
+                locale="it-IT"
+              />
+              <Btn label="Conferma" onPress={confirmIOS} style={{ marginTop: 12 }} />
+            </View>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 }
@@ -604,7 +695,11 @@ function GradesScreen() {
 
   async function updateGrade() {
     try {
-      await api("PUT", `/Grade/update/${showEdit.id}`, { value: parseFloat(showEdit.value), date: showEdit.date }, token);
+      await api("PUT", `/Grade/update/${showEdit.id}`, {
+        subjectId: showEdit.subjectId,
+        value: parseFloat(showEdit.value),
+        date: showEdit.date,
+      }, token);
       setShowEdit(null);
       load();
     } catch (e) { Alert.alert("Errore", e.message); }
@@ -637,8 +732,13 @@ function GradesScreen() {
         <View style={{ flexDirection: "row", gap: 8, marginBottom: 12 }}>
           <TextInput style={[s.input, { flex: 1 }]} placeholder="Filtra materia" placeholderTextColor={C.textLight}
             value={filterSubject} onChangeText={v => { setFilterSubject(v); setFilterDate(""); }} />
-          <TextInput style={[s.input, { flex: 1 }]} placeholder="Data (YYYY-MM-DD)" placeholderTextColor={C.textLight}
-            value={filterDate} onChangeText={v => { setFilterDate(v); setFilterSubject(""); }} />
+          <View style={{ flex: 1 }}>
+            <DateField
+              value={filterDate}
+              onChange={(v) => { setFilterDate(v); setFilterSubject(""); }}
+              placeholder="Filtra per data…"
+            />
+          </View>
         </View>
       </View>
       {loading ? <Loader /> : grades.length === 0 ? <EmptyState message="Nessun voto trovato" /> :
@@ -699,7 +799,11 @@ function GradesScreen() {
           emptyMessage="Nessuna materia disponibile"
         />
         <Input label="Voto (1-10)" value={newGrade.value} onChangeText={v => setNewGrade(f => ({ ...f, value: v }))} keyboardType="decimal-pad" />
-        <Input label="Data (YYYY-MM-DD)" value={newGrade.date} onChangeText={v => setNewGrade(f => ({ ...f, date: v }))} />
+        <DateField
+          label="Data"
+          value={newGrade.date}
+          onChange={(v) => setNewGrade(f => ({ ...f, date: v }))}
+        />
         <Btn label="Salva" onPress={addGrade} />
       </FormModal>
 
@@ -707,7 +811,11 @@ function GradesScreen() {
       <FormModal visible={!!showEdit} title="Modifica voto" onClose={() => setShowEdit(null)}>
         {showEdit && <>
           <Input label="Nuovo voto" value={String(showEdit.value)} onChangeText={v => setShowEdit(f => ({ ...f, value: v }))} keyboardType="decimal-pad" />
-          <Input label="Data (YYYY-MM-DD)" value={showEdit.date} onChangeText={v => setShowEdit(f => ({ ...f, date: v }))} />
+          <DateField
+            label="Data"
+            value={showEdit.date}
+            onChange={(v) => setShowEdit(f => ({ ...f, date: v }))}
+          />
           <Btn label="Aggiorna" onPress={updateGrade} />
         </>}
       </FormModal>
