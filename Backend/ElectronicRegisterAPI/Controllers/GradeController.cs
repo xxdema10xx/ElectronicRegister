@@ -308,30 +308,30 @@ namespace ElectronicRegisterAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "teacher,admin")]
-        public async Task<ActionResult> Add(Grade grade)
+        public async Task<ActionResult> Add(AddGradeDto gradeDto)
         {
             if(User.IsInRole("teacher"))
             {
                 var teacherId = Guid.Parse(User.FindFirst("teacherId")?.Value!);
-                grade.TeacherId = teacherId;
                 // Check if the teacher is actually teaching the subject
-                var subject = await _context.Subjects.FindAsync(grade.SubjectId);
+                var subject = await _context.Subjects.FindAsync(gradeDto.SubjectId);
                 if (subject == null || subject.TeacherId != teacherId)
                 {
                     return Forbid();
                 }
             }
-            else if (User.IsInRole("admin"))
+
+            var teacher = await _context.Teachers.FindAsync(_context.Subjects.FirstOrDefault(s => s.Id == gradeDto.SubjectId)?.TeacherId);
+            if (teacher == null) return NotFound();
+            var grade = new Grade
             {
-                // Admin can set any teacherId, but we should validate it exists
-                var teacher = await _context.Teachers.FindAsync(grade.TeacherId);
-                if (teacher == null) return NotFound();
-            }
-            else
-            {
-                return Forbid();
-            }
-            grade.Id = Guid.NewGuid();
+                Id = Guid.NewGuid(),
+                StudentId = gradeDto.StudentId,
+                SubjectId = gradeDto.SubjectId,
+                TeacherId = teacher.Id,
+                Value = gradeDto.Value,
+                Date = gradeDto.Date
+            };
             _context.Grades.Add(grade);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = grade.Id }, grade);
@@ -341,7 +341,7 @@ namespace ElectronicRegisterAPI.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            var grade = _grades.FirstOrDefault(g => g.Id == id);
+            var grade = await _context.Grades.FindAsync(id);
             if (grade == null) return NotFound();
             _context.Grades.Remove(grade);
             await _context.SaveChangesAsync();
