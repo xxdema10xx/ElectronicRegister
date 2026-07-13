@@ -442,6 +442,18 @@ async function updateEntity(type, id) {
     }
 }
 
+async function deleteUser(id) {
+    if (!confirm("Sei sicuro di voler eliminare questo utente?")) return;
+
+    try {
+        await sendApiRequest(`${API_BASE}/api/Users/${id}`, "DELETE");
+        loadPage();
+    } catch (e) {
+        console.error(e);
+        alert("Errore durante l'eliminazione dell'utente.");
+    }
+}
+
 async function loadPage() {
     const bottomTableRow = document.getElementById("bottom-table-row");
     const userBadgeRole = document.getElementById("user-badge-role");
