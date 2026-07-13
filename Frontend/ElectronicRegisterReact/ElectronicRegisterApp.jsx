@@ -1132,55 +1132,134 @@ function UsersScreen() {
 function ProfileScreen({ onLogout }) {
   const { user, token } = useAuth();
   const [showEdit, setShowEdit] = useState(false);
-  const [form, setForm] = useState({ email: "", password: "", firstName: "", lastName: "" });
-
+ 
+  // Form per l'admin: email, nome, cognome (via update) + cambio password (via updatepassword)
+  const [form, setForm] = useState({ email: "", firstName: "", lastName: "", oldPassword: "", newPassword: "" });
+ 
+  // Form per studente/docente (solo cambio password)
+  const [pwdForm, setPwdForm] = useState({ oldPassword: "", newPassword: "" });
+ 
+  const role = user?.role?.toLowerCase();
+  const isAdmin = role === "admin";
+ 
+  const name = `${user?.studentFirstName || user?.teacherFirstName || ""} ${user?.studentLastName || user?.teacherLastName || ""}`.trim();
+ 
+  function resetForms() {
+    setForm({ email: "", firstName: "", lastName: "", oldPassword: "", newPassword: "" });
+    setPwdForm({ oldPassword: "", newPassword: "" });
+  }
+ 
+  function validateNewPassword(pwd) {
+    if (pwd.length < 8) {
+      Alert.alert("Attenzione", "La nuova password deve avere almeno 8 caratteri");
+      return false;
+    }
+    const hasSpecialChar = /[!@#$%^&*()_\-+=<>?/[\]{}]/.test(pwd);
+    if (!hasSpecialChar) {
+      Alert.alert("Attenzione", "La nuova password deve contenere almeno un carattere speciale");
+      return false;
+    }
+    return true;
+  }
+ 
   async function save() {
+    // Admin: email/firstName/lastName tramite /Users/update/{id}, password tramite /Users/updatepassword/{id}
     const body = {};
     if (form.email) body.email = form.email;
-    if (form.password) body.password = form.password;
     if (form.firstName) body.firstName = form.firstName;
     if (form.lastName) body.lastName = form.lastName;
+ 
+    const wantsPasswordChange = form.oldPassword || form.newPassword;
+ 
+    if (Object.keys(body).length === 0 && !wantsPasswordChange) {
+      Alert.alert("Attenzione", "Inserisci almeno un campo da modificare");
+      return;
+    }
+ 
+    if (wantsPasswordChange) {
+      if (!form.oldPassword || !form.newPassword) {
+        Alert.alert("Attenzione", "Per cambiare la password inserisci vecchia e nuova password");
+        return;
+      }
+      if (!validateNewPassword(form.newPassword)) return;
+    }
+ 
     try {
-      await api("PUT", `/Users/update/${user.id}`, body, token);
+      if (Object.keys(body).length > 0) {
+        await api("PUT", `/Users/update/${user.id}`, body, token);
+      }
+      if (wantsPasswordChange) {
+        await api("PUT", `/Users/updatepassword/${user.id}`, {
+          oldPassword: form.oldPassword,
+          newPassword: form.newPassword,
+        }, token);
+      }
       Alert.alert("Successo", "Profilo aggiornato!");
       setShowEdit(false);
+      resetForms();
     } catch (e) { Alert.alert("Errore", e.message); }
   }
-
-  const role = user?.role?.toLowerCase();
-  const name = `${user?.studentFirstName || user?.teacherFirstName || ""} ${user?.studentLastName || user?.teacherLastName || ""}`.trim();
-
+ 
+  async function savePassword() {
+    // Studente/Docente: solo password tramite /Users/updatepassword/{id}
+    if (!pwdForm.oldPassword || !pwdForm.newPassword) {
+      Alert.alert("Attenzione", "Inserisci vecchia e nuova password");
+      return;
+    }
+    if (!validateNewPassword(pwdForm.newPassword)) return;
+ 
+    try {
+      await api("PUT", `/Users/updatepassword/${user.id}`, {
+        oldPassword: pwdForm.oldPassword,
+        newPassword: pwdForm.newPassword,
+      }, token);
+      Alert.alert("Successo", "Password aggiornata!");
+      setShowEdit(false);
+      resetForms();
+    } catch (e) { Alert.alert("Errore", e.message); }
+  }
+ 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 16 }}>
-      <View style={s.profileHeader}>
-        <View style={s.profileAvatar}>
-          <Text style={s.profileAvatarText}>{(user?.email || "?")[0].toUpperCase()}</Text>
-        </View>
-        {name && <Text style={s.profileName}>{name}</Text>}
-        <Text style={s.profileEmail}>{user?.email}</Text>
-        <Badge text={role} role={role} />
-      </View>
-
-      <Card style={{ marginTop: 16 }}>
-        <Text style={[s.cardTitle, { fontSize: 14 }]}>Dettagli account</Text>
-        <View style={s.profileRow}><Text style={s.profileKey}>Email</Text><Text style={s.profileVal}>{user?.email}</Text></View>
-        <View style={s.profileRow}><Text style={s.profileKey}>Ruolo</Text><Text style={s.profileVal}>{role}</Text></View>
-        {user?.studentId && <View style={s.profileRow}><Text style={s.profileKey}>ID Studente</Text><Text style={s.profileVal}>{user.studentId.slice(0, 16)}…</Text></View>}
-        {user?.teacherId && <View style={s.profileRow}><Text style={s.profileKey}>ID Docente</Text><Text style={s.profileVal}>{user.teacherId.slice(0, 16)}…</Text></View>}
-      </Card>
-
-      <Btn label="✏️  Modifica profilo" onPress={() => setShowEdit(true)} style={{ marginTop: 16 }} variant="primary" />
-      <Btn label="🚪  Logout" onPress={onLogout} style={{ marginTop: 10 }} variant="danger" />
-
-      <FormModal visible={showEdit} title="Modifica profilo" onClose={() => setShowEdit(false)}>
-        <Input label="Nuova email (opzionale)" value={form.email} onChangeText={v => setForm(f => ({ ...f, email: v }))} keyboardType="email-address" autoCapitalize="none" />
-        <Input label="Nuova password (opzionale)" value={form.password} onChangeText={v => setForm(f => ({ ...f, password: v }))} secureTextEntry />
-        {role !== "admin" && <>
-          <Input label="Nome (opzionale)" value={form.firstName} onChangeText={v => setForm(f => ({ ...f, firstName: v }))} />
-          <Input label="Cognome (opzionale)" value={form.lastName} onChangeText={v => setForm(f => ({ ...f, lastName: v }))} />
-        </>}
-        <Btn label="Salva" onPress={save} />
-      </FormModal>
+    <View style={s.profileHeader}>
+    <View style={s.profileAvatar}>
+    <Text style={s.profileAvatarText}>{(user?.email || "?")[0].toUpperCase()}</Text>
+    </View>
+            {name && <Text style={s.profileName}>{name}</Text>}
+    <Text style={s.profileEmail}>{user?.email}</Text>
+    <Badge text={role} role={role} />
+    </View>
+    
+          <Card style={{ marginTop: 16 }}>
+    <Text style={[s.cardTitle, { fontSize: 14 }]}>Dettagli account</Text>
+    <View style={s.profileRow}><Text style={s.profileKey}>Email</Text><Text style={s.profileVal}>{user?.email}</Text></View>
+    <View style={s.profileRow}><Text style={s.profileKey}>Ruolo</Text><Text style={s.profileVal}>{role}</Text></View>
+            {user?.studentId && <View style={s.profileRow}><Text style={s.profileKey}>ID Studente</Text><Text style={s.profileVal}>{user.studentId.slice(0, 16)}…</Text></View>}
+            {user?.teacherId && <View style={s.profileRow}><Text style={s.profileKey}>ID Docente</Text><Text style={s.profileVal}>{user.teacherId.slice(0, 16)}…</Text></View>}
+    </Card>
+ 
+    <Btn
+      label={isAdmin ? "✏️  Modifica profilo" : "🔒  Cambia password"}
+      onPress={() => setShowEdit(true)}
+      style={{ marginTop: 16 }}
+      variant="primary"
+    />
+    <Btn label="🚪  Logout" onPress={onLogout} style={{ marginTop: 10 }} variant="danger" />
+    
+          {isAdmin ? (
+    <FormModal visible={showEdit} title="Modifica profilo" onClose={() => { setShowEdit(false); resetForms(); }}>
+    <Input label="Nuova email (opzionale)" value={form.email} onChangeText={v => setForm(f => ({ ...f, email: v }))} keyboardType="email-address" autoCapitalize="none" />
+    <Input label="Vecchia password (opzionale)" value={form.oldPassword} onChangeText={v => setForm(f => ({ ...f, oldPassword: v }))} secureTextEntry />
+    <Input label="Nuova password (opzionale)" value={form.newPassword} onChangeText={v => setForm(f => ({ ...f, newPassword: v }))} secureTextEntry />
+    <Btn label="Salva" onPress={save} />
+    </FormModal>
+          ) : (
+    <FormModal visible={showEdit} title="Cambia password" onClose={() => { setShowEdit(false); resetForms(); }}>
+    <Input label="Vecchia password" value={pwdForm.oldPassword} onChangeText={v => setPwdForm(f => ({ ...f, oldPassword: v }))} secureTextEntry />
+    <Input label="Nuova password" value={pwdForm.newPassword} onChangeText={v => setPwdForm(f => ({ ...f, newPassword: v }))} secureTextEntry />
+    <Btn label="Salva" onPress={savePassword} />
+    </FormModal>
+          )}
     </ScrollView>
   );
 }
