@@ -111,12 +111,21 @@ namespace ElectronicRegisterAPI.Controllers
             return NoContent();
         }
 
+        private static bool HasSpecialChar(string password)
+        {
+            return password.Any(c => "!@#$%^&*()_-+=<>?/[]{}".Contains(c));
+        }
+
         [HttpPut("updatepassword/{id}")]
         [Authorize(Roles = "student,teacher,admin")]
         public async Task<ActionResult> UpdatePassword(Guid id, UpdatePasswordDto dto)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null) return NotFound();
+            if (!User.IsInRole("admin") && user.Id != id) return Forbid();
+            if (dto.OldPassword == null || dto.NewPassword == null) return BadRequest("Old and new passwords are required");
+            if (dto.NewPassword.Length < 8) return BadRequest("Password must be at least 8 characters long");
+            if (!HasSpecialChar(dto.NewPassword)) return BadRequest("Password must contain at least one special character");
             if (!Bcrypt.Verify(dto.OldPassword, user.PasswordHash)) return BadRequest("Passwords don't match");
             user.PasswordHash = Bcrypt.HashPassword(dto.NewPassword);
             _context.Users.Update(user);
