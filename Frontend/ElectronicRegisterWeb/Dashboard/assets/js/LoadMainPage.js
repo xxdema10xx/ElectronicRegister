@@ -202,10 +202,20 @@ function renderTeachersBodyAdmin(tbody, teachersData) {
                 <p style="color: blue;">${teacher.id}</p>
             </td>
             <td class="min-width">
-                <p>${teacher.firstName}</p>
+                <p id="first-name-${teacher.id}">${teacher.firstName}</p>
             </td>
             <td class="min-width">
-                <p>${teacher.lastName}</p>
+                <p id="last-name-${teacher.id}">${teacher.lastName}</p>
+            </td>
+            <td>
+                <div class="action">
+                    <button class="text-success" data-id="${teacher.id}" onclick="showModal('Teacher', this.dataset.id)">
+                        <i class="lni lni-pencil-alt"></i>
+                    </button>
+                    <button class="text-danger" data-id="${teacher.id}" onclick="deleteTeacher(this.dataset.id)">
+                        <i class="lni lni-trash-can"></i>
+                    </button>
+                </div>
             </td>
         `;
         tbody.appendChild(row);
@@ -451,6 +461,30 @@ async function deleteUser(id) {
     } catch (e) {
         console.error(e);
         alert("Errore durante l'eliminazione dell'utente.");
+    }
+}
+
+async function deleteStudent(id) {
+    if (!confirm("Sei sicuro di voler eliminare questo allievo?")) return;
+
+    try {
+        await sendApiRequest(`${API_BASE}/api/Student/${id}`, "DELETE");
+        loadPage();
+    } catch (e) {
+        console.error(e);
+        alert("Errore durante l'eliminazione dell'allievo.");
+    }
+}
+
+async function deleteTeacher(id) {
+    if (!confirm("Sei sicuro di voler eliminare questo insegnante?")) return;
+
+    try {
+        await sendApiRequest(`${API_BASE}/api/Teacher/${id}`, "DELETE");
+        loadPage();
+    } catch (e) {
+        console.error(e);
+        alert("Errore durante l'eliminazione dell'insegnante.");
     }
 }
 
