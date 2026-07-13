@@ -62,16 +62,7 @@ async function createSubject() {
         document.getElementById("new-subject-name").value = "";
     } catch (e) {
         console.error(e);
-        // Il backend a volte risponde con un errore di rete/CORS sulla creazione
-        // della materia anche quando questa è stata effettivamente salvata:
-        // verifichiamo prima di mostrare un errore all'utente.
-        const created = await sendTokenForData(`${API_BASE}/api/Subject/byname/${encodeURIComponent(name)}`).catch(() => null);
-        if (created && created.teacherId === teacherId) {
-            showFeedback("create-subject-feedback", "Materia creata con successo.", false);
-            document.getElementById("new-subject-name").value = "";
-        } else {
-            showFeedback("create-subject-feedback", "Errore durante la creazione della materia.", true);
-        }
+        showFeedback("create-subject-feedback", "Errore durante la creazione della materia.", true);
     }
 }
 
