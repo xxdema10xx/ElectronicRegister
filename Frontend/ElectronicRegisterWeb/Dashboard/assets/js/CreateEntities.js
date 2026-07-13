@@ -184,6 +184,11 @@ async function initManagePage() {
     const userData = await getUserData();
     if (!userData) return;
 
+    populateUserBadge(userData);
+    const userBadgeRole = document.getElementById("user-badge-role");
+    if (userBadgeRole) userBadgeRole.innerText = capitalize(userData.role);
+    wireHeaderSearch();
+
     if (userData.role === "admin") {
         await initAdminSection();
     } else if (userData.role === "teacher") {

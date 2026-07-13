@@ -36,6 +36,11 @@ async function loadCardsData(userData) {
                 ],
                 ["Allievi", "Insegnanti", "Voti Totali", "Utenti"]
             );
+            const card3 = document.getElementById("card-3");
+            if (card3) {
+                card3.style.cursor = "pointer";
+                card3.onclick = () => window.location.href = "grades.html";
+            }
             break;
         case "teacher":
             if (chartTitle) chartTitle.innerText = "Media annuale dei voti da te inseriti";
@@ -222,20 +227,25 @@ function renderTeachersBodyAdmin(tbody, teachersData) {
     });
 }
 
-function renderAdminsBodyAdmin(tbody, adminsData) {
-    adminsData
-    .filter(admin => admin.role === "admin")
-    .forEach(admin => {
+function renderSubjectsBodyAdmin(tbody, subjectsData) {
+    subjectsData.forEach(subject => {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td class="min-width">
-                <p style="color: blue;">${admin.id}</p>
+                <p id="subject-name-${subject.id}" style="color: blue;">${subject.name}</p>
             </td>
             <td class="min-width">
-                <p>${admin.email}</p>
+                <p id="subject-teacher-${subject.id}" data-teacher-id="${subject.teacherId}">${subject.teacherFirstName} ${subject.teacherLastName}</p>
             </td>
-            <td class="min-width">
-                <p>${admin.role}</p>
+            <td>
+                <div class="action">
+                    <button class="text-success" data-id="${subject.id}" onclick="showModal('Subject', this.dataset.id)">
+                        <i class="lni lni-pencil-alt"></i>
+                    </button>
+                    <button class="text-danger" data-id="${subject.id}" onclick="deleteSubject(this.dataset.id)">
+                        <i class="lni lni-trash-can"></i>
+                    </button>
+                </div>
             </td>
         `;
         tbody.appendChild(row);
@@ -345,6 +355,72 @@ async function loadTable(ids, title, description, tableHeadHtml, dataUrl, render
     renderBody(tbody, data);
 }
 
+const PAGINATED_GRADES_PAGE_SIZE = 20;
+
+// Come loadTable, ma per la tabella Voti di teacher/student: carica i primi
+// 20 voti e ne carica altri 20 ogni volta che si scrolla vicino al fondo
+// della tabella, mostrando uno spinner durante il caricamento.
+async function loadPaginatedGradesTable(ids, title, description, tableHeadHtml, renderBody) {
+    document.getElementById(ids.title).innerText = title;
+    document.getElementById(ids.desc).innerText = description;
+    document.getElementById(ids.head).innerHTML = tableHeadHtml;
+
+    const tbody = document.getElementById(ids.body);
+    const container = tbody.closest(".table-responsive");
+    tbody.innerHTML = "";
+
+    let page = 0;
+    let total = 0;
+    let loadedCount = 0;
+    let loading = false;
+
+    function showSpinnerRow() {
+        const row = document.createElement("tr");
+        row.id = "grades-pagination-spinner-row";
+        row.innerHTML = `
+            <td colspan="100%" class="text-center" style="padding: 15px 0;">
+                <div class="grades-spinner mx-auto" style="width: 24px; height: 24px; border-width: 3px;"></div>
+            </td>
+        `;
+        tbody.appendChild(row);
+    }
+
+    function hideSpinnerRow() {
+        const row = document.getElementById("grades-pagination-spinner-row");
+        if (row) row.remove();
+    }
+
+    async function loadNextPage() {
+        if (loading || (page > 0 && loadedCount >= total)) return;
+        loading = true;
+        showSpinnerRow();
+
+        try {
+            const nextPage = page + 1;
+            const data = await sendTokenForData(
+                `${API_BASE}/api/Grade/paged?pageNumber=${nextPage}&pageSize=${PAGINATED_GRADES_PAGE_SIZE}`
+            );
+            page = nextPage;
+            total = data.totalCount;
+            loadedCount += data.items.length;
+            hideSpinnerRow();
+            renderBody(tbody, data.items);
+        } finally {
+            loading = false;
+            hideSpinnerRow();
+        }
+    }
+
+    if (container) {
+        container.addEventListener("scroll", () => {
+            const nearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 100;
+            if (nearBottom) loadNextPage();
+        });
+    }
+
+    await loadNextPage();
+}
+
 const entityFieldsConfig = {
     Users: [
         { key: "email",     domSuffix: "email",      inputId: "modal-email" },
@@ -363,6 +439,10 @@ const entityFieldsConfig = {
         { key: "subjectId", domSuffix: "subject", inputId: "modal-subject", type: "select" },
         { key: "value",     domSuffix: "grade",   inputId: "modal-grade" },
         { key: "date",      domSuffix: "date",    inputId: "modal-date" }
+    ],
+    Subject: [
+        { key: "name",      domSuffix: "name",    inputId: "modal-subject-name" },
+        { key: "teacherId", domSuffix: "teacher", inputId: "modal-subject-teacher", type: "teacherSelect", readAttr: "teacherId" }
     ]
 };
 
@@ -391,6 +471,28 @@ async function populateSubjectSelect(selectId, selectedName) {
     }
 }
 
+// Popola una <select> con tutti gli insegnanti presenti nel db,
+// selezionando l'opzione il cui id combacia con selectedTeacherId
+async function populateTeacherSelect(selectId, selectedTeacherId) {
+    const select = document.getElementById(selectId);
+    select.innerHTML = "";
+    try {
+        const teachers = await sendTokenForData(`${API_BASE}/api/Teacher`);
+        teachers.forEach(teacher => {
+            const option = document.createElement("option");
+            option.value = teacher.id;
+            option.textContent = `${teacher.firstName} ${teacher.lastName}`;
+            select.appendChild(option);
+        });
+
+        if (selectedTeacherId) {
+            select.value = selectedTeacherId;
+        }
+    } catch (e) {
+        console.error("Errore nel recupero degli insegnanti:", e);
+    }
+}
+
 async function showModal(type, id) {
     const config = entityFieldsConfig[type];
     if (!config) {
@@ -406,6 +508,8 @@ async function showModal(type, id) {
         type === "Grade" ? "block" : "none";
     document.getElementById("user-fields").style.display =
         type === "Users" ? "block" : "none";
+    document.getElementById("subject-fields").style.display =
+        type === "Subject" ? "block" : "none";
 
     for (const field of config) {
         if (field.skipRead) {
@@ -415,10 +519,14 @@ async function showModal(type, id) {
 
         const sourceElId = `${field.domSuffix}-${id}`;
         const sourceEl = document.getElementById(sourceElId);
-        const value = sourceEl ? sourceEl.textContent.trim() : "";
+        const value = field.readAttr
+            ? (sourceEl ? sourceEl.dataset[field.readAttr] : "")
+            : (sourceEl ? sourceEl.textContent.trim() : "");
 
         if (field.type === "select") {
             await populateSubjectSelect(field.inputId, value);
+        } else if (field.type === "teacherSelect") {
+            await populateTeacherSelect(field.inputId, value);
         } else {
             document.getElementById(field.inputId).value = value;
         }
@@ -488,23 +596,25 @@ async function deleteTeacher(id) {
     }
 }
 
+async function deleteSubject(id) {
+    if (!confirm("Sei sicuro di voler eliminare questa materia?")) return;
+
+    try {
+        await sendApiRequest(`${API_BASE}/api/Subject/${id}`, "DELETE");
+        loadPage();
+    } catch (e) {
+        console.error(e);
+        alert("Errore durante l'eliminazione della materia.");
+    }
+}
+
 async function loadPage() {
     const bottomTableRow = document.getElementById("bottom-table-row");
     const userBadgeRole = document.getElementById("user-badge-role");
     const userData = await getUserData();
     userBadgeRole.innerText = capitalize(userData.role) ?? "ERROR";
-    // Determina il fullName in base al tipo di utente
-    let fullName = userData.email; // Default to email if no name is available
-    if (userData.studentId) {
-        fullName = `${capitalize(userData.studentFirstName)} ${capitalize(userData.studentLastName)}`;
-    } else if (userData.teacherId) {
-        fullName = `${capitalize(userData.teacherFirstName)} ${capitalize(userData.teacherLastName)}`;
-    }
-
-    populateFields(
-        ["dropdown-badge-name", "dropdown-badge-email", "user-badge-name"],
-        [fullName, userData.email, fullName]
-    );
+    populateUserBadge(userData);
+    wireHeaderSearch();
 
     switch (userData.role) {
         case "admin":
@@ -572,15 +682,15 @@ async function loadPage() {
                     head: "bottom-table-head",
                     body: "bottom-table-body"
                 },
-                "Amministratori",
-                "Elenco di tutti gli amministratori.",
+                "Materie",
+                "Elimina e modifica materie.",
                 `<tr>
-                    <th><h6>Id</h6></th>
-                    <th><h6>Email</h6></th>
-                    <th><h6>Ruolo</h6></th>
+                    <th><h6>Nome</h6></th>
+                    <th><h6>Insegnante</h6></th>
+                    <th><h6>Action</h6></th>
                 </tr>`,
-                "/api/Users",
-                renderAdminsBodyAdmin
+                "/api/Subject",
+                renderSubjectsBodyAdmin
             );
         break;
 
@@ -588,7 +698,7 @@ async function loadPage() {
             if (bottomTableRow) bottomTableRow.style.display = "none";
             loadCardsData(userData);
             loadChartData();
-            loadTable(
+            loadPaginatedGradesTable(
                 {
                     title: "top-table-title",
                     desc: "top-table-desc",
@@ -604,7 +714,6 @@ async function loadPage() {
                     <th><h6>Data</h6></th>
                     <th><h6>Action</h6></th>
                 </tr>`,
-                "/api/Grade",
                 renderGradesBodyTeacher
             );
             loadTable(
@@ -644,7 +753,7 @@ async function loadPage() {
             if (bottomTableRow) bottomTableRow.style.display = "none";
             await loadCardsData(userData);
             await loadChartData();
-            loadTable(
+            loadPaginatedGradesTable(
                 {
                     title: "top-table-title",
                     desc: "top-table-desc",
@@ -658,7 +767,6 @@ async function loadPage() {
                     <th><h6>Voto</h6></th>
                     <th><h6>Data</h6></th>
                 </tr>`,
-                "/api/Grade",
                 renderGradesBodyStudent
             );
             loadTable(
