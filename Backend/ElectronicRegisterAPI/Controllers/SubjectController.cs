@@ -170,6 +170,10 @@ namespace ElectronicRegisterAPI.Controllers
         {
             var subject = await _context.Subjects.FindAsync(id);
             if (subject == null) return NotFound();
+
+            if (await _context.Grades.AnyAsync(g => g.SubjectId == id))
+                return BadRequest("Impossibile eliminare la materia: ha voti assegnati.");
+
             _context.Subjects.Remove(subject);
             await _context.SaveChangesAsync();
             return NoContent();
