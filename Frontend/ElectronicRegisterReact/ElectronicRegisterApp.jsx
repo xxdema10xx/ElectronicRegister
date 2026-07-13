@@ -589,26 +589,32 @@ function DashboardScreen({ navigate }) {
     { icon: "⚙️", label: "Profilo",           screen: "profile" },
   ];
 
-  const name = user?.studentFirstName || user?.teacherFirstName || user?.email?.split("@")[0] || "Utente";
+  const name = user?.studentFirstName || user?.teacherFirstName || user?.email?.split(".")[0] || "Utente";
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={[s.dashHeader, { position: "relative" }]}>
         <View style={{ flex: 1, marginRight: 8 }}>
           <Text style={s.dashWelcome}>Benvenuto,</Text>
-          <Text style={s.dashName}>{name} {user?.studentLastName || user?.teacherLastName || ""}</Text>
+          <Text style={s.dashName}>{name}</Text>
         </View>
         <Badge text={role} role={role} />
         <View
           pointerEvents="none"
-          style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, alignItems: "center", justifyContent: "center" }}
+          style={{
+            position: "absolute",
+            top: -40,        // distanza fissa dal bordo superiore dell'header
+            left: 0,
+            right: 0,
+            alignItems: "center",
+          }}
         >
-          <Image
-            source={require('./assets/images/logoits.png')}
-            style={{ width: 150, height: 100 }}
-            resizeMode="contain"
-          />
-        </View>
+  <Image
+    source={require('./assets/images/logoitsTrim.png')}
+    style={{ width: 150, height: 100 }}
+    resizeMode="contain"
+  />
+</View>
       </View>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <View style={s.dashGrid}>
