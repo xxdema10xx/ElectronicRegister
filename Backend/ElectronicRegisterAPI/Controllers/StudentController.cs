@@ -104,6 +104,10 @@ namespace ElectronicRegisterAPI.Controllers
         {
             var student = await _context.Students.FindAsync(id);
             if (student == null) return NotFound();
+
+            if (await _context.Grades.AnyAsync(g => g.StudentId == id))
+                return BadRequest("Impossibile eliminare l'allievo: ha voti assegnati.");
+
             _context.Students.Remove(student);
             await _context.SaveChangesAsync();
             return NoContent();

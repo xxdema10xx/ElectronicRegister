@@ -84,6 +84,13 @@ namespace ElectronicRegisterAPI.Controllers
         {
             var teacher = await _context.Teachers.FindAsync(id);
             if (teacher == null) return NotFound();
+
+            if (await _context.Subjects.AnyAsync(s => s.TeacherId == id))
+                return BadRequest("Impossibile eliminare l'insegnante: ha materie assegnate.");
+
+            if (await _context.Grades.AnyAsync(g => g.TeacherId == id))
+                return BadRequest("Impossibile eliminare l'insegnante: ha voti assegnati.");
+
             _context.Teachers.Remove(teacher);
             await _context.SaveChangesAsync();
             return NoContent();

@@ -4,6 +4,14 @@ const capitalize = (str = '') => {
         : '';
 };
 
+// sendApiRequest lancia errori come "API error 400: <messaggio dal backend>";
+// qui estraiamo solo il messaggio per mostrarlo all'utente, con un fallback
+// generico se non riconosciamo il formato.
+function extractApiErrorMessage(error, fallback) {
+    const match = /^API error \d+: (.+)$/s.exec(error?.message || "");
+    return match ? match[1] : fallback;
+}
+
 function populateFields(ids, values) {
     ids.forEach((id, i) => {
         const element = document.getElementById(id);

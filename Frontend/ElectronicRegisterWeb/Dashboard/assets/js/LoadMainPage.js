@@ -602,7 +602,7 @@ async function deleteStudent(id) {
         loadPage();
     } catch (e) {
         console.error(e);
-        alert("Errore durante l'eliminazione dell'allievo.");
+        alert(extractApiErrorMessage(e, "Errore durante l'eliminazione dell'allievo."));
     }
 }
 
@@ -614,7 +614,7 @@ async function deleteTeacher(id) {
         loadPage();
     } catch (e) {
         console.error(e);
-        alert("Errore durante l'eliminazione dell'insegnante.");
+        alert(extractApiErrorMessage(e, "Errore durante l'eliminazione dell'insegnante."));
     }
 }
 
@@ -626,7 +626,7 @@ async function deleteSubject(id) {
         loadPage();
     } catch (e) {
         console.error(e);
-        alert("Errore durante l'eliminazione della materia.");
+        alert(extractApiErrorMessage(e, "Errore durante l'eliminazione della materia."));
     }
 }
 
