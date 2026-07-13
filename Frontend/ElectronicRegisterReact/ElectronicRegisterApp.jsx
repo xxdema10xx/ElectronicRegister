@@ -922,7 +922,6 @@ function StudentsScreen() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(null);
   const [form, setForm] = useState({ firstName: "", lastName: "" });
 
@@ -937,13 +936,6 @@ function StudentsScreen() {
   }, [token, search]);
 
   useEffect(() => { load(); }, [load]);
-
-  async function add() {
-    try {
-      await api("POST", "/Student", form, token);
-      setShowAdd(false); setForm({ firstName: "", lastName: "" }); load();
-    } catch (e) { Alert.alert("Errore", e.message); }
-  }
 
   async function update() {
     try {
@@ -972,7 +964,7 @@ function StudentsScreen() {
           />
         </View>
         <SectionHeader title="Studenti" action={
-          role === "admin" && <Btn label="+ Studente" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
+          role === "admin"
         } />
         <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per cognome…"
           placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
@@ -998,11 +990,6 @@ function StudentsScreen() {
           )}
         />
       }
-      <FormModal visible={showAdd} title="Aggiungi studente" onClose={() => setShowAdd(false)}>
-        <Input label="Nome" value={form.firstName} onChangeText={v => setForm(f => ({ ...f, firstName: v }))} />
-        <Input label="Cognome" value={form.lastName} onChangeText={v => setForm(f => ({ ...f, lastName: v }))} />
-        <Btn label="Salva" onPress={add} />
-      </FormModal>
       <FormModal visible={!!showEdit} title="Modifica studente" onClose={() => setShowEdit(null)}>
         {showEdit && <>
           <Input label="Nome" value={showEdit.firstName} onChangeText={v => setShowEdit(f => ({ ...f, firstName: v }))} />
@@ -1020,7 +1007,6 @@ function TeachersScreen() {
   const role = user?.role?.toLowerCase();
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(null);
   const [form, setForm] = useState({ firstName: "", lastName: "" });
 
@@ -1034,13 +1020,6 @@ function TeachersScreen() {
   }, [token]);
 
   useEffect(() => { load(); }, [load]);
-
-  async function add() {
-    try {
-      await api("POST", "/Teacher", form, token);
-      setShowAdd(false); setForm({ firstName: "", lastName: "" }); load();
-    } catch (e) { Alert.alert("Errore", e.message); }
-  }
 
   async function update() {
     try {
@@ -1073,7 +1052,7 @@ function TeachersScreen() {
           />
         </View>
         <SectionHeader title="Professori" action={
-        role === "admin" && <Btn label="+ Professore" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
+        role === "admin"
       } /></View>
       {loading ? <Loader /> : teachers.length === 0 ? <EmptyState message="Nessun professore trovato" /> :
         <FlatList
@@ -1096,11 +1075,6 @@ function TeachersScreen() {
           )}
         />
       }
-      <FormModal visible={showAdd} title="Aggiungi professore" onClose={() => setShowAdd(false)}>
-        <Input label="Nome" value={form.firstName} onChangeText={v => setForm(f => ({ ...f, firstName: v }))} />
-        <Input label="Cognome" value={form.lastName} onChangeText={v => setForm(f => ({ ...f, lastName: v }))} />
-        <Btn label="Salva" onPress={add} />
-      </FormModal>
       <FormModal visible={!!showEdit} title="Modifica professore" onClose={() => setShowEdit(null)}>
         {showEdit && <>
           <Input label="Nome" value={showEdit.firstName} onChangeText={v => setShowEdit(f => ({ ...f, firstName: v }))} />
