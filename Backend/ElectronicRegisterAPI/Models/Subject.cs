@@ -10,4 +10,6 @@ public partial class Subject
     public required string Name { get; set; }
 
     public Guid TeacherId { get; set; }
+
+    public virtual Teacher Teacher { get; set; } = null!;
 }
