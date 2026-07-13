@@ -969,7 +969,11 @@ function TeachersScreen() {
       { text: "Annulla" },
       { text: "Elimina", style: "destructive", onPress: async () => {
         try { await api("DELETE", `/Teacher/${id}`, null, token); load(); }
-        catch (e) { Alert.alert("Errore", e.message); }
+        catch (e)
+        {
+          console.log(e.message);
+          Alert.alert("Errore", "Il docente ha una o più materie a suo carico, assegnarle ad un altro prima di procedere all'eliminazione");
+        }
       }},
     ]);
   }
@@ -1068,7 +1072,11 @@ function SubjectsScreen() {
       { text: "Annulla" },
       { text: "Elimina", style: "destructive", onPress: async () => {
         try { await api("DELETE", `/Subject/${id}`, null, token); load(); }
-        catch (e) { Alert.alert("Errore", e.message); }
+        catch (e)
+        {
+          console.log(e.message);
+          Alert.alert("Errore", "La materia non può essere eliminata perché ha dei voti associati");
+        }
       }},
     ]);
   }
