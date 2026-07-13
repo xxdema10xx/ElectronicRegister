@@ -130,7 +130,12 @@ namespace ElectronicRegisterAPI.Controllers
                     FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,
                     LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName
                 } : null
-            }).ToListAsync();
+            })
+            .OrderBy(g => g.Date)
+            .ThenBy(g => g.SubjectName)
+            .ThenBy(g => g.Value)
+            .ThenBy(g => g.StudentId)
+            .ToListAsync();
 
             // Nota: uno studente senza voti NON è un errore, è un caso normale
             return Ok(grades);
