@@ -13,6 +13,44 @@
     <link rel="stylesheet" href="assets/css/materialdesignicons.min.css" />
     <link rel="stylesheet" href="assets/css/fullcalendar.css" />
     <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+      .change-password-content {
+        border-radius: 12px;
+        overflow: hidden;
+        border: none;
+      }
+      .change-password-content .modal-header {
+        background: linear-gradient(135deg, #365CF5, #4338CA);
+        border-bottom: none;
+        padding: 20px 24px;
+      }
+      .change-password-content .modal-title {
+        color: #fff;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+      }
+      .change-password-content .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+      }
+      .change-password-content .modal-body {
+        padding: 24px;
+      }
+      .change-password-feedback {
+        margin-top: 10px;
+        margin-bottom: 0;
+        font-size: 13px;
+        min-height: 18px;
+        font-weight: 500;
+      }
+      .change-password-feedback.success { color: #10B981; }
+      .change-password-feedback.error { color: #EF4444; }
+      #current-password-field.field-error,
+      #new-password-field.field-error,
+      #confirm-password-field.field-error {
+        border: 1px solid #EF4444 !important;
+      }
+    </style>
   </head>
   <body>
     <!-- ======== Preloader =========== -->
@@ -209,9 +247,6 @@
               <div class="card-style settings-card-1 mb-30">
                 <div class="title mb-30 d-flex justify-content-between align-items-center">
                   <h6>Il Mio Profilo</h6>
-                  <button type="button" class="border-0 bg-transparent" onclick="toggleEdit()" id="toggle-edit-btn" hidden>
-                    <i class="lni lni-pencil-alt"></i>
-                  </button>
                 </div>
                 <div class="profile-info">
                   <div class="d-flex align-items-center mb-30">
@@ -227,21 +262,23 @@
                       <p class="text-sm text-gray" id="role-field"></p>
                     </div>
                   </div>
-                  <div class="input-style-1">
-                    <label>Nome</label>
-                    <input type="text" placeholder="First Name" value="" id="first-name-field" disabled/>
-                  </div>
-                  <div class="input-style-1">
-                    <label>Cognome</label>
-                    <input type="text" placeholder="Last Name" value="" id="last-name-field" disabled/>
+                  <div id="name-fields-wrapper">
+                    <div class="input-style-1">
+                      <label>Nome</label>
+                      <input type="text" placeholder="First Name" value="" id="first-name-field" disabled/>
+                    </div>
+                    <div class="input-style-1">
+                      <label>Cognome</label>
+                      <input type="text" placeholder="Last Name" value="" id="last-name-field" disabled/>
+                    </div>
                   </div>
                   <div class="input-style-1">
                     <label>Email</label>
                     <input type="email" placeholder="email@example.com" value="" id="email-field" disabled/>
                   </div>
                   <div class="col-12">
-                    <button class="main-btn primary-btn btn-hover" id="update-profile-btn" onclick="updateProfile()" hidden disabled>
-                      Aggiorna Profilo
+                    <button class="main-btn primary-btn btn-hover" id="show-password-modal-btn" onclick="showChangePasswordModal()">
+                      <i class="lni lni-lock-alt me-1"></i> Aggiorna Password
                     </button>
                   </div>
                 </div>
@@ -255,6 +292,38 @@
         <!-- end container -->
       </section>
       <!-- ========== section end ========== -->
+
+      <!-- ========== change password modal start ========== -->
+      <div class="modal fade" id="change-password-modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content change-password-content">
+            <div class="modal-header">
+              <h5 class="modal-title"><i class="lni lni-lock-alt me-2"></i>Aggiorna Password</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="input-style-1">
+                <label>Password Attuale</label>
+                <input type="password" id="current-password-field" placeholder="Password attuale" />
+              </div>
+              <div class="input-style-1">
+                <label>Nuova Password</label>
+                <input type="password" id="new-password-field" placeholder="Nuova password" />
+              </div>
+              <div class="input-style-1">
+                <label>Conferma Nuova Password</label>
+                <input type="password" id="confirm-password-field" placeholder="Ripeti la nuova password" />
+              </div>
+              <p id="change-password-feedback" class="change-password-feedback"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="main-btn light-btn btn-hover" data-bs-dismiss="modal">Annulla</button>
+              <button type="button" class="main-btn primary-btn btn-hover" id="save-password-btn" onclick="changePassword()">Salva</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ========== change password modal end ========== -->
 
       <!-- ========== footer start =========== -->
       <footer class="footer">
@@ -308,32 +377,17 @@
       const userBadgeRole = document.getElementById("user-badge-role");
       const firstNameField = document.getElementById("first-name-field");
       const lastNameField = document.getElementById("last-name-field");
+      const nameFieldsWrapper = document.getElementById("name-fields-wrapper");
       const roleField = document.getElementById("role-field");
       const emailField = document.getElementById("email-field");
-      const updateProfileBtn = document.getElementById("update-profile-btn");
-      const toggleEditBtn = document.getElementById("toggle-edit-btn");
-      const editableFields = [firstNameField, lastNameField, emailField];
+
+      let currentUserData = null;
 
       const capitalize = (str = '') => {
           return str.length
               ? str.charAt(0).toUpperCase() + str.slice(1)
               : '';
       };
-
-      function toggleProperty(elements, property) {
-        elements.forEach(element => {
-          element[property] = !element[property];
-        });
-      }
-
-      function toggleEdit() {
-        toggleProperty([...editableFields, updateProfileBtn], "disabled");
-        toggleProperty([updateProfileBtn], "hidden");
-        const bgColor = !firstNameField.disabled ? "white" : "#EFEFEF80";
-        editableFields.forEach(field => {
-          field.style.backgroundColor = bgColor;
-        });
-      }
 
       function populateFields(firstName, lastName, role, email) {
         const fullName = `${capitalize(firstName)} ${capitalize(lastName)}`.trim();
@@ -379,37 +433,94 @@
 
       async function loadPage() {
         const userData = await getUserData();
+        currentUserData = userData;
         userBadgeRole.innerText =  userData.role ?  userData.role : "ERROR"
         wireHeaderSearch();
         applyNavVisibility(userData);
-        if(userData.studentId) { 
+        if(userData.studentId) {
+          nameFieldsWrapper.style.display = "block";
           populateFields(userData.studentFirstName, userData.studentLastName, userData.role, userData.email)
         }
         else if(userData.teacherId) {
+          nameFieldsWrapper.style.display = "block";
           populateFields(userData.teacherFirstName, userData.teacherLastName, userData.role, userData.email)
         }
         else if(userData.role === "admin") {
-          const emailLocalPart = userData.email.split("@")[0];
-          populateFields(emailLocalPart, "", userData.role, userData.email);
-          toggleEditBtn.hidden = false;
+          nameFieldsWrapper.style.display = "none";
+          populateFields("", "", userData.role, userData.email);
+          fullNameField.innerText = userData.email.split("@")[0];
         }
       }
 
-      async function updateProfile() {
-        const API_BASE = `https://localhost:7225`;
-        const userData = await getUserData();
-        const data = {
-          email: emailField.value || null,
-          firstName: firstNameField.value || null,
-          lastName: lastNameField.value || null
-        };
-        try{
-          const res = await sendApiRequest(`${API_BASE}/api/Users/update/${userData.id}`, "PUT", data);
-          toggleEdit();
-          return res;
-        } catch(e) {
-          console.log(e);
-          console.log(e.message);
+      // sendApiRequest lancia errori come "API error 400: <messaggio dal backend>";
+      // estraiamo solo il messaggio per mostrarlo all'utente.
+      function extractApiErrorMessage(error, fallback) {
+        const match = /^API error \d+: (.+)$/s.exec(error?.message || "");
+        return match ? match[1] : fallback;
+      }
+
+      const passwordFieldIds = ["current-password-field", "new-password-field", "confirm-password-field"];
+
+      function markFieldError(id, hasError) {
+        document.getElementById(id).classList.toggle("field-error", hasError);
+      }
+
+      function setPasswordFeedback(message, isError) {
+        const feedback = document.getElementById("change-password-feedback");
+        feedback.textContent = message;
+        feedback.className = "change-password-feedback" + (message ? (isError ? " error" : " success") : "");
+      }
+
+      passwordFieldIds.forEach(id => {
+        document.getElementById(id).addEventListener("input", () => {
+          markFieldError(id, false);
+          setPasswordFeedback("", false);
+        });
+      });
+
+      function showChangePasswordModal() {
+        passwordFieldIds.forEach(id => {
+          document.getElementById(id).value = "";
+          markFieldError(id, false);
+        });
+        setPasswordFeedback("", false);
+        new bootstrap.Modal(document.getElementById("change-password-modal")).show();
+      }
+
+      async function changePassword() {
+        const currentPassword = document.getElementById("current-password-field").value;
+        const newPassword = document.getElementById("new-password-field").value;
+        const confirmPassword = document.getElementById("confirm-password-field").value;
+
+        passwordFieldIds.forEach(id => markFieldError(id, false));
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+          markFieldError("current-password-field", !currentPassword);
+          markFieldError("new-password-field", !newPassword);
+          markFieldError("confirm-password-field", !confirmPassword);
+          setPasswordFeedback("Compila tutti i campi.", true);
+          return;
+        }
+
+        if (newPassword !== confirmPassword) {
+          markFieldError("new-password-field", true);
+          markFieldError("confirm-password-field", true);
+          setPasswordFeedback("Le due password non coincidono.", true);
+          return;
+        }
+
+        try {
+          await sendApiRequest(`${API_BASE}/api/Users/updatepassword/${currentUserData.id}`, "PUT", {
+            oldPassword: currentPassword,
+            newPassword: newPassword
+          });
+          setPasswordFeedback("Password aggiornata con successo.", false);
+          setTimeout(() => {
+            bootstrap.Modal.getInstance(document.getElementById("change-password-modal"))?.hide();
+          }, 1200);
+        } catch (e) {
+          console.error(e);
+          setPasswordFeedback(extractApiErrorMessage(e, "Errore durante l'aggiornamento della password."), true);
         }
       }
 
