@@ -122,7 +122,7 @@ namespace ElectronicRegisterAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult> Add(SubjectDto subjectDto)
+        public async Task<ActionResult> Add(AddSubjectDto subjectDto)
         {
             //Check if teacher exists
             var teacher = await _context.Teachers.FindAsync(subjectDto.TeacherId);
