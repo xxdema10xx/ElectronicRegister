@@ -133,7 +133,7 @@ namespace ElectronicRegisterAPI.Controllers
                         } : null
                     }
                     )
-                .OrderBy(g => g.Date)
+                .OrderByDescending(g => g.Date)
                     .ThenBy(g => g.SubjectName)
                     .ThenBy(g => g.Value)
                     .ThenBy(g => g.StudentId)
