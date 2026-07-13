@@ -287,7 +287,14 @@ namespace ElectronicRegisterAPI.Controllers
         [HttpPut("update/{id}")]
         [Authorize(Roles = "teacher,admin")]
         public async Task<ActionResult> Update(Guid id, UpdateGradeDto dto)
-        { 
+        {
+            if(User.IsInRole("teacher"))
+            {
+                var teacherId = Guid.Parse(User.FindFirst("teacherId")?.Value!);
+                var gradeToUpdate = await _context.Grades.FindAsync(id);
+                if (gradeToUpdate == null) return NotFound();
+                if (gradeToUpdate.TeacherId != teacherId) return Forbid();
+            }
             var grade = await _context.Grades.FindAsync(id);
             if (grade == null) return NotFound();
             grade.SubjectId = dto.SubjectId;
@@ -303,6 +310,27 @@ namespace ElectronicRegisterAPI.Controllers
         [Authorize(Roles = "teacher,admin")]
         public async Task<ActionResult> Add(Grade grade)
         {
+            if(User.IsInRole("teacher"))
+            {
+                var teacherId = Guid.Parse(User.FindFirst("teacherId")?.Value!);
+                grade.TeacherId = teacherId;
+                // Check if the teacher is actually teaching the subject
+                var subject = await _context.Subjects.FindAsync(grade.SubjectId);
+                if (subject == null || subject.TeacherId != teacherId)
+                {
+                    return Forbid();
+                }
+            }
+            else if (User.IsInRole("admin"))
+            {
+                // Admin can set any teacherId, but we should validate it exists
+                var teacher = await _context.Teachers.FindAsync(grade.TeacherId);
+                if (teacher == null) return NotFound();
+            }
+            else
+            {
+                return Forbid();
+            }
             grade.Id = Guid.NewGuid();
             _context.Grades.Add(grade);
             await _context.SaveChangesAsync();

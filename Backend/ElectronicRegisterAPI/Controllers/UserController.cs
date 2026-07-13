@@ -124,7 +124,7 @@ namespace ElectronicRegisterAPI.Controllers
                 StudentId = dto.StudentId,
                 TeacherId = dto.TeacherId
             };
-
+            
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);

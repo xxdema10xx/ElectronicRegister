@@ -42,8 +42,8 @@ namespace ElectronicRegisterAPI.Controllers
                 Id = s.Id,
                 Name = s.Name,
                 TeacherId = s.TeacherId,
-                TeacherFirstName = s.Teacher != null ? s.Teacher.FirstName : null,
-                TeacherLastName = s.Teacher != null ? s.Teacher.LastName : null
+                TeacherFirstName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.FirstName : null,
+                TeacherLastName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.LastName : null
             }).ToListAsync();
             if (subjects.Count == 0) return NotFound();
             return Ok(subjects);
@@ -59,8 +59,8 @@ namespace ElectronicRegisterAPI.Controllers
                 Id = s.Id,
                 Name = s.Name,
                 TeacherId = s.TeacherId,
-                TeacherFirstName = s.Teacher != null ? s.Teacher.FirstName : null,
-                TeacherLastName = s.Teacher != null ? s.Teacher.LastName : null
+                TeacherFirstName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.FirstName : null,
+                TeacherLastName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.LastName : null
             }).FirstOrDefaultAsync();
             if (subject == null) return NotFound();
             return Ok(subject);
@@ -70,15 +70,15 @@ namespace ElectronicRegisterAPI.Controllers
         [Authorize(Roles = "teacher,admin,student")]
         public async Task<ActionResult<SubjectDto>> GetSubjectByName(string name)
         {
-            var subject = await _context.Subjects.Include(s => s.Teacher).FirstOrDefaultAsync(s => s.Name == name);
+            var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Name == name);
             if (subject == null) return NotFound();
             return Ok(new SubjectDto
             {
                 Id = subject.Id,
                 Name = subject.Name,
                 TeacherId = subject.TeacherId,
-                TeacherFirstName = subject.Teacher != null ? subject.Teacher.FirstName : null,
-                TeacherLastName = subject.Teacher != null ? subject.Teacher.LastName : null
+                TeacherFirstName = _context.Teachers.FirstOrDefault(t => t.Id == subject.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == subject.TeacherId)!.FirstName : null,
+                TeacherLastName = _context.Teachers.FirstOrDefault(t => t.Id == subject.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == subject.TeacherId)!.LastName : null
             });
         }
 
@@ -87,7 +87,6 @@ namespace ElectronicRegisterAPI.Controllers
         public async Task<ActionResult<List<SubjectDto>>> GetSubjectByTeacherId(Guid id)
         {
             var subject = await _context.Subjects
-                .Include(t => t.Teacher)
                 .Where(s => s.TeacherId == id)
                 .Select(
                     s => new SubjectDto
@@ -95,8 +94,8 @@ namespace ElectronicRegisterAPI.Controllers
                         Id = s.Id,
                         Name = s.Name,
                         TeacherId = s.TeacherId,
-                        TeacherFirstName = s.Teacher != null ? s.Teacher.FirstName : null,
-                        TeacherLastName = s.Teacher != null ? s.Teacher.LastName : null
+                        TeacherFirstName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.FirstName : null,
+                        TeacherLastName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.LastName : null
                     })
                 .ToListAsync();
             if (subject.Count == 0) return NotFound();
