@@ -735,7 +735,7 @@ function GradesScreen() {
           <Btn label="+ Voto" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
         } />
         {/* Filters */}
-        <View style={{ flexDirection: "row", gap: 8, marginBottom: 12 }}>
+        <View style={{ flexDirection: "row", gap: 8, marginBottom: 12, alignItems: "flex-start" }}>
           <TextInput style={[s.input, { flex: 1 }]} placeholder="Filtra materia" placeholderTextColor={C.textLight}
             value={filterSubject} onChangeText={v => { setFilterSubject(v); setFilterDate(""); }} />
           <View style={{ flex: 1 }}>
@@ -1521,9 +1521,9 @@ const s = StyleSheet.create({
   cardTitle:     { fontSize: 18, fontWeight: "700", color: C.text, marginBottom: 16 },
   // Inputs
   label:         { fontSize: 13, fontWeight: "600", color: C.textMuted, marginBottom: 6 },
-  input:         { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, padding: 12, fontSize: 15, color: C.text },
+  input:         { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, padding: 12, fontSize: 15,  color: C.text, height: 48 },
   // Select field
-  selectBox:     { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, padding: 12, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  selectBox:     { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, padding: 12, flexDirection: "row", alignItems: "center", justifyContent: "space-between", height: 48 },
   selectOption:  { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 14, paddingHorizontal: 4, borderBottomWidth: 1, borderBottomColor: C.border },
   selectOptionActive: { backgroundColor: "#EFF6FF" },
   selectOptionText: { fontSize: 15, color: C.text },
