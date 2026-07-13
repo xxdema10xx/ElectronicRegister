@@ -578,7 +578,6 @@ function GradesScreen() {
       await api("POST", "/Grade", {
         studentId: newGrade.studentId,
         subjectId: newGrade.subjectId,
-        teacherId: newGrade.teacherId,
         value: parseFloat(newGrade.value),
         date: newGrade.date,
       }, token);
@@ -676,15 +675,6 @@ function GradesScreen() {
           onSelect={(v) => setNewGrade(f => ({ ...f, subjectId: v }))}
           placeholder="Seleziona materia…"
           emptyMessage="Nessuna materia disponibile"
-        />
-        <SelectField
-          label="Professore"
-          value={newGrade.teacherId}
-          options={teachers}
-          getLabel={(t) => `${t.firstName} ${t.lastName}`}
-          onSelect={(v) => setNewGrade(f => ({ ...f, teacherId: v }))}
-          placeholder="Seleziona professore…"
-          emptyMessage="Nessun professore disponibile"
         />
         <Input label="Voto (1-10)" value={newGrade.value} onChangeText={v => setNewGrade(f => ({ ...f, value: v }))} keyboardType="decimal-pad" />
         <Input label="Data (YYYY-MM-DD)" value={newGrade.date} onChangeText={v => setNewGrade(f => ({ ...f, date: v }))} />

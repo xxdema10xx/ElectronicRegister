@@ -111,6 +111,19 @@ namespace ElectronicRegisterAPI.Controllers
             return NoContent();
         }
 
+        [HttpPut("updatepassword/{id}")]
+        [Authorize(Roles = "student,teacher,admin")]
+        public async Task<ActionResult> UpdatePassword(Guid id, UpdatePasswordDto dto)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+            if (!Bcrypt.Verify(dto.OldPassword, user.PasswordHash)) return BadRequest("Passwords don't match");
+            user.PasswordHash = Bcrypt.HashPassword(dto.NewPassword);
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
         [HttpPost]
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> Add(CreateUserDto dto)
@@ -124,7 +137,7 @@ namespace ElectronicRegisterAPI.Controllers
                 StudentId = dto.StudentId,
                 TeacherId = dto.TeacherId
             };
-            
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
