@@ -36,6 +36,23 @@ namespace ElectronicRegisterAPI.Controllers
         [Authorize(Roles = "teacher,admin,student")]
         public async Task<ActionResult<List<SubjectDto>>> GetAll()
         {
+            if (User.IsInRole("teacher"))
+            {
+                var teacherId = Guid.Parse(User.FindFirst("teacherId")?.Value!);
+                var teacherSubjects = await _context.Subjects
+                    .Where(s => s.TeacherId == teacherId)
+                    .Select(s => new SubjectDto
+                    {
+                        Id = s.Id,
+                        Name = s.Name,
+                        TeacherId = s.TeacherId,
+                        TeacherFirstName = s.Teacher != null ? s.Teacher.FirstName : null,
+                        TeacherLastName = s.Teacher != null ? s.Teacher.LastName : null
+                    })
+                    .ToListAsync();
+                if (teacherSubjects.Count == 0) return NotFound();
+                return Ok(teacherSubjects);
+            }
             var subjects = await _context.Subjects.Select(
             s => new SubjectDto
             {
