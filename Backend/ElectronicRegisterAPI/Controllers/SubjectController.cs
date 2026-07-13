@@ -42,8 +42,8 @@ namespace ElectronicRegisterAPI.Controllers
                 Id = s.Id,
                 Name = s.Name,
                 TeacherId = s.TeacherId,
-                TeacherFirstName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.FirstName : null,
-                TeacherLastName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.LastName : null
+                TeacherFirstName = s.Teacher != null ? s.Teacher.FirstName : null,
+                TeacherLastName = s.Teacher != null ? s.Teacher.LastName : null
             }).ToListAsync();
             if (subjects.Count == 0) return NotFound();
             return Ok(subjects);
@@ -59,8 +59,8 @@ namespace ElectronicRegisterAPI.Controllers
                 Id = s.Id,
                 Name = s.Name,
                 TeacherId = s.TeacherId,
-                TeacherFirstName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.FirstName : null,
-                TeacherLastName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.LastName : null
+                TeacherFirstName = s.Teacher != null ? s.Teacher.FirstName : null,
+                TeacherLastName = s.Teacher != null ? s.Teacher.LastName : null
             }).FirstOrDefaultAsync();
             if (subject == null) return NotFound();
             return Ok(subject);
@@ -70,15 +70,15 @@ namespace ElectronicRegisterAPI.Controllers
         [Authorize(Roles = "teacher,admin,student")]
         public async Task<ActionResult<SubjectDto>> GetSubjectByName(string name)
         {
-            var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Name == name);
+            var subject = await _context.Subjects.Include(s => s.Teacher).FirstOrDefaultAsync(s => s.Name == name);
             if (subject == null) return NotFound();
             return Ok(new SubjectDto
             {
                 Id = subject.Id,
                 Name = subject.Name,
                 TeacherId = subject.TeacherId,
-                TeacherFirstName = _context.Teachers.FirstOrDefault(t => t.Id == subject.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == subject.TeacherId)!.FirstName : null,
-                TeacherLastName = _context.Teachers.FirstOrDefault(t => t.Id == subject.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == subject.TeacherId)!.LastName : null
+                TeacherFirstName = subject.Teacher != null ? subject.Teacher.FirstName : null,
+                TeacherLastName = subject.Teacher != null ? subject.Teacher.LastName : null
             });
         }
 
@@ -87,6 +87,7 @@ namespace ElectronicRegisterAPI.Controllers
         public async Task<ActionResult<List<SubjectDto>>> GetSubjectByTeacherId(Guid id)
         {
             var subject = await _context.Subjects
+                .Include(t => t.Teacher)
                 .Where(s => s.TeacherId == id)
                 .Select(
                     s => new SubjectDto
@@ -94,8 +95,8 @@ namespace ElectronicRegisterAPI.Controllers
                         Id = s.Id,
                         Name = s.Name,
                         TeacherId = s.TeacherId,
-                        TeacherFirstName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.FirstName : null,
-                        TeacherLastName = _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId) != null ? _context.Teachers.FirstOrDefault(t => t.Id == s.TeacherId)!.LastName : null
+                        TeacherFirstName = s.Teacher != null ? s.Teacher.FirstName : null,
+                        TeacherLastName = s.Teacher != null ? s.Teacher.LastName : null
                     })
                 .ToListAsync();
             if (subject.Count == 0) return NotFound();
@@ -121,9 +122,18 @@ namespace ElectronicRegisterAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult> Add(Subject subject)
+        public async Task<ActionResult> Add(SubjectDto subjectDto)
         {
-            subject.Id = Guid.NewGuid();
+            //Check if teacher exists
+            var teacher = await _context.Teachers.FindAsync(subjectDto.TeacherId);
+            if(teacher == null) return NotFound();
+            //Create new subject
+            var subject = new Subject
+            {
+                Id = Guid.NewGuid(),
+                Name = subjectDto.Name,
+                TeacherId = teacher.Id
+            };
             _context.Subjects.Add(subject);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = subject.Id }, subject);
@@ -133,7 +143,7 @@ namespace ElectronicRegisterAPI.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            var subject = _subjects.FirstOrDefault(s => s.Id == id);
+            var subject = await _context.Subjects.FindAsync(id);
             if (subject == null) return NotFound();
             _context.Subjects.Remove(subject);
             await _context.SaveChangesAsync();
