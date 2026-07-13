@@ -44,7 +44,7 @@ function populateUserBadge(userData) {
 // Nasconde dalla sidebar le voci non pertinenti al ruolo: gli studenti non
 // devono vedere "Gestione" né "Voti", gli insegnanti non devono vedere "Voti".
 function applyNavVisibility(userData) {
-    const gestioneLink = document.querySelector('.sidebar-nav a[href="add-student.html"]');
+    const gestioneLink = document.querySelector('.sidebar-nav a[href="gestione.html"]');
     const votiLink = document.querySelector('.sidebar-nav a[href="grades.html"]');
 
     if (userData.role === "student") {
