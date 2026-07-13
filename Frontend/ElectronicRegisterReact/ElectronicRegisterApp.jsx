@@ -16,6 +16,7 @@ import {
 } from "react-native";
 
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Ionicons } from '@expo/vector-icons';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -570,23 +571,23 @@ function DashboardScreen({ navigate }) {
 
   const cards = [
     ...(role === "student" ? [
-      { icon: "📊", label: "I miei voti",    screen: "grades" },
-      { icon: "📚", label: "Materie",         screen: "subjects" },
-      { icon: "👩‍🏫", label: "Professori",     screen: "teachers" },
+      { icon: <Ionicons name="ribbon-outline" size={32} color={C.footer} />, label: "I miei voti",    screen: "grades" },
+      { icon: <Ionicons name="library-outline" size={32} color={C.footer} />, label: "Materie",         screen: "subjects" },
+      { icon: <Ionicons name="pencil-outline" size={32} color={C.footer} />, label: "Professori",     screen: "teachers" },
     ] : []),
     ...(role === "teacher" ? [
-      { icon: "📊", label: "Voti",            screen: "grades" },
-      { icon: "👨‍🎓", label: "Studenti",       screen: "students" },
-      { icon: "📚", label: "Materie",         screen: "subjects" },
+      { icon: <Ionicons name="ribbon-outline" size={32} color={C.footer} />, label: "Voti",            screen: "grades" },
+      { icon: <Ionicons name="school-outline" size={32} color={C.footer} />, label: "Studenti",       screen: "students" },
+      { icon: <Ionicons name="library-outline" size={32} color={C.footer} />, label: "Materie",         screen: "subjects" },
     ] : []),
     ...(role === "admin" ? [
-      { icon: "📊", label: "Voti",            screen: "grades" },
-      { icon: "👨‍🎓", label: "Studenti",       screen: "students" },
-      { icon: "👩‍🏫", label: "Professori",     screen: "teachers" },
-      { icon: "📚", label: "Materie",         screen: "subjects" },
-      { icon: "👤", label: "Utenti",          screen: "users" },
+      { icon: <Ionicons name="ribbon-outline" size={32} color={C.footer} />, label: "Voti",            screen: "grades" },
+      { icon: <Ionicons name="school-outline" size={32} color={C.footer} />, label: "Studenti",       screen: "students" },
+      { icon: <Ionicons name="pencil-outline" size={32} color={C.footer} />, label: "Professori",     screen: "teachers" },
+      { icon: <Ionicons name="library-outline" size={32} color={C.footer} />, label: "Materie",         screen: "subjects" },
+      { icon: <Ionicons name="people-circle-outline" size={32} color={C.footer} />, label: "Utenti",          screen: "users" },
     ] : []),
-    { icon: "⚙️", label: "Profilo",           screen: "profile" },
+    { icon: <Ionicons name="person-circle-outline" size={32} color={C.footer} />, label: "Profilo",           screen: "profile" },
   ];
 
   const name = user?.studentFirstName || user?.teacherFirstName || user?.email?.split(".")[0] || "Utente";
@@ -770,11 +771,11 @@ function GradesScreen() {
               {(role === "teacher" || role === "admin") && (
                 <View style={{ flexDirection: "row", gap: 6 }}>
                   <TouchableOpacity onPress={() => setShowEdit({ ...g })}>
-                    <Text style={s.actionIcon}>✏️</Text>
+                    <Ionicons name="create-outline" size={32} color={C.footer} />
                   </TouchableOpacity>
                   {role === "admin" && (
                     <TouchableOpacity onPress={() => deleteGrade(g.id)}>
-                      <Text style={s.actionIcon}>🗑️</Text>
+                      <Ionicons name="trash-outline" size={32} color={C.footer} />
                     </TouchableOpacity>
                   )}
                 </View>
@@ -904,8 +905,8 @@ function StudentsScreen() {
               </View>
               {role === "admin" && (
                 <View style={{ flexDirection: "row", gap: 8 }}>
-                  <TouchableOpacity onPress={() => setShowEdit({ ...st })}><Text style={s.actionIcon}>✏️</Text></TouchableOpacity>
-                  <TouchableOpacity onPress={() => del(st.id)}><Text style={s.actionIcon}>🗑️</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={() => setShowEdit({ ...st })}><Ionicons name="create-outline" size={32} color={C.footer} /></TouchableOpacity>
+                  <TouchableOpacity onPress={() => del(st.id)}><Ionicons name="trash-outline" size={32} color={C.footer} /></TouchableOpacity>
                 </View>
               )}
             </Card>
@@ -998,8 +999,8 @@ function TeachersScreen() {
               </View>
               {role === "admin" && (
                 <View style={{ flexDirection: "row", gap: 8 }}>
-                  <TouchableOpacity onPress={() => setShowEdit({ ...t })}><Text style={s.actionIcon}>✏️</Text></TouchableOpacity>
-                  <TouchableOpacity onPress={() => del(t.id)}><Text style={s.actionIcon}>🗑️</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={() => setShowEdit({ ...t })}><Ionicons name="create-outline" size={32} color={C.footer} /></TouchableOpacity>
+                  <TouchableOpacity onPress={() => del(t.id)}><Ionicons name="trash-outline" size={32} color={C.footer} /></TouchableOpacity>
                 </View>
               )}
             </Card>
@@ -1101,8 +1102,8 @@ function SubjectsScreen() {
               </View>
               {role === "admin" && (
                 <View style={{ flexDirection: "row", gap: 8 }}>
-                  <TouchableOpacity onPress={() => setShowEdit({ ...sub })}><Text style={s.actionIcon}>✏️</Text></TouchableOpacity>
-                  <TouchableOpacity onPress={() => del(sub.id)}><Text style={s.actionIcon}>🗑️</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={() => setShowEdit({ ...sub })}><Ionicons name="create-outline" size={32} color={C.footer} /></TouchableOpacity>
+                  <TouchableOpacity onPress={() => del(sub.id)}><Ionicons name="trash-outline" size={32} color={C.footer} /></TouchableOpacity>
                 </View>
               )}
             </Card>
@@ -1222,8 +1223,8 @@ function UsersScreen() {
                 <Badge text={u.role} role={u.role} />
               </View>
               <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: 8, marginTop: 8 }}>
-                <TouchableOpacity onPress={() => setShowEdit({ ...u })}><Text style={s.actionIcon}>✏️</Text></TouchableOpacity>
-                <TouchableOpacity onPress={() => del(u.id)}><Text style={s.actionIcon}>🗑️</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => setShowEdit({ ...u })}><Ionicons name="create-outline" size={32} color={C.footer} /></TouchableOpacity>
+                <TouchableOpacity onPress={() => del(u.id)}><Ionicons name="trash-outline" size={32} color={C.footer} /></TouchableOpacity>
               </View>
             </Card>
           )}
@@ -1375,12 +1376,12 @@ function ProfileScreen({ onLogout }) {
     </Card>
  
     <Btn
-      label={isAdmin ? "✏️  Modifica profilo" : "🔒  Cambia password"}
+      label={isAdmin ? "Modifica profilo" : "Cambia password"}
       onPress={() => setShowEdit(true)}
       style={{ marginTop: 16 }}
       variant="primary"
     />
-    <Btn label="🚪  Logout" onPress={onLogout} style={{ marginTop: 10 }} variant="danger" />
+    <Btn label="Logout" onPress={onLogout} style={{ marginTop: 10 }} variant="danger" />
     
           {isAdmin ? (
     <FormModal visible={showEdit} title="Modifica profilo" onClose={() => { setShowEdit(false); resetForms(); }}>
@@ -1409,11 +1410,11 @@ function AppNav({ token, user, onLogout }) {
   const insets = useSafeAreaInsets(); // ← aggiungi questa riga
 
   const tabs = [
-    { key: "dashboard", icon: "🏠", label: "Home" },
-    { key: "grades",    icon: "📊", label: "Voti" },
-    { key: "subjects",  icon: "📚", label: "Materie" },
-    ...(user?.role !== "student" ? [{ key: "students", icon: "👨‍🎓", label: "Studenti" }] : []),
-    { key: "profile",   icon: "👤", label: "Profilo" },
+    { key: "dashboard", icon: <Ionicons name="home-outline" size={32} color={C.white} />, label: "Home" },
+    { key: "grades",    icon: <Ionicons name="ribbon-outline" size={32} color={C.white} />, label: "Voti" },
+    { key: "subjects",  icon: <Ionicons name="library-outline" size={32} color={C.white} />, label: "Materie" },
+    ...(user?.role !== "student" ? [{ key: "students", icon: <Ionicons name="school-outline" size={32} color={C.white} />, label: "Studenti" }] : []),
+    { key: "profile",   icon: <Ionicons name="person-circle-outline" size={32} color={C.white} />, label: "Profilo" },
   ];
 
   const SCREENS = {
