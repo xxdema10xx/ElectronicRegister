@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon" />
-    <title>Profile | PlainAdmin Demo</title>
+    <title>Voti</title>
 
     <!-- ========== All CSS files linkup ========= -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
@@ -13,6 +13,16 @@
     <link rel="stylesheet" href="assets/css/materialdesignicons.min.css" />
     <link rel="stylesheet" href="assets/css/fullcalendar.css" />
     <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+      .grades-spinner {
+        width: 60px;
+        height: 60px;
+        border: 5px solid #365CF5;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spinner 0.9s linear infinite;
+      }
+    </style>
   </head>
   <body>
     <!-- ======== Preloader =========== -->
@@ -55,7 +65,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="grades.html">
+            <a href="grades.html" class="active">
               <span class="icon">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -70,7 +80,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="profile.html" class="active">
+            <a href="profile.html">
               <span class="icon">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -111,6 +121,7 @@
             </div>
             <div class="col-lg-7 col-md-7 col-6">
               <div class="header-right">
+                <!-- profile start -->
                 <div class="profile-box ml-15">
                   <button class="dropdown-toggle bg-transparent border-0" type="button" id="profile"
                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -134,31 +145,21 @@
                         </div>
                         <div class="content">
                           <h4 class="text-sm" id="dropdown-badge-name"></h4>
-                          <a href="#" id="dropdown-badge-email" style="color: blueviolet; font-size: xx-small;"></a>
+                          <a class="text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white text-xs"
+                            href="#" id="dropdown-badge-email"></a>
                         </div>
                       </div>
                     </li>
                     <li class="divider"></li>
                     <li>
                       <a href="profile.html">
-                        <i class="lni lni-user"></i> Profilo
+                        <i class="lni lni-user"></i> View Profile
                       </a>
-                    </li>
-                    <li>
-                      <a href="#0">
-                        <i class="lni lni-alarm"></i> Notifiche
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#0"> <i class="lni lni-inbox"></i> Messaggi </a>
-                    </li>
-                    <li>
-                      <a href="#0"> <i class="lni lni-cog"></i> Impostazioni </a>
                     </li>
                     <li class="divider"></li>
                     <li>
-                      <button onclick="logout()" style="background-color: rgba(0, 0, 0, 0);">
-                        <a> <i class="lni lni-exit"></i> Esci </a>
+                      <button onclick="logout()" style="background-color: rgba(0, 0, 0, 0); border: none;">
+                        <a> <i class="lni lni-exit"></i> Log Out </a>
                       </button>
                     </li>
                   </ul>
@@ -171,15 +172,15 @@
       </header>
       <!-- ========== header end ========== -->
 
-      <!-- ========== section start ========== -->
-      <section class="section">
+      <!-- ========== tab components start ========== -->
+      <section class="tab-components">
         <div class="container-fluid">
           <!-- ========== title-wrapper start ========== -->
           <div class="title-wrapper pt-30">
             <div class="row align-items-center">
               <div class="col-md-6">
                 <div class="title">
-                  <h2>Profilo</h2>
+                  <h2>Voti</h2>
                 </div>
               </div>
               <!-- end col -->
@@ -188,11 +189,10 @@
                   <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                       <li class="breadcrumb-item">
-                        <a href="#0">Dashboard</a>
+                        <a href="index.html">Dashboard</a>
                       </li>
-                      <li class="breadcrumb-item"><a href="#0">Pages</a></li>
                       <li class="breadcrumb-item active" aria-current="page">
-                        Profilo
+                        Voti
                       </li>
                     </ol>
                   </nav>
@@ -204,57 +204,98 @@
           </div>
           <!-- ========== title-wrapper end ========== -->
 
-          <div class="row">
-            <div>
-              <div class="card-style settings-card-1 mb-30">
-                <div class="title mb-30 d-flex justify-content-between align-items-center">
-                  <h6>Il Mio Profilo</h6>
-                  <button type="button" class="border-0 bg-transparent" onclick="toggleEdit()" id="toggle-edit-btn" hidden>
-                    <i class="lni lni-pencil-alt"></i>
-                  </button>
-                </div>
-                <div class="profile-info">
-                  <div class="d-flex align-items-center mb-30">
-                    <div class="profile-image">
-                      <img src="assets/images/profile/default.png" alt="" />
-                      <div class="update-image">
-                        <input type="file" />
-                        <label for=""><i class="lni lni-cloud-upload"></i></label>
-                      </div>
-                    </div>
-                    <div class="profile-meta">
-                      <h5 class="text-bold text-dark mb-10" id="full-name-field"></h5>
-                      <p class="text-sm text-gray" id="role-field"></p>
-                    </div>
-                  </div>
-                  <div class="input-style-1">
-                    <label>Nome</label>
-                    <input type="text" placeholder="First Name" value="" id="first-name-field" disabled/>
-                  </div>
-                  <div class="input-style-1">
-                    <label>Cognome</label>
-                    <input type="text" placeholder="Last Name" value="" id="last-name-field" disabled/>
-                  </div>
-                  <div class="input-style-1">
-                    <label>Email</label>
-                    <input type="email" placeholder="email@example.com" value="" id="email-field" disabled/>
-                  </div>
-                  <div class="col-12">
-                    <button class="main-btn primary-btn btn-hover" id="update-profile-btn" onclick="updateProfile()" hidden disabled>
-                      Aggiorna Profilo
-                    </button>
+          <!-- ========== grades loading spinner ========== -->
+          <div id="grades-loading" class="text-center" style="padding: 60px 0;">
+            <div class="grades-spinner mx-auto mb-15"></div>
+            <p>Caricamento voti...</p>
+          </div>
+          <!-- ========== grades table ========== -->
+          <div id="grades-table-wrapper" class="card-style mb-30" style="display:none;">
+            <h6 class="mb-25">Tutti i voti</h6>
+            <div class="row mb-20">
+              <div class="col-lg-4">
+                <div class="select-style-1">
+                  <label>Materia</label>
+                  <div class="select-position">
+                    <select id="filter-subject">
+                      <option value="">Tutte le materie</option>
+                    </select>
                   </div>
                 </div>
               </div>
-              <!-- end card -->
+              <div class="col-lg-4">
+                <div class="select-style-1">
+                  <label>Allievo</label>
+                  <div class="select-position">
+                    <select id="filter-student">
+                      <option value="">Tutti gli allievi</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="input-style-1">
+                  <label>Data</label>
+                  <input type="date" id="filter-date" />
+                </div>
+              </div>
             </div>
-            <!-- end col -->
+            <div class="table-wrapper table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th><h6>Voto</h6></th>
+                    <th><h6>Allievo</h6></th>
+                    <th><h6>Materia</h6></th>
+                    <th><h6>Data</h6></th>
+                    <th><h6>Action</h6></th>
+                  </tr>
+                </thead>
+                <tbody id="grades-table-body"></tbody>
+              </table>
+              <!-- end table -->
+            </div>
+            <div id="grades-loading-more" class="text-center" style="display:none; padding: 20px 0;">
+              <div class="grades-spinner mx-auto" style="width: 30px; height: 30px; border-width: 3px;"></div>
+            </div>
           </div>
-          <!-- end row -->
         </div>
         <!-- end container -->
       </section>
-      <!-- ========== section end ========== -->
+      <!-- ========== tab components end ========== -->
+
+      <!-- ========== modal start ========== -->
+      <div class="modal fade" id="edit-grade-modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Modifica Voto</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="select-style-1">
+                <label>Materia</label>
+                <div class="select-position">
+                  <select id="grade-modal-subject"></select>
+                </div>
+              </div>
+              <div class="input-style-1">
+                <label>Voto</label>
+                <input type="number" id="grade-modal-value" step="0.5" min="0" max="10" />
+              </div>
+              <div class="input-style-1">
+                <label>Data</label>
+                <input type="date" id="grade-modal-date" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="main-btn light-btn btn-hover" data-bs-dismiss="modal">Annulla</button>
+              <button type="button" class="main-btn primary-btn btn-hover" id="grade-modal-save-btn">Salva</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ========== modal end ========== -->
 
       <!-- ========== footer start =========== -->
       <footer class="footer">
@@ -285,11 +326,13 @@
       <!-- ========== footer end =========== -->
     </main>
     <!-- ======== main-wrapper end =========== -->
-    
+
     <!-- ========= All Javascript files linkup ======== -->
     <script src="../config.js"></script>
     <script src="assets/js/Authentication.js"></script>
     <script src="assets/js/ApiRequests.js?v=2"></script>
+    <script src="assets/js/utils.js?v=3"></script>
+    <script src="assets/js/GradesPage.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/Chart.min.js"></script>
     <script src="assets/js/dynamic-pie-chart.js"></script>
@@ -299,108 +342,5 @@
     <script src="assets/js/world-merc.js"></script>
     <script src="assets/js/polyfill.js"></script>
     <script src="assets/js/main.js"></script>
-
-    <script>
-      const dropDownBadgeName = document.getElementById("dropdown-badge-name");
-      const dropDownBadgeEmail = document.getElementById("dropdown-badge-email");
-      const fullNameField = document.getElementById("full-name-field");
-      const userBadgeName = document.getElementById("user-badge-name");
-      const userBadgeRole = document.getElementById("user-badge-role");
-      const firstNameField = document.getElementById("first-name-field");
-      const lastNameField = document.getElementById("last-name-field");
-      const roleField = document.getElementById("role-field");
-      const emailField = document.getElementById("email-field");
-      const updateProfileBtn = document.getElementById("update-profile-btn");
-      const toggleEditBtn = document.getElementById("toggle-edit-btn");
-      const editableFields = [firstNameField, lastNameField, emailField];
-
-      const capitalize = (str = '') => {
-          return str.length
-              ? str.charAt(0).toUpperCase() + str.slice(1)
-              : '';
-      };
-
-      function toggleProperty(elements, property) {
-        elements.forEach(element => {
-          element[property] = !element[property];
-        });
-      }
-
-      function toggleEdit() {
-        toggleProperty([...editableFields, updateProfileBtn], "disabled");
-        toggleProperty([updateProfileBtn], "hidden");
-        const bgColor = !firstNameField.disabled ? "white" : "#EFEFEF80";
-        editableFields.forEach(field => {
-          field.style.backgroundColor = bgColor;
-        });
-      }
-
-      function populateFields(firstName, lastName, role, email) {
-        const fullName = `${capitalize(firstName)} ${capitalize(lastName)}`.trim();
-        dropDownBadgeName.innerText = fullName;
-        dropDownBadgeEmail.innerText = email;
-        fullNameField.innerText = fullName;
-        userBadgeName.innerText = fullName;
-        userBadgeRole.innerText = capitalize(role);
-        firstNameField.value = capitalize(firstName);
-        lastNameField.value = capitalize(lastName);
-        roleField.innerText = capitalize(role);
-        emailField.value = email;
-      }
-
-      function wireHeaderSearch() {
-        const input = document.querySelector(".header-search input");
-        if (!input) return;
-
-        const form = input.closest("form");
-        if (form) form.addEventListener("submit", e => e.preventDefault());
-
-        input.addEventListener("input", () => {
-          const query = input.value.trim().toLowerCase();
-          document.querySelectorAll(".main-wrapper table tbody").forEach(tbody => {
-            Array.from(tbody.rows).forEach(row => {
-              row.style.display = !query || row.textContent.toLowerCase().includes(query) ? "" : "none";
-            });
-          });
-        });
-      }
-
-      async function loadPage() {
-        const userData = await getUserData();
-        userBadgeRole.innerText =  userData.role ?  userData.role : "ERROR"
-        wireHeaderSearch();
-        if(userData.studentId) { 
-          populateFields(userData.studentFirstName, userData.studentLastName, userData.role, userData.email)
-        }
-        else if(userData.teacherId) {
-          populateFields(userData.teacherFirstName, userData.teacherLastName, userData.role, userData.email)
-        }
-        else if(userData.role === "admin") {
-          const emailLocalPart = userData.email.split("@")[0];
-          populateFields(emailLocalPart, "", userData.role, userData.email);
-          toggleEditBtn.hidden = false;
-        }
-      }
-
-      async function updateProfile() {
-        const API_BASE = `https://localhost:7225`;
-        const userData = await getUserData();
-        const data = {
-          email: emailField.value || null,
-          firstName: firstNameField.value || null,
-          lastName: lastNameField.value || null
-        };
-        try{
-          const res = await sendApiRequest(`${API_BASE}/api/Users/update/${userData.id}`, "PUT", data);
-          toggleEdit();
-          return res;
-        } catch(e) {
-          console.log(e);
-          console.log(e.message);
-        }
-      }
-
-      loadPage();
-    </script>
   </body>
 </html>

@@ -83,7 +83,100 @@ namespace ElectronicRegisterAPI.Controllers
             });
         }
 
-        //NEW GET ALL METHOD: The following code is the new GetAll() method that includes role-based filtering for students and teachers. 
+        [HttpGet("filters")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<GradeFiltersDto>> GetFilters()
+        {
+            var subjectIds = await _context.Grades.Select(g => g.SubjectId).Distinct().ToListAsync();
+            var studentIds = await _context.Grades.Select(g => g.StudentId).Distinct().ToListAsync();
+
+            var subjects = await _context.Subjects
+                .Where(s => subjectIds.Contains(s.Id))
+                .Select(s => new SubjectDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    TeacherId = s.TeacherId,
+                    TeacherFirstName = s.Teacher != null ? s.Teacher.FirstName : null,
+                    TeacherLastName = s.Teacher != null ? s.Teacher.LastName : null
+                })
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+
+            var students = await _context.Students
+                .Where(s => studentIds.Contains(s.Id))
+                .Select(s => new StudentDto
+                {
+                    Id = s.Id,
+                    FirstName = s.FirstName,
+                    LastName = s.LastName
+                })
+                .OrderBy(s => s.FirstName).ThenBy(s => s.LastName)
+                .ToListAsync();
+
+            return Ok(new GradeFiltersDto { Subjects = subjects, Students = students });
+        }
+
+        [HttpGet("paged")]
+        [Authorize(Roles = "teacher,admin,student")]
+        public async Task<ActionResult<GradePageDto>> GetPaged(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 20,
+            [FromQuery] Guid? subjectId = null,
+            [FromQuery] Guid? studentId = null,
+            [FromQuery] DateOnly? date = null)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1 || pageSize > 100) pageSize = 20;
+
+            var query = _context.Grades.AsQueryable();
+
+            if (User.IsInRole("student"))
+            {
+                var claimStudentId = Guid.Parse(User.FindFirst("studentId")?.Value!);
+                query = query.Where(g => g.StudentId == claimStudentId);
+            }
+            else if (User.IsInRole("teacher"))
+            {
+                var claimTeacherId = Guid.Parse(User.FindFirst("teacherId")?.Value!);
+                query = query.Where(g => g.TeacherId == claimTeacherId);
+            }
+
+            if (subjectId.HasValue) query = query.Where(g => g.SubjectId == subjectId.Value);
+            if (studentId.HasValue) query = query.Where(g => g.StudentId == studentId.Value);
+            if (date.HasValue) query = query.Where(g => g.Date == date.Value);
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(g => g.Date)
+                    .ThenBy(g => g.SubjectId)
+                    .ThenBy(g => g.Value)
+                    .ThenBy(g => g.StudentId)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(g => new GradeDto
+                {
+                    Id = g.Id,
+                    StudentId = g.StudentId,
+                    SubjectId = g.SubjectId,
+                    SubjectName = _context.Subjects.FirstOrDefault(s => s.Id == g.SubjectId)!.Name,
+                    TeacherId = g.TeacherId,
+                    Value = g.Value,
+                    Date = g.Date,
+                    Student = _context.Students.FirstOrDefault(s => s.Id == g.StudentId) != null ? new StudentDto
+                    {
+                        Id = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.Id,
+                        FirstName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.FirstName,
+                        LastName = _context.Students.FirstOrDefault(s => s.Id == g.StudentId)!.LastName
+                    } : null
+                })
+                .ToListAsync();
+
+            return Ok(new GradePageDto { Items = items, TotalCount = totalCount });
+        }
+
+        //NEW GET ALL METHOD: The following code is the new GetAll() method that includes role-based filtering for students and teachers.
         // It replaces the old GetAll() method that was commented out below. 
         // The new method ensures that students can only see their own grades and teachers can only see grades for their own students.
         [HttpGet]
