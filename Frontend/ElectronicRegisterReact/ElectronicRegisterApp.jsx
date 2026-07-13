@@ -645,8 +645,12 @@ function GradesScreen() {
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(null);
-  const [filterSubject, setFilterSubject] = useState("");
+  // Filtri come su grades.html: materia e allievo sono select (solo tra le
+  // materie/allievi che hanno almeno un voto), la data è un calendario.
+  const [filterSubjectId, setFilterSubjectId] = useState("");
+  const [filterStudentId, setFilterStudentId] = useState("");
   const [filterDate, setFilterDate] = useState("");
+  const [filterOptions, setFilterOptions] = useState({ subjects: [], students: [] });
   const [newGrade, setNewGrade] = useState({ studentId: "", subjectId: "", teacherId: "", value: "", date: "" });
   // Paginazione lato server (come sul web): carichiamo GRADES_PAGE_SIZE voti
   // alla volta tramite /Grade/paged, aggiungendo altre pagine man mano che
@@ -656,47 +660,60 @@ function GradesScreen() {
   const pageRef = useRef(0);
   const totalRef = useRef(0);
 
-  // Traduce i filtri (materia per nome, data) in query string per l'endpoint
-  // paginato, che accetta subjectId (guid) e date, non un nome di materia.
-  const fetchGradesPage = useCallback(async (pageNumber, subjectsList) => {
+  const hasActiveFilters = !!(filterSubjectId || filterStudentId || filterDate);
+
+  function clearFilters() {
+    setFilterSubjectId("");
+    setFilterStudentId("");
+    setFilterDate("");
+  }
+
+  const fetchGradesPage = useCallback(async (pageNumber) => {
     const params = new URLSearchParams({
       pageNumber: String(pageNumber),
       pageSize: String(GRADES_PAGE_SIZE),
     });
-
-    if (filterSubject) {
-      const match = subjectsList.find(s => s.name === filterSubject.trim());
-      if (!match) return { items: [], totalCount: 0 };
-      params.set("subjectId", match.id);
-    } else if (filterDate) {
-      params.set("date", filterDate);
-    }
+    if (filterSubjectId) params.set("subjectId", filterSubjectId);
+    if (filterStudentId) params.set("studentId", filterStudentId);
+    if (filterDate) params.set("date", filterDate);
 
     return api("GET", `/Grade/paged?${params.toString()}`, null, token);
-  }, [token, filterSubject, filterDate]);
+  }, [token, filterSubjectId, filterStudentId, filterDate]);
 
-  const load = useCallback(async ({ isRefresh } = {}) => {
-    isRefresh ? setRefreshing(true) : setLoading(true);
+  // Anagrafiche e opzioni dei filtri: non dipendono dai filtri attivi, quindi
+  // vengono ricaricate solo al mount e col pull-to-refresh, non a ogni tap
+  // su un filtro.
+  const loadMeta = useCallback(async () => {
     try {
       const sub = await api("GET", "/Subject", null, token);
-      const subList = Array.isArray(sub) ? sub : [];
-      setSubjects(subList);
+      setSubjects(Array.isArray(sub) ? sub : []);
       if (role !== "student") {
         const st = await api("GET", "/Student", null, token);
         setStudents(Array.isArray(st) ? st : []);
         const te = await api("GET", "/Teacher", null, token);
         setTeachers(Array.isArray(te) ? te : []);
       }
+      const filters = await api("GET", "/Grade/filters", null, token).catch(() => ({ subjects: [], students: [] }));
+      setFilterOptions({
+        subjects: Array.isArray(filters?.subjects) ? filters.subjects : [],
+        students: Array.isArray(filters?.students) ? filters.students : [],
+      });
+    } catch (e) { /* non bloccante per la lista voti */ }
+  }, [token, role]);
 
-      const result = await fetchGradesPage(1, subList);
+  const loadGrades = useCallback(async ({ isRefresh } = {}) => {
+    isRefresh ? setRefreshing(true) : setLoading(true);
+    try {
+      const result = await fetchGradesPage(1);
       pageRef.current = 1;
       totalRef.current = result.totalCount;
       setGrades(result.items);
     } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setGrades([]); }
     finally { isRefresh ? setRefreshing(false) : setLoading(false); }
-  }, [token, role, fetchGradesPage]);
+  }, [fetchGradesPage]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { loadMeta(); }, [loadMeta]);
+  useEffect(() => { loadGrades(); }, [loadGrades]);
 
   const hasMore = grades.length < totalRef.current;
 
@@ -705,7 +722,7 @@ function GradesScreen() {
     setLoadingMore(true);
     try {
       const nextPage = pageRef.current + 1;
-      const result = await fetchGradesPage(nextPage, subjects);
+      const result = await fetchGradesPage(nextPage);
       pageRef.current = nextPage;
       totalRef.current = result.totalCount;
       setGrades(prev => prev.concat(result.items));
@@ -714,7 +731,13 @@ function GradesScreen() {
   }
 
   function onRefresh() {
-    load({ isRefresh: true });
+    loadMeta();
+    loadGrades({ isRefresh: true });
+  }
+
+  function refreshAll() {
+    loadMeta();
+    loadGrades();
   }
 
   function subjectName(id) { return subjects.find(s => s.id === id)?.name || id?.slice(0, 8) || "—"; }
@@ -730,7 +753,7 @@ function GradesScreen() {
       }, token);
       setShowAdd(false);
       setNewGrade({ studentId: "", subjectId: "", teacherId: "", value: "", date: "" });
-      load();
+      refreshAll();
     } catch (e) { Alert.alert("Errore", e.message); }
   }
 
@@ -742,7 +765,7 @@ function GradesScreen() {
         date: showEdit.date,
       }, token);
       setShowEdit(null);
-      load();
+      refreshAll();
     } catch (e) { Alert.alert("Errore", e.message); }
   }
 
@@ -750,7 +773,7 @@ function GradesScreen() {
     Alert.alert("Conferma", "Eliminare questo voto?", [
       { text: "Annulla" },
       { text: "Elimina", style: "destructive", onPress: async () => {
-        try { await api("DELETE", `/Grade/${id}`, null, token); load(); }
+        try { await api("DELETE", `/Grade/${id}`, null, token); refreshAll(); }
         catch (e) { Alert.alert("Errore", e.message); }
       }},
     ]);
@@ -770,17 +793,41 @@ function GradesScreen() {
           <Btn label="+ Voto" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
         } />
         {/* Filters */}
-        <View style={{ flexDirection: "row", gap: 8, marginBottom: 12, alignItems: "flex-start" }}>
-          <TextInput style={[s.input, { flex: 1 }]} placeholder="Filtra materia" placeholderTextColor={C.textLight}
-            value={filterSubject} onChangeText={v => { setFilterSubject(v); setFilterDate(""); }} />
+        <View style={{ flexDirection: "row", gap: 8, alignItems: "flex-start" }}>
+          <View style={{ flex: 1 }}>
+            <SelectField
+              label="Materia"
+              value={filterSubjectId}
+              options={[{ id: "", label: "Tutte le materie" }, ...filterOptions.subjects.map(s => ({ id: s.id, label: s.name }))]}
+              getLabel={o => o.label}
+              getValue={o => o.id}
+              onSelect={setFilterSubjectId}
+            />
+          </View>
           <View style={{ flex: 1 }}>
             <DateField
+              label="Data"
               value={filterDate}
-              onChange={(v) => { setFilterDate(v); setFilterSubject(""); }}
-              placeholder="Filtra per data…"
+              onChange={setFilterDate}
+              placeholder="Tutte le date"
             />
           </View>
         </View>
+        {role !== "student" && (
+          <SelectField
+            label="Allievo"
+            value={filterStudentId}
+            options={[{ id: "", label: "Tutti gli allievi" }, ...filterOptions.students.map(s => ({ id: s.id, label: `${s.firstName} ${s.lastName}` }))]}
+            getLabel={o => o.label}
+            getValue={o => o.id}
+            onSelect={setFilterStudentId}
+          />
+        )}
+        {hasActiveFilters && (
+          <TouchableOpacity onPress={clearFilters} style={{ alignSelf: "flex-start", marginBottom: 8 }}>
+            <Text style={{ color: C.primary, fontWeight: "600" }}>✕ Cancella filtri</Text>
+          </TouchableOpacity>
+        )}
       </View>
       {loading ? <Loader /> :
         <FlatList

@@ -84,11 +84,24 @@ namespace ElectronicRegisterAPI.Controllers
         }
 
         [HttpGet("filters")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "teacher,admin,student")]
         public async Task<ActionResult<GradeFiltersDto>> GetFilters()
         {
-            var subjectIds = await _context.Grades.Select(g => g.SubjectId).Distinct().ToListAsync();
-            var studentIds = await _context.Grades.Select(g => g.StudentId).Distinct().ToListAsync();
+            var gradesQuery = _context.Grades.AsQueryable();
+
+            if (User.IsInRole("student"))
+            {
+                var claimStudentId = Guid.Parse(User.FindFirst("studentId")?.Value!);
+                gradesQuery = gradesQuery.Where(g => g.StudentId == claimStudentId);
+            }
+            else if (User.IsInRole("teacher"))
+            {
+                var claimTeacherId = Guid.Parse(User.FindFirst("teacherId")?.Value!);
+                gradesQuery = gradesQuery.Where(g => g.TeacherId == claimTeacherId);
+            }
+
+            var subjectIds = await gradesQuery.Select(g => g.SubjectId).Distinct().ToListAsync();
+            var studentIds = await gradesQuery.Select(g => g.StudentId).Distinct().ToListAsync();
 
             var subjects = await _context.Subjects
                 .Where(s => subjectIds.Contains(s.Id))
