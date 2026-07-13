@@ -187,6 +187,7 @@ async function initManagePage() {
     populateUserBadge(userData);
     const userBadgeRole = document.getElementById("user-badge-role");
     if (userBadgeRole) userBadgeRole.innerText = capitalize(userData.role);
+    applyNavVisibility(userData);
     wireHeaderSearch();
 
     if (userData.role === "admin") {

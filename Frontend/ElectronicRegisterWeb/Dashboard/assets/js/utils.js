@@ -33,6 +33,20 @@ function populateUserBadge(userData) {
     if (dropdownBadgeEmail) dropdownBadgeEmail.innerText = userData.email;
 }
 
+// Nasconde dalla sidebar le voci non pertinenti al ruolo: gli studenti non
+// devono vedere "Gestione" né "Voti", gli insegnanti non devono vedere "Voti".
+function applyNavVisibility(userData) {
+    const gestioneLink = document.querySelector('.sidebar-nav a[href="add-student.html"]');
+    const votiLink = document.querySelector('.sidebar-nav a[href="grades.html"]');
+
+    if (userData.role === "student") {
+        if (gestioneLink) gestioneLink.closest("li").style.display = "none";
+        if (votiLink) votiLink.closest("li").style.display = "none";
+    } else if (userData.role === "teacher") {
+        if (votiLink) votiLink.closest("li").style.display = "none";
+    }
+}
+
 // Filtra le righe di tutte le tabelle nel contenuto principale in base al
 // testo digitato nella barra di ricerca dell'header. Generico: non richiede
 // conoscere quali tabelle sono presenti nella pagina corrente.

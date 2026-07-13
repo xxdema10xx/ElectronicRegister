@@ -614,6 +614,7 @@ async function loadPage() {
     const userData = await getUserData();
     userBadgeRole.innerText = capitalize(userData.role) ?? "ERROR";
     populateUserBadge(userData);
+    applyNavVisibility(userData);
     wireHeaderSearch();
 
     switch (userData.role) {
