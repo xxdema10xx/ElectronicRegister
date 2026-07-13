@@ -79,45 +79,6 @@ async function api(method, path, body, token) {
   if (!res.ok) throw new Error(typeof data === "string" ? data : data?.message || `Errore ${res.status}`);
   return data;
 }
-// async function api(method, path, body, token) {
-//   const opts = {
-//     method,
-//     headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-//     ...(body ? { body: JSON.stringify(body) } : {}),
-//   };
-//   const res = await fetch(`${API_BASE}${path}`, opts);
-//   if (res.status === 204) return null;
-//   const text = await res.text();
-//   let data;
-//   try { data = JSON.parse(text); } catch { data = text; }
-
-//   if (!res.ok) {
-//     console.log("ERRORE BACKEND COMPLETO:", JSON.stringify(data, null, 2)); // 👈 aggiungi questa riga
-
-//     let msg = `Errore ${res.status}`;
-//     if (typeof data === "string") msg = data;
-//     else if (data?.message) msg = data.message;
-//     else if (data?.errors) msg = Object.values(data.errors).flat().join("\n"); // 👈 gestisce ProblemDetails
-//     else if (data?.title) msg = data.title;
-
-//     throw new Error(msg);
-//   }
-//   return data;
-// }
-// async function api(method, path, body, token) {
-//   const opts = {
-//     method,
-//     headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-//     ...(body ? { body: JSON.stringify(body) } : {}),
-//   };
-//   const res = await fetch(`${API_BASE}${path}`, opts);
-//   if (res.status === 204) return null;
-//   const text = await res.text();
-//   let data;
-//   try { data = JSON.parse(text); } catch { data = text; }
-//   if (!res.ok) throw new Error(typeof data === "string" ? data : data?.message || `Errore ${res.status}`);
-//   return data;
-// }
 
 // ─── AUTH CONTEXT ─────────────────────────────────────────────────────────────
 const AuthContext = createContext(null);
@@ -125,7 +86,7 @@ function useAuth() { return useContext(AuthContext); }
 
 function useMicrosoftLogin() {
   const redirectUri = AuthSession.makeRedirectUri({ scheme: 'electronicregister' });
-  
+
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
       clientId: MS_CLIENT_ID,
@@ -172,6 +133,66 @@ function Input({ label, ...props }) {
     <View style={{ marginBottom: 14 }}>
       {label && <Text style={s.label}>{label}</Text>}
       <TextInput style={s.input} placeholderTextColor={C.textLight} {...props} />
+    </View>
+  );
+}
+
+// ─── SELECT FIELD (modale con lista scorrevole al posto dell'input manuale) ──
+function SelectField({
+  label,
+  value,
+  options = [],
+  onSelect,
+  placeholder = "Seleziona…",
+  getLabel = (o) => o.label,
+  getValue = (o) => o.id,
+  emptyMessage = "Nessun elemento disponibile",
+}) {
+  const [open, setOpen] = useState(false);
+  const selected = options.find(o => getValue(o) === value);
+
+  return (
+    <View style={{ marginBottom: 14 }}>
+      {label && <Text style={s.label}>{label}</Text>}
+      <TouchableOpacity style={s.selectBox} onPress={() => setOpen(true)} activeOpacity={0.7}>
+        <Text style={{ fontSize: 15, color: selected ? C.text : C.textLight, flex: 1 }} numberOfLines={1}>
+          {selected ? getLabel(selected) : placeholder}
+        </Text>
+        <Text style={{ color: C.textLight, fontSize: 12 }}>▾</Text>
+      </TouchableOpacity>
+
+      <Modal visible={open} animationType="slide" transparent onRequestClose={() => setOpen(false)}>
+        <View style={s.modalOverlay}>
+          <View style={[s.modalCard, { maxHeight: "75%" }]}>
+            <View style={s.modalHeader}>
+              <Text style={s.modalTitle}>{label || "Seleziona"}</Text>
+              <TouchableOpacity onPress={() => setOpen(false)}><Text style={s.modalClose}>✕</Text></TouchableOpacity>
+            </View>
+            {options.length === 0 ? (
+              <EmptyState message={emptyMessage} />
+            ) : (
+              <FlatList
+                data={options}
+                keyExtractor={(o) => String(getValue(o))}
+                renderItem={({ item }) => {
+                  const isSelected = getValue(item) === value;
+                  return (
+                    <TouchableOpacity
+                      style={[s.selectOption, isSelected && s.selectOptionActive]}
+                      onPress={() => { onSelect(getValue(item)); setOpen(false); }}
+                    >
+                      <Text style={[s.selectOptionText, isSelected && s.selectOptionTextActive]}>
+                        {getLabel(item)}
+                      </Text>
+                      {isSelected && <Text style={{ color: C.primary, fontWeight: "700" }}>✓</Text>}
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -378,9 +399,9 @@ function LoginScreen({ onLogin, goRegister }) {
     <SafeAreaView style={s.authBg}>
       <StatusBar barStyle="light-content" backgroundColor={C.primary} />
       <View style={s.authHeader}>
-        <Image 
-          source={require('./assets/images/logoits.png')} 
-          style={{ width: 150, height: 100 }} 
+        <Image
+          source={require('./assets/images/logoits.png')}
+          style={{ width: 150, height: 100 }}
         />
         <Text style={s.authTitle}>Electronic Register</Text>
         <Text style={s.authSubtitle}>ITS Umbria</Text>
@@ -426,9 +447,9 @@ function RegisterScreen({ onBack }) {
     <SafeAreaView style={s.authBg}>
       <StatusBar barStyle="light-content" backgroundColor={C.primary} />
       <View style={s.authHeader}>
-        <Image 
-          source={require('./assets/images/logoits.png')} 
-          style={{ width: 150, height: 100 }} 
+        <Image
+          source={require('./assets/images/logoits.png')}
+          style={{ width: 150, height: 100 }}
         />
         <Text style={s.authTitle}>Electronic Register</Text>
       </View>
@@ -519,12 +540,13 @@ function GradesScreen() {
   const [grades, setGrades] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [students, setStudents] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(null);
   const [filterSubject, setFilterSubject] = useState("");
   const [filterDate, setFilterDate] = useState("");
-  const [newGrade, setNewGrade] = useState({ studentId: "", subjectId: "", value: "", date: "" });
+  const [newGrade, setNewGrade] = useState({ studentId: "", subjectId: "", teacherId: "", value: "", date: "" });
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -539,6 +561,8 @@ function GradesScreen() {
       if (role !== "student") {
         const st = await api("GET", "/Student", null, token);
         setStudents(Array.isArray(st) ? st : []);
+        const te = await api("GET", "/Teacher", null, token);
+        setTeachers(Array.isArray(te) ? te : []);
       }
     } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setGrades([]); }
     finally { setLoading(false); }
@@ -586,9 +610,9 @@ function GradesScreen() {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50, marginBottom: 50 }}>
-          <Image 
-            source={require('./assets/images/logoits.png')} 
-            style={{ width: 100, height: 100 }} 
+          <Image
+            source={require('./assets/images/logoits.png')}
+            style={{ width: 100, height: 100 }}
           />
         </View>
         <SectionHeader title="Voti" action={
@@ -635,9 +659,33 @@ function GradesScreen() {
 
       {/* ADD MODAL */}
       <FormModal visible={showAdd} title="Aggiungi voto" onClose={() => setShowAdd(false)}>
-        <Input label="ID Studente" value={newGrade.studentId} onChangeText={v => setNewGrade(f => ({ ...f, studentId: v }))} placeholder="UUID studente" />
-        <Input label="ID Materia" value={newGrade.subjectId} onChangeText={v => setNewGrade(f => ({ ...f, subjectId: v }))} placeholder="UUID materia" />
-        <Input label="ID Professore" value={newGrade.teacherId} onChangeText={v => setNewGrade(f => ({ ...f, teacherId: v }))} placeholder="UUID professore" />
+        <SelectField
+          label="Studente"
+          value={newGrade.studentId}
+          options={students}
+          getLabel={(st) => `${st.firstName} ${st.lastName}`}
+          onSelect={(v) => setNewGrade(f => ({ ...f, studentId: v }))}
+          placeholder="Seleziona studente…"
+          emptyMessage="Nessuno studente disponibile"
+        />
+        <SelectField
+          label="Materia"
+          value={newGrade.subjectId}
+          options={subjects}
+          getLabel={(sub) => sub.name}
+          onSelect={(v) => setNewGrade(f => ({ ...f, subjectId: v }))}
+          placeholder="Seleziona materia…"
+          emptyMessage="Nessuna materia disponibile"
+        />
+        <SelectField
+          label="Professore"
+          value={newGrade.teacherId}
+          options={teachers}
+          getLabel={(t) => `${t.firstName} ${t.lastName}`}
+          onSelect={(v) => setNewGrade(f => ({ ...f, teacherId: v }))}
+          placeholder="Seleziona professore…"
+          emptyMessage="Nessun professore disponibile"
+        />
         <Input label="Voto (1-10)" value={newGrade.value} onChangeText={v => setNewGrade(f => ({ ...f, value: v }))} keyboardType="decimal-pad" />
         <Input label="Data (YYYY-MM-DD)" value={newGrade.date} onChangeText={v => setNewGrade(f => ({ ...f, date: v }))} />
         <Btn label="Salva" onPress={addGrade} />
@@ -706,9 +754,9 @@ function StudentsScreen() {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50, marginBottom: 50 }}>
-          <Image 
-            source={require('./assets/images/logoits.png')} 
-            style={{ width: 100, height: 100 }} 
+          <Image
+            source={require('./assets/images/logoits.png')}
+            style={{ width: 100, height: 100 }}
           />
         </View>
         <SectionHeader title="Studenti" action={
@@ -803,9 +851,9 @@ function TeachersScreen() {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50, marginBottom: 50 }}>
-          <Image 
-            source={require('./assets/images/logoits.png')} 
-            style={{ width: 100, height: 100 }} 
+          <Image
+            source={require('./assets/images/logoits.png')}
+            style={{ width: 100, height: 100 }}
           />
         </View>
         <SectionHeader title="Professori" action={
@@ -821,7 +869,6 @@ function TeachersScreen() {
               <View style={[s.avatar, { backgroundColor: "#C7D2FE" }]}><Text style={[s.avatarText, { color: "#4338CA" }]}>{t.firstName[0]}{t.lastName[0]}</Text></View>
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>Prof. {t.firstName} {t.lastName}</Text>
-                {/* <Text style={s.itemSub}>{t.id.slice(0, 16)}…</Text> */}
               </View>
               {role === "admin" && (
                 <View style={{ flexDirection: "row", gap: 8 }}>
@@ -854,6 +901,7 @@ function SubjectsScreen() {
   const { token, user } = useAuth();
   const role = user?.role?.toLowerCase();
   const [subjects, setSubjects] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showAdd, setShowAdd] = useState(false);
@@ -866,6 +914,8 @@ function SubjectsScreen() {
       const path = search ? `/Subject/byname/${search}` : "/Subject";
       const data = await api("GET", path, null, token);
       setSubjects(Array.isArray(data) ? data : data ? [data] : []);
+      const te = await api("GET", "/Teacher", null, token);
+      setTeachers(Array.isArray(te) ? te : []);
     } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setSubjects([]); }
     finally { setLoading(false); }
   }, [token, search]);
@@ -900,9 +950,9 @@ function SubjectsScreen() {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50, marginBottom: 50 }}>
-          <Image 
-            source={require('./assets/images/logoits.png')} 
-            style={{ width: 100, height: 100 }} 
+          <Image
+            source={require('./assets/images/logoits.png')}
+            style={{ width: 100, height: 100 }}
           />
         </View>
         <SectionHeader title="Materie" action={
@@ -935,13 +985,29 @@ function SubjectsScreen() {
       }
       <FormModal visible={showAdd} title="Aggiungi materia" onClose={() => setShowAdd(false)}>
         <Input label="Nome materia" value={form.name} onChangeText={v => setForm(f => ({ ...f, name: v }))} />
-        <Input label="ID Professore (UUID)" value={form.teacherId} onChangeText={v => setForm(f => ({ ...f, teacherId: v }))} />
+        <SelectField
+          label="Professore"
+          value={form.teacherId}
+          options={teachers}
+          getLabel={(t) => `${t.firstName} ${t.lastName}`}
+          onSelect={(v) => setForm(f => ({ ...f, teacherId: v }))}
+          placeholder="Seleziona professore…"
+          emptyMessage="Nessun professore disponibile"
+        />
         <Btn label="Salva" onPress={add} />
       </FormModal>
       <FormModal visible={!!showEdit} title="Modifica materia" onClose={() => setShowEdit(null)}>
         {showEdit && <>
           <Input label="Nome" value={showEdit.name} onChangeText={v => setShowEdit(f => ({ ...f, name: v }))} />
-          <Input label="ID Professore" value={showEdit.teacherId || ""} onChangeText={v => setShowEdit(f => ({ ...f, teacherId: v }))} />
+          <SelectField
+            label="Professore"
+            value={showEdit.teacherId}
+            options={teachers}
+            getLabel={(t) => `${t.firstName} ${t.lastName}`}
+            onSelect={(v) => setShowEdit(f => ({ ...f, teacherId: v }))}
+            placeholder="Seleziona professore…"
+            emptyMessage="Nessun professore disponibile"
+          />
           <Btn label="Aggiorna" onPress={update} />
         </>}
       </FormModal>
@@ -1001,23 +1067,13 @@ function UsersScreen() {
   ]);
 }
 
-  // async function del(id) {
-  //   Alert.alert("Conferma", "Eliminare utente?", [
-  //     { text: "Annulla" },
-  //     { text: "Elimina", style: "destructive", onPress: async () => {
-  //       try { await api("DELETE", `/Users/${id}`, null, token); load(); }
-  //       catch (e) { Alert.alert("Errore", e.message); }
-  //     }},
-  //   ]);
-  // }
-
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50, marginBottom: 50 }}>
-          <Image 
-            source={require('./assets/images/logoits.png')} 
-            style={{ width: 100, height: 100 }} 
+          <Image
+            source={require('./assets/images/logoits.png')}
+            style={{ width: 100, height: 100 }}
           />
         </View>
         <SectionHeader title="Utenti" action={
@@ -1240,7 +1296,7 @@ export default function App() {
         <AppNav token={token} user={user} onLogout={handleLogout} />
       </AuthContext.Provider>
     </SafeAreaProvider>
-    
+
   );
 }
 
@@ -1261,6 +1317,12 @@ const s = StyleSheet.create({
   // Inputs
   label:         { fontSize: 13, fontWeight: "600", color: C.textMuted, marginBottom: 6 },
   input:         { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, padding: 12, fontSize: 15, color: C.text },
+  // Select field
+  selectBox:     { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, padding: 12, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  selectOption:  { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 14, paddingHorizontal: 4, borderBottomWidth: 1, borderBottomColor: C.border },
+  selectOptionActive: { backgroundColor: "#EFF6FF" },
+  selectOptionText: { fontSize: 15, color: C.text },
+  selectOptionTextActive: { color: C.primary, fontWeight: "700" },
   // Buttons
   btn:           { borderRadius: 10, padding: 14, alignItems: "center", justifyContent: "center", flexDirection: "row" },
   btnText:       { fontSize: 15, fontWeight: "700" },
