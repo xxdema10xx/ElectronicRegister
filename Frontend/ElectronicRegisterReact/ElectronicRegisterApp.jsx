@@ -1180,10 +1180,10 @@ function SubjectsScreen() {
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
           renderItem={({ item: sub }) => (
             <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
-              <View style={[s.avatar, { backgroundColor: "#FDE68A" }]}><Text style={[s.avatarText, { color: "#92400E" }]}>📚</Text></View>
+              <View style={[s.avatar, { backgroundColor: "#FDE68A" }]}><Text style={[s.avatarText, { color: "#92400E" }]}><Ionicons name="book-outline" size={24}  /></Text></View>
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>{sub.name}</Text>
-                {sub.teacherFirstName && <Text style={s.itemSub}>👩‍🏫 {sub.teacherFirstName} {sub.teacherLastName}</Text>}
+                {sub.teacherFirstName && <Text style={s.itemSub}> <Ionicons name="person-outline" size={16} color={C.text} /> {sub.teacherFirstName} {sub.teacherLastName}</Text>}
               </View>
               {role === "admin" && (
                 <View style={{ flexDirection: "row", gap: 8 }}>
