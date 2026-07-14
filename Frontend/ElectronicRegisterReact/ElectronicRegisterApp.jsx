@@ -135,11 +135,12 @@ function Btn({ label, onPress, style, textStyle, icon, variant = "primary", load
   );
 }
 
-function Input({ label, ...props }) {
+function Input({ label, error, ...props }) {
   return (
     <View style={{ marginBottom: 14 }}>
       {label && <Text style={s.label}>{label}</Text>}
-      <TextInput style={s.input} placeholderTextColor={C.textLight} {...props} />
+      <TextInput style={[s.input, error && s.inputError]} placeholderTextColor={C.textLight} {...props} />
+      {error && <Text style={s.errorText}>{error}</Text>}
     </View>
   );
 }
@@ -657,6 +658,7 @@ function GradesScreen() {
   const [filterStudentId, setFilterStudentId] = useState("");
   const [filterDate, setFilterDate] = useState("");
   const [filterOptions, setFilterOptions] = useState({ subjects: [], students: [] });
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [newGrade, setNewGrade] = useState({ studentId: "", subjectId: "", teacherId: "", value: "", date: "" });
   // Paginazione lato server (come sul web): carichiamo GRADES_PAGE_SIZE voti
   // alla volta tramite /Grade/paged, aggiungendo altre pagine man mano che
@@ -799,40 +801,50 @@ function GradesScreen() {
           <Btn label="+ Voto" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
         } />
         {/* Filters */}
-        <View style={{ flexDirection: "row", gap: 8, alignItems: "flex-start" }}>
-          <View style={{ flex: 1 }}>
-            <SelectField
-              label="Materia"
-              value={filterSubjectId}
-              options={[{ id: "", label: "Tutte le materie" }, ...filterOptions.subjects.map(s => ({ id: s.id, label: s.name }))]}
-              getLabel={o => o.label}
-              getValue={o => o.id}
-              onSelect={setFilterSubjectId}
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <DateField
-              label="Data"
-              value={filterDate}
-              onChange={setFilterDate}
-              placeholder="Tutte le date"
-            />
-          </View>
-        </View>
-        {role !== "student" && (
-          <SelectField
-            label="Allievo"
-            value={filterStudentId}
-            options={[{ id: "", label: "Tutti gli allievi" }, ...filterOptions.students.map(s => ({ id: s.id, label: `${s.firstName} ${s.lastName}` }))]}
-            getLabel={o => o.label}
-            getValue={o => o.id}
-            onSelect={setFilterStudentId}
-          />
-        )}
-        {hasActiveFilters && (
-          <TouchableOpacity onPress={clearFilters} style={{ alignSelf: "flex-start", marginBottom: 8 }}>
-            <Text style={{ color: C.primary, fontWeight: "600" }}>✕ Cancella filtri</Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: filtersOpen ? 8 : 4 }}>
+          <TouchableOpacity onPress={() => setFiltersOpen(o => !o)} style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+            <Ionicons name={filtersOpen ? "chevron-up-outline" : "chevron-down-outline"} size={18} color={C.primary} />
+            <Text style={{ color: C.primary, fontWeight: "600" }}>Filtri{hasActiveFilters ? " •" : ""}</Text>
           </TouchableOpacity>
+          {hasActiveFilters && (
+            <TouchableOpacity onPress={clearFilters}>
+              <Text style={{ color: C.danger, fontWeight: "600" }}>✕ Cancella filtri</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+        {filtersOpen && (
+          <>
+            <View style={{ flexDirection: "row", gap: 8, alignItems: "flex-start" }}>
+              <View style={{ flex: 1 }}>
+                <SelectField
+                  label="Materia"
+                  value={filterSubjectId}
+                  options={[{ id: "", label: "Tutte le materie" }, ...filterOptions.subjects.map(s => ({ id: s.id, label: s.name }))]}
+                  getLabel={o => o.label}
+                  getValue={o => o.id}
+                  onSelect={setFilterSubjectId}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <DateField
+                  label="Data"
+                  value={filterDate}
+                  onChange={setFilterDate}
+                  placeholder="Tutte le date"
+                />
+              </View>
+            </View>
+            {role !== "student" && (
+              <SelectField
+                label="Allievo"
+                value={filterStudentId}
+                options={[{ id: "", label: "Tutti gli allievi" }, ...filterOptions.students.map(s => ({ id: s.id, label: `${s.firstName} ${s.lastName}` }))]}
+                getLabel={o => o.label}
+                getValue={o => o.id}
+                onSelect={setFilterStudentId}
+              />
+            )}
+          </>
         )}
       </View>
       {loading ? <Loader /> :
@@ -1339,61 +1351,93 @@ function UsersScreen() {
 }
 
 // ─── PROFILE SCREEN ───────────────────────────────────────────────────────────
+// Controlla i requisiti di sicurezza della nuova password e la coerenza con
+// la conferma e con la password attuale. Viene richiamata a ogni tap così
+// gli errori spariscono non appena l'utente corregge il campo.
+function getPasswordErrors(newPwd, confirmPwd, oldPwd) {
+  const errors = {};
+  if (newPwd) {
+    const missing = [];
+    if (newPwd.length < 8) missing.push("almeno 8 caratteri");
+    if (!/[a-z]/.test(newPwd)) missing.push("una lettera minuscola");
+    if (!/[A-Z]/.test(newPwd)) missing.push("una lettera maiuscola");
+    if (!/[0-9]/.test(newPwd)) missing.push("un numero");
+    if (!/[!@#$%^&*()_\-+=<>?/[\]{}]/.test(newPwd)) missing.push("un carattere speciale");
+    if (missing.length > 0) {
+      errors.newPassword = `La password deve contenere ${missing.join(", ")}`;
+    } else if (oldPwd && newPwd === oldPwd) {
+      errors.newPassword = "La nuova password deve essere diversa da quella attuale";
+    }
+  }
+  if (confirmPwd && newPwd && confirmPwd !== newPwd) {
+    errors.confirmPassword = "Le password non coincidono";
+  }
+  return errors;
+}
+
 function ProfileScreen({ onLogout }) {
   const { user, token } = useAuth();
   const [showEdit, setShowEdit] = useState(false);
- 
+
   // Form per l'admin: email, nome, cognome (via update) + cambio password (via updatepassword)
-  const [form, setForm] = useState({ email: "", firstName: "", lastName: "", oldPassword: "", newPassword: "" });
- 
+  const [form, setForm] = useState({ email: "", firstName: "", lastName: "", oldPassword: "", newPassword: "", confirmPassword: "" });
+  const [formPwdErrors, setFormPwdErrors] = useState({});
+
   // Form per studente/docente (solo cambio password)
-  const [pwdForm, setPwdForm] = useState({ oldPassword: "", newPassword: "" });
- 
+  const [pwdForm, setPwdForm] = useState({ oldPassword: "", newPassword: "", confirmPassword: "" });
+  const [pwdErrors, setPwdErrors] = useState({});
+
   const role = user?.role?.toLowerCase();
   const isAdmin = role === "admin";
- 
+
   const name = `${user?.studentFirstName || user?.teacherFirstName || ""} ${user?.studentLastName || user?.teacherLastName || ""}`.trim();
- 
+
   function resetForms() {
-    setForm({ email: "", firstName: "", lastName: "", oldPassword: "", newPassword: "" });
-    setPwdForm({ oldPassword: "", newPassword: "" });
+    setForm({ email: "", firstName: "", lastName: "", oldPassword: "", newPassword: "", confirmPassword: "" });
+    setPwdForm({ oldPassword: "", newPassword: "", confirmPassword: "" });
+    setFormPwdErrors({});
+    setPwdErrors({});
   }
- 
-  function validateNewPassword(pwd) {
-    if (pwd.length < 8) {
-      Alert.alert("Attenzione", "La nuova password deve avere almeno 8 caratteri");
-      return false;
-    }
-    const hasSpecialChar = /[!@#$%^&*()_\-+=<>?/[\]{}]/.test(pwd);
-    if (!hasSpecialChar) {
-      Alert.alert("Attenzione", "La nuova password deve contenere almeno un carattere speciale");
-      return false;
-    }
-    return true;
+
+  function updateFormField(field, value) {
+    setForm(f => {
+      const next = { ...f, [field]: value };
+      setFormPwdErrors(getPasswordErrors(next.newPassword, next.confirmPassword, next.oldPassword));
+      return next;
+    });
   }
- 
+
+  function updatePwdField(field, value) {
+    setPwdForm(f => {
+      const next = { ...f, [field]: value };
+      setPwdErrors(getPasswordErrors(next.newPassword, next.confirmPassword, next.oldPassword));
+      return next;
+    });
+  }
+
   async function save() {
     // Admin: email/firstName/lastName tramite /Users/update/{id}, password tramite /Users/updatepassword/{id}
     const body = {};
     if (form.email) body.email = form.email;
     if (form.firstName) body.firstName = form.firstName;
     if (form.lastName) body.lastName = form.lastName;
- 
-    const wantsPasswordChange = form.oldPassword || form.newPassword;
- 
+
+    const wantsPasswordChange = form.oldPassword || form.newPassword || form.confirmPassword;
+
     if (Object.keys(body).length === 0 && !wantsPasswordChange) {
       Alert.alert("Attenzione", "Inserisci almeno un campo da modificare");
       return;
     }
- 
+
     if (wantsPasswordChange) {
-      if (!form.oldPassword || !form.newPassword) {
-        Alert.alert("Attenzione", "Per cambiare la password inserisci vecchia e nuova password");
+      if (!form.oldPassword || !form.newPassword || !form.confirmPassword) {
+        Alert.alert("Attenzione", "Per cambiare la password inserisci vecchia password, nuova password e conferma");
         return;
       }
-      if (!validateNewPassword(form.newPassword)) return;
+      const errors = getPasswordErrors(form.newPassword, form.confirmPassword, form.oldPassword);
+      if (Object.keys(errors).length > 0) { setFormPwdErrors(errors); return; }
     }
- 
+
     try {
       if (Object.keys(body).length > 0) {
         await api("PUT", `/Users/update/${user.id}`, body, token);
@@ -1409,15 +1453,16 @@ function ProfileScreen({ onLogout }) {
       resetForms();
     } catch (e) { Alert.alert("Errore", e.message); }
   }
- 
+
   async function savePassword() {
     // Studente/Docente: solo password tramite /Users/updatepassword/{id}
-    if (!pwdForm.oldPassword || !pwdForm.newPassword) {
-      Alert.alert("Attenzione", "Inserisci vecchia e nuova password");
+    if (!pwdForm.oldPassword || !pwdForm.newPassword || !pwdForm.confirmPassword) {
+      Alert.alert("Attenzione", "Inserisci vecchia password, nuova password e conferma");
       return;
     }
-    if (!validateNewPassword(pwdForm.newPassword)) return;
- 
+    const errors = getPasswordErrors(pwdForm.newPassword, pwdForm.confirmPassword, pwdForm.oldPassword);
+    if (Object.keys(errors).length > 0) { setPwdErrors(errors); return; }
+
     try {
       await api("PUT", `/Users/updatepassword/${user.id}`, {
         oldPassword: pwdForm.oldPassword,
@@ -1459,14 +1504,16 @@ function ProfileScreen({ onLogout }) {
           {isAdmin ? (
     <FormModal visible={showEdit} title="Modifica profilo" onClose={() => { setShowEdit(false); resetForms(); }}>
     <Input label="Nuova email (opzionale)" value={form.email} onChangeText={v => setForm(f => ({ ...f, email: v }))} keyboardType="email-address" autoCapitalize="none" />
-    <Input label="Vecchia password (opzionale)" value={form.oldPassword} onChangeText={v => setForm(f => ({ ...f, oldPassword: v }))} secureTextEntry />
-    <Input label="Nuova password (opzionale)" value={form.newPassword} onChangeText={v => setForm(f => ({ ...f, newPassword: v }))} secureTextEntry />
+    <Input label="Vecchia password (opzionale)" value={form.oldPassword} onChangeText={v => updateFormField("oldPassword", v)} secureTextEntry />
+    <Input label="Nuova password (opzionale)" value={form.newPassword} onChangeText={v => updateFormField("newPassword", v)} secureTextEntry error={formPwdErrors.newPassword} />
+    <Input label="Conferma nuova password" value={form.confirmPassword} onChangeText={v => updateFormField("confirmPassword", v)} secureTextEntry error={formPwdErrors.confirmPassword} />
     <Btn label="Salva" onPress={save} />
     </FormModal>
           ) : (
     <FormModal visible={showEdit} title="Cambia password" onClose={() => { setShowEdit(false); resetForms(); }}>
-    <Input label="Vecchia password" value={pwdForm.oldPassword} onChangeText={v => setPwdForm(f => ({ ...f, oldPassword: v }))} secureTextEntry />
-    <Input label="Nuova password" value={pwdForm.newPassword} onChangeText={v => setPwdForm(f => ({ ...f, newPassword: v }))} secureTextEntry />
+    <Input label="Vecchia password" value={pwdForm.oldPassword} onChangeText={v => updatePwdField("oldPassword", v)} secureTextEntry />
+    <Input label="Nuova password" value={pwdForm.newPassword} onChangeText={v => updatePwdField("newPassword", v)} secureTextEntry error={pwdErrors.newPassword} />
+    <Input label="Conferma nuova password" value={pwdForm.confirmPassword} onChangeText={v => updatePwdField("confirmPassword", v)} secureTextEntry error={pwdErrors.confirmPassword} />
     <Btn label="Salva" onPress={savePassword} />
     </FormModal>
           )}
@@ -1596,6 +1643,8 @@ const s = StyleSheet.create({
   // Inputs
   label:         { fontSize: 13, fontWeight: "600", color: C.textMuted, marginBottom: 6 },
   input:         { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, padding: 12, fontSize: 15,  color: C.text, height: 48 },
+  inputError:    { borderColor: C.danger, borderWidth: 1.5 },
+  errorText:     { color: C.danger, fontSize: 12, marginTop: 4 },
   // Select field
   selectBox:     { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, padding: 12, flexDirection: "row", alignItems: "center", justifyContent: "space-between", height: 48 },
   selectOption:  { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 14, paddingHorizontal: 4, borderBottomWidth: 1, borderBottomColor: C.border },
