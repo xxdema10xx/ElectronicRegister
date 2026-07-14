@@ -84,6 +84,7 @@ namespace ElectronicRegisterAPI.Controllers
         {
             var user = await _context.Users.FindAsync(id);
             if(user == null) return NotFound();
+            if(dto.Email == null || dto.Email == "") return BadRequest("Email is required");
             if (!User.IsInRole("admin")) return Forbid();
             if (dto.Email != null) user.Email = dto.Email;
             if (dto.Password != null) user.PasswordHash = Bcrypt.HashPassword(dto.Password);
@@ -137,6 +138,22 @@ namespace ElectronicRegisterAPI.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> Add(CreateUserDto dto)
         {
+            if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
+            {
+                return BadRequest("Email already exists");
+            }
+            if (dto.Password.Length < 8)
+            {
+                return BadRequest("Password must be at least 8 characters long");
+            }
+            if (!HasSpecialChar(dto.Password))
+            {
+                return BadRequest("Password must contain at least one special character");
+            }
+            if (dto.Email == null || dto.Email == "")
+            {
+                return BadRequest("Email is required");
+            }
             var user = new User
             {
                 Id = Guid.NewGuid(),
