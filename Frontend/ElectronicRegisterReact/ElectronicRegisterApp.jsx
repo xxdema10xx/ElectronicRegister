@@ -89,7 +89,10 @@ const AuthContext = createContext(null);
 function useAuth() { return useContext(AuthContext); }
 
 function useMicrosoftLogin() {
-  const redirectUri = AuthSession.makeRedirectUri({ scheme: 'electronicregister' });
+  const redirectUri = AuthSession.makeRedirectUri({ 
+    scheme: 'electronicregister',
+    path: 'auth'
+  });
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
@@ -362,7 +365,10 @@ function LoginScreen({ onLogin, goRegister }) {
   const [loading, setLoading] = useState(false);
   const [msLoading, setMsLoading] = useState(false);
 
-  const redirectUri = AuthSession.makeRedirectUri({ scheme: 'electronicregister' });
+  const redirectUri = AuthSession.makeRedirectUri({ 
+    scheme: 'electronicregister',
+    path: 'auth'
+  });
   console.log("REDIRECT URI (registra questo su Entra ID):", redirectUri);
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
