@@ -344,10 +344,10 @@ function Loader() {
 // ─── MODAL FORM ───────────────────────────────────────────────────────────────
 function FormModal({ visible, title, onClose, children }) {
   return (
-    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+    <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
-        <View style={s.modalOverlay}>
-          <View style={s.modalCard}>
+        <View style={s.formModalOverlay}>
+          <View style={s.formModalCard}>
             <View style={s.modalHeader}>
               <Text style={s.modalTitle}>{title}</Text>
               <TouchableOpacity onPress={onClose}><Text style={s.modalClose}>✕</Text></TouchableOpacity>
@@ -1698,6 +1698,10 @@ const s = StyleSheet.create({
   // Modal
   modalOverlay:  { flex: 1, backgroundColor: "rgba(0,0,0,0.45)", justifyContent: "flex-end" },
   modalCard:     { backgroundColor: C.card, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, maxHeight: "85%" },
+  // Form modal (aggiungi/modifica voto, studente, materia, utente, profilo…): centrato invece che
+  // ancorato in basso, così non finisce sotto la barra di navigazione del telefono.
+  formModalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.45)", justifyContent: "center", alignItems: "center", padding: 20 },
+  formModalCard: { backgroundColor: C.card, borderRadius: 20, padding: 24, width: "100%", maxWidth: 420, maxHeight: "80%" },
   modalHeader:   { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20 },
   modalTitle:    { fontSize: 18, fontWeight: "700", color: C.text },
   modalClose:    { fontSize: 20, color: C.textMuted },
