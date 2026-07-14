@@ -6,6 +6,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
+    "icon": "./assets/images/logoits.png",
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -15,7 +16,11 @@
       }
     },
     "android": {
-      "package": "com.xxdema10xx.ElectronicRegister"
+      "package": "com.xxdema10xx.ElectronicRegister",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logoits.png",
+        "backgroundColor": "#ffffff"
+      }
     },
     "plugins": [
       "expo-web-browser",
