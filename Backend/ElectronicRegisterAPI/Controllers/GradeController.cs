@@ -410,6 +410,10 @@ namespace ElectronicRegisterAPI.Controllers
             }
             var grade = await _context.Grades.FindAsync(id);
             if (grade == null) return NotFound();
+            if (dto.Value < 1 || dto.Value > 10)
+            {
+                return BadRequest("Il valore del voto deve essere compreso tra 1 e 10.");
+            }
             grade.SubjectId = dto.SubjectId;
             grade.Value = dto.Value;
             grade.Date = dto.Date;
@@ -434,9 +438,9 @@ namespace ElectronicRegisterAPI.Controllers
                 }
             }
 
-            if (gradeDto.Value < 1 || gradeDto.Value > 30)
+            if (gradeDto.Value < 1 || gradeDto.Value > 10)
             {
-                return BadRequest("Il valore del voto deve essere compreso tra 1 e 30.");
+                return BadRequest("Il valore del voto deve essere compreso tra 1 e 10.");
             }
 
             var teacher = await _context.Teachers.FindAsync(_context.Subjects.FirstOrDefault(s => s.Id == gradeDto.SubjectId)?.TeacherId);
