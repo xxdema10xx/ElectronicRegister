@@ -434,6 +434,11 @@ namespace ElectronicRegisterAPI.Controllers
                 }
             }
 
+            if (gradeDto.Value < 1 || gradeDto.Value > 30)
+            {
+                return BadRequest("Il valore del voto deve essere compreso tra 1 e 30.");
+            }
+
             var teacher = await _context.Teachers.FindAsync(_context.Subjects.FirstOrDefault(s => s.Id == gradeDto.SubjectId)?.TeacherId);
             if (teacher == null) return NotFound();
             var grade = new Grade
