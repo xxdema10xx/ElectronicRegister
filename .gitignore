@@ -6,3 +6,5 @@ report.json
 bin/
 obj/
 node_modules/
+*.sql
+*.old
