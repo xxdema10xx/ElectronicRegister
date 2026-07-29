@@ -9,3 +9,4 @@ node_modules/
 *.sql
 *.old
 config.js
+Backend/ElectronicRegisterAPI/appsettings.json
