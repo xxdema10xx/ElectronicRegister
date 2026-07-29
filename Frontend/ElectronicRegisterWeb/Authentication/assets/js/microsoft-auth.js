@@ -39,7 +39,7 @@ function handleLoginSuccess(accessToken) {
   console.log("TOKEN RICEVUTO:", accessToken);
   console.log("PAYLOAD DECODIFICATO:", JSON.parse(atob(accessToken.split('.')[1])));
 
-  fetch(`${CONFIG.API_BASE}/api/auth/microsoft-login`, {
+  fetch(`${CONFIG.API_BASE}/auth/microsoft-login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ accessToken: accessToken })

@@ -7,7 +7,7 @@ async function checkToken() {
             window.location.href = '../Authentication/login.html';
             return;
         }
-        const res = await fetch(`${API_BASE}/api/Auth/me`, {
+        const res = await fetch(`${API_BASE}/Auth/me`, {
                 headers: {
                 Authorization: `Bearer ${token}`
             }
