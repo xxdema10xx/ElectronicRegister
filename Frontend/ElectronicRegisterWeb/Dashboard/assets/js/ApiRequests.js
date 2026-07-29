@@ -56,7 +56,7 @@ async function sendApiRequest(url, method, data = null) {
 
 async function getUserData() {
     try{
-        const userData = await sendTokenForData(`${API_BASE}/api/Auth/me`);
+        const userData = await sendTokenForData(`${API_BASE}/Auth/me`);
         return userData;
     } catch(error) {
         console.error(error.message);

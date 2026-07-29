@@ -3,7 +3,7 @@ const msalConfig = {
   auth: {
     clientId: "df405eeb-4453-4f41-86d7-2a4af11446b6",
     authority: "https://login.microsoftonline.com/common",
-    redirectUri: window.location.origin + "/ElectronicRegister/Frontend/ElectronicRegisterWeb/Authentication/login.html"
+    redirectUri: window.location.origin + "/Authentication/login.html"
   },
   cache: {
     cacheLocation: "sessionStorage"
@@ -39,7 +39,7 @@ function handleLoginSuccess(accessToken) {
   console.log("TOKEN RICEVUTO:", accessToken);
   console.log("PAYLOAD DECODIFICATO:", JSON.parse(atob(accessToken.split('.')[1])));
 
-  fetch(`${CONFIG.API_BASE}/api/auth/microsoft-login`, {
+  fetch(`${CONFIG.API_BASE}/auth/microsoft-login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ accessToken: accessToken })

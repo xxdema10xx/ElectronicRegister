@@ -41,10 +41,10 @@ async function loadCardsData(userData) {
             if (chartTitle) chartTitle.innerText = "Andamento Media Voti Annuale";
             formatCardsData(
                 [
-                    `${API_BASE}/api/Student/count`,
-                    `${API_BASE}/api/Teacher/count`,
-                    `${API_BASE}/api/Grade/count`,
-                    `${API_BASE}/api/Users/count`
+                    `${API_BASE}/Student/count`,
+                    `${API_BASE}/Teacher/count`,
+                    `${API_BASE}/Grade/count`,
+                    `${API_BASE}/Users/count`
                 ],
                 ["Allievi", "Insegnanti", "Voti Totali", "Utenti"]
             );
@@ -58,9 +58,9 @@ async function loadCardsData(userData) {
             if (chartTitle) chartTitle.innerText = "Media annuale dei voti da te inseriti";
             formatCardsData(
                 [
-                    `${API_BASE}/api/Subject/count`,
-                    `${API_BASE}/api/Student/count`,
-                    `${API_BASE}/api/Grade/count`
+                    `${API_BASE}/Subject/count`,
+                    `${API_BASE}/Student/count`,
+                    `${API_BASE}/Grade/count`
                 ],
                 ["Le Tue Materie", "I Tuoi Alunni", "I Tuoi Voti"]
             );
@@ -70,8 +70,8 @@ async function loadCardsData(userData) {
         case "student":
             if (chartTitle) chartTitle.innerText = "Andamento Media Voti Annuale";
             try {
-                const subjectsCount = await sendTokenForData(`${API_BASE}/api/Subject/count`);
-                const studentGrades = await sendTokenForData(`${API_BASE}/api/Grade`);
+                const subjectsCount = await sendTokenForData(`${API_BASE}/Subject/count`);
+                const studentGrades = await sendTokenForData(`${API_BASE}/Grade`);
                 let gradesCount = 0;
                 let total = 0;
                 studentGrades.forEach(grade => {
@@ -121,7 +121,7 @@ async function loadCardsData(userData) {
 
 
 async function loadChartData() {
-    const statistics = await sendTokenForData(`${API_BASE}/api/Grade/statistics`);
+    const statistics = await sendTokenForData(`${API_BASE}/Grade/statistics`);
     const yearlyAverage = statistics.yearlyAverage;
     const monthlyAverage = statistics.monthlyAverage.map(avg => avg !== null ? avg.toFixed(2) : 0);
     document.getElementById("average-yearly-grades").innerText = yearlyAverage.toFixed(1);
@@ -280,7 +280,7 @@ function renderSubjectsBodyStudent(tbody, subjectsData) {
 }
 
 async function renderSubjectAveragesBodyStudent(tbody, subjectsData) {
-    const grades = await sendTokenForData(`${API_BASE}/api/Grade`);
+    const grades = await sendTokenForData(`${API_BASE}/Grade`);
     grades.forEach(grade => {
         const subject = subjectsData.find(s => s.id === grade.subjectId);
         if (subject) {
@@ -410,7 +410,7 @@ async function loadPaginatedGradesTable(ids, title, description, tableHeadHtml, 
         try {
             const nextPage = page + 1;
             const data = await sendTokenForData(
-                `${API_BASE}/api/Grade/paged?pageNumber=${nextPage}&pageSize=${PAGINATED_GRADES_PAGE_SIZE}`
+                `${API_BASE}/Grade/paged?pageNumber=${nextPage}&pageSize=${PAGINATED_GRADES_PAGE_SIZE}`
             );
             page = nextPage;
             total = data.totalCount;
@@ -465,7 +465,7 @@ async function populateSubjectSelect(selectId, selectedName) {
     select.innerHTML = "";
     const userData = await getUserData();
     try {
-        const subjects = await sendTokenForData(`${API_BASE}/api/Subject/byteacher/${userData.teacherId}`);
+        const subjects = await sendTokenForData(`${API_BASE}/Subject/byteacher/${userData.teacherId}`);
         subjects.forEach(subject => {
             const option = document.createElement("option");
             option.value = subject.id;
@@ -489,7 +489,7 @@ async function populateTeacherSelect(selectId, selectedTeacherId) {
     const select = document.getElementById(selectId);
     select.innerHTML = "";
     try {
-        const teachers = await sendTokenForData(`${API_BASE}/api/Teacher`);
+        const teachers = await sendTokenForData(`${API_BASE}/Teacher`);
         teachers.forEach(teacher => {
             const option = document.createElement("option");
             option.value = teacher.id;
@@ -572,7 +572,7 @@ async function updateEntity(type, id) {
     });
 
     try {
-        const res = await sendApiRequest(`${API_BASE}/api/${type}/update/${id}`, "PUT", data);
+        const res = await sendApiRequest(`${API_BASE}/${type}/update/${id}`, "PUT", data);
         bootstrap.Modal.getInstance(document.getElementById("edit-entity-modal")).hide();
         document.activeElement.blur();
         loadPage();
@@ -586,7 +586,7 @@ async function deleteUser(id) {
     if (!confirm("Sei sicuro di voler eliminare questo utente?")) return;
 
     try {
-        await sendApiRequest(`${API_BASE}/api/Users/${id}`, "DELETE");
+        await sendApiRequest(`${API_BASE}/Users/${id}`, "DELETE");
         loadPage();
     } catch (e) {
         console.error(e);
@@ -598,7 +598,7 @@ async function deleteStudent(id) {
     if (!confirm("Sei sicuro di voler eliminare questo allievo?")) return;
 
     try {
-        await sendApiRequest(`${API_BASE}/api/Student/${id}`, "DELETE");
+        await sendApiRequest(`${API_BASE}/Student/${id}`, "DELETE");
         loadPage();
     } catch (e) {
         console.error(e);
@@ -610,7 +610,7 @@ async function deleteTeacher(id) {
     if (!confirm("Sei sicuro di voler eliminare questo insegnante?")) return;
 
     try {
-        await sendApiRequest(`${API_BASE}/api/Teacher/${id}`, "DELETE");
+        await sendApiRequest(`${API_BASE}/Teacher/${id}`, "DELETE");
         loadPage();
     } catch (e) {
         console.error(e);
@@ -622,7 +622,7 @@ async function deleteSubject(id) {
     if (!confirm("Sei sicuro di voler eliminare questa materia?")) return;
 
     try {
-        await sendApiRequest(`${API_BASE}/api/Subject/${id}`, "DELETE");
+        await sendApiRequest(`${API_BASE}/Subject/${id}`, "DELETE");
         loadPage();
     } catch (e) {
         console.error(e);
@@ -659,7 +659,7 @@ async function loadPage() {
                     <th><h6>Cognome</h6></th>
                     <th><h6>Action</h6></th>
                 </tr>`,
-                "/api/Users",
+                "/Users",
                 renderUsersBodyAdmin
             );
             loadTable(
@@ -677,7 +677,7 @@ async function loadPage() {
                     <th><h6>Cognome</h6></th>
                     <th><h6>Action</h6></th>
                 </tr>`,
-                "/api/Student",
+                "/Student",
                 renderStudentsBodyAdmin
             );
             loadTable(
@@ -695,7 +695,7 @@ async function loadPage() {
                     <th><h6>Cognome</h6></th>
                     <th><h6>Action</h6></th>
                 </tr>`,
-                "/api/Teacher",
+                "/Teacher",
                 renderTeachersBodyAdmin
             );
             loadTable(
@@ -712,7 +712,7 @@ async function loadPage() {
                     <th><h6>Insegnante</h6></th>
                     <th><h6>Action</h6></th>
                 </tr>`,
-                "/api/Subject",
+                "/Subject",
                 renderSubjectsBodyAdmin
             );
         break;
@@ -751,7 +751,7 @@ async function loadPage() {
                 `<tr>
                     <th><h6>Materia</h6></th>
                 </tr>`,
-                "/api/Subject/byteacher/" + userData.teacherId,
+                "/Subject/byteacher/" + userData.teacherId,
                 renderSubjectsBodyTeacher
             );
             loadTable(
@@ -767,7 +767,7 @@ async function loadPage() {
                     <th><h6>Nome</h6></th>
                     <th><h6>Cognome</h6></th>
                 </tr>`,
-                "/api/Student",
+                "/Student",
                 renderStudentsBodyTeacher
             );
         break;
@@ -805,7 +805,7 @@ async function loadPage() {
                     <th><h6>Name</h6></th>
                     <th><h6>Insegnante</h6></th>
                 </tr>`,
-                "/api/Subject",
+                "/Subject",
                 renderSubjectsBodyStudent
             );
             loadTable(
@@ -821,7 +821,7 @@ async function loadPage() {
                     <th><h6>Materia</h6></th>
                     <th><h6>Media</h6></th>
                 </tr>`,
-                "/api/Subject",
+                "/Subject",
                 renderSubjectAveragesBodyStudent
             );
         break;

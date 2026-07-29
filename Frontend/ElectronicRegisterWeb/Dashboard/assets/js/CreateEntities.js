@@ -32,7 +32,7 @@ async function createUser() {
     }
 
     try {
-        await sendApiRequest(`${API_BASE}/api/Auth/RegisterForAdmin`, "POST", {
+        await sendApiRequest(`${API_BASE}/Auth/RegisterForAdmin`, "POST", {
             email, password, role, firstName, lastName
         });
         showFeedback("create-user-feedback", "Utente creato con successo.", false);
@@ -57,7 +57,7 @@ async function createSubject() {
     }
 
     try {
-        await sendApiRequest(`${API_BASE}/api/Subject`, "POST", { name, teacherId });
+        await sendApiRequest(`${API_BASE}/Subject`, "POST", { name, teacherId });
         showFeedback("create-subject-feedback", "Materia creata con successo.", false);
         document.getElementById("new-subject-name").value = "";
     } catch (e) {
@@ -79,7 +79,7 @@ async function createGrade() {
     }
 
     try {
-        await sendApiRequest(`${API_BASE}/api/Grade`, "POST", {
+        await sendApiRequest(`${API_BASE}/Grade`, "POST", {
             studentId, subjectId, value: parseFloat(value), date
         });
         showFeedback("create-grade-feedback", "Voto creato con successo.", false);
@@ -94,17 +94,17 @@ async function initAdminSection() {
     document.getElementById("admin-section").style.display = "block";
     document.getElementById("new-grade-date").value = todayIsoDate();
 
-    const teachers = await sendTokenForData(`${API_BASE}/api/Teacher`).catch(() => []);
+    const teachers = await sendTokenForData(`${API_BASE}/Teacher`).catch(() => []);
     document.getElementById("new-subject-teacher").innerHTML = teachers
         .map(t => `<option value="${t.id}">${t.firstName} ${t.lastName}</option>`)
         .join("");
 
-    const students = await sendTokenForData(`${API_BASE}/api/Student`).catch(() => []);
+    const students = await sendTokenForData(`${API_BASE}/Student`).catch(() => []);
     document.getElementById("new-grade-student").innerHTML = students
         .map(s => `<option value="${s.id}">${s.firstName} ${s.lastName}</option>`)
         .join("");
 
-    const subjects = await sendTokenForData(`${API_BASE}/api/Subject`).catch(() => []);
+    const subjects = await sendTokenForData(`${API_BASE}/Subject`).catch(() => []);
     document.getElementById("new-grade-subject").innerHTML = subjects
         .map(s => `<option value="${s.id}">${s.name}</option>`)
         .join("");
@@ -125,7 +125,7 @@ async function saveTeacherGrade(studentId, subjectId) {
     }
 
     try {
-        await sendApiRequest(`${API_BASE}/api/Grade`, "POST", {
+        await sendApiRequest(`${API_BASE}/Grade`, "POST", {
             studentId, subjectId, value: parseFloat(value), date
         });
         alert("Voto salvato con successo.");
@@ -140,7 +140,7 @@ async function initTeacherSection(userData) {
     document.getElementById("teacher-grade-date").value = todayIsoDate();
 
     const tbody = document.getElementById("teacher-students-body");
-    const subjects = await sendTokenForData(`${API_BASE}/api/Subject/byteacher/${userData.teacherId}`).catch(() => []);
+    const subjects = await sendTokenForData(`${API_BASE}/Subject/byteacher/${userData.teacherId}`).catch(() => []);
 
     if (subjects.length === 0) {
         tbody.innerHTML = `<tr><td colspan="3">Nessuna materia assegnata.</td></tr>`;
@@ -159,7 +159,7 @@ async function initTeacherSection(userData) {
         });
     }
 
-    const students = await sendTokenForData(`${API_BASE}/api/Student`).catch(() => []);
+    const students = await sendTokenForData(`${API_BASE}/Student`).catch(() => []);
     tbody.innerHTML = "";
 
     students.forEach(student => {
