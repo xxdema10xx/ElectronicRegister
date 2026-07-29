@@ -47,7 +47,7 @@ async function doLogin() {
   setLoading(loginBtn, true);
 
   try {
-    const res = await fetch(`${API_BASE}/api/Auth/login`, {
+    const res = await fetch(`${API_BASE}/Auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })

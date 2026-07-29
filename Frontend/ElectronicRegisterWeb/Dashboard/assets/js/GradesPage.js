@@ -44,7 +44,7 @@ function currentFilterParams() {
 }
 
 async function loadFilters() {
-    const filters = await sendTokenForData(`${API_BASE}/api/Grade/filters`).catch(() => ({ subjects: [], students: [] }));
+    const filters = await sendTokenForData(`${API_BASE}/Grade/filters`).catch(() => ({ subjects: [], students: [] }));
 
     const subjectSelect = document.getElementById("filter-subject");
     subjectSelect.innerHTML = `<option value="">Tutte le materie</option>` +
@@ -92,7 +92,7 @@ async function loadNextPage() {
         params.set("pageNumber", nextPage);
         params.set("pageSize", PAGE_SIZE);
 
-        const result = await sendTokenForData(`${API_BASE}/api/Grade/paged?${params.toString()}`);
+        const result = await sendTokenForData(`${API_BASE}/Grade/paged?${params.toString()}`);
         currentPage = nextPage;
         totalCount = result.totalCount;
         gradesCache = gradesCache.concat(result.items);
@@ -112,7 +112,7 @@ async function showGradeModal(id) {
     const grade = gradesCache.find(g => g.id === id);
     if (!grade) return;
 
-    const subjects = await sendTokenForData(`${API_BASE}/api/Subject`).catch(() => []);
+    const subjects = await sendTokenForData(`${API_BASE}/Subject`).catch(() => []);
     const select = document.getElementById("grade-modal-subject");
     select.innerHTML = subjects.map(s => `<option value="${s.id}">${s.name}</option>`).join("");
     select.value = grade.subjectId;
@@ -130,7 +130,7 @@ async function updateGrade(id) {
     const date = document.getElementById("grade-modal-date").value;
 
     try {
-        await sendApiRequest(`${API_BASE}/api/Grade/update/${id}`, "PUT", {
+        await sendApiRequest(`${API_BASE}/Grade/update/${id}`, "PUT", {
             subjectId, value: parseFloat(value), date
         });
         bootstrap.Modal.getInstance(document.getElementById("edit-grade-modal")).hide();
@@ -147,7 +147,7 @@ async function deleteGrade(id) {
     if (!confirm("Sei sicuro di voler eliminare questo voto?")) return;
 
     try {
-        await sendApiRequest(`${API_BASE}/api/Grade/${id}`, "DELETE");
+        await sendApiRequest(`${API_BASE}/Grade/${id}`, "DELETE");
         loadFilters();
         loadFirstPage();
     } catch (e) {

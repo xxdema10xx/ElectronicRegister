@@ -510,7 +510,7 @@
         }
 
         try {
-          await sendApiRequest(`${API_BASE}/api/Users/updatepassword/${currentUserData.id}`, "PUT", {
+          await sendApiRequest(`${API_BASE}/Users/updatepassword/${currentUserData.id}`, "PUT", {
             oldPassword: currentPassword,
             newPassword: newPassword
           });
