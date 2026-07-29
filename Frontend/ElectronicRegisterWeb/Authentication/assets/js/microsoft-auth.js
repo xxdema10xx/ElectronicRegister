@@ -3,7 +3,7 @@ const msalConfig = {
   auth: {
     clientId: "df405eeb-4453-4f41-86d7-2a4af11446b6",
     authority: "https://login.microsoftonline.com/common",
-    redirectUri: window.location.origin + "/ElectronicRegister/Frontend/ElectronicRegisterWeb/Authentication/login.html"
+    redirectUri: window.location.origin + "/Authentication/login.html"
   },
   cache: {
     cacheLocation: "sessionStorage"

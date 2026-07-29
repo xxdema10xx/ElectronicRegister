@@ -659,7 +659,7 @@ async function loadPage() {
                     <th><h6>Cognome</h6></th>
                     <th><h6>Action</h6></th>
                 </tr>`,
-                "/api/Users",
+                "/Users",
                 renderUsersBodyAdmin
             );
             loadTable(
@@ -677,7 +677,7 @@ async function loadPage() {
                     <th><h6>Cognome</h6></th>
                     <th><h6>Action</h6></th>
                 </tr>`,
-                "/api/Student",
+                "/Student",
                 renderStudentsBodyAdmin
             );
             loadTable(
@@ -695,7 +695,7 @@ async function loadPage() {
                     <th><h6>Cognome</h6></th>
                     <th><h6>Action</h6></th>
                 </tr>`,
-                "/api/Teacher",
+                "/Teacher",
                 renderTeachersBodyAdmin
             );
             loadTable(
@@ -712,7 +712,7 @@ async function loadPage() {
                     <th><h6>Insegnante</h6></th>
                     <th><h6>Action</h6></th>
                 </tr>`,
-                "/api/Subject",
+                "/Subject",
                 renderSubjectsBodyAdmin
             );
         break;
@@ -751,7 +751,7 @@ async function loadPage() {
                 `<tr>
                     <th><h6>Materia</h6></th>
                 </tr>`,
-                "/api/Subject/byteacher/" + userData.teacherId,
+                "/Subject/byteacher/" + userData.teacherId,
                 renderSubjectsBodyTeacher
             );
             loadTable(
@@ -767,7 +767,7 @@ async function loadPage() {
                     <th><h6>Nome</h6></th>
                     <th><h6>Cognome</h6></th>
                 </tr>`,
-                "/api/Student",
+                "/Student",
                 renderStudentsBodyTeacher
             );
         break;
@@ -805,7 +805,7 @@ async function loadPage() {
                     <th><h6>Name</h6></th>
                     <th><h6>Insegnante</h6></th>
                 </tr>`,
-                "/api/Subject",
+                "/Subject",
                 renderSubjectsBodyStudent
             );
             loadTable(
@@ -821,7 +821,7 @@ async function loadPage() {
                     <th><h6>Materia</h6></th>
                     <th><h6>Media</h6></th>
                 </tr>`,
-                "/api/Subject",
+                "/Subject",
                 renderSubjectAveragesBodyStudent
             );
         break;
