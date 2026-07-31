@@ -1,0 +1,6 @@
+@ElectronicRegisterAPI_HostAddress = http://localhost:5257
+
+GET {{ElectronicRegisterAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
