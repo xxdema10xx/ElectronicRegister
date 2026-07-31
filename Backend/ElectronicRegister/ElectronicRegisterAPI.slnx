@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Application/ElectronicRegisterAPI.Application/ElectronicRegisterAPI.Application.csproj" />
+    <Project Path="src/Business/ElectronicRegisterAPI.Business/ElectronicRegisterAPI.Business.csproj" />
+    <Project Path="src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj" />
+    <Project Path="src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/test/" />
+  <Project Path="src/Api/ElectronicRegisterAPI/ElectronicRegisterAPI.csproj" />
+</Solution>
