@@ -7,17 +7,21 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 
 public interface IGradeRepository
 {
-    Task CreateAsync(CreateGradeDto gradeDto);
-    Task<List<GradeDto>> ReadAllAsync();
-    Task UpdateAsync(Guid id, UpdateGradeDto dto);
-    Task DeleteAsync(Guid id);
-    Task<int> CountAsync();
-    Task<GradeStatisticsDto> GetStatisticsAsync();
-    Task<GradeFiltersDto> GetFiltersAsync();
-    Task<GradePageDto> GetPagedAsync(int pageNumber = 1,int pageSize = 20,Guid? subjectId = null,Guid? studentId = null,DateOnly? date = null);
-    Task<GradeDto> GetByIdAsync(Guid id);
-    Task<List<GradeDto>> GetGradesByStudentIdAsync(Guid id);
-    Task<List<GradeDto>> GetGradesBySubjectNameAsync(string subject);
-    Task<List<GradeDto>> GetGradesByDateAsync(DateOnly date);
-    
+    //Task<Grade?> GetByIdAsync(Guid id);
+
+    //Task<List<Grade>> GetAllAsync();
+
+    //Task AddAsync(Grade grade);
+
+    //Task UpdateAsync(Grade grade);
+
+    //Task DeleteAsync(Grade grade);
+
+    //Task<bool> ExistsByStudentIdAsync(Guid studentId);
+
+    //Task<bool> ExistsBySubjectIdAsync(Guid subjectId);
+
+    //Task<bool> ExistsByTeacherIdAsync(Guid teacherId);
+
+    //Task<int> CountAsync();
 }
