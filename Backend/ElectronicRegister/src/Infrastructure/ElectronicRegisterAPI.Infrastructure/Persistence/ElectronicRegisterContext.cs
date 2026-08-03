@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
+using ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
-namespace ElectronicRegisterAPI.Models;
+namespace ElectronicRegisterAPI.Infrastructure.Persistence;
 
-public partial class ElectronicRegisterContext : DbContext
+internal partial class ElectronicRegisterContext : DbContext
 {
     public ElectronicRegisterContext()
     {

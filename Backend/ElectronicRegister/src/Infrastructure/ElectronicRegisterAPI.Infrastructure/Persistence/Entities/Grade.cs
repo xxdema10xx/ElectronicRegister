@@ -3,13 +3,17 @@ using System.Collections.Generic;
 
 namespace ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
-public partial class Subject
+internal partial class Grade
 {
     public Guid Id { get; set; }
 
-    public required string Name { get; set; }
+    public Guid StudentId { get; set; }
+
+    public Guid SubjectId { get; set; }
 
     public Guid TeacherId { get; set; }
 
-    public virtual Teacher Teacher { get; set; } = null!;
+    public decimal Value { get; set; }
+
+    public DateOnly Date { get; set; }
 }
