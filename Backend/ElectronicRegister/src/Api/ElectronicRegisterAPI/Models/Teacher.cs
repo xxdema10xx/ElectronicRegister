@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ElectronicRegisterAPI.Models;
+namespace ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
 public partial class Teacher
 {

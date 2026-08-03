@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ElectronicRegisterAPI.Domain.DTOs;
+﻿using ElectronicRegisterAPI.Domain.DTOs;
 
-namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories
+namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+
+public interface ISubjectRepository
 {
-    public interface ISubjectRepository
-    {
-        Task CreateAsync(CreateSubjectDto subjectDto);
-        Task<List<SubjectDto>> ReadAllAsync();
-        Task UpdateAsync(Guid id, UpdateSubjectDto dto);
-        Task DeleteAsync(Guid id);
-        Task<int> CountAsync();
-        Task<SubjectDto> GetByIdAsync(Guid id);
-        Task<SubjectDto> GetSubjectByNameAsync(string name);
-        Task<List<SubjectDto>> GetSubjectByTeacherIdAsync(Guid id);
-        
-        
-    }
+    Task<int> CountAsync(Guid? teacherId = null);
+    Task<List<SubjectDto>> GetAllAsync(Guid? teacherId = null);
+    Task<SubjectDto?> GetByIdAsync(Guid id);
+    Task<List<SubjectDto>> GetByIdsAsync(IEnumerable<Guid> ids);
+    Task<SubjectDto?> GetByNameAsync(string name);
+    Task<List<SubjectDto>> GetByTeacherIdAsync(Guid teacherId);
+    Task<bool> ExistsForTeacherAsync(Guid teacherId);
+    Task AddAsync(SubjectDto subjectDto);
+    Task UpdateAsync(SubjectDto subjectDto);
+    Task DeleteAsync(Guid id);
 }

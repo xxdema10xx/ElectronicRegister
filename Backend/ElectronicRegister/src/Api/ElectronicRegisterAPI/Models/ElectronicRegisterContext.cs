@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
-namespace ElectronicRegisterAPI.Models;
+namespace ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
 public partial class ElectronicRegisterContext : DbContext
 {

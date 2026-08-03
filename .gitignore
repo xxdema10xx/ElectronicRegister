@@ -10,3 +10,6 @@ node_modules/
 *.old
 config.js
 Backend/ElectronicRegisterAPI/appsettings.json
+.vs/
+bin/
+obj/

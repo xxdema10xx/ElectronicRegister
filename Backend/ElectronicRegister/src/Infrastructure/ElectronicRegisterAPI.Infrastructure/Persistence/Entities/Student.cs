@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ElectronicRegisterAPI.Models;
+namespace ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
-public partial class Student
+internal partial class Student
 {
     public Guid Id { get; set; }
 
