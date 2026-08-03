@@ -15,8 +15,8 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Managers
         Task<List<GradeDto>> GetGradesByStudentIdAsync(Guid studentId);
         Task<List<GradeDto>?> GetGradesBySubjectNameAsync(string subjectName, ClaimsContext caller);
         Task<List<GradeDto>> GetGradesByDateAsync(DateOnly date, ClaimsContext caller);
-        Task<Guid?> AddAsync(AddGradeDto dto, ClaimsContext caller);
-        Task<bool> UpdateAsync(Guid id, UpdateGradeDto dto, ClaimsContext caller);
+        Task<Guid?> AddAsync(CreateGradeDto dto, ClaimsContext caller);
+        Task UpdateAsync(Guid id, UpdateGradeDto dto, ClaimsContext caller);
         Task<bool> DeleteAsync(Guid id);
     }
 }

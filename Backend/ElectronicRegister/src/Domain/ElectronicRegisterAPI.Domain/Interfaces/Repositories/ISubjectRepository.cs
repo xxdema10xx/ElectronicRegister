@@ -1,17 +1,17 @@
-﻿using ElectronicRegisterAPI.Domain.DTOs;
+﻿using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 
 public interface ISubjectRepository
 {
     Task<int> CountAsync(Guid? teacherId = null);
-    Task<List<SubjectDto>> GetAllAsync(Guid? teacherId = null);
-    Task<SubjectDto?> GetByIdAsync(Guid id);
-    Task<List<SubjectDto>> GetByIdsAsync(IEnumerable<Guid> ids);
-    Task<SubjectDto?> GetByNameAsync(string name);
-    Task<List<SubjectDto>> GetByTeacherIdAsync(Guid teacherId);
+    Task<List<Subject>> GetAllAsync(Guid? teacherId = null);
+    Task<Subject?> GetByIdAsync(Guid id);
+    Task<List<Subject>> GetByIdsAsync(IEnumerable<Guid> ids);
+    Task<Subject?> GetByNameAsync(string name);
+    Task<List<Subject>> GetByTeacherIdAsync(Guid teacherId);
     Task<bool> ExistsForTeacherAsync(Guid teacherId);
-    Task AddAsync(SubjectDto subjectDto);
-    Task UpdateAsync(SubjectDto subjectDto);
+    Task AddAsync(Subject subject);
+    Task UpdateAsync(Subject subject);
     Task DeleteAsync(Guid id);
 }

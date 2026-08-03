@@ -1,6 +1,6 @@
 namespace ElectronicRegisterAPI.DTOs
 {
-    public class AddGradeDto
+    public class CreateGradeDto
     {
         public Guid StudentId { get; set; }
         public Guid SubjectId { get; set; }

@@ -131,7 +131,7 @@
 | CreateSubjectDto | ✅ |
 | UpdateSubjectDto | ✅ |
 | GradeDto | ✅ |
-| **AddGradeDto** | ✅ **CREATO** (era mancante) |
+| **CreateGradeDto** | ✅ **CREATO** (era mancante) |
 | UpdateGradeDto | ✅ |
 | GradePageDto | ✅ |
 | GradeFiltersDto | ✅ |
@@ -508,9 +508,9 @@ public static class ServiceCollectionExtensions
 
 ## ERRORI TROVATI E RISOLTI
 
-### Errore 1: AddGradeDto Mancante ✅
-**Problema:** IGradeManager referenziava `AddGradeDto` che non esisteva in Domain
-**File:** `src/Domain/ElectronicRegisterAPI.Domain/DTOs/AddGradeDto.cs`
+### Errore 1: CreateGradeDto Mancante ✅
+**Problema:** IGradeManager referenziava `CreateGradeDto` che non esisteva in Domain
+**File:** `src/Domain/ElectronicRegisterAPI.Domain/DTOs/CreateGradeDto.cs`
 **Azione:** Creato il file con namespace corretto
 **Risultato:** ✅ Risolto
 
@@ -551,7 +551,7 @@ Main Issues:
 - Api.csproj missing ProjectReferences (thought, but actually present)
 - Infrastructure.csproj missing NuGet packages (thought, but actually present)
 - Missing entity using in DbContext
-- Missing AddGradeDto
+- Missing CreateGradeDto
 - Missing Repository implementations
 - Missing Repository methods
 ```
@@ -624,7 +624,7 @@ I 24 errori rimasti sono nei Controller che ancora usano `ElectronicRegisterCont
 
 | Azione | File | Descrizione |
 |--------|------|-------------|
-| **Creato** | `AddGradeDto.cs` | DTO mancante |
+| **Creato** | `CreateGradeDto.cs` | DTO mancante |
 | **Modificato** | `ElectronicRegisterContext.cs` | Aggiunto using per Entities |
 | **Modificato** | `GradeRepository.cs` | Aggiunti ExistsFor* methods |
 | **Modificato** | `SubjectRepository.cs` | Aggiornato con tutti i metodi |

@@ -425,7 +425,7 @@ namespace ElectronicRegisterAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "teacher,admin")]
-        public async Task<ActionResult> Add(AddGradeDto gradeDto)
+        public async Task<ActionResult> Add(CreateGradeDto gradeDto)
         {
             if(User.IsInRole("teacher"))
             {

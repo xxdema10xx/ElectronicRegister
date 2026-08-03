@@ -581,7 +581,7 @@ internal class GradeService : IGradeService
 
 Ripeti per `AuthService` (validazione email `allievo_...@itsumbria.it`, regole password con `HasSpecialChar`/lunghezza, regole nome/cognome), `StudentService`/`SubjectService`/`TeacherService` (regole di cancellazione: "non eliminare se esistono voti/materie collegate"), `UserService` (regole di update/password).
 
-> Nota importante: in queste eccezioni usa tipi standard (`ArgumentOutOfRangeException`, `UnauthorizedAccessException`, oppure una tua eccezione custom `BusinessRuleException`) — sarà compito del Manager (Application) tradurle in `BadRequest`/`Forbid`/`NotFound` HTTP, perché il livello Business non deve conoscere ASP.NET Core.
+> Nota importante: in queste eccezioni usa tipi standard (`ArgumentOutOfRangeException`,z `UnauthorizedAccessException`, oppure una tua eccezione custom `BusinessRuleException`) — sarà compito del Manager (Application) tradurle in `BadRequest`/`Forbid`/`NotFound` HTTP, perché il livello Business non deve conoscere ASP.NET Core.
 
 ### 8.2 Registrazione DI: `AddBusinessServices`
 
