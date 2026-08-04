@@ -16,4 +16,6 @@ internal partial class Grade
     public decimal Value { get; set; }
 
     public DateOnly Date { get; set; }
+
+    public virtual Subject Subject { get; set; } = null!;
 }

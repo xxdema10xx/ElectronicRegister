@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using ElectronicRegisterAPI.Domain.DTOs;
+using Subject = ElectronicRegisterAPI.Domain.Models;
+using DomainSubject = ElectronicRegisterAPI.Domain.Models.Subject;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
-using ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
+using  ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
+using SubjectEntity =  ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Subject;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
@@ -18,60 +20,72 @@ internal class SubjectRepository : ISubjectRepository
     public async Task<int> CountAsync(Guid? teacherId = null)
     {
         var query = _context.Subjects.AsQueryable();
-        // TODO: Filter by teacherId if needed (depends on data model relationship)
+        if (teacherId.HasValue)
+        {
+            query = query.Where(s => s.TeacherId == teacherId);
+            return await query.CountAsync();
+        }
         return await query.CountAsync();
     }
 
-    public async Task<List<SubjectDto>> GetAllAsync(Guid? teacherId = null)
+    public async Task<List<DomainSubject>> GetAllAsync(Guid? teacherId = null)
     {
+        var subjects = new List<DomainSubject>();
         var query = _context.Subjects.AsQueryable();
-        // TODO: Filter by teacherId if needed (depends on data model relationship)
-        var subjects = await query.ToListAsync();
-        return subjects.Select(MapToDto).ToList();
+        if (teacherId.HasValue)
+        {
+            query = query.Where(s => s.TeacherId == teacherId);
+            subjects = await query.Select(s => MapTo(s)).ToListAsync();
+            return subjects;
+        }
+        
+        return subjects = await query.Select(s => MapTo(s)).ToListAsync();
     }
 
-    public async Task<SubjectDto?> GetByIdAsync(Guid id)
+    public async Task<DomainSubject?> GetByIdAsync(Guid id)
     {
         var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Id == id);
-        return subject == null ? null : MapToDto(subject);
+        return subject == null ? null : MapTo(subject);
     }
 
-    public async Task<List<SubjectDto>> GetByIdsAsync(IEnumerable<Guid> ids)
+    public async Task<List<DomainSubject>> GetByIdsAsync(IEnumerable<Guid> ids)
     {
-        var subjects = await _context.Subjects.Where(s => ids.Contains(s.Id)).ToListAsync();
-        return subjects.Select(MapToDto).ToList();
+        return await _context.Subjects
+            .Where(s => ids.Contains(s.Id))
+            .Select(s => MapTo(s))
+            .ToListAsync();
     }
 
-    public async Task<SubjectDto?> GetByNameAsync(string name)
+    public async Task<DomainSubject?> GetByNameAsync(string name)
     {
         var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Name == name);
-        return subject == null ? null : MapToDto(subject);
+        return subject == null ? null : MapTo(subject);
     }
 
-    public async Task<List<SubjectDto>> GetByTeacherIdAsync(Guid teacherId)
+    public async Task<List<DomainSubject>> GetByTeacherIdAsync(Guid teacherId)
     {
-        // TODO: Implement based on data model relationship between Subject and Teacher
-        var subjects = await _context.Subjects.ToListAsync();
-        return subjects.Select(MapToDto).ToList();
+        return  await _context.Subjects
+            .Where(s => s.TeacherId == teacherId)
+            .Select(s => MapTo(s))
+            .ToListAsync();
     }
 
     public async Task<bool> ExistsForTeacherAsync(Guid teacherId)
     {
-        // TODO: Implement based on data model relationship between Subject and Teacher
-        return await _context.Subjects.AnyAsync();
+        return await _context.Subjects.AnyAsync(s => s.TeacherId == teacherId);
     }
 
-    public async Task AddAsync(SubjectDto subjectDto)
+    public async Task AddAsync(DomainSubject subject)
     {
-        var subject = MapToEntity(subjectDto);
-        _context.Subjects.Add(subject);
+        var subjectEntity = MapToEntity(subject);
+        _context.Subjects.Add(subjectEntity);
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(SubjectDto subjectDto)
+    public async Task UpdateAsync(DomainSubject subject)
     {
-        var subject = MapToEntity(subjectDto);
-        _context.Subjects.Update(subject);
+        var subjectEntity = MapToEntity(subject);
+        _context.Subjects.Update(subjectEntity);
         await _context.SaveChangesAsync();
     }
 
@@ -85,21 +99,23 @@ internal class SubjectRepository : ISubjectRepository
         }
     }
 
-    private static SubjectDto MapToDto(Subject subject)
+    private static DomainSubject MapTo(SubjectEntity subjects)
     {
-        return new SubjectDto
+        return new DomainSubject
         {
-            Id = subject.Id,
-            Name = subject.Name
+            Id = subjects.Id,
+            Name = subjects.Name,
+            TeacherId = subjects.TeacherId
         };
     }
 
-    private static Subject MapToEntity(SubjectDto subjectDto)
+    private static SubjectEntity MapToEntity(DomainSubject subject)
     {
-        return new Subject
+        return new SubjectEntity
         {
-            Id = subjectDto.Id,
-            Name = subjectDto.Name
+            Id = subject.Id,
+            Name = subject.Name,
+            TeacherId = subject.TeacherId
         };
     }
 }
