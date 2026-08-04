@@ -1,5 +1,6 @@
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
+using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Business.Services;
 
@@ -35,5 +36,11 @@ internal class GradeService : IGradeService
         var subject = await _subjectRepository.GetByIdAsync(subjectId);
         if (subject is null || subject.TeacherId != teacherId)
             throw new UnauthorizedAccessException("Il docente non insegna questa materia.");
+    }
+
+    public async Task EnsureTeacherOwnsGradeAsync(Guid teacherId, Grade grade)
+    {
+        if(grade.TeacherId != teacherId)
+            throw new UnauthorizedAccessException("Il docente non è autorizzato a modificare questo voto.");
     }
 }
