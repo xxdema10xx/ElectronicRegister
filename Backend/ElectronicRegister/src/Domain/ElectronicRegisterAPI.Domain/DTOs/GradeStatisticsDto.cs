@@ -2,7 +2,7 @@ namespace ElectronicRegisterAPI.Domain.DTOs
 {
     public class GradeStatisticsDto
     {
-        public decimal yearlyAverage { get; set; }
-        public decimal?[] monthlyAverage { get; set; } = new decimal?[12];
+        public decimal YearlyAverage { get; set; }
+        public decimal?[] MonthlyAverage { get; set; } = new decimal?[12];
     }
 }
