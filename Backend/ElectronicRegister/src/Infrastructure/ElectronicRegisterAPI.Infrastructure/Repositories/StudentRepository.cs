@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using ElectronicRegisterAPI.Domain.DTOs;
+using Student = ElectronicRegisterAPI.Domain.Models.Student;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
-using ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
+using StudentEntity = ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Student;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
@@ -20,41 +20,39 @@ internal class StudentRepository : IStudentRepository
         return await _context.Students.CountAsync();
     }
 
-    public async Task<List<StudentDto>> GetAllAsync()
+    public async Task<List<Student>> GetAllAsync()
     {
         var students = await _context.Students.ToListAsync();
-        return students.Select(MapToDto).ToList();
+        return students.Select(MapToModel).ToList();
     }
 
-    public async Task<StudentDto?> GetByIdAsync(Guid id)
+    public async Task<Student?> GetByIdAsync(Guid id)
     {
         var student = await _context.Students.FirstOrDefaultAsync(s => s.Id == id);
-        return student == null ? null : MapToDto(student);
+        return student == null ? null : MapToModel(student);
     }
 
-    public async Task<List<StudentDto>> GetByIdsAsync(IEnumerable<Guid> ids)
+    public async Task<List<Student>> GetByIdsAsync(IEnumerable<Guid> ids)
     {
         var students = await _context.Students.Where(s => ids.Contains(s.Id)).ToListAsync();
-        return students.Select(MapToDto).ToList();
+        return students.Select(MapToModel).ToList();
     }
 
-    public async Task<List<StudentDto>> GetByLastNameAsync(string lastName)
+    public async Task<List<Student>> GetByLastNameAsync(string lastName)
     {
         var students = await _context.Students.Where(s => s.LastName == lastName).ToListAsync();
-        return students.Select(MapToDto).ToList();
+        return students.Select(MapToModel).ToList();
     }
 
-    public async Task AddAsync(StudentDto studentDto)
+    public async Task AddAsync(Student student)
     {
-        var student = MapToEntity(studentDto);
-        _context.Students.Add(student);
+        _context.Students.Add(MapToEntity(student));
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(StudentDto studentDto)
+    public async Task UpdateAsync(Student student)
     {
-        var student = MapToEntity(studentDto);
-        _context.Students.Update(student);
+        _context.Students.Update(MapToEntity(student));
         await _context.SaveChangesAsync();
     }
 
@@ -68,9 +66,9 @@ internal class StudentRepository : IStudentRepository
         }
     }
 
-    private static StudentDto MapToDto(Student student)
+    private static Student MapToModel(StudentEntity student)
     {
-        return new StudentDto
+        return new Student
         {
             Id = student.Id,
             FirstName = student.FirstName,
@@ -78,13 +76,13 @@ internal class StudentRepository : IStudentRepository
         };
     }
 
-    private static Student MapToEntity(StudentDto studentDto)
+    private static StudentEntity MapToEntity(Student student)
     {
-        return new Student
+        return new StudentEntity
         {
-            Id = studentDto.Id,
-            FirstName = studentDto.FirstName,
-            LastName = studentDto.LastName
+            Id = student.Id,
+            FirstName = student.FirstName,
+            LastName = student.LastName
         };
     }
 }
