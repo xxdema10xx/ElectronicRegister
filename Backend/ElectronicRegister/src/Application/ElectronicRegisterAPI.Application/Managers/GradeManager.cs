@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
@@ -30,19 +29,26 @@ internal class GradeManager : IGradeManager
 
     public async Task<List<GradeDto>> GetAllAsync(ClaimsContext caller)
     {
-        var grades = await _gradeRepository.GetAllAsync();
-        var studentId = caller.Role == UserRole.Student ? caller.StudentId : null;
-        var teacherId = caller.Role == UserRole.Teacher ? caller.TeacherId : null;
-        var students = (await _studentRepository.GetByIdsAsync(grades.Select(g => g.StudentId).Distinct().ToList()))
+        var studentId = caller.Role == UserRole.Student
+            ? caller.StudentId
+            : null;
+
+        var teacherId = caller.Role == UserRole.Teacher
+            ? caller.TeacherId
+            : null;
+
+        var grades = await _gradeRepository.GetAllAsync(
+            teacherId,
+            studentId);
+
+        var studentIds = grades
+            .Select(g => g.StudentId)
+            .Distinct()
+            .ToList();
+
+        var students = (await _studentRepository.GetByIdsAsync(studentIds))
             .ToDictionary(s => s.Id);
-        if (studentId.HasValue)
-        {
-            grades = grades.Where(g => g.StudentId == studentId.Value).ToList();
-        }
-        else if (teacherId.HasValue)
-        {
-            grades = grades.Where(g => g.TeacherId == teacherId.Value).ToList();
-        }
+
         return grades.Select(g => new GradeDto
         {
             Id = g.Id,
@@ -52,7 +58,12 @@ internal class GradeManager : IGradeManager
             Value = g.Value,
             Date = g.Date,
             Student = students.TryGetValue(g.StudentId, out var student)
-                ? new StudentDto { Id = student.Id, FirstName = student.FirstName, LastName = student.LastName }
+                ? new StudentDto
+                {
+                    Id = student.Id,
+                    FirstName = student.FirstName,
+                    LastName = student.LastName
+                }
                 : null
         }).ToList();
     }
@@ -85,40 +96,123 @@ internal class GradeManager : IGradeManager
         };
     }
 
-    public async Task<GradePageDto> GetPagedAsync(int pageNumber, int pageSize, Guid? subjectId, Guid? studentId, DateOnly? date, ClaimsContext caller)
+    public async Task<GradePageDto> GetPagedAsync(
+        int pageNumber, 
+        int pageSize, 
+        Guid? subjectId, 
+        Guid? studentId, 
+        DateOnly? date, 
+        ClaimsContext caller
+    )
     {
-        // Implementation for getting paged grades
-        var grades = await _gradeRepository.GetPagedAsync(pageNumber, pageSize, subjectId, studentId, date);
-        var totalCount = await _gradeRepository.CountAsync();
-        if (caller.Role == UserRole.Student)
-        {
-            grades = grades.Where(g => g.StudentId == caller.StudentId).ToList();
-        }
-        else if (caller.Role == UserRole.Teacher)
-        {
-            grades = grades.Where(g => g.TeacherId == caller.TeacherId).ToList();
-            totalCount = await _gradeRepository.CountAsync(caller.TeacherId);
-        }
-        var gradeDtos = grades.Select(g => new GradeDto
-        {
-            Id = g.Id,
-            StudentId = g.StudentId,
-            SubjectId = g.SubjectId,
-            TeacherId = g.TeacherId,
-            Value = g.Value,
-            Date = g.Date
-        }).ToList();
-        return new GradePageDto { Items = gradeDtos, TotalCount= totalCount };
+        if (pageNumber < 1) pageNumber = 1;
+        if (pageSize < 1 || pageSize > 100) pageSize = 20;
+
+        Guid? restrictToStudentId = caller.Role == UserRole.Student ? caller.StudentId : null;
+        Guid? restrictToTeacherId = caller.Role == UserRole.Teacher ? caller.TeacherId : null;
+
+        var (grades, totalCount) = await _gradeRepository.GetPagedAsync(
+            pageNumber, pageSize, subjectId, studentId, date, restrictToStudentId, restrictToTeacherId);
+
+        var items = await MapToDtosAsync(grades);
+
+        return new GradePageDto { Items = items, TotalCount = totalCount };
     }
 
     public async Task<GradeStatisticsDto?> GetStatisticsAsync(ClaimsContext caller)
     {
         // Implementation for getting grade statistics
+        if (caller.Role == UserRole.Student)
+        {
+            var statistics = await _gradeRepository.GetStatisticsAsync(null, caller.StudentId!.Value);
+            return new GradeStatisticsDto
+            {
+                yearlyAverage = statistics.YearlyAverage,
+                monthlyAverage = statistics.MonthlyAverage
+            };
+        }
+        if (caller.Role == UserRole.Teacher)
+        {
+            var statistics = await _gradeRepository.GetStatisticsAsync(caller.TeacherId!.Value, null);
+            return new GradeStatisticsDto
+            {
+                yearlyAverage = statistics.YearlyAverage,
+                monthlyAverage = statistics.MonthlyAverage
+            };
+        }
+        
+        var statisticsAll = await _gradeRepository.GetStatisticsAsync(null, null);
+        return new GradeStatisticsDto
+        {
+            yearlyAverage = statisticsAll.YearlyAverage,
+            monthlyAverage = statisticsAll.MonthlyAverage
+        };
     }
 
     public async Task<GradeFiltersDto> GetFiltersAsync(ClaimsContext caller)
     {
-        // Implementation for getting grade filters
+        Guid? teacherId = null;
+        Guid? studentId = null;
+
+        if (caller.Role == UserRole.Teacher)
+        {
+            teacherId = caller.TeacherId;
+        }
+        else if (caller.Role == UserRole.Student)
+        {
+            studentId = caller.StudentId;
+        }
+
+        var grades = await _gradeRepository.GetAllAsync(
+            teacherId,
+            studentId);
+
+        var subjectIds = grades
+            .Select(g => g.SubjectId)
+            .Distinct()
+            .ToList();
+
+        var studentIds = grades
+            .Select(g => g.StudentId)
+            .Distinct()
+            .ToList();
+
+        var subjects = await _subjectRepository.GetByIdsAsync(subjectIds);
+        var students = await _studentRepository.GetByIdsAsync(studentIds);
+        var teachers = await _teacherRepository.GetAllAsync();
+
+        var teachersById = teachers.ToDictionary(t => t.Id);
+
+        return new GradeFiltersDto
+        {
+            Subjects = subjects
+                .Select(s =>
+                {
+                    teachersById.TryGetValue(s.TeacherId, out var teacher);
+
+                    return new SubjectDto
+                    {
+                        Id = s.Id,
+                        Name = s.Name,
+                        TeacherId = s.TeacherId,
+                        TeacherFirstName = teacher?.FirstName,
+                        TeacherLastName = teacher?.LastName
+                    };
+                })
+                .OrderBy(s => s.Name)
+                .ToList(),
+
+            Students = students
+                .Select(s => new StudentDto
+                {
+                    Id = s.Id,
+                    FirstName = s.FirstName,
+                    LastName = s.LastName
+                })
+                .OrderBy(s => s.LastName)
+                .ThenBy(s => s.FirstName)
+                .ToList()
+        };
     }
 
     public async Task<List<GradeDto>> GetGradesByStudentIdAsync(Guid studentId)
@@ -219,7 +313,8 @@ internal class GradeManager : IGradeManager
             Value = dto.Value,
             Date = dto.Date,
             SubjectId = dto.SubjectId,
-            StudentId = dto.StudentId
+            StudentId = dto.StudentId,
+            TeacherId = caller.Role == UserRole.Teacher ? caller.TeacherId!.Value : subject.TeacherId
         };
         await _gradeRepository.AddAsync(grade);
         return grade.Id;
@@ -256,5 +351,28 @@ internal class GradeManager : IGradeManager
 
         await _gradeRepository.DeleteAsync(grade);
         return true;
+    }
+
+    private async Task<List<GradeDto>> MapToDtosAsync(List<Grade> grades)
+    {
+        var subjectIds = grades.Select(g => g.SubjectId).Distinct().ToList();
+        var studentIds = grades.Select(g => g.StudentId).Distinct().ToList();
+
+        var subjects = (await _subjectRepository.GetByIdsAsync(subjectIds)).ToDictionary(s => s.Id);
+        var students = (await _studentRepository.GetByIdsAsync(studentIds)).ToDictionary(s => s.Id);
+
+        return grades.Select(g => new GradeDto
+        {
+            Id = g.Id,
+            StudentId = g.StudentId,
+            SubjectId = g.SubjectId,
+            SubjectName = subjects.TryGetValue(g.SubjectId, out var subj) ? subj.Name : null,
+            TeacherId = g.TeacherId,
+            Value = g.Value,
+            Date = g.Date,
+            Student = students.TryGetValue(g.StudentId, out var stud)
+                ? new StudentDto { Id = stud.Id, FirstName = stud.FirstName, LastName = stud.LastName }
+                : null
+        }).ToList();
     }
 }
