@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.Models;
 using Grade = ElectronicRegisterAPI.Domain.Models.Grade;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
@@ -22,19 +22,30 @@ internal class GradeRepository : IGradeRepository
         return grade == null ? null : MapToModel(grade);
     }
 
-    public async Task<List<Grade>> GetAllAsync()
-    {
-        return await _context.Grades
-            .Select(g => MapToModel(g))
-            .ToListAsync();
-    }
-
-    public async Task<int> CountAsync(Guid? teacherId = null)
+    public async Task<List<Grade>> GetAllAsync(Guid? teacherId, Guid? studentId)
     {
         var query = _context.Grades.AsQueryable();
         if (teacherId.HasValue)
         {
             query = query.Where(g => g.TeacherId == teacherId.Value);
+        }
+        if (studentId.HasValue)
+        {
+            query = query.Where(g => g.StudentId == studentId.Value);
+        }
+        return await query.Select(g => MapToModel(g)).ToListAsync();
+    }
+
+    public async Task<int> CountAsync(Guid? teacherId = null, Guid? studentId = null)
+    {
+        var query = _context.Grades.AsQueryable();
+        if (teacherId.HasValue)
+        {
+            query = query.Where(g => g.TeacherId == teacherId.Value);
+        }
+        if (studentId.HasValue)
+        {
+            query = query.Where(g => g.StudentId == studentId.Value);
         }
         return await query.CountAsync();
     }
@@ -59,17 +70,69 @@ internal class GradeRepository : IGradeRepository
         return await query.Select(g => MapToModel(g)).ToListAsync();
     }
 
-    public async Task<List<Grade>> GetPagedAsync(int pageNumber, int pageSize, Guid? subjectId, Guid? studentId, DateOnly? date)
+    public async Task<(List<Grade> Items, int TotalCount)> GetPagedAsync(
+        int pageNumber, int pageSize,
+        Guid? subjectId, Guid? studentId, DateOnly? date,
+        Guid? restrictToStudentId, Guid? restrictToTeacherId)
     {
         var query = _context.Grades.AsQueryable();
+
+        if (restrictToStudentId.HasValue) query = query.Where(g => g.StudentId == restrictToStudentId.Value);
+        if (restrictToTeacherId.HasValue) query = query.Where(g => g.TeacherId == restrictToTeacherId.Value);
         if (subjectId.HasValue) query = query.Where(g => g.SubjectId == subjectId.Value);
         if (studentId.HasValue) query = query.Where(g => g.StudentId == studentId.Value);
         if (date.HasValue) query = query.Where(g => g.Date == date.Value);
-        return await query
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(g => g.Date).ThenBy(g => g.SubjectId).ThenBy(g => g.Value).ThenBy(g => g.StudentId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .Select(g => MapToModel(g))
+            .Select(g => new Grade
+            {
+                Id = g.Id,
+                StudentId = g.StudentId,
+                SubjectId = g.SubjectId,
+                TeacherId = g.TeacherId,
+                Value = g.Value,
+                Date = g.Date
+            })
             .ToListAsync();
+
+        return (items, totalCount);
+    }
+    public async Task<GradeStatistics> GetStatisticsAsync(Guid? teacherId, Guid? studentId)
+    {
+        var query = _context.Grades.AsQueryable();
+
+        if(teacherId.HasValue) query = query.Where(g => g.TeacherId == teacherId.Value);
+        
+        if(studentId.HasValue) query = query.Where(g => g.StudentId == studentId.Value);
+
+        var yearlyAverage = await query.Select(g => (decimal?)g.Value).AverageAsync() ?? 0;
+
+        var monthlyData = await query
+                .GroupBy(g => g.Date.Month)
+                .Select(g => new
+                {
+                    Month = g.Key,
+                    Average = g.Average(x => x.Value)
+                })
+                .ToListAsync();
+
+        var monthlyAverage = new decimal?[12];
+
+        foreach (var item in monthlyData)
+        {
+            monthlyAverage[item.Month - 1] = item.Average;
+        }
+
+        return new GradeStatistics
+        {
+            YearlyAverage = yearlyAverage,
+            MonthlyAverage = monthlyAverage
+        };
     }
 
     public async Task<List<Grade>> GetByStudentIdAsync(Guid studentId)
