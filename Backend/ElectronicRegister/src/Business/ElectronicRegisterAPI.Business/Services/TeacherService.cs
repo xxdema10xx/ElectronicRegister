@@ -1,30 +1,23 @@
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 
-namespace ElectronicRegisterAPI.Business.Services;
-
 internal class TeacherService : ITeacherService
 {
-    private readonly ITeacherRepository _teacherRepository;
+    private readonly ISubjectRepository _subjectRepository;
+    private readonly IGradeRepository _gradeRepository;
 
-    public TeacherService(ITeacherRepository teacherRepository)
+    public TeacherService(ISubjectRepository subjectRepository, IGradeRepository gradeRepository)
     {
-        _teacherRepository = teacherRepository;
+        _subjectRepository = subjectRepository;
+        _gradeRepository = gradeRepository;
     }
 
     public async Task EnsureTeacherCanBeDeletedAsync(Guid teacherId)
     {
-        var teacher = await _teacherRepository.GetByIdAsync(teacherId);
-        if (teacher is null)
-            throw new KeyNotFoundException("Il docente non esiste.");
-        if (teacher.Subjects.Any())
-            throw new InvalidOperationException("Il docente ha materie assegnate e non può essere eliminato.");
-    }
+        if (await _subjectRepository.ExistsForTeacherAsync(teacherId))
+            throw new InvalidOperationException("Impossibile eliminare l'insegnante: ha materie assegnate.");
 
-    public async Task EnsureTeacherExistsAsync(Guid teacherId)
-    {
-        var teacher = await _teacherRepository.GetByIdAsync(teacherId);
-        if (teacher is null)
-            throw new KeyNotFoundException("Il docente non esiste.");
+        if (await _gradeRepository.ExistsForTeacherAsync(teacherId))
+            throw new InvalidOperationException("Impossibile eliminare l'insegnante: ha voti assegnati.");
     }
 }

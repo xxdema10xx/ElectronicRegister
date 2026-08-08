@@ -6,7 +6,6 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Services
 {
     public interface ITeacherService
     {
-        Task EnsureTeacherExistsAsync(Guid teacherId);
         Task EnsureTeacherCanBeDeletedAsync(Guid teacherId);
     }
 }

@@ -7,6 +7,7 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Services
     public interface ISubjectService
     {
         Task EnsureSubjectExistsAsync(Guid subjectId);
+        Task EnsureNameIsAvailableAsync(string subjectName);
         Task EnsureSubjectCanBeDeletedAsync(Guid subjectId);
     }
 }

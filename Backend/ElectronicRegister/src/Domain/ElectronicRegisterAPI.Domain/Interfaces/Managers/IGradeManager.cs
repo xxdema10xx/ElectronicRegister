@@ -7,6 +7,7 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Managers
 {
     public interface IGradeManager
     {
+        Task<int> CountAsync(ClaimsContext caller);
         Task<List<GradeDto>> GetAllAsync(ClaimsContext caller);
         Task<GradeDto?> GetByIdAsync(Guid id, ClaimsContext caller);
         Task<GradePageDto> GetPagedAsync(int pageNumber, int pageSize, Guid? subjectId, Guid? studentId, DateOnly? date, ClaimsContext caller);

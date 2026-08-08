@@ -56,14 +56,10 @@ internal class StudentRepository : IStudentRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Student student)
     {
-        var student = await _context.Students.FirstOrDefaultAsync(s => s.Id == id);
-        if (student != null)
-        {
-            _context.Students.Remove(student);
-            await _context.SaveChangesAsync();
-        }
+        _context.Students.Remove(MapToEntity(student));
+        await _context.SaveChangesAsync();
     }
 
     private static Student MapToModel(StudentEntity student)

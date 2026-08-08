@@ -3,8 +3,8 @@
     public class UserDto
     {
         public Guid Id { get; set; }
-        public string Email { get; set; }
-        public string Role { get; set; }
+        public required string Email { get; set; }
+        public required string Role { get; set; }
         public Guid? StudentId { get; set; }
         public string? StudentFirstName { get; set; }
         public string? StudentLastName { get; set; }

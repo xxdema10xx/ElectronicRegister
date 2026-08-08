@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using ElectronicRegisterAPI.Domain.DTOs;
+using User = ElectronicRegisterAPI.Domain.Models.User;
+using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
-using ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
+using UserEntity = ElectronicRegisterAPI.Infrastructure.Persistence.Entities.User;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
@@ -15,22 +16,22 @@ internal class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<UserDto?> GetByEmailAsync(string email)
+    public async Task<User?> GetByEmailAsync(string email)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-        return user == null ? null : MapToDto(user);
+        return user == null ? null : MapToModel(user);
     }
 
-    public async Task<UserDto?> GetByIdAsync(Guid id)
+    public async Task<User?> GetByIdAsync(Guid id)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
-        return user == null ? null : MapToDto(user);
+        return user == null ? null : MapToModel(user);
     }
 
-    public async Task<List<UserDto>> GetAllAsync()
+    public async Task<List<User>> GetAllAsync()
     {
         var users = await _context.Users.ToListAsync();
-        return users.Select(MapToDto).ToList();
+        return users.Select(MapToModel).ToList();
     }
 
     public async Task<int> CountAsync()
@@ -38,26 +39,26 @@ internal class UserRepository : IUserRepository
         return await _context.Users.CountAsync();
     }
 
-    public async Task AddAsync(UserDto userDto)
+    public async Task AddAsync(User userDto)
     {
         var user = MapToEntity(userDto);
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(UserDto userDto)
+    public async Task UpdateAsync(User userDto)
     {
         var user = MapToEntity(userDto);
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(User user)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
-        if (user != null)
+        var entity = await _context.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
+        if (entity != null)
         {
-            _context.Users.Remove(user);
+            _context.Users.Remove(entity);
             await _context.SaveChangesAsync();
         }
     }
@@ -67,23 +68,43 @@ internal class UserRepository : IUserRepository
         return await _context.Users.AnyAsync(u => u.Email == email);
     }
 
-    private static UserDto MapToDto(User user)
+    private static User MapToModel(UserEntity entity)
     {
-        return new UserDto
+        var role = entity.Role.ToLowerInvariant() switch
         {
-            Id = user.Id,
-            Email = user.Email,
-            Role = user.Role
+            "admin" => UserRole.Admin,
+            "teacher" => UserRole.Teacher,
+            "student" => UserRole.Student,
+            _ => throw new ArgumentOutOfRangeException(nameof(entity.Role), $"Ruolo non valido: {entity.Role}")
+        };
+
+        return new User
+        {
+            Id = entity.Id,
+            Email = entity.Email,
+            PasswordHash = entity.PasswordHash,
+            Role = role,
+            StudentId = entity.StudentId,
+            TeacherId = entity.TeacherId
         };
     }
 
-    private static User MapToEntity(UserDto userDto)
+    private static UserEntity MapToEntity(User user)
     {
-        return new User
+        return new UserEntity
         {
-            Id = userDto.Id,
-            Email = userDto.Email,
-            Role = userDto.Role
+            Id = user.Id,
+            Email = user.Email,
+            PasswordHash = user.PasswordHash,
+            Role = user.Role switch
+            {
+                UserRole.Admin => "admin",
+                UserRole.Teacher => "teacher",
+                UserRole.Student => "student",
+                _ => throw new ArgumentOutOfRangeException(nameof(user.Role), $"Ruolo non valido: {user.Role}")
+            },
+            StudentId = user.StudentId,
+            TeacherId = user.TeacherId
         };
     }
 }

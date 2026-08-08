@@ -89,14 +89,11 @@ internal class SubjectRepository : ISubjectRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(DomainSubject subject)
     {
-        var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Id == id);
-        if (subject != null)
-        {
-            _context.Subjects.Remove(subject);
-            await _context.SaveChangesAsync();
-        }
+        var subjectEntity = MapToEntity(subject);
+        _context.Subjects.Remove(subjectEntity);
+        await _context.SaveChangesAsync();
     }
 
     private static DomainSubject MapTo(SubjectEntity subjects)

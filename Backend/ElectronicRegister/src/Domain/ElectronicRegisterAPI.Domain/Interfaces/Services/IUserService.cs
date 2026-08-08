@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ElectronicRegisterAPI.Domain.Interfaces.Services
+﻿using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.Enums;
+public interface IUserService
 {
-    public interface IUserService
-    {
-        void EnsureEmailIsValid(string email);
-        //void EnsureSelfRegistrationEmailFormat(string email); // ex IAuthService.ValidateRegistrationEmail
-        Task EnsureEmailIsAvailableAsync(string email);
-        void EnsureValidPassword(string password);
-        void EnsurePasswordMatches(string password, string passwordHash);
-        void EnsureValidRole(string role);
-        void EnsureValidName(string name, int minLength);
-    }
+    void EnsureEmailIsValid(string? email);
+    Task EnsureEmailIsAvailableAsync(string email);
+    void EnsureValidPassword(string? password);
+    void EnsurePasswordMatches(string? password, string passwordHash);
+    void EnsureValidRole(string role);
+    void EnsureValidName(string firstName, string lastName);
+    void EnsureCallerCanChangePassword(ClaimsContext caller, Guid targetUserId);
+    void EnsureSelfRegistrationEmailFormat(string email);
+    UserRole ParseRole(string role);
 }

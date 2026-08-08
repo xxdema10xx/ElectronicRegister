@@ -1,7 +1,7 @@
-using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
-using ElectronicRegisterAPI.Domain.Interfaces.Services;
-using ElectronicRegisterAPI.Domain.Interfaces.Security;
+using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+using ElectronicRegisterAPI.Domain.Interfaces.Security;
 
 namespace ElectronicRegisterAPI.Business.Services;
 
@@ -9,6 +9,9 @@ internal class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
+
+    private readonly int _minFirstNameLength = 3;
+    private readonly int _minLastNameLength = 2;
 
     public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher)
     {
@@ -21,19 +24,16 @@ internal class UserService : IUserService
         return password.Any(c => "!@#$%^&*()_-+=<>?/[]{}".Contains(c));
     }
 
-    private bool IsValidName(string name, int minLength)
+    private bool IsValidName(string firstName, string lastName)
     {
-        return !string.IsNullOrWhiteSpace(name) && name.Length >= minLength;
+        return !string.IsNullOrWhiteSpace(firstName) && firstName.Length >= _minFirstNameLength &&
+               !string.IsNullOrWhiteSpace(lastName) && lastName.Length >= _minLastNameLength;
     }
 
-    public void EnsureEmailIsValid(string email)
+    public void EnsureEmailIsValid(string? email)
     {
         if (string.IsNullOrWhiteSpace(email))
-            throw new ArgumentException("L'email non può essere vuota.");
-        if (!email.Contains("@") ||
-            !email.StartsWith("allievo_") ||
-            !email.EndsWith("@itsumbria.it"))
-            throw new ArgumentException("L'email non è valida.");
+            throw new ArgumentException("L'email è obbligatoria.");
     }
 
     public async Task EnsureEmailIsAvailableAsync(string email)
@@ -43,33 +43,51 @@ internal class UserService : IUserService
             throw new InvalidOperationException("L'email è già in uso.");
     }
 
-    public void EnsureValidPassword(string password)
+    public void EnsureValidPassword(string? password)
     {
-        if (string.IsNullOrWhiteSpace(password))
-            throw new ArgumentException("La password non può essere vuota.");
-        if (password.Length < 8)
+        if (string.IsNullOrEmpty(password) || password.Length < 8)
             throw new ArgumentException("La password deve contenere almeno 8 caratteri.");
         if (!HasSpecialChar(password))
             throw new ArgumentException("La password deve contenere almeno un carattere speciale.");
     }
 
-    public void EnsurePasswordMatches(string password, string passwordHash)
+    public void EnsurePasswordMatches(string? password, string passwordHash)
     {
-        if (!_passwordHasher.Verify(password, passwordHash))
+        if (string.IsNullOrEmpty(password) || !_passwordHasher.Verify(password, passwordHash))
             throw new ArgumentException("La password non corrisponde.");
+    }
+
+    public void EnsureCallerCanChangePassword(ClaimsContext caller, Guid targetUserId)
+    {
+        if (caller.Role != UserRole.Admin && caller.UserId != targetUserId)
+            throw new UnauthorizedAccessException("Non puoi modificare la password di un altro utente.");
     }
 
     public void EnsureValidRole(string role)
     {
-        if (!Enum.TryParse<UserRole>(role, ignoreCase: true, out _))
+        if (Enum.TryParse<UserRole>(role, ignoreCase: true, out _))
             throw new ArgumentException("Il ruolo non è valido.");
     }
 
-    public void EnsureValidName(string name, int minLength)
+    public void EnsureValidName(string firstName, string lastName)
     {
-        if (!IsValidName(name, minLength))
-            throw new ArgumentException($"Il nome deve contenere almeno {minLength} caratteri.");
+        if (!IsValidName(firstName, lastName))
+            throw new ArgumentException("Il nome e il cognome sono obbligatori.");
     }
+
+    public void EnsureSelfRegistrationEmailFormat(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email) || !email.StartsWith("allievo_") || !email.EndsWith("@itsumbria.it"))
+            throw new ArgumentException("Formato email non valido!");
+    }
+
+    public UserRole ParseRole(string role) => role.ToLowerInvariant() switch
+    {
+        "admin" => UserRole.Admin,
+        "teacher" => UserRole.Teacher,
+        "student" => UserRole.Student,
+        _ => throw new ArgumentException($"Ruolo non valido: {role}")
+    };
 
 }
 

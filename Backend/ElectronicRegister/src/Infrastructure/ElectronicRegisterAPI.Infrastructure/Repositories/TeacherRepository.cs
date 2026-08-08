@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
-using ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
+using Teacher = ElectronicRegisterAPI.Domain.Models.Teacher;
+using TeacherEntity = ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Teacher;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
@@ -20,51 +20,54 @@ internal class TeacherRepository : ITeacherRepository
         return await _context.Teachers.CountAsync();
     }
 
-    public async Task<List<TeacherDto>> GetAllAsync()
+    public async Task<List<Teacher>> GetAllAsync()
     {
         var teachers = await _context.Teachers.ToListAsync();
-        return teachers.Select(MapToDto).ToList();
+        return teachers.Select(MapToModel).ToList();
     }
 
-    public async Task<TeacherDto?> GetByIdAsync(Guid id)
+    public async Task<Teacher?> GetByIdAsync(Guid id)
     {
         var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == id);
-        return teacher == null ? null : MapToDto(teacher);
+        return teacher == null ? null : MapToModel(teacher);
     }
 
-    public async Task<List<TeacherDto>> GetByLastNameAsync(string lastName)
+    public async Task<List<Teacher>> GetByIdsAsync(IEnumerable<Guid> ids)
+    {
+        var teachers = await _context.Teachers.Where(t => ids.Contains(t.Id)).ToListAsync();
+        return teachers.Select(MapToModel).ToList();
+    }
+
+    public async Task<List<Teacher>> GetByLastNameAsync(string lastName)
     {
         var teachers = await _context.Teachers.Where(t => t.LastName == lastName).ToListAsync();
-        return teachers.Select(MapToDto).ToList();
+        return teachers.Select(MapToModel).ToList();
     }
 
-    public async Task AddAsync(TeacherDto teacherDto)
+    public async Task AddAsync(Teacher teacher)
     {
-        var teacher = MapToEntity(teacherDto);
-        _context.Teachers.Add(teacher);
+        var teacherEntity = MapToEntity(teacher);
+        _context.Teachers.Add(teacherEntity);
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(TeacherDto teacherDto)
+    public async Task UpdateAsync(Teacher teacher)
     {
-        var teacher = MapToEntity(teacherDto);
-        _context.Teachers.Update(teacher);
+        var teacherEntity = MapToEntity(teacher);
+        _context.Teachers.Update(teacherEntity);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Teacher teacher)
     {
-        var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == id);
-        if (teacher != null)
-        {
-            _context.Teachers.Remove(teacher);
-            await _context.SaveChangesAsync();
-        }
+        var teacherEntity = MapToEntity(teacher);
+        _context.Teachers.Remove(teacherEntity);
+        await _context.SaveChangesAsync();
     }
 
-    private static TeacherDto MapToDto(Teacher teacher)
+    private static Teacher MapToModel(TeacherEntity teacher)
     {
-        return new TeacherDto
+        return new Teacher
         {
             Id = teacher.Id,
             FirstName = teacher.FirstName,
@@ -72,13 +75,13 @@ internal class TeacherRepository : ITeacherRepository
         };
     }
 
-    private static Teacher MapToEntity(TeacherDto teacherDto)
+    private static TeacherEntity MapToEntity(Teacher teacher)
     {
-        return new Teacher
+        return new TeacherEntity
         {
-            Id = teacherDto.Id,
-            FirstName = teacherDto.FirstName,
-            LastName = teacherDto.LastName
+            Id = teacher.Id,
+            FirstName = teacher.FirstName,
+            LastName = teacher.LastName
         };
     }
 }

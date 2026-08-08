@@ -7,11 +7,11 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Managers
 {
     public interface ITeacherManager
     {
-        Task<int> CountAsync(ClaimsContext claimsContext);
-        Task<List<TeacherDto>> GetAllAsync(ClaimsContext claimsContext);
-        Task<TeacherDto> GetByIdAsync(Guid id, ClaimsContext claimsContext);
-        Task UpdateAsync(Guid id, UpdateTeacherDto dto, ClaimsContext claimsContext);
-        Task AddAsync(CreateTeacherDto dto, ClaimsContext claimsContext);
-        Task DeleteAsync(Guid id, ClaimsContext claimsContext);
+        Task<int> CountAsync();
+        Task<List<TeacherDto>> GetAllAsync();
+        Task<TeacherDto?> GetByIdAsync(Guid id);
+        Task<Guid?> AddAsync(CreateTeacherDto dto);
+        Task<bool> UpdateAsync(Guid id, UpdateTeacherDto dto);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

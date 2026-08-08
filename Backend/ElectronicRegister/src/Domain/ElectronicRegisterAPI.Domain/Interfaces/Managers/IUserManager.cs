@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ElectronicRegisterAPI.Domain.DTOs;
-
-namespace ElectronicRegisterAPI.Domain.Interfaces.Managers
+﻿using ElectronicRegisterAPI.Domain.DTOs;
+public interface IUserManager
 {
-    public interface IUserManager
-    {
-        Task<int> CountAsync(ClaimsContext caller);
-        Task<List<UserDto>> GetAllAsync(ClaimsContext caller);
-        Task<UserDto> GetByIdAsync(Guid id, ClaimsContext caller);
-        Task UpdateAsync(Guid id, UpdateUserDto dto, ClaimsContext caller);
-        Task AddAsync(CreateUserDto dto, ClaimsContext caller);
-        Task DeleteAsync(Guid id, ClaimsContext caller);
-    }
+    Task<int> CountAsync();
+    Task<List<UserDto>> GetAllAsync();
+    Task<UserDto?> GetByIdAsync(Guid id);
+    Task<bool> UpdatePasswordAsync(Guid id, UpdatePasswordDto dto, ClaimsContext caller);
+    Task<bool> UpdateAsync(Guid id, UpdateUserDto dto);
+    Task<bool> AddAsync(CreateUserDto dto);
+    Task<bool> DeleteAsync(Guid id);
 }

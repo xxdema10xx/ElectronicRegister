@@ -11,5 +11,5 @@ public interface IStudentRepository
     Task<List<Student>> GetByLastNameAsync(string lastName);
     Task AddAsync(Student student);
     Task UpdateAsync(Student student);
-    Task DeleteAsync(Guid id);
+    Task DeleteAsync(Student student);
 }

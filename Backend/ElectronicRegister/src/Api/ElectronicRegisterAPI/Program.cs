@@ -1,41 +1,30 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.IdentityModel.Protocols;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using System.Text;
 using Scalar.AspNetCore;
-using ElectronicRegisterAPI.Models;
+using ElectronicRegisterAPI.Infrastructure.DependencyInjection;
+using ElectronicRegisterAPI.Business.DependencyInjection;
+using ElectronicRegisterAPI.Application.DependencyInjection;
+using ElectronicRegisterAPI.Api.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ElectronicRegisterContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
-    ));
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddBusinessServices();
+builder.Services.AddApplicationManagers();
+builder.Services.AddApiServices();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
+        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
-    });
+        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
 
-// --- Autenticazione: SOLO il tuo JWT custom (invariato) ---
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -43,24 +32,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+            IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
     });
 
 builder.Services.AddAuthorization();
-
-// --- Necessario SOLO per validare il token Microsoft dentro AuthController.MicrosoftLogin ---
-var azureTenantId = builder.Configuration["AzureAd:TenantId"];
-var stsDiscoveryEndpoint = $"https://login.microsoftonline.com/{azureTenantId}/v2.0/.well-known/openid-configuration";
-
-builder.Services.AddSingleton(new ConfigurationManager<OpenIdConnectConfiguration>(
-    stsDiscoveryEndpoint,
-    new OpenIdConnectConfigurationRetriever()));
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {

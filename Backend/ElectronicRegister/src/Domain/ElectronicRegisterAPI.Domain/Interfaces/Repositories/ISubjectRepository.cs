@@ -13,5 +13,5 @@ public interface ISubjectRepository
     Task<bool> ExistsForTeacherAsync(Guid teacherId);
     Task AddAsync(Subject subject);
     Task UpdateAsync(Subject subject);
-    Task DeleteAsync(Guid id);
+    Task DeleteAsync(Subject subject);
 }

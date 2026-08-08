@@ -9,11 +9,11 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Managers
     {
         Task<int> CountAsync(ClaimsContext caller);
         Task<List<SubjectDto>> GetAllAsync(ClaimsContext caller);
-        Task<SubjectDto> GetByIdAsync(Guid id, ClaimsContext caller);
-        Task<SubjectDto> GetSubjectByNameAsync(string name, ClaimsContext caller);
+        Task<SubjectDto?> GetByIdAsync(Guid id, ClaimsContext caller);
+        Task<SubjectDto?> GetSubjectByNameAsync(string name, ClaimsContext caller);
         Task<List<SubjectDto>> GetSubjectsByTeacherIdAsync(Guid teacherId, ClaimsContext caller);
-        Task UpdateAsync(Guid id, UpdateSubjectDto dto, ClaimsContext caller);
-        Task AddAsync(CreateSubjectDto dto, ClaimsContext caller);
-        Task DeleteAsync(Guid id, ClaimsContext caller);
+        Task<bool> UpdateAsync(Guid id, UpdateSubjectDto dto);
+        Task<Guid?> AddAsync(CreateSubjectDto dto);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

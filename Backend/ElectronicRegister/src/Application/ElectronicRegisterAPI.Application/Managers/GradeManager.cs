@@ -29,6 +29,16 @@ namespace ElectronicRegisterAPI.Application.Managers
             _gradeService = gradeService;
         }
 
+        public async Task<int> CountAsync(ClaimsContext caller)
+        {
+            var studentId = caller.Role == UserRole.Student
+                ? caller.StudentId
+                : null;
+            var teacherId = caller.Role == UserRole.Teacher
+                ? caller.TeacherId
+                : null;
+            return await _gradeRepository.CountAsync(teacherId, studentId);
+        }
         public async Task<List<GradeDto>> GetAllAsync(ClaimsContext caller)
         {
             var studentId = caller.Role == UserRole.Student
