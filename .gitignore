@@ -1,15 +1,29 @@
 .DS_Store
-appsettings.Development.json
-appsettings.Local.json
+
+# ASP.NET configuration / secrets
+**/appsettings.json
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.*.local.json
+
+# Keep example configuration files tracked
+!**/appsettings.example.json
+
+# Environment / local files
 *.env
 report.json
+config.js
+
+# Build
 bin/
 obj/
+
+# Dependencies
 node_modules/
+
+# Database / backup files
 *.sql
 *.old
-config.js
-Backend/ElectronicRegisterAPI/appsettings.json
+
+# Visual Studio
 .vs/
-bin/
-obj/
