@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Models;
@@ -22,7 +23,7 @@ internal class GradeService : IGradeService
     {
         var grade = await _gradeRepository.GetByIdAsync(id);
         if (grade is null)
-            throw new InvalidOperationException("Il voto specificato non esiste.");
+            throw new BusinessRuleException("Il voto specificato non esiste.");
     }
 
     public void EnsureValidGradeValue(decimal value)

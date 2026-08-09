@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 
@@ -21,6 +22,6 @@ internal class StudentService : IStudentService
             throw new KeyNotFoundException("Lo studente non esiste.");
         var hasGrades = await _gradeRepository.ExistsForStudentAsync(studentId);
         if (hasGrades)
-            throw new InvalidOperationException("Lo studente ha voti registrati e non può essere eliminato.");
+            throw new BusinessRuleException("Lo studente ha voti registrati e non può essere eliminato.");
     }
 }

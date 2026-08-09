@@ -1,5 +1,6 @@
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Security;
 
@@ -40,7 +41,7 @@ internal class UserService : IUserService
     {
         var user = await _userRepository.GetByEmailAsync(email);
         if (user != null)
-            throw new InvalidOperationException("L'email è già in uso.");
+            throw new BusinessRuleException("L'email è già in uso.");
     }
 
     public void EnsureValidPassword(string? password)
@@ -65,7 +66,7 @@ internal class UserService : IUserService
 
     public void EnsureValidRole(string role)
     {
-        if (Enum.TryParse<UserRole>(role, ignoreCase: true, out _))
+        if (!Enum.TryParse<UserRole>(role, ignoreCase: true, out _))
             throw new ArgumentException("Il ruolo non è valido.");
     }
 

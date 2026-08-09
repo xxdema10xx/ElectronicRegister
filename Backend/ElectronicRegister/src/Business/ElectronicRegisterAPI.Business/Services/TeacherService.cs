@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 
@@ -15,9 +16,9 @@ internal class TeacherService : ITeacherService
     public async Task EnsureTeacherCanBeDeletedAsync(Guid teacherId)
     {
         if (await _subjectRepository.ExistsForTeacherAsync(teacherId))
-            throw new InvalidOperationException("Impossibile eliminare l'insegnante: ha materie assegnate.");
+            throw new BusinessRuleException("Impossibile eliminare l'insegnante: ha materie assegnate.");
 
         if (await _gradeRepository.ExistsForTeacherAsync(teacherId))
-            throw new InvalidOperationException("Impossibile eliminare l'insegnante: ha voti assegnati.");
+            throw new BusinessRuleException("Impossibile eliminare l'insegnante: ha voti assegnati.");
     }
 }

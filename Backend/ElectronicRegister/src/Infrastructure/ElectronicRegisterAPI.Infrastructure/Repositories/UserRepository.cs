@@ -46,10 +46,23 @@ internal class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(User userDto)
+    public async Task UpdateAsync(User user)
     {
-        var user = MapToEntity(userDto);
-        _context.Users.Update(user);
+        var entity = await _context.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
+        if (entity is null) return;
+
+        entity.Email = user.Email;
+        entity.PasswordHash = user.PasswordHash;
+        entity.Role = user.Role switch
+        {
+            UserRole.Admin => "admin",
+            UserRole.Teacher => "teacher",
+            UserRole.Student => "student",
+            _ => throw new ArgumentOutOfRangeException(nameof(user.Role), $"Ruolo non valido: {user.Role}")
+        };
+        entity.StudentId = user.StudentId;
+        entity.TeacherId = user.TeacherId;
+
         await _context.SaveChangesAsync();
     }
 

@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplicationManagers(this IServiceCollection services)
     {
-        //services.AddScoped<IAuthManager, AuthManager>();
+        services.AddScoped<IAuthManager, AuthManager>();
         services.AddScoped<IGradeManager, GradeManager>();
         services.AddScoped<IStudentManager, StudentManager>();
         services.AddScoped<ISubjectManager, SubjectManager>();

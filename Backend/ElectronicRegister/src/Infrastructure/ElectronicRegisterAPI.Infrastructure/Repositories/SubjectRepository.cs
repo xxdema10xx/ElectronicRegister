@@ -77,21 +77,28 @@ internal class SubjectRepository : ISubjectRepository
 
     public async Task AddAsync(DomainSubject subject)
     {
-        var subjectEntity = MapToEntity(subject);
+        var subjectEntity = new SubjectEntity
+        {
+            Id = subject.Id,
+            Name = subject.Name,
+            TeacherId = subject.TeacherId
+        };
         _context.Subjects.Add(subjectEntity);
         await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(DomainSubject subject)
     {
-        var subjectEntity = MapToEntity(subject);
+        var subjectEntity = await MapToEntity(subject);
+        if (subjectEntity is null) return;
         _context.Subjects.Update(subjectEntity);
         await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(DomainSubject subject)
     {
-        var subjectEntity = MapToEntity(subject);
+        var subjectEntity = await MapToEntity(subject);
+        if (subjectEntity is null) return;
         _context.Subjects.Remove(subjectEntity);
         await _context.SaveChangesAsync();
     }
@@ -106,14 +113,16 @@ internal class SubjectRepository : ISubjectRepository
         };
     }
 
-    private static SubjectEntity MapToEntity(DomainSubject subject)
+    private async Task<SubjectEntity?> MapToEntity(DomainSubject subject)
     {
-        return new SubjectEntity
-        {
-            Id = subject.Id,
-            Name = subject.Name,
-            TeacherId = subject.TeacherId
-        };
+        var entity = await _context.Subjects.FirstOrDefaultAsync(s => s.Id == subject.Id);
+        if (entity is null) return null;
+
+        entity.Id = subject.Id;
+        entity.Name = subject.Name;
+        entity.TeacherId = subject.TeacherId;
+
+        return entity;
     }
 }
 

@@ -46,21 +46,29 @@ internal class TeacherRepository : ITeacherRepository
 
     public async Task AddAsync(Teacher teacher)
     {
-        var teacherEntity = MapToEntity(teacher);
+        var teacherEntity = new TeacherEntity
+        {
+            Id = teacher.Id,
+            FirstName = teacher.FirstName,
+            LastName = teacher.LastName
+        };
         _context.Teachers.Add(teacherEntity);
         await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(Teacher teacher)
     {
-        var teacherEntity = MapToEntity(teacher);
+        var teacherEntity = await MapToEntity(teacher);
+        if (teacherEntity is null) return;
+
         _context.Teachers.Update(teacherEntity);
         await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Teacher teacher)
     {
-        var teacherEntity = MapToEntity(teacher);
+        var teacherEntity = await MapToEntity(teacher);
+        if(teacherEntity is null) return;
         _context.Teachers.Remove(teacherEntity);
         await _context.SaveChangesAsync();
     }
@@ -75,13 +83,15 @@ internal class TeacherRepository : ITeacherRepository
         };
     }
 
-    private static TeacherEntity MapToEntity(Teacher teacher)
+    private async Task<TeacherEntity?> MapToEntity(Teacher teacher)
     {
-        return new TeacherEntity
-        {
-            Id = teacher.Id,
-            FirstName = teacher.FirstName,
-            LastName = teacher.LastName
-        };
+        var entity = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == teacher.Id);
+        if (entity is null) return null;
+
+        entity.Id = teacher.Id;
+        entity.FirstName = teacher.FirstName;
+        entity.LastName = teacher.LastName;
+
+        return entity;
     }
 }

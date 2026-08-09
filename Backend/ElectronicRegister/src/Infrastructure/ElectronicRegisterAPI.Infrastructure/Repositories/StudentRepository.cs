@@ -46,19 +46,29 @@ internal class StudentRepository : IStudentRepository
 
     public async Task AddAsync(Student student)
     {
-        _context.Students.Add(MapToEntity(student));
+        var studentEntity = new StudentEntity
+        {
+            Id = student.Id,
+            FirstName = student.FirstName,
+            LastName = student.LastName
+        };
+        _context.Students.Add(studentEntity);
         await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(Student student)
     {
-        _context.Students.Update(MapToEntity(student));
+        var entity = await MapToEntity(student);
+        if (entity == null) return;
+        _context.Students.Update(entity);
         await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Student student)
     {
-        _context.Students.Remove(MapToEntity(student));
+        var entity = await MapToEntity(student);
+        if (entity == null) return;
+        _context.Students.Remove(entity);
         await _context.SaveChangesAsync();
     }
 
@@ -72,13 +82,15 @@ internal class StudentRepository : IStudentRepository
         };
     }
 
-    private static StudentEntity MapToEntity(Student student)
+    private async Task<StudentEntity?> MapToEntity(Student student)
     {
-        return new StudentEntity
-        {
-            Id = student.Id,
-            FirstName = student.FirstName,
-            LastName = student.LastName
-        };
+        var entity = await _context.Students.FirstOrDefaultAsync(s => s.Id == student.Id);
+        if (entity is null) return null;
+
+        entity.Id = student.Id;
+        entity.FirstName = student.FirstName;
+        entity.LastName = student.LastName;
+
+        return entity;
     }
 }

@@ -1,3 +1,5 @@
+console.log("🔥 GRADES.JS CARICATO");
+
 const PAGE_SIZE = 20;
 
 let gradesCache = [];
@@ -83,23 +85,40 @@ async function loadNextPage() {
     if (currentPage > 0 && gradesCache.length >= totalCount) return;
 
     isLoading = true;
+
     const loadingMoreEl = document.getElementById("grades-loading-more");
     if (loadingMoreEl) loadingMoreEl.style.display = "block";
 
     try {
         const nextPage = currentPage + 1;
+
         const params = currentFilterParams();
         params.set("pageNumber", nextPage);
         params.set("pageSize", PAGE_SIZE);
 
-        const result = await sendTokenForData(`${API_BASE}/Grade/paged?${params.toString()}`);
+        console.log(
+            "CARICO PAGINA",
+            nextPage,
+            "FILTRO:",
+            params.toString()
+        );
+
+        const result = await sendTokenForData(
+            `${API_BASE}/Grade/paged?${params.toString()}`
+        );
+
         currentPage = nextPage;
         totalCount = result.totalCount;
         gradesCache = gradesCache.concat(result.items);
-        renderGradesTable(result.items, true);
+
+        renderGradesTable(result.items, nextPage > 1);
+
     } finally {
         isLoading = false;
-        if (loadingMoreEl) loadingMoreEl.style.display = "none";
+
+        if (loadingMoreEl) {
+            loadingMoreEl.style.display = "none";
+        }
     }
 }
 
@@ -174,7 +193,7 @@ async function initGradesPage() {
     window.addEventListener("scroll", handleScroll);
 
     await loadFilters();
-    loadFirstPage();
+    await loadFirstPage();
 }
 
 initGradesPage();

@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 
@@ -21,14 +22,14 @@ internal class SubjectService : ISubjectService
             throw new KeyNotFoundException("La materia non esiste.");
         var hasGrades = await _gradeRepository.ExistsForSubjectAsync(subjectId);
         if (hasGrades)
-            throw new InvalidOperationException("La materia ha voti registrati e non può essere eliminata.");
+            throw new BusinessRuleException("La materia ha voti registrati e non può essere eliminata.");
     }
 
     public async Task EnsureNameIsAvailableAsync(string name)
     {
         var subject = await _subjectRepository.GetByNameAsync(name);
         if (subject != null)
-            throw new InvalidOperationException("Il nome della materia è già in uso.");
+            throw new BusinessRuleException("Il nome della materia è già in uso.");
     }
 
     public async Task EnsureSubjectExistsAsync(Guid subjectId)

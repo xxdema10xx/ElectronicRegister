@@ -144,21 +144,31 @@ internal class GradeRepository : IGradeRepository
 
     public async Task AddAsync(Grade grade)
     {
-        var gradeEntity = MapToEntity(grade);
+        var gradeEntity = new GradeEntity
+        {
+            Id = grade.Id,
+            StudentId = grade.StudentId,
+            SubjectId = grade.SubjectId,
+            TeacherId = grade.TeacherId,
+            Value = grade.Value,
+            Date = grade.Date
+        };
         await _context.Grades.AddAsync(gradeEntity);
         await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(Grade grade)
     {
-        var gradeEntity = MapToEntity(grade);
+        var gradeEntity = await MapToEntity(grade);
+        if (gradeEntity == null) return;
         _context.Grades.Update(gradeEntity);
         await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Grade grade)
     {
-        var gradeEntity = MapToEntity(grade);
+        var gradeEntity = await MapToEntity(grade);
+        if (gradeEntity == null) return;
         _context.Grades.Remove(gradeEntity);
         await _context.SaveChangesAsync();
     }
@@ -191,16 +201,18 @@ internal class GradeRepository : IGradeRepository
         };
     }
 
-    private static GradeEntity MapToEntity(Grade grade)
+    private async Task<GradeEntity?> MapToEntity(Grade grade)
     {
-        return new GradeEntity
-        {
-            Id = grade.Id,
-            StudentId = grade.StudentId,
-            SubjectId = grade.SubjectId,
-            TeacherId = grade.TeacherId,
-            Value = grade.Value,
-            Date = grade.Date
-        };
+        var entity = await _context.Grades.FirstOrDefaultAsync(g => g.Id == grade.Id);
+        if (entity is null) return null;
+
+        entity.Id = grade.Id;
+        entity.StudentId = grade.StudentId;
+        entity.SubjectId = grade.SubjectId;
+        entity.TeacherId = grade.TeacherId;
+        entity.Value = grade.Value;
+        entity.Date = grade.Date;
+
+        return entity;
     }
 }
