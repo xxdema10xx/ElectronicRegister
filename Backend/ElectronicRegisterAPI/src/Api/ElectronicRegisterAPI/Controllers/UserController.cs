@@ -1,8 +1,7 @@
 ﻿using ElectronicRegisterAPI.Domain.DTOs;
-using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace ElectronicRegisterAPI.Api.Controllers;
 

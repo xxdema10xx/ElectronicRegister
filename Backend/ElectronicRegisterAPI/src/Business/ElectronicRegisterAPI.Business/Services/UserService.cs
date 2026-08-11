@@ -1,5 +1,6 @@
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Security;
