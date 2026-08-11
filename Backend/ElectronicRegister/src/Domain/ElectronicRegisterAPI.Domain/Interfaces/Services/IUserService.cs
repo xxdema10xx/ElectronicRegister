@@ -1,5 +1,8 @@
 ﻿using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
+
+namespace ElectronicRegisterAPI.Domain.Interfaces.Services;
+
 public interface IUserService
 {
     void EnsureEmailIsValid(string? email);

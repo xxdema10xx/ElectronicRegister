@@ -1,6 +1,7 @@
 ﻿using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Security;
 using ElectronicRegisterAPI.Domain.Models;
@@ -47,7 +48,15 @@ internal class AuthManager : IAuthManager
 
     public async Task<string?> MicrosoftLoginAsync(MicrosoftLoginDto dto)
     {
-        var principal = await _microsoftTokenValidator.ValidateAsync(dto.AccessToken);
+        ClaimsPrincipal principal;
+        try
+        {
+            principal = await _microsoftTokenValidator.ValidateAsync(dto.AccessToken);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
 
         var email = principal.FindFirst("preferred_username")?.Value
                     ?? principal.FindFirst(ClaimTypes.Email)?.Value;
@@ -65,6 +74,7 @@ internal class AuthManager : IAuthManager
         await _userService.EnsureEmailIsAvailableAsync(dto.Email);
         _userService.EnsureValidPassword(dto.Password);
         _userService.EnsureValidName(dto.FirstName, dto.LastName);
+        _userService.EnsureSelfRegistrationEmailFormat(dto.Email);
 
         var student = new Student
         {
@@ -72,6 +82,7 @@ internal class AuthManager : IAuthManager
             FirstName = dto.FirstName!,
             LastName = dto.LastName!
         };
+
         await _studentRepository.AddAsync(student);
 
         var user = new User

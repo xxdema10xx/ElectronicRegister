@@ -1,4 +1,7 @@
 ﻿using ElectronicRegisterAPI.Domain.DTOs;
+
+namespace ElectronicRegisterAPI.Domain.Interfaces.Managers;
+
 public interface IUserManager
 {
     Task<int> CountAsync();

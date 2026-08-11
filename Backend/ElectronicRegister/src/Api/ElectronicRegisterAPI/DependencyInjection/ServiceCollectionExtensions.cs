@@ -1,5 +1,4 @@
 ﻿using ElectronicRegisterAPI.Api.ExceptionHandling;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ElectronicRegisterAPI.Api.DependencyInjection;
 

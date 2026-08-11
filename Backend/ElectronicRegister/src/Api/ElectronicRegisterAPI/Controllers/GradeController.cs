@@ -3,7 +3,8 @@ using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+
+namespace ElectronicRegisterAPI.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -30,7 +31,7 @@ public class GradeController : ApiControllerBase
     public async Task<ActionResult<GradeStatisticsDto>> GetStatistics()
     {
         var statistics = await _gradeManager.GetStatisticsAsync(CurrentCaller());
-        return Ok(statistics);
+        return statistics is null ? NotFound() : Ok(statistics); ;
     }
 
     [HttpGet("filters")]
@@ -123,6 +124,6 @@ public class GradeController : ApiControllerBase
     public async Task<ActionResult> Delete(Guid id)
     {
         var deleted = await _gradeManager.DeleteAsync(id);
-        return NoContent();
+        return deleted ? NoContent() : NotFound();
     }
 }

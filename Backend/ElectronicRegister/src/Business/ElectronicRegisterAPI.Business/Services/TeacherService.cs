@@ -2,6 +2,8 @@ using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 
+namespace ElectronicRegisterAPI.Business.Services;
+
 internal class TeacherService : ITeacherService
 {
     private readonly ISubjectRepository _subjectRepository;

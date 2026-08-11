@@ -40,6 +40,9 @@ namespace ElectronicRegisterAPI.Application.Managers
             var teacher = await _teacherRepository.GetByIdAsync(id);
             if (teacher == null) return false;
 
+            teacher.FirstName = dto.FirstName;
+            teacher.LastName = dto.LastName;
+
             await _teacherRepository.UpdateAsync(teacher);
             return true;
         }

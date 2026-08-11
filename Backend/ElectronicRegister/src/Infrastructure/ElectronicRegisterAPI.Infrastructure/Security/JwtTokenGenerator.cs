@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Constants;
 using ElectronicRegisterAPI.Domain.Interfaces.Security;
 using ElectronicRegisterAPI.Infrastructure.Options;
 
@@ -31,8 +32,8 @@ internal class JwtTokenGenerator : IJwtTokenGenerator
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        if (studentId.HasValue) claims.Add(new Claim("studentId", studentId.Value.ToString()));
-        if (teacherId.HasValue) claims.Add(new Claim("teacherId", teacherId.Value.ToString()));
+        if (studentId.HasValue) claims.Add(new Claim(CustomClaimTypes.StudentId, studentId.Value.ToString()));
+        if (teacherId.HasValue) claims.Add(new Claim(CustomClaimTypes.TeacherId, teacherId.Value.ToString()));
 
         var token = new JwtSecurityToken(
             issuer: _options.Issuer,

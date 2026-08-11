@@ -8,7 +8,9 @@ using ElectronicRegisterAPI.Domain.Interfaces.Security;
 using ElectronicRegisterAPI.Infrastructure.Options;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
 using ElectronicRegisterAPI.Infrastructure.Repositories;
+using ElectronicRegisterAPI.Infrastructure.Mappers;
 using ElectronicRegisterAPI.Infrastructure.Security;
+using ElectronicRegisterAPI.Domain.Mappers;
 
 namespace ElectronicRegisterAPI.Infrastructure.DependencyInjection;
 

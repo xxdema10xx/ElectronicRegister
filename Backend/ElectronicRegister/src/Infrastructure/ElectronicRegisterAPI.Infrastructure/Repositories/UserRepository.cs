@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using User = ElectronicRegisterAPI.Domain.Models.User;
 using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+using ElectronicRegisterAPI.Infrastructure.Mappers;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
 using UserEntity = ElectronicRegisterAPI.Infrastructure.Persistence.Entities.User;
 
@@ -41,7 +42,7 @@ internal class UserRepository : IUserRepository
 
     public async Task AddAsync(User userDto)
     {
-        var user = MapToEntity(userDto);
+        var user = MapToNewEntity(userDto);
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
     }
@@ -53,13 +54,7 @@ internal class UserRepository : IUserRepository
 
         entity.Email = user.Email;
         entity.PasswordHash = user.PasswordHash;
-        entity.Role = user.Role switch
-        {
-            UserRole.Admin => "admin",
-            UserRole.Teacher => "teacher",
-            UserRole.Student => "student",
-            _ => throw new ArgumentOutOfRangeException(nameof(user.Role), $"Ruolo non valido: {user.Role}")
-        };
+        entity.Role = RoleMapper.ToDbString(user.Role);
         entity.StudentId = user.StudentId;
         entity.TeacherId = user.TeacherId;
 
@@ -83,13 +78,7 @@ internal class UserRepository : IUserRepository
 
     private static User MapToModel(UserEntity entity)
     {
-        var role = entity.Role.ToLowerInvariant() switch
-        {
-            "admin" => UserRole.Admin,
-            "teacher" => UserRole.Teacher,
-            "student" => UserRole.Student,
-            _ => throw new ArgumentOutOfRangeException(nameof(entity.Role), $"Ruolo non valido: {entity.Role}")
-        };
+        var role = RoleMapper.FromDbString(entity.Role);
 
         return new User
         {
@@ -102,20 +91,14 @@ internal class UserRepository : IUserRepository
         };
     }
 
-    private static UserEntity MapToEntity(User user)
+    private static UserEntity MapToNewEntity(User user)
     {
         return new UserEntity
         {
             Id = user.Id,
             Email = user.Email,
             PasswordHash = user.PasswordHash,
-            Role = user.Role switch
-            {
-                UserRole.Admin => "admin",
-                UserRole.Teacher => "teacher",
-                UserRole.Student => "student",
-                _ => throw new ArgumentOutOfRangeException(nameof(user.Role), $"Ruolo non valido: {user.Role}")
-            },
+            Role = RoleMapper.ToDbString(user.Role),
             StudentId = user.StudentId,
             TeacherId = user.TeacherId
         };

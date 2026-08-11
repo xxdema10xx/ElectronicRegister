@@ -139,31 +139,16 @@ namespace ElectronicRegisterAPI.Application.Managers
 
         public async Task<GradeStatisticsDto?> GetStatisticsAsync(ClaimsContext caller)
         {
-            // Implementation for getting grade statistics
-            if (caller.Role == UserRole.Student)
-            {
-                var statistics = await _gradeRepository.GetStatisticsAsync(null, caller.StudentId!.Value);
-                return new GradeStatisticsDto
-                {
-                    YearlyAverage = statistics.YearlyAverage,
-                    MonthlyAverage = statistics.MonthlyAverage
-                };
-            }
-            if (caller.Role == UserRole.Teacher)
-            {
-                var statistics = await _gradeRepository.GetStatisticsAsync(caller.TeacherId!.Value, null);
-                return new GradeStatisticsDto
-                {
-                    YearlyAverage = statistics.YearlyAverage,
-                    MonthlyAverage = statistics.MonthlyAverage
-                };
-            }
-        
-            var statisticsAll = await _gradeRepository.GetStatisticsAsync(null, null);
-            return new GradeStatisticsDto
-            {
-                YearlyAverage = statisticsAll.YearlyAverage,
-                MonthlyAverage = statisticsAll.MonthlyAverage
+            Guid? teacherId = caller.Role == UserRole.Teacher ? caller.TeacherId : null;
+            Guid? studentId = caller.Role == UserRole.Student ? caller.StudentId : null;
+
+            var hasAnyGrade = await _gradeRepository.CountAsync(teacherId, studentId) > 0;
+            if (!hasAnyGrade) return null;
+
+            var statistics = await _gradeRepository.GetStatisticsAsync(teacherId, studentId);
+            return new GradeStatisticsDto { 
+                YearlyAverage = statistics.YearlyAverage, 
+                MonthlyAverage = statistics.MonthlyAverage 
             };
         }
 
@@ -296,7 +281,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             Guid? teacherId = caller.Role == UserRole.Teacher ? caller.TeacherId : null;
 
             var grades = await _gradeRepository.GetByDateAsync(date, studentId, teacherId);
-            if (grades.Count == 0) return grades.Select(s => new GradeDto()).ToList(); // lista vuota, il Controller decide se fare 404
+            if (grades.Count == 0) return new List<GradeDto>();
 
             var subjectIds = grades.Select(g => g.SubjectId).Distinct().ToList();
             var studentIds = grades.Select(g => g.StudentId).Distinct().ToList();
@@ -328,6 +313,9 @@ namespace ElectronicRegisterAPI.Application.Managers
 
             var subject = await _subjectRepository.GetByIdAsync(dto.SubjectId);
             if (subject is null) return null;
+
+            var student = await _studentRepository.GetByIdAsync(dto.StudentId);
+            if (student is null) return null;
 
             var grade = new Grade 
             {
