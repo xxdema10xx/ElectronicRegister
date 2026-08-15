@@ -133,7 +133,7 @@ internal class UserManager : IUserManager
         var user = await _userRepository.GetByIdAsync(id);
         if (user is null) return false;
 
-        _userService.EnsureUserCanBeDeletedAsync(user);
+        _userService.EnsureUserCanBeDeleted(user);
 
         await _userRepository.DeleteAsync(user);
         return true;

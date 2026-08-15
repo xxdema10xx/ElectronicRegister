@@ -14,6 +14,6 @@ public interface IUserService
     void EnsureValidName(string firstName, string lastName);
     void EnsureCallerCanChangePassword(ClaimsContext caller, Guid targetUserId);
     void EnsureSelfRegistrationEmailFormat(string email);
-    void EnsureUserCanBeDeletedAsync(User user);
+    void EnsureUserCanBeDeleted(User user);
     UserRole ParseRole(string role);
 }
