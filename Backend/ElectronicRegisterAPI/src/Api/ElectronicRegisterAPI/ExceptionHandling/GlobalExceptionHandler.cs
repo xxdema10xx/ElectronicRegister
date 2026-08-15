@@ -13,6 +13,8 @@ internal class GlobalExceptionHandler : IExceptionHandler
     {
         var (statusCode, title) = exception switch
         {
+            KeyNotFoundException => 
+                (StatusCodes.Status404NotFound, "La risorsa non esiste"),
 
             ArgumentException =>
                 (StatusCodes.Status400BadRequest, "Richiesta non valida"),

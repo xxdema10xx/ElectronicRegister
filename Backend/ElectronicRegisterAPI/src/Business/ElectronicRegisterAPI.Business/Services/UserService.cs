@@ -4,6 +4,7 @@ using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Security;
+using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Business.Services;
 
@@ -83,6 +84,15 @@ internal class UserService : IUserService
             throw new ArgumentException("Formato email non valido!");
     }
 
+    public void EnsureUserCanBeDeleted(User user)
+    {
+        if (user.StudentId != null)
+            throw new BusinessRuleException("Questo utente ha un profilo studente collegato");
+
+        if (user.TeacherId != null)
+            throw new BusinessRuleException("Questo utente ha un profilo insegnante collegato");
+    }
+
     public UserRole ParseRole(string role) => role.ToLowerInvariant() switch
     {
         "admin" => UserRole.Admin,
@@ -90,6 +100,5 @@ internal class UserService : IUserService
         "student" => UserRole.Student,
         _ => throw new ArgumentException($"Ruolo non valido: {role}")
     };
-
 }
 

@@ -64,7 +64,7 @@ internal class AuthManager : IAuthManager
         if (string.IsNullOrEmpty(email)) return null;
 
         var user = await _userRepository.GetByEmailAsync(email);
-        if (user is null) return null;   // "utente non registrato" — il Controller traduce in 401
+        if (user is null) return null;
 
         return _jwtTokenGenerator.Generate(user.Id, user.Email, user.Role, user.StudentId, user.TeacherId);
     }

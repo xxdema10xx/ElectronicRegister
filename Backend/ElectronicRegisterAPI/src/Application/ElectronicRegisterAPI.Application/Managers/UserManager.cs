@@ -133,11 +133,13 @@ internal class UserManager : IUserManager
         var user = await _userRepository.GetByIdAsync(id);
         if (user is null) return false;
 
+        _userService.EnsureUserCanBeDeletedAsync(user);
+
         await _userRepository.DeleteAsync(user);
         return true;
     }
 
-    private UserDto MapToDto(User user)
+    private static UserDto MapToDto(User user)
     {
         return new UserDto
         {
