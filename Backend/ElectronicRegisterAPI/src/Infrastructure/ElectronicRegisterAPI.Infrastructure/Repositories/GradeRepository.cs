@@ -93,8 +93,7 @@ internal class GradeRepository : IGradeRepository
             {
                 Id = g.Id,
                 StudentId = g.StudentId,
-                SubjectId = g.SubjectId,
-                TeacherId = g.TeacherId,
+                ClassSubjectId = g.SubjectId,
                 Value = g.Value,
                 Date = g.Date
             })

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
-internal partial class User
+public partial class User
 {
     public Guid Id { get; set; }
 
