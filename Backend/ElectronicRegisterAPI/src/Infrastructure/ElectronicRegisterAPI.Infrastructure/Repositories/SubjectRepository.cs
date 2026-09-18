@@ -1,12 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using Subject = ElectronicRegisterAPI.Domain.Models;
-using DomainSubject = ElectronicRegisterAPI.Domain.Models.Subject;
-using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
-using  ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
-using SubjectEntity =  ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Subject;
+using Microsoft.EntityFrameworkCore;
+using DomainSubject = ElectronicRegisterAPI.Domain.Models.Subject;
+using SubjectEntity = ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Subject;
 
-namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
 internal class SubjectRepository : ISubjectRepository
 {
@@ -17,112 +13,96 @@ internal class SubjectRepository : ISubjectRepository
         _context = context;
     }
 
-    public async Task<int> CountAsync(Guid? teacherId = null)
+    public async Task<int> CountAsync()
     {
-        var query = _context.Subjects.AsQueryable();
-        if (teacherId.HasValue)
-        {
-            query = query.Where(s => s.TeacherId == teacherId);
-            return await query.CountAsync();
-        }
-        return await query.CountAsync();
+        return await _context.Subjects.CountAsync();
     }
 
-    public async Task<List<DomainSubject>> GetAllAsync(Guid? teacherId = null)
+    public async Task<List<DomainSubject>> GetAllAsync()
     {
-        var subjects = new List<DomainSubject>();
-        var query = _context.Subjects.AsQueryable();
-        if (teacherId.HasValue)
-        {
-            query = query.Where(s => s.TeacherId == teacherId);
-            subjects = await query.Select(s => MapTo(s)).ToListAsync();
-            return subjects;
-        }
-        
-        return subjects = await query.Select(s => MapTo(s)).ToListAsync();
+        return await _context.Subjects
+            .AsNoTracking()
+            .Select(s => new DomainSubject
+            {
+                Id = s.Id,
+                Name = s.Name
+            })
+            .ToListAsync();
     }
 
     public async Task<DomainSubject?> GetByIdAsync(Guid id)
     {
-        var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Id == id);
-        return subject == null ? null : MapTo(subject);
+        return await _context.Subjects
+            .AsNoTracking()
+            .Where(s => s.Id == id)
+            .Select(s => new DomainSubject
+            {
+                Id = s.Id,
+                Name = s.Name
+            })
+            .FirstOrDefaultAsync();
     }
 
     public async Task<List<DomainSubject>> GetByIdsAsync(IEnumerable<Guid> ids)
     {
         return await _context.Subjects
+            .AsNoTracking()
             .Where(s => ids.Contains(s.Id))
-            .Select(s => MapTo(s))
+            .Select(s => new DomainSubject
+            {
+                Id = s.Id,
+                Name = s.Name
+            })
             .ToListAsync();
     }
 
     public async Task<DomainSubject?> GetByNameAsync(string name)
     {
-        var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Name == name);
-        return subject == null ? null : MapTo(subject);
-    }
-
-    public async Task<List<DomainSubject>> GetByTeacherIdAsync(Guid teacherId)
-    {
-        return  await _context.Subjects
-            .Where(s => s.TeacherId == teacherId)
-            .Select(s => MapTo(s))
-            .ToListAsync();
-    }
-
-    public async Task<bool> ExistsForTeacherAsync(Guid teacherId)
-    {
-        return await _context.Subjects.AnyAsync(s => s.TeacherId == teacherId);
+        return await _context.Subjects
+            .AsNoTracking()
+            .Where(s => s.Name == name)
+            .Select(s => new DomainSubject
+            {
+                Id = s.Id,
+                Name = s.Name
+            })
+            .FirstOrDefaultAsync();
     }
 
     public async Task AddAsync(DomainSubject subject)
     {
-        var subjectEntity = new SubjectEntity
+        var entity = new SubjectEntity
         {
             Id = subject.Id,
-            Name = subject.Name,
-            TeacherId = subject.TeacherId
+            Name = subject.Name
         };
-        _context.Subjects.Add(subjectEntity);
+
+        await _context.Subjects.AddAsync(entity);
         await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(DomainSubject subject)
     {
-        var subjectEntity = await MapToEntity(subject);
-        if (subjectEntity is null) return;
-        _context.Subjects.Update(subjectEntity);
+        var entity = await _context.Subjects
+            .FirstOrDefaultAsync(s => s.Id == subject.Id);
+
+        if (entity is null)
+            return;
+
+        entity.Name = subject.Name;
+
         await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(DomainSubject subject)
     {
-        var subjectEntity = await MapToEntity(subject);
-        if (subjectEntity is null) return;
-        _context.Subjects.Remove(subjectEntity);
+        var entity = await _context.Subjects
+            .FirstOrDefaultAsync(s => s.Id == subject.Id);
+
+        if (entity is null)
+            return;
+
+        _context.Subjects.Remove(entity);
         await _context.SaveChangesAsync();
     }
-
-    private static DomainSubject MapTo(SubjectEntity subjects)
-    {
-        return new DomainSubject
-        {
-            Id = subjects.Id,
-            Name = subjects.Name,
-            TeacherId = subjects.TeacherId
-        };
-    }
-
-    private async Task<SubjectEntity?> MapToEntity(DomainSubject subject)
-    {
-        var entity = await _context.Subjects.FirstOrDefaultAsync(s => s.Id == subject.Id);
-        if (entity is null) return null;
-
-        entity.Id = subject.Id;
-        entity.Name = subject.Name;
-        entity.TeacherId = subject.TeacherId;
-
-        return entity;
-    }
 }
-

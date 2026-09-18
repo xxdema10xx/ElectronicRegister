@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ElectronicRegisterAPI.Domain.Models
+namespace ElectronicRegisterAPI.Domain.Models;
+public class StudyPath
 {
-    internal class StudyPath
-    {
-        public Guid Id;
-        public string Name;
-        public string Description;
-    }
+    public Guid Id;
+    public required string Name;
+    public required string Description;
 }

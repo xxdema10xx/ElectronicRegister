@@ -6,21 +6,16 @@ namespace ElectronicRegisterAPI.Business.Services;
 
 internal class TeacherService : ITeacherService
 {
-    private readonly ISubjectRepository _subjectRepository;
-    private readonly IGradeRepository _gradeRepository;
+    private readonly IClassSubjectRepository _classSubjectRepository;
 
-    public TeacherService(ISubjectRepository subjectRepository, IGradeRepository gradeRepository)
+    public TeacherService(IClassSubjectRepository classSubjectRepository)
     {
-        _subjectRepository = subjectRepository;
-        _gradeRepository = gradeRepository;
+        _classSubjectRepository = classSubjectRepository;
     }
 
     public async Task EnsureTeacherCanBeDeletedAsync(Guid teacherId)
     {
-        if (await _subjectRepository.ExistsForTeacherAsync(teacherId))
-            throw new BusinessRuleException("Impossibile eliminare l'insegnante: ha materie assegnate.");
-
-        if (await _gradeRepository.ExistsForTeacherAsync(teacherId))
-            throw new BusinessRuleException("Impossibile eliminare l'insegnante: ha voti assegnati.");
+        if (await _classSubjectRepository.ExistsForTeacherAsync(teacherId))
+            throw new BusinessRuleException("Impossibile eliminare l'insegnante: ha assegnazioni a classi e materie.");
     }
 }

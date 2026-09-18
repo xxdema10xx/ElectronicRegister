@@ -1,11 +1,6 @@
-﻿namespace ElectronicRegisterAPI.Domain.DTOs
-{
-    public class UpdateSubjectDto
-    {
-        public required string Name { get; set; }
-        public Guid TeacherId { get; set; }
+﻿namespace ElectronicRegisterAPI.Domain.DTOs;
 
-        //public string? TeacherFirstName { get; set; }
-        //public string? TeacherLastName { get; set; }
-    }
+public class UpdateSubjectDto
+{
+    public required string Name { get; set; }
 }

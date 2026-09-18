@@ -1,10 +1,9 @@
-﻿namespace ElectronicRegisterAPI.Domain.DTOs
+﻿namespace ElectronicRegisterAPI.Domain.DTOs;
+
+public class UpdateUserDto
 {
-    public class UpdateUserDto
-    {
-        public string? Email { get; set; }
-        public string? Password { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-    }
+    public string? Email { get; set; }
+    public string? Password { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
 }

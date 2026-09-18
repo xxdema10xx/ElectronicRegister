@@ -1,7 +1,6 @@
-namespace ElectronicRegisterAPI.Domain.DTOs
+namespace ElectronicRegisterAPI.Domain.DTOs;
+
+public class MicrosoftLoginDto
 {
-    public class MicrosoftLoginDto
-    {
-        public string AccessToken { get; set; } = null!;
-    }
+    public string AccessToken { get; set; } = null!;
 }

@@ -1,9 +1,10 @@
 using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Models;
-using ElectronicRegisterAPI.Domain.Enums;
 
 namespace ElectronicRegisterAPI.Application.Managers
 {
@@ -11,21 +12,21 @@ namespace ElectronicRegisterAPI.Application.Managers
     {
         private readonly IGradeRepository _gradeRepository;
         private readonly ISubjectRepository _subjectRepository;
-        private readonly ITeacherRepository _teacherRepository;
         private readonly IStudentRepository _studentRepository;
         private readonly IGradeService _gradeService;
+        private readonly IClassSubjectRepository _classSubjectRepository;
 
         public GradeManager(
             IGradeRepository gradeRepository,
             ISubjectRepository subjectRepository,
-            ITeacherRepository teacherRepository,
             IStudentRepository studentRepository,
+            IClassSubjectRepository classSubjectRepository,
             IGradeService gradeService)
         {
             _gradeRepository = gradeRepository;
             _subjectRepository = subjectRepository;
-            _teacherRepository = teacherRepository;
             _studentRepository = studentRepository;
+            _classSubjectRepository = classSubjectRepository;
             _gradeService = gradeService;
         }
 
@@ -53,65 +54,39 @@ namespace ElectronicRegisterAPI.Application.Managers
                 teacherId,
                 studentId);
 
-            var studentIds = grades
-                .Select(g => g.StudentId)
-                .Distinct()
-                .ToList();
-
-            var students = (await _studentRepository.GetByIdsAsync(studentIds))
-                .ToDictionary(s => s.Id);
-
-            var subjectIds = grades
-                .Select(g => g.SubjectId)
-                .Distinct()
-                .ToList();
-
-            var subjects = (await _subjectRepository.GetByIdsAsync(subjectIds))
-                .ToDictionary(s => s.Id);
-
-            return grades.Select(g => new GradeDto
-            {
-                Id = g.Id,
-                StudentId = g.StudentId,
-                SubjectId = g.SubjectId,
-                SubjectName = subjects.TryGetValue(g.SubjectId, out var subject)
-                    ? subject.Name
-                    : null,
-                TeacherId = g.TeacherId,
-                Value = g.Value,
-                Date = g.Date,
-                Student = students.TryGetValue(g.StudentId, out var student)
-                    ? new StudentDto
-                    {
-                        Id = student.Id,
-                        FirstName = student.FirstName,
-                        LastName = student.LastName
-                    }
-                    : null
-            }).ToList();
+            return await MapToDtosAsync(grades);
         }
 
         public async Task<GradeDto?> GetByIdAsync(Guid id, ClaimsContext caller)
         {
             var grade = await _gradeRepository.GetByIdAsync(id);
-            if (grade is null) return null;
 
-            if (caller.Role == UserRole.Student && grade.StudentId != caller.StudentId) return null;
-            if (caller.Role == UserRole.Teacher && grade.TeacherId != caller.TeacherId) return null;
+            if (grade is null)
+                return null;
 
-            var student = await _studentRepository.GetByIdAsync(grade.StudentId);
-            var subject = await _subjectRepository.GetByIdAsync(grade.SubjectId);
-            return new GradeDto
+            if (caller.Role == UserRole.Student &&
+                grade.StudentId != caller.StudentId)
             {
-                Id = grade.Id,
-                StudentId = grade.StudentId,
-                SubjectId = grade.SubjectId,
-                SubjectName = subject?.Name,
-                TeacherId = grade.TeacherId,
-                Value = grade.Value,
-                Date = grade.Date,
-                Student = student != null ? new StudentDto { Id = student.Id, FirstName = student.FirstName, LastName = student.LastName } : null
-            };
+                return null;
+            }
+
+            if (caller.Role == UserRole.Teacher)
+            {
+                var classSubject =
+                    await _classSubjectRepository.GetByIdAsync(
+                        grade.ClassSubjectId);
+
+                if (classSubject is null ||
+                    classSubject.TeacherId != caller.TeacherId)
+                {
+                    return null;
+                }
+            }
+
+            var dto = await MapToDtosAsync(
+                new List<Grade> { grade });
+
+            return dto.FirstOrDefault();
         }
 
         public async Task<GradePageDto> GetPagedAsync(
@@ -158,20 +133,25 @@ namespace ElectronicRegisterAPI.Application.Managers
             Guid? studentId = null;
 
             if (caller.Role == UserRole.Teacher)
-            {
                 teacherId = caller.TeacherId;
-            }
             else if (caller.Role == UserRole.Student)
-            {
                 studentId = caller.StudentId;
-            }
 
             var grades = await _gradeRepository.GetAllAsync(
                 teacherId,
                 studentId);
 
-            var subjectIds = grades
-                .Select(g => g.SubjectId)
+            var classSubjectIds = grades
+                .Select(g => g.ClassSubjectId)
+                .Distinct()
+                .ToList();
+
+            var classSubjects =
+                await _classSubjectRepository.GetByIdsAsync(
+                    classSubjectIds);
+
+            var subjectIds = classSubjects
+                .Select(cs => cs.SubjectId)
                 .Distinct()
                 .ToList();
 
@@ -180,27 +160,19 @@ namespace ElectronicRegisterAPI.Application.Managers
                 .Distinct()
                 .ToList();
 
-            var subjects = await _subjectRepository.GetByIdsAsync(subjectIds);
-            var students = await _studentRepository.GetByIdsAsync(studentIds);
-            var teachers = await _teacherRepository.GetAllAsync();
+            var subjects =
+                await _subjectRepository.GetByIdsAsync(subjectIds);
 
-            var teachersById = teachers.ToDictionary(t => t.Id);
+            var students =
+                await _studentRepository.GetByIdsAsync(studentIds);
 
             return new GradeFiltersDto
             {
                 Subjects = subjects
-                    .Select(s =>
+                    .Select(s => new SubjectDto
                     {
-                        teachersById.TryGetValue(s.TeacherId, out var teacher);
-
-                        return new SubjectDto
-                        {
-                            Id = s.Id,
-                            Name = s.Name,
-                            TeacherId = s.TeacherId,
-                            TeacherFirstName = teacher?.FirstName,
-                            TeacherLastName = teacher?.LastName
-                        };
+                        Id = s.Id,
+                        Name = s.Name
                     })
                     .OrderBy(s => s.Name)
                     .ToList(),
@@ -218,139 +190,174 @@ namespace ElectronicRegisterAPI.Application.Managers
             };
         }
 
-        public async Task<List<GradeDto>> GetGradesByStudentIdAsync(Guid studentId)
+        public async Task<List<GradeDto>>GetGradesByStudentIdAsync(Guid studentId)
         {
-            // Implementation for getting grades by student ID
-            var student = await _studentRepository.GetByIdAsync(studentId);
-            if(student is null) return new List<GradeDto>();
-            var grades = await _gradeRepository.GetByStudentIdAsync(studentId);
-            var subjectIds = grades.Select(g => g.SubjectId).Distinct().ToList();
-            var subjects = await _subjectRepository.GetByIdsAsync(subjectIds);
-            var subjectDictionary = subjects.ToDictionary(s => s.Id);
-            return grades.Select(
-                    g => new GradeDto
-                    {
-                        Id = g.Id,
-                        StudentId = g.StudentId,
-                        SubjectId = g.SubjectId,
-                        SubjectName = subjectDictionary.TryGetValue(g.SubjectId, out var subject) ? subject.Name : null,
-                        TeacherId = g.TeacherId,
-                        Value = g.Value,
-                        Date = g.Date,
-                        Student = new StudentDto { 
-                            Id = student.Id, 
-                            FirstName = student.FirstName, 
-                            LastName = student.LastName
-                        }
-                    }
-                ).ToList();
+            var student =
+                await _studentRepository.GetByIdAsync(studentId);
+
+            if (student is null)
+                return new List<GradeDto>();
+
+            var grades =
+                await _gradeRepository.GetByStudentIdAsync(studentId);
+
+            return await MapToDtosAsync(grades);
         }
 
-        public async Task<List<GradeDto>?> GetGradesBySubjectNameAsync(string subjectName, ClaimsContext caller)
+        public async Task<List<GradeDto>?>GetGradesBySubjectNameAsync(string subjectName, ClaimsContext caller)
         {
-            Guid? studentId = caller.Role == UserRole.Student ? caller.StudentId : null;
-            Guid? teacherId = caller.Role == UserRole.Teacher ? caller.TeacherId : null;
+            Guid? studentId =
+                caller.Role == UserRole.Student
+                    ? caller.StudentId
+                    : null;
 
-            var grades = await _gradeRepository.GetBySubjectNameAsync(subjectName, studentId, teacherId);
-            if (grades.Count == 0) return new List<GradeDto>();
+            Guid? teacherId =
+                caller.Role == UserRole.Teacher
+                    ? caller.TeacherId
+                    : null;
 
-            var subjectIds = grades.Select(g => g.SubjectId).Distinct().ToList();
-            var studentIds = grades.Select(g => g.StudentId).Distinct().ToList();
+            var grades =
+                await _gradeRepository.GetBySubjectNameAsync(
+                    subjectName,
+                    studentId,
+                    teacherId);
 
-            var students = (await _studentRepository.GetByIdsAsync(studentIds)).ToDictionary(s => s.Id);
-            var subjects = (await _subjectRepository.GetByIdsAsync(subjectIds)).ToDictionary(s => s.Id);
-
-            return grades.Select(g => new GradeDto
-            {
-                Id = g.Id,
-                StudentId = g.StudentId,
-                SubjectId = g.SubjectId,
-                SubjectName = subjects.TryGetValue(g.SubjectId, out var subj) ? subj.Name : null,
-                TeacherId = g.TeacherId,
-                Value = g.Value,
-                Date = g.Date,
-                Student = students.TryGetValue(g.StudentId, out var stud)
-                    ? new StudentDto { Id = stud.Id, FirstName = stud.FirstName, LastName = stud.LastName }
-                    : null
-            }).ToList();
+            return await MapToDtosAsync(grades);
         }
 
-        public async Task<List<GradeDto>> GetGradesByDateAsync(DateOnly date, ClaimsContext caller)
+        public async Task<List<GradeDto>>GetGradesByDateAsync(DateOnly date, ClaimsContext caller)
         {
-            Guid? studentId = caller.Role == UserRole.Student ? caller.StudentId : null;
-            Guid? teacherId = caller.Role == UserRole.Teacher ? caller.TeacherId : null;
+            Guid? studentId =
+                caller.Role == UserRole.Student
+                    ? caller.StudentId
+                    : null;
 
-            var grades = await _gradeRepository.GetByDateAsync(date, studentId, teacherId);
-            if (grades.Count == 0) return new List<GradeDto>();
+            Guid? teacherId =
+                caller.Role == UserRole.Teacher
+                    ? caller.TeacherId
+                    : null;
 
-            var subjectIds = grades.Select(g => g.SubjectId).Distinct().ToList();
-            var studentIds = grades.Select(g => g.StudentId).Distinct().ToList();
+            var grades =
+                await _gradeRepository.GetByDateAsync(
+                    date,
+                    studentId,
+                    teacherId);
 
-            var subjects = (await _subjectRepository.GetByIdsAsync(subjectIds)).ToDictionary(s => s.Id);
-            var students = (await _studentRepository.GetByIdsAsync(studentIds)).ToDictionary(s => s.Id);
-
-            return grades.Select(g => new GradeDto
-            {
-                Id = g.Id,
-                StudentId = g.StudentId,
-                SubjectId = g.SubjectId,
-                SubjectName = subjects.TryGetValue(g.SubjectId, out var subj) ? subj.Name : null,
-                TeacherId = g.TeacherId,
-                Value = g.Value,
-                Date = g.Date,
-                Student = students.TryGetValue(g.StudentId, out var stud)
-                    ? new StudentDto { Id = stud.Id, FirstName = stud.FirstName, LastName = stud.LastName }
-                    : null
-            }).ToList();
+            return await MapToDtosAsync(grades);
         }
 
         public async Task<Guid?> AddAsync(CreateGradeDto dto, ClaimsContext caller)
         {
             _gradeService.EnsureValidGradeValue(dto.Value);
 
+            var student =
+                await _studentRepository.GetByIdAsync(dto.StudentId);
+
+            if (student is null)
+                return null;
+
+            if (!student.ClassId.HasValue)
+                throw new BusinessRuleException(
+                    "Lo studente non è assegnato a una classe.");
+
+            var classSubject =
+                await _classSubjectRepository.GetAsync(
+                    student.ClassId.Value,
+                    dto.SubjectId);
+
+            if (classSubject is null)
+                throw new BusinessRuleException(
+                    "La materia non è assegnata alla classe dello studente.");
+
+            await _gradeService
+                .EnsureStudentBelongsToClassSubjectAsync(
+                    student,
+                    classSubject);
+
             if (caller.Role == UserRole.Teacher)
-                await _gradeService.EnsureTeacherTeachesSubjectAsync(caller.TeacherId!.Value, dto.SubjectId);
+            {
+                if (!caller.TeacherId.HasValue)
+                    throw new UnauthorizedAccessException();
 
-            var subject = await _subjectRepository.GetByIdAsync(dto.SubjectId);
-            if (subject is null) return null;
+                await _gradeService
+                    .EnsureTeacherTeachesClassSubjectAsync(
+                        caller.TeacherId.Value,
+                        classSubject.Id);
+            }
 
-            var student = await _studentRepository.GetByIdAsync(dto.StudentId);
-            if (student is null) return null;
-
-            var grade = new Grade 
+            var grade = new Grade
             {
                 Id = Guid.NewGuid(),
+                StudentId = student.Id,
+                ClassSubjectId = classSubject.Id,
                 Value = dto.Value,
-                Date = dto.Date,
-                SubjectId = dto.SubjectId,
-                StudentId = dto.StudentId,
-                TeacherId = caller.Role == UserRole.Teacher ? caller.TeacherId!.Value : subject.TeacherId
+                Date = dto.Date
             };
+
             await _gradeRepository.AddAsync(grade);
+
             return grade.Id;
         }
 
         public async Task<bool> UpdateAsync(Guid id, UpdateGradeDto dto, ClaimsContext caller)
         {
-            var grade = await _gradeRepository.GetByIdAsync(id);
-            if (grade is null) return false;
+            var grade =
+                await _gradeRepository.GetByIdAsync(id);
 
-            if (caller.Role == UserRole.Teacher)
-            {
-                await _gradeService.EnsureTeacherOwnsGradeAsync(caller.TeacherId!.Value, grade);
-                await _gradeService.EnsureTeacherTeachesSubjectAsync(caller.TeacherId!.Value, dto.SubjectId);
-            }
+            if (grade is null)
+                return false;
 
             _gradeService.EnsureValidGradeValue(dto.Value);
 
-            var subject = await _subjectRepository.GetByIdAsync(dto.SubjectId);
-            if (subject is null) return false;
+            if (caller.Role == UserRole.Teacher)
+            {
+                if (!caller.TeacherId.HasValue)
+                    throw new UnauthorizedAccessException();
 
+                await _gradeService.EnsureTeacherOwnsGradeAsync(
+                    caller.TeacherId.Value,
+                    grade);
+            }
+
+            var student =
+                await _studentRepository.GetByIdAsync(
+                    grade.StudentId);
+
+            if (student is null)
+                return false;
+
+            if (!student.ClassId.HasValue)
+                throw new BusinessRuleException(
+                    "Lo studente non è assegnato a una classe.");
+
+            var classSubject =
+                await _classSubjectRepository.GetAsync(
+                    student.ClassId.Value,
+                    dto.SubjectId);
+
+            if (classSubject is null)
+                throw new BusinessRuleException(
+                    "La materia non è assegnata alla classe dello studente.");
+
+            await _gradeService
+                .EnsureStudentBelongsToClassSubjectAsync(
+                    student,
+                    classSubject);
+
+            if (caller.Role == UserRole.Teacher)
+            {
+                await _gradeService
+                    .EnsureTeacherTeachesClassSubjectAsync(
+                        caller.TeacherId!.Value,
+                        classSubject.Id);
+            }
+
+            grade.ClassSubjectId = classSubject.Id;
             grade.Value = dto.Value;
             grade.Date = dto.Date;
-            grade.SubjectId = dto.SubjectId;
 
             await _gradeRepository.UpdateAsync(grade);
+
             return true;
         }
 
@@ -365,25 +372,81 @@ namespace ElectronicRegisterAPI.Application.Managers
 
         private async Task<List<GradeDto>> MapToDtosAsync(List<Grade> grades)
         {
-            var subjectIds = grades.Select(g => g.SubjectId).Distinct().ToList();
-            var studentIds = grades.Select(g => g.StudentId).Distinct().ToList();
+            if (grades.Count == 0)
+                return new List<GradeDto>();
 
-            var subjects = (await _subjectRepository.GetByIdsAsync(subjectIds)).ToDictionary(s => s.Id);
-            var students = (await _studentRepository.GetByIdsAsync(studentIds)).ToDictionary(s => s.Id);
+            var classSubjectIds = grades
+                .Select(g => g.ClassSubjectId)
+                .Distinct()
+                .ToList();
 
-            return grades.Select(g => new GradeDto
+            var studentIds = grades
+                .Select(g => g.StudentId)
+                .Distinct()
+                .ToList();
+
+            var classSubjects = (await _classSubjectRepository
+                    .GetByIdsAsync(classSubjectIds))
+                .ToDictionary(cs => cs.Id);
+
+            var subjectIds = classSubjects.Values
+                .Select(cs => cs.SubjectId)
+                .Distinct()
+                .ToList();
+
+            var subjects = (await _subjectRepository
+                    .GetByIdsAsync(subjectIds))
+                .ToDictionary(s => s.Id);
+
+            var students = (await _studentRepository
+                    .GetByIdsAsync(studentIds))
+                .ToDictionary(s => s.Id);
+
+            var result = new List<GradeDto>();
+
+            foreach (var grade in grades)
             {
-                Id = g.Id,
-                StudentId = g.StudentId,
-                SubjectId = g.SubjectId,
-                SubjectName = subjects.TryGetValue(g.SubjectId, out var subj) ? subj.Name : null,
-                TeacherId = g.TeacherId,
-                Value = g.Value,
-                Date = g.Date,
-                Student = students.TryGetValue(g.StudentId, out var stud)
-                    ? new StudentDto { Id = stud.Id, FirstName = stud.FirstName, LastName = stud.LastName }
-                    : null
-            }).ToList();
+                if (!classSubjects.TryGetValue(
+                        grade.ClassSubjectId,
+                        out var classSubject))
+                {
+                    throw new InvalidOperationException(
+                        $"ClassSubject {grade.ClassSubjectId} non trovato per il voto {grade.Id}.");
+                }
+
+                subjects.TryGetValue(
+                    classSubject.SubjectId,
+                    out var subject);
+
+                students.TryGetValue(
+                    grade.StudentId,
+                    out var student);
+
+                result.Add(new GradeDto
+                {
+                    Id = grade.Id,
+                    StudentId = grade.StudentId,
+
+                    SubjectId = classSubject.SubjectId,
+                    SubjectName = subject?.Name,
+
+                    TeacherId = classSubject.TeacherId,
+
+                    Value = grade.Value,
+                    Date = grade.Date,
+
+                    Student = student is null
+                        ? null
+                        : new StudentDto
+                        {
+                            Id = student.Id,
+                            FirstName = student.FirstName,
+                            LastName = student.LastName
+                        }
+                });
+            }
+
+            return result;
         }
     }
 }

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace ElectronicRegisterAPI.Domain.DTOs;
 
-namespace ElectronicRegisterAPI.Domain.DTOs
+public class CreateTeacherDto
 {
-    public class CreateTeacherDto
-    {
-        public string FirstName { get; set; } = null!;
+    public required string FirstName { get; set; }
 
-        public string LastName { get; set; } = null!;
-    }
+    public required string LastName { get; set; }
 }

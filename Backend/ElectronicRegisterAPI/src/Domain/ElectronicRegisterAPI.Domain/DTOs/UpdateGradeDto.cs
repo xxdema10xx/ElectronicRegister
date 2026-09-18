@@ -1,9 +1,8 @@
-﻿namespace ElectronicRegisterAPI.Domain.DTOs
+﻿namespace ElectronicRegisterAPI.Domain.DTOs;
+
+public class UpdateGradeDto
 {
-    public class UpdateGradeDto
-    {
-        public Guid SubjectId { get; set; }
-        public decimal Value { get; set; }
-        public DateOnly Date { get; set; }
-    }
+    public Guid SubjectId { get; set; }
+    public decimal Value { get; set; }
+    public DateOnly Date { get; set; }
 }

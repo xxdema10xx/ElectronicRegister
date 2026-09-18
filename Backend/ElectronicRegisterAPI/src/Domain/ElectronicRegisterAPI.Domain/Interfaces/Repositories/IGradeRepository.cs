@@ -23,6 +23,4 @@ public interface IGradeRepository
     Task UpdateAsync(Grade grade);
     Task DeleteAsync(Grade grade);
     Task<bool> ExistsForStudentAsync(Guid studentId);
-    Task<bool> ExistsForSubjectAsync(Guid subjectId);
-    Task<bool> ExistsForTeacherAsync(Guid teacherId);
 }

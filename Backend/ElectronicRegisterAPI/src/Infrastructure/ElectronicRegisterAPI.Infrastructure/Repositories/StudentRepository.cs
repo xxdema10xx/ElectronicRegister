@@ -50,7 +50,8 @@ internal class StudentRepository : IStudentRepository
         {
             Id = student.Id,
             FirstName = student.FirstName,
-            LastName = student.LastName
+            LastName = student.LastName,
+            ClassId = student.ClassId
         };
         _context.Students.Add(studentEntity);
         await _context.SaveChangesAsync();
@@ -58,7 +59,7 @@ internal class StudentRepository : IStudentRepository
 
     public async Task UpdateAsync(Student student)
     {
-        var entity = await MapToEntity(student);
+        var entity = await MapToEntityAsync(student);
         if (entity == null) return;
         _context.Students.Update(entity);
         await _context.SaveChangesAsync();
@@ -66,7 +67,7 @@ internal class StudentRepository : IStudentRepository
 
     public async Task DeleteAsync(Student student)
     {
-        var entity = await MapToEntity(student);
+        var entity = await MapToEntityAsync(student);
         if (entity == null) return;
         _context.Students.Remove(entity);
         await _context.SaveChangesAsync();
@@ -78,11 +79,12 @@ internal class StudentRepository : IStudentRepository
         {
             Id = student.Id,
             FirstName = student.FirstName,
-            LastName = student.LastName
+            LastName = student.LastName,
+            ClassId = student.ClassId
         };
     }
 
-    private async Task<StudentEntity?> MapToEntity(Student student)
+    private async Task<StudentEntity?> MapToEntityAsync(Student student)
     {
         var entity = await _context.Students.FirstOrDefaultAsync(s => s.Id == student.Id);
         if (entity is null) return null;
@@ -90,6 +92,7 @@ internal class StudentRepository : IStudentRepository
         entity.Id = student.Id;
         entity.FirstName = student.FirstName;
         entity.LastName = student.LastName;
+        entity.ClassId = student.ClassId;
 
         return entity;
     }

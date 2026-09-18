@@ -30,9 +30,13 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(new ConfigurationManager<OpenIdConnectConfiguration>(
             stsDiscoveryEndpoint, new OpenIdConnectConfigurationRetriever()));
 
+        services.AddScoped<IBienniumRepository, BienniumRepository>();
+        services.AddScoped<IStudyAreaRepository, StudyAreaRepository>();
+        services.AddScoped<IStudyPathRepository, StudyPathRepository>();
         services.AddScoped<IGradeRepository, GradeRepository>();
         services.AddScoped<IStudentRepository, StudentRepository>();
         services.AddScoped<ISubjectRepository, SubjectRepository>();
+        services.AddScoped<IClassSubjectRepository, ClassSubjectRepository>();
         services.AddScoped<ITeacherRepository, TeacherRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
 

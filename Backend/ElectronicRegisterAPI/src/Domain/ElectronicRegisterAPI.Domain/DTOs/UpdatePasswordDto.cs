@@ -1,8 +1,7 @@
-namespace ElectronicRegisterAPI.Domain.DTOs
+namespace ElectronicRegisterAPI.Domain.DTOs;
+
+public class UpdatePasswordDto
 {
-    public class UpdatePasswordDto
-    {
-        public string? OldPassword { get; set; }
-        public string? NewPassword { get; set; }
-    }
+    public required string OldPassword { get; set; }
+    public required string NewPassword { get; set; }
 }

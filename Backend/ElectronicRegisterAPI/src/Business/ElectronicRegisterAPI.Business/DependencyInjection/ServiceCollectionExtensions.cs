@@ -8,6 +8,9 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddBusinessServices(this IServiceCollection services)
     {
+        services.AddScoped<IBienniumService, BienniumService>();
+        services.AddScoped<IStudyAreaService, StudyAreaService>();
+        services.AddScoped<IStudyPathService, StudyPathService>();
         services.AddScoped<IGradeService, GradeService>();
         services.AddScoped<IStudentService, StudentService>();
         services.AddScoped<ISubjectService, SubjectService>();

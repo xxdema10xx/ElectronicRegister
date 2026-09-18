@@ -54,9 +54,6 @@ public partial class ElectronicRegisterContext : DbContext
             entity.Property(e => e.EndYear)
                 .HasColumnType("int(11)")
                 .HasColumnName("end_year");
-            entity.Property(e => e.Name)
-                .HasMaxLength(20)
-                .HasColumnName("name");
             entity.Property(e => e.StartYear)
                 .HasColumnType("int(11)")
                 .HasColumnName("start_year");

@@ -11,7 +11,5 @@ public partial class Biennium
 
     public int EndYear { get; set; }
 
-    public string? Name { get; set; }
-
     public virtual ICollection<BienniumStudyArea> BienniumStudyAreas { get; set; } = new List<BienniumStudyArea>();
 }

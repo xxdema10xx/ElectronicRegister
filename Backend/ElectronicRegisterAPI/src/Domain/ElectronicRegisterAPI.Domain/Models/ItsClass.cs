@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ElectronicRegisterAPI.Domain.Models
+namespace ElectronicRegisterAPI.Domain.Models;
+public class ItsClass
 {
-    internal class ItsClass
-    {
-        public Guid Id;
-        public Guid BienniumStudyPathId;
-        public string Name;
-    }
+    public Guid Id;
+    public Guid BienniumStudyPathId;
+    public required string Name;
 }

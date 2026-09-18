@@ -27,7 +27,7 @@ internal class GradeRepository : IGradeRepository
         var query = _context.Grades.AsQueryable();
         if (teacherId.HasValue)
         {
-            query = query.Where(g => g.TeacherId == teacherId.Value);
+            query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
         }
         if (studentId.HasValue)
         {
@@ -41,7 +41,7 @@ internal class GradeRepository : IGradeRepository
         var query = _context.Grades.AsQueryable();
         if (teacherId.HasValue)
         {
-            query = query.Where(g => g.TeacherId == teacherId.Value);
+            query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
         }
         if (studentId.HasValue)
         {
@@ -55,7 +55,7 @@ internal class GradeRepository : IGradeRepository
         var query = _context.Grades.Where(g => g.Date == date);
 
         if (studentId.HasValue) query = query.Where(g => g.StudentId == studentId.Value);
-        if (teacherId.HasValue) query = query.Where(g => g.TeacherId == teacherId.Value);
+        if (teacherId.HasValue) query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
 
         return await query.Select(g => MapToModel(g)).ToListAsync();
     }
@@ -63,37 +63,41 @@ internal class GradeRepository : IGradeRepository
     public async Task<List<Grade>> GetBySubjectNameAsync(string subjectName, Guid? studentId = null, Guid? teacherId = null)
     {
         var query = _context.Grades
-            .Include(g => g.Subject)
-            .Where(g => g.Subject.Name == subjectName);
+            .Where(g => g.ClassSubject.Subject.Name == subjectName);
         if (studentId.HasValue) query = query.Where(g => g.StudentId == studentId.Value);
-        if (teacherId.HasValue) query = query.Where(g => g.TeacherId == teacherId.Value);
+        if (teacherId.HasValue) query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
         return await query.Select(g => MapToModel(g)).ToListAsync();
     }
 
-    public async Task<(List<Grade> Items, int TotalCount)> GetPagedAsync(
-        int pageNumber, int pageSize,
-        Guid? subjectId, Guid? studentId, DateOnly? date,
-        Guid? restrictToStudentId, Guid? restrictToTeacherId)
+    public async Task<(List<Grade> Items, int TotalCount)>GetPagedAsync(
+        int pageNumber,
+        int pageSize,
+        Guid? subjectId,
+        Guid? studentId,
+        DateOnly? date,
+        Guid? restrictToStudentId,
+        Guid? restrictToTeacherId
+    )
     {
         var query = _context.Grades.AsQueryable();
 
         if (restrictToStudentId.HasValue) query = query.Where(g => g.StudentId == restrictToStudentId.Value);
-        if (restrictToTeacherId.HasValue) query = query.Where(g => g.TeacherId == restrictToTeacherId.Value);
-        if (subjectId.HasValue) query = query.Where(g => g.SubjectId == subjectId.Value);
+        if (restrictToTeacherId.HasValue) query = query.Where(g => g.ClassSubject.TeacherId == restrictToTeacherId.Value);
+        if (subjectId.HasValue) query = query.Where(g => g.ClassSubject.SubjectId == subjectId.Value);
         if (studentId.HasValue) query = query.Where(g => g.StudentId == studentId.Value);
         if (date.HasValue) query = query.Where(g => g.Date == date.Value);
 
         var totalCount = await query.CountAsync();
 
         var items = await query
-            .OrderByDescending(g => g.Date).ThenBy(g => g.SubjectId).ThenBy(g => g.Value).ThenBy(g => g.StudentId)
+            .OrderByDescending(g => g.Date).ThenBy(g => g.ClassSubjectId).ThenBy(g => g.Value).ThenBy(g => g.StudentId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(g => new Grade
             {
                 Id = g.Id,
                 StudentId = g.StudentId,
-                ClassSubjectId = g.SubjectId,
+                ClassSubjectId = g.ClassSubjectId,
                 Value = g.Value,
                 Date = g.Date
             })
@@ -105,7 +109,7 @@ internal class GradeRepository : IGradeRepository
     {
         var query = _context.Grades.AsQueryable();
 
-        if(teacherId.HasValue) query = query.Where(g => g.TeacherId == teacherId.Value);
+        if(teacherId.HasValue) query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
         
         if(studentId.HasValue) query = query.Where(g => g.StudentId == studentId.Value);
 
@@ -147,8 +151,7 @@ internal class GradeRepository : IGradeRepository
         {
             Id = grade.Id,
             StudentId = grade.StudentId,
-            SubjectId = grade.SubjectId,
-            TeacherId = grade.TeacherId,
+            ClassSubjectId = grade.ClassSubjectId,
             Value = grade.Value,
             Date = grade.Date
         };
@@ -177,24 +180,13 @@ internal class GradeRepository : IGradeRepository
         return await _context.Grades.AnyAsync(g => g.StudentId == studentId);
     }
 
-    public async Task<bool> ExistsForSubjectAsync(Guid subjectId)
-    {
-        return await _context.Grades.AnyAsync(g => g.SubjectId == subjectId);
-    }
-
-    public async Task<bool> ExistsForTeacherAsync(Guid teacherId)
-    {
-        return await _context.Grades.AnyAsync(g => g.TeacherId == teacherId);
-    }
-
     private static Grade MapToModel(GradeEntity gradeEntity)
     {
         return new Grade
         {
             Id = gradeEntity.Id,
             StudentId = gradeEntity.StudentId,
-            SubjectId = gradeEntity.SubjectId,
-            TeacherId = gradeEntity.TeacherId,
+            ClassSubjectId = gradeEntity.ClassSubjectId,
             Value = gradeEntity.Value,
             Date = gradeEntity.Date
         };
@@ -207,8 +199,7 @@ internal class GradeRepository : IGradeRepository
 
         entity.Id = grade.Id;
         entity.StudentId = grade.StudentId;
-        entity.SubjectId = grade.SubjectId;
-        entity.TeacherId = grade.TeacherId;
+        entity.ClassSubjectId = grade.ClassSubjectId;
         entity.Value = grade.Value;
         entity.Date = grade.Date;
 
