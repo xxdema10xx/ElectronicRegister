@@ -12,7 +12,13 @@ namespace ElectronicRegisterAPI.Business.Services
             _studyPathRepository = studyPathRepository;
         }
 
-        public void EnsureValidStudyPathName(string name)
+        public async Task EnsureValidStudyPathIdAsync(Guid id)
+        {
+            var studyPath = await _studyPathRepository.GetByIdAsync(id);
+            if (studyPath is null) throw new KeyNotFoundException("Il percorso di studio specificato non esiste.");
+        }
+
+        public void EnsureValidStudyPathName(string? name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Il nome del percorso di studio non può essere vuoto.");
@@ -20,7 +26,7 @@ namespace ElectronicRegisterAPI.Business.Services
                 throw new ArgumentException("Il nome del percorso di studio non può superare i 100 caratteri.");
         }
 
-        public void EnsureValidStudyPathDescription(string description)
+        public void EnsureValidStudyPathDescription(string? description)
         {
             if (string.IsNullOrWhiteSpace(description))
                 throw new ArgumentException("La descrizione del percorso di studio non può essere vuota.");
@@ -28,10 +34,10 @@ namespace ElectronicRegisterAPI.Business.Services
                 throw new ArgumentException("La descrizione del percorso di studio non può superare i 500 caratteri.");
         }
 
-        public async Task EnsureStudyPathExistsAsync(Guid id)
+        public async Task StudyPathExistsByNameAsync(string name)
         {
-            var studyPath = await _studyPathRepository.GetByIdAsync(id);
-            if (studyPath == null) throw new KeyNotFoundException("Il percorso di studio specificato non esiste.");
+            var studyPath = await _studyPathRepository.GetByNameAsync(name);
+            if (studyPath is not null) throw new KeyNotFoundException("Il percorso di studio specificato esiste già.");
         }
     }
 }

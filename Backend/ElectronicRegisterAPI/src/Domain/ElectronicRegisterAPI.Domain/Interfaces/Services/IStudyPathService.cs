@@ -2,7 +2,8 @@
 
 public interface IStudyPathService
 {
-    void EnsureValidStudyPathName(string name);
-    void EnsureValidStudyPathDescription(string description);
-    Task EnsureStudyPathExistsAsync(Guid id);
+    Task EnsureValidStudyPathIdAsync(Guid id);
+    void EnsureValidStudyPathName(string? name);
+    void EnsureValidStudyPathDescription(string? description);
+    Task StudyPathExistsByNameAsync(string name);
 }

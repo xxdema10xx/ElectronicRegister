@@ -7,7 +7,7 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Managers
         Task<int> CountAsync();
         Task<List<StudyPathDto>> GetAllAsync();
         Task<StudyPathDto?> GetByIdAsync(Guid id);
-        Task<StudyPathDto> GetStudyPathByNameAsync(string name);
+        Task<StudyPathDto?> GetStudyPathByNameAsync(string name);
         Task<bool> AddAsync(CreateStudyPathDto dto);
         Task<bool> UpdateAsync(Guid id, UpdateStudyPathDto dto);
         Task<bool> DeleteAsync(Guid id);

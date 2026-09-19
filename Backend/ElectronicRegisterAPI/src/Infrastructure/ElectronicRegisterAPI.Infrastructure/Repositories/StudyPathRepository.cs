@@ -32,6 +32,12 @@ internal class StudyPathRepository : IStudyPathRepository
         return studyPath == null ? null : MapToModel(studyPath);
     }
 
+    public async Task<StudyPathModel?> GetByNameAsync(string name)
+    {
+        var studyPath = await _context.StudyPaths.FirstOrDefaultAsync(b => b.Name == name);
+        return studyPath == null ? null : MapToModel(studyPath);
+    }
+
     public async Task AddAsync(StudyPathModel studyPath)
     {
         var studyPathEntity = new StudyPathEntity
