@@ -1,8 +1,10 @@
-﻿namespace ElectronicRegisterAPI.Domain.Interfaces.Services;
+﻿using ElectronicRegisterAPI.Domain.Models;
+
+namespace ElectronicRegisterAPI.Domain.Interfaces.Services;
 
 public interface IStudyPathService
 {
-    Task EnsureValidStudyPathIdAsync(Guid id);
+    Task<StudyPath> EnsureValidStudyPathIdAsync(Guid id);
     void EnsureValidStudyPathName(string? name);
     void EnsureValidStudyPathDescription(string? description);
     Task StudyPathExistsByNameAsync(string name);

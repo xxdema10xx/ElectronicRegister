@@ -1,5 +1,6 @@
 ﻿using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Business.Services
 {
@@ -12,10 +13,11 @@ namespace ElectronicRegisterAPI.Business.Services
             _studyPathRepository = studyPathRepository;
         }
 
-        public async Task EnsureValidStudyPathIdAsync(Guid id)
+        public async Task<StudyPath> EnsureValidStudyPathIdAsync(Guid id)
         {
             var studyPath = await _studyPathRepository.GetByIdAsync(id);
             if (studyPath is null) throw new KeyNotFoundException("Il percorso di studio specificato non esiste.");
+            return studyPath;
         }
 
         public void EnsureValidStudyPathName(string? name)

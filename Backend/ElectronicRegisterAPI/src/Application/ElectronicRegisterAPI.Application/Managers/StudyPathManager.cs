@@ -50,16 +50,13 @@ namespace ElectronicRegisterAPI.Application.Managers
         }
         public async Task<bool> UpdateAsync(Guid id, UpdateStudyPathDto dto)
         {
-            await _studyPathService.EnsureValidStudyPathIdAsync(id);
-            var studyPath = await _studyPathRepository.GetByIdAsync(id);
-            if(studyPath == null) return false;
+            var studyPath = await _studyPathService.EnsureValidStudyPathIdAsync(id);
 
             _studyPathService.EnsureValidStudyPathName(dto.Name);
-
             _studyPathService.EnsureValidStudyPathDescription(dto.Description);
             
-            studyPath.Name = dto.Name ?? studyPath.Name;
-            studyPath.Description = dto.Description ?? studyPath.Description;
+            studyPath.Name = dto.Name;
+            studyPath.Description = dto.Description;
 
             await _studyPathRepository.UpdateAsync(studyPath);
             return true;
