@@ -30,6 +30,7 @@ namespace ElectronicRegisterAPI.Application.Managers
 
         public async Task<StudyAreaDto?> GetByIdAsync(Guid id)
         {
+            await _studyAreaService.EnsureStudyAreaExistsAsync(id);
             var studyArea = await _studyAreaRepository.GetByIdAsync(id);
             return studyArea == null ? null : MapToDto(studyArea);
         }
@@ -57,10 +58,9 @@ namespace ElectronicRegisterAPI.Application.Managers
 
         public async Task<bool> UpdateAsync(Guid id, UpdateStudyAreaDto dto)
         {
-
+            await _studyAreaService.EnsureStudyAreaExistsAsync(id);
             _studyAreaService.EnsureValidStudyAreaName(dto.Name);
             _studyAreaService.EnsureValidStudyAreaDescription(dto.Description);
-            await _studyAreaService.EnsureStudyAreaExistsAsync(id);
             var studyArea = new StudyArea
             {
                 Id = id,

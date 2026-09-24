@@ -2,7 +2,7 @@
 
 public interface IStudyAreaService
 {
-    void EnsureValidStudyAreaName(string name);
-    void EnsureValidStudyAreaDescription(string description);
+    void EnsureValidStudyAreaName(string? name);
+    void EnsureValidStudyAreaDescription(string? description);
     Task EnsureStudyAreaExistsAsync(Guid id);
 }

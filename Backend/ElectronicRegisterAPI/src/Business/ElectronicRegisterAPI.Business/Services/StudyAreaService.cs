@@ -12,7 +12,7 @@ namespace ElectronicRegisterAPI.Business.Services
             _studyAreaRepository = studyAreaRepository;
         }
 
-        public void EnsureValidStudyAreaName(string name)
+        public void EnsureValidStudyAreaName(string? name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -20,11 +20,11 @@ namespace ElectronicRegisterAPI.Business.Services
             }
         }
 
-        public void EnsureValidStudyAreaDescription(string description)
+        public void EnsureValidStudyAreaDescription(string? description)
         {
             if (string.IsNullOrWhiteSpace(description))
             {
-                throw new ArgumentException("La descrizione dell'area di studio non può essere nullo o vuoto.");
+                throw new ArgumentException("La descrizione dell'area di studio non può essere nulla o vuota.");
             }
         }
 
