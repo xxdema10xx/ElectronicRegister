@@ -63,9 +63,7 @@ namespace ElectronicRegisterAPI.Application.Managers
         }
         public async Task<bool> DeleteAsync(Guid id)
         {
-            await _studyPathService.EnsureValidStudyPathIdAsync(id);
-            var studyPath = await _studyPathRepository.GetByIdAsync(id);
-            if(studyPath == null) return false;
+            var studyPath = await _studyPathService.EnsureValidStudyPathIdAsync(id);
             await _studyPathRepository.DeleteAsync(studyPath);
             return true;
         }
