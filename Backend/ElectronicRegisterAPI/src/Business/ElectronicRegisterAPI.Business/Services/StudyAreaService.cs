@@ -1,5 +1,6 @@
 ﻿using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Business.Services
 {
@@ -28,13 +29,29 @@ namespace ElectronicRegisterAPI.Business.Services
             }
         }
 
-        public async Task EnsureStudyAreaExistsAsync(Guid id)
+        public async Task<StudyArea> EnsureStudyAreaExistsAsync(Guid id)
         {
             var studyArea = await _studyAreaRepository.GetByIdAsync(id);
             if (studyArea == null)
             {
                 throw new KeyNotFoundException("L'area di studio specificata non esiste.");
             }
+            return studyArea;
+        }
+
+        public async Task<StudyArea> EnsureStudyAreaCanBeDeletedAsync(Guid id)
+        {
+            var studyArea = await _studyAreaRepository.GetByIdAsync(id);
+            if (studyArea == null)
+            {
+                throw new KeyNotFoundException("L'area di studio specificata non esiste.");
+            }
+            var hasStudyPaths = await _studyAreaRepository.HasStudyPathsAsync(id);
+            if (hasStudyPaths)
+            {
+                throw new InvalidOperationException("L'area di studio non può essere eliminata perché è associata a percorsi di studio.");
+            }
+            return studyArea;
         }
     }
 }

@@ -7,5 +7,6 @@ public interface IStudyPathService
     Task<StudyPath> EnsureValidStudyPathIdAsync(Guid id);
     void EnsureValidStudyPathName(string? name);
     void EnsureValidStudyPathDescription(string? description);
-    Task StudyPathExistsByNameAsync(string name);
+    Task StudyPathAlreadyExistsByNameAsync(string name);
+    Task<StudyPath> EnsureStudyPathCanBeDeletedAsync(Guid id);
 }

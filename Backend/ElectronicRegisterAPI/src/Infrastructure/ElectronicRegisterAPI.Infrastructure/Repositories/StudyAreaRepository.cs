@@ -38,6 +38,11 @@ internal class StudyAreaRepository : IStudyAreaRepository
         return studyArea == null ? null : MapToModel(studyArea);
     }
 
+    public async Task<bool> HasStudyPathsAsync(Guid studyAreaId)
+    {
+        return await _context.BienniumStudyPaths.AnyAsync(x => x.BienniumStudyAreaId == studyAreaId);
+    }
+
     public async Task AddAsync(StudyAreaModel studyArea)
     {
         var studyAreaEntity = new StudyAreaEntity

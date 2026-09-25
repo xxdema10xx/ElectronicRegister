@@ -38,7 +38,9 @@ namespace ElectronicRegisterAPI.Application.Managers
         }
         public async Task<bool> AddAsync(CreateStudyPathDto dto)
         {
-            await _studyPathService.StudyPathExistsByNameAsync(dto.Name);
+            await _studyPathService.StudyPathAlreadyExistsByNameAsync(dto.Name);
+            _studyPathService.EnsureValidStudyPathName(dto.Name);
+            _studyPathService.EnsureValidStudyPathDescription(dto.Description);
             var studyPath = new StudyPath
             {
                 Id = Guid.NewGuid(),
@@ -63,7 +65,7 @@ namespace ElectronicRegisterAPI.Application.Managers
         }
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var studyPath = await _studyPathService.EnsureValidStudyPathIdAsync(id);
+            var studyPath = await _studyPathService.EnsureStudyPathCanBeDeletedAsync(id);
             await _studyPathRepository.DeleteAsync(studyPath);
             return true;
         }

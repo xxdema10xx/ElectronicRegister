@@ -7,6 +7,7 @@ public interface IStudyPathRepository
     Task<StudyPath?> GetByIdAsync(Guid id);
     Task<List<StudyPath>> GetAllAsync();
     Task<StudyPath?> GetByNameAsync(string name);
+    Task<bool> HasClassesAsync(Guid id);
     Task AddAsync(StudyPath studyPath);
     Task UpdateAsync(StudyPath studyPath);
     Task DeleteAsync(StudyPath studyPath);

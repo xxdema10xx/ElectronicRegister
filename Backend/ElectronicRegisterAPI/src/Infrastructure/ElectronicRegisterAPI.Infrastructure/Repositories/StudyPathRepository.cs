@@ -38,6 +38,11 @@ internal class StudyPathRepository : IStudyPathRepository
         return studyPath == null ? null : MapToModel(studyPath);
     }
 
+    public async Task<bool> HasClassesAsync(Guid studyPathId)
+    {
+        return await _context.Classes.AnyAsync(x => x.BienniumStudyPath.StudyPathId == studyPathId);
+    }
+
     public async Task AddAsync(StudyPathModel studyPath)
     {
         var studyPathEntity = new StudyPathEntity

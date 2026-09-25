@@ -35,6 +35,11 @@ internal class BienniumRepository : IBienniumRepository
         return activeBiennia.Select(MapToModel).ToList();
     }
 
+    public async Task<bool> HasStudyAreasAsync(Guid bienniumId)
+    {
+        return await _context.BienniumStudyAreas.AnyAsync(x => x.BienniumId == bienniumId);
+    }
+
     public async Task<BienniumModel?> GetByIdAsync(Guid id)
     {
         var biennium = await _context.Biennia.FirstOrDefaultAsync(b => b.Id == id);

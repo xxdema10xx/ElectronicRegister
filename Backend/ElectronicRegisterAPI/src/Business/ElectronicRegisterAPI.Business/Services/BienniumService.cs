@@ -29,5 +29,13 @@ namespace ElectronicRegisterAPI.Business.Services
             var biennium = await _bienniumRepository.GetByIdAsync(id);
             if (biennium == null) throw new KeyNotFoundException("Il biennio specificato non esiste.");
         }
+
+        public async Task EnsureBienniumCanBeDeletedAsync(Guid bienniumId)
+        {
+            if (await _bienniumRepository.HasStudyAreasAsync(bienniumId))
+            {
+                throw new InvalidOperationException("Impossibile eliminare il biennio: ha aree di studio associate.");
+            }
+        }
     }
 }
