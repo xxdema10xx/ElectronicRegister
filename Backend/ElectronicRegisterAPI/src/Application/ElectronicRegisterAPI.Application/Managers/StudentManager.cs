@@ -64,11 +64,7 @@ namespace ElectronicRegisterAPI.Application.Managers
         }
         public async Task<bool> DeleteAsync(Guid id)
         {
-            await _studentService.EnsureStudentCanBeDeletedAsync(id);
-
-            var student = await _studentRepository.GetByIdAsync(id);
-            if (student is null) return false;
-
+            var student = await _studentService.EnsureStudentCanBeDeletedAsync(id);
             await _studentRepository.DeleteAsync(student);
             return true;
         }
