@@ -7,13 +7,13 @@ export async function getExams(search, token) {
   return res.data;
 }
 
-export async function createExam({ name, subjectId, date }, token) {
-  const res = await axiosClient.post("/Exam", { name, subjectId, date }, { headers: authHeader(token) });
+export async function createExam({ name, subjectId, date, isRetake = false }, token) {
+  const res = await axiosClient.post("/Exam", { name, subjectId, date, isRetake }, { headers: authHeader(token) });
   return res.data;
 }
 
-export async function updateExam(id, { name, subjectId, date }, token) {
-  const res = await axiosClient.put(`/Exam/update/${id}`, { name, subjectId, date }, { headers: authHeader(token) });
+export async function updateExam(id, { name, subjectId, date, isRetake = false }, token) {
+  const res = await axiosClient.put(`/Exam/update/${id}`, { name, subjectId, date, isRetake }, { headers: authHeader(token) });
   return res.data;
 }
 

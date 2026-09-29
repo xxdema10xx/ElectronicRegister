@@ -1,6 +1,6 @@
 // src/api/axiosClient.js
 import axios from "axios";
-import { API_BASE } from "../config";
+import { API_BASE } from "../appConfig";
 
 const axiosClient = axios.create({
   baseURL: API_BASE,

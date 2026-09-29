@@ -12,6 +12,7 @@ import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
 import SectionHeader from "../components/SectionHeader";
 import FormModal from "../components/FormModal";
+import { filterBySearch } from "../utils/search";
 import { getUsers, registerUser, updateUser, deleteUser } from "../api/userService";
 
 const ROLES = ["student", "teacher", "admin"];
@@ -21,6 +22,7 @@ export default function UsersScreen() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const visibleUsers = filterBySearch(users, search, x => [x.email, x.userName, x.firstName, x.lastName]);
   const [showRegister, setShowRegister] = useState(false);
   const [showEdit, setShowEdit] = useState(null);
   const [form, setForm] = useState({ email: "", password: "", role: "student", firstName: "", lastName: "" });
@@ -28,11 +30,11 @@ export default function UsersScreen() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getUsers(search, token);
+      const data = await getUsers("", token);
       setUsers(Array.isArray(data) ? data : []);
     } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setUsers([]); }
     finally { setLoading(false); }
-  }, [token, search]);
+  }, [token]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -69,9 +71,9 @@ export default function UsersScreen() {
         <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per nome…"
           placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
       </View>
-      {loading ? <Loader /> : users.length === 0 ? <EmptyState message="Nessun utente trovato" /> :
+      {loading ? <Loader /> : visibleUsers.length === 0 ? <EmptyState message="Nessun utente trovato" /> :
         <FlatList
-          data={users}
+          data={visibleUsers}
           keyExtractor={u => u.id}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
           renderItem={({ item: u }) => (

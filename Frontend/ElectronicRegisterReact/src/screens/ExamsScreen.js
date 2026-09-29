@@ -13,6 +13,10 @@ import SectionHeader from "../components/SectionHeader";
 import SelectField from "../components/SelectField";
 import DateField from "../components/DateField";
 import FormModal from "../components/FormModal";
+import ExamTests from "../components/ExamTests";
+import CheckboxField from "../components/CheckboxField";
+import { filterBySearch } from "../utils/search";
+import { DEMO_EXAMS } from "../data/examsMock";
 import { getExams, createExam, updateExam, deleteExam } from "../api/examService";
 import { getSubjects } from "../api/subjectService";
 
@@ -23,33 +27,35 @@ export default function ExamsScreen() {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const visibleExams = filterBySearch(exams, search, e => [e.name, e.subjectName]);
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(null);
-  const [form, setForm] = useState({ name: "", subjectId: "", date: ""});
+  const [form, setForm] = useState({ name: "", subjectId: "", date: "", isRetake: false });
 
   const load = useCallback(async () => {
       setLoading(true);
       try {
-        const data = await getExams(search, token);
-        setExams(Array.isArray(data) ? data : data ? [data] : []);
+        const data = await getExams("", token);
+        const list = Array.isArray(data) ? data : data ? [data] : [];
+        setExams(list.length === 0 ? DEMO_EXAMS : list);
         const te = await getSubjects(token);
         setSubjects(Array.isArray(te) ? te : []);
-      } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setExams([]); }
+      } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setExams(DEMO_EXAMS); }
       finally { setLoading(false); }
-    }, [token, search]);
+    }, [token]);
 
     useEffect(() => { load(); }, [load]);
     
       async function add() {
         try {
           await createExam(form, token);
-          setShowAdd(false); setForm({ name: "", subjectId: "", date: "" }); load();
+          setShowAdd(false); setForm({ name: "", subjectId: "", date: "", isRetake: false }); load();
         } catch (e) { Alert.alert("Errore", e.message); }
       }
     
       async function save() {
         try {
-          await updateExam(showEdit.id, { name: showEdit.name, subjectId: showEdit.subjectId, date: showEdit.date }, token);
+          await updateExam(showEdit.id, { name: showEdit.name, subjectId: showEdit.subjectId, date: showEdit.date, isRetake: !!showEdit.isRetake }, token);
           setShowEdit(null); load();
         } catch (e) { Alert.alert("Errore", e.message); }
       }
@@ -75,25 +81,28 @@ export default function ExamsScreen() {
               <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per nome…"
                 placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
             </View>
-            {loading ? <Loader /> : exams.length === 0 ? <EmptyState message="Nessun esame trovato" /> :
+            {loading ? <Loader /> : visibleExams.length === 0 ? <EmptyState message="Nessun esame trovato" /> :
               <FlatList
-                data={exams}
+                data={visibleExams}
                 keyExtractor={exam => exam.id}
                 contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
                 renderItem={({ item: exam }) => (
-                  <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+                  <Card style={{ marginBottom: 10 }}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <View style={[s.avatar, { backgroundColor: "#FDE68A" }]}><Text style={[s.avatarText, { color: "#92400E" }]}><Ionicons name="book-outline" size={24} /></Text></View>
                     <View style={{ flex: 1, marginLeft: 12 }}>
-                      <Text style={s.itemTitle}>{exam.name}</Text>
+                      <Text style={s.itemTitle}>{exam.name}{exam.demo ? "  (solo prova)" : ""}{exam.isRetake ? "  · Recupero" : ""}</Text>
                       {exam.subjectName && <Text style={s.itemSub}> <Ionicons name="book-outline" size={16} color={C.text} /> {exam.subjectName}</Text>}
                        {exam.date && <Text style={s.itemSub}> <Ionicons name="calendar-outline" size={16} color={C.text} /> {" "}{exam.date}</Text>}
                     </View>
-                    {(role === "admin" || role === "teacher") && (
+                    {(role === "admin" || role === "teacher") && !exam.demo && (
                       <View style={{ flexDirection: "row", gap: 8 }}>
                         <TouchableOpacity onPress={() => setShowEdit({ ...exam })}><Ionicons name="create-outline" size={32} color={C.footer} /></TouchableOpacity>
                         <TouchableOpacity onPress={() => remove(exam.id)}><Ionicons name="trash-outline" size={32} color={C.footer} /></TouchableOpacity>
                       </View>
                     )}
+                    </View>
+                    <ExamTests exam={exam} token={token} canWrite={role === "admin" || role === "teacher"} />
                   </Card>
                 )}
               />
@@ -110,6 +119,7 @@ export default function ExamsScreen() {
                 emptyMessage="Nessuna materia disponibile"
               />
               <DateField label="Data" value={form.date} onChange={(v) => setForm(f => ({ ...f, date: v }))} />
+              <CheckboxField label="Esame di recupero" value={form.isRetake} onChange={(v) => setForm(f => ({ ...f, isRetake: v }))} />
               <Btn label="Crea" onPress={add} />
             </FormModal>
             <FormModal visible={!!showEdit} title="Modifica esame" onClose={() => setShowEdit(null)}>
@@ -125,6 +135,7 @@ export default function ExamsScreen() {
                   emptyMessage="Nessuna materia disponibile"
                 />
                 <DateField label="Data" value={showEdit.date} onChange={(v) => setShowEdit(f => ({ ...f, date: v }))} />
+                <CheckboxField label="Esame di recupero" value={!!showEdit.isRetake} onChange={(v) => setShowEdit(f => ({ ...f, isRetake: v }))} />
                 <Btn label="Aggiorna" onPress={save} />
               </>}
             </FormModal>

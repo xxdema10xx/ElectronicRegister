@@ -1,6 +1,6 @@
 // src/hooks/useMicrosoftLogin.js
 import * as AuthSession from "expo-auth-session";
-import { MS_CLIENT_ID, MS_REDIRECT, msDiscovery } from "../config";
+import { MS_CLIENT_ID, MS_REDIRECT, msDiscovery } from "../appConfig";
 
 // Incapsula la richiesta OAuth verso Microsoft Entra ID: espone `request`,
 // `response` e `promptAsync` come lo useAuthRequest di expo-auth-session,

@@ -12,6 +12,7 @@ import EmptyState from "../components/EmptyState";
 import SectionHeader from "../components/SectionHeader";
 import SelectField from "../components/SelectField";
 import FormModal from "../components/FormModal";
+import { filterBySearch } from "../utils/search";
 import { getSubjects, createSubject, updateSubject, deleteSubject } from "../api/subjectService";
 import { getTeachers } from "../api/teacherService";
 
@@ -22,6 +23,7 @@ export default function SubjectsScreen() {
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const visibleSubjects = filterBySearch(subjects, search, x => [x.name, x.teacherName]);
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(null);
   const [form, setForm] = useState({ name: "", teacherId: "" });
@@ -29,13 +31,13 @@ export default function SubjectsScreen() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getSubjects(search, token);
+      const data = await getSubjects("", token);
       setSubjects(Array.isArray(data) ? data : data ? [data] : []);
       const te = await getTeachers(token);
       setTeachers(Array.isArray(te) ? te : []);
     } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setSubjects([]); }
     finally { setLoading(false); }
-  }, [token, search]);
+  }, [token]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -74,9 +76,9 @@ export default function SubjectsScreen() {
         <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per nome…"
           placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
       </View>
-      {loading ? <Loader /> : subjects.length === 0 ? <EmptyState message="Nessuna materia trovata" /> :
+      {loading ? <Loader /> : visibleSubjects.length === 0 ? <EmptyState message="Nessuna materia trovata" /> :
         <FlatList
-          data={subjects}
+          data={visibleSubjects}
           keyExtractor={sub => sub.id}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
           renderItem={({ item: sub }) => (

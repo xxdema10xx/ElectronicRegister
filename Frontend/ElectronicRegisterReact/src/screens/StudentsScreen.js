@@ -11,6 +11,7 @@ import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
 import SectionHeader from "../components/SectionHeader";
 import FormModal from "../components/FormModal";
+import { filterBySearch } from "../utils/search";
 import { getStudents, updateStudent, deleteStudent } from "../api/studentService";
 
 export default function StudentsScreen() {
@@ -19,16 +20,17 @@ export default function StudentsScreen() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const visibleStudents = filterBySearch(students, search, x => [x.firstName, x.lastName, x.email]);
   const [showEdit, setShowEdit] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getStudents(search, token);
+      const data = await getStudents("", token);
       setStudents(Array.isArray(data) ? data : []);
     } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setStudents([]); }
     finally { setLoading(false); }
-  }, [token, search]);
+  }, [token]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -56,9 +58,9 @@ export default function StudentsScreen() {
         <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per cognome…"
           placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
       </View>
-      {loading ? <Loader /> : students.length === 0 ? <EmptyState message="Nessuno studente trovato" /> :
+      {loading ? <Loader /> : visibleStudents.length === 0 ? <EmptyState message="Nessuno studente trovato" /> :
         <FlatList
-          data={students}
+          data={visibleStudents}
           keyExtractor={st => st.id}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
           renderItem={({ item: st }) => (
