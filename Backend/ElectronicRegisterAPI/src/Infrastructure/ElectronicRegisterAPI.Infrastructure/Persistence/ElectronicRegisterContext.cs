@@ -51,12 +51,8 @@ public partial class ElectronicRegisterContext : DbContext
             entity.HasIndex(e => new { e.StartYear, e.EndYear }, "uq_biennium").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.EndYear)
-                .HasColumnType("int(11)")
-                .HasColumnName("end_year");
-            entity.Property(e => e.StartYear)
-                .HasColumnType("int(11)")
-                .HasColumnName("start_year");
+            entity.Property(e => e.EndYear).HasColumnName("end_year");
+            entity.Property(e => e.StartYear).HasColumnName("start_year");
         });
 
         modelBuilder.Entity<BienniumStudyArea>(entity =>

@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace ElectronicRegisterAPI.Domain.Models;
 
-namespace ElectronicRegisterAPI.Domain.Models;
 public class Biennium
 {
-    public Guid Id;
-    public int StartYear;
-    public int EndYear;
-    public bool IsActive;
+    public Guid Id { get; set; }
+
+    public DateOnly StartYear { get; set; }
+
+    public DateOnly EndYear { get; set; }
+
+    public bool IsActive =>
+        DateOnly.FromDateTime(DateTime.Today) >= StartYear &&
+        DateOnly.FromDateTime(DateTime.Today) <= EndYear;
 }

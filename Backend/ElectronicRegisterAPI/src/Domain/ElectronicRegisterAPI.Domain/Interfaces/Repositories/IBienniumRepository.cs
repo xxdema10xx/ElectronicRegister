@@ -5,7 +5,6 @@ public interface IBienniumRepository
 {
     Task<int> CountAsync();
     Task<List<Biennium>> GetAllAsync();
-    Task<List<Biennium>> GetActiveBienniaAsync();
     Task<bool> HasStudyAreasAsync(Guid bienniumId);
     Task<Biennium?> GetByIdAsync(Guid bienniumId);
     Task<Biennium?> GetBienniumByStartYearAsync(int startYear);

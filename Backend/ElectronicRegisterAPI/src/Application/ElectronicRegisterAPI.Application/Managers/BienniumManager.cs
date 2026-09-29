@@ -29,12 +29,6 @@ namespace ElectronicRegisterAPI.Application.Managers
             return MapToDtos(biennia);
         }
 
-        public async Task<List<BienniumDto>> GetActiveBienniaAsync()
-        {
-            var activeBiennia = await _bienniumRepository.GetActiveBienniaAsync();
-            return MapToDtos(activeBiennia);
-        }
-
         public async Task<BienniumDto?> GetByIdAsync(Guid id)
         {
             var biennium = await _bienniumRepository.GetByIdAsync(id);

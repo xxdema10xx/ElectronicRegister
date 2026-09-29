@@ -13,13 +13,13 @@ namespace ElectronicRegisterAPI.Business.Services
             _bienniumRepository = bienniumRepository;
         }
 
-        public void EnsureValidBienniumValue(int startYear, int endYear)
+        public void EnsureValidBienniumValue(DateOnly startYear, DateOnly endYear)
         {
-            if (startYear < minYear || endYear < minYear || startYear >= endYear)
+            if (startYear.Year < minYear || endYear.Year < minYear || startYear >= endYear)
             {
                 throw new ArgumentException($"L'anno di inizio e di fine devono essere maggiori o uguali a {minYear}.");
             }
-            if (endYear - startYear != 2)
+            if (endYear.Year - startYear.Year != 2)
             {
                 throw new ArgumentException($"L'anno di fine deve essere esattamente due anni dopo {startYear}.");
             }

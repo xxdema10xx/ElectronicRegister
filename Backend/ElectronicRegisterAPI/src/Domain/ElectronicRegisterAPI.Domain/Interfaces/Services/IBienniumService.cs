@@ -2,7 +2,7 @@
 
 public interface IBienniumService
 {
-    void EnsureValidBienniumValue(int startYear, int endYear);
+    void EnsureValidBienniumValue(DateOnly startYear, DateOnly endYear);
     Task EnsureBienniumExistsAsync(Guid id);
     Task EnsureBienniumCanBeDeletedAsync(Guid bienniumId);
 }

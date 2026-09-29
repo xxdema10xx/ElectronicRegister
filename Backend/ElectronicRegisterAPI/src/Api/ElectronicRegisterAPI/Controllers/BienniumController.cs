@@ -1,4 +1,5 @@
-﻿using ElectronicRegisterAPI.Domain.DTOs;
+﻿using ElectronicRegisterAPI.Api.Controllers;
+using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,13 +9,15 @@ namespace ElectronicRegisterAPI.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class BienniumController : ControllerBase
+    public class BienniumController : ApiControllerBase
     {
         private readonly IBienniumManager _bienniumManager;
+        private readonly ISubjectManager _subjectManager;
 
-        public BienniumController(IBienniumManager bienniumManager)
+        public BienniumController(IBienniumManager bienniumManager, ISubjectManager subjectManager)
         {
             _bienniumManager = bienniumManager;
+            _subjectManager = subjectManager;
         }
 
         [HttpGet("count")]
@@ -32,13 +35,13 @@ namespace ElectronicRegisterAPI.Controllers
             return subjects.Count == 0 ? NotFound() : Ok(subjects);
         }
 
-        [HttpGet("active")]
-        [Authorize(Roles = "admin")]
-        public async Task<ActionResult<List<SubjectDto>>> GetActiveBiennia()
-        {
-            var subjects = await _bienniumManager.GetActiveBienniaAsync();
-            return subjects.Count == 0 ? NotFound() : Ok(subjects);
-        }
+        //[HttpGet("active")]
+        //[Authorize(Roles = "admin")]
+        //public async Task<ActionResult<List<SubjectDto>>> GetActiveBiennia()
+        //{
+        //    var subjects = await _bienniumManager.GetActiveBienniaAsync();
+        //    return subjects.Count == 0 ? NotFound() : Ok(subjects);
+        //}
 
         [HttpGet("{id}")]
         [Authorize(Roles = "admin")]
@@ -52,7 +55,7 @@ namespace ElectronicRegisterAPI.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult<SubjectDto>> GetSubjectByName(string name)
         {
-            var subject = await _bienniumManager.GetSubjectByNameAsync(name);
+            var subject = await _subjectManager.GetSubjectByNameAsync(name, CurrentCaller());
             return subject is null ? NotFound() : Ok(subject);
         }
 
@@ -60,7 +63,7 @@ namespace ElectronicRegisterAPI.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult<List<SubjectDto>>> GetSubjectByTeacherId(Guid id)
         {
-            var subjects = await _bienniumManager.GetSubjectsByTeacherIdAsync(id, CurrentCaller());
+            var subjects = await _subjectManager.GetSubjectsByTeacherIdAsync(id, CurrentCaller());
             return subjects.Count == 0 ? NotFound() : Ok(subjects);
         }
 
