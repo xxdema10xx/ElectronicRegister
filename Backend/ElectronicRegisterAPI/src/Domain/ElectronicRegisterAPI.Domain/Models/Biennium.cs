@@ -8,4 +8,5 @@ public class Biennium
     public Guid Id;
     public int StartYear;
     public int EndYear;
+    public bool IsActive;
 }

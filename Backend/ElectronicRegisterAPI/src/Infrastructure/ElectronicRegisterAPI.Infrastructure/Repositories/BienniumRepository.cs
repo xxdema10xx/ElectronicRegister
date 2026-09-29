@@ -93,7 +93,8 @@ internal class BienniumRepository : IBienniumRepository
         {
             Id = biennium.Id,
             StartYear = biennium.StartYear,
-            EndYear = biennium.EndYear
+            EndYear = biennium.EndYear,
+            IsActive = //implementare la logica di controllo del biennium attivo
         };
     }
 
