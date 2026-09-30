@@ -5,7 +5,7 @@ using System.Text;
 namespace ElectronicRegisterAPI.Domain.Models;
 public class ItsClass
 {
-    public Guid Id;
-    public Guid BienniumStudyPathId;
-    public required string Name;
+    public Guid Id { get; set; }
+    public Guid BienniumStudyPathId { get; set; }
+    public required string Name { get; set; }
 }
