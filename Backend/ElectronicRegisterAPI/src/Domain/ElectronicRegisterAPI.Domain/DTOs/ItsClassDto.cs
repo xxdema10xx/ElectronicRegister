@@ -5,6 +5,5 @@
         public Guid Id { get; set; }
         public required string Name { get; set; }
         public Guid BienniumStudyPathId { get; set; }
-        public required string BienniumStudyPathName { get; set; }
     }
 }

@@ -23,6 +23,7 @@ public partial class ElectronicRegisterContext : DbContext
     public virtual DbSet<ClassSubject> ClassSubjects { get; set; }
 
     public virtual DbSet<Grade> Grades { get; set; }
+    public virtual DbSet<Exam> Exams { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
 
