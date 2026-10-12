@@ -1,13 +1,16 @@
 // src/components/FormModal.js
 import { KeyboardAvoidingView, Modal, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { s } from "../constants/theme";
+import { useLayout } from "../hooks/useLayout";
 
-export default function FormModal({ visible, title, onClose, children }) {
+// `wide`: modale più larga (form a due colonne) sugli schermi larghi
+export default function FormModal({ visible, title, onClose, children, wide }) {
+  const { isDesktop } = useLayout();
   return (
     <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
         <View style={s.formModalOverlay}>
-          <View style={s.formModalCard}>
+          <View style={[s.formModalCard, wide && isDesktop && { maxWidth: 680 }]}>
             <View style={s.modalHeader}>
               <Text style={s.modalTitle}>{title}</Text>
               <TouchableOpacity onPress={onClose}><Text style={s.modalClose}>✕</Text></TouchableOpacity>

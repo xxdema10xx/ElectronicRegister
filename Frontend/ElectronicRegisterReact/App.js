@@ -1,4 +1,5 @@
 // App.js
+import "./src/utils/webAlert";
 import { useState } from "react";
 import { ActivityIndicator, Alert, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";

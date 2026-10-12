@@ -14,6 +14,8 @@ import SelectField from "../components/SelectField";
 import DateField from "../components/DateField";
 import FormModal from "../components/FormModal";
 import ExamTests from "../components/ExamTests";
+import ExamForm from "../components/ExamForm";
+import { useLayout } from "../hooks/useLayout";
 import CheckboxField from "../components/CheckboxField";
 import { filterBySearch } from "../utils/search";
 import { DEMO_EXAMS } from "../data/examsMock";
@@ -23,6 +25,7 @@ import { getSubjects } from "../api/subjectService";
 export default function ExamsScreen() {
   const { token, user } = useAuth();
   const role = user?.role?.toLowerCase();
+  const { isDesktop } = useLayout();
   const [exams, setExams] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,11 +78,21 @@ export default function ExamsScreen() {
       return (
           <View style={{ flex: 1, backgroundColor: C.bg }}>
             <View style={s.screenPad}>
-              <SectionHeader title="Esami" action={
-                (role === "admin" || role === "teacher") && <Btn label="+ Esame" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
-              } />
-              <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per nome…"
-                placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
+              {isDesktop ? (
+                // Web: ricerca e "+ Esame" sulla stessa riga (il titolo è già nella barra in alto)
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginTop: 8, marginBottom: 12 }}>
+                  <TextInput style={[s.input, { flex: 1 }]} placeholder="Cerca per nome…"
+                    placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
+                  {(role === "admin" || role === "teacher") &&
+                    <Btn label="Crea esame" onPress={() => setShowAdd(true)} style={{ height: 48, paddingHorizontal: 24 }} />}
+                </View>
+              ) : (<>
+                <SectionHeader title="Esami" action={
+                  (role === "admin" || role === "teacher") && <Btn label="Crea esame" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
+                } />
+                <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per nome…"
+                  placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
+              </>)}
             </View>
             {loading ? <Loader /> : visibleExams.length === 0 ? <EmptyState message="Nessun esame trovato" /> :
               <FlatList
@@ -107,37 +120,11 @@ export default function ExamsScreen() {
                 )}
               />
             }
-            <FormModal visible={showAdd} title="Aggiungi esame" onClose={() => setShowAdd(false)}>
-              <Input label="Nome esame" value={form.name} onChangeText={v => setForm(f => ({ ...f, name: v }))} />
-              <SelectField
-                label="Materia"
-                value={form.subjectId}
-                options={subjects}
-                getLabel={(t) => `${t.name}`}
-                onSelect={(v) => setForm(f => ({ ...f, subjectId: v }))}
-                placeholder="Seleziona materia"
-                emptyMessage="Nessuna materia disponibile"
-              />
-              <DateField label="Data" value={form.date} onChange={(v) => setForm(f => ({ ...f, date: v }))} />
-              <CheckboxField label="Esame di recupero" value={form.isRetake} onChange={(v) => setForm(f => ({ ...f, isRetake: v }))} />
-              <Btn label="Crea" onPress={add} />
+            <FormModal wide visible={showAdd} title="Nuovo esame" onClose={() => setShowAdd(false)}>
+              <ExamForm value={form} onChange={setForm} subjects={subjects} onSubmit={add} onCancel={() => setShowAdd(false)} submitLabel="Crea esame" />
             </FormModal>
-            <FormModal visible={!!showEdit} title="Modifica esame" onClose={() => setShowEdit(null)}>
-              {showEdit && <>
-                <Input label="Nome" value={showEdit.name} onChangeText={v => setShowEdit(f => ({ ...f, name: v }))} />
-                <SelectField
-                  label="Materia"
-                  value={showEdit.subjectId}
-                  options={subjects}
-                  getLabel={(t) => `${t.name}`}
-                  onSelect={(v) => setShowEdit(f => ({ ...f, subjectId: v }))}
-                  placeholder="Seleziona materia"
-                  emptyMessage="Nessuna materia disponibile"
-                />
-                <DateField label="Data" value={showEdit.date} onChange={(v) => setShowEdit(f => ({ ...f, date: v }))} />
-                <CheckboxField label="Esame di recupero" value={!!showEdit.isRetake} onChange={(v) => setShowEdit(f => ({ ...f, isRetake: v }))} />
-                <Btn label="Aggiorna" onPress={save} />
-              </>}
+            <FormModal wide visible={!!showEdit} title="Modifica esame" onClose={() => setShowEdit(null)}>
+              {showEdit && <ExamForm value={showEdit} onChange={setShowEdit} subjects={subjects} onSubmit={save} onCancel={() => setShowEdit(null)} submitLabel="Aggiorna" />}
             </FormModal>
           </View>
         );

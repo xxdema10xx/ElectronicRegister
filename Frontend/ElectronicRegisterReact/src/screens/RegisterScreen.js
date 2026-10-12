@@ -6,10 +6,12 @@ import Card from "../components/Card";
 import Input from "../components/Input";
 import Btn from "../components/Btn";
 import { register } from "../api/authService";
+import { useLayout } from "../hooks/useLayout";
 
 export default function RegisterScreen({ onBack }) {
   const [form, setForm] = useState({ email: "", password: "", firstName: "", lastName: "" });
   const [loading, setLoading] = useState(false);
+  const { isDesktop } = useLayout();
 
   function set(k, v) { setForm(f => ({ ...f, [k]: v })); }
 
@@ -29,7 +31,7 @@ export default function RegisterScreen({ onBack }) {
         <Image source={require("../../assets/images/logoits.png")} style={{ width: 150, height: 100 }} />
         <Text style={s.authTitle}>Electronic Register</Text>
       </View>
-      <ScrollView contentContainerStyle={s.authBody}>
+      <ScrollView contentContainerStyle={[s.authBody, isDesktop && s.authBodyDesktop]}>
         <Card>
           <Text style={s.cardTitle}>Crea account</Text>
           <Input label="Nome" value={form.firstName} onChangeText={v => set("firstName", v)} placeholder="Mario" />

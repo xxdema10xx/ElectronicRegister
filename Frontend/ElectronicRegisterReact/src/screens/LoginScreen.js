@@ -8,6 +8,7 @@ import Input from "../components/Input";
 import Btn from "../components/Btn";
 import { login, loginWithMicrosoft } from "../api/authService";
 import { useMicrosoftLogin } from "../hooks/useMicrosoftLogin";
+import { useLayout } from "../hooks/useLayout";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -17,6 +18,7 @@ export default function LoginScreen({ onLogin, goRegister }) {
   const [loading, setLoading] = useState(false);
   const [msLoading, setMsLoading] = useState(false);
 
+  const { isDesktop } = useLayout();
   const { request, response, promptAsync, exchangeCode } = useMicrosoftLogin();
 
   useEffect(() => {
@@ -67,7 +69,7 @@ export default function LoginScreen({ onLogin, goRegister }) {
         <Text style={s.authTitle}>Electronic Register</Text>
         <Text style={s.authSubtitle}>ITS Umbria</Text>
       </View>
-      <View style={s.authBody}>
+      <View style={[s.authBody, isDesktop && s.authBodyDesktop]}>
         <Card>
           <Text style={s.cardTitle}>Accedi</Text>
           <Input label="Email" value={email} onChangeText={setEmail} keyboardType="email-address"

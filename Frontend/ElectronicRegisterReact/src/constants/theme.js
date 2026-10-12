@@ -32,6 +32,7 @@ export const s = StyleSheet.create({
   authTitle: { fontSize: 26, fontWeight: "800", color: C.white },
   authSubtitle: { fontSize: 14, color: "rgba(255,255,255,0.7)", marginTop: 4 },
   authBody: { backgroundColor: C.bg, borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 24, flexGrow: 1 },
+  authBodyDesktop: { borderRadius: 28, alignSelf: "center", width: "100%", maxWidth: 480, flexGrow: 0, marginBottom: 40 },
   // Card
   card: { backgroundColor: C.card, borderRadius: 14, padding: 16, shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 }, elevation: 3 },
   cardTitle: { fontSize: 18, fontWeight: "700", color: C.text, marginBottom: 16 },

@@ -15,7 +15,7 @@ axiosClient.interceptors.response.use(
   (error) => {
     const data = error.response?.data;
     const message =
-      typeof data === "string" ? data :
+      (typeof data === "string" && data) ? data :
       data?.message ? data.message :
       error.message || "Errore di rete";
     return Promise.reject(new Error(message));

@@ -11,6 +11,7 @@ import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
 import SectionHeader from "../components/SectionHeader";
 import FormModal from "../components/FormModal";
+import StudentGrades from "../components/StudentGrades";
 import { filterBySearch } from "../utils/search";
 import { getStudents, updateStudent, deleteStudent } from "../api/studentService";
 
@@ -22,6 +23,7 @@ export default function StudentsScreen() {
   const [search, setSearch] = useState("");
   const visibleStudents = filterBySearch(students, search, x => [x.firstName, x.lastName, x.email]);
   const [showEdit, setShowEdit] = useState(null);
+  const [gradesOf, setGradesOf] = useState(null); // studente di cui si vedono i voti (solo admin)
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -64,10 +66,12 @@ export default function StudentsScreen() {
           keyExtractor={st => st.id}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
           renderItem={({ item: st }) => (
+            <TouchableOpacity activeOpacity={role === "admin" ? 0.7 : 1} onPress={() => role === "admin" && setGradesOf(st)}>
             <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
               <View style={s.avatar}><Text style={s.avatarText}>{st.firstName[0]}{st.lastName[0]}</Text></View>
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>{st.firstName} {st.lastName}</Text>
+                {role === "admin" && <Text style={s.itemSub}>Clicca per vedere i voti</Text>}
               </View>
               {role === "admin" && (
                 <View style={{ flexDirection: "row", gap: 8 }}>
@@ -76,9 +80,11 @@ export default function StudentsScreen() {
                 </View>
               )}
             </Card>
+            </TouchableOpacity>
           )}
         />
       }
+      <StudentGrades student={gradesOf} token={token} onClose={() => setGradesOf(null)} />
       <FormModal visible={!!showEdit} title="Modifica studente" onClose={() => setShowEdit(null)}>
         {showEdit && <>
           <Input label="Nome" value={showEdit.firstName} onChangeText={v => setShowEdit(f => ({ ...f, firstName: v }))} />

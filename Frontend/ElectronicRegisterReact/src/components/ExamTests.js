@@ -103,7 +103,7 @@ export default function ExamTests({ exam, token, canWrite }) {
           <Ionicons name={expanded ? "chevron-down" : "chevron-forward"} size={20} color={C.text} />
           <Text style={{ color: C.text, fontWeight: "600" }}>Test{expanded && !loading ? ` (${tests.length})` : ""}</Text>
         </TouchableOpacity>
-        {canWrite && <Btn label="+ Test" onPress={newTest} style={s.smBtn} textStyle={s.smBtnText} />}
+        {canWrite && <Btn label="Crea test" onPress={newTest} style={s.smBtn} textStyle={s.smBtnText} />}
       </View>
 
       {draft && !editing && (
