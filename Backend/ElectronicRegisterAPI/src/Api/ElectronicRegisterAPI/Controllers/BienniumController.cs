@@ -35,13 +35,21 @@ namespace ElectronicRegisterAPI.Controllers
             return subjects.Count == 0 ? NotFound() : Ok(subjects);
         }
 
-        //[HttpGet("active")]
-        //[Authorize(Roles = "admin")]
-        //public async Task<ActionResult<List<SubjectDto>>> GetActiveBiennia()
-        //{
-        //    var subjects = await _bienniumManager.GetActiveBienniaAsync();
-        //    return subjects.Count == 0 ? NotFound() : Ok(subjects);
-        //}
+        [HttpGet("active")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<List<SubjectDto>>> GetActiveBiennia()
+        {
+            var subjects = await _bienniumManager.GetActiveBienniaAsync();
+            return subjects.Count == 0 ? NotFound() : Ok(subjects);
+        }
+
+        [HttpGet("inactive")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<List<SubjectDto>>> GetInactiveBiennia()
+        {
+            var subjects = await _bienniumManager.GetInactiveBienniaAsync();
+            return subjects.Count == 0 ? NotFound() : Ok(subjects);
+        }
 
         [HttpGet("{id}")]
         [Authorize(Roles = "admin")]

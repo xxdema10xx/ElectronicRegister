@@ -15,6 +15,8 @@ public partial class ClassSubject
 
     public virtual Class Class { get; set; } = null!;
 
+    public virtual ICollection<Exam> Exams { get; set; } = new List<Exam>();
+
     public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
 
     public virtual Subject Subject { get; set; } = null!;

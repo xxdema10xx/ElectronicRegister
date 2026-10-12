@@ -12,6 +12,8 @@ public partial class ElectronicRegisterContext : DbContext
     {
     }
 
+    public virtual DbSet<AuditEvent> AuditEvents { get; set; }
+
     public virtual DbSet<Biennium> Biennia { get; set; }
 
     public virtual DbSet<BienniumStudyArea> BienniumStudyAreas { get; set; }
@@ -22,7 +24,19 @@ public partial class ElectronicRegisterContext : DbContext
 
     public virtual DbSet<ClassSubject> ClassSubjects { get; set; }
 
+    public virtual DbSet<Exam> Exams { get; set; }
+
+    public virtual DbSet<ExamStudent> ExamStudents { get; set; }
+
+    public virtual DbSet<ExamSubmission> ExamSubmissions { get; set; }
+
+    public virtual DbSet<ExamViolation> ExamViolations { get; set; }
+
     public virtual DbSet<Grade> Grades { get; set; }
+
+    public virtual DbSet<Question> Questions { get; set; }
+
+    public virtual DbSet<QuestionOption> QuestionOptions { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
 
@@ -31,6 +45,8 @@ public partial class ElectronicRegisterContext : DbContext
     public virtual DbSet<StudyPath> StudyPaths { get; set; }
 
     public virtual DbSet<Subject> Subjects { get; set; }
+
+    public virtual DbSet<SubmissionAnswer> SubmissionAnswers { get; set; }
 
     public virtual DbSet<Teacher> Teachers { get; set; }
 
@@ -41,6 +57,41 @@ public partial class ElectronicRegisterContext : DbContext
         modelBuilder
             .UseCollation("utf8mb4_unicode_ci")
             .HasCharSet("utf8mb4");
+
+        modelBuilder.Entity<AuditEvent>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("audit_event");
+
+            entity.HasIndex(e => new { e.ActorUserId, e.CreatedAt }, "idx_audit_actor");
+
+            entity.HasIndex(e => new { e.EntityType, e.EntityId, e.CreatedAt }, "idx_audit_entity");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Action)
+                .HasMaxLength(100)
+                .HasColumnName("action");
+            entity.Property(e => e.ActorUserId).HasColumnName("actor_user_id");
+            entity.Property(e => e.AfterJson).HasColumnName("after_json");
+            entity.Property(e => e.BeforeJson).HasColumnName("before_json");
+            entity.Property(e => e.CreatedAt)
+                .HasMaxLength(6)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("created_at");
+            entity.Property(e => e.EntityId).HasColumnName("entity_id");
+            entity.Property(e => e.EntityType)
+                .HasMaxLength(100)
+                .HasColumnName("entity_type");
+            entity.Property(e => e.RequestId)
+                .HasMaxLength(100)
+                .HasColumnName("request_id");
+
+            entity.HasOne(d => d.ActorUser).WithMany(p => p.AuditEvents)
+                .HasForeignKey(d => d.ActorUserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("fk_audit_actor");
+        });
 
         modelBuilder.Entity<Biennium>(entity =>
         {
@@ -157,6 +208,232 @@ public partial class ElectronicRegisterContext : DbContext
                 .HasConstraintName("fk_cs_teacher");
         });
 
+        modelBuilder.Entity<Exam>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("exam");
+
+            entity.HasIndex(e => e.ClassSubjectId, "idx_exam_class_subject");
+
+            entity.HasIndex(e => e.RetakeOfExamId, "idx_exam_retake_of");
+
+            entity.HasIndex(e => new { e.Status, e.AvailableFrom, e.AvailableUntil }, "idx_exam_status_window");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AvailableFrom)
+                .HasMaxLength(6)
+                .HasColumnName("available_from");
+            entity.Property(e => e.AvailableUntil)
+                .HasMaxLength(6)
+                .HasColumnName("available_until");
+            entity.Property(e => e.CancelledAt)
+                .HasMaxLength(6)
+                .HasColumnName("cancelled_at");
+            entity.Property(e => e.ClassSubjectId).HasColumnName("class_subject_id");
+            entity.Property(e => e.ClosedAt)
+                .HasMaxLength(6)
+                .HasColumnName("closed_at");
+            entity.Property(e => e.CreatedAt)
+                .HasMaxLength(6)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("created_at");
+            entity.Property(e => e.Description)
+                .HasColumnType("text")
+                .HasColumnName("description");
+            entity.Property(e => e.DurationMinutes)
+                .HasColumnType("int(11)")
+                .HasColumnName("duration_minutes");
+            entity.Property(e => e.Name)
+                .HasMaxLength(150)
+                .HasColumnName("name");
+            entity.Property(e => e.PassingPercent)
+                .HasPrecision(5, 2)
+                .HasDefaultValueSql("'60.00'")
+                .HasColumnName("passing_percent");
+            entity.Property(e => e.PublishedAt)
+                .HasMaxLength(6)
+                .HasColumnName("published_at");
+            entity.Property(e => e.RetakeOfExamId).HasColumnName("retake_of_exam_id");
+            entity.Property(e => e.Status)
+                .HasDefaultValueSql("'draft'")
+                .HasColumnType("enum('draft','published','closed','cancelled')")
+                .HasColumnName("status");
+            entity.Property(e => e.TotalPoints)
+                .HasPrecision(7, 2)
+                .HasColumnName("total_points");
+            entity.Property(e => e.UpdatedAt)
+                .HasMaxLength(6)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("updated_at");
+
+            entity.HasOne(d => d.ClassSubject).WithMany(p => p.Exams)
+                .HasForeignKey(d => d.ClassSubjectId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_exam_class_subject");
+
+            entity.HasOne(d => d.RetakeOfExam).WithMany(p => p.InverseRetakeOfExam)
+                .HasForeignKey(d => d.RetakeOfExamId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("fk_exam_retake_of");
+        });
+
+        modelBuilder.Entity<ExamStudent>(entity =>
+        {
+            entity.HasKey(e => new { e.ExamId, e.StudentId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity.ToTable("exam_student");
+
+            entity.HasIndex(e => new { e.StudentId, e.ExamId }, "idx_exam_student_student");
+
+            entity.Property(e => e.ExamId).HasColumnName("exam_id");
+            entity.Property(e => e.StudentId).HasColumnName("student_id");
+            entity.Property(e => e.AssignedAt)
+                .HasMaxLength(6)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("assigned_at");
+            entity.Property(e => e.ExtraTimeMinutes)
+                .HasColumnType("int(11)")
+                .HasColumnName("extra_time_minutes");
+
+            entity.HasOne(d => d.Exam).WithMany(p => p.ExamStudents)
+                .HasForeignKey(d => d.ExamId)
+                .HasConstraintName("fk_exam_student_exam");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.ExamStudents)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_exam_student_student");
+        });
+
+        modelBuilder.Entity<ExamSubmission>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("exam_submission");
+
+            entity.HasIndex(e => e.ReviewedByUserId, "fk_exam_submission_reviewer");
+
+            entity.HasIndex(e => new { e.ExamId, e.Status }, "idx_exam_submission_exam_status");
+
+            entity.HasIndex(e => new { e.Status, e.DeadlineAt }, "idx_exam_submission_expiration");
+
+            entity.HasIndex(e => new { e.StudentId, e.Status }, "idx_exam_submission_student_status");
+
+            entity.HasIndex(e => e.GradeId, "uq_exam_submission_grade").IsUnique();
+
+            entity.HasIndex(e => new { e.ExamId, e.StudentId }, "uq_exam_submission_student").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ClosedScore)
+                .HasPrecision(7, 2)
+                .HasColumnName("closed_score");
+            entity.Property(e => e.CreatedAt)
+                .HasMaxLength(6)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeadlineAt)
+                .HasMaxLength(6)
+                .HasColumnName("deadline_at");
+            entity.Property(e => e.ExamId).HasColumnName("exam_id");
+            entity.Property(e => e.FinalizedAt)
+                .HasMaxLength(6)
+                .HasColumnName("finalized_at");
+            entity.Property(e => e.GradeId).HasColumnName("grade_id");
+            entity.Property(e => e.LastClientRevision)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("last_client_revision");
+            entity.Property(e => e.MaxScore)
+                .HasPrecision(7, 2)
+                .HasColumnName("max_score");
+            entity.Property(e => e.OpenMaxPoints)
+                .HasPrecision(7, 2)
+                .HasColumnName("open_max_points");
+            entity.Property(e => e.OpenScore)
+                .HasPrecision(7, 2)
+                .HasColumnName("open_score");
+            entity.Property(e => e.Passed).HasColumnName("passed");
+            entity.Property(e => e.PassingScore)
+                .HasPrecision(7, 2)
+                .HasColumnName("passing_score");
+            entity.Property(e => e.ReviewedByUserId).HasColumnName("reviewed_by_user_id");
+            entity.Property(e => e.StartedAt)
+                .HasMaxLength(6)
+                .HasColumnName("started_at");
+            entity.Property(e => e.Status)
+                .HasDefaultValueSql("'in_progress'")
+                .HasColumnType("enum('in_progress','graded','pending_review','failed_auto','finalized')")
+                .HasColumnName("status");
+            entity.Property(e => e.StudentId).HasColumnName("student_id");
+            entity.Property(e => e.SubmitReason)
+                .HasColumnType("enum('manual','time_expired','violations')")
+                .HasColumnName("submit_reason");
+            entity.Property(e => e.SubmittedAt)
+                .HasMaxLength(6)
+                .HasColumnName("submitted_at");
+            entity.Property(e => e.SuggestedGrade)
+                .HasPrecision(4, 2)
+                .HasColumnName("suggested_grade");
+            entity.Property(e => e.TotalScore)
+                .HasPrecision(7, 2)
+                .HasColumnName("total_score");
+            entity.Property(e => e.UpdatedAt)
+                .HasMaxLength(6)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.ViolationCount)
+                .HasColumnType("int(11)")
+                .HasColumnName("violation_count");
+
+            entity.HasOne(d => d.Exam).WithMany(p => p.ExamSubmissions)
+                .HasForeignKey(d => d.ExamId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_exam_submission_exam");
+
+            entity.HasOne(d => d.Grade).WithOne(p => p.ExamSubmission)
+                .HasForeignKey<ExamSubmission>(d => d.GradeId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("fk_exam_submission_grade");
+
+            entity.HasOne(d => d.ReviewedByUser).WithMany(p => p.ExamSubmissions)
+                .HasForeignKey(d => d.ReviewedByUserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("fk_exam_submission_reviewer");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.ExamSubmissions)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_exam_submission_student");
+        });
+
+        modelBuilder.Entity<ExamViolation>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("exam_violation");
+
+            entity.HasIndex(e => new { e.SubmissionId, e.OccurredAt }, "idx_exam_violation_submission");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.MetadataJson).HasColumnName("metadata_json");
+            entity.Property(e => e.OccurredAt)
+                .HasMaxLength(6)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("occurred_at");
+            entity.Property(e => e.SubmissionId).HasColumnName("submission_id");
+            entity.Property(e => e.Type)
+                .HasMaxLength(50)
+                .HasColumnName("type");
+
+            entity.HasOne(d => d.Submission).WithMany(p => p.ExamViolations)
+                .HasForeignKey(d => d.SubmissionId)
+                .HasConstraintName("fk_exam_violation_submission");
+        });
+
         modelBuilder.Entity<Grade>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -183,6 +460,62 @@ public partial class ElectronicRegisterContext : DbContext
             entity.HasOne(d => d.Student).WithMany(p => p.Grades)
                 .HasForeignKey(d => d.StudentId)
                 .HasConstraintName("fk_grade_student");
+        });
+
+        modelBuilder.Entity<Question>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("question");
+
+            entity.HasIndex(e => e.ExamId, "idx_question_exam");
+
+            entity.HasIndex(e => new { e.ExamId, e.Position }, "uq_question_position").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ExamId).HasColumnName("exam_id");
+            entity.Property(e => e.Points)
+                .HasPrecision(7, 2)
+                .HasColumnName("points");
+            entity.Property(e => e.Position)
+                .HasColumnType("int(11)")
+                .HasColumnName("position");
+            entity.Property(e => e.Required).HasColumnName("required");
+            entity.Property(e => e.Text)
+                .HasColumnType("text")
+                .HasColumnName("text");
+            entity.Property(e => e.Type)
+                .HasColumnType("enum('single','multiple','open')")
+                .HasColumnName("type");
+
+            entity.HasOne(d => d.Exam).WithMany(p => p.Questions)
+                .HasForeignKey(d => d.ExamId)
+                .HasConstraintName("fk_question_exam");
+        });
+
+        modelBuilder.Entity<QuestionOption>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("question_option");
+
+            entity.HasIndex(e => e.QuestionId, "idx_question_option_question");
+
+            entity.HasIndex(e => new { e.QuestionId, e.Position }, "uq_question_option_position").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IsCorrect).HasColumnName("is_correct");
+            entity.Property(e => e.Position)
+                .HasColumnType("int(11)")
+                .HasColumnName("position");
+            entity.Property(e => e.QuestionId).HasColumnName("question_id");
+            entity.Property(e => e.Text)
+                .HasMaxLength(500)
+                .HasColumnName("text");
+
+            entity.HasOne(d => d.Question).WithMany(p => p.QuestionOptions)
+                .HasForeignKey(d => d.QuestionId)
+                .HasConstraintName("fk_question_option_question");
         });
 
         modelBuilder.Entity<Student>(entity =>
@@ -254,6 +587,67 @@ public partial class ElectronicRegisterContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(150)
                 .HasColumnName("name");
+        });
+
+        modelBuilder.Entity<SubmissionAnswer>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("submission_answer");
+
+            entity.HasIndex(e => e.QuestionId, "idx_submission_answer_question");
+
+            entity.HasIndex(e => e.SubmissionId, "idx_submission_answer_submission");
+
+            entity.HasIndex(e => new { e.SubmissionId, e.QuestionId }, "uq_submission_answer").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AwardedPoints)
+                .HasPrecision(7, 2)
+                .HasColumnName("awarded_points");
+            entity.Property(e => e.IsCorrect).HasColumnName("is_correct");
+            entity.Property(e => e.LastSavedAt)
+                .HasMaxLength(6)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("last_saved_at");
+            entity.Property(e => e.OpenText)
+                .HasColumnType("text")
+                .HasColumnName("open_text");
+            entity.Property(e => e.QuestionId).HasColumnName("question_id");
+            entity.Property(e => e.SubmissionId).HasColumnName("submission_id");
+            entity.Property(e => e.TeacherComment)
+                .HasColumnType("text")
+                .HasColumnName("teacher_comment");
+
+            entity.HasOne(d => d.Question).WithMany(p => p.SubmissionAnswers)
+                .HasForeignKey(d => d.QuestionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_submission_answer_question");
+
+            entity.HasOne(d => d.Submission).WithMany(p => p.SubmissionAnswers)
+                .HasForeignKey(d => d.SubmissionId)
+                .HasConstraintName("fk_submission_answer_submission");
+
+            entity.HasMany(d => d.Options).WithMany(p => p.SubmissionAnswers)
+                .UsingEntity<Dictionary<string, object>>(
+                    "SubmissionAnswerOption",
+                    r => r.HasOne<QuestionOption>().WithMany()
+                        .HasForeignKey("OptionId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("fk_submission_answer_option_option"),
+                    l => l.HasOne<SubmissionAnswer>().WithMany()
+                        .HasForeignKey("SubmissionAnswerId")
+                        .HasConstraintName("fk_submission_answer_option_answer"),
+                    j =>
+                    {
+                        j.HasKey("SubmissionAnswerId", "OptionId")
+                            .HasName("PRIMARY")
+                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                        j.ToTable("submission_answer_option");
+                        j.HasIndex(new[] { "OptionId" }, "idx_submission_answer_option_option");
+                        j.IndexerProperty<Guid>("SubmissionAnswerId").HasColumnName("submission_answer_id");
+                        j.IndexerProperty<Guid>("OptionId").HasColumnName("option_id");
+                    });
         });
 
         modelBuilder.Entity<Teacher>(entity =>

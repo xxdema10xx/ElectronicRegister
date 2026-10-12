@@ -29,6 +29,18 @@ namespace ElectronicRegisterAPI.Application.Managers
             return MapToDtos(biennia);
         }
 
+        public async Task<List<BienniumDto>> GetActiveBienniaAsync()
+        {
+            var biennia = await _bienniumRepository.GetActiveBienniaAsync();
+            return MapToDtos(biennia);
+        }
+
+        public async Task<List<BienniumDto>> GetInactiveBienniaAsync()
+        {
+            var biennia = await _bienniumRepository.GetInactiveBienniaAsync();
+            return MapToDtos(biennia);
+        }
+
         public async Task<BienniumDto?> GetByIdAsync(Guid id)
         {
             var biennium = await _bienniumRepository.GetByIdAsync(id);
@@ -85,22 +97,22 @@ namespace ElectronicRegisterAPI.Application.Managers
             {
                 Id = biennium.Id,
                 StartYear = biennium.StartYear,
-                EndYear = biennium.EndYear
+                EndYear = biennium.EndYear,
+                IsActive = biennium.IsActive
             };
         }
 
-        private List<BienniumDto> MapToDtos(List<Biennium> biennia)
+        private List<BienniumDto> MapToDtos(IEnumerable<Biennium> biennia)
         {
-            if(biennia == null || biennia.Count == 0)
-            {
-                return new List<BienniumDto>();
-            }
+            if (biennia is null)
+                return [];
 
             return biennia.Select(b => new BienniumDto
             {
                 Id = b.Id,
                 StartYear = b.StartYear,
-                EndYear = b.EndYear
+                EndYear = b.EndYear,
+                IsActive = b.IsActive
             }).ToList();
         }
     }

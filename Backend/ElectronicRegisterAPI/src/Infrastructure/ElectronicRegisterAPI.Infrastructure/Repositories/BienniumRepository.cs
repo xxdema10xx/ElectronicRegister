@@ -21,10 +21,32 @@ internal class BienniumRepository : IBienniumRepository
         return await _context.Biennia.CountAsync();
     }
 
-    public async Task<List<BienniumModel>> GetAllAsync()
+    public async Task<IEnumerable<BienniumModel>> GetAllAsync()
     {
-        var biennia = await _context.Biennia.ToListAsync();
+        var biennia = await _context.Biennia.AsNoTracking().ToListAsync();
         return biennia.Select(MapToModel).ToList();
+    }
+
+    public async Task<IEnumerable<BienniumModel>> GetActiveBienniaAsync()
+    {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+
+        var biennia = await _context.Biennia
+            .AsNoTracking()
+            .Where(b => b.StartYear <= today && b.EndYear >= today)
+            .ToListAsync();
+
+        return biennia.Select(MapToModel);
+    }
+
+    public async Task<IEnumerable<BienniumModel>> GetInactiveBienniaAsync()
+    {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var biennia = await _context.Biennia
+            .AsNoTracking()
+            .Where(b => b.StartYear > today || b.EndYear < today)
+            .ToListAsync();
+        return biennia.Select(MapToModel);
     }
 
     public async Task<bool> HasStudyAreasAsync(Guid bienniumId)
