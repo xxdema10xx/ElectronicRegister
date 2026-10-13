@@ -34,7 +34,8 @@ export default function ExamTests({ exam, token, canWrite }) {
   const [saving, setSaving] = useState(false);
   const [viewing, setViewing] = useState(null); // test aperto in sola lettura
   const [draft, setDraft] = useState(() => draftStore.get(exam.id));
-  const [editing, setEditing] = useState(() => !!draftStore.get(exam.id)); // editor aperto
+  // Editor aperto: parte sempre chiuso, una bozza esistente si riprende dal link "Test in preparazione"
+  const [editing, setEditing] = useState(false);
 
   const load = useCallback(async () => {
     if (exam.demo) return;
