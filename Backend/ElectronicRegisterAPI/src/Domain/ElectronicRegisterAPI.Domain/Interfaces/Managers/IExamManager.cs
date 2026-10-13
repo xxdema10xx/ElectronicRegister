@@ -8,13 +8,12 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Managers
 {
     public interface IExamManager
     {
-        Task<int> CountAsync();
-        Task<List<ExamDto>> GetAllAsync();
-        Task<ExamDto?> GetByIdAsync(Guid id);
-        Task<List<ExamDto>> GetByIdsAsync(IEnumerable<Guid> ids);
-        Task<List<ExamDto>> GetByDateAsync(DateOnly date);
-        Task<bool> AddAsync(CreateExamDto dto);
-        Task<bool> UpdateAsync(Guid id, UpdateExamDto dto);
+        Task<int> CountAsync(ClaimsContext caller);
+        Task<List<ExamDto>> GetAllAsync(ClaimsContext caller);
+        Task<ExamDto?> GetByIdAsync(Guid id, ClaimsContext caller);
+        Task<List<ExamDto>> GetByDateAsync(DateOnly date, ClaimsContext caller);
+        Task<Guid?> AddAsync(CreateExamDto dto, ClaimsContext caller);
+        Task<bool> UpdateAsync(Guid id, UpdateExamDto dto, ClaimsContext caller);
         Task<bool> DeleteAsync(Guid id);
     }
 }

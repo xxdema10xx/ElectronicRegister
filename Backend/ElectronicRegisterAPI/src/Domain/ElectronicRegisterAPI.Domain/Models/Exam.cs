@@ -4,4 +4,5 @@ public class Exam
     public Guid Id { get; set; }
     public Guid ClassSubjectId { get; set; }
     public DateOnly Date { get; set; }
+    public bool IsRetake { get; set; }
 }

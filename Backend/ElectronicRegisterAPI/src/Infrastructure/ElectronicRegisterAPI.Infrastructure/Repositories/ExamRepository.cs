@@ -50,7 +50,8 @@ internal class ExamRepository : IExamRepository
         {
             Id = exam.Id,
             ClassSubjectId = exam.ClassSubjectId,
-            Date = exam.Date
+            Date = exam.Date,
+            IsRetake = exam.IsRetake
         };
         _context.Exams.Add(examEntity);
         await _context.SaveChangesAsync();
@@ -77,7 +78,8 @@ internal class ExamRepository : IExamRepository
         {
             Id = exam.Id,
             ClassSubjectId = exam.ClassSubjectId,
-            Date = exam.Date
+            Date = exam.Date,
+            IsRetake = exam.IsRetake
         };
     }
 
@@ -88,6 +90,7 @@ internal class ExamRepository : IExamRepository
 
         entity.ClassSubjectId = exam.ClassSubjectId;
         entity.Date = exam.Date;
+        entity.IsRetake = exam.IsRetake;
 
         return entity;
     }
