@@ -15,7 +15,7 @@ public class ExamSummaryDto
     public decimal PassingPercent { get; set; }
     public decimal TotalPoints { get; set; }
     public ExamStatus Status { get; set; }
-    public int AssignedStudentCount { get; set; }
+    public int AssignedStudentsCount { get; set; }
     public DateTime? PublishedAt { get; set; }
     public DateTime? ClosedAt { get; set; }
     public DateTime? CancelledAt { get; set; }

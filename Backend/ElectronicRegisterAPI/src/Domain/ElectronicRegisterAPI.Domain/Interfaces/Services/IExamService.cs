@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 using ElectronicRegisterAPI.Domain.Models;
 
-namespace ElectronicRegisterAPI.Domain.Interfaces.Services
+namespace ElectronicRegisterAPI.Domain.Interfaces.Services;
+
+public interface IExamService
 {
-    public interface IExamService
-    {
-        void EnsureValidSchedule(DateTime from, DateTime until, int durationMinutes);
-        void EnsureValidPassingPercent(decimal passingPercent);
-        void EnsureValidStructure(Exam exam);
-        void EnsureEditable(Exam exam);
-        void EnsurePublishable(Exam exam);
-        void EnsureCanCancel(Exam exam, bool hasSubmissions);
-        void EnsureCanDelete(Exam exam);
-        decimal CalculateTotalPoints(IEnumerable<Question> questions);
-    }
+    void EnsureValidName(string name);
+    void EnsureValidSchedule(DateTime availableFrom, DateTime availableUntil, int durationMinutes);
+    void EnsureValidPassingPercent(decimal passingPercent);
+    void EnsureValidQuestions(IReadOnlyList<Question> questions);
+    void EnsureEditable(Exam exam);
+    void EnsurePublishable(Exam exam, DateTime nowUtc);
+    void EnsureCanCancel(Exam exam, bool hasSubmissions);
+    void EnsureDeletable(Exam exam, bool hasSubmissions);
+    decimal CalculateTotalPoints(IReadOnlyList<Question> questions);
 }

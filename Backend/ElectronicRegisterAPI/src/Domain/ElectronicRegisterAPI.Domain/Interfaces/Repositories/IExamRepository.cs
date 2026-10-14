@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories
@@ -9,6 +10,7 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories
     {
         Task<Exam?> GetByIdAsync(Guid id, bool includeStructure = false, bool includeStudents = false);
         Task<List<Exam>> GetAllAsync(Guid? teacherId = null);
+        Task<List<ExamSummaryDto>> GetSummariesAsync(Guid? teacherId = null);
         Task<List<Exam>> GetAssignedToStudentAsync(Guid studentId);
         Task<List<Exam>> GetByClassSubjectAsync(Guid classSubjectId);
         Task<bool> HasSubmissionsAsync(Guid examId);

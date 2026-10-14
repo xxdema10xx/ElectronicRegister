@@ -39,7 +39,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IClassSubjectRepository, ClassSubjectRepository>();
         services.AddScoped<ITeacherRepository, TeacherRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-
+        services.AddScoped<IExamRepository, ExamRepository>();
         services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IMicrosoftTokenValidator, MicrosoftTokenValidator>();
