@@ -7,6 +7,7 @@ public interface IStudyAreaRepository
     Task<List<StudyArea>> GetAllAsync();
     Task<StudyArea?> GetByIdAsync(Guid studyAreaId);
     Task<StudyArea?> GetStudyAreaByNameAsync(string name);
+    Task<bool> HasStudyPathsAsync(Guid studyAreaId);
     Task AddAsync(StudyArea studyArea);
     Task UpdateAsync(StudyArea studyArea);
     Task DeleteAsync(StudyArea studyArea);

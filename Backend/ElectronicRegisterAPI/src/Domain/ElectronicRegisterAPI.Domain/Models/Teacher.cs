@@ -4,6 +4,6 @@ namespace ElectronicRegisterAPI.Domain.Models;
 public class Teacher
 {
     public Guid Id { get; set; }
-    public string FirstName { get; set; } = null!;
-    public string LastName { get; set; } = null!;
+    public required string FirstName { get; set; }
+    public required string LastName { get; set; }
 }

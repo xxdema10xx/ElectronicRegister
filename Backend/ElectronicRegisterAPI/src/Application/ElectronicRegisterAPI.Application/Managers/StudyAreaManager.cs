@@ -30,9 +30,8 @@ namespace ElectronicRegisterAPI.Application.Managers
 
         public async Task<StudyAreaDto?> GetByIdAsync(Guid id)
         {
-            await _studyAreaService.EnsureStudyAreaExistsAsync(id);
-            var studyArea = await _studyAreaRepository.GetByIdAsync(id);
-            return studyArea == null ? null : MapToDto(studyArea);
+            var studyArea = await _studyAreaService.EnsureStudyAreaExistsAsync(id);
+            return MapToDto(studyArea);
         }
 
         public async Task<StudyAreaDto?> GetStudyAreaByNameAsync(string name)
@@ -73,9 +72,7 @@ namespace ElectronicRegisterAPI.Application.Managers
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            await _studyAreaService.EnsureStudyAreaExistsAsync(id);
-            var studyArea = await _studyAreaRepository.GetByIdAsync(id);
-            if (studyArea is null) return false;
+            var studyArea = await _studyAreaService.EnsureStudyAreaCanBeDeletedAsync(id);
             await _studyAreaRepository.DeleteAsync(studyArea);
             return true;
         }

@@ -1,4 +1,5 @@
 using ElectronicRegisterAPI.Domain.Exceptions;
+using ElectronicRegisterAPI.Domain.Models;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 
@@ -15,7 +16,7 @@ internal class StudentService : IStudentService
         _gradeRepository = gradeRepository;
     }
 
-    public async Task EnsureStudentCanBeDeletedAsync(Guid studentId)
+    public async Task<Student> EnsureStudentCanBeDeletedAsync(Guid studentId)
     {
         var student = await _studentRepository.GetByIdAsync(studentId);
         if (student is null)
@@ -23,5 +24,6 @@ internal class StudentService : IStudentService
         var hasGrades = await _gradeRepository.ExistsForStudentAsync(studentId);
         if (hasGrades)
             throw new BusinessRuleException("Lo studente ha voti registrati e non può essere eliminato.");
+        return student;
     }
 }

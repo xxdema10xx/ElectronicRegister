@@ -6,8 +6,8 @@ namespace ElectronicRegisterAPI.Domain.Models;
 public class User
 {
     public Guid Id { get; set; }
-    public string Email { get; set; } = null!;
-    public string PasswordHash { get; set; } = null!;
+    public required string Email { get; set; }
+    public required string PasswordHash { get; set; }
     public UserRole Role { get; set; }
     public Guid? StudentId { get; set; }
     public Guid? TeacherId { get; set; }

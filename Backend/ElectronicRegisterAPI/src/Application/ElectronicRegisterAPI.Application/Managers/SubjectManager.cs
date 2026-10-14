@@ -74,24 +74,19 @@ namespace ElectronicRegisterAPI.Application.Managers
 
         public async Task<List<SubjectDto>>GetSubjectsByTeacherIdAsync(Guid teacherId, ClaimsContext caller)
         {
-            if (caller.Role == UserRole.Teacher &&
-                caller.TeacherId != teacherId)
+            if (caller.Role == UserRole.Teacher && caller.TeacherId != teacherId)
             {
                 return new List<SubjectDto>();
             }
 
-            var assignments =
-                await _classSubjectRepository
-                    .GetByTeacherIdAsync(teacherId);
+            var assignments = await _classSubjectRepository.GetByTeacherIdAsync(teacherId);
 
             var subjectIds = assignments
                 .Select(cs => cs.SubjectId)
                 .Distinct()
                 .ToList();
 
-            var subjects =
-                await _subjectRepository
-                    .GetByIdsAsync(subjectIds);
+            var subjects = await _subjectRepository.GetByIdsAsync(subjectIds);
 
             return subjects
                 .Select(s => new SubjectDto
@@ -106,8 +101,7 @@ namespace ElectronicRegisterAPI.Application.Managers
         {
             var subject = await _subjectRepository.GetByIdAsync(id);
 
-            if (subject is null)
-                return false;
+            if (subject is null) return false;
 
             subject.Name = dto.Name;
 

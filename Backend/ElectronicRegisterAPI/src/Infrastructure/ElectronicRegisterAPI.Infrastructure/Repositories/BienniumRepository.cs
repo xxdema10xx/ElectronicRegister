@@ -27,12 +27,9 @@ internal class BienniumRepository : IBienniumRepository
         return biennia.Select(MapToModel).ToList();
     }
 
-    public async Task<List<BienniumModel>> GetActiveBienniaAsync()
+    public async Task<bool> HasStudyAreasAsync(Guid bienniumId)
     {
-        var activeBiennia = await _context.Biennia
-            .Where(b => b.StartYear <= currentYear && b.EndYear >= currentYear)
-            .ToListAsync();
-        return activeBiennia.Select(MapToModel).ToList();
+        return await _context.BienniumStudyAreas.AnyAsync(x => x.BienniumId == bienniumId);
     }
 
     public async Task<BienniumModel?> GetByIdAsync(Guid id)
@@ -43,13 +40,13 @@ internal class BienniumRepository : IBienniumRepository
 
     public async Task<BienniumModel?> GetBienniumByStartYearAsync(int startYear)
     {
-        var biennium = await _context.Biennia.FirstOrDefaultAsync(b => b.StartYear == startYear);
+        var biennium = await _context.Biennia.FirstOrDefaultAsync(b => b.StartYear.Year == startYear);
         return biennium == null ? null : MapToModel(biennium);
     }
 
     public async Task<BienniumModel?> GetBienniumByEndYearAsync(int endYear)
     {
-        var biennium = await _context.Biennia.FirstOrDefaultAsync(b => b.EndYear == endYear);
+        var biennium = await _context.Biennia.FirstOrDefaultAsync(b => b.EndYear.Year == endYear);
         return biennium == null ? null : MapToModel(biennium);
     }
 
