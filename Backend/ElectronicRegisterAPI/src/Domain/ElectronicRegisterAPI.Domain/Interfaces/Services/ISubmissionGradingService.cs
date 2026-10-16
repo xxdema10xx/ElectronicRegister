@@ -14,6 +14,7 @@ public interface ISubmissionGradingService
         ClosedGradingResult gradingResult);
 
     decimal CalculateOpenScore(
+        Exam exam,
         IReadOnlyList<SubmissionAnswer> answers);
 
     decimal ConvertToGrade(

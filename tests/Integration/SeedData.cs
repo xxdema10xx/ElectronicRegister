@@ -17,6 +17,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
         AutosaveConcurrentToSubmit = 4,
         ConcurrentFinalize = 5,
         ExamRegression = 6
+        , ClosedOnly = 7
     }
 
     public sealed record ScenarioIds(
@@ -149,8 +150,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             ctx.ExamStudents.Add(new ExamStudent { ExamId = ids.ExamId, StudentId = ids.StudentId, ExtraTimeMinutes = 0, AssignedAt = now.AddHours(-2) });
 
-            ctx.Questions.Add(new Question { Id = ids.OpenQuestionId, ExamId = ids.ExamId, Position = 1, Text = "Domanda aperta", Type = "open", Points = 5m, Required = false });
-            ctx.Questions.Add(new Question { Id = ids.SingleQuestionId, ExamId = ids.ExamId, Position = 2, Text = "Domanda a risposta singola", Type = "single", Points = 5m, Required = false });
+            var qOpen = new Question { Id = ids.OpenQuestionId, ExamId = ids.ExamId, Position = 1, Text = "Domanda aperta", Type = "open", Points = 5m, Required = false };
+            var qSingle = new Question { Id = ids.SingleQuestionId, ExamId = ids.ExamId, Position = 2, Text = "Domanda a risposta singola", Type = "single", Points = 5m, Required = false };
+            ctx.Questions.Add(qOpen);
+            ctx.Questions.Add(qSingle);
 
             var correctOption = new QuestionOption { Id = ids.CorrectOptionId, QuestionId = ids.SingleQuestionId, Position = 1, Text = "Risposta corretta", IsCorrect = true };
             var wrongOption = new QuestionOption { Id = ids.WrongOptionId, QuestionId = ids.SingleQuestionId, Position = 2, Text = "Risposta errata", IsCorrect = false };
@@ -198,6 +201,25 @@ namespace ElectronicRegisterAPI.Tests.Integration
                     break;
 
                 default:
+                    submission.Status = "in_progress";
+                    submission.StartedAt = now.AddMinutes(-10);
+                    submission.DeadlineAt = now.AddMinutes(50);
+                    submission.LastClientRevision = 0UL;
+                    break;
+
+                case IntegrationScenario.ClosedOnly:
+                    // Exam with only closed questions: mark the open question as single and move an option to it
+                    qOpen.Type = "single";
+
+                    // move wrongOption to become the correct option for the former open question
+                    wrongOption.QuestionId = ids.OpenQuestionId;
+                    wrongOption.IsCorrect = true;
+
+                    // ensure the open answer becomes a closed answer selecting the option
+                    openAnswer.OpenText = null;
+                    openAnswer.Options.Add(wrongOption);
+
+                    // ensure submission metadata
                     submission.Status = "in_progress";
                     submission.StartedAt = now.AddMinutes(-10);
                     submission.DeadlineAt = now.AddMinutes(50);

@@ -18,7 +18,7 @@ internal static class ExamSubmissionMapper
         };
     }
 
-    public static SubmissionResultDto ToSubmissionResultDto(ExamSubmission s)
+    public static SubmissionResultDto ToSubmissionResultDto(ExamSubmission s, decimal? officialGradeValue)
     {
         if (s is null) throw new ArgumentNullException(nameof(s));
 
@@ -30,7 +30,8 @@ internal static class ExamSubmissionMapper
             SubmittedAt = s.SubmittedAt,
             TotalScore = s.TotalScore,
             MaxScore = s.MaxScore,
-            Grade = s.GradeId is null ? (decimal?)null : s.ClosedScore, // best-effort
+            // officialGradeValue is provided by the application layer when GradeId is present
+            Grade = s.GradeId is null ? (decimal?)null : officialGradeValue,
             Passed = s.Passed
         };
     }

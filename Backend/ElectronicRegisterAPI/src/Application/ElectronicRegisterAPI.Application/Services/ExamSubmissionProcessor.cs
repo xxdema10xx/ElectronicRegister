@@ -53,7 +53,15 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
             {
                 // return current state
                 var current = await _submissionRepository.GetByIdAsync(submissionId, withAnswers: true);
-                result = ExamSubmissionMapper.ToSubmissionResultDto(current ?? submission);
+                var target = current ?? submission;
+                decimal? officialGrade = null;
+                if (target.GradeId.HasValue)
+                {
+                    var grade = await _gradeRepository.GetByIdAsync(target.GradeId.Value);
+                    if (grade is null) throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
+                    officialGrade = grade.Value;
+                }
+                result = ExamSubmissionMapper.ToSubmissionResultDto(target, officialGrade);
                 return;
             }
 
@@ -111,7 +119,15 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
             {
                 // Another actor may have submitted concurrently; return current persisted state (idempotent)
                 var current = await _submissionRepository.GetByIdAsync(submissionId, withAnswers: true);
-                result = ExamSubmissionMapper.ToSubmissionResultDto(current ?? submission);
+                var target = current ?? submission;
+                decimal? officialGrade = null;
+                if (target.GradeId.HasValue)
+                {
+                    var grade = await _gradeRepository.GetByIdAsync(target.GradeId.Value);
+                    if (grade is null) throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
+                    officialGrade = grade.Value;
+                }
+                result = ExamSubmissionMapper.ToSubmissionResultDto(target, officialGrade);
                 return;
             }
 
@@ -186,7 +202,15 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
             });
 
             var current2 = await _submissionRepository.GetByIdAsync(submissionId, withAnswers: true);
-            result = ExamSubmissionMapper.ToSubmissionResultDto(current2 ?? submission);
+            var finalTarget = current2 ?? submission;
+            decimal? finalOfficialGrade = null;
+            if (finalTarget.GradeId.HasValue)
+            {
+                var g = await _gradeRepository.GetByIdAsync(finalTarget.GradeId.Value);
+                if (g is null) throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
+                finalOfficialGrade = g.Value;
+            }
+            result = ExamSubmissionMapper.ToSubmissionResultDto(finalTarget, finalOfficialGrade);
         });
 
         return result!;

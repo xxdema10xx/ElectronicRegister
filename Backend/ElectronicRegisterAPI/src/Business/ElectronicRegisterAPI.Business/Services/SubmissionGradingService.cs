@@ -97,12 +97,15 @@ internal class SubmissionGradingService : ISubmissionGradingService
         };
     }
 
-    public decimal CalculateOpenScore(IReadOnlyList<SubmissionAnswer> answers)
+    public decimal CalculateOpenScore(Exam exam, IReadOnlyList<SubmissionAnswer> answers)
     {
+        if (exam is null) throw new ArgumentNullException(nameof(exam));
         if (answers is null) throw new ArgumentNullException(nameof(answers));
 
-        // Open score is determined by awarded points already set on answers
-        return answers.Sum(a => a.AwardedPoints ?? 0m);
+        // Only consider answers that belong to open questions
+        var openQuestionIds = exam.Questions.Where(q => q.Type == QuestionType.Open).Select(q => q.Id).ToHashSet();
+
+        return answers.Where(a => openQuestionIds.Contains(a.QuestionId)).Sum(a => a.AwardedPoints ?? 0m);
     }
 
     public decimal ConvertToGrade(decimal totalScore, decimal maxScore, decimal passingPercent)

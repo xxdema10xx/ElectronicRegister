@@ -15,6 +15,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
     private readonly IGradeRepository _gradeRepository;
     private readonly IAuditRepository _auditRepository;
     private readonly ISubmissionGradingService _gradingService;
+    private readonly IGradeService _gradeService;
     private readonly ITransactionManager _transactionManager;
     private readonly IClassSubjectRepository _classSubjectRepository;
 
@@ -26,7 +27,8 @@ internal class ExamSubmissionManager : IExamSubmissionManager
         IAuditRepository auditRepository,
         ISubmissionGradingService gradingService,
         ITransactionManager transactionManager,
-        IClassSubjectRepository classSubjectRepository)
+        IClassSubjectRepository classSubjectRepository,
+        IGradeService gradeService)
     {
         _submissionRepository = submissionRepository;
         _examRepository = examRepository;
@@ -34,6 +36,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
         _gradeRepository = gradeRepository;
         _auditRepository = auditRepository;
         _gradingService = gradingService;
+        _gradeService = gradeService;
         _transactionManager = transactionManager;
         _classSubjectRepository = classSubjectRepository;
     }
@@ -261,7 +264,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
                 answer.TeacherComment = input.Comment;
             }
 
-            submission.OpenScore = _gradingService.CalculateOpenScore(submission.Answers);
+            submission.OpenScore = _gradingService.CalculateOpenScore(exam, submission.Answers);
             submission.TotalScore = (submission.ClosedScore ?? 0m) + (submission.OpenScore ?? 0m);
             submission.Passed = submission.TotalScore >= (submission.PassingScore ?? 0m);
 
@@ -329,12 +332,17 @@ internal class ExamSubmissionManager : IExamSubmissionManager
                     throw new InvalidOperationException("Non tutte le risposte aperte sono state corrette.");
             }
 
-            submission.OpenScore = _gradingService.CalculateOpenScore(submission.Answers);
+            submission.OpenScore = _gradingService.CalculateOpenScore(exam, submission.Answers);
             submission.TotalScore = (submission.ClosedScore ?? 0m) + (submission.OpenScore ?? 0m);
             submission.Passed = submission.TotalScore >= (submission.PassingScore ?? 0m);
 
             var gradeValue = dto.FinalGrade
                 ?? _gradingService.ConvertToGrade(submission.TotalScore ?? 0m, submission.MaxScore ?? 1m, submission.PassingScore ?? 0m);
+
+            if (dto.FinalGrade.HasValue)
+            {
+                _gradeService.EnsureValidGradeValue(dto.FinalGrade.Value);
+            }
 
             if (!submission.GradeId.HasValue)
             {

@@ -14,6 +14,7 @@ namespace ElectronicRegisterAPI.Application.Managers
         private readonly IExamRepository _examRepository;
         private readonly IClassSubjectRepository _classSubjectRepository;
         private readonly IStudentRepository _studentRepository;
+        private readonly IGradeRepository _gradeRepository;
         private readonly IExamSubmissionRepository _examSubmissionRepository;
     private readonly IExamSubmissionProcessor _examSubmissionProcessor;
         private readonly IExamService _examService;
@@ -25,6 +26,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             IExamService examService, 
             IClassSubjectRepository classSubjectRepository, 
             IStudentRepository studentRepository, 
+            IGradeRepository gradeRepository,
             IExamSubmissionRepository examSubmissionRepository,
             IExamSubmissionProcessor examSubmissionProcessor,
             ISubjectService subjectService,
@@ -35,6 +37,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             _examService = examService;
             _classSubjectRepository = classSubjectRepository;
             _studentRepository = studentRepository;
+            _gradeRepository = gradeRepository;
             _examSubmissionRepository = examSubmissionRepository;
             _examSubmissionProcessor = examSubmissionProcessor;
             _subjectService = subjectService;
@@ -533,7 +536,19 @@ namespace ElectronicRegisterAPI.Application.Managers
                     throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
             }
 
-            return ExamSubmissionMapper.ToSubmissionResultDto(submission);
+            // When returning result, resolve official grade value if present via grade repository
+            decimal? officialGrade = null;
+            if (submission.GradeId.HasValue)
+            {
+                var grade = await _gradeRepository.GetByIdAsync(submission.GradeId.Value);
+                if (grade is null)
+                {
+                    throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
+                }
+                officialGrade = grade.Value;
+            }
+
+            return ExamSubmissionMapper.ToSubmissionResultDto(submission, officialGrade);
         }
     }
 }
