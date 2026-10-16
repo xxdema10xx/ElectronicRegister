@@ -21,8 +21,8 @@ namespace ElectronicRegisterAPI.Domain.Models
         public DateTime? PublishedAt { get; set; }
         public DateTime? ClosedAt { get; set; }
         public DateTime? CancelledAt { get; set; }
-        public List<Question> Questions { get; set; } = [];
-        public List<ExamStudent> AssignedStudents { get; set; } = [];
+        public List<Question> Questions { get; set; } = new List<Question>();
+        public List<ExamStudent> AssignedStudents { get; set; } = new List<ExamStudent>();
         public bool IsRetake => RetakeOfExamId.HasValue;
     }
 }

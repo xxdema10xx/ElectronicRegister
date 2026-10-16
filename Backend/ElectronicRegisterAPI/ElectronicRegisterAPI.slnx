@@ -5,6 +5,12 @@
     <Project Path="src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj" />
     <Project Path="src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/src/Application/" />
+  <Folder Name="/src/Business/" />
+  <Folder Name="/src/Domain/" />
+  <Folder Name="/src/Infrastructure/" />
   <Folder Name="/test/" />
+  <Project Path="../../tests/Integration/Integration.Tests.csproj" />
+  <Project Path="../../tests/Unit/Unit.Tests.csproj" />
   <Project Path="src/Api/ElectronicRegisterAPI/ElectronicRegisterAPI.csproj" />
 </Solution>

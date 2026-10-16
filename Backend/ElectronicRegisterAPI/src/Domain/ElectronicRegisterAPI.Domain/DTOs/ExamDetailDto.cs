@@ -18,7 +18,7 @@ public class ExamDetailDto
     public DateTime? PublishedAt { get; set; }
     public DateTime? ClosedAt { get; set; }
     public DateTime? CancelledAt { get; set; }
-    public List<QuestionDto> Questions { get; set; } = [];
-    public List<ExamAssignedStudentDto> AssignedStudents { get; set; } = [];
+    public List<QuestionDto> Questions { get; set; } = new List<QuestionDto>();
+    public List<ExamAssignedStudentDto> AssignedStudents { get; set; } = new List<ExamAssignedStudentDto>();
     public bool IsRetake => RetakeOfExamId.HasValue;
 }

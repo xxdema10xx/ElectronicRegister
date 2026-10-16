@@ -15,5 +15,5 @@ public class SubmissionAnswerReviewDto
     public bool? IsCorrect { get; set; }
     public decimal? AwardedPoints { get; set; }
     public string? TeacherComment { get; set; }
-    public List<SubmissionAnswerOptionReviewDto> Options { get; set; } = [];
+    public List<SubmissionAnswerOptionReviewDto> Options { get; set; } = new List<SubmissionAnswerOptionReviewDto>();
 }

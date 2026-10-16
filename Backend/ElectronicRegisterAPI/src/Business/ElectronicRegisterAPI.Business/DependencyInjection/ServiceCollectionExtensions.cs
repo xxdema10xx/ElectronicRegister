@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITeacherService, TeacherService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IExamService, ExamService>();
+        services.AddScoped<ISubmissionGradingService, SubmissionGradingService>();
 
         return services;
     }

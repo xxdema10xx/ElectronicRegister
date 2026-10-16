@@ -30,6 +30,16 @@ namespace ElectronicRegisterAPI.Domain.Models
 
         public Guid? GradeId { get; set; }
 
-        public List<SubmissionAnswer> Answers { get; set; } = [];
+        // additional fields mapped from persistence
+        public SubmitReason? SubmitReason { get; set; }
+        public int ViolationCount { get; set; }
+        public decimal? OpenMaxPoints { get; set; }
+        public decimal? SuggestedGrade { get; set; }
+        public Guid? ReviewedByUserId { get; set; }
+        public DateTime? FinalizedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+
+        public List<SubmissionAnswer> Answers { get; set; } = new List<SubmissionAnswer>();
     }
 }

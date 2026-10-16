@@ -40,6 +40,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITeacherRepository, TeacherRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IExamRepository, ExamRepository>();
+        services.AddScoped<IExamSubmissionRepository, ExamSubmissionRepository>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Services.ITimeProvider, ElectronicRegisterAPI.Infrastructure.Services.SystemTimeProvider>();
+        services.AddScoped<IAuditRepository, AuditRepository>();
+        services.AddScoped<ITransactionManager, TransactionManager>();
         services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IMicrosoftTokenValidator, MicrosoftTokenValidator>();

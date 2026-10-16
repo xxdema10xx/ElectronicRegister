@@ -16,5 +16,6 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories
         Task<bool> TryBeginSubmitAsync(Guid submissionId, DateTime submittedAt, SubmitReason reason);
         Task UpdateAfterGradingAsync(ExamSubmission submission);
         Task UpdateAfterReviewAsync(ExamSubmission submission);
+        Task<ExamSubmission?> GetByIdForUpdateAsync(Guid id, bool withAnswers = false);
     }
 }

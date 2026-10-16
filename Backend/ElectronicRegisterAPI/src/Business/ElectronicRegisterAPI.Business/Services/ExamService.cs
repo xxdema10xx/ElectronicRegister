@@ -3,11 +3,26 @@ using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Models;
+using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 
 namespace ElectronicRegisterAPI.Business.Services;
 
 public class ExamService : IExamService
 {
+    private readonly IExamRepository _examRepository;
+
+    public ExamService(IExamRepository examRepository)
+    {
+        _examRepository = examRepository;
+    }
+
+    public async Task<Exam> EnsureExamExistsAsync(Guid examId)
+    {
+        var exam = await _examRepository.GetByIdAsync(examId);
+        if (exam is null) throw new KeyNotFoundException("L'esame non esiste.");
+        return exam;
+    }
+
     public void EnsureValidName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -65,6 +80,64 @@ public class ExamService : IExamService
 
         if (duplicatedPositions)
             throw new ArgumentException("Le posizioni delle domande devono essere univoche.");
+    }
+
+    public void EnsureValidRetakeExam(Exam? originalExam, Guid classSubjectId)
+    {
+        if (originalExam is null)
+            throw new KeyNotFoundException("L'esame originale non esiste.");
+
+        if (originalExam.ClassSubjectId != classSubjectId)
+            throw new ArgumentException("Il recupero deve appartenere alla stessa classe-materia.");
+    }
+
+    public void EnsureValidAssignedStudents(IReadOnlyList<ExamStudent> assignedStudents, IReadOnlyList<Student> students, Guid classId)
+    {
+        ArgumentNullException.ThrowIfNull(assignedStudents);
+        ArgumentNullException.ThrowIfNull(students);
+
+        if (assignedStudents.Any(s => s is null))
+            throw new ArgumentException("La lista degli studenti contiene elementi nulli.");
+
+        if (assignedStudents.Any(s => s.StudentId == Guid.Empty))
+            throw new ArgumentException("Identificativo studente non valido.");
+
+        if (assignedStudents
+            .Select(s => s.StudentId)
+            .Distinct()
+            .Count() != assignedStudents.Count)
+            throw new ArgumentException("Uno studente non può essere assegnato più volte.");
+
+        if (assignedStudents.Any(s => s.ExtraTimeMinutes < 0))
+            throw new ArgumentException("Il tempo aggiuntivo non può essere negativo.");
+
+        var studentIds = assignedStudents.Select(s => s.StudentId).ToHashSet();
+
+        var foundIds = students.Select(s => s.Id).ToHashSet();
+
+        if (!studentIds.SetEquals(foundIds))
+            throw new KeyNotFoundException("Uno o più studenti assegnati non esistono.");
+
+        if (students.Any(s => s.ClassId != classId))
+            throw new ArgumentException("Tutti gli studenti devono appartenere alla classe selezionata.");
+    }
+
+    public void EnsureStartAllowed(Exam? exam, ExamSubmission? existingSubmission, Guid studentId, DateTime nowUtc)
+    {
+        if (exam is null) throw new ArgumentException("L'esame originale non può essere nullo.");
+
+        if (exam.Status != ExamStatus.Published || nowUtc < exam.AvailableFrom || nowUtc >= exam.AvailableUntil)
+            throw new BusinessRuleException("L'esame non è disponibile in questo momento.");
+
+        if (existingSubmission is not null && existingSubmission.Status != SubmissionStatus.Finalized)
+            throw new BusinessRuleException("Hai già iniziato o completato questo esame.");
+    }
+
+    public void EnsureSubmissionInProgress(ExamSubmission submission)
+    {
+        if (submission is null) throw new ArgumentNullException(nameof(submission));
+        if (submission.Status != SubmissionStatus.InProgress)
+            throw new BusinessRuleException("La submission non è in stato InProgress.");
     }
 
     public decimal CalculateTotalPoints(IReadOnlyList<Question> questions)

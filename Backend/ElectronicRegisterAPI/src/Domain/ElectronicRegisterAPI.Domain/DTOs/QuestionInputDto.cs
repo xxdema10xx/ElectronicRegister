@@ -9,5 +9,5 @@ public class QuestionInputDto
     public QuestionType Type { get; set; }
     public decimal Points { get; set; }
     public bool Required { get; set; }
-    public List<QuestionOptionInputDto> Options { get; set; } = [];
+    public List<QuestionOptionInputDto> Options { get; set; } = new List<QuestionOptionInputDto>();
 }

@@ -10,5 +10,5 @@ public class QuestionForStudentDto
     public QuestionType Type { get; set; }
     public decimal Points { get; set; }
     public bool Required { get; set; }
-    public List<QuestionOptionForStudentDto> Options { get; set; } = [];
+    public List<QuestionOptionForStudentDto> Options { get; set; } = new List<QuestionOptionForStudentDto>();
 }

@@ -4,5 +4,5 @@ public class AnswerInputDto
 {
     public Guid QuestionId { get; set; }
     public string? OpenText { get; set; }
-    public List<Guid> SelectedOptionIds { get; set; } = [];
+    public List<Guid> SelectedOptionIds { get; set; } = new List<Guid>();
 }

@@ -13,6 +13,6 @@ namespace ElectronicRegisterAPI.Domain.Models
         public bool? IsCorrect { get; set; }
         public decimal? AwardedPoints { get; set; }
         public string? TeacherComment { get; set; }
-        public List<Guid> SelectedOptionIds { get; set; } = [];
+        public List<Guid> SelectedOptionIds { get; set; } = new List<Guid>();
     }
 }

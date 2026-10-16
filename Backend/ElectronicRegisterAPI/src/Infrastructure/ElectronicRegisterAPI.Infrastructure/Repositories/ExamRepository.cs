@@ -122,33 +122,22 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
                 CancelledAt = r.CancelledAt
             }).ToList();
         }
+
         public async Task<List<Exam>> GetAssignedToStudentAsync(Guid studentId)
         {
-            return await _context.Exams
+            var entities = await _context.Exams
                 .AsNoTracking()
                 .Where(e =>
-                    e.ExamStudents.Any(es =>
-                        es.StudentId == studentId))
+                    e.ExamStudents.Any(es => es.StudentId == studentId))
+                .Where(e => e.Status != "draft")
+                .Include(e => e.ExamStudents
+                    .Where(es => es.StudentId == studentId))
                 .OrderByDescending(e => e.AvailableFrom)
-                .Select(e => new Exam
-                {
-                    Id = e.Id,
-                    ClassSubjectId = e.ClassSubjectId,
-                    RetakeOfExamId = e.RetakeOfExamId,
-                    Name = e.Name,
-                    Description = e.Description,
-                    AvailableFrom = e.AvailableFrom,
-                    AvailableUntil = e.AvailableUntil,
-                    DurationMinutes = e.DurationMinutes,
-                    PassingPercent = e.PassingPercent,
-                    TotalPoints = e.TotalPoints,
-                    Status = ExamStatusMapper.FromDbString(e.Status),
-                    PublishedAt = e.PublishedAt,
-                    ClosedAt = e.ClosedAt,
-                    CancelledAt = e.CancelledAt
-                })
                 .ToListAsync();
+
+            return entities.Select(MapToModel).ToList();
         }
+
         public async Task<List<Exam>> GetByClassSubjectAsync(Guid classSubjectId)
         {
             var entities = await _context.Exams

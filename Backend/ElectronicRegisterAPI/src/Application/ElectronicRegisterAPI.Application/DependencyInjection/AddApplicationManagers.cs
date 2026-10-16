@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using ElectronicRegisterAPI.Application.Managers;
 
@@ -11,6 +12,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IBienniumManager, BienniumManager>();
         services.AddScoped<IStudyAreaManager, StudyAreaManager>();
         services.AddScoped<IStudyPathManager, StudyPathManager>();
+        services.AddScoped<IExamManager, ExamManager>();
+        services.AddScoped<IExamSubmissionManager, ExamSubmissionManager>();
+        services.AddScoped<IExamSubmissionProcessor, ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor>();
         services.AddScoped<IAuthManager, AuthManager>();
         services.AddScoped<IGradeManager, GradeManager>();
         services.AddScoped<IStudentManager, StudentManager>();

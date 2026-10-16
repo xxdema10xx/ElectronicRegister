@@ -8,5 +8,5 @@ public class ExamForStudentDto
     public DateTime AvailableUntil { get; set; }
     public int DurationMinutes { get; set; }
     public decimal TotalPoints { get; set; }
-    public List<QuestionForStudentDto> Questions { get; set; } = [];
+    public List<QuestionForStudentDto> Questions { get; set; } = new List<QuestionForStudentDto>();
 }

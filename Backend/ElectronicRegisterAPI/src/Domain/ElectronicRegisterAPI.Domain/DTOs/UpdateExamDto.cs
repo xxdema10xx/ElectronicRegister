@@ -10,5 +10,5 @@ public class UpdateExamDto
     public DateTime AvailableUntil { get; set; }
     public int DurationMinutes { get; set; }
     public decimal PassingPercent { get; set; }
-    public List<QuestionInputDto> Questions { get; set; } = [];
+    public List<QuestionInputDto> Questions { get; set; } = new List<QuestionInputDto>();
 }

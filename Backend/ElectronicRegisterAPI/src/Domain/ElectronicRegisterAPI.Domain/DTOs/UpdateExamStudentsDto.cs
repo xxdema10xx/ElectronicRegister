@@ -2,5 +2,5 @@ namespace ElectronicRegisterAPI.Domain.DTOs;
 
 public class UpdateExamStudentsDto
 {
-    public List<ExamStudentInputDto> Students { get; set; } = [];
+    public List<ExamStudentInputDto> Students { get; set; } = new List<ExamStudentInputDto>();
 }

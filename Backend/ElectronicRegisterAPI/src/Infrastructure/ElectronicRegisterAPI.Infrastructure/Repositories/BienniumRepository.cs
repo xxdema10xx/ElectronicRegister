@@ -9,8 +9,6 @@ internal class BienniumRepository : IBienniumRepository
 {
     private readonly ElectronicRegisterContext _context;
 
-    private readonly int currentYear = DateTime.Now.Year;
-
     public BienniumRepository(ElectronicRegisterContext context)
     {
         _context = context;

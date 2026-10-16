@@ -20,6 +20,6 @@ namespace ElectronicRegisterAPI.Domain.Models
 
         public bool Required { get; set; }
 
-        public List<QuestionOption> Options { get; set; } = [];
+        public List<QuestionOption> Options { get; set; } = new List<QuestionOption>();
     }
 }

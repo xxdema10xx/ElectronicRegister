@@ -10,6 +10,6 @@ public class CreateExamDto
     public DateTime AvailableUntil { get; set; }
     public int DurationMinutes { get; set; }
     public decimal PassingPercent { get; set; } = 60m;
-    public List<ExamStudentInputDto> AssignedStudents { get; set; } = [];
-    public List<QuestionInputDto> Questions { get; set; } = [];
+    public List<ExamStudentInputDto> AssignedStudents { get; set; } = new List<ExamStudentInputDto>();
+    public List<QuestionInputDto> Questions { get; set; } = new List<QuestionInputDto>();
 }

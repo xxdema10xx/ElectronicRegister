@@ -28,5 +28,5 @@ public class SubmissionReviewDto
     public decimal? FinalGrade { get; set; }
     public Guid? ReviewedByUserId { get; set; }
     public DateTime? FinalizedAt { get; set; }
-    public List<SubmissionAnswerReviewDto> Answers { get; set; } = [];
+    public List<SubmissionAnswerReviewDto> Answers { get; set; } = new List<SubmissionAnswerReviewDto>();
 }
