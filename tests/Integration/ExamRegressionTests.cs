@@ -18,8 +18,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             _fixture = fixture;
         }
 
-        private ClaimsContext TeacherCaller(Guid teacherId) => new ClaimsContext(Guid.NewGuid(), UserRole.Teacher, null, teacherId);
-        private ClaimsContext AdminCaller() => new ClaimsContext(Guid.NewGuid(), UserRole.Admin, null, null);
+        private ClaimsContext TeacherCaller(Guid teacherId) => new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, teacherId);
+        private ClaimsContext AdminCaller() => new ClaimsContext(SeedData.AdminUserId, UserRole.Admin, null, null);
 
         // Every test starts from a fresh in-progress submission (one open + one single-choice answer).
         // A new submission cannot be added next to it: (exam_id, student_id) is unique.
@@ -309,7 +309,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamManager>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
 
-            var studentCaller = new ClaimsContext(Guid.NewGuid(), UserRole.Student, ids.StudentId, null);
+            var studentCaller = new ClaimsContext(ids.StudentId, UserRole.Student, ids.StudentId, null);
 
             var dto = new SaveExamAnswersDto { ClientRevision = 1 };
             dto.Answers.Add(new AnswerInputDto { QuestionId = ids.OpenQuestionId, OpenText = "x" });
@@ -333,7 +333,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
 
             // simulate client sending stale revision -> SaveAnswersAsync should return Accepted = false and not modify data
-            var studentCaller = new ClaimsContext(Guid.NewGuid(), UserRole.Student, ids.StudentId, null);
+            var studentCaller = new ClaimsContext(ids.StudentId, UserRole.Student, ids.StudentId, null);
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamManager>();
 
             // First, perform an initial save to increment revision

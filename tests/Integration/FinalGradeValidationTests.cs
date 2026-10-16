@@ -31,7 +31,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
-            var caller = new ClaimsContext(Guid.NewGuid(), UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
 
             var before = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
             var beforeGrades = await gradeRepo.GetByStudentIdAsync(ids.StudentId);
@@ -68,7 +68,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
-            var caller = new ClaimsContext(Guid.NewGuid(), UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
 
             var before = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
             var beforeGrades = await gradeRepo.GetByStudentIdAsync(ids.StudentId);
@@ -103,7 +103,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
-            var caller = new ClaimsContext(Guid.NewGuid(), UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
 
             var before = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
             var beforeGrades = await gradeRepo.GetByStudentIdAsync(ids.StudentId);
@@ -138,7 +138,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
-            var caller = new ClaimsContext(Guid.NewGuid(), UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
 
             // Ensure open answers reviewed
             var before = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
@@ -149,7 +149,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             }
             if (reviewDto.Answers.Count > 0) await mgr.ReviewAsync(ids.SubmissionId, reviewDto, caller);
 
-            await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 1m }, caller);
+            await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 1m, OverrideReason = "Teacher confirmed boundary grade" }, caller);
 
             using var verifyScope = _fixture.ScopeFactory.CreateScope();
             var verifyRepo = verifyScope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
@@ -170,7 +170,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
-            var caller = new ClaimsContext(Guid.NewGuid(), UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
 
             var before = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
             var reviewDto = new ReviewOpenAnswersDto();
@@ -180,7 +180,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             }
             if (reviewDto.Answers.Count > 0) await mgr.ReviewAsync(ids.SubmissionId, reviewDto, caller);
 
-            await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 10m }, caller);
+            await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 10m, OverrideReason = "Teacher confirmed boundary grade" }, caller);
 
             using var verifyScope = _fixture.ScopeFactory.CreateScope();
             var verifyRepo = verifyScope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();

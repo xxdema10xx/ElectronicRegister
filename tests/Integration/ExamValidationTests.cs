@@ -22,8 +22,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             _fixture = fixture;
         }
 
-        private ClaimsContext StudentCaller(ScenarioIds ids) => new ClaimsContext(Guid.NewGuid(), UserRole.Student, ids.StudentId, null);
-        private ClaimsContext TeacherCaller(Guid teacherId) => new ClaimsContext(Guid.NewGuid(), UserRole.Teacher, null, teacherId);
+        private ClaimsContext StudentCaller(ScenarioIds ids) => new ClaimsContext(ids.StudentId, UserRole.Student, ids.StudentId, null);
+        private ClaimsContext TeacherCaller(Guid teacherId) => new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, teacherId);
 
         [SkippableFact]
         public async Task Review_InProgress_IsRejected()

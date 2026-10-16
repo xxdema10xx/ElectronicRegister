@@ -32,7 +32,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
 
-            var caller = new ClaimsContext(Guid.NewGuid(), UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
 
             // At this scenario: ClosedScore = 4, openAnswer.AwardedPoints = 4 (intentional), open actual review will set open answer to 2
             // Ensure DB has ClosedScore = 4 already (seed sets it in ConcurrentFinalize scenario, but we use PreparePendingReview which sets open awarded points differently)

@@ -40,6 +40,7 @@ public partial class ExamSubmission
     public bool? Passed { get; set; }
 
     public decimal? SuggestedGrade { get; set; }
+    public string? OverrideReason { get; set; }
 
     public Guid? GradeId { get; set; }
 

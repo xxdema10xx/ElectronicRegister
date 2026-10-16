@@ -13,7 +13,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
     private readonly IExamRepository _examRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly IGradeRepository _gradeRepository;
-    private readonly IAuditRepository _auditRepository;
+    private readonly IAuditRepository _auditEventRepository;
     private readonly ISubmissionGradingService _gradingService;
     private readonly IGradeService _gradeService;
     private readonly ITransactionManager _transactionManager;
@@ -24,7 +24,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
         IExamRepository examRepository,
         IStudentRepository studentRepository,
         IGradeRepository gradeRepository,
-        IAuditRepository auditRepository,
+        IAuditRepository auditEventRepository,
         ISubmissionGradingService gradingService,
         ITransactionManager transactionManager,
         IClassSubjectRepository classSubjectRepository,
@@ -34,7 +34,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
         _examRepository = examRepository;
         _studentRepository = studentRepository;
         _gradeRepository = gradeRepository;
-        _auditRepository = auditRepository;
+        _auditEventRepository = auditEventRepository;
         _gradingService = gradingService;
         _gradeService = gradeService;
         _transactionManager = transactionManager;
@@ -266,10 +266,23 @@ internal class ExamSubmissionManager : IExamSubmissionManager
 
             submission.OpenScore = _gradingService.CalculateOpenScore(exam, submission.Answers);
             submission.TotalScore = (submission.ClosedScore ?? 0m) + (submission.OpenScore ?? 0m);
+            // Passed is not official until a Grade exists; here we set a provisional Passed based on passing percent
             submission.Passed = submission.TotalScore >= (submission.PassingScore ?? 0m);
 
             // Do NOT finalize here; mark as pending review and persist awarded points.
             submission.Status = SubmissionStatus.PendingReview;
+
+            var allOpenAnswersReviewed = submission.Answers
+                .Where(a => exam.Questions.Any(q => q.Id == a.QuestionId && q.Type == QuestionType.Open))
+                .All(a => a.AwardedPoints.HasValue);
+
+            if (allOpenAnswersReviewed)
+            {
+                submission.SuggestedGrade = _gradingService.ConvertToGrade(
+                    submission.TotalScore ?? 0m,
+                    submission.MaxScore ?? 1m,
+                    exam.PassingPercent);
+            }
 
             await _submissionRepository.UpdateAfterReviewAsync(submission);
         });
@@ -337,13 +350,26 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             submission.Passed = submission.TotalScore >= (submission.PassingScore ?? 0m);
 
             var gradeValue = dto.FinalGrade
-                ?? _gradingService.ConvertToGrade(submission.TotalScore ?? 0m, submission.MaxScore ?? 1m, submission.PassingScore ?? 0m);
+                ?? _gradingService.ConvertToGrade(submission.TotalScore ?? 0m, submission.MaxScore ?? 1m, exam.PassingPercent);
 
             if (dto.FinalGrade.HasValue)
             {
+                // Validate final grade value
                 _gradeService.EnsureValidGradeValue(dto.FinalGrade.Value);
+                // When overriding, OverrideReason required if differs from suggested
+                var suggested = submission.SuggestedGrade ?? _gradingService.ConvertToGrade(submission.TotalScore ?? 0m, submission.MaxScore ?? 1m, exam.PassingPercent);
+                if (dto.FinalGrade.Value != suggested)
+                {
+                    if (string.IsNullOrWhiteSpace(dto.OverrideReason))
+                        throw new ArgumentException("OverrideReason is required when FinalGrade differs from SuggestedGrade.");
+                    if (dto.OverrideReason.Trim().Length > 1000)
+                        throw new ArgumentException("OverrideReason exceeds maximum length of 1000.");
+                }
+                // trim and persist reason
+                submission.OverrideReason = dto.OverrideReason?.Trim();
             }
 
+            // If no official grade exists, create one with gradeValue (either suggested or final)
             if (!submission.GradeId.HasValue)
             {
                 var grade = new Grade
@@ -354,19 +380,41 @@ internal class ExamSubmissionManager : IExamSubmissionManager
                     Value = gradeValue,
                     Date = DateOnly.FromDateTime(DateTime.UtcNow)
                 };
-
                 await _gradeRepository.AddAsync(grade);
                 submission.GradeId = grade.Id;
             }
+            else
+            {
+                // Update existing Grade when overriding
+                var existing = await _gradeRepository.GetByIdAsync(submission.GradeId.Value);
+                if (existing is null) throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
+                if (dto.FinalGrade.HasValue && existing.Value != dto.FinalGrade.Value)
+                {
+                    // update grade value
+                    existing.Value = dto.FinalGrade.Value;
+                    await _gradeRepository.UpdateAsync(existing);
+                }
+            }
+
+            // Ensure official Passed follows Grade.Value
+            var finalGradeRow = await _gradeRepository.GetByIdAsync(submission.GradeId.Value);
+            if (finalGradeRow is null) throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
+            submission.Passed = finalGradeRow.Value >= 6m;
+            submission.FinalizedAt = DateTime.UtcNow;
+
+            // ReviewedByUserId must reference a persisted User.Id (authenticated actor)
+            if (caller.Role == UserRole.Teacher || caller.Role == UserRole.Admin)
+                submission.ReviewedByUserId = caller.UserId;
 
             submission.Status = SubmissionStatus.Finalized;
             submission.FinalizedAt = DateTime.UtcNow;
 
             await _submissionRepository.UpdateAfterGradingAsync(submission);
 
-            await _auditRepository.AddAsync(new Domain.Models.AuditEvent
+            await _auditEventRepository.AddAsync(new Domain.Models.AuditEvent
             {
                 Id = Guid.NewGuid(),
+                ActorUserId = caller.UserId,
                 Action = "submission.finalize",
                 EntityType = "exam_submission",
                 EntityId = submission.Id,

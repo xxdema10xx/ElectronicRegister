@@ -56,8 +56,12 @@ namespace ElectronicRegisterAPI.Tests.Integration
         public static readonly Guid BienniumStudyPathId = Id(0, 5);
         public static readonly Guid ClassId = Id(0, 6);
         public static readonly Guid TeacherId = Id(0, 7);
+        public static readonly Guid OtherTeacherId = Id(0, 12);
         public static readonly Guid SubjectId = Id(0, 8);
         public static readonly Guid ClassSubjectId = Id(0, 9);
+        // Persisted integration users (authenticated identities)
+        public static readonly Guid TeacherUserId = Id(0, 10);
+        public static readonly Guid AdminUserId = Id(0, 11);
 
         public static async Task EnsureBaseDataAsync(ElectronicRegisterContext ctx)
         {
@@ -72,9 +76,40 @@ namespace ElectronicRegisterAPI.Tests.Integration
             await EnsureAsync(ctx, new Class { Id = ClassId, BienniumStudyPathId = BienniumStudyPathId, Name = "IT-1A" },
                 e => e.BienniumStudyPathId == BienniumStudyPathId);
             await EnsureAsync(ctx, new Teacher { Id = TeacherId, FirstName = "IT", LastName = "Teacher" });
+            await EnsureAsync(ctx, new Teacher { Id = OtherTeacherId, FirstName = "Other", LastName = "Teacher" });
             await EnsureAsync(ctx, new Subject { Id = SubjectId, Name = "IT Integration Subject" });
             await EnsureAsync(ctx, new ClassSubject { Id = ClassSubjectId, ClassId = ClassId, SubjectId = SubjectId, TeacherId = TeacherId },
                 e => e.ClassId == ClassId && e.SubjectId == SubjectId && e.TeacherId == TeacherId);
+
+            await ctx.SaveChangesAsync();
+
+            // Ensure persisted users that map to the seeded teacher/admin
+            await EnsureAsync(ctx, new ElectronicRegisterAPI.Infrastructure.Persistence.Entities.User
+            {
+                Id = TeacherUserId,
+                Email = "integration.teacher@example.test",
+                PasswordHash = "",
+                Role = "teacher",
+                TeacherId = TeacherId
+            }, e => e.TeacherId == TeacherId);
+
+            await EnsureAsync(ctx, new ElectronicRegisterAPI.Infrastructure.Persistence.Entities.User
+            {
+                Id = Id(0, 13),
+                Email = "integration.other.teacher@example.test",
+                PasswordHash = "",
+                Role = "teacher",
+                TeacherId = OtherTeacherId
+            }, e => e.TeacherId == OtherTeacherId);
+
+            await EnsureAsync(ctx, new ElectronicRegisterAPI.Infrastructure.Persistence.Entities.User
+            {
+                Id = AdminUserId,
+                Email = "integration.admin@example.test",
+                PasswordHash = "",
+                Role = "admin",
+                TeacherId = null
+            }, e => e.Role == "admin");
 
             await ctx.SaveChangesAsync();
         }
@@ -122,7 +157,9 @@ namespace ElectronicRegisterAPI.Tests.Integration
             await ctx.QuestionOptions.Where(o => questionIds.Contains(o.QuestionId)).ExecuteDeleteAsync();
             await ctx.Questions.Where(q => q.ExamId == ids.ExamId).ExecuteDeleteAsync();
             await ctx.Exams.Where(e => e.Id == ids.ExamId).ExecuteDeleteAsync();
+            // Remove the scenario student and any User row that was created for that student
             await ctx.Students.Where(s => s.Id == ids.StudentId).ExecuteDeleteAsync();
+            await ctx.Users.Where(u => u.Id == ids.StudentId).ExecuteDeleteAsync();
         }
 
         private static void AddScenario(ElectronicRegisterContext ctx, IntegrationScenario scenario, ScenarioIds ids)
@@ -131,6 +168,15 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var n = (int)scenario;
 
             ctx.Students.Add(new Student { Id = ids.StudentId, FirstName = "IT", LastName = $"Student{n}", ClassId = ClassId });
+            // Also create a corresponding persisted User for the student so ClaimsContext.UserId references exist
+            ctx.Users.Add(new ElectronicRegisterAPI.Infrastructure.Persistence.Entities.User
+            {
+                Id = ids.StudentId,
+                Email = $"student{n}.integration@example.test",
+                PasswordHash = string.Empty,
+                Role = "student",
+                StudentId = ids.StudentId
+            });
 
             ctx.Exams.Add(new Exam
             {
@@ -211,11 +257,16 @@ namespace ElectronicRegisterAPI.Tests.Integration
                     // Exam with only closed questions: mark the open question as single and move an option to it
                     qOpen.Type = "single";
 
-                    // move wrongOption to become the correct option for the former open question
-                    wrongOption.QuestionId = ids.OpenQuestionId;
-                    wrongOption.IsCorrect = true;
+                    // adjust points so that closed-only scenario yields 60% when student has one correct and one incorrect
+                    // make single question worth 6 and the other worth 4 so one correct yields total 6/10
+                    qOpen.Points = 4m;
+                    qSingle.Points = 6m;
 
-                    // ensure the open answer becomes a closed answer selecting the option
+                    // move wrongOption to become an option for the former open question but KEEP it incorrect
+                    wrongOption.QuestionId = ids.OpenQuestionId;
+                    wrongOption.IsCorrect = false;
+
+                    // ensure the open answer becomes a closed answer selecting the (incorrect) option
                     openAnswer.OpenText = null;
                     openAnswer.Options.Add(wrongOption);
 

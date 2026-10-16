@@ -8,7 +8,7 @@ using ElectronicRegisterAPI.Domain.Enums;
 
 namespace ElectronicRegisterAPI.Business.Services;
 
-internal class SubmissionGradingService : ISubmissionGradingService
+public class SubmissionGradingService : ISubmissionGradingService
 {
     public ClosedGradingResult GradeClosedQuestions(Exam exam, IReadOnlyList<SubmissionAnswer> answers)
     {
@@ -110,17 +110,53 @@ internal class SubmissionGradingService : ISubmissionGradingService
 
     public decimal ConvertToGrade(decimal totalScore, decimal maxScore, decimal passingPercent)
     {
-        if (maxScore <= 0) return 0m;
+        // Validate inputs according to Phase 2B rules
+        if (maxScore <= 0) throw new ArgumentOutOfRangeException(nameof(maxScore), "maxScore must be > 0");
+        if (totalScore < 0) throw new ArgumentOutOfRangeException(nameof(totalScore), "totalScore must be >= 0");
+        if (totalScore > maxScore) throw new ArgumentOutOfRangeException(nameof(totalScore), "totalScore cannot exceed maxScore");
+        if (passingPercent <= 0 || passingPercent >= 100) throw new ArgumentOutOfRangeException(nameof(passingPercent), "passingPercent must be between 0 and 100 (exclusive)");
 
-        // convert to 1..10 scale, passingPercent is threshold for pass (~6)
-        var ratio = totalScore / maxScore;
-        var grade = 1m + ratio * 9m; // linear mapping
+        // decimal arithmetic only
+        // p = TotalScore / MaxScore
+        var p = maxScore == 0m ? 0m : Decimal.Divide(totalScore, maxScore);
+        // s = PassingPercent / 100
+        var s = Decimal.Divide(passingPercent, 100m);
 
-        // clamp
+        decimal grade;
+
+        if (p <= s)
+        {
+            // grade = 1 + 5 * (p / s)
+            // avoid division by zero (s validated to be >0)
+            grade = 1m + 5m * Decimal.Divide(p, s);
+            // requirement: when totalScore < passingScore, rounded grade must never be >= 6
+            // we therefore cap raw grade to a value strictly below 6 when p < s
+            if (p < s && grade >= 6m)
+            {
+                grade = 5.99m;
+            }
+        }
+        else
+        {
+            // grade = 6 + 4 * ((p - s) / (1 - s))
+            grade = 6m + 4m * Decimal.Divide((p - s), (1m - s));
+        }
+
+        // clamp to [1,10]
         if (grade < 1m) grade = 1m;
         if (grade > 10m) grade = 10m;
 
-        return Math.Round(grade, 2);
+        // round to 2 decimals using MidpointRounding.AwayFromZero
+        var rounded = Decimal.Round(grade, 2, MidpointRounding.AwayFromZero);
+
+        // enforce the rule: if totalScore < passingScore, rounded must be < 6
+        if (totalScore < Decimal.Multiply(maxScore, s) && rounded >= 6m)
+        {
+            // set to 5.99 explicitly
+            return 5.99m;
+        }
+
+        return rounded;
     }
 
     public void EnsureReviewPointsValid(Question question, decimal awardedPoints)

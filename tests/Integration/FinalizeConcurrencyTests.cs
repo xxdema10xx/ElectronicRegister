@@ -39,7 +39,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var manager2 = scope2.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
 
             // Use seeded teacher id for caller
-            var caller = new ClaimsContext(Guid.NewGuid(), Domain.Enums.UserRole.Teacher, null, SeedData.TeacherId);
+            var persistedTeacherUserId = SeedData.TeacherUserId;
+            var caller = new ClaimsContext(persistedTeacherUserId, Domain.Enums.UserRole.Teacher, null, SeedData.TeacherId);
 
             // Synchronize the start of both tasks
             var gate = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);

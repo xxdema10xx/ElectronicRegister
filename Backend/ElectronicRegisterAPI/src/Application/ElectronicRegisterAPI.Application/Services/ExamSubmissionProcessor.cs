@@ -162,11 +162,14 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
             if (evaluation.Status == SubmissionStatus.Graded)
             {
                 submission.TotalScore = evaluation.TotalScore;
-                submission.Passed = evaluation.Passed ?? false;
+                // For closed-only graded submissions, compute SuggestedGrade and create the official Grade equal to SuggestedGrade
                 submission.Status = SubmissionStatus.Graded;
 
-                // create grade: SubmitExamDto does not contain FinalGrade; compute suggested grade from grading service
-                var gradeValue = _gradingService.ConvertToGrade(submission.TotalScore ?? 0m, submission.MaxScore ?? 1m, submission.PassingScore ?? 0m);
+                var gradeValue = _gradingService.ConvertToGrade(submission.TotalScore ?? 0m, submission.MaxScore ?? 1m, exam.PassingPercent);
+
+                // persist suggested grade
+                submission.SuggestedGrade = gradeValue;
+
                 var grade = new Grade
                 {
                     Id = Guid.NewGuid(),
@@ -177,6 +180,9 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
                 };
                 await _gradeRepository.AddAsync(grade);
                 submission.GradeId = grade.Id;
+
+                // Official Passed is derived from Grade.Value
+                submission.Passed = gradeValue >= 6m;
             }
             else if (evaluation.Status == SubmissionStatus.PendingReview)
             {
@@ -195,6 +201,7 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
             await _auditRepository.AddAsync(new Domain.Models.AuditEvent
             {
                 Id = Guid.NewGuid(),
+                ActorUserId = caller?.UserId,
                 Action = "submission.submit",
                 EntityType = "exam_submission",
                 EntityId = submission.Id,

@@ -198,7 +198,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
         }
 
         private static ClaimsContext StudentCaller(ScenarioIds ids) =>
-            new ClaimsContext(Guid.NewGuid(), UserRole.Student, ids.StudentId, null);
+            new ClaimsContext(ids.StudentId, UserRole.Student, ids.StudentId, null);
 
         private static async Task<SubmissionResultDto?> SubmitOrRejectedAsync(IExamManager manager, Guid submissionId, SubmitExamDto dto, ClaimsContext caller)
         {

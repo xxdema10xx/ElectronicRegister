@@ -377,6 +377,9 @@ public partial class ElectronicRegisterContext : DbContext
             entity.Property(e => e.SuggestedGrade)
                 .HasPrecision(4, 2)
                 .HasColumnName("suggested_grade");
+            entity.Property(e => e.OverrideReason)
+                .HasColumnName("override_reason")
+                .HasMaxLength(1000);
             entity.Property(e => e.TotalScore)
                 .HasPrecision(7, 2)
                 .HasColumnName("total_score");

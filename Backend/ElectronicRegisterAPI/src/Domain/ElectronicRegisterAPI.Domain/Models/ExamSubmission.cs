@@ -35,6 +35,7 @@ namespace ElectronicRegisterAPI.Domain.Models
         public int ViolationCount { get; set; }
         public decimal? OpenMaxPoints { get; set; }
         public decimal? SuggestedGrade { get; set; }
+        public string? OverrideReason { get; set; }
         public Guid? ReviewedByUserId { get; set; }
         public DateTime? FinalizedAt { get; set; }
         public DateTime CreatedAt { get; set; }

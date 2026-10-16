@@ -35,7 +35,10 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
 
         var entity = await query.FirstOrDefaultAsync(s => s.Id == id);
 
-        return entity is null ? null : MapToModel(entity, withAnswers);
+        if (entity is null)
+            return null;
+
+        return MapToModel(entity, withAnswers);
     }
 
     public async Task<ExamSubmission?> GetByIdForUpdateAsync(Guid id, bool withAnswers = false)
@@ -383,6 +386,7 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
         entity.GradeId = submission.GradeId;
             entity.OpenMaxPoints = submission.OpenMaxPoints;
             entity.SuggestedGrade = submission.SuggestedGrade;
+            entity.OverrideReason = submission.OverrideReason;
             entity.ReviewedByUserId = submission.ReviewedByUserId;
             entity.FinalizedAt = submission.FinalizedAt;
         entity.UpdatedAt = DateTime.UtcNow;

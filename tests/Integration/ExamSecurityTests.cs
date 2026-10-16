@@ -18,9 +18,9 @@ namespace ElectronicRegisterAPI.Tests.Integration
             _fixture = fixture;
         }
 
-        private ClaimsContext TeacherCaller(Guid teacherId) => new ClaimsContext(Guid.NewGuid(), UserRole.Teacher, null, teacherId);
-        private ClaimsContext AdminCaller() => new ClaimsContext(Guid.NewGuid(), UserRole.Admin, null, null);
-        private ClaimsContext StudentCaller(Guid studentId) => new ClaimsContext(Guid.NewGuid(), UserRole.Student, studentId, null);
+        private ClaimsContext TeacherCaller(Guid teacherId) => new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, teacherId);
+        private ClaimsContext AdminCaller() => new ClaimsContext(SeedData.AdminUserId, UserRole.Admin, null, null);
+        private ClaimsContext StudentCaller(Guid studentId) => new ClaimsContext(studentId, UserRole.Student, studentId, null);
 
         private Task<ScenarioIds> ResetAsync() => _fixture.ResetScenarioAsync(IntegrationScenario.ExamRegression);
 

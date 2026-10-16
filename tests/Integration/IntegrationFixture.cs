@@ -110,7 +110,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
                 }
             }
 
-            var studentCaller = new Domain.DTOs.ClaimsContext(Guid.NewGuid(), Domain.Enums.UserRole.Student, ids.StudentId, null);
+            // Use persisted user identity for the student actor when submitting
+            // Create or reuse a per-scenario student user if needed; for now reuse the scenario StudentId as UserId when present
+            var studentUserId = ids.StudentId; // student user persisted by scenario
+            var studentCaller = new Domain.DTOs.ClaimsContext(studentUserId, Domain.Enums.UserRole.Student, ids.StudentId, null);
 
             await examMgr.SubmitAsync(ids.SubmissionId, dto, studentCaller);
 
