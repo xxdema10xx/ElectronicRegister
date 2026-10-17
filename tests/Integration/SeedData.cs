@@ -17,7 +17,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
         AutosaveConcurrentToSubmit = 4,
         ConcurrentFinalize = 5,
         ExamRegression = 6
-        , ClosedOnly = 7
+        , ClosedOnly = 7,
+        Phase3WorkerClosed = 30,
+        Phase3WorkerOpen = 31,
+        Phase3WorkerFailure = 32
     }
 
     public sealed record ScenarioIds(
@@ -254,6 +257,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
                     break;
 
                 case IntegrationScenario.ClosedOnly:
+                case IntegrationScenario.Phase3WorkerClosed:
+                case IntegrationScenario.Phase3WorkerFailure:
                     // Exam with only closed questions: mark the open question as single and move an option to it
                     qOpen.Type = "single";
 

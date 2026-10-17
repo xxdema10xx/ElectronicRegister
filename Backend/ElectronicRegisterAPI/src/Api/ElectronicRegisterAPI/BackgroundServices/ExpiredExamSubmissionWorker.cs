@@ -15,15 +15,13 @@ namespace ElectronicRegisterAPI.Api.BackgroundServices
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<ExpiredExamSubmissionWorker> _logger;
-        private readonly ITimeProvider _timeProvider;
         private readonly TimeSpan _interval = TimeSpan.FromSeconds(15);
         private readonly int _batchSize = 50;
 
-        public ExpiredExamSubmissionWorker(IServiceScopeFactory scopeFactory, ILogger<ExpiredExamSubmissionWorker> logger, ITimeProvider timeProvider)
+        public ExpiredExamSubmissionWorker(IServiceScopeFactory scopeFactory, ILogger<ExpiredExamSubmissionWorker> logger)
         {
             _scopeFactory = scopeFactory;
             _logger = logger;
-            _timeProvider = timeProvider;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -56,14 +54,15 @@ namespace ElectronicRegisterAPI.Api.BackgroundServices
             }
         }
 
-        private async Task ProcessBatchAsync(CancellationToken cancellationToken)
+        // The timer and integration tests invoke the same selection/dispatch path.
+        internal async Task ProcessBatchAsync(CancellationToken cancellationToken)
         {
             // First scope: query expired submissions (lightweight, no answers)
             using (var listScope = _scopeFactory.CreateScope())
             {
                 var submissionRepo = listScope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
 
-                var now = _timeProvider.UtcNow;
+                var now = listScope.ServiceProvider.GetRequiredService<ITimeProvider>().UtcNow;
                 var expired = await submissionRepo.GetExpiredInProgressAsync(now, _batchSize);
 
                 if (expired == null || expired.Count == 0) return;
