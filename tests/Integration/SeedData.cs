@@ -20,7 +20,9 @@ namespace ElectronicRegisterAPI.Tests.Integration
         , ClosedOnly = 7,
         Phase3WorkerClosed = 30,
         Phase3WorkerOpen = 31,
-        Phase3WorkerFailure = 32
+        Phase3WorkerFailure = 32,
+        Phase4Lifecycle = 40,
+        Phase4Unassigned = 41
     }
 
     public sealed record ScenarioIds(

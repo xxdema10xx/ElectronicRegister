@@ -48,8 +48,8 @@ public class ExamService : IExamService
 
     public void EnsureValidPassingPercent(decimal passingPercent)
     {
-        if (passingPercent <= 0 || passingPercent > 100)
-            throw new ArgumentException("La percentuale di sufficienza deve essere maggiore di 0 e minore o uguale a 100.");
+        if (passingPercent <= 0 || passingPercent >= 100)
+            throw new ArgumentException("La percentuale di sufficienza deve essere maggiore di 0 e minore di 100.");
     }
 
     public void EnsureValidQuestions(IReadOnlyList<Question> questions)
@@ -129,7 +129,7 @@ public class ExamService : IExamService
         if (exam.Status != ExamStatus.Published || nowUtc < exam.AvailableFrom || nowUtc >= exam.AvailableUntil)
             throw new BusinessRuleException("L'esame non è disponibile in questo momento.");
 
-        if (existingSubmission is not null && existingSubmission.Status != SubmissionStatus.Finalized)
+        if (existingSubmission is not null)
             throw new BusinessRuleException("Hai già iniziato o completato questo esame.");
     }
 
@@ -178,6 +178,15 @@ public class ExamService : IExamService
 
         if (CalculateTotalPoints(exam.Questions) <= 0)
             throw new BusinessRuleException("Il punteggio totale dell'esame deve essere maggiore di zero.");
+        if (exam.TotalPoints != CalculateTotalPoints(exam.Questions))
+            throw new BusinessRuleException("Il punteggio totale non corrisponde alla struttura delle domande.");
+    }
+
+    public void EnsureCanClose(Exam exam)
+    {
+        ArgumentNullException.ThrowIfNull(exam);
+        if (exam.Status != ExamStatus.Published)
+            throw new BusinessRuleException("È possibile chiudere solo un esame pubblicato.");
     }
 
     public void EnsureCanCancel(Exam exam, bool hasSubmissions)

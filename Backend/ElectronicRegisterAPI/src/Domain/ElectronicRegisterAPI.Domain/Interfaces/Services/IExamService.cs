@@ -17,6 +17,7 @@ public interface IExamService
     void EnsureEditable(Exam exam);
     void EnsurePublishable(Exam exam, DateTime nowUtc);
     void EnsureCanCancel(Exam exam, bool hasSubmissions);
+    void EnsureCanClose(Exam exam);
     void EnsureDeletable(Exam exam, bool hasSubmissions);
     decimal CalculateTotalPoints(IReadOnlyList<Question> questions);
 }

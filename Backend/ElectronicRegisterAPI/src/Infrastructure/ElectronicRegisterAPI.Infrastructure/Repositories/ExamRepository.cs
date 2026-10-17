@@ -41,6 +41,19 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
 
             return entity is null ? null : MapToModel(entity);
         }
+
+        public async Task<Exam?> GetByIdForUpdateAsync(Guid id)
+        {
+            if (_context.Database.CurrentTransaction is null)
+                throw new InvalidOperationException("Exam row lock requires an ambient transaction.");
+            var entity = await _context.Exams.FromSqlRaw("SELECT * FROM exam WHERE id = {0} FOR UPDATE", id)
+                .AsTracking().Include(e => e.Questions).ThenInclude(q => q.QuestionOptions)
+                .Include(e => e.ExamStudents).FirstOrDefaultAsync();
+            return entity is null ? null : MapToModel(entity);
+        }
+
+        public Task<bool> HasRetakesAsync(Guid examId) =>
+            _context.Exams.AnyAsync(e => e.RetakeOfExamId == examId);
         public async Task<List<Exam>> GetAllAsync(Guid? teacherId = null)
         {
             var query = _context.Exams
@@ -253,6 +266,11 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
             _context.Questions.RemoveRange(entity.Questions);
 
             entity.Questions.Clear();
+            // Release unique (exam_id, position) keys before inserting the replacement.
+            // The application owns the transaction across this save and the following saves.
+            if (_context.Database.CurrentTransaction is null)
+                throw new InvalidOperationException("Structure replacement requires an ambient transaction.");
+            await _context.SaveChangesAsync();
 
             foreach (var question in exam.Questions)
             {
@@ -280,6 +298,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
                         });
                 }
 
+                _context.Questions.Add(questionEntity);
                 entity.Questions.Add(questionEntity);
             }
 

@@ -9,6 +9,8 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories
     public interface IExamRepository
     {
         Task<Exam?> GetByIdAsync(Guid id, bool includeStructure = false, bool includeStudents = false);
+        Task<Exam?> GetByIdForUpdateAsync(Guid id);
+        Task<bool> HasRetakesAsync(Guid examId);
         Task<List<Exam>> GetAllAsync(Guid? teacherId = null);
         Task<List<ExamSummaryDto>> GetSummariesAsync(Guid? teacherId = null);
         Task<List<Exam>> GetAssignedToStudentAsync(Guid studentId);
