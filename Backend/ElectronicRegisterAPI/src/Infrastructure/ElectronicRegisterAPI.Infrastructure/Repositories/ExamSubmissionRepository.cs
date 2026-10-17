@@ -442,6 +442,7 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
             ViolationCount = entity.ViolationCount,
             OpenMaxPoints = entity.OpenMaxPoints,
             SuggestedGrade = entity.SuggestedGrade,
+            OverrideReason = entity.OverrideReason,
             ReviewedByUserId = entity.ReviewedByUserId,
             FinalizedAt = entity.FinalizedAt,
             CreatedAt = entity.CreatedAt,

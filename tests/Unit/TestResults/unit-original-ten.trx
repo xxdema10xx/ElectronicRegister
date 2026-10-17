@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="1ce5847f-cd10-4d20-9ba3-fe60f85366aa" name="Lorenzo@DESKTOP-QUOAG32 2026-10-17 12:55:15" runUser="DESKTOP-QUOAG32\CodexSandboxOffline" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-17T12:55:15.5455435+02:00" queuing="2026-10-17T12:55:15.5455436+02:00" start="2026-10-17T12:55:15.0162911+02:00" finish="2026-10-17T12:55:15.5632095+02:00" />
+  <TestSettings name="default" id="4e14db04-9637-4e36-9a9c-edbf98575418">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-17_12_55_15" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="ec9b2d11-b32c-42b5-9cea-b5f83cc8774f" testId="194af7fb-e5a2-7f38-6398-1250bc0d2d37" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.PersistenceError_RollsBack_AndThrows" computerName="DESKTOP-QUOAG32" duration="00:00:00.0066675" startTime="2026-10-17T12:55:15.4802682+02:00" endTime="2026-10-17T12:55:15.4802683+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ec9b2d11-b32c-42b5-9cea-b5f83cc8774f" />
+    <UnitTestResult executionId="77d8c841-32ec-4721-99e8-eeba2351e29e" testId="6b8183ad-b425-9b43-2844-0d99c4530773" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.AutoSubmit_NoDto_NoCaller_UsesPersistedAnswers" computerName="DESKTOP-QUOAG32" duration="00:00:00.0070658" startTime="2026-10-17T12:55:15.5108008+02:00" endTime="2026-10-17T12:55:15.5108009+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="77d8c841-32ec-4721-99e8-eeba2351e29e" />
+    <UnitTestResult executionId="c1be3ded-ac28-44aa-b439-4020801150e7" testId="e3433ff1-3abe-631a-0cd4-e27d7771e127" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_ManualRejected" computerName="DESKTOP-QUOAG32" duration="00:00:00.0074671" startTime="2026-10-17T12:55:15.5037081+02:00" endTime="2026-10-17T12:55:15.5037082+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c1be3ded-ac28-44aa-b439-4020801150e7" />
+    <UnitTestResult executionId="a872d733-d72d-456b-b50b-7d83f69cfabc" testId="75daae38-2adb-a7a8-27bc-52de0169b6ec" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DeadlineReached_NoNewAnswersButExistingProcessed" computerName="DESKTOP-QUOAG32" duration="00:00:00.0079961" startTime="2026-10-17T12:55:15.4735654+02:00" endTime="2026-10-17T12:55:15.4735655+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a872d733-d72d-456b-b50b-7d83f69cfabc" />
+    <UnitTestResult executionId="293f8453-2242-473a-ae8a-c0e5fbee64f0" testId="e9028ac3-5659-486b-8a3e-c933d79ff6aa" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_AutoAllowed" computerName="DESKTOP-QUOAG32" duration="00:00:00.0057706" startTime="2026-10-17T12:55:15.4860744+02:00" endTime="2026-10-17T12:55:15.4860745+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="293f8453-2242-473a-ae8a-c0e5fbee64f0" />
+    <UnitTestResult executionId="9eb7a6d0-9a13-4462-bdde-84b68078eb04" testId="b132e377-e1e0-3bfb-4afd-88d3b226659d" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DoubleSubmit_NoDuplicateGradeCreated" computerName="DESKTOP-QUOAG32" duration="00:00:00.0054533" startTime="2026-10-17T12:55:15.4962113+02:00" endTime="2026-10-17T12:55:15.4962114+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9eb7a6d0-9a13-4462-bdde-84b68078eb04" />
+    <UnitTestResult executionId="6cb55e4e-da6a-4ddc-b0c5-1d16e2b87004" testId="374655e2-0472-704c-68c7-fcdf030c1883" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenQuestions_PendingReview_NoGradeCreated" computerName="DESKTOP-QUOAG32" duration="00:00:00.0713305" startTime="2026-10-17T12:55:15.4533404+02:00" endTime="2026-10-17T12:55:15.4533538+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6cb55e4e-da6a-4ddc-b0c5-1d16e2b87004" />
+    <UnitTestResult executionId="6c981f4e-c826-4967-809b-8bfd24e70e33" testId="62015273-7d53-2cb7-d1d6-ec5e74446862" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.ClosedOnly_GradedAndGradeCreated" computerName="DESKTOP-QUOAG32" duration="00:00:00.0057699" startTime="2026-10-17T12:55:15.5278732+02:00" endTime="2026-10-17T12:55:15.5278733+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6c981f4e-c826-4967-809b-8bfd24e70e33" />
+    <UnitTestResult executionId="f530acd2-4981-435f-b448-327d0a54d27a" testId="4f574eb9-4ac7-de44-e297-62a53ad94eba" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenAnswersEmpty_TreatedAsZeroPoints" computerName="DESKTOP-QUOAG32" duration="00:00:00.0125369" startTime="2026-10-17T12:55:15.4655553+02:00" endTime="2026-10-17T12:55:15.4655554+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f530acd2-4981-435f-b448-327d0a54d27a" />
+    <UnitTestResult executionId="63792523-e4f2-4789-aed5-59cc5af5e7d9" testId="726b03fb-c2a4-7427-4448-bf04cc0f894a" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.FailedAuto_NoGradeCreated" computerName="DESKTOP-QUOAG32" duration="00:00:00.0046193" startTime="2026-10-17T12:55:15.4907276+02:00" endTime="2026-10-17T12:55:15.4907277+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="63792523-e4f2-4789-aed5-59cc5af5e7d9" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DoubleSubmit_NoDuplicateGradeCreated" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="b132e377-e1e0-3bfb-4afd-88d3b226659d">
+      <Execution id="9eb7a6d0-9a13-4462-bdde-84b68078eb04" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="DoubleSubmit_NoDuplicateGradeCreated" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DeadlineReached_NoNewAnswersButExistingProcessed" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="75daae38-2adb-a7a8-27bc-52de0169b6ec">
+      <Execution id="a872d733-d72d-456b-b50b-7d83f69cfabc" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="DeadlineReached_NoNewAnswersButExistingProcessed" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_AutoAllowed" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="e9028ac3-5659-486b-8a3e-c933d79ff6aa">
+      <Execution id="293f8453-2242-473a-ae8a-c0e5fbee64f0" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="RequiredMissing_AutoAllowed" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.ClosedOnly_GradedAndGradeCreated" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="62015273-7d53-2cb7-d1d6-ec5e74446862">
+      <Execution id="6c981f4e-c826-4967-809b-8bfd24e70e33" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="ClosedOnly_GradedAndGradeCreated" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.AutoSubmit_NoDto_NoCaller_UsesPersistedAnswers" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="6b8183ad-b425-9b43-2844-0d99c4530773">
+      <Execution id="77d8c841-32ec-4721-99e8-eeba2351e29e" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="AutoSubmit_NoDto_NoCaller_UsesPersistedAnswers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.PersistenceError_RollsBack_AndThrows" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="194af7fb-e5a2-7f38-6398-1250bc0d2d37">
+      <Execution id="ec9b2d11-b32c-42b5-9cea-b5f83cc8774f" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="PersistenceError_RollsBack_AndThrows" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenQuestions_PendingReview_NoGradeCreated" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="374655e2-0472-704c-68c7-fcdf030c1883">
+      <Execution id="6cb55e4e-da6a-4ddc-b0c5-1d16e2b87004" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="OpenQuestions_PendingReview_NoGradeCreated" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenAnswersEmpty_TreatedAsZeroPoints" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="4f574eb9-4ac7-de44-e297-62a53ad94eba">
+      <Execution id="f530acd2-4981-435f-b448-327d0a54d27a" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="OpenAnswersEmpty_TreatedAsZeroPoints" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.FailedAuto_NoGradeCreated" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="726b03fb-c2a4-7427-4448-bf04cc0f894a">
+      <Execution id="63792523-e4f2-4789-aed5-59cc5af5e7d9" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="FailedAuto_NoGradeCreated" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_ManualRejected" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="e3433ff1-3abe-631a-0cd4-e27d7771e127">
+      <Execution id="c1be3ded-ac28-44aa-b439-4020801150e7" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="RequiredMissing_ManualRejected" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="194af7fb-e5a2-7f38-6398-1250bc0d2d37" executionId="ec9b2d11-b32c-42b5-9cea-b5f83cc8774f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6b8183ad-b425-9b43-2844-0d99c4530773" executionId="77d8c841-32ec-4721-99e8-eeba2351e29e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e3433ff1-3abe-631a-0cd4-e27d7771e127" executionId="c1be3ded-ac28-44aa-b439-4020801150e7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="75daae38-2adb-a7a8-27bc-52de0169b6ec" executionId="a872d733-d72d-456b-b50b-7d83f69cfabc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e9028ac3-5659-486b-8a3e-c933d79ff6aa" executionId="293f8453-2242-473a-ae8a-c0e5fbee64f0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b132e377-e1e0-3bfb-4afd-88d3b226659d" executionId="9eb7a6d0-9a13-4462-bdde-84b68078eb04" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="374655e2-0472-704c-68c7-fcdf030c1883" executionId="6cb55e4e-da6a-4ddc-b0c5-1d16e2b87004" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="62015273-7d53-2cb7-d1d6-ec5e74446862" executionId="6c981f4e-c826-4967-809b-8bfd24e70e33" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4f574eb9-4ac7-de44-e297-62a53ad94eba" executionId="f530acd2-4981-435f-b448-327d0a54d27a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="726b03fb-c2a4-7427-4448-bf04cc0f894a" executionId="63792523-e4f2-4789-aed5-59cc5af5e7d9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="10" executed="10" passed="10" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.04]   Discovering: Unit.Tests&#xD;
+[xUnit.net 00:00:00.07]   Discovered:  Unit.Tests&#xD;
+[xUnit.net 00:00:00.07]   Starting:    Unit.Tests&#xD;
+[xUnit.net 00:00:00.24]   Finished:    Unit.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
@@ -326,7 +327,12 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             {
                 if (submission.GradeId.HasValue)
                 {
-                    return; // already finalized with grade - idempotent
+                    var grade = await _gradeRepository.GetByIdAsync(submission.GradeId.Value)
+                        ?? throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
+                    var requestedGrade = dto.FinalGrade ?? submission.SuggestedGrade;
+                    if (requestedGrade != grade.Value || dto.OverrideReason?.Trim() != submission.OverrideReason)
+                        throw new InvalidOperationException("Richiesta di finalizzazione in conflitto con quella già applicata.");
+                    return;
                 }
                 else
                 {
@@ -345,12 +351,22 @@ internal class ExamSubmissionManager : IExamSubmissionManager
                     throw new InvalidOperationException("Non tutte le risposte aperte sono state corrette.");
             }
 
+            var previousGrade = submission.GradeId.HasValue
+                ? await _gradeRepository.GetByIdAsync(submission.GradeId.Value) : null;
+            var beforeJson = JsonSerializer.Serialize(new
+            {
+                submission.Status, submission.SuggestedGrade, Grade = previousGrade?.Value,
+                submission.OverrideReason, submission.Passed, submission.FinalizedAt
+            });
+
             submission.OpenScore = _gradingService.CalculateOpenScore(exam, submission.Answers);
             submission.TotalScore = (submission.ClosedScore ?? 0m) + (submission.OpenScore ?? 0m);
             submission.Passed = submission.TotalScore >= (submission.PassingScore ?? 0m);
 
-            var gradeValue = dto.FinalGrade
-                ?? _gradingService.ConvertToGrade(submission.TotalScore ?? 0m, submission.MaxScore ?? 1m, exam.PassingPercent);
+            var suggestedGrade = _gradingService.ConvertToGrade(submission.TotalScore ?? 0m, submission.MaxScore ?? 1m, exam.PassingPercent);
+            submission.SuggestedGrade = suggestedGrade;
+            var gradeValue = dto.FinalGrade ?? suggestedGrade;
+            var isOverride = gradeValue != suggestedGrade;
 
             if (dto.FinalGrade.HasValue)
             {
@@ -415,7 +431,13 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             {
                 Id = Guid.NewGuid(),
                 ActorUserId = caller.UserId,
-                Action = "submission.finalize",
+                Action = isOverride ? "submission.override" : "submission.finalize",
+                BeforeJson = beforeJson,
+                AfterJson = JsonSerializer.Serialize(new
+                {
+                    submission.Status, submission.SuggestedGrade, Grade = finalGradeRow.Value,
+                    submission.OverrideReason, submission.Passed, submission.FinalizedAt
+                }),
                 EntityType = "exam_submission",
                 EntityId = submission.Id,
                 CreatedAt = DateTime.UtcNow
