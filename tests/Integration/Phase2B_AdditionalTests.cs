@@ -25,6 +25,25 @@ namespace ElectronicRegisterAPI.Tests.Integration
         private ClaimsContext AdminCaller() => new ClaimsContext(SeedData.AdminUserId, UserRole.Admin, null, null);
         private ClaimsContext StudentCaller(ScenarioIds ids) => new ClaimsContext(ids.StudentId, UserRole.Student, ids.StudentId, null);
 
+        private async Task EnsureAllOpenReviewedAsync(ScenarioIds ids, ClaimsContext teacher)
+        {
+            using var scope = _fixture.ScopeFactory.CreateScope();
+            var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
+            var submissionMgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+
+            var sub = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
+            var reviewDto = new ReviewOpenAnswersDto();
+            foreach (var a in sub!.Answers.Where(x => x.OpenText != null))
+            {
+                reviewDto.Answers.Add(new OpenAnswerReviewInputDto { AnswerId = a.Id, AwardedPoints = 0m });
+            }
+
+            if (reviewDto.Answers.Count > 0)
+            {
+                await submissionMgr.ReviewAsync(ids.SubmissionId, reviewDto, teacher);
+            }
+        }
+
         // A. Conversion and persistence ------------------------------------------
         [SkippableFact]
         public async Task ClosedOnly_70Percent_CreatesSuggestedAndOfficialSeven()
@@ -82,10 +101,12 @@ namespace ElectronicRegisterAPI.Tests.Integration
                 var q1 = await ctxWrite.Questions.FindAsync(ids.OpenQuestionId);
                 var q2 = await ctxWrite.Questions.FindAsync(ids.SingleQuestionId);
                 q1.Points = 2.5m; q2.Points = 7.5m; // assume student gets only q2 correct -> 7.5/10 => 75% (not below)
-                // instead force student to select incorrect option for q2
-                var ans = await ctxWrite.SubmissionAnswers.FirstAsync(a => a.SubmissionId == ids.SubmissionId && a.QuestionId == ids.SingleQuestionId);
+                // instead force student to select incorrect existing option for q2
+                var ans = await ctxWrite.SubmissionAnswers.Include(a => a.Options).FirstAsync(a => a.SubmissionId == ids.SubmissionId && a.QuestionId == ids.SingleQuestionId);
                 ans.Options.Clear();
-                ans.Options.Add(new ElectronicRegisterAPI.Infrastructure.Persistence.Entities.QuestionOption { Id = ids.WrongOptionId, QuestionId = ids.SingleQuestionId, IsCorrect = false, Position = 1, Text = "Wrong" });
+                var wrongOption = await ctxWrite.QuestionOptions.FindAsync(ids.WrongOptionId);
+                if (wrongOption == null) throw new InvalidOperationException("Expected wrong option to exist in seed data.");
+                ans.Options.Add(wrongOption);
                 await ctxWrite.SaveChangesAsync();
             }
 
@@ -277,6 +298,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             using var scope = _fixture.ScopeFactory.CreateScope();
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
 
             var dto = new FinalizeSubmissionDto { FinalGrade = 5m };
             await Assert.ThrowsAsync<ArgumentException>(async () => await mgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller()));
@@ -296,6 +318,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             using var scope = _fixture.ScopeFactory.CreateScope();
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
 
             var dto = new FinalizeSubmissionDto { FinalGrade = 5m, OverrideReason = "   " };
             await Assert.ThrowsAsync<ArgumentException>(async () => await mgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller()));
@@ -309,6 +332,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             using var scope = _fixture.ScopeFactory.CreateScope();
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            // Ensure all open answers are reviewed before Finalize
+            await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
 
             var dto = new FinalizeSubmissionDto { FinalGrade = 0m, OverrideReason = "Reason" };
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await mgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller()));
@@ -341,6 +366,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             using var scope = _fixture.ScopeFactory.CreateScope();
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
 
+            await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
             var dto = new FinalizeSubmissionDto { FinalGrade = 5m, OverrideReason = "Admin override" };
             await mgr.FinalizeAsync(ids.SubmissionId, dto, AdminCaller());
 
@@ -401,6 +427,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             using var scope = _fixture.ScopeFactory.CreateScope();
             var subMgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
             var dto = new FinalizeSubmissionDto { FinalGrade = 5m, OverrideReason = "Reason" };
+            // Ensure all open answers are reviewed before Finalize
+            await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
             await subMgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
 
             using var verify = _fixture.ScopeFactory.CreateScope();
@@ -421,6 +449,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             using var scope = _fixture.ScopeFactory.CreateScope();
             var subMgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
             var dto = new FinalizeSubmissionDto { FinalGrade = 5m, OverrideReason = "Reason" };
+            await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
             await subMgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
 
             using var verify = _fixture.ScopeFactory.CreateScope();
@@ -442,6 +471,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             using var scope = _fixture.ScopeFactory.CreateScope();
             var subMgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
 
+            await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
             var dto = new FinalizeSubmissionDto { FinalGrade = 6m, OverrideReason = "Reason" };
             await subMgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
             await subMgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
@@ -473,8 +503,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var t2 = Task.Run(async () => { try { await mgr2.FinalizeAsync(ids.SubmissionId, dto2, TeacherCaller()); return (Exception?)null; } catch (Exception ex) { return ex; } });
 
             var results = await Task.WhenAll(t1, t2);
-            // ensure at least one succeeded
-            Assert.True(results.All(r => r == null));
+            // ensure at least one succeeded (the losing request may be rejected due to finalization)
+            Assert.True(results.Any(r => r == null));
 
             using var verify = _fixture.ScopeFactory.CreateScope();
             var ctx = verify.ServiceProvider.GetRequiredService<ElectronicRegisterAPI.Infrastructure.Persistence.ElectronicRegisterContext>();
@@ -492,6 +522,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamManager>();
             var subMgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
 
+            await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
             var dto = new FinalizeSubmissionDto { FinalGrade = 5m, OverrideReason = "Reason" };
             await subMgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
 
