@@ -34,6 +34,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
         private MySqlContainer? _mysql;
         private ServiceProvider? _serviceProvider;
 
+        internal string ConnectionString { get; private set; } = string.Empty;
+
         public bool IsAvailable { get; private set; }
 
         public string UnavailableReason { get; private set; } = "Ambiente di integrazione non inizializzato.";
@@ -60,6 +62,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
                 connectionString = containerConnection;
             }
 
+            ConnectionString = connectionString;
             _serviceProvider = BuildServiceProvider(connectionString);
 
             using var scope = _serviceProvider.CreateScope();

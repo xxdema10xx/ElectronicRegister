@@ -536,6 +536,9 @@ namespace ElectronicRegisterAPI.Application.Managers
                     throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
             }
 
+            else if (caller.Role != UserRole.Admin)
+                throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
+
             // When returning result, resolve official grade value if present via grade repository
             decimal? officialGrade = null;
             if (submission.GradeId.HasValue)
@@ -548,7 +551,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                 officialGrade = grade.Value;
             }
 
-            return ExamSubmissionMapper.ToSubmissionResultDto(submission, officialGrade);
+            return ExamSubmissionMapper.ToSubmissionResultDto(submission, officialGrade, caller);
         }
     }
 }

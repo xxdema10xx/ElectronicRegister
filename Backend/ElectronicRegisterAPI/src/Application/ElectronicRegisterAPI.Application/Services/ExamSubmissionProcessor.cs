@@ -61,7 +61,7 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
                     if (grade is null) throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
                     officialGrade = grade.Value;
                 }
-                result = ExamSubmissionMapper.ToSubmissionResultDto(target, officialGrade);
+                result = ExamSubmissionMapper.ToSubmissionResultDto(target, officialGrade, caller);
                 return;
             }
 
@@ -127,7 +127,7 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
                     if (grade is null) throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
                     officialGrade = grade.Value;
                 }
-                result = ExamSubmissionMapper.ToSubmissionResultDto(target, officialGrade);
+                result = ExamSubmissionMapper.ToSubmissionResultDto(target, officialGrade, caller);
                 return;
             }
 
@@ -217,7 +217,7 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
                 if (g is null) throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
                 finalOfficialGrade = g.Value;
             }
-            result = ExamSubmissionMapper.ToSubmissionResultDto(finalTarget, finalOfficialGrade);
+            result = ExamSubmissionMapper.ToSubmissionResultDto(finalTarget, finalOfficialGrade, caller);
         });
 
         return result!;

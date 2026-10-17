@@ -1,3 +1,5 @@
+using ElectronicRegisterAPI.Application.Mappers;
+using ElectronicRegisterAPI.Domain.Exceptions;
 using System.Text.Json;
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
@@ -45,10 +47,13 @@ internal class ExamSubmissionManager : IExamSubmissionManager
     public async Task<List<SubmissionSummaryDto>> GetByExamAsync(Guid examId, SubmissionStatus? status, ClaimsContext caller)
     {
         ArgumentNullException.ThrowIfNull(caller);
+        if (status.HasValue && !Enum.IsDefined(status.Value))
+            throw new ArgumentException("Stato submission non valido.", nameof(status));
         // Only Admin or the Teacher owning the ClassSubject for the exam are allowed
         if (caller.Role == UserRole.Admin)
         {
-            // admin allowed
+            _ = await _examRepository.GetByIdAsync(examId)
+                ?? throw new KeyNotFoundException("Esame non trovato.");
         }
         else if (caller.Role == UserRole.Teacher)
         {
@@ -82,8 +87,8 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             StartedAt = s.StartedAt,
             DeadlineAt = s.DeadlineAt,
             SubmittedAt = s.SubmittedAt,
-            SubmitReason = null,
-            ViolationCount = 0,
+            SubmitReason = s.SubmitReason,
+            ViolationCount = s.ViolationCount,
             TotalScore = s.TotalScore,
             MaxScore = s.MaxScore,
             Passed = s.Passed,
@@ -97,6 +102,9 @@ internal class ExamSubmissionManager : IExamSubmissionManager
 
         var submission = await _submissionRepository.GetByIdAsync(id, withAnswers: true)
             ?? throw new KeyNotFoundException("La submission non esiste.");
+
+        if (caller.Role is not (UserRole.Student or UserRole.Teacher or UserRole.Admin))
+            throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
 
         // authorization: teacher/admin or the student who owns it
         if (caller.Role == UserRole.Student && caller.StudentId != submission.StudentId)
@@ -141,8 +149,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
                         Id = opt.Id,
                         Position = opt.Position,
                         Text = opt.Text,
-                        // Students must not see which options are correct
-                        IsCorrect = (caller.Role == UserRole.Teacher || caller.Role == UserRole.Admin) ? opt.IsCorrect : false,
+                        IsCorrect = opt.IsCorrect,
                         IsSelected = selectedOptionIds.Contains(opt.Id)
                     });
                 }
@@ -175,8 +182,16 @@ internal class ExamSubmissionManager : IExamSubmissionManager
                 Options = options,
                 IsCorrect = a.IsCorrect,
                 AwardedPoints = a.AwardedPoints,
-                TeacherComment = caller.Role == UserRole.Teacher ? a.TeacherComment : null
+                TeacherComment = a.TeacherComment
             });
+        }
+
+        decimal? officialGrade = null;
+        if (submission.GradeId.HasValue)
+        {
+            var grade = await _gradeRepository.GetByIdAsync(submission.GradeId.Value)
+                ?? throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
+            officialGrade = grade.Value;
         }
 
         var dto = new SubmissionReviewDto
@@ -202,13 +217,13 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             Passed = submission.Passed,
             SuggestedGrade = submission.SuggestedGrade,
             GradeId = submission.GradeId,
-            FinalGrade = null,
+            FinalGrade = officialGrade,
             ReviewedByUserId = submission.ReviewedByUserId,
             FinalizedAt = submission.FinalizedAt,
             Answers = answers
         };
 
-        return dto;
+        return SubmissionVisibility.Apply(dto, caller);
     }
 
     public async Task ReviewAsync(Guid id, ReviewOpenAnswersDto dto, ClaimsContext caller)
@@ -217,6 +232,8 @@ internal class ExamSubmissionManager : IExamSubmissionManager
         ArgumentNullException.ThrowIfNull(dto);
         if (caller.Role != UserRole.Teacher && caller.Role != UserRole.Admin)
             throw new UnauthorizedAccessException("Non sei autorizzato a revisionare submissions.");
+        if (dto.Answers is null || dto.Answers.Any(a => a is null))
+            throw new ArgumentException("La lista delle risposte non può essere nulla o contenere elementi null.");
         // Review must be transactional to avoid races with Finalize
         await _transactionManager.ExecuteAsync(async () =>
         {
@@ -235,13 +252,13 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             }
 
             if (!submission.SubmittedAt.HasValue)
-                throw new InvalidOperationException("La submission non è stata consegnata e non può essere revisionata.");
+                throw SubmissionErrors.Conflict("La submission non è stata consegnata e non può essere revisionata.");
             if (submission.Status == SubmissionStatus.InProgress)
-                throw new InvalidOperationException("Non è possibile revisionare una submission InProgress.");
+                throw SubmissionErrors.Conflict("Non è possibile revisionare una submission InProgress.");
             if (submission.Status == SubmissionStatus.Finalized)
-                throw new InvalidOperationException("Non è possibile revisionare una submission già Finalized.");
+                throw SubmissionErrors.Conflict("Non è possibile revisionare una submission già Finalized.");
             if (submission.GradeId.HasValue)
-                throw new InvalidOperationException("Non è possibile modificare i punteggi di una submission che ha già un voto ufficiale.");
+                throw SubmissionErrors.Conflict("Non è possibile modificare i punteggi di una submission che ha già un voto ufficiale.");
 
             // load exam once for question metadata
             var exam = await _examRepository.GetByIdAsync(submission.ExamId, includeStructure: true)
@@ -257,7 +274,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
                 var question = exam.Questions.FirstOrDefault(q => q.Id == answer.QuestionId);
                 if (question is null) throw new KeyNotFoundException($"Question {answer.QuestionId} non trovato nell'esame.");
                 if (question.Type != QuestionType.Open)
-                    throw new InvalidOperationException("È consentita la correzione manuale solo per domande di tipo Open.");
+                    throw SubmissionErrors.InvalidRequest("È consentita la correzione manuale solo per domande di tipo Open.");
 
                 _gradingService.EnsureReviewPointsValid(question, input.AwardedPoints);
 
@@ -316,11 +333,11 @@ internal class ExamSubmissionManager : IExamSubmissionManager
 
             // Submission must have been submitted before finalization
             if (!submission.SubmittedAt.HasValue)
-                throw new InvalidOperationException("Non è possibile finalizzare una submission non consegnata.");
+                throw SubmissionErrors.Conflict("Non è possibile finalizzare una submission non consegnata.");
 
             // Prevent finalizing an InProgress submission
             if (submission.Status == SubmissionStatus.InProgress)
-                throw new InvalidOperationException("Non è possibile finalizzare una submission InProgress.");
+                throw SubmissionErrors.Conflict("Non è possibile finalizzare una submission InProgress.");
 
             // If already finalized, honor idempotency only when a Grade exists. If Finalized but GradeId is null, treat as inconsistent.
             if (submission.Status == SubmissionStatus.Finalized)
@@ -331,7 +348,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
                         ?? throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
                     var requestedGrade = dto.FinalGrade ?? submission.SuggestedGrade;
                     if (requestedGrade != grade.Value || dto.OverrideReason?.Trim() != submission.OverrideReason)
-                        throw new InvalidOperationException("Richiesta di finalizzazione in conflitto con quella già applicata.");
+                        throw SubmissionErrors.Conflict("Richiesta di finalizzazione in conflitto con quella già applicata.");
                     return;
                 }
                 else
@@ -348,7 +365,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             {
                 var question = exam.Questions.FirstOrDefault(q => q.Id == answer.QuestionId);
                 if (question != null && question.Type == QuestionType.Open && !answer.AwardedPoints.HasValue)
-                    throw new InvalidOperationException("Non tutte le risposte aperte sono state corrette.");
+                    throw SubmissionErrors.Conflict("Non tutte le risposte aperte sono state corrette.");
             }
 
             var previousGrade = submission.GradeId.HasValue

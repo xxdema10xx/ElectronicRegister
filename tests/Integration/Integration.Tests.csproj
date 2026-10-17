@@ -16,6 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\..\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\ElectronicRegisterAPI.csproj" />
 	<ProjectReference Include="..\..\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\ElectronicRegisterAPI.Application.csproj" />
 	<ProjectReference Include="..\..\Backend\ElectronicRegisterAPI\src\Business\ElectronicRegisterAPI.Business\ElectronicRegisterAPI.Business.csproj" />
 	<ProjectReference Include="..\..\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\ElectronicRegisterAPI.Infrastructure.csproj" />

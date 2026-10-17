@@ -12,10 +12,12 @@ namespace ElectronicRegisterAPI.Api.Controllers;
 public class ExamController : ApiControllerBase
 {
     private readonly IExamManager _examManager;
+    private readonly IExamSubmissionManager _submissionManager;
 
-    public ExamController(IExamManager examManager)
+    public ExamController(IExamManager examManager, IExamSubmissionManager submissionManager)
     {
         _examManager = examManager;
+        _submissionManager = submissionManager;
     }
 
     [HttpGet]
@@ -120,6 +122,36 @@ public class ExamController : ApiControllerBase
     {
         var res = await _examManager.SubmitAsync(id, dto, CurrentCaller());
         return Ok(res);
+    }
+
+    [HttpGet("{examId}/submissions")]
+    [Authorize(Roles = "teacher,admin")]
+    public async Task<ActionResult<List<SubmissionSummaryDto>>> GetSubmissions(Guid examId, [FromQuery] SubmissionStatus? status)
+    {
+        return Ok(await _submissionManager.GetByExamAsync(examId, status, CurrentCaller()));
+    }
+
+    [HttpGet("submission/{id}/review")]
+    [Authorize(Roles = "teacher,admin")]
+    public async Task<ActionResult<SubmissionReviewDto>> GetReview(Guid id)
+    {
+        return Ok(await _submissionManager.GetByIdAsync(id, CurrentCaller()));
+    }
+
+    [HttpPut("submission/{id}/review")]
+    [Authorize(Roles = "teacher,admin")]
+    public async Task<ActionResult> Review(Guid id, ReviewOpenAnswersDto dto)
+    {
+        await _submissionManager.ReviewAsync(id, dto, CurrentCaller());
+        return NoContent();
+    }
+
+    [HttpPost("submission/{id}/finalize")]
+    [Authorize(Roles = "teacher,admin")]
+    public async Task<ActionResult> FinalizeSubmission(Guid id, FinalizeSubmissionDto dto)
+    {
+        await _submissionManager.FinalizeAsync(id, dto, CurrentCaller());
+        return NoContent();
     }
 
     [HttpGet("submission/{id}/result")]
