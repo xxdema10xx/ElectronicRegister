@@ -1,0 +1,79 @@
+﻿{
+    "BaselinePreserved":  true,
+    "BaselineTotal":  257,
+    "NewUnitTests":  9,
+    "NewIntegrationTests":  61,
+    "FinalTotal":  327,
+    "FinalTestSetsIdentical":  true,
+    "ClassCounts":  {
+                        "Mt2MicrosoftIdentityTests":  11,
+                        "Mt2IdentityTests":  50,
+                        "AuditBootstrapTests":  2
+                    },
+    "Baseline":  [
+                     {
+                         "Project":  "Unit",
+                         "Total":  39,
+                         "Executed":  39,
+                         "Passed":  39,
+                         "Failed":  0,
+                         "Skipped":  0,
+                         "File":  "Lorenzo_DESKTOP-QUOAG32_2026-10-18_22_13_16_net10.0.trx",
+                         "SHA256":  "CE5DC8C76DA487680EB7F28348C5DC6F7F0912BCCEBF3DB2BAE826DB6D9A57A7"
+                     },
+                     {
+                         "Project":  "Integration",
+                         "Total":  218,
+                         "Executed":  218,
+                         "Passed":  218,
+                         "Failed":  0,
+                         "Skipped":  0,
+                         "File":  "Lorenzo_DESKTOP-QUOAG32_2026-10-18_22_13_19_net10.0.trx",
+                         "SHA256":  "603B03FA97EE2E5E4DCB374D0243DBE900EFDCF8D90319E3CC59109ADB550782"
+                     }
+                 ],
+    "Final1":  [
+                   {
+                       "Project":  "Unit",
+                       "Total":  48,
+                       "Executed":  48,
+                       "Passed":  48,
+                       "Failed":  0,
+                       "Skipped":  0,
+                       "File":  "Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_18_37_net10.0.trx",
+                       "SHA256":  "916236995C4FF606AE17C16B76787F823B6E4A850048A40E4D5747A404C81287"
+                   },
+                   {
+                       "Project":  "Integration",
+                       "Total":  279,
+                       "Executed":  279,
+                       "Passed":  279,
+                       "Failed":  0,
+                       "Skipped":  0,
+                       "File":  "Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_18_40_net10.0.trx",
+                       "SHA256":  "B31E4D43E1ECE85C8801FC02D6F59C31884C68B817744261BDEEC161304B72F6"
+                   }
+               ],
+    "Final2":  [
+                   {
+                       "Project":  "Unit",
+                       "Total":  48,
+                       "Executed":  48,
+                       "Passed":  48,
+                       "Failed":  0,
+                       "Skipped":  0,
+                       "File":  "Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_19_48_net10.0.trx",
+                       "SHA256":  "09F6B06708749A6FD375A7D570D771419F9A31F6C275D282586AA1CF767CCA8F"
+                   },
+                   {
+                       "Project":  "Integration",
+                       "Total":  279,
+                       "Executed":  279,
+                       "Passed":  279,
+                       "Failed":  0,
+                       "Skipped":  0,
+                       "File":  "Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_19_51_net10.0.trx",
+                       "SHA256":  "4121786ED372634A3F569C9FC65E5F110FB35FB3A4AFCBF06C16887B7C0C5828"
+                   }
+               ]
+}

@@ -81,6 +81,14 @@ namespace ElectronicRegisterAPI.Application.Managers
 
             var assignments = await _classSubjectRepository.GetByTeacherIdAsync(teacherId);
 
+            if (caller.Role == UserRole.Student)
+            {
+                if (!caller.StudentId.HasValue) return new List<SubjectDto>();
+                var student = await _studentRepository.GetByIdAsync(caller.StudentId.Value);
+                if (student?.ClassId is null) return new List<SubjectDto>();
+                assignments = assignments.Where(cs => cs.ClassId == student.ClassId.Value).ToList();
+            }
+
             var subjectIds = assignments
                 .Select(cs => cs.SubjectId)
                 .Distinct()

@@ -40,15 +40,24 @@ internal sealed class Phase2C_HttpHost : IAsyncDisposable
 
     private Phase2C_HttpHost(WebApplication app, HttpClient client) => (_app, Client) = (app, client);
 
-    public static async Task<Phase2C_HttpHost> StartAsync(string connectionString)
+    public static async Task<Phase2C_HttpHost> StartAsync(string connectionString, Action<IServiceCollection>? configureServices = null)
     {
         var builder = WebApplication.CreateBuilder(new WebApplicationOptions { EnvironmentName = "Production" });
         builder.Logging.ClearProviders();
         builder.WebHost.UseUrls("http://127.0.0.1:0");
         builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
         {
-            ["ConnectionStrings:DefaultConnection"] = connectionString
+            ["ConnectionStrings:DefaultConnection"] = connectionString,
+            ["Jwt:Key"] = Key, ["Jwt:Issuer"] = Issuer, ["Jwt:Audience"] = Issuer,
+            ["Identity:Legacy:Enabled"] = "true",
+            ["Identity:Legacy:AllowUnbackfilledAccounts"] = "true",
+            ["Identity:Legacy:InstitutionId"] = "71000000-0000-0000-0000-000000000001"
         });
+        // Explicit test-only migration manifest, including scenarios created after host startup.
+        var legacyIds = Enum.GetValues<IntegrationScenario>().Select(s => ScenarioIds.For(s).StudentId)
+            .Concat(new[] { SeedData.AdminUserId, SeedData.TeacherUserId, SeedData.Id(0, 13) }).Distinct().ToArray();
+        builder.Configuration.AddInMemoryCollection(legacyIds.Select((id, index) =>
+            new KeyValuePair<string, string?>($"Identity:Legacy:UserIds:{index}", id.ToString())));
         builder.Services.AddInfrastructure(builder.Configuration);
         builder.Services.AddBusinessServices();
         builder.Services.AddApplicationManagers();
@@ -67,6 +76,8 @@ internal sealed class Phase2C_HttpHost : IAsyncDisposable
             };
         });
         builder.Services.AddAuthorization();
+        ElectronicRegisterAPI.Api.Security.InstitutionAuthentication.AddInstitutionAuthentication(builder.Services, builder.Configuration);
+        configureServices?.Invoke(builder.Services);
         var app = builder.Build();
         app.UseExceptionHandler();
         app.UseAuthentication();

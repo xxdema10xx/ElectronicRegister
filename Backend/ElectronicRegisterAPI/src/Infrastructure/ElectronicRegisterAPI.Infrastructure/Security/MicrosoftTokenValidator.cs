@@ -28,10 +28,12 @@ internal class MicrosoftTokenValidator : IMicrosoftTokenValidator
 
         var validationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
+            ValidateIssuer = true,
+            ValidIssuer = $"https://login.microsoftonline.com/{_options.TenantId}/v2.0",
             ValidateAudience = true,
             ValidAudience = _options.Audience,
             ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
             IssuerSigningKeys = config.SigningKeys
         };
 

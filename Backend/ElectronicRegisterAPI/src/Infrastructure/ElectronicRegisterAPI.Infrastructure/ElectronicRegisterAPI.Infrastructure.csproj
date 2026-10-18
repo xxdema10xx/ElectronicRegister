@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\ElectronicRegisterAPI.Domain\ElectronicRegisterAPI.Domain.csproj" />
+    <EmbeddedResource Include="..\..\..\..\..\migrations\mt1\*.sql" LogicalName="MT1.%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,5 +28,8 @@
     <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="8.0.1" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.0.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\..\..\migrations\mt3\*.sql" LogicalName="MT3.%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

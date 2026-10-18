@@ -1,0 +1,8 @@
+﻿DATABASE()	VERSION()	@@tx_isolation
+electronic_register_test	5.7.24	REPEATABLE-READ
+id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra
+1	SIMPLE	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	no matching row in const table
+remaining_institutions
+0
+remaining_memberships
+0

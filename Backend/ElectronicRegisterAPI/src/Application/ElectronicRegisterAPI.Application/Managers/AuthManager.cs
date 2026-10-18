@@ -17,7 +17,9 @@ internal class AuthManager : IAuthManager
     private readonly IUserService _userService;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly IMicrosoftTokenValidator _microsoftTokenValidator;
+    private readonly IMicrosoftIdentityLink _microsoftIdentityLink;
+    private readonly ITransactionManager _transactionManager;
+    private readonly ILegacyAccess _legacyAccess;
 
     public AuthManager(
         IUserRepository userRepository,
@@ -26,7 +28,8 @@ internal class AuthManager : IAuthManager
         IUserService userService,
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
-        IMicrosoftTokenValidator microsoftTokenValidator)
+        IMicrosoftIdentityLink microsoftIdentityLink,
+        ITransactionManager transactionManager, ILegacyAccess legacyAccess)
     {
         _userRepository = userRepository;
         _studentRepository = studentRepository;
@@ -34,13 +37,15 @@ internal class AuthManager : IAuthManager
         _userService = userService;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
-        _microsoftTokenValidator = microsoftTokenValidator;
+        _microsoftIdentityLink = microsoftIdentityLink;
+        _transactionManager = transactionManager;
+        _legacyAccess = legacyAccess;
     }
 
     public async Task<string?> LoginAsync(LoginDto dto)
     {
         var user = await _userRepository.GetByEmailAsync(dto.Email);
-        if (user is null || !_passwordHasher.Verify(dto.Password, user.PasswordHash))
+        if (user is null || !_passwordHasher.Verify(dto.Password, user.PasswordHash) || !await _legacyAccess.IsAllowedAsync(user.Id))
             return null;
 
         return _jwtTokenGenerator.Generate(user.Id, user.Email, user.Role, user.StudentId, user.TeacherId);
@@ -48,28 +53,18 @@ internal class AuthManager : IAuthManager
 
     public async Task<string?> MicrosoftLoginAsync(MicrosoftLoginDto dto)
     {
-        ClaimsPrincipal principal;
-        try
-        {
-            principal = await _microsoftTokenValidator.ValidateAsync(dto.AccessToken);
-        }
-        catch (Exception)
-        {
-            return null;
-        }
-
-        var email = principal.FindFirst("preferred_username")?.Value
-                    ?? principal.FindFirst(ClaimTypes.Email)?.Value;
-
-        if (string.IsNullOrEmpty(email)) return null;
-
-        var user = await _userRepository.GetByEmailAsync(email);
-        if (user is null) return null;
+        var userId = await _microsoftIdentityLink.AuthenticateAsync(dto.AccessToken);
+        if (!userId.HasValue) return null;
+        var user = await _userRepository.GetByIdAsync(userId.Value);
+        if (user is null || !await _legacyAccess.IsAllowedAsync(user.Id)) return null;
 
         return _jwtTokenGenerator.Generate(user.Id, user.Email, user.Role, user.StudentId, user.TeacherId);
     }
 
-    public async Task RegisterAsync(RegisterDto dto)
+    public Task RegisterAsync(RegisterDto dto) =>
+        _transactionManager.ExecuteAsync(() => RegisterCoreAsync(dto));
+
+    private async Task RegisterCoreAsync(RegisterDto dto)
     {
         await _userService.EnsureEmailIsAvailableAsync(dto.Email);
         _userService.EnsureValidPassword(dto.Password);
@@ -96,7 +91,10 @@ internal class AuthManager : IAuthManager
         await _userRepository.AddAsync(user);
     }
 
-    public async Task RegisterForAdminAsync(RegisterForAdminDto dto)
+    public Task RegisterForAdminAsync(RegisterForAdminDto dto) =>
+        _transactionManager.ExecuteAsync(() => RegisterForAdminCoreAsync(dto));
+
+    private async Task RegisterForAdminCoreAsync(RegisterForAdminDto dto)
     {
         await _userService.EnsureEmailIsAvailableAsync(dto.Email);
         _userService.EnsureValidRole(dto.Role);

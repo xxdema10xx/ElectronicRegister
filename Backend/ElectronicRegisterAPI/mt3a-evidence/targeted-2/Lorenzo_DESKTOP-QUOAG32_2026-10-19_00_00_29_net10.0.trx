@@ -1,0 +1,541 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="f9ed0114-deba-41f2-bd2a-5c22610ea03c" name="Lorenzo@DESKTOP-QUOAG32 2026-10-19 00:00:29" runUser="DESKTOP-QUOAG32\Lorenzo" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-19T00:00:29.3827955+02:00" queuing="2026-10-19T00:00:29.3827956+02:00" start="2026-10-19T00:00:26.1275142+02:00" finish="2026-10-19T00:00:37.1873532+02:00" />
+  <TestSettings name="default" id="b74b0118-5be6-435c-a171-4090c88278a7">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-19_00_00_29" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="09ea83cb-e9f0-413c-a0b0-9d0886e458ca" testId="332f6a97-b67a-f55e-9bf0-d6b23c5a0cae" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: &quot;duplicate&quot;, number: 1062)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0084912" startTime="2026-10-19T00:00:35.8879786+02:00" endTime="2026-10-19T00:00:35.8879788+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="09ea83cb-e9f0-413c-a0b0-9d0886e458ca" />
+    <UnitTestResult executionId="a7c0fd39-bf4e-45a4-b150-02a3a83d6895" testId="f918b494-1103-7e55-6872-e89fb4792061" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam_student&quot;, column: &quot;student_id&quot;, parent: &quot;student&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0069400" startTime="2026-10-19T00:00:29.5168286+02:00" endTime="2026-10-19T00:00:29.5168290+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a7c0fd39-bf4e-45a4-b150-02a3a83d6895" />
+    <UnitTestResult executionId="9b30269a-b345-4a16-b881-c6c2b6a13908" testId="ce856b90-a1c2-c061-dbf9-e13b2273e722" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: &quot;wrong-user&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0032324" startTime="2026-10-19T00:00:36.4839729+02:00" endTime="2026-10-19T00:00:36.4839729+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9b30269a-b345-4a16-b881-c6c2b6a13908" />
+    <UnitTestResult executionId="f08691d1-4e87-4fa2-b431-63f551a072db" testId="0cb41006-bb35-c3f5-bd10-965923e68d5e" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;biennium_study_area&quot;, column: &quot;study_area_id&quot;, parent: &quot;study_area&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0077434" startTime="2026-10-19T00:00:30.2539259+02:00" endTime="2026-10-19T00:00:30.2539262+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f08691d1-4e87-4fa2-b431-63f551a072db" />
+    <UnitTestResult executionId="aa82e65d-9b53-48e4-aabd-7c0cd229bafe" testId="1570a49b-bb2c-cbe8-e39e-214f8f1e4f24" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;class_subject&quot;, column: &quot;teacher_id&quot;, parent: &quot;teacher&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0046391" startTime="2026-10-19T00:00:30.9759534+02:00" endTime="2026-10-19T00:00:30.9759537+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aa82e65d-9b53-48e4-aabd-7c0cd229bafe" />
+    <UnitTestResult executionId="332d3ccb-9c09-4b67-958f-273ded4cc410" testId="b65f7414-dd8a-00bd-6e01-ccbcb2ce5327" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AllCompositeConstraintsAndSupportingIndexesExistWithStrictGuidTypes" computerName="DESKTOP-QUOAG32" duration="00:00:00.0758563" startTime="2026-10-19T00:00:35.2439483+02:00" endTime="2026-10-19T00:00:35.2439486+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="332d3ccb-9c09-4b67-958f-273ded4cc410" />
+    <UnitTestResult executionId="a2f278c3-adea-4cc8-b767-971bc6714906" testId="2752e257-51f7-c5fd-f027-710184cb7ec2" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;grade&quot;, column: &quot;class_subject_id&quot;, parent: &quot;class_subject&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0074684" startTime="2026-10-19T00:00:31.9959368+02:00" endTime="2026-10-19T00:00:31.9959371+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a2f278c3-adea-4cc8-b767-971bc6714906" />
+    <UnitTestResult executionId="2a22f1ca-1cde-4349-9742-6f1d46e05316" testId="3a9919a0-3650-929e-9cbc-06c4ba8174c6" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;class_subject&quot;, column: &quot;subject_id&quot;, parent: &quot;subject&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0056562" startTime="2026-10-19T00:00:28.9809109+02:00" endTime="2026-10-19T00:00:28.9809114+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2a22f1ca-1cde-4349-9742-6f1d46e05316" />
+    <UnitTestResult executionId="3580e565-6b2a-4e62-9d22-39378aefad13" testId="f6e7e846-f6b9-1da6-c043-166511c6054b" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;submission_answer&quot;, column: &quot;question_id&quot;, parent: &quot;question&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0051165" startTime="2026-10-19T00:00:29.1565067+02:00" endTime="2026-10-19T00:00:29.1565069+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3580e565-6b2a-4e62-9d22-39378aefad13">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1452&#xD;
+Actual:   1451</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 106&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="cfd10bff-da2b-4f9d-b372-6f0bb23f64cc" testId="04552ced-8ef2-16ce-fbb7-1190c86d3558" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam_submission&quot;, column: &quot;grade_id&quot;, parent: &quot;grade&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0049540" startTime="2026-10-19T00:00:28.8059978+02:00" endTime="2026-10-19T00:00:28.8059981+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cfd10bff-da2b-4f9d-b372-6f0bb23f64cc">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1452&#xD;
+Actual:   1062</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 106&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="18a8f36f-d397-473a-baa9-d5ccd6c0d3a8" testId="f7642f8f-41e9-052a-bf5a-440456d17a95" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: &quot;wrong-membership&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0035963" startTime="2026-10-19T00:00:36.5759747+02:00" endTime="2026-10-19T00:00:36.5759748+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="18a8f36f-d397-473a-baa9-d5ccd6c0d3a8" />
+    <UnitTestResult executionId="684afb8e-00ca-496e-9858-4b22ead36629" testId="5b7f1e8b-5a83-7f48-3ce6-25e75539afed" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: &quot;role&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0148711" startTime="2026-10-19T00:00:36.3048864+02:00" endTime="2026-10-19T00:00:36.3048864+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="684afb8e-00ca-496e-9858-4b22ead36629" />
+    <UnitTestResult executionId="681488c8-2e27-48b5-b5ef-343338f5ed4f" testId="d732cd98-b620-9dbf-7735-bc2eca509da9" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ConflictingOwnershipRollsBackEntireBackfill" computerName="DESKTOP-QUOAG32" duration="00:00:00.0821754" startTime="2026-10-19T00:00:37.1409093+02:00" endTime="2026-10-19T00:00:37.1409095+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="681488c8-2e27-48b5-b5ef-343338f5ed4f" />
+    <UnitTestResult executionId="cb16c3d4-10b9-41b3-8a6c-c04c75b374e8" testId="e1c1c06c-b4be-5b50-0d4e-1f16eceb5e07" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;biennium_study_path&quot;, column: &quot;biennium_study_area_id&quot;, parent: &quot;biennium_study_area&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0080831" startTime="2026-10-19T00:00:30.0688778+02:00" endTime="2026-10-19T00:00:30.0688784+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cb16c3d4-10b9-41b3-8a6c-c04c75b374e8" />
+    <UnitTestResult executionId="235111f2-8d16-4037-941d-4eb2d413c6a0" testId="c0cdde9a-9da2-f04a-681a-be05818def73" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ControlledProfileBackfillPreservesEveryLegacyCellAndIsIdempotent" computerName="DESKTOP-QUOAG32" duration="00:00:00.1902204" startTime="2026-10-19T00:00:36.8089050+02:00" endTime="2026-10-19T00:00:36.8089052+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="235111f2-8d16-4037-941d-4eb2d413c6a0" />
+    <UnitTestResult executionId="21cc106c-57b3-4f81-852d-531250c20113" testId="0c68812e-523b-7661-f6a8-c52c5f39375e" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: &quot;membership&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0700185" startTime="2026-10-19T00:00:36.1199367+02:00" endTime="2026-10-19T00:00:36.1199369+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="21cc106c-57b3-4f81-852d-531250c20113" />
+    <UnitTestResult executionId="78ba6c49-bca1-44a2-91e1-39462164b3c3" testId="ea642ef4-f180-e77f-8e18-36be4531666d" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: &quot;membership&quot;, number: 1452)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0076776" startTime="2026-10-19T00:00:35.7329714+02:00" endTime="2026-10-19T00:00:35.7329716+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="78ba6c49-bca1-44a2-91e1-39462164b3c3" />
+    <UnitTestResult executionId="625e4960-bdb5-4b38-a6eb-9a9487e1b7f8" testId="b02cd807-43f7-9f8e-dde7-0a2d484b782e" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.ProfileOwnershipCannotBeMovedOrRelinked(kind: &quot;teacher&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0097820" startTime="2026-10-19T00:00:33.3188672+02:00" endTime="2026-10-19T00:00:33.3188675+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="625e4960-bdb5-4b38-a6eb-9a9487e1b7f8" />
+    <UnitTestResult executionId="a09fe392-9e61-4465-8960-dae594221aa5" testId="29262097-7812-e52f-e4d2-f2fbf04f0052" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: &quot;missing-profile&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0138466" startTime="2026-10-19T00:00:36.2449953+02:00" endTime="2026-10-19T00:00:36.2449953+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a09fe392-9e61-4465-8960-dae594221aa5" />
+    <UnitTestResult executionId="c3a6bb74-cd61-4b59-b143-40d2017308dd" testId="b0aaf96a-d4b4-db03-e8a2-b608269e9e2d" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RealAdminMembershipDoesNotImplyTeacherOrStudentProfile" computerName="DESKTOP-QUOAG32" duration="00:00:00.0253673" startTime="2026-10-19T00:00:36.0058947+02:00" endTime="2026-10-19T00:00:36.0058948+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c3a6bb74-cd61-4b59-b143-40d2017308dd" />
+    <UnitTestResult executionId="df65233a-7fda-4c9f-9b40-b0bcb2056534" testId="0b8bc77e-bfa1-ade1-4a73-71907a7c84d4" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched" computerName="DESKTOP-QUOAG32" duration="00:00:00.0047460" startTime="2026-10-19T00:00:33.9504827+02:00" endTime="2026-10-19T00:00:33.9504828+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="df65233a-7fda-4c9f-9b40-b0bcb2056534">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidCastException : Unable to cast object of type 'System.Guid' to type 'System.String'.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 192&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7c10d6f3-44fb-402c-8709-8d5e36e21950" testId="22149246-9fbd-8f5e-6d76-3235b7a91fd6" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;student&quot;, column: &quot;class_id&quot;, parent: &quot;class&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0079410" startTime="2026-10-19T00:00:31.7828604+02:00" endTime="2026-10-19T00:00:31.7828607+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7c10d6f3-44fb-402c-8709-8d5e36e21950" />
+    <UnitTestResult executionId="f10cb67c-a009-462d-b636-15732c1f694d" testId="537aaae7-7202-41a3-58b7-7622d7a3da71" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam_submission&quot;, column: &quot;exam_id&quot;, parent: &quot;exam&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0051309" startTime="2026-10-19T00:00:30.8103588+02:00" endTime="2026-10-19T00:00:30.8103593+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f10cb67c-a009-462d-b636-15732c1f694d">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1452&#xD;
+Actual:   1451</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 106&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4e374d82-3d96-4965-b8aa-d8eaf80b34b3" testId="f661dc22-265d-e4b3-e7cf-1f9da905b8b9" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;class&quot;, column: &quot;biennium_study_path_id&quot;, parent: &quot;biennium_study_path&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0051469" startTime="2026-10-19T00:00:32.4313404+02:00" endTime="2026-10-19T00:00:32.4313406+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4e374d82-3d96-4965-b8aa-d8eaf80b34b3">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1452&#xD;
+Actual:   1062</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 106&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a4267ffc-c25e-40e1-ad49-4b3a0a20294b" testId="f87f5e1b-b668-c801-b077-a33de220c6b1" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: &quot;wrong-institution&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0037515" startTime="2026-10-19T00:00:36.4378924+02:00" endTime="2026-10-19T00:00:36.4378925+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a4267ffc-c25e-40e1-ad49-4b3a0a20294b" />
+    <UnitTestResult executionId="d500a698-1bd7-4202-8403-d5160e33a0fa" testId="a4c2ce8d-76ee-3303-7bd4-481b4109859d" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.CatalogNamesAndBienniumDatesAreIndependentAndProfilesHaveNoInventedUsers" computerName="DESKTOP-QUOAG32" duration="00:00:00.0396556" startTime="2026-10-19T00:00:34.7929064+02:00" endTime="2026-10-19T00:00:34.7929067+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d500a698-1bd7-4202-8403-d5160e33a0fa" />
+    <UnitTestResult executionId="ae4ac369-ea32-429a-afda-4be568d0a455" testId="e3c2c68f-e525-ba75-2272-2660325005ab" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;biennium_study_path&quot;, column: &quot;study_path_id&quot;, parent: &quot;study_path&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0101217" startTime="2026-10-19T00:00:32.2168845+02:00" endTime="2026-10-19T00:00:32.2168847+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ae4ac369-ea32-429a-afda-4be568d0a455" />
+    <UnitTestResult executionId="f4901885-d8a8-4140-a5d8-17d9cd561697" testId="6a0e5613-eb6a-ce45-4c65-62d68b1a99d2" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipToolRejectsUnauthorizedDatabaseBeforeNetwork(database: &quot;electronic_register&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0003816" startTime="2026-10-19T00:00:33.7329904+02:00" endTime="2026-10-19T00:00:33.7329907+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f4901885-d8a8-4140-a5d8-17d9cd561697" />
+    <UnitTestResult executionId="8d6ddffa-8864-4d92-ab59-2db32ee8c6d8" testId="fa5c7cc6-31c9-ade7-a254-6e9e6ac36100" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: &quot;missing&quot;, number: 1452)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0090886" startTime="2026-10-19T00:00:35.8358835+02:00" endTime="2026-10-19T00:00:35.8358837+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8d6ddffa-8864-4d92-ab59-2db32ee8c6d8" />
+    <UnitTestResult executionId="43ec7dab-cb4f-44dd-b9bd-d83055a0a217" testId="bc03c24d-b3f6-dc4c-71c1-ee3c9579d705" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;class_subject&quot;, column: &quot;class_id&quot;, parent: &quot;class&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0069287" startTime="2026-10-19T00:00:31.1499086+02:00" endTime="2026-10-19T00:00:31.1499089+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="43ec7dab-cb4f-44dd-b9bd-d83055a0a217" />
+    <UnitTestResult executionId="cdb4978c-0a62-41fc-8efc-21a2ac915975" testId="6555e44b-f429-76a6-8061-4a9a15ce63d0" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows" computerName="DESKTOP-QUOAG32" duration="00:00:00.0031863" startTime="2026-10-19T00:00:35.4154549+02:00" endTime="2026-10-19T00:00:35.4154551+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cdb4978c-0a62-41fc-8efc-21a2ac915975">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidCastException : Unable to cast object of type 'System.Guid' to type 'System.String'.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 181&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="00c2d96a-951a-440f-b9dc-63841d76b5c1" testId="01d0f799-ae31-8224-df77-af805496a290" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;submission_answer&quot;, column: &quot;submission_id&quot;, parent: &quot;exam_submission&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0063753" startTime="2026-10-19T00:00:29.8878372+02:00" endTime="2026-10-19T00:00:29.8878375+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="00c2d96a-951a-440f-b9dc-63841d76b5c1" />
+    <UnitTestResult executionId="27e16a63-46e5-470a-94b5-1d9c9ebf3396" testId="1fb3e438-f4e6-ebb7-de9a-a52036b418a0" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;grade&quot;, column: &quot;student_id&quot;, parent: &quot;student&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0058640" startTime="2026-10-19T00:00:28.6208271+02:00" endTime="2026-10-19T00:00:28.6208275+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="27e16a63-46e5-470a-94b5-1d9c9ebf3396" />
+    <UnitTestResult executionId="9707680a-d874-44c0-be18-84839ee7cf2f" testId="d55b6538-8cdd-d5f6-b628-378e38ab5adb" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: &quot;duplicate&quot;, number: 1062)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0085352" startTime="2026-10-19T00:00:35.9379261+02:00" endTime="2026-10-19T00:00:35.9379262+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9707680a-d874-44c0-be18-84839ee7cf2f" />
+    <UnitTestResult executionId="dfe17331-a727-44ff-9672-a7c0ae0b777a" testId="7c3931ad-08e7-6b57-2fd1-7b6687db6bcb" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;question&quot;, column: &quot;exam_id&quot;, parent: &quot;exam&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0051382" startTime="2026-10-19T00:00:29.7103103+02:00" endTime="2026-10-19T00:00:29.7103105+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="dfe17331-a727-44ff-9672-a7c0ae0b777a">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1452&#xD;
+Actual:   1062</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 106&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8f937e56-8e83-49a8-8b93-a3c9baa3b7da" testId="48eabc8b-891f-97f0-2ba8-99195fbc5911" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.IncompatibleLegacyRoleBlocksBackfillWithoutChangingAnyLegacyCell" computerName="DESKTOP-QUOAG32" duration="00:00:00.0843035" startTime="2026-10-19T00:00:36.9379624+02:00" endTime="2026-10-19T00:00:36.9379626+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8f937e56-8e83-49a8-8b93-a3c9baa3b7da" />
+    <UnitTestResult executionId="2a63b87f-c2a0-4764-8a82-8e525da8c54d" testId="24e307f5-53ef-4055-f62b-2c0d7fe401b7" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.MigrationRejectsAnyOtherDatabaseBeforeConnecting(database: &quot;other_database&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0015582" startTime="2026-10-19T00:00:36.3478471+02:00" endTime="2026-10-19T00:00:36.3478471+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2a63b87f-c2a0-4764-8a82-8e525da8c54d" />
+    <UnitTestResult executionId="23d8a0b7-2b3d-40d8-a67a-af4fc9b95928" testId="b8c9e34c-dd10-6608-ff06-4f438dbc8ec4" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: &quot;missing&quot;, number: 1452)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0240497" startTime="2026-10-19T00:00:35.6820331+02:00" endTime="2026-10-19T00:00:35.6820333+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="23d8a0b7-2b3d-40d8-a67a-af4fc9b95928" />
+    <UnitTestResult executionId="b5092958-3a1a-440f-a4de-89c896e2eedc" testId="01d7dbc4-b3fa-113c-de69-85975c083b26" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: &quot;grade&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0072614" startTime="2026-10-19T00:00:34.1649035+02:00" endTime="2026-10-19T00:00:34.1649038+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b5092958-3a1a-440f-a4de-89c896e2eedc" />
+    <UnitTestResult executionId="44e4acf2-c7bd-4b19-8c49-3531eb619284" testId="d861581a-476f-9dc9-bc0d-c148c898be9f" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.InstitutionDeleteRestrictsAndCannotCascadeSchoolData" computerName="DESKTOP-QUOAG32" duration="00:00:00.0078903" startTime="2026-10-19T00:00:32.8710067+02:00" endTime="2026-10-19T00:00:32.8710070+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="44e4acf2-c7bd-4b19-8c49-3531eb619284" />
+    <UnitTestResult executionId="cabb02a0-dda6-4538-bcd2-b268d9cd8a72" testId="6f5a8666-ad63-e1b1-b758-eb6b683f6860" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AnswersCannotUseAnotherExamOrAnOptionOfAnotherQuestionInTheSameTenant" computerName="DESKTOP-QUOAG32" duration="00:00:00.0212342" startTime="2026-10-19T00:00:34.9955804+02:00" endTime="2026-10-19T00:00:34.9955807+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cabb02a0-dda6-4538-bcd2-b268d9cd8a72">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1452&#xD;
+Actual:   1451</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AnswersCannotUseAnotherExamOrAnOptionOfAnotherQuestionInTheSameTenant() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 141&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="e08c581b-b914-4aa4-a8ac-55484cad5ae8" testId="14044e6c-dc6b-1a8e-e7e9-bbd23e4fcb58" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.MigrationRejectsAnyOtherDatabaseBeforeConnecting(database: &quot;electronic_register&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0002576" startTime="2026-10-19T00:00:36.3898521+02:00" endTime="2026-10-19T00:00:36.3898521+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e08c581b-b914-4aa4-a8ac-55484cad5ae8" />
+    <UnitTestResult executionId="143147bd-9551-4aa5-bcb8-6efcb29e1c24" testId="6bb6e0bd-d559-07ef-7703-c79aec85eb5e" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AuditIsAttributedFromEntityAndCannotClaimAnotherInstitution" computerName="DESKTOP-QUOAG32" duration="00:00:00.0091796" startTime="2026-10-19T00:00:32.6539080+02:00" endTime="2026-10-19T00:00:32.6539083+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="143147bd-9551-4aa5-bcb8-6efcb29e1c24" />
+    <UnitTestResult executionId="637180fb-dd8d-45d7-82d7-1bc92460cca6" testId="121d9b74-4847-ffef-b8b8-c52e12f4e0b4" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.GlobalIdentityResolvesDifferentProfilesAndBothRolesInEachFoundation" computerName="DESKTOP-QUOAG32" duration="00:00:00.0329568" startTime="2026-10-19T00:00:37.0149107+02:00" endTime="2026-10-19T00:00:37.0149108+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="637180fb-dd8d-45d7-82d7-1bc92460cca6" />
+    <UnitTestResult executionId="b299078a-01c3-449d-bd11-e129f43363bd" testId="d7b90a0a-fdee-9b7a-1afd-f934b2aaa456" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: &quot;retake&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0154763" startTime="2026-10-19T00:00:34.3849535+02:00" endTime="2026-10-19T00:00:34.3849538+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b299078a-01c3-449d-bd11-e129f43363bd" />
+    <UnitTestResult executionId="bd4bf257-57bb-4fbf-b0a4-2af191dc0a1c" testId="b97f77e3-3d2a-1e6b-72bd-e98493130650" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam&quot;, column: &quot;retake_of_exam_id&quot;, parent: &quot;exam&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0062860" startTime="2026-10-19T00:00:30.6268959+02:00" endTime="2026-10-19T00:00:30.6268962+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bd4bf257-57bb-4fbf-b0a4-2af191dc0a1c" />
+    <UnitTestResult executionId="cf2459ea-2eb8-4e00-bcbb-341825422b9e" testId="fd272eb3-1c2f-149b-d92e-56d37c408c2a" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam_submission&quot;, column: &quot;student_id&quot;, parent: &quot;student&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0150738" startTime="2026-10-19T00:00:28.1463840+02:00" endTime="2026-10-19T00:00:28.1464286+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cf2459ea-2eb8-4e00-bcbb-341825422b9e" />
+    <UnitTestResult executionId="059e7ee8-6bc5-41ff-9a51-d4687cb39f53" testId="728b0360-59c5-428b-85ec-e3a6e6535fc6" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: &quot;class&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0146558" startTime="2026-10-19T00:00:34.5729676+02:00" endTime="2026-10-19T00:00:34.5729679+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="059e7ee8-6bc5-41ff-9a51-d4687cb39f53" />
+    <UnitTestResult executionId="04a2d966-ceb8-4b0f-9f68-ecb663c2de1d" testId="e95508aa-35f6-c4cb-bd46-64d794982345" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.ProfileOwnershipCannotBeMovedOrRelinked(kind: &quot;student&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0122520" startTime="2026-10-19T00:00:33.0988548+02:00" endTime="2026-10-19T00:00:33.0988553+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="04a2d966-ceb8-4b0f-9f68-ecb663c2de1d" />
+    <UnitTestResult executionId="3b4b469d-f9f4-4769-8597-7796baf59b56" testId="0b4f87cc-a7ba-7834-d545-b699233fb5af" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipToolRejectsUnauthorizedDatabaseBeforeNetwork(database: &quot;other_database&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0007584" startTime="2026-10-19T00:00:33.5308534+02:00" endTime="2026-10-19T00:00:33.5308537+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3b4b469d-f9f4-4769-8597-7796baf59b56" />
+    <UnitTestResult executionId="18e12aa9-0eaf-4494-88a1-508803ab356f" testId="a0da0f1d-f7cf-b78f-d425-edcd8f006bc3" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: &quot;membership&quot;, number: 1452)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0050101" startTime="2026-10-19T00:00:35.7819534+02:00" endTime="2026-10-19T00:00:35.7819535+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="18e12aa9-0eaf-4494-88a1-508803ab356f" />
+    <UnitTestResult executionId="fdcd7a32-6556-44a1-b4c9-bb187e1e7d7b" testId="ee2d9ef8-0dbd-20a8-c1ed-7b2ef2664a97" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;biennium_study_area&quot;, column: &quot;biennium_id&quot;, parent: &quot;biennium&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0092709" startTime="2026-10-19T00:00:31.5625316+02:00" endTime="2026-10-19T00:00:31.5625319+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fdcd7a32-6556-44a1-b4c9-bb187e1e7d7b" />
+    <UnitTestResult executionId="f05460c4-899f-429d-b632-44844985f905" testId="8ac50f23-daa7-821d-9878-ee296f5d02eb" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: &quot;admin-no-profile&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0006945" startTime="2026-10-19T00:00:36.5268593+02:00" endTime="2026-10-19T00:00:36.5268594+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f05460c4-899f-429d-b632-44844985f905" />
+    <UnitTestResult executionId="4ec3070c-3f4f-43d3-b15f-716909c2eafe" testId="d1aa281c-f271-2cd7-5b65-6a8cc5f22289" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam&quot;, column: &quot;class_subject_id&quot;, parent: &quot;class_subject&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0082332" startTime="2026-10-19T00:00:28.4429170+02:00" endTime="2026-10-19T00:00:28.4429176+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4ec3070c-3f4f-43d3-b15f-716909c2eafe" />
+    <UnitTestResult executionId="d460ab97-54b6-4dfc-9ce2-ec63db94fb26" testId="2eab1835-b9a3-c41a-64a0-647eb3789f9d" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;question_option&quot;, column: &quot;question_id&quot;, parent: &quot;question&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0041954" startTime="2026-10-19T00:00:31.3414225+02:00" endTime="2026-10-19T00:00:31.3414228+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d460ab97-54b6-4dfc-9ce2-ec63db94fb26">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1452&#xD;
+Actual:   1062</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 106&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="0030cb96-0a6e-42d3-8030-c4e03a3d4fc7" testId="ac3c6e64-495e-9de0-473e-90e5c37d1482" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;submission_answer_option&quot;, column: &quot;option_id&quot;, parent: &quot;question_option&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0072107" startTime="2026-10-19T00:00:29.3389132+02:00" endTime="2026-10-19T00:00:29.3389135+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0030cb96-0a6e-42d3-8030-c4e03a3d4fc7" />
+    <UnitTestResult executionId="a2016590-38cb-4874-9418-7d3a7d9f2152" testId="55ea270f-c1db-c54a-455a-f47431560fdd" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam_violation&quot;, column: &quot;submission_id&quot;, parent: &quot;exam_submission&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0061981" startTime="2026-10-19T00:00:30.4428491+02:00" endTime="2026-10-19T00:00:30.4428495+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a2016590-38cb-4874-9418-7d3a7d9f2152" />
+    <UnitTestResult executionId="c663dba3-edc5-4c3e-807a-d8cb205012a1" testId="6a37b925-958b-bea3-71ca-38782275afbb" testName="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: &quot;institution&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0149562" startTime="2026-10-19T00:00:36.1789275+02:00" endTime="2026-10-19T00:00:36.1789276+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c663dba3-edc5-4c3e-807a-d8cb205012a1" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;class_subject&quot;, column: &quot;teacher_id&quot;, parent: &quot;teacher&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="1570a49b-bb2c-cbe8-e39e-214f8f1e4f24">
+      <Execution id="aa82e65d-9b53-48e4-aabd-7c0cd229bafe" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: &quot;missing&quot;, number: 1452)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="fa5c7cc6-31c9-ade7-a254-6e9e6ac36100">
+      <Execution id="8d6ddffa-8864-4d92-ab59-2db32ee8c6d8" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: &quot;role&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="5b7f1e8b-5a83-7f48-3ce6-25e75539afed">
+      <Execution id="684afb8e-00ca-496e-9858-4b22ead36629" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam_student&quot;, column: &quot;student_id&quot;, parent: &quot;student&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="f918b494-1103-7e55-6872-e89fb4792061">
+      <Execution id="a7c0fd39-bf4e-45a4-b150-02a3a83d6895" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: &quot;wrong-membership&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="f7642f8f-41e9-052a-bf5a-440456d17a95">
+      <Execution id="18a8f36f-d397-473a-baa9-d5ccd6c0d3a8" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="ContextCannotInventAProfile" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: &quot;membership&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="0c68812e-523b-7661-f6a8-c52c5f39375e">
+      <Execution id="21cc106c-57b3-4f81-852d-531250c20113" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RealAdminMembershipDoesNotImplyTeacherOrStudentProfile" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="b0aaf96a-d4b4-db03-e8a2-b608269e9e2d">
+      <Execution id="c3a6bb74-cd61-4b59-b143-40d2017308dd" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="RealAdminMembershipDoesNotImplyTeacherOrStudentProfile" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;class_subject&quot;, column: &quot;class_id&quot;, parent: &quot;class&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="bc03c24d-b3f6-dc4c-71c1-ee3c9579d705">
+      <Execution id="43ec7dab-cb4f-44dd-b9bd-d83055a0a217" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AuditIsAttributedFromEntityAndCannotClaimAnotherInstitution" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="6bb6e0bd-d559-07ef-7703-c79aec85eb5e">
+      <Execution id="143147bd-9551-4aa5-bcb8-6efcb29e1c24" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="AuditIsAttributedFromEntityAndCannotClaimAnotherInstitution" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: &quot;class&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="728b0360-59c5-428b-85ec-e3a6e6535fc6">
+      <Execution id="059e7ee8-6bc5-41ff-9a51-d4687cb39f53" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="HistoricalSetNullKeepsOwnerAndOtherTenantData" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: &quot;missing&quot;, number: 1452)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="b8c9e34c-dd10-6608-ff06-4f438dbc8ec4">
+      <Execution id="23d8a0b7-2b3d-40d8-a67a-af4fc9b95928" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.InstitutionDeleteRestrictsAndCannotCascadeSchoolData" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="d861581a-476f-9dc9-bc0d-c148c898be9f">
+      <Execution id="44e4acf2-c7bd-4b19-8c49-3531eb619284" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="InstitutionDeleteRestrictsAndCannotCascadeSchoolData" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: &quot;membership&quot;, number: 1452)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="ea642ef4-f180-e77f-8e18-36be4531666d">
+      <Execution id="78ba6c49-bca1-44a2-91e1-39462164b3c3" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;biennium_study_path&quot;, column: &quot;study_path_id&quot;, parent: &quot;study_path&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="e3c2c68f-e525-ba75-2272-2660325005ab">
+      <Execution id="ae4ac369-ea32-429a-afda-4be568d0a455" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: &quot;duplicate&quot;, number: 1062)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="d55b6538-8cdd-d5f6-b628-378e38ab5adb">
+      <Execution id="9707680a-d874-44c0-be18-84839ee7cf2f" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam_violation&quot;, column: &quot;submission_id&quot;, parent: &quot;exam_submission&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="55ea270f-c1db-c54a-455a-f47431560fdd">
+      <Execution id="a2016590-38cb-4874-9418-7d3a7d9f2152" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ControlledProfileBackfillPreservesEveryLegacyCellAndIsIdempotent" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="c0cdde9a-9da2-f04a-681a-be05818def73">
+      <Execution id="235111f2-8d16-4037-941d-4eb2d413c6a0" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="ControlledProfileBackfillPreservesEveryLegacyCellAndIsIdempotent" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipToolRejectsUnauthorizedDatabaseBeforeNetwork(database: &quot;electronic_register&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="6a0e5613-eb6a-ce45-4c65-62d68b1a99d2">
+      <Execution id="f4901885-d8a8-4140-a5d8-17d9cd561697" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="OwnershipToolRejectsUnauthorizedDatabaseBeforeNetwork" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;grade&quot;, column: &quot;class_subject_id&quot;, parent: &quot;class_subject&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="2752e257-51f7-c5fd-f027-710184cb7ec2">
+      <Execution id="a2f278c3-adea-4cc8-b767-971bc6714906" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam_submission&quot;, column: &quot;grade_id&quot;, parent: &quot;grade&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="04552ced-8ef2-16ce-fbb7-1190c86d3558">
+      <Execution id="cfd10bff-da2b-4f9d-b372-6f0bb23f64cc" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.MigrationRejectsAnyOtherDatabaseBeforeConnecting(database: &quot;other_database&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="24e307f5-53ef-4055-f62b-2c0d7fe401b7">
+      <Execution id="2a63b87f-c2a0-4764-8a82-8e525da8c54d" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="MigrationRejectsAnyOtherDatabaseBeforeConnecting" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;biennium_study_path&quot;, column: &quot;biennium_study_area_id&quot;, parent: &quot;biennium_study_area&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="e1c1c06c-b4be-5b50-0d4e-1f16eceb5e07">
+      <Execution id="cb16c3d4-10b9-41b3-8a6c-c04c75b374e8" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: &quot;grade&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="01d7dbc4-b3fa-113c-de69-85975c083b26">
+      <Execution id="b5092958-3a1a-440f-a4de-89c896e2eedc" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="HistoricalSetNullKeepsOwnerAndOtherTenantData" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AnswersCannotUseAnotherExamOrAnOptionOfAnotherQuestionInTheSameTenant" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="6f5a8666-ad63-e1b1-b758-eb6b683f6860">
+      <Execution id="cabb02a0-dda6-4538-bcd2-b268d9cd8a72" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="AnswersCannotUseAnotherExamOrAnOptionOfAnotherQuestionInTheSameTenant" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;submission_answer&quot;, column: &quot;submission_id&quot;, parent: &quot;exam_submission&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="01d0f799-ae31-8224-df77-af805496a290">
+      <Execution id="00c2d96a-951a-440f-b9dc-63841d76b5c1" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;class_subject&quot;, column: &quot;subject_id&quot;, parent: &quot;subject&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="3a9919a0-3650-929e-9cbc-06c4ba8174c6">
+      <Execution id="2a22f1ca-1cde-4349-9742-6f1d46e05316" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: &quot;duplicate&quot;, number: 1062)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="332f6a97-b67a-f55e-9bf0-d6b23c5a0cae">
+      <Execution id="09ea83cb-e9f0-413c-a0b0-9d0886e458ca" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ConflictingOwnershipRollsBackEntireBackfill" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="d732cd98-b620-9dbf-7735-bc2eca509da9">
+      <Execution id="681488c8-2e27-48b5-b5ef-343338f5ed4f" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="ConflictingOwnershipRollsBackEntireBackfill" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.MigrationRejectsAnyOtherDatabaseBeforeConnecting(database: &quot;electronic_register&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="14044e6c-dc6b-1a8e-e7e9-bbd23e4fcb58">
+      <Execution id="e08c581b-b914-4aa4-a8ac-55484cad5ae8" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="MigrationRejectsAnyOtherDatabaseBeforeConnecting" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: &quot;institution&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="6a37b925-958b-bea3-71ca-38782275afbb">
+      <Execution id="c663dba3-edc5-4c3e-807a-d8cb205012a1" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: &quot;membership&quot;, number: 1452)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="a0da0f1d-f7cf-b78f-d425-edcd8f006bc3">
+      <Execution id="18e12aa9-0eaf-4494-88a1-508803ab356f" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;submission_answer&quot;, column: &quot;question_id&quot;, parent: &quot;question&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="f6e7e846-f6b9-1da6-c043-166511c6054b">
+      <Execution id="3580e565-6b2a-4e62-9d22-39378aefad13" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AllCompositeConstraintsAndSupportingIndexesExistWithStrictGuidTypes" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="b65f7414-dd8a-00bd-6e01-ccbcb2ce5327">
+      <Execution id="332d3ccb-9c09-4b67-958f-273ded4cc410" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="AllCompositeConstraintsAndSupportingIndexesExistWithStrictGuidTypes" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;grade&quot;, column: &quot;student_id&quot;, parent: &quot;student&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="1fb3e438-f4e6-ebb7-de9a-a52036b418a0">
+      <Execution id="27e16a63-46e5-470a-94b5-1d9c9ebf3396" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;biennium_study_area&quot;, column: &quot;study_area_id&quot;, parent: &quot;study_area&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="0cb41006-bb35-c3f5-bd10-965923e68d5e">
+      <Execution id="f08691d1-4e87-4fa2-b431-63f551a072db" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;student&quot;, column: &quot;class_id&quot;, parent: &quot;class&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="22149246-9fbd-8f5e-6d76-3235b7a91fd6">
+      <Execution id="7c10d6f3-44fb-402c-8709-8d5e36e21950" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: &quot;wrong-institution&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="f87f5e1b-b668-c801-b077-a33de220c6b1">
+      <Execution id="a4267ffc-c25e-40e1-ad49-4b3a0a20294b" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="ContextCannotInventAProfile" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam_submission&quot;, column: &quot;exam_id&quot;, parent: &quot;exam&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="537aaae7-7202-41a3-58b7-7622d7a3da71">
+      <Execution id="f10cb67c-a009-462d-b636-15732c1f694d" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.IncompatibleLegacyRoleBlocksBackfillWithoutChangingAnyLegacyCell" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="48eabc8b-891f-97f0-2ba8-99195fbc5911">
+      <Execution id="8f937e56-8e83-49a8-8b93-a3c9baa3b7da" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="IncompatibleLegacyRoleBlocksBackfillWithoutChangingAnyLegacyCell" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: &quot;retake&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="d7b90a0a-fdee-9b7a-1afd-f934b2aaa456">
+      <Execution id="b299078a-01c3-449d-bd11-e129f43363bd" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="HistoricalSetNullKeepsOwnerAndOtherTenantData" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam_submission&quot;, column: &quot;student_id&quot;, parent: &quot;student&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="fd272eb3-1c2f-149b-d92e-56d37c408c2a">
+      <Execution id="cf2459ea-2eb8-4e00-bcbb-341825422b9e" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;submission_answer_option&quot;, column: &quot;option_id&quot;, parent: &quot;question_option&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="ac3c6e64-495e-9de0-473e-90e5c37d1482">
+      <Execution id="0030cb96-0a6e-42d3-8030-c4e03a3d4fc7" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: &quot;wrong-user&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="ce856b90-a1c2-c061-dbf9-e13b2273e722">
+      <Execution id="9b30269a-b345-4a16-b881-c6c2b6a13908" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="ContextCannotInventAProfile" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: &quot;missing-profile&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="29262097-7812-e52f-e4d2-f2fbf04f0052">
+      <Execution id="a09fe392-9e61-4465-8960-dae594221aa5" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.ProfileOwnershipCannotBeMovedOrRelinked(kind: &quot;student&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="e95508aa-35f6-c4cb-bd46-64d794982345">
+      <Execution id="04a2d966-ceb8-4b0f-9f68-ecb663c2de1d" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="ProfileOwnershipCannotBeMovedOrRelinked" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipToolRejectsUnauthorizedDatabaseBeforeNetwork(database: &quot;other_database&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="0b4f87cc-a7ba-7834-d545-b699233fb5af">
+      <Execution id="3b4b469d-f9f4-4769-8597-7796baf59b56" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="OwnershipToolRejectsUnauthorizedDatabaseBeforeNetwork" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.CatalogNamesAndBienniumDatesAreIndependentAndProfilesHaveNoInventedUsers" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="a4c2ce8d-76ee-3303-7bd4-481b4109859d">
+      <Execution id="d500a698-1bd7-4202-8403-d5160e33a0fa" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="CatalogNamesAndBienniumDatesAreIndependentAndProfilesHaveNoInventedUsers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;class&quot;, column: &quot;biennium_study_path_id&quot;, parent: &quot;biennium_study_path&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="f661dc22-265d-e4b3-e7cf-1f9da905b8b9">
+      <Execution id="4e374d82-3d96-4965-b8aa-d8eaf80b34b3" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.ProfileOwnershipCannotBeMovedOrRelinked(kind: &quot;teacher&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="b02cd807-43f7-9f8e-dde7-0a2d484b782e">
+      <Execution id="625e4960-bdb5-4b38-a6eb-9a9487e1b7f8" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="ProfileOwnershipCannotBeMovedOrRelinked" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;biennium_study_area&quot;, column: &quot;biennium_id&quot;, parent: &quot;biennium&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="ee2d9ef8-0dbd-20a8-c1ed-7b2ef2664a97">
+      <Execution id="fdcd7a32-6556-44a1-b4c9-bb187e1e7d7b" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="0b8bc77e-bfa1-ade1-4a73-71907a7c84d4">
+      <Execution id="df65233a-7fda-4c9f-9b40-b0bcb2056534" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.GlobalIdentityResolvesDifferentProfilesAndBothRolesInEachFoundation" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="121d9b74-4847-ffef-b8b8-c52e12f4e0b4">
+      <Execution id="637180fb-dd8d-45d7-82d7-1bc92460cca6" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="GlobalIdentityResolvesDifferentProfilesAndBothRolesInEachFoundation" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;question_option&quot;, column: &quot;question_id&quot;, parent: &quot;question&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="2eab1835-b9a3-c41a-64a0-647eb3789f9d">
+      <Execution id="d460ab97-54b6-4dfc-9ce2-ec63db94fb26" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam&quot;, column: &quot;retake_of_exam_id&quot;, parent: &quot;exam&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="b97f77e3-3d2a-1e6b-72bd-e98493130650">
+      <Execution id="bd4bf257-57bb-4fbf-b0a4-2af191dc0a1c" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="6555e44b-f429-76a6-8061-4a9a15ce63d0">
+      <Execution id="cdb4978c-0a62-41fc-8efc-21a2ac915975" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: &quot;admin-no-profile&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="8ac50f23-daa7-821d-9878-ee296f5d02eb">
+      <Execution id="f05460c4-899f-429d-b632-44844985f905" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests" name="ContextCannotInventAProfile" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;question&quot;, column: &quot;exam_id&quot;, parent: &quot;exam&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="7c3931ad-08e7-6b57-2fd1-7b6687db6bcb">
+      <Execution id="dfe17331-a727-44ff-9672-a7c0ae0b777a" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: &quot;exam&quot;, column: &quot;class_subject_id&quot;, parent: &quot;class_subject&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="d1aa281c-f271-2cd7-5b65-6a8cc5f22289">
+      <Execution id="4ec3070c-3f4f-43d3-b15f-716909c2eafe" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="RealCompositeForeignKeysRejectCrossTenantUpdate" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="332f6a97-b67a-f55e-9bf0-d6b23c5a0cae" executionId="09ea83cb-e9f0-413c-a0b0-9d0886e458ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f918b494-1103-7e55-6872-e89fb4792061" executionId="a7c0fd39-bf4e-45a4-b150-02a3a83d6895" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ce856b90-a1c2-c061-dbf9-e13b2273e722" executionId="9b30269a-b345-4a16-b881-c6c2b6a13908" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0cb41006-bb35-c3f5-bd10-965923e68d5e" executionId="f08691d1-4e87-4fa2-b431-63f551a072db" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1570a49b-bb2c-cbe8-e39e-214f8f1e4f24" executionId="aa82e65d-9b53-48e4-aabd-7c0cd229bafe" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b65f7414-dd8a-00bd-6e01-ccbcb2ce5327" executionId="332d3ccb-9c09-4b67-958f-273ded4cc410" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2752e257-51f7-c5fd-f027-710184cb7ec2" executionId="a2f278c3-adea-4cc8-b767-971bc6714906" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3a9919a0-3650-929e-9cbc-06c4ba8174c6" executionId="2a22f1ca-1cde-4349-9742-6f1d46e05316" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f6e7e846-f6b9-1da6-c043-166511c6054b" executionId="3580e565-6b2a-4e62-9d22-39378aefad13" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="04552ced-8ef2-16ce-fbb7-1190c86d3558" executionId="cfd10bff-da2b-4f9d-b372-6f0bb23f64cc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f7642f8f-41e9-052a-bf5a-440456d17a95" executionId="18a8f36f-d397-473a-baa9-d5ccd6c0d3a8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5b7f1e8b-5a83-7f48-3ce6-25e75539afed" executionId="684afb8e-00ca-496e-9858-4b22ead36629" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d732cd98-b620-9dbf-7735-bc2eca509da9" executionId="681488c8-2e27-48b5-b5ef-343338f5ed4f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e1c1c06c-b4be-5b50-0d4e-1f16eceb5e07" executionId="cb16c3d4-10b9-41b3-8a6c-c04c75b374e8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c0cdde9a-9da2-f04a-681a-be05818def73" executionId="235111f2-8d16-4037-941d-4eb2d413c6a0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0c68812e-523b-7661-f6a8-c52c5f39375e" executionId="21cc106c-57b3-4f81-852d-531250c20113" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ea642ef4-f180-e77f-8e18-36be4531666d" executionId="78ba6c49-bca1-44a2-91e1-39462164b3c3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b02cd807-43f7-9f8e-dde7-0a2d484b782e" executionId="625e4960-bdb5-4b38-a6eb-9a9487e1b7f8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="29262097-7812-e52f-e4d2-f2fbf04f0052" executionId="a09fe392-9e61-4465-8960-dae594221aa5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b0aaf96a-d4b4-db03-e8a2-b608269e9e2d" executionId="c3a6bb74-cd61-4b59-b143-40d2017308dd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0b8bc77e-bfa1-ade1-4a73-71907a7c84d4" executionId="df65233a-7fda-4c9f-9b40-b0bcb2056534" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="22149246-9fbd-8f5e-6d76-3235b7a91fd6" executionId="7c10d6f3-44fb-402c-8709-8d5e36e21950" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="537aaae7-7202-41a3-58b7-7622d7a3da71" executionId="f10cb67c-a009-462d-b636-15732c1f694d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f661dc22-265d-e4b3-e7cf-1f9da905b8b9" executionId="4e374d82-3d96-4965-b8aa-d8eaf80b34b3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f87f5e1b-b668-c801-b077-a33de220c6b1" executionId="a4267ffc-c25e-40e1-ad49-4b3a0a20294b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a4c2ce8d-76ee-3303-7bd4-481b4109859d" executionId="d500a698-1bd7-4202-8403-d5160e33a0fa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e3c2c68f-e525-ba75-2272-2660325005ab" executionId="ae4ac369-ea32-429a-afda-4be568d0a455" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6a0e5613-eb6a-ce45-4c65-62d68b1a99d2" executionId="f4901885-d8a8-4140-a5d8-17d9cd561697" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fa5c7cc6-31c9-ade7-a254-6e9e6ac36100" executionId="8d6ddffa-8864-4d92-ab59-2db32ee8c6d8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bc03c24d-b3f6-dc4c-71c1-ee3c9579d705" executionId="43ec7dab-cb4f-44dd-b9bd-d83055a0a217" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6555e44b-f429-76a6-8061-4a9a15ce63d0" executionId="cdb4978c-0a62-41fc-8efc-21a2ac915975" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="01d0f799-ae31-8224-df77-af805496a290" executionId="00c2d96a-951a-440f-b9dc-63841d76b5c1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1fb3e438-f4e6-ebb7-de9a-a52036b418a0" executionId="27e16a63-46e5-470a-94b5-1d9c9ebf3396" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d55b6538-8cdd-d5f6-b628-378e38ab5adb" executionId="9707680a-d874-44c0-be18-84839ee7cf2f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7c3931ad-08e7-6b57-2fd1-7b6687db6bcb" executionId="dfe17331-a727-44ff-9672-a7c0ae0b777a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="48eabc8b-891f-97f0-2ba8-99195fbc5911" executionId="8f937e56-8e83-49a8-8b93-a3c9baa3b7da" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="24e307f5-53ef-4055-f62b-2c0d7fe401b7" executionId="2a63b87f-c2a0-4764-8a82-8e525da8c54d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b8c9e34c-dd10-6608-ff06-4f438dbc8ec4" executionId="23d8a0b7-2b3d-40d8-a67a-af4fc9b95928" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="01d7dbc4-b3fa-113c-de69-85975c083b26" executionId="b5092958-3a1a-440f-a4de-89c896e2eedc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d861581a-476f-9dc9-bc0d-c148c898be9f" executionId="44e4acf2-c7bd-4b19-8c49-3531eb619284" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6f5a8666-ad63-e1b1-b758-eb6b683f6860" executionId="cabb02a0-dda6-4538-bcd2-b268d9cd8a72" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="14044e6c-dc6b-1a8e-e7e9-bbd23e4fcb58" executionId="e08c581b-b914-4aa4-a8ac-55484cad5ae8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6bb6e0bd-d559-07ef-7703-c79aec85eb5e" executionId="143147bd-9551-4aa5-bcb8-6efcb29e1c24" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="121d9b74-4847-ffef-b8b8-c52e12f4e0b4" executionId="637180fb-dd8d-45d7-82d7-1bc92460cca6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d7b90a0a-fdee-9b7a-1afd-f934b2aaa456" executionId="b299078a-01c3-449d-bd11-e129f43363bd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b97f77e3-3d2a-1e6b-72bd-e98493130650" executionId="bd4bf257-57bb-4fbf-b0a4-2af191dc0a1c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fd272eb3-1c2f-149b-d92e-56d37c408c2a" executionId="cf2459ea-2eb8-4e00-bcbb-341825422b9e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="728b0360-59c5-428b-85ec-e3a6e6535fc6" executionId="059e7ee8-6bc5-41ff-9a51-d4687cb39f53" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e95508aa-35f6-c4cb-bd46-64d794982345" executionId="04a2d966-ceb8-4b0f-9f68-ecb663c2de1d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0b4f87cc-a7ba-7834-d545-b699233fb5af" executionId="3b4b469d-f9f4-4769-8597-7796baf59b56" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a0da0f1d-f7cf-b78f-d425-edcd8f006bc3" executionId="18e12aa9-0eaf-4494-88a1-508803ab356f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ee2d9ef8-0dbd-20a8-c1ed-7b2ef2664a97" executionId="fdcd7a32-6556-44a1-b4c9-bb187e1e7d7b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8ac50f23-daa7-821d-9878-ee296f5d02eb" executionId="f05460c4-899f-429d-b632-44844985f905" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d1aa281c-f271-2cd7-5b65-6a8cc5f22289" executionId="4ec3070c-3f4f-43d3-b15f-716909c2eafe" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2eab1835-b9a3-c41a-64a0-647eb3789f9d" executionId="d460ab97-54b6-4dfc-9ce2-ec63db94fb26" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ac3c6e64-495e-9de0-473e-90e5c37d1482" executionId="0030cb96-0a6e-42d3-8030-c4e03a3d4fc7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="55ea270f-c1db-c54a-455a-f47431560fdd" executionId="a2016590-38cb-4874-9418-7d3a7d9f2152" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6a37b925-958b-bea3-71ca-38782275afbb" executionId="c663dba3-edc5-4c3e-807a-d8cb205012a1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="58" executed="58" passed="49" failed="9" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.13]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.17]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.17]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:02.37]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:02.37]       Expected: 1452&#xD;
+[xUnit.net 00:00:02.37]       Actual:   1062&#xD;
+[xUnit.net 00:00:02.37]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.37]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs(106,0): at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent)&#xD;
+[xUnit.net 00:00:02.37]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:02.72]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:02.72]       Expected: 1452&#xD;
+[xUnit.net 00:00:02.72]       Actual:   1451&#xD;
+[xUnit.net 00:00:02.72]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.72]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs(106,0): at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent)&#xD;
+[xUnit.net 00:00:02.72]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.28]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:03.28]       Expected: 1452&#xD;
+[xUnit.net 00:00:03.28]       Actual:   1062&#xD;
+[xUnit.net 00:00:03.28]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.28]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs(106,0): at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent)&#xD;
+[xUnit.net 00:00:03.28]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:04.38]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:04.38]       Expected: 1452&#xD;
+[xUnit.net 00:00:04.38]       Actual:   1451&#xD;
+[xUnit.net 00:00:04.38]       Stack Trace:&#xD;
+[xUnit.net 00:00:04.38]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs(106,0): at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent)&#xD;
+[xUnit.net 00:00:04.38]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:04.91]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:04.91]       Expected: 1452&#xD;
+[xUnit.net 00:00:04.91]       Actual:   1062&#xD;
+[xUnit.net 00:00:04.91]       Stack Trace:&#xD;
+[xUnit.net 00:00:04.91]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs(106,0): at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent)&#xD;
+[xUnit.net 00:00:04.91]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:06.00]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:06.00]       Expected: 1452&#xD;
+[xUnit.net 00:00:06.00]       Actual:   1062&#xD;
+[xUnit.net 00:00:06.00]       Stack Trace:&#xD;
+[xUnit.net 00:00:06.00]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs(106,0): at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(String child, String column, String parent)&#xD;
+[xUnit.net 00:00:06.00]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:07.52]       System.InvalidCastException : Unable to cast object of type 'System.Guid' to type 'System.String'.&#xD;
+[xUnit.net 00:00:07.52]       Stack Trace:&#xD;
+[xUnit.net 00:00:07.52]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs(192,0): at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched()&#xD;
+[xUnit.net 00:00:07.52]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:08.56]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:08.56]       Expected: 1452&#xD;
+[xUnit.net 00:00:08.56]       Actual:   1451&#xD;
+[xUnit.net 00:00:08.56]       Stack Trace:&#xD;
+[xUnit.net 00:00:08.56]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs(141,0): at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AnswersCannotUseAnotherExamOrAnOptionOfAnotherQuestionInTheSameTenant()&#xD;
+[xUnit.net 00:00:08.56]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:08.98]       System.InvalidCastException : Unable to cast object of type 'System.Guid' to type 'System.String'.&#xD;
+[xUnit.net 00:00:08.98]       Stack Trace:&#xD;
+[xUnit.net 00:00:08.98]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs(181,0): at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows()&#xD;
+[xUnit.net 00:00:08.98]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:10.71]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-19T00:00:28.8043868+02:00">
+        <Text>[xUnit.net 00:00:02.37]     ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "exam_submission", column: "grade_id", parent: "grade") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-19T00:00:29.1565462+02:00">
+        <Text>[xUnit.net 00:00:02.72]     ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "submission_answer", column: "question_id", parent: "question") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-19T00:00:29.7103509+02:00">
+        <Text>[xUnit.net 00:00:03.28]     ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "question", column: "exam_id", parent: "exam") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-19T00:00:30.8103858+02:00">
+        <Text>[xUnit.net 00:00:04.38]     ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "exam_submission", column: "exam_id", parent: "exam") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-19T00:00:31.3414672+02:00">
+        <Text>[xUnit.net 00:00:04.91]     ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "question_option", column: "question_id", parent: "question") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-19T00:00:32.4312833+02:00">
+        <Text>[xUnit.net 00:00:06.00]     ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "class", column: "biennium_study_path_id", parent: "biennium_study_path") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-19T00:00:33.9504622+02:00">
+        <Text>[xUnit.net 00:00:07.52]     ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-19T00:00:34.9955674+02:00">
+        <Text>[xUnit.net 00:00:08.56]     ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AnswersCannotUseAnotherExamOrAnOptionOfAnotherQuestionInTheSameTenant [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-19T00:00:35.4154975+02:00">
+        <Text>[xUnit.net 00:00:08.98]     ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

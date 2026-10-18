@@ -29,7 +29,7 @@ namespace ElectronicRegisterAPI.Controllers
 
         [HttpGet]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<List<SubjectDto>>> GetAll()
+        public async Task<ActionResult<List<BienniumDto>>> GetAll()
         {
             var subjects = await _bienniumManager.GetAllAsync();
             return subjects.Count == 0 ? NotFound() : Ok(subjects);
@@ -37,7 +37,7 @@ namespace ElectronicRegisterAPI.Controllers
 
         [HttpGet("active")]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<List<SubjectDto>>> GetActiveBiennia()
+        public async Task<ActionResult<List<BienniumDto>>> GetActiveBiennia()
         {
             var subjects = await _bienniumManager.GetActiveBienniaAsync();
             return subjects.Count == 0 ? NotFound() : Ok(subjects);
@@ -45,7 +45,7 @@ namespace ElectronicRegisterAPI.Controllers
 
         [HttpGet("inactive")]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<List<SubjectDto>>> GetInactiveBiennia()
+        public async Task<ActionResult<List<BienniumDto>>> GetInactiveBiennia()
         {
             var subjects = await _bienniumManager.GetInactiveBienniaAsync();
             return subjects.Count == 0 ? NotFound() : Ok(subjects);
@@ -53,7 +53,7 @@ namespace ElectronicRegisterAPI.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<SubjectDto>> GetById(Guid id)
+        public async Task<ActionResult<BienniumDto>> GetById(Guid id)
         {
             var subject = await _bienniumManager.GetByIdAsync(id);
             return subject is null ? NotFound() : Ok(subject);
@@ -88,7 +88,7 @@ namespace ElectronicRegisterAPI.Controllers
         public async Task<ActionResult> Add(CreateBienniumDto dto)
         {
             var id = await _bienniumManager.AddAsync(dto);
-            return id ? CreatedAtAction(nameof(GetById), new { id }, id) : NotFound();
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpDelete("{id}")]

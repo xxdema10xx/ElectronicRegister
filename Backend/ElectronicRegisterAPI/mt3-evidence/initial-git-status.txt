@@ -1,0 +1,74 @@
+﻿ M src/Api/ElectronicRegisterAPI/Controllers/BienniumController.cs
+ M src/Api/ElectronicRegisterAPI/Controllers/StudentController.cs
+ M src/Api/ElectronicRegisterAPI/DependencyInjection/ServiceCollectionExtensions.cs
+ M src/Api/ElectronicRegisterAPI/Program.cs
+ M src/Api/ElectronicRegisterAPI/appsettings.example.json
+ M src/Application/ElectronicRegisterAPI.Application/DependencyInjection/AddApplicationManagers.cs
+ M src/Application/ElectronicRegisterAPI.Application/Managers/AuthManager.cs
+ M src/Application/ElectronicRegisterAPI.Application/Managers/BienniumManager.cs
+ M src/Application/ElectronicRegisterAPI.Application/Managers/GradeManager.cs
+ M src/Application/ElectronicRegisterAPI.Application/Managers/StudentManager.cs
+ M src/Application/ElectronicRegisterAPI.Application/Managers/SubjectManager.cs
+ M src/Application/ElectronicRegisterAPI.Application/Managers/UserManager.cs
+ M src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IBienniumManager.cs
+ M src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IStudentManager.cs
+ M src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IUserManager.cs
+ M src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IGradeRepository.cs
+ M src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IStudentRepository.cs
+ M src/Infrastructure/ElectronicRegisterAPI.Infrastructure/DependencyInjection/ServiceCollectionExtensions.cs
+ M src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj
+ M src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/GradeRepository.cs
+ M src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/StudentRepository.cs
+ M src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/StudyAreaRepository.cs
+ M src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Security/BcryptPasswordHasher.cs
+ M src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Security/MicrosoftTokenValidator.cs
+ M ../../tests/Integration/Phase2C_HttpHost.cs
+?? mt3-evidence/
+?? mt3-inventory.txt
+?? src/Api/ElectronicRegisterAPI/Controllers/InstitutionIdentityController.cs
+?? src/Api/ElectronicRegisterAPI/Security/
+?? src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionAuthManager.cs
+?? src/Business/ElectronicRegisterAPI.Business/Services/MembershipAuthorizationRules.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/DTOs/InstitutionAuthDtos.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Enums/InstitutionRole.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Enums/InstitutionStatus.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Enums/MembershipStatus.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IInstitutionAuthManager.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/ICampusRepository.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionMembershipRepository.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionRepository.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IMembershipAuthorizationRepository.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Security/IInstitutionTokens.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Models/Campus.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Models/Institution.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Models/InstitutionMembership.cs
+?? src/Domain/ElectronicRegisterAPI.Domain/Models/TenantContext.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Options/IdentityMigrationOptions.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.Multitenancy.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/Campus.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/Institution.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/InstitutionMembership.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/InstitutionMembershipRole.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/CampusRepository.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionMembershipRepository.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionRepository.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/MembershipAuthorizationRepository.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Security/InstitutionTokens.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Security/LegacyAccess.cs
+?? src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Security/MicrosoftIdentityLink.cs
+?? ../../docs/
+?? ../../migrations/
+?? ../../tests/Integration/AuditBootstrapTests.cs
+?? ../../tests/Integration/AuditMicrosoftTests.cs
+?? ../../tests/Integration/AuditRegressionTests.cs
+?? ../../tests/Integration/FINAL_BACKEND_AUDIT.md
+?? ../../tests/Integration/MULTITENANCY_MT1_REPORT.md
+?? ../../tests/Integration/MULTITENANCY_MT2_REPORT.md
+?? ../../tests/Integration/Mt1IntegrityTests.cs
+?? ../../tests/Integration/Mt2IdentityTests.cs
+?? ../../tests/Integration/Mt2MicrosoftIdentityTests.cs
+?? ../../tests/Integration/TestResults/final-audit/
+?? ../../tests/Integration/TestResults/mt1/
+?? ../../tests/Integration/TestResults/mt2/
+?? ../../tests/Unit/MembershipAuthorizationTests.cs

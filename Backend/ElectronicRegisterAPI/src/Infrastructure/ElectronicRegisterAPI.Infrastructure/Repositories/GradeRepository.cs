@@ -180,6 +180,9 @@ internal class GradeRepository : IGradeRepository
         return await _context.Grades.AnyAsync(g => g.StudentId == studentId);
     }
 
+    public Task<bool> IsLinkedToExamSubmissionAsync(Guid gradeId) =>
+        _context.ExamSubmissions.AnyAsync(s => s.GradeId == gradeId);
+
     private static Grade MapToModel(GradeEntity gradeEntity)
     {
         return new Grade

@@ -59,7 +59,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             return biennium == null ? null : MapToDto(biennium);
         }
 
-        public async Task<bool> AddAsync(CreateBienniumDto dto)
+        public async Task<Guid> AddAsync(CreateBienniumDto dto)
         {
             _bienniumService.EnsureValidBienniumValue(dto.StartYear, dto.EndYear);
             var biennium = new Biennium
@@ -69,11 +69,12 @@ namespace ElectronicRegisterAPI.Application.Managers
                 EndYear = dto.EndYear
             };
             await _bienniumRepository.AddAsync(biennium);
-            return true;
+            return biennium.Id;
         }
 
         public async Task<bool> UpdateAsync(Guid id, UpdateBienniumDto dto)
         {
+            _bienniumService.EnsureValidBienniumValue(dto.StartYear, dto.EndYear);
             var biennium = await _bienniumRepository.GetByIdAsync(id);
             if (biennium == null) return false;
             biennium.StartYear = dto.StartYear;

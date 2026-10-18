@@ -352,6 +352,9 @@ namespace ElectronicRegisterAPI.Application.Managers
                         classSubject.Id);
             }
 
+            if (await _gradeRepository.IsLinkedToExamSubmissionAsync(id))
+                throw new BusinessRuleException("An exam grade must be managed through submission finalization.");
+
             grade.ClassSubjectId = classSubject.Id;
             grade.Value = dto.Value;
             grade.Date = dto.Date;
@@ -365,6 +368,9 @@ namespace ElectronicRegisterAPI.Application.Managers
         {
             var grade = await _gradeRepository.GetByIdAsync(id);
             if (grade is null) return false;
+
+            if (await _gradeRepository.IsLinkedToExamSubmissionAsync(id))
+                throw new BusinessRuleException("An exam grade cannot be deleted through the grade endpoint.");
 
             await _gradeRepository.DeleteAsync(grade);
             return true;

@@ -1,0 +1,2 @@
+# The repository ignores *.sql globally. MT-1 reviewed migration sources are versioned.
+!*.sql

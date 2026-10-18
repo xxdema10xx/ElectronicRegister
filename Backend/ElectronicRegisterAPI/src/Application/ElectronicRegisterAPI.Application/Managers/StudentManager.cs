@@ -16,27 +16,27 @@ namespace ElectronicRegisterAPI.Application.Managers
             _studentService = studentService;
         }
 
-        public async Task<int> CountAsync()
+        public async Task<int> CountAsync(ClaimsContext caller)
         {
-            return await _studentRepository.CountAsync();
+            return await _studentRepository.CountAsync(TeacherRestriction(caller));
         }
 
-        public async Task<List<StudentDto>> GetAllAsync()
+        public async Task<List<StudentDto>> GetAllAsync(ClaimsContext caller)
         { 
-            var students = await _studentRepository.GetAllAsync();
+            var students = await _studentRepository.GetAllAsync(TeacherRestriction(caller));
             return students.Select(MapToDto).ToList();
         }
 
-        public async Task<StudentDto?> GetByIdAsync(Guid id)
+        public async Task<StudentDto?> GetByIdAsync(Guid id, ClaimsContext caller)
         {
-            var student = await _studentRepository.GetByIdAsync(id);
+            var student = await _studentRepository.GetByIdAsync(id, TeacherRestriction(caller));
             if (student is null) return null;
 
             return MapToDto(student);
         }
-        public async Task<List<StudentDto>> GetStudentsByLastNameAsync(string lastName)
+        public async Task<List<StudentDto>> GetStudentsByLastNameAsync(string lastName, ClaimsContext caller)
         {
-            var students = await _studentRepository.GetByLastNameAsync(lastName);
+            var students = await _studentRepository.GetByLastNameAsync(lastName, TeacherRestriction(caller));
             return students.Select(MapToDto).ToList();
         }
         public async Task<bool> UpdateAsync(Guid id, UpdateStudentDto dto)
@@ -50,7 +50,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             await _studentRepository.UpdateAsync(student);
             return true;
         }
-        public async Task<bool> AddAsync(CreateStudentDto dto)
+        public async Task<Guid> AddAsync(CreateStudentDto dto)
         {
             var student = new Student
             {
@@ -60,13 +60,22 @@ namespace ElectronicRegisterAPI.Application.Managers
             };
 
             await _studentRepository.AddAsync(student);
-            return true;
+            return student.Id;
         }
         public async Task<bool> DeleteAsync(Guid id)
         {
             var student = await _studentService.EnsureStudentCanBeDeletedAsync(id);
             await _studentRepository.DeleteAsync(student);
             return true;
+        }
+
+        private static Guid? TeacherRestriction(ClaimsContext caller)
+        {
+            ArgumentNullException.ThrowIfNull(caller);
+            if (caller.Role == ElectronicRegisterAPI.Domain.Enums.UserRole.Admin) return null;
+            if (caller.Role == ElectronicRegisterAPI.Domain.Enums.UserRole.Teacher && caller.TeacherId.HasValue)
+                return caller.TeacherId.Value;
+            throw new UnauthorizedAccessException();
         }
 
         private StudentDto MapToDto(Student student)

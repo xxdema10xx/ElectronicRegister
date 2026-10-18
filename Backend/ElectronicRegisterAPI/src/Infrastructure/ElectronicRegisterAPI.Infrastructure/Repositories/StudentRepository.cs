@@ -15,20 +15,20 @@ internal class StudentRepository : IStudentRepository
         _context = context;
     }
 
-    public async Task<int> CountAsync()
+    public async Task<int> CountAsync(Guid? teacherId = null)
     {
-        return await _context.Students.CountAsync();
+        return await VisibleToTeacher(teacherId).CountAsync();
     }
 
-    public async Task<List<Student>> GetAllAsync()
+    public async Task<List<Student>> GetAllAsync(Guid? teacherId = null)
     {
-        var students = await _context.Students.ToListAsync();
+        var students = await VisibleToTeacher(teacherId).ToListAsync();
         return students.Select(MapToModel).ToList();
     }
 
-    public async Task<Student?> GetByIdAsync(Guid id)
+    public async Task<Student?> GetByIdAsync(Guid id, Guid? teacherId = null)
     {
-        var student = await _context.Students.FirstOrDefaultAsync(s => s.Id == id);
+        var student = await VisibleToTeacher(teacherId).FirstOrDefaultAsync(s => s.Id == id);
         return student == null ? null : MapToModel(student);
     }
 
@@ -38,9 +38,9 @@ internal class StudentRepository : IStudentRepository
         return students.Select(MapToModel).ToList();
     }
 
-    public async Task<List<Student>> GetByLastNameAsync(string lastName)
+    public async Task<List<Student>> GetByLastNameAsync(string lastName, Guid? teacherId = null)
     {
-        var students = await _context.Students.Where(s => s.LastName == lastName).ToListAsync();
+        var students = await VisibleToTeacher(teacherId).Where(s => s.LastName == lastName).ToListAsync();
         return students.Select(MapToModel).ToList();
     }
 
@@ -72,6 +72,10 @@ internal class StudentRepository : IStudentRepository
         _context.Students.Remove(entity);
         await _context.SaveChangesAsync();
     }
+
+    private IQueryable<StudentEntity> VisibleToTeacher(Guid? teacherId) =>
+        _context.Students.AsNoTracking().Where(s => !teacherId.HasValue ||
+            (s.Class != null && s.Class.ClassSubjects.Any(cs => cs.TeacherId == teacherId.Value)));
 
     private static Student MapToModel(StudentEntity student)
     {

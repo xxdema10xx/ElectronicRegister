@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="a3d27fc4-0efe-4e4f-9b74-d881296dc8fe" name="Lorenzo@DESKTOP-QUOAG32 2026-10-18 18:56:10" runUser="DESKTOP-QUOAG32\Lorenzo" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-18T18:56:10.5192471+02:00" queuing="2026-10-18T18:56:10.5192472+02:00" start="2026-10-18T18:56:08.2735714+02:00" finish="2026-10-18T18:56:10.5231808+02:00" />
+  <TestSettings name="default" id="d087e703-1812-497d-a46f-36afca90e413">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-18_18_56_10" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="7b4650ac-cb7a-4c72-981e-49bffbcd0df8" testId="36bddda9-3b41-6487-e585-82ce1e6611d0" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_BienniumUpdatePreservesDateValidation" computerName="DESKTOP-QUOAG32" duration="00:00:00.1289495" startTime="2026-10-18T18:56:10.2832517+02:00" endTime="2026-10-18T18:56:10.2832518+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7b4650ac-cb7a-4c72-981e-49bffbcd0df8">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: BadRequest&#xD;
+Actual:   NoContent</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_BienniumUpdatePreservesDateValidation() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 36&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_BienniumUpdatePreservesDateValidation() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 44&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="df414938-215e-498f-9b5f-943ae5e08550" testId="2c45c922-2a92-56c9-d30f-167660758b6a" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudyAreaDependencyUsesStudyAreaForeignKey" computerName="DESKTOP-QUOAG32" duration="00:00:00.0510711" startTime="2026-10-18T18:56:10.0165809+02:00" endTime="2026-10-18T18:56:10.0165936+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="df414938-215e-498f-9b5f-943ae5e08550">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudyAreaDependencyUsesStudyAreaForeignKey() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 22&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="9b91cb19-c421-46d3-97f3-f1b328275c17" testId="89b79a58-2ef5-70b5-cb75-9f188567a339" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(teacherProfile: False)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0445141" startTime="2026-10-18T18:56:10.3937606+02:00" endTime="2026-10-18T18:56:10.3937607+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9b91cb19-c421-46d3-97f3-f1b328275c17">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Strings differ&#xD;
+           ↓ (pos 0)&#xD;
+Expected: "audit-user-9405a7ca6d54469e825c34e45a7f2d"···&#xD;
+Actual:   "changed-audit-user-9405a7ca6d54469e825c34"···&#xD;
+           ↑ (pos 0)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(Boolean teacherProfile) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 74&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(Boolean teacherProfile) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 85&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="db44db56-f4dc-4f5d-a06e-3abc603901ed" testId="dab55886-a190-f546-17e2-de73ad0849b9" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(teacherProfile: True)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0189747" startTime="2026-10-18T18:56:10.4618612+02:00" endTime="2026-10-18T18:56:10.4618612+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="db44db56-f4dc-4f5d-a06e-3abc603901ed">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Strings differ&#xD;
+           ↓ (pos 0)&#xD;
+Expected: "audit-user-1e198ad4d961464ab357df968da9fd"···&#xD;
+Actual:   "changed-audit-user-1e198ad4d961464ab357df"···&#xD;
+           ↑ (pos 0)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(Boolean teacherProfile) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 74&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(Boolean teacherProfile) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 85&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(teacherProfile: False)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="89b79a58-2ef5-70b5-cb75-9f188567a339">
+      <Execution id="9b91cb19-c421-46d3-97f3-f1b328275c17" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_UserUpdateFaultIsAtomic" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(teacherProfile: True)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="dab55886-a190-f546-17e2-de73ad0849b9">
+      <Execution id="db44db56-f4dc-4f5d-a06e-3abc603901ed" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_UserUpdateFaultIsAtomic" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudyAreaDependencyUsesStudyAreaForeignKey" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="2c45c922-2a92-56c9-d30f-167660758b6a">
+      <Execution id="df414938-215e-498f-9b5f-943ae5e08550" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_StudyAreaDependencyUsesStudyAreaForeignKey" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_BienniumUpdatePreservesDateValidation" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="36bddda9-3b41-6487-e585-82ce1e6611d0">
+      <Execution id="7b4650ac-cb7a-4c72-981e-49bffbcd0df8" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_BienniumUpdatePreservesDateValidation" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="36bddda9-3b41-6487-e585-82ce1e6611d0" executionId="7b4650ac-cb7a-4c72-981e-49bffbcd0df8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2c45c922-2a92-56c9-d30f-167660758b6a" executionId="df414938-215e-498f-9b5f-943ae5e08550" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="89b79a58-2ef5-70b5-cb75-9f188567a339" executionId="9b91cb19-c421-46d3-97f3-f1b328275c17" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dab55886-a190-f546-17e2-de73ad0849b9" executionId="db44db56-f4dc-4f5d-a06e-3abc603901ed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="4" executed="4" passed="0" failed="4" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.09]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.13]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.13]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:01.45]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:01.45]       Expected: True&#xD;
+[xUnit.net 00:00:01.45]       Actual:   False&#xD;
+[xUnit.net 00:00:01.45]       Stack Trace:&#xD;
+[xUnit.net 00:00:01.45]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(22,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudyAreaDependencyUsesStudyAreaForeignKey()&#xD;
+[xUnit.net 00:00:01.45]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:01.72]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:01.72]       Expected: BadRequest&#xD;
+[xUnit.net 00:00:01.72]       Actual:   NoContent&#xD;
+[xUnit.net 00:00:01.72]       Stack Trace:&#xD;
+[xUnit.net 00:00:01.72]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(36,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_BienniumUpdatePreservesDateValidation()&#xD;
+[xUnit.net 00:00:01.72]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(44,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_BienniumUpdatePreservesDateValidation()&#xD;
+[xUnit.net 00:00:01.72]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:01.83]       Assert.Equal() Failure: Strings differ&#xD;
+[xUnit.net 00:00:01.83]                  ↓ (pos 0)&#xD;
+[xUnit.net 00:00:01.83]       Expected: "audit-user-9405a7ca6d54469e825c34e45a7f2d"···&#xD;
+[xUnit.net 00:00:01.83]       Actual:   "changed-audit-user-9405a7ca6d54469e825c34"···&#xD;
+[xUnit.net 00:00:01.83]                  ↑ (pos 0)&#xD;
+[xUnit.net 00:00:01.83]       Stack Trace:&#xD;
+[xUnit.net 00:00:01.83]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(74,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(Boolean teacherProfile)&#xD;
+[xUnit.net 00:00:01.83]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(85,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(Boolean teacherProfile)&#xD;
+[xUnit.net 00:00:01.83]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:01.89]       Assert.Equal() Failure: Strings differ&#xD;
+[xUnit.net 00:00:01.89]                  ↓ (pos 0)&#xD;
+[xUnit.net 00:00:01.89]       Expected: "audit-user-1e198ad4d961464ab357df968da9fd"···&#xD;
+[xUnit.net 00:00:01.89]       Actual:   "changed-audit-user-1e198ad4d961464ab357df"···&#xD;
+[xUnit.net 00:00:01.89]                  ↑ (pos 0)&#xD;
+[xUnit.net 00:00:01.89]       Stack Trace:&#xD;
+[xUnit.net 00:00:01.89]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(74,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(Boolean teacherProfile)&#xD;
+[xUnit.net 00:00:01.89]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(85,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(Boolean teacherProfile)&#xD;
+[xUnit.net 00:00:01.89]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:01.90]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:56:10.0151926+02:00">
+        <Text>[xUnit.net 00:00:01.45]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudyAreaDependencyUsesStudyAreaForeignKey [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:56:10.2832747+02:00">
+        <Text>[xUnit.net 00:00:01.72]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_BienniumUpdatePreservesDateValidation [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:56:10.3937432+02:00">
+        <Text>[xUnit.net 00:00:01.83]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(teacherProfile: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:56:10.4618376+02:00">
+        <Text>[xUnit.net 00:00:01.89]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(teacherProfile: True) [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

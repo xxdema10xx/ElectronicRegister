@@ -1,0 +1,250 @@
+﻿{
+  "audit_event": {
+    "Columns": [
+      "id",
+      "actor_user_id",
+      "action",
+      "entity_type",
+      "entity_id",
+      "before_json",
+      "after_json",
+      "request_id",
+      "created_at"
+    ],
+    "Count": 12,
+    "Sha256": "66D4370F8FE94E3B846AF9DAA5CFC51A5882130EEA1F376867D8A8DF1942113C"
+  },
+  "biennium": {
+    "Columns": [
+      "id",
+      "start_year",
+      "end_year"
+    ],
+    "Count": 1,
+    "Sha256": "3B9A3892F3F46CC540E6482A3905590E5FA67A8995CCB4E9D734654A3EF4B934"
+  },
+  "biennium_study_area": {
+    "Columns": [
+      "id",
+      "biennium_id",
+      "study_area_id"
+    ],
+    "Count": 1,
+    "Sha256": "0D49CB1E9FBBB3C58AFF2F802D058A6BF3E9A2F2F739C2FB61F3F6B045D74434"
+  },
+  "biennium_study_path": {
+    "Columns": [
+      "id",
+      "biennium_study_area_id",
+      "study_path_id"
+    ],
+    "Count": 1,
+    "Sha256": "4EB9EC02F46BB82A88A021AC41BB0624CFCDE73401FF00035385CCC56729861E"
+  },
+  "class": {
+    "Columns": [
+      "id",
+      "biennium_study_path_id",
+      "name"
+    ],
+    "Count": 1,
+    "Sha256": "E6FAE0078D0E3884509E1272F451A825B298C17064AE36D4DE7E7B429BA7B795"
+  },
+  "class_subject": {
+    "Columns": [
+      "id",
+      "class_id",
+      "subject_id",
+      "teacher_id"
+    ],
+    "Count": 1,
+    "Sha256": "03A9C2D28C0CC77E3E65A5556CFA3D85ED0F6774916438BE6498FABE91A319FF"
+  },
+  "exam": {
+    "Columns": [
+      "id",
+      "class_subject_id",
+      "retake_of_exam_id",
+      "name",
+      "description",
+      "available_from",
+      "available_until",
+      "duration_minutes",
+      "passing_percent",
+      "total_points",
+      "status",
+      "published_at",
+      "closed_at",
+      "cancelled_at",
+      "created_at",
+      "updated_at"
+    ],
+    "Count": 12,
+    "Sha256": "98C79ABE4B2D6D8218BD9F6A25DC31C2648A2B9545D16BEA8997891222771EFA"
+  },
+  "exam_student": {
+    "Columns": [
+      "exam_id",
+      "student_id",
+      "extra_time_minutes",
+      "assigned_at"
+    ],
+    "Count": 12,
+    "Sha256": "649034F456C357DB6D630E870525736E7DFE0B67EDC6CB5D7A0FC5895BFFD1EF"
+  },
+  "exam_submission": {
+    "Columns": [
+      "id",
+      "exam_id",
+      "student_id",
+      "status",
+      "started_at",
+      "deadline_at",
+      "submitted_at",
+      "submit_reason",
+      "violation_count",
+      "last_client_revision",
+      "max_score",
+      "passing_score",
+      "closed_score",
+      "open_max_points",
+      "open_score",
+      "total_score",
+      "passed",
+      "suggested_grade",
+      "override_reason",
+      "grade_id",
+      "reviewed_by_user_id",
+      "finalized_at",
+      "created_at",
+      "updated_at"
+    ],
+    "Count": 12,
+    "Sha256": "659CA471F9278BE9D578344ADD6FC8875C2F7735ADFF1DD259E6088DC3E64477"
+  },
+  "exam_violation": {
+    "Columns": [
+      "id",
+      "submission_id",
+      "type",
+      "metadata_json",
+      "occurred_at"
+    ],
+    "Count": 0,
+    "Sha256": "4F53CDA18C2BAA0C0354BB5F9A3ECBE5ED12AB4D8E11BA873C2F11161202B945"
+  },
+  "grade": {
+    "Columns": [
+      "id",
+      "student_id",
+      "class_subject_id",
+      "value",
+      "date"
+    ],
+    "Count": 4,
+    "Sha256": "65C5925EA66FB86C8D792F14DCE206C8AA955FD34CCD0D8A0A52EB409925A89F"
+  },
+  "question": {
+    "Columns": [
+      "id",
+      "exam_id",
+      "position",
+      "text",
+      "type",
+      "points",
+      "required"
+    ],
+    "Count": 24,
+    "Sha256": "2F9FF4CBDB846A3B3FA93B3496C7C8A0D862D02FE0D936D8BDA96D23FF1623DC"
+  },
+  "question_option": {
+    "Columns": [
+      "id",
+      "question_id",
+      "position",
+      "text",
+      "is_correct"
+    ],
+    "Count": 24,
+    "Sha256": "4701CB7A5F148BFB75A203710F8957CC8B364EA61BDA5966DDDAA805FB870458"
+  },
+  "student": {
+    "Columns": [
+      "id",
+      "first_name",
+      "last_name",
+      "class_id"
+    ],
+    "Count": 12,
+    "Sha256": "9B4749838BD9F4E7D29FB2BE60C97E543B82911D260C3C1B0C5417C43592CD9A"
+  },
+  "study_area": {
+    "Columns": [
+      "id",
+      "name",
+      "description"
+    ],
+    "Count": 1,
+    "Sha256": "0BC55ACDF1A46CF70648E0D284EDC130EDA3B441AC1A95820F2901BBF8C43AAB"
+  },
+  "study_path": {
+    "Columns": [
+      "id",
+      "name",
+      "description"
+    ],
+    "Count": 1,
+    "Sha256": "2A3F368BB4F5D8818994FF604DF0C2213ADC1CA19E47DBC455E636D552D6B122"
+  },
+  "subject": {
+    "Columns": [
+      "id",
+      "name"
+    ],
+    "Count": 1,
+    "Sha256": "B937B464EE13554C68E2608BAD96881D42E51835251076F312CEB11D3A3CF32E"
+  },
+  "submission_answer": {
+    "Columns": [
+      "id",
+      "submission_id",
+      "question_id",
+      "open_text",
+      "is_correct",
+      "awarded_points",
+      "teacher_comment",
+      "last_saved_at"
+    ],
+    "Count": 22,
+    "Sha256": "2A2D89F90E65F64E3C3D1DEF4E02D2F23FF71CDC349DF6EE0D89B295B132EC22"
+  },
+  "submission_answer_option": {
+    "Columns": [
+      "submission_answer_id",
+      "option_id"
+    ],
+    "Count": 13,
+    "Sha256": "002125CEE608686B989AEFAC9B0E6C9235A56A12308778678663675D48A848D9"
+  },
+  "teacher": {
+    "Columns": [
+      "id",
+      "first_name",
+      "last_name"
+    ],
+    "Count": 2,
+    "Sha256": "73BC6A6F6B4FF911E9DFABA68A4C49FF6D7A4D1B77FCE9F798C8B2C833E320E9"
+  },
+  "user": {
+    "Columns": [
+      "id",
+      "email",
+      "password_hash",
+      "role",
+      "student_id",
+      "teacher_id"
+    ],
+    "Count": 15,
+    "Sha256": "AEE91FDDB2DF39407A75ABD6DC5687EE1388EC04A708C94FE660607BE1BB61FF"
+  }
+}

@@ -1,0 +1,474 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="82aded44-1710-4a7c-bc64-7db73da46bde" name="Lorenzo@DESKTOP-QUOAG32 2026-10-18 18:48:55" runUser="DESKTOP-QUOAG32\Lorenzo" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-18T18:48:55.6955709+02:00" queuing="2026-10-18T18:48:55.6955710+02:00" start="2026-10-18T18:48:53.9284268+02:00" finish="2026-10-18T18:48:58.4861127+02:00" />
+  <TestSettings name="default" id="17f12fac-6734-4544-a374-a6bd4b23c57a">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-18_18_48_55" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="4e0ed89b-608f-4a53-8777-bde9ce0db4ee" testId="30786857-d7b4-ba88-aa7b-433168fa5289" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Student&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0154782" startTime="2026-10-18T18:48:58.1976291+02:00" endTime="2026-10-18T18:48:58.1976292+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4e0ed89b-608f-4a53-8777-bde9ce0db4ee">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Text.Json.JsonException : The JSON value could not be converted to System.Guid. Path: $ | LineNumber: 0 | BytePositionInLine: 4.&#xD;
+---- System.InvalidOperationException : Cannot get the value of a token type 'True' as a string.</Message>
+          <StackTrace>   at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, Utf8JsonReader&amp; reader, Exception ex)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState&amp; bufferState, JsonReaderState&amp; jsonReaderState, ReadStack&amp; readStack, T&amp; value)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)&#xD;
+   at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 88&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 108&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ExpectedString(JsonTokenType tokenType)&#xD;
+   at System.Text.Json.Utf8JsonReader.TryGetGuid(Guid&amp; value)&#xD;
+   at System.Text.Json.Utf8JsonReader.GetGuid()&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader&amp; reader, Type typeToConvert, JsonSerializerOptions options, ReadStack&amp; state, T&amp; value, Boolean&amp; isPopulatedValue)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="07a31ca3-80f2-418f-a4c6-c5e1018925c8" testId="955883f1-14a1-a160-1238-ba0be1fd9eec" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;close&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0824253" startTime="2026-10-18T18:48:57.6472655+02:00" endTime="2026-10-18T18:48:57.6472656+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="07a31ca3-80f2-418f-a4c6-c5e1018925c8" />
+    <UnitTestResult executionId="0a6f078d-0aa4-4716-a553-275f8c5ab895" testId="39cf3f32-dac1-786b-7b65-eebe6c05d366" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;update-admin&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.2056745" startTime="2026-10-18T18:48:57.5179137+02:00" endTime="2026-10-18T18:48:57.5179138+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0a6f078d-0aa4-4716-a553-275f8c5ab895">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Conflict&#xD;
+Actual:   NoContent</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(String operation) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 35&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="675fd645-9423-4752-95ca-448c39376850" testId="cfa91299-876d-0bac-920a-ef38cf363af4" testName="ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(correctIssuer: False)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0227474" startTime="2026-10-18T18:48:55.3386242+02:00" endTime="2026-10-18T18:48:55.3386243+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="675fd645-9423-4752-95ca-448c39376850">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: No exception was thrown&#xD;
+Expected: typeof(Microsoft.IdentityModel.Tokens.SecurityTokenInvalidIssuerException)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(Boolean correctIssuer) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditMicrosoftTests.cs:line 45&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(Boolean correctIssuer) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditMicrosoftTests.cs:line 45&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c8f2d1b9-e38b-4c34-b670-4d0bcdc1df3c" testId="a898384c-741c-7e75-83a7-77c060c0fad5" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;id&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0100002" startTime="2026-10-18T18:48:57.9507516+02:00" endTime="2026-10-18T18:48:57.9507517+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c8f2d1b9-e38b-4c34-b670-4d0bcdc1df3c">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: NotFound&#xD;
+Actual:   OK</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(String operation) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 55&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="42440cbe-943e-4dba-ada5-e7f72e1f9c1c" testId="3553ab77-9d8e-0980-8a7e-aacb2e142a26" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;publish&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0409317" startTime="2026-10-18T18:48:57.7342344+02:00" endTime="2026-10-18T18:48:57.7342345+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="42440cbe-943e-4dba-ada5-e7f72e1f9c1c" />
+    <UnitTestResult executionId="718e7dfd-019f-4abc-8f6e-40f6718d43be" testId="d9436bc0-0f01-86e8-cb05-311f0e2cc400" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Biennium&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0233565" startTime="2026-10-18T18:48:58.1385661+02:00" endTime="2026-10-18T18:48:58.1385663+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="718e7dfd-019f-4abc-8f6e-40f6718d43be">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Text.Json.JsonException : The JSON value could not be converted to System.Guid. Path: $ | LineNumber: 0 | BytePositionInLine: 4.&#xD;
+---- System.InvalidOperationException : Cannot get the value of a token type 'True' as a string.</Message>
+          <StackTrace>   at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, Utf8JsonReader&amp; reader, Exception ex)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState&amp; bufferState, JsonReaderState&amp; jsonReaderState, ReadStack&amp; readStack, T&amp; value)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)&#xD;
+   at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 88&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 108&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ExpectedString(JsonTokenType tokenType)&#xD;
+   at System.Text.Json.Utf8JsonReader.TryGetGuid(Guid&amp; value)&#xD;
+   at System.Text.Json.Utf8JsonReader.GetGuid()&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader&amp; reader, Type typeToConvert, JsonSerializerOptions options, ReadStack&amp; state, T&amp; value, Boolean&amp; isPopulatedValue)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="d83f6c13-e785-45f1-a48d-1105a484d8a0" testId="1ac26f0e-1f98-e492-ccc5-7dc1436868a2" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;delete-admin&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.6141830" startTime="2026-10-18T18:48:57.0156706+02:00" endTime="2026-10-18T18:48:57.0156707+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d83f6c13-e785-45f1-a48d-1105a484d8a0">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Conflict&#xD;
+Actual:   NoContent</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(String operation) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 35&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ddcb3989-150d-4d9f-8e8b-e15e91dbb5b1" testId="06fe7fc8-b4e5-e1b9-3f5f-1ed4989764be" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;update-teacher&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.2016344" startTime="2026-10-18T18:48:57.2626330+02:00" endTime="2026-10-18T18:48:57.2626331+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ddcb3989-150d-4d9f-8e8b-e15e91dbb5b1">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Conflict&#xD;
+Actual:   NoContent</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(String operation) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 35&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="1500191a-6eaf-42a5-8e4c-3ba015e67c92" testId="3d7e464f-3933-3b71-2780-9abfd199163a" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;count&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0187120" startTime="2026-10-18T18:48:58.0687490+02:00" endTime="2026-10-18T18:48:58.0687490+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1500191a-6eaf-42a5-8e4c-3ba015e67c92">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 0&#xD;
+Actual:   12</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(String operation) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 56&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="cde4fe65-def2-4db3-80eb-7581ebbb10f6" testId="1accf719-8621-9341-a216-b987af60f0cf" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Users&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.1285997" startTime="2026-10-18T18:48:58.3693704+02:00" endTime="2026-10-18T18:48:58.3693705+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cde4fe65-def2-4db3-80eb-7581ebbb10f6">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Text.Json.JsonException : The JSON value could not be converted to System.Guid. Path: $ | LineNumber: 0 | BytePositionInLine: 4.&#xD;
+---- System.InvalidOperationException : Cannot get the value of a token type 'True' as a string.</Message>
+          <StackTrace>   at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, Utf8JsonReader&amp; reader, Exception ex)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState&amp; bufferState, JsonReaderState&amp; jsonReaderState, ReadStack&amp; readStack, T&amp; value)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)&#xD;
+   at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 88&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 108&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ExpectedString(JsonTokenType tokenType)&#xD;
+   at System.Text.Json.Utf8JsonReader.TryGetGuid(Guid&amp; value)&#xD;
+   at System.Text.Json.Utf8JsonReader.GetGuid()&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader&amp; reader, Type typeToConvert, JsonSerializerOptions options, ReadStack&amp; state, T&amp; value, Boolean&amp; isPopulatedValue)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="94c1ec60-53ac-468a-b19e-9b37e87da16a" testId="955e2433-8321-4081-71a4-6646cee13703" testName="ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(correctIssuer: True)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0634531" startTime="2026-10-18T18:48:55.3092283+02:00" endTime="2026-10-18T18:48:55.3092413+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="94c1ec60-53ac-468a-b19e-9b37e87da16a" />
+    <UnitTestResult executionId="06e02fe8-4a37-4b47-9c02-a4edc1b51530" testId="37de46a7-a75e-6a57-812a-b28675e83dec" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_LoginWithoutPasswordHashIsUnauthorized" computerName="DESKTOP-QUOAG32" duration="00:00:00.0167419" startTime="2026-10-18T18:48:58.4337730+02:00" endTime="2026-10-18T18:48:58.4337731+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="06e02fe8-4a37-4b47-9c02-a4edc1b51530">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Unauthorized&#xD;
+Actual:   BadRequest</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_LoginWithoutPasswordHashIsUnauthorized() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 67&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="6825d211-e783-42af-8fe2-311004077a83" testId="6dac8224-2afc-d572-1a95-5c66aac58646" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;cancel&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0604977" startTime="2026-10-18T18:48:57.8392371+02:00" endTime="2026-10-18T18:48:57.8392372+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6825d211-e783-42af-8fe2-311004077a83" />
+    <UnitTestResult executionId="97694e21-9ddc-4667-9672-c0f8816afb29" testId="447477d3-aeb4-f20b-3d8f-b36db2185a5a" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: True)" computerName="DESKTOP-QUOAG32" duration="00:00:00.1291899" startTime="2026-10-18T18:48:56.3378070+02:00" endTime="2026-10-18T18:48:56.3378071+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="97694e21-9ddc-4667-9672-c0f8816afb29">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.False() Failure&#xD;
+Expected: False&#xD;
+Actual:   True</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(Boolean adminFlow) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 140&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(Boolean adminFlow) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 149&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c2316d92-9d5b-4596-8d1d-3a9abfbeb907" testId="b9a86dde-ccf6-e895-52af-f4e283ebe7ee" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;list&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0149839" startTime="2026-10-18T18:48:57.8958702+02:00" endTime="2026-10-18T18:48:57.8958703+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c2316d92-9d5b-4596-8d1d-3a9abfbeb907">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: NotFound&#xD;
+Actual:   OK</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(String operation) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 55&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="f29afdd1-9843-4ead-9f45-74ed6d1e62f1" testId="7ce4f4fe-1cff-0756-5ecf-ffbcea24f902" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: False)" computerName="DESKTOP-QUOAG32" duration="00:00:00.2319079" startTime="2026-10-18T18:48:56.0914068+02:00" endTime="2026-10-18T18:48:56.0914069+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f29afdd1-9843-4ead-9f45-74ed6d1e62f1">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.False() Failure&#xD;
+Expected: False&#xD;
+Actual:   True</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(Boolean adminFlow) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 140&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(Boolean adminFlow) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 149&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="0c0916c0-9e8c-4fe3-a542-00550efe46b5" testId="35b0b1a7-34b9-0983-0922-746847091d75" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;name&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0124859" startTime="2026-10-18T18:48:58.0067075+02:00" endTime="2026-10-18T18:48:58.0067076+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0c0916c0-9e8c-4fe3-a542-00550efe46b5">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: NotFound&#xD;
+Actual:   OK</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(String operation) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 55&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;update-admin&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="39cf3f32-dac1-786b-7b65-eebe6c05d366">
+      <Execution id="0a6f078d-0aa4-4716-a553-275f8c5ab895" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_ExamGradeCannotBypassFinalization" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(correctIssuer: False)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="cfa91299-876d-0bac-920a-ef38cf363af4">
+      <Execution id="675fd645-9423-4752-95ca-448c39376850" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests" name="MicrosoftValidator_RequiresConfiguredTenantIssuer" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Biennium&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="d9436bc0-0f01-86e8-cb05-311f0e2cc400">
+      <Execution id="718e7dfd-019f-4abc-8f6e-40f6718d43be" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_CreateReturnsPersistedGuidAndUsableLocation" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;list&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="b9a86dde-ccf6-e895-52af-f4e283ebe7ee">
+      <Execution id="c2316d92-9d5b-4596-8d1d-3a9abfbeb907" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_TeacherWithoutAssignmentsCannotReadStudents" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;name&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="35b0b1a7-34b9-0983-0922-746847091d75">
+      <Execution id="0c0916c0-9e8c-4fe3-a542-00550efe46b5" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_TeacherWithoutAssignmentsCannotReadStudents" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: False)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="7ce4f4fe-1cff-0756-5ecf-ffbcea24f902">
+      <Execution id="f29afdd1-9843-4ead-9f45-74ed6d1e62f1" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_RegistrationFaultRollsBackProfileAndUser" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;close&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="955883f1-14a1-a160-1238-ba0be1fd9eec">
+      <Execution id="07a31ca3-80f2-418f-a4c6-c5e1018925c8" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_LoginWithoutPasswordHashIsUnauthorized" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="37de46a7-a75e-6a57-812a-b28675e83dec">
+      <Execution id="06e02fe8-4a37-4b47-9c02-a4edc1b51530" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_LoginWithoutPasswordHashIsUnauthorized" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;update-teacher&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="06fe7fc8-b4e5-e1b9-3f5f-1ed4989764be">
+      <Execution id="ddcb3989-150d-4d9f-8e8b-e15e91dbb5b1" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_ExamGradeCannotBypassFinalization" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(correctIssuer: True)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="955e2433-8321-4081-71a4-6646cee13703">
+      <Execution id="94c1ec60-53ac-468a-b19e-9b37e87da16a" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests" name="MicrosoftValidator_RequiresConfiguredTenantIssuer" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: True)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="447477d3-aeb4-f20b-3d8f-b36db2185a5a">
+      <Execution id="97694e21-9ddc-4667-9672-c0f8816afb29" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_RegistrationFaultRollsBackProfileAndUser" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;cancel&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="6dac8224-2afc-d572-1a95-5c66aac58646">
+      <Execution id="6825d211-e783-42af-8fe2-311004077a83" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;delete-admin&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="1ac26f0e-1f98-e492-ccc5-7dc1436868a2">
+      <Execution id="d83f6c13-e785-45f1-a48d-1105a484d8a0" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_ExamGradeCannotBypassFinalization" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Student&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="30786857-d7b4-ba88-aa7b-433168fa5289">
+      <Execution id="4e0ed89b-608f-4a53-8777-bde9ce0db4ee" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_CreateReturnsPersistedGuidAndUsableLocation" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Users&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="1accf719-8621-9341-a216-b987af60f0cf">
+      <Execution id="cde4fe65-def2-4db3-80eb-7581ebbb10f6" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_CreateReturnsPersistedGuidAndUsableLocation" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;publish&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="3553ab77-9d8e-0980-8a7e-aacb2e142a26">
+      <Execution id="42440cbe-943e-4dba-ada5-e7f72e1f9c1c" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;count&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="3d7e464f-3933-3b71-2780-9abfd199163a">
+      <Execution id="1500191a-6eaf-42a5-8e4c-3ba015e67c92" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_TeacherWithoutAssignmentsCannotReadStudents" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;id&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="a898384c-741c-7e75-83a7-77c060c0fad5">
+      <Execution id="c8f2d1b9-e38b-4c34-b670-4d0bcdc1df3c" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_TeacherWithoutAssignmentsCannotReadStudents" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="30786857-d7b4-ba88-aa7b-433168fa5289" executionId="4e0ed89b-608f-4a53-8777-bde9ce0db4ee" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="955883f1-14a1-a160-1238-ba0be1fd9eec" executionId="07a31ca3-80f2-418f-a4c6-c5e1018925c8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="39cf3f32-dac1-786b-7b65-eebe6c05d366" executionId="0a6f078d-0aa4-4716-a553-275f8c5ab895" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="cfa91299-876d-0bac-920a-ef38cf363af4" executionId="675fd645-9423-4752-95ca-448c39376850" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a898384c-741c-7e75-83a7-77c060c0fad5" executionId="c8f2d1b9-e38b-4c34-b670-4d0bcdc1df3c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3553ab77-9d8e-0980-8a7e-aacb2e142a26" executionId="42440cbe-943e-4dba-ada5-e7f72e1f9c1c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d9436bc0-0f01-86e8-cb05-311f0e2cc400" executionId="718e7dfd-019f-4abc-8f6e-40f6718d43be" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1ac26f0e-1f98-e492-ccc5-7dc1436868a2" executionId="d83f6c13-e785-45f1-a48d-1105a484d8a0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="06fe7fc8-b4e5-e1b9-3f5f-1ed4989764be" executionId="ddcb3989-150d-4d9f-8e8b-e15e91dbb5b1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3d7e464f-3933-3b71-2780-9abfd199163a" executionId="1500191a-6eaf-42a5-8e4c-3ba015e67c92" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1accf719-8621-9341-a216-b987af60f0cf" executionId="cde4fe65-def2-4db3-80eb-7581ebbb10f6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="955e2433-8321-4081-71a4-6646cee13703" executionId="94c1ec60-53ac-468a-b19e-9b37e87da16a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="37de46a7-a75e-6a57-812a-b28675e83dec" executionId="06e02fe8-4a37-4b47-9c02-a4edc1b51530" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6dac8224-2afc-d572-1a95-5c66aac58646" executionId="6825d211-e783-42af-8fe2-311004077a83" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="447477d3-aeb4-f20b-3d8f-b36db2185a5a" executionId="97694e21-9ddc-4667-9672-c0f8816afb29" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b9a86dde-ccf6-e895-52af-f4e283ebe7ee" executionId="c2316d92-9d5b-4596-8d1d-3a9abfbeb907" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7ce4f4fe-1cff-0756-5ecf-ffbcea24f902" executionId="f29afdd1-9843-4ead-9f45-74ed6d1e62f1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="35b0b1a7-34b9-0983-0922-746847091d75" executionId="0c0916c0-9e8c-4fe3-a542-00550efe46b5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="18" executed="18" passed="4" failed="14" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.07]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.11]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.11]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:01.08]       Assert.Throws() Failure: No exception was thrown&#xD;
+[xUnit.net 00:00:01.08]       Expected: typeof(Microsoft.IdentityModel.Tokens.SecurityTokenInvalidIssuerException)&#xD;
+[xUnit.net 00:00:01.08]       Stack Trace:&#xD;
+[xUnit.net 00:00:01.08]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditMicrosoftTests.cs(45,0): at ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(Boolean correctIssuer)&#xD;
+[xUnit.net 00:00:01.08]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditMicrosoftTests.cs(45,0): at ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(Boolean correctIssuer)&#xD;
+[xUnit.net 00:00:01.08]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:01.84]       Assert.False() Failure&#xD;
+[xUnit.net 00:00:01.84]       Expected: False&#xD;
+[xUnit.net 00:00:01.84]       Actual:   True&#xD;
+[xUnit.net 00:00:01.84]       Stack Trace:&#xD;
+[xUnit.net 00:00:01.84]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(140,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(Boolean adminFlow)&#xD;
+[xUnit.net 00:00:01.84]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(149,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(Boolean adminFlow)&#xD;
+[xUnit.net 00:00:01.84]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:02.08]       Assert.False() Failure&#xD;
+[xUnit.net 00:00:02.08]       Expected: False&#xD;
+[xUnit.net 00:00:02.08]       Actual:   True&#xD;
+[xUnit.net 00:00:02.08]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.08]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(140,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(Boolean adminFlow)&#xD;
+[xUnit.net 00:00:02.08]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(149,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(Boolean adminFlow)&#xD;
+[xUnit.net 00:00:02.08]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:02.76]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:02.76]       Expected: Conflict&#xD;
+[xUnit.net 00:00:02.76]       Actual:   NoContent&#xD;
+[xUnit.net 00:00:02.76]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.76]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(35,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(String operation)&#xD;
+[xUnit.net 00:00:02.76]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.01]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:03.01]       Expected: Conflict&#xD;
+[xUnit.net 00:00:03.01]       Actual:   NoContent&#xD;
+[xUnit.net 00:00:03.01]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.01]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(35,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(String operation)&#xD;
+[xUnit.net 00:00:03.01]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.26]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:03.26]       Expected: Conflict&#xD;
+[xUnit.net 00:00:03.26]       Actual:   NoContent&#xD;
+[xUnit.net 00:00:03.26]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.26]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(35,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(String operation)&#xD;
+[xUnit.net 00:00:03.26]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.64]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:03.64]       Expected: NotFound&#xD;
+[xUnit.net 00:00:03.64]       Actual:   OK&#xD;
+[xUnit.net 00:00:03.64]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.64]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(55,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(String operation)&#xD;
+[xUnit.net 00:00:03.64]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.70]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:03.70]       Expected: NotFound&#xD;
+[xUnit.net 00:00:03.70]       Actual:   OK&#xD;
+[xUnit.net 00:00:03.70]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.70]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(55,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(String operation)&#xD;
+[xUnit.net 00:00:03.70]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.75]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:03.75]       Expected: NotFound&#xD;
+[xUnit.net 00:00:03.75]       Actual:   OK&#xD;
+[xUnit.net 00:00:03.75]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.75]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(55,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(String operation)&#xD;
+[xUnit.net 00:00:03.75]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.81]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:03.81]       Expected: 0&#xD;
+[xUnit.net 00:00:03.81]       Actual:   12&#xD;
+[xUnit.net 00:00:03.81]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.81]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(56,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(String operation)&#xD;
+[xUnit.net 00:00:03.81]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.88]       System.Text.Json.JsonException : The JSON value could not be converted to System.Guid. Path: $ | LineNumber: 0 | BytePositionInLine: 4.&#xD;
+[xUnit.net 00:00:03.88]       ---- System.InvalidOperationException : Cannot get the value of a token type 'True' as a string.&#xD;
+[xUnit.net 00:00:03.88]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.88]            at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, Utf8JsonReader&amp; reader, Exception ex)&#xD;
+[xUnit.net 00:00:03.88]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:03.88]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState&amp; bufferState, JsonReaderState&amp; jsonReaderState, ReadStack&amp; readStack, T&amp; value)&#xD;
+[xUnit.net 00:00:03.88]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:03.88]            at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:03.88]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(88,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource)&#xD;
+[xUnit.net 00:00:03.88]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(108,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource)&#xD;
+[xUnit.net 00:00:03.88]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.88]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:03.88]            at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ExpectedString(JsonTokenType tokenType)&#xD;
+[xUnit.net 00:00:03.88]            at System.Text.Json.Utf8JsonReader.TryGetGuid(Guid&amp; value)&#xD;
+[xUnit.net 00:00:03.88]            at System.Text.Json.Utf8JsonReader.GetGuid()&#xD;
+[xUnit.net 00:00:03.88]            at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader&amp; reader, Type typeToConvert, JsonSerializerOptions options, ReadStack&amp; state, T&amp; value, Boolean&amp; isPopulatedValue)&#xD;
+[xUnit.net 00:00:03.88]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:03.94]       System.Text.Json.JsonException : The JSON value could not be converted to System.Guid. Path: $ | LineNumber: 0 | BytePositionInLine: 4.&#xD;
+[xUnit.net 00:00:03.94]       ---- System.InvalidOperationException : Cannot get the value of a token type 'True' as a string.&#xD;
+[xUnit.net 00:00:03.94]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.94]            at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, Utf8JsonReader&amp; reader, Exception ex)&#xD;
+[xUnit.net 00:00:03.94]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:03.94]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState&amp; bufferState, JsonReaderState&amp; jsonReaderState, ReadStack&amp; readStack, T&amp; value)&#xD;
+[xUnit.net 00:00:03.94]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:03.94]            at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:03.94]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(88,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource)&#xD;
+[xUnit.net 00:00:03.94]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(108,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource)&#xD;
+[xUnit.net 00:00:03.94]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.94]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:03.94]            at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ExpectedString(JsonTokenType tokenType)&#xD;
+[xUnit.net 00:00:03.94]            at System.Text.Json.Utf8JsonReader.TryGetGuid(Guid&amp; value)&#xD;
+[xUnit.net 00:00:03.94]            at System.Text.Json.Utf8JsonReader.GetGuid()&#xD;
+[xUnit.net 00:00:03.94]            at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader&amp; reader, Type typeToConvert, JsonSerializerOptions options, ReadStack&amp; state, T&amp; value, Boolean&amp; isPopulatedValue)&#xD;
+[xUnit.net 00:00:03.94]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:04.11]       System.Text.Json.JsonException : The JSON value could not be converted to System.Guid. Path: $ | LineNumber: 0 | BytePositionInLine: 4.&#xD;
+[xUnit.net 00:00:04.11]       ---- System.InvalidOperationException : Cannot get the value of a token type 'True' as a string.&#xD;
+[xUnit.net 00:00:04.11]       Stack Trace:&#xD;
+[xUnit.net 00:00:04.11]            at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, Utf8JsonReader&amp; reader, Exception ex)&#xD;
+[xUnit.net 00:00:04.11]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:04.11]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState&amp; bufferState, JsonReaderState&amp; jsonReaderState, ReadStack&amp; readStack, T&amp; value)&#xD;
+[xUnit.net 00:00:04.11]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:04.11]            at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:04.11]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(88,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource)&#xD;
+[xUnit.net 00:00:04.11]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(108,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(String resource)&#xD;
+[xUnit.net 00:00:04.11]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:04.11]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:04.11]            at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ExpectedString(JsonTokenType tokenType)&#xD;
+[xUnit.net 00:00:04.11]            at System.Text.Json.Utf8JsonReader.TryGetGuid(Guid&amp; value)&#xD;
+[xUnit.net 00:00:04.11]            at System.Text.Json.Utf8JsonReader.GetGuid()&#xD;
+[xUnit.net 00:00:04.11]            at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader&amp; reader, Type typeToConvert, JsonSerializerOptions options, ReadStack&amp; state, T&amp; value, Boolean&amp; isPopulatedValue)&#xD;
+[xUnit.net 00:00:04.11]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:04.18]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:04.18]       Expected: Unauthorized&#xD;
+[xUnit.net 00:00:04.18]       Actual:   BadRequest&#xD;
+[xUnit.net 00:00:04.18]       Stack Trace:&#xD;
+[xUnit.net 00:00:04.18]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(67,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_LoginWithoutPasswordHashIsUnauthorized()&#xD;
+[xUnit.net 00:00:04.18]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:04.18]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:55.3375786+02:00">
+        <Text>[xUnit.net 00:00:01.08]     ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(correctIssuer: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:56.0914507+02:00">
+        <Text>[xUnit.net 00:00:01.84]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:56.3378555+02:00">
+        <Text>[xUnit.net 00:00:02.08]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:57.0157502+02:00">
+        <Text>[xUnit.net 00:00:02.76]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: "delete-admin") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:57.2626509+02:00">
+        <Text>[xUnit.net 00:00:03.01]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: "update-teacher") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:57.5177667+02:00">
+        <Text>[xUnit.net 00:00:03.26]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: "update-admin") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:57.8959199+02:00">
+        <Text>[xUnit.net 00:00:03.64]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: "list") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:57.9507479+02:00">
+        <Text>[xUnit.net 00:00:03.69]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: "id") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:58.0067047+02:00">
+        <Text>[xUnit.net 00:00:03.75]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: "name") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:58.0687327+02:00">
+        <Text>[xUnit.net 00:00:03.81]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: "count") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:58.1383445+02:00">
+        <Text>[xUnit.net 00:00:03.88]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: "Biennium") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:58.1973546+02:00">
+        <Text>[xUnit.net 00:00:03.94]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: "Student") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:58.3691352+02:00">
+        <Text>[xUnit.net 00:00:04.11]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: "Users") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:48:58.4337304+02:00">
+        <Text>[xUnit.net 00:00:04.18]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_LoginWithoutPasswordHashIsUnauthorized [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

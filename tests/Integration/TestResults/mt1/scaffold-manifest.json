@@ -1,0 +1,18 @@
+﻿[
+    {
+        "File":  "Institution.cs",
+        "SHA256":  "EBD5A141B33767773452ABDB74005E949E8F2EE0F9B73AD3A49AB0DAED59589E"
+    },
+    {
+        "File":  "Campus.cs",
+        "SHA256":  "33856A2C01F39188F3DDCC7AD5F85C8AA3C4E3FCE2B3EE265649CCD2957EA0C5"
+    },
+    {
+        "File":  "InstitutionMembership.cs",
+        "SHA256":  "B1E66B004AB1893CD9E488362DE3CB9AA28F272751825848AB7C840DD282EE8C"
+    },
+    {
+        "File":  "InstitutionMembershipRole.cs",
+        "SHA256":  "184D11176EB6A6881033BA81A25DBE2EE9D3270B474A40E7406E5E595BEEA864"
+    }
+]
