@@ -16,6 +16,7 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories
         Task<List<Exam>> GetAssignedToStudentAsync(Guid studentId);
         Task<List<Exam>> GetByClassSubjectAsync(Guid classSubjectId);
         Task<bool> HasSubmissionsAsync(Guid examId);
+        Task<bool> HasInProgressSubmissionsAsync(Guid examId);
         Task AddAsync(Exam exam);
         Task UpdateAsync(Exam exam);
         Task ReplaceStructureAsync(Exam exam);

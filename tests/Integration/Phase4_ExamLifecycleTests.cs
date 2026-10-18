@@ -283,7 +283,7 @@ public partial class Phase4_ExamLifecycleTests(IntegrationFixture fixture) : IAs
     }
 
     [Fact]
-    public async Task CloseWithActiveSubmission_PreservesIt_AndAutomaticDeliveryStillWorks()
+    public async Task CloseWithActiveSubmission_IsRejected_AndClosesAfterAutomaticDelivery()
     {
         var id = await CreateAsync(Draft());
         Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/publish", null)).StatusCode);
@@ -296,7 +296,9 @@ public partial class Phase4_ExamLifecycleTests(IntegrationFixture fixture) : IAs
             Assert.Equal(SubmissionStatus.InProgress, (await repo.GetByIdAsync(started.SubmissionId))!.Status);
         }
         Assert.Equal(HttpStatusCode.Conflict, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/cancel", null)).StatusCode);
-        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/close", null)).StatusCode);
+        var before = await ExamSnapshotAsync(id);
+        Assert.Equal(HttpStatusCode.Conflict, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/close", null)).StatusCode);
+        Assert.Equal(before, await ExamSnapshotAsync(id));
         using (var scope = fixture.ScopeFactory.CreateScope())
         {
             var sub = await scope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>().GetByIdAsync(started.SubmissionId);
@@ -310,6 +312,7 @@ public partial class Phase4_ExamLifecycleTests(IntegrationFixture fixture) : IAs
                 .ProcessSubmitAsync(started.SubmissionId, null, SubmitReason.TimeExpired, null);
             Assert.NotNull(result.SubmittedAt);
         }
+        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/close", null)).StatusCode);
         using var verify = fixture.ScopeFactory.CreateScope();
         var ctx = verify.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
         Assert.Single(await ctx.AuditEvents.Where(a => a.EntityId == id && a.Action == "exam.close").ToListAsync());

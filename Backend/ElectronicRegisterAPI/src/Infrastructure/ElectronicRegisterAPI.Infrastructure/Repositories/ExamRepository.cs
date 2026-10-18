@@ -165,6 +165,16 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         {
             return _context.ExamSubmissions.AnyAsync(s => s.ExamId == examId);
         }
+        public Task<bool> HasInProgressSubmissionsAsync(Guid examId)
+        {
+            if (_context.Database.CurrentTransaction is null)
+                throw new InvalidOperationException("Submission check requires an ambient transaction and the Exam row lock.");
+
+            // Close acquires the Exam lock before any consistent read establishes a snapshot.
+            // All earlier Starts have committed; later Starts wait for Close to commit/rollback.
+            // Do not lock submissions: Submit/worker own those locks and can read exam structure.
+            return _context.ExamSubmissions.AnyAsync(s => s.ExamId == examId && s.Status == "in_progress");
+        }
         public async Task AddAsync(Exam exam)
         {
             var entity = new ExamEntity

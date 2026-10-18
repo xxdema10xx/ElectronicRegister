@@ -384,6 +384,8 @@ namespace ElectronicRegisterAPI.Application.Managers
                 }
 
                 _examService.EnsureCanClose(exam);
+                if (await _examRepository.HasInProgressSubmissionsAsync(id))
+                    throw new BusinessRuleException("Cannot close an exam while submissions are in progress.");
                 var beforeJson = LifecycleJson(exam);
                 // Closing: set status and ClosedAt
                 exam.Status = ExamStatus.Closed;
