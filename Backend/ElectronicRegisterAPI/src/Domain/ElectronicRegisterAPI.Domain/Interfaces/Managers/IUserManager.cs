@@ -9,6 +9,6 @@ public interface IUserManager
     Task<UserDto?> GetByIdAsync(Guid id);
     Task<bool> UpdatePasswordAsync(Guid id, UpdatePasswordDto dto, ClaimsContext caller);
     Task<bool> UpdateAsync(Guid id, UpdateUserDto dto);
-    Task<bool> AddAsync(CreateUserDto dto);
+    Task<Guid> AddAsync(CreateUserDto dto);
     Task<bool> DeleteAsync(Guid id);
 }

@@ -40,7 +40,7 @@ internal class StudyAreaRepository : IStudyAreaRepository
 
     public async Task<bool> HasStudyPathsAsync(Guid studyAreaId)
     {
-        return await _context.BienniumStudyPaths.AnyAsync(x => x.BienniumStudyAreaId == studyAreaId);
+        return await _context.BienniumStudyPaths.AnyAsync(x => x.BienniumStudyArea.StudyAreaId == studyAreaId);
     }
 
     public async Task AddAsync(StudyAreaModel studyArea)

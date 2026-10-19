@@ -1,6 +1,7 @@
 using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
+using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Business.Services;
 
@@ -13,6 +14,19 @@ internal class SubjectService : ISubjectService
     {
         _subjectRepository = subjectRepository;
         _classSubjectRepository = classSubjectRepository;
+    }
+
+    public void EnsureClassSubjectExists(ClassSubject? classSubject)
+    {
+        if (classSubject is null) throw new KeyNotFoundException("La materia associata alla classe non esiste.");
+    }
+
+    public async Task<ClassSubject> EnsureValidClassSubjectId(Guid classSubjectId)
+    {
+        if (classSubjectId == Guid.Empty) throw new ArgumentException("L'identificativo della materia associata alla classe non può essere vuoto.");
+        var classSubject = await _classSubjectRepository.GetByIdAsync(classSubjectId);
+        if ( classSubject is null) throw new KeyNotFoundException("La materia associata alla classe non esiste.");
+        return classSubject;
     }
 
     public async Task EnsureSubjectCanBeDeletedAsync(Guid subjectId)

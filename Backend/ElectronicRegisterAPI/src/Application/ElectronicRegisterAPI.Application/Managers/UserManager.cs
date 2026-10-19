@@ -15,19 +15,22 @@ internal class UserManager : IUserManager
     private readonly ITeacherRepository _teacherRepository;
     private readonly IUserService _userService;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly ITransactionManager _transactionManager;
 
     public UserManager(
         IUserRepository userRepository,
         IStudentRepository studentRepository,
         ITeacherRepository teacherRepository,
         IUserService userService,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher,
+        ITransactionManager transactionManager)
     {
         _userRepository = userRepository;
         _studentRepository = studentRepository;
         _teacherRepository = teacherRepository;
         _userService = userService;
         _passwordHasher = passwordHasher;
+        _transactionManager = transactionManager;
     }
 
     public Task<int> CountAsync() => _userRepository.CountAsync();
@@ -63,6 +66,13 @@ internal class UserManager : IUserManager
 
     public async Task<bool> UpdateAsync(Guid id, UpdateUserDto dto)
     {
+        var updated = false;
+        await _transactionManager.ExecuteAsync(async () => updated = await UpdateCoreAsync(id, dto));
+        return updated;
+    }
+
+    private async Task<bool> UpdateCoreAsync(Guid id, UpdateUserDto dto)
+    {
         var user = await _userRepository.GetByIdAsync(id);
         if (user is null) return false;
 
@@ -87,7 +97,7 @@ internal class UserManager : IUserManager
             if (user.StudentId.HasValue)
             {
                 var student = await _studentRepository.GetByIdAsync(user.StudentId.Value);
-                if (student is null) return false;
+                if (student is null) throw new KeyNotFoundException("Linked student profile not found.");
 
                 if (dto.FirstName != null) student.FirstName = dto.FirstName;
                 if (dto.LastName != null) student.LastName = dto.LastName;
@@ -96,7 +106,7 @@ internal class UserManager : IUserManager
             else if (user.TeacherId.HasValue)
             {
                 var teacher = await _teacherRepository.GetByIdAsync(user.TeacherId.Value);
-                if (teacher is null) return false;
+                if (teacher is null) throw new KeyNotFoundException("Linked teacher profile not found.");
 
                 if (dto.FirstName != null) teacher.FirstName = dto.FirstName;
                 if (dto.LastName != null) teacher.LastName = dto.LastName;
@@ -107,7 +117,7 @@ internal class UserManager : IUserManager
         return true;
     }
    
-    public async Task<bool> AddAsync(CreateUserDto dto)
+    public async Task<Guid> AddAsync(CreateUserDto dto)
     {
         _userService.EnsureEmailIsValid(dto.Email);
         await _userService.EnsureEmailIsAvailableAsync(dto.Email!);
@@ -125,7 +135,7 @@ internal class UserManager : IUserManager
         };
 
         await _userRepository.AddAsync(user);
-        return true;
+        return user.Id;
     }
 
     public async Task<bool> DeleteAsync(Guid id)

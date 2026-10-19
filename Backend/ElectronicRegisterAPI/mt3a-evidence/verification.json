@@ -1,0 +1,242 @@
+{
+  "baseline": {
+    "total": 348,
+    "files": [
+      {
+        "file": "baseline/Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_46_13_net10.0.trx",
+        "sha256": "361b225eddc8ce2e90f9f59ab79218dc06d416a6db5566157d5674e0ad43fbbe",
+        "counters": {
+          "total": 48,
+          "executed": 48,
+          "passed": 48,
+          "failed": 0,
+          "error": 0,
+          "timeout": 0,
+          "aborted": 0,
+          "inconclusive": 0,
+          "passedButRunAborted": 0,
+          "notRunnable": 0,
+          "notExecuted": 0,
+          "disconnected": 0,
+          "warning": 0,
+          "completed": 0,
+          "inProgress": 0,
+          "pending": 0
+        }
+      },
+      {
+        "file": "baseline/Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_46_16_net10.0.trx",
+        "sha256": "fdb8e33b93f5fb0aefa41f1914ebeb6df0afdb27144b3fbf4fae2df16cbb50cd",
+        "counters": {
+          "total": 300,
+          "executed": 300,
+          "passed": 300,
+          "failed": 0,
+          "error": 0,
+          "timeout": 0,
+          "aborted": 0,
+          "inconclusive": 0,
+          "passedButRunAborted": 0,
+          "notRunnable": 0,
+          "notExecuted": 0,
+          "disconnected": 0,
+          "warning": 0,
+          "completed": 0,
+          "inProgress": 0,
+          "pending": 0
+        }
+      }
+    ],
+    "classCounts": {
+      "AuditBootstrapTests": 2,
+      "AuditMicrosoftTests": 2,
+      "ConcurrencyIntegrationTests": 4,
+      "ExamLifecycleServiceTests": 10,
+      "ExamRegressionTests": 11,
+      "ExamSecurityTests": 2,
+      "ExamSubmissionProcessorTests": 11,
+      "ExamValidationTests": 9,
+      "FinalGradeValidationTests": 5,
+      "FinalizeConcurrencyTests": 1,
+      "GradeMappingTests": 4,
+      "MembershipAuthorizationTests": 9,
+      "Mt1IntegrityTests": 21,
+      "Mt2IdentityTests": 50,
+      "Mt2MicrosoftIdentityTests": 11,
+      "Mt3ProfileTests": 21,
+      "OpenScoreDoubleCountTests": 1,
+      "Phase2B_AdditionalTests": 18,
+      "Phase2B_ConversionAndOverrideTests": 2,
+      "Phase2C_ApiTests": 14,
+      "Phase2C_VisibilityTests": 10,
+      "Phase3_ConcurrencyTests": 7,
+      "Phase3_TransactionRollbackTests": 10,
+      "Phase3_WorkerRecoveryTests": 4,
+      "Phase4_ExamLifecycleTests": 91,
+      "SubmissionGradingServiceTests": 18
+    }
+  },
+  "final-1": {
+    "total": 387,
+    "files": [
+      {
+        "file": "final-1/Lorenzo_DESKTOP-QUOAG32_2026-10-19_00_12_46_net10.0.trx",
+        "sha256": "422b36b029438ed2cf3ee1d74c757c0f879c9f9fbc34f98717ab3a97729c82f2",
+        "counters": {
+          "total": 48,
+          "executed": 48,
+          "passed": 48,
+          "failed": 0,
+          "error": 0,
+          "timeout": 0,
+          "aborted": 0,
+          "inconclusive": 0,
+          "passedButRunAborted": 0,
+          "notRunnable": 0,
+          "notExecuted": 0,
+          "disconnected": 0,
+          "warning": 0,
+          "completed": 0,
+          "inProgress": 0,
+          "pending": 0
+        }
+      },
+      {
+        "file": "final-1/Lorenzo_DESKTOP-QUOAG32_2026-10-19_00_12_48_net10.0.trx",
+        "sha256": "56d14a0e3a9aa88b1144b3b0146dbfc5bf80881e64edd924c757ac7f850c73e9",
+        "counters": {
+          "total": 339,
+          "executed": 339,
+          "passed": 339,
+          "failed": 0,
+          "error": 0,
+          "timeout": 0,
+          "aborted": 0,
+          "inconclusive": 0,
+          "passedButRunAborted": 0,
+          "notRunnable": 0,
+          "notExecuted": 0,
+          "disconnected": 0,
+          "warning": 0,
+          "completed": 0,
+          "inProgress": 0,
+          "pending": 0
+        }
+      }
+    ],
+    "classCounts": {
+      "AuditBootstrapTests": 2,
+      "AuditMicrosoftTests": 2,
+      "ConcurrencyIntegrationTests": 4,
+      "ExamLifecycleServiceTests": 10,
+      "ExamRegressionTests": 11,
+      "ExamSecurityTests": 2,
+      "ExamSubmissionProcessorTests": 11,
+      "ExamValidationTests": 9,
+      "FinalGradeValidationTests": 5,
+      "FinalizeConcurrencyTests": 1,
+      "GradeMappingTests": 4,
+      "MembershipAuthorizationTests": 9,
+      "Mt1IntegrityTests": 21,
+      "Mt2IdentityTests": 50,
+      "Mt2MicrosoftIdentityTests": 11,
+      "Mt3ProfileTests": 21,
+      "Mt3aOwnershipTests": 39,
+      "OpenScoreDoubleCountTests": 1,
+      "Phase2B_AdditionalTests": 18,
+      "Phase2B_ConversionAndOverrideTests": 2,
+      "Phase2C_ApiTests": 14,
+      "Phase2C_VisibilityTests": 10,
+      "Phase3_ConcurrencyTests": 7,
+      "Phase3_TransactionRollbackTests": 10,
+      "Phase3_WorkerRecoveryTests": 4,
+      "Phase4_ExamLifecycleTests": 91,
+      "SubmissionGradingServiceTests": 18
+    }
+  },
+  "final-2": {
+    "total": 387,
+    "files": [
+      {
+        "file": "final-2/Lorenzo_DESKTOP-QUOAG32_2026-10-19_00_15_31_net10.0.trx",
+        "sha256": "75273489d36e3e281f574acfe59aba79fc168c15d58484134e1789fc29787bf1",
+        "counters": {
+          "total": 48,
+          "executed": 48,
+          "passed": 48,
+          "failed": 0,
+          "error": 0,
+          "timeout": 0,
+          "aborted": 0,
+          "inconclusive": 0,
+          "passedButRunAborted": 0,
+          "notRunnable": 0,
+          "notExecuted": 0,
+          "disconnected": 0,
+          "warning": 0,
+          "completed": 0,
+          "inProgress": 0,
+          "pending": 0
+        }
+      },
+      {
+        "file": "final-2/Lorenzo_DESKTOP-QUOAG32_2026-10-19_00_15_34_net10.0.trx",
+        "sha256": "a8ca86ba1858733847b51ecdab388a788b7f88af7561ce8db3ae8c33951ae1ca",
+        "counters": {
+          "total": 339,
+          "executed": 339,
+          "passed": 339,
+          "failed": 0,
+          "error": 0,
+          "timeout": 0,
+          "aborted": 0,
+          "inconclusive": 0,
+          "passedButRunAborted": 0,
+          "notRunnable": 0,
+          "notExecuted": 0,
+          "disconnected": 0,
+          "warning": 0,
+          "completed": 0,
+          "inProgress": 0,
+          "pending": 0
+        }
+      }
+    ],
+    "classCounts": {
+      "AuditBootstrapTests": 2,
+      "AuditMicrosoftTests": 2,
+      "ConcurrencyIntegrationTests": 4,
+      "ExamLifecycleServiceTests": 10,
+      "ExamRegressionTests": 11,
+      "ExamSecurityTests": 2,
+      "ExamSubmissionProcessorTests": 11,
+      "ExamValidationTests": 9,
+      "FinalGradeValidationTests": 5,
+      "FinalizeConcurrencyTests": 1,
+      "GradeMappingTests": 4,
+      "MembershipAuthorizationTests": 9,
+      "Mt1IntegrityTests": 21,
+      "Mt2IdentityTests": 50,
+      "Mt2MicrosoftIdentityTests": 11,
+      "Mt3ProfileTests": 21,
+      "Mt3aOwnershipTests": 39,
+      "OpenScoreDoubleCountTests": 1,
+      "Phase2B_AdditionalTests": 18,
+      "Phase2B_ConversionAndOverrideTests": 2,
+      "Phase2C_ApiTests": 14,
+      "Phase2C_VisibilityTests": 10,
+      "Phase3_ConcurrencyTests": 7,
+      "Phase3_TransactionRollbackTests": 10,
+      "Phase3_WorkerRecoveryTests": 4,
+      "Phase4_ExamLifecycleTests": 91,
+      "SubmissionGradingServiceTests": 18
+    }
+  },
+  "preservation": {
+    "all348BaselineCasesInBothFinalRuns": true,
+    "identicalFinalCaseSets": true,
+    "newMySqlIntegrityCases": 39,
+    "totalFailed": 0,
+    "totalSkippedOrNotExecuted": 0
+  }
+}

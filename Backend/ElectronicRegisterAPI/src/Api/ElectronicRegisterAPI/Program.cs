@@ -6,6 +6,14 @@ using ElectronicRegisterAPI.Api.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseDefaultServiceProvider(options =>
+{
+    options.ValidateScopes = true;
+    options.ValidateOnBuild = true;
+});
+if (string.IsNullOrWhiteSpace(builder.Configuration["urls"]))
+    builder.WebHost.UseUrls("http://0.0.0.0:5000");
+
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddBusinessServices();
 builder.Services.AddApplicationManagers();
@@ -38,6 +46,7 @@ builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.JwtBearer
     });
 
 builder.Services.AddAuthorization();
+ElectronicRegisterAPI.Api.Security.InstitutionAuthentication.AddInstitutionAuthentication(builder.Services, builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
@@ -56,4 +65,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Run("http://0.0.0.0:5000");
+app.Run();

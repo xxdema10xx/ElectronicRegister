@@ -20,7 +20,13 @@ internal class GlobalExceptionHandler : IExceptionHandler
                 (StatusCodes.Status400BadRequest, "Richiesta non valida"),
 
             UnauthorizedAccessException =>
-                (StatusCodes.Status403Forbidden, "Non autorizzato"),
+                (httpContext.User.Identity?.IsAuthenticated == true ? StatusCodes.Status403Forbidden : StatusCodes.Status401Unauthorized, "Non autorizzato"),
+
+            InvalidOperationException when SubmissionErrors.IsInvalidRequest(exception) =>
+                (StatusCodes.Status400BadRequest, "Richiesta non valida"),
+
+            InvalidOperationException when SubmissionErrors.IsConflict(exception) =>
+                (StatusCodes.Status409Conflict, "Operazione non consentita"),
 
             BusinessRuleException =>
                 (StatusCodes.Status409Conflict, "Operazione non consentita"),
@@ -38,7 +44,7 @@ internal class GlobalExceptionHandler : IExceptionHandler
                 Title = title,
                 Detail = statusCode == StatusCodes.Status500InternalServerError
                     ? "Si è verificato un errore interno."
-                    : exception.Message
+                    : title
             },
             cancellationToken);
 

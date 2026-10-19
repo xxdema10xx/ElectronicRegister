@@ -17,5 +17,7 @@ public partial class Grade
 
     public virtual ClassSubject ClassSubject { get; set; } = null!;
 
+    public virtual ExamSubmission? ExamSubmission { get; set; }
+
     public virtual Student Student { get; set; } = null!;
 }

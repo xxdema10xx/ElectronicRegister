@@ -9,6 +9,5 @@ public class Biennium
     public DateOnly EndYear { get; set; }
 
     public bool IsActive =>
-        DateOnly.FromDateTime(DateTime.Today) >= StartYear &&
-        DateOnly.FromDateTime(DateTime.Today) <= EndYear;
+        DateOnly.FromDateTime(DateTime.Today) >= StartYear && DateOnly.FromDateTime(DateTime.Today) <= EndYear;
 }

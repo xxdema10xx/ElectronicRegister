@@ -24,6 +24,22 @@ public static class ServiceCollectionExtensions
 
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
         services.Configure<AzureAdOptions>(configuration.GetSection(AzureAdOptions.SectionName));
+        services.Configure<LegacyIdentityOptions>(configuration.GetSection("Identity:Legacy"));
+        services.AddOptions<LegacyIdentityOptions>()
+            .Validate(o => !o.Enabled || (o.InstitutionId != Guid.Empty && o.UserIds.Length > 0 &&
+                o.UserIds.All(id => id != Guid.Empty) && o.UserIds.Distinct().Count() == o.UserIds.Length),
+                "Legacy auth requires an explicit institution and nonempty unique user allowlist.")
+            .ValidateOnStart();
+        services.Configure<MicrosoftIdentityOptions>(configuration.GetSection("Identity:Microsoft"));
+        services.AddScoped<IMembershipAuthorizationRepository, MembershipAuthorizationRepository>();
+        services.AddScoped<IInstitutionProfileRepository, InstitutionProfileRepository>();
+        services.AddScoped<InstitutionSchoolQueries>();
+        services.AddScoped<IInstitutionStudentRepository, InstitutionStudentRepository>();
+        services.AddScoped<IInstitutionTeacherRepository, InstitutionTeacherRepository>();
+        services.AddScoped<IInstitutionSubjectRepository, InstitutionSubjectRepository>();
+        services.AddScoped<IInstitutionTokens, InstitutionTokens>();
+        services.AddScoped<ILegacyAccess, LegacyAccess>();
+        services.AddScoped<IMicrosoftIdentityLink, MicrosoftIdentityLink>();
 
         var azureTenantId = configuration["AzureAd:TenantId"];
         var stsDiscoveryEndpoint = $"https://login.microsoftonline.com/{azureTenantId}/v2.0/.well-known/openid-configuration";
@@ -39,7 +55,15 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IClassSubjectRepository, ClassSubjectRepository>();
         services.AddScoped<ITeacherRepository, TeacherRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-
+        services.AddScoped<IExamRepository, ExamRepository>();
+        services.AddScoped<IExamSubmissionRepository, ExamSubmissionRepository>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Services.ITimeProvider, ElectronicRegisterAPI.Infrastructure.Services.SystemTimeProvider>();
+        services.AddScoped<IAuditRepository, AuditRepository>();
+        services.AddScoped<ITransactionManager, TransactionManager>();
+        // Preparatory MT-1 persistence. Not consumed by legacy auth/API/worker.
+        services.AddScoped<IInstitutionRepository, InstitutionRepository>();
+        services.AddScoped<ICampusRepository, CampusRepository>();
+        services.AddScoped<IInstitutionMembershipRepository, InstitutionMembershipRepository>();
         services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IMicrosoftTokenValidator, MicrosoftTokenValidator>();

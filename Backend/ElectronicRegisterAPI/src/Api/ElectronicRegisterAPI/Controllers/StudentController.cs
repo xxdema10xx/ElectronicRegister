@@ -8,7 +8,7 @@ namespace ElectronicRegisterAPI.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class StudentController : ControllerBase
+public class StudentController : ApiControllerBase
 {
     private readonly IStudentManager _studentManager;
 
@@ -21,14 +21,14 @@ public class StudentController : ControllerBase
     [Authorize(Roles = "teacher,admin")]
     public async Task<ActionResult<int>> Count()
     {
-        return Ok(await _studentManager.CountAsync());
+        return Ok(await _studentManager.CountAsync(CurrentCaller()));
     }
 
     [HttpGet]
     [Authorize(Roles = "teacher,admin")]
     public async Task<ActionResult<List<StudentDto>>> GetAll()
     {
-        var students = await _studentManager.GetAllAsync();
+        var students = await _studentManager.GetAllAsync(CurrentCaller());
         return students.Count == 0 ? NotFound() : Ok(students);
     }
 
@@ -36,7 +36,7 @@ public class StudentController : ControllerBase
     [Authorize(Roles = "teacher,admin")]
     public async Task<ActionResult<StudentDto>> GetById(Guid id)
     {
-        var student = await _studentManager.GetByIdAsync(id);
+        var student = await _studentManager.GetByIdAsync(id, CurrentCaller());
         return student is null ? NotFound() : Ok(student);
     }
 
@@ -44,7 +44,7 @@ public class StudentController : ControllerBase
     [Authorize(Roles = "teacher,admin")]
     public async Task<ActionResult<List<StudentDto>>> GetStudentsByName(string lastName)
     {
-        var students = await _studentManager.GetStudentsByLastNameAsync(lastName);
+        var students = await _studentManager.GetStudentsByLastNameAsync(lastName, CurrentCaller());
         return students.Count == 0 ? NotFound() : Ok(students);
     }
 

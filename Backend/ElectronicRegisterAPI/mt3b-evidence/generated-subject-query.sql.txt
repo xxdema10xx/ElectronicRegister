@@ -1,0 +1,14 @@
+SELECT `s`.`id` AS `Id`, `s`.`name` AS `Name`
+FROM `subject` AS `s`
+WHERE (`s`.`institution_id` = @__tenant_InstitutionId_0) AND EXISTS (
+    SELECT 1
+    FROM `class_subject` AS `c`
+    INNER JOIN `class` AS `c0` ON `c`.`class_id` = `c0`.`id`
+    INNER JOIN `teacher` AS `t` ON `c`.`teacher_id` = `t`.`id`
+    INNER JOIN `subject` AS `s0` ON `c`.`subject_id` = `s0`.`id`
+    WHERE (((`c`.`institution_id` = @__tenant_InstitutionId_1) AND (((`c0`.`institution_id` = @__t_InstitutionId_2) AND (`t`.`institution_id` = @__t_InstitutionId_2)) AND (`s0`.`institution_id` = @__t_InstitutionId_2))) AND EXISTS (
+        SELECT 1
+        FROM `institution_student_profile` AS `i`
+        INNER JOIN `institution_membership` AS `i0` ON (`i`.`institution_id` = `i0`.`institution_id`) AND (`i`.`membership_id` = `i0`.`id`)
+        INNER JOIN `student` AS `s1` ON `i`.`student_id` = `s1`.`id`
+        WHERE ((((`i`.`institution_id` = @__t_InstitutionId_3) AND (`i`.`membership_id` = @__t_MembershipId_4)) AND (`i0`.`user_id` = @__t_UserId_5)) AND (`s1`.`institution_id` = @__t_InstitutionId_3)) AND (`s1`.`class_id` = `c`.`class_id`))) AND (`c`.`subject_id` = `s`.`id`))

@@ -40,7 +40,9 @@ internal class StudyPathRepository : IStudyPathRepository
 
     public async Task<bool> HasClassesAsync(Guid studyPathId)
     {
-        return await _context.Classes.AnyAsync(x => x.BienniumStudyPath.StudyPathId == studyPathId);
+        // Defensive null-check: although the FK BienniumStudyPathId is non-nullable in the model,
+        // ensure the expression is null-safe when translated to EF Core queries.
+        return await _context.Classes.AnyAsync(x => x.BienniumStudyPath != null && x.BienniumStudyPath.StudyPathId == studyPathId);
     }
 
     public async Task AddAsync(StudyPathModel studyPath)

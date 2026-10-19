@@ -1,0 +1,151 @@
+{
+  "baselineTotal": 327,
+  "baselinePreserved": true,
+  "finalTotal": 348,
+  "newIntegrationCases": 21,
+  "finalTestSetsIdentical": true,
+  "baseline": [
+    {
+      "project": "Unit",
+      "file": "Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_29_57_net10.0.trx",
+      "counts": {
+        "total": 48,
+        "executed": 48,
+        "passed": 48,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "sha256": "522ef9f74e31e32577c72516cb9dff16e08076badb21c7c520b9365824c477f0"
+    },
+    {
+      "project": "Integration",
+      "file": "Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_29_59_net10.0.trx",
+      "counts": {
+        "total": 279,
+        "executed": 279,
+        "passed": 279,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "sha256": "ebb860ae84d0984107ebbddef1796630c55d7ea0bca7485ceeac50b5fd37a9cc"
+    }
+  ],
+  "final1": [
+    {
+      "project": "Unit",
+      "file": "Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_35_22_net10.0.trx",
+      "counts": {
+        "total": 48,
+        "executed": 48,
+        "passed": 48,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "sha256": "29e64e9919b0c0f37e099a94466946832267e181975656c57dda2b5fc797969f"
+    },
+    {
+      "project": "Integration",
+      "file": "Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_35_25_net10.0.trx",
+      "counts": {
+        "total": 300,
+        "executed": 300,
+        "passed": 300,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "sha256": "c8216cecc19a5fc00da931bf7db55f34d3a6a428a68a4f0d27295d19fc607041"
+    }
+  ],
+  "final2": [
+    {
+      "project": "Unit",
+      "file": "Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_36_44_net10.0.trx",
+      "counts": {
+        "total": 48,
+        "executed": 48,
+        "passed": 48,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "sha256": "3cccfa40dd676a45bad2669d29f9783a1b34460bcfe2d8514686b1fd5f19124d"
+    },
+    {
+      "project": "Integration",
+      "file": "Lorenzo_DESKTOP-QUOAG32_2026-10-18_23_36_46_net10.0.trx",
+      "counts": {
+        "total": 300,
+        "executed": 300,
+        "passed": 300,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "sha256": "e64866e8fa600d1b651d3c9a0d33afd93bb9e48f3e57e73bfa01764a26ead6e3"
+    }
+  ]
+}

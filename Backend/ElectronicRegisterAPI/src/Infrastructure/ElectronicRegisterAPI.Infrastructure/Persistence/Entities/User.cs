@@ -17,6 +17,10 @@ public partial class User
 
     public Guid? TeacherId { get; set; }
 
+    public virtual ICollection<AuditEvent> AuditEvents { get; set; } = new List<AuditEvent>();
+
+    public virtual ICollection<ExamSubmission> ExamSubmissions { get; set; } = new List<ExamSubmission>();
+
     public virtual Student? Student { get; set; }
 
     public virtual Teacher? Teacher { get; set; }
