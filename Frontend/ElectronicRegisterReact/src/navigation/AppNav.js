@@ -7,6 +7,7 @@ import { C, s } from "../constants/theme";
 import DashboardScreen from "../screens/DashboardScreen";
 import GradesScreen from "../screens/GradesScreen";
 import StudentsScreen from "../screens/StudentsScreen";
+import MyClassesScreen from "../screens/MyClassesScreen";
 import TeachersScreen from "../screens/TeachersScreen";
 import SubjectsScreen from "../screens/SubjectsScreen";
 import UsersScreen from "../screens/UsersScreen";
@@ -20,7 +21,7 @@ import { useStudentExams } from "../data/studentExams";
 import { CONTENT_MAX_WIDTH, useLayout } from "../hooks/useLayout";
 
 const TITLES = {
-  dashboard: "Electronic Register", grades: "Voti", students: "Studenti", classes: "Classi", exams: "Esami",
+  dashboard: "Electronic Register", grades: "Voti", students: "Studenti", myClasses: "Classi", classes: "Classi", exams: "Esami",
   teachers: "Professori", subjects: "Materie", users: "Utenti", profile: "Profilo",
 };
 
@@ -44,7 +45,8 @@ export default function AppNav({ user, onLogout }) {
     { key: "dashboard", icon: "home-outline", label: "Home" },
     ...(role !== "admin" ? [{ key: "grades", icon: "ribbon-outline", label: "Voti" }] : []),
     ...(role === "admin" ? [{ key: "classes", icon: "people-outline", label: "Classi" }] : []),
-    ...(role === "teacher" || role === "admin" ? [{ key: "students", icon: "school-outline", label: "Studenti" }] : []),
+    ...(role === "teacher" ? [{ key: "myClasses", icon: "school-outline", label: "Classi" }] : []),
+    ...(role === "admin" ? [{ key: "students", icon: "school-outline", label: "Studenti" }] : []),
     ...(role === "admin" || role === "student" ? [{ key: "teachers", icon: "pencil-outline", label: "Professori" }] : []),
     { key: "subjects", icon: "library-outline", label: "Materie" },
     { key: "exams", icon: "document-text-outline", label: "Esami", dot: role === "student" && unseenCount > 0 },
@@ -56,6 +58,7 @@ export default function AppNav({ user, onLogout }) {
     dashboard: <DashboardScreen navigate={setScreen} />,
     grades: <GradesScreen />,
     students: <StudentsScreen />,
+    myClasses: <MyClassesScreen />,
     classes: <ClassesScreen />,
     teachers: <TeachersScreen />,
     subjects: <SubjectsScreen />,

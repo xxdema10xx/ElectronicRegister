@@ -1,66 +1,85 @@
 // src/data/studentExams.js
-// Test assegnati allo studente (dati di PROVA) e stato locale: notifiche già viste e consegne.
-// Da sostituire con le API del backend quando esisteranno; lo stato è salvato nel browser (localStorage).
-import { useEffect, useState } from "react";
+// Esami dello studente: elenco dal backend (GET /Exam/assigned) più due piccoli stati locali al browser:
+//  - le notifiche già viste (per il pallino "nuovo esame");
+//  - la consegna in corso o appena conclusa di ogni esame: serve a riprendere dopo un refresh, perché il
+//    server restituisce le domande solo all'avvio, e a ritrovare l'esito (il server non elenca gli id delle consegne).
+import { useCallback, useEffect, useState } from "react";
 import { Platform } from "react-native";
-import { DEMO_EXAMS, DEMO_TESTS } from "./examsMock";
+import { useAuth } from "../hooks/useAuth";
+import { createExamApi } from "../api/examApi";
+import { resetMockExams } from "../api/mockExamBackend";
 
-// Test da svolgere, con la durata in minuti
-const ASSIGNED = [
-  { testId: "demo-test-1", durationMinutes: 20 },
-  { testId: "demo-test-4", durationMinutes: 30 },
-  { testId: "demo-test-6", durationMinutes: 25 },
-];
+const SEEN_KEY = "studentExamSeen2";
+const RUNS_KEY = "studentExamRuns2";
 
-const allTests = Object.values(DEMO_TESTS).flat();
-
-const KEY = "studentExamState";
-const empty = () => ({ seen: [], submissions: {} });
-
-function load() {
-  try { return Platform.OS === "web" ? { ...empty(), ...JSON.parse(window.localStorage.getItem(KEY)) } : empty(); }
-  catch { return empty(); }
+function read(key, fallback) {
+  try { return Platform.OS === "web" ? JSON.parse(window.localStorage.getItem(key)) ?? fallback : fallback; }
+  catch { return fallback; }
+}
+function write(key, value) {
+  try { if (Platform.OS === "web") window.localStorage.setItem(key, JSON.stringify(value)); } catch {}
 }
 
-let state = load();
+let seen = read(SEEN_KEY, []);
+let runs = read(RUNS_KEY, {});
 const listeners = new Set();
+const emit = () => listeners.forEach(l => l());
 
-function commit(next) {
-  state = next;
-  try { if (Platform.OS === "web") window.localStorage.setItem(KEY, JSON.stringify(state)); } catch {}
-  listeners.forEach(l => l());
+// Segna come viste le notifiche degli esami (fa sparire il pallino)
+export function markSeen(examIds) {
+  const missing = examIds.filter(id => !seen.includes(id));
+  if (!missing.length) return;
+  seen = [...seen, ...missing];
+  write(SEEN_KEY, seen);
+  emit();
 }
 
-// Segna come viste le notifiche dei test (fa sparire il pallino)
-export function markSeen(testIds) {
-  const missing = testIds.filter(id => !state.seen.includes(id));
-  if (missing.length) commit({ ...state, seen: [...state.seen, ...missing] });
+// Consegna di un esame: { submissionId, startedAt, deadlineAt, exam, answers, revision, finished, result }
+export const getRun = (examId) => runs[examId] || null;
+export function saveRun(examId, patch) {
+  runs = { ...runs, [examId]: { ...(runs[examId] || {}), ...patch } };
+  write(RUNS_KEY, runs);
+}
+export function notifyStudentExamsChanged() { emit(); }
+
+// Solo per la prova: riporta tutto allo stato iniziale
+export function resetStudentDemo() {
+  seen = [];
+  runs = {};
+  write(SEEN_KEY, seen);
+  write(RUNS_KEY, runs);
+  resetMockExams();
+  emit();
 }
 
-// Registra la consegna: { answers, submittedAt, violations, autoSubmitted, reason }
-export function submitExam(testId, submission) {
-  commit({ ...state, submissions: { ...state.submissions, [testId]: submission } });
-}
-
-// Solo per la prova: riporta tutto allo stato iniziale (test da svolgere e pallino acceso)
-export function resetStudentDemo() { commit(empty()); }
-
-function snapshot() {
-  const items = ASSIGNED.map(a => {
-    const test = allTests.find(t => t.id === a.testId);
-    const exam = DEMO_EXAMS.find(e => e.id === test.examId);
-    return { ...a, test, exam, submission: state.submissions[a.testId] || null, isNew: !state.seen.includes(a.testId) };
-  });
-  return { items, unseenCount: items.filter(i => i.isNew && !i.submission).length };
-}
-
-// Test assegnati + numero di notifiche non ancora viste; si aggiorna da solo quando lo stato cambia
+// Esami assegnati allo studente + numero di notifiche non ancora viste; si aggiorna da solo
 export function useStudentExams() {
+  const { token, user } = useAuth();
+  const role = user?.role?.toLowerCase();
+  const [assigned, setAssigned] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(null);
   const [, force] = useState(0);
+
+  const reload = useCallback(async () => {
+    if (role !== "student") return;
+    try { setAssigned(await createExamApi(token, user).getAssigned()); setError(null); }
+    catch (e) { setError(e.message); /* resta l'ultimo elenco noto */ }
+    finally { setLoaded(true); }
+  }, [token, user, role]);
+
   useEffect(() => {
-    const l = () => force(n => n + 1);
+    reload();
+    const id = setInterval(reload, 60000);
+    return () => clearInterval(id);
+  }, [reload]);
+
+  useEffect(() => {
+    const l = () => { force(n => n + 1); reload(); };
     listeners.add(l);
     return () => { listeners.delete(l); };
-  }, []);
-  return snapshot();
+  }, [reload]);
+
+  const unseenCount = assigned.filter(a => a.canStart && !seen.includes(a.id)).length;
+  return { assigned, loaded, error, unseenCount, reload, isSeen: (id) => seen.includes(id) };
 }

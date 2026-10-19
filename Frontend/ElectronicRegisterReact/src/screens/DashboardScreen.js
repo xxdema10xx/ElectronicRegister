@@ -9,15 +9,15 @@ import GradeCircle from "../components/GradeCircle";
 import { useAuth } from "../hooks/useAuth";
 import NotificationDot from "../components/NotificationDot";
 import { useStudentExams } from "../data/studentExams";
-import { DEMO_EXAMS } from "../data/examsMock";
+import { useExamApi } from "../hooks/useExamApi";
+import { EXAM_STATUS, EXAM_STATUS_LABEL, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
 import { useLayout } from "../hooks/useLayout";
-import { formatDateForDisplay, toISODate } from "../utils/dateUtils";
+import { formatDateForDisplay } from "../utils/dateUtils";
 import { getGradesPage } from "../api/gradeService";
 import { getSubjects } from "../api/subjectService";
 import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
 import { getUsers } from "../api/userService";
-import { getExams } from "../api/examService";
 
 const toList = d => Array.isArray(d) ? d : d ? [d] : [];
 
@@ -58,7 +58,8 @@ const Empty = ({ text }) => <Text style={[s.itemSub, { paddingVertical: 8 }]}>{t
 export default function DashboardScreen({ navigate }) {
   const { token, user } = useAuth();
   const role = user?.role?.toLowerCase();
-  const { items: assigned, unseenCount } = useStudentExams();
+  const { assigned, unseenCount, isSeen } = useStudentExams();
+  const examApi = useExamApi();
   const { isDesktop, isWide } = useLayout();
 
   const [grades, setGrades] = useState(null);       // { items, totalCount }
@@ -75,7 +76,7 @@ export default function DashboardScreen({ navigate }) {
       .then(d => set(() => setGrades({ items: toList(d?.items), totalCount: d?.totalCount ?? toList(d?.items).length })))
       .catch(() => set(() => setGrades({ items: [], totalCount: 0 })));
     if (role !== "student") {
-      getExams("", token).then(d => set(() => setExams(toList(d).length ? toList(d) : DEMO_EXAMS))).catch(() => set(() => setExams(DEMO_EXAMS)));
+      examApi.listExams().then(d => set(() => setExams(toList(d)))).catch(() => set(() => setExams([])));
       getStudents(undefined, token).then(d => set(() => setCounts(c => ({ ...c, students: toList(d).length })))).catch(() => {});
     }
     if (role === "admin") {
@@ -83,16 +84,18 @@ export default function DashboardScreen({ navigate }) {
       getUsers("", token).then(d => set(() => setCounts(c => ({ ...c, users: toList(d).length })))).catch(() => {});
     }
     return () => { alive = false; };
-  }, [token, role]);
+  }, [token, role, examApi]);
 
   const gradeItems = (grades?.items || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
   const recentGrades = gradeItems.slice(0, isDesktop ? 8 : 5);
   const average = gradeItems.length ? (gradeItems.reduce((sum, g) => sum + Number(g.value), 0) / gradeItems.length).toFixed(1) : "—";
   const subjectName = id => subjects.find(x => x.id === id)?.name || "—";
 
-  const today = toISODate(new Date());
-  const upcomingExams = (exams || []).filter(e => String(e.date) >= today).sort((a, b) => String(a.date).localeCompare(String(b.date))).slice(0, isDesktop ? 8 : 5);
-  const pendingTests = assigned.filter(i => !i.submission);
+  const now = Date.now();
+  const upcomingExams = (exams || [])
+    .filter(e => ["draft", "published"].includes(fromEnum(e.status, EXAM_STATUS)) && parseUtc(e.availableUntil).getTime() >= now)
+    .sort((a, b) => parseUtc(a.availableFrom) - parseUtc(b.availableFrom)).slice(0, isDesktop ? 8 : 5);
+  const pendingTests = assigned.filter(a => a.canStart);
 
   // Card delle sezioni: servono solo quando non c'è la sidebar (la tab bar mobile ha solo Home e Profilo)
   const nav = (icon, label, screen, dot) => ({ icon: <Ionicons name={icon} size={32} color={C.footer} />, label, screen, dot });
@@ -102,7 +105,7 @@ export default function DashboardScreen({ navigate }) {
       nav("pencil-outline", "Professori", "teachers"), nav("document-text-outline", "Esami", "exams", unseenCount > 0),
     ] : []),
     ...(role === "teacher" ? [
-      nav("ribbon-outline", "Voti", "grades"), nav("school-outline", "Studenti", "students"),
+      nav("ribbon-outline", "Voti", "grades"), nav("school-outline", "Classi", "myClasses"),
       nav("library-outline", "Materie", "subjects"), nav("document-text-outline", "Esami", "exams"),
     ] : []),
     ...(role === "admin" ? [
@@ -131,13 +134,13 @@ export default function DashboardScreen({ navigate }) {
 
   const examsPanel = role === "student" ? (
     <Panel title="Esami da svolgere" onMore={() => navigate("exams")}>
-      {pendingTests.length === 0 ? <Empty text="Nessun esame da svolgere" /> : pendingTests.map(i => (
-        <TouchableOpacity key={i.testId} onPress={() => navigate("exams")} style={[s.profileRow, { alignItems: "center" }]}>
+      {pendingTests.length === 0 ? <Empty text="Nessun esame da svolgere" /> : pendingTests.map(a => (
+        <TouchableOpacity key={a.id} onPress={() => navigate("exams")} style={[s.profileRow, { alignItems: "center" }]}>
           <View style={{ flex: 1 }}>
-            <Text style={s.itemTitle}>{i.exam?.name || i.test?.name}</Text>
-            <Text style={s.itemSub}>{i.test?.name} · {i.durationMinutes} min</Text>
+            <Text style={s.itemTitle}>{a.name}</Text>
+            <Text style={s.itemSub}>{a.durationMinutes} min · fino al {formatDateTime(a.availableUntil)}</Text>
           </View>
-          {i.isNew && <View style={{ position: "relative", width: 14, height: 14 }}><NotificationDot visible style={{ top: 0, right: 0 }} /></View>}
+          {!isSeen(a.id) && <View style={{ position: "relative", width: 14, height: 14 }}><NotificationDot visible style={{ top: 0, right: 0 }} /></View>}
         </TouchableOpacity>
       ))}
     </Panel>
@@ -147,9 +150,9 @@ export default function DashboardScreen({ navigate }) {
         <TouchableOpacity key={e.id} onPress={() => navigate("exams")} style={[s.profileRow, { alignItems: "center" }]}>
           <View style={{ flex: 1 }}>
             <Text style={s.itemTitle}>{e.name}</Text>
-            <Text style={s.itemSub}>{e.subjectName || subjectName(e.subjectId)}{e.isRetake ? " · recupero" : ""}</Text>
+            <Text style={s.itemSub}>{EXAM_STATUS_LABEL[fromEnum(e.status, EXAM_STATUS)]}{e.isRetake ? " · recupero" : ""}</Text>
           </View>
-          <Text style={{ color: C.textMuted, fontWeight: "600" }}>{formatDateForDisplay(e.date)}</Text>
+          <Text style={{ color: C.textMuted, fontWeight: "600" }}>{formatDateTime(e.availableFrom)}</Text>
         </TouchableOpacity>
       ))}
     </Panel>

@@ -1,15 +1,18 @@
 // src/components/TestViewer.js
-// Vista in sola lettura di un test: domande, opzioni con le risposte giuste, punti.
+// Vista in sola lettura di un esame (ExamDetailDto): dati, domande, opzioni con le risposte giuste, punti.
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C } from "../constants/theme";
 import Card from "./Card";
+import { EXAM_STATUS, EXAM_STATUS_LABEL, fromEnum, formatDateTime, questionFromDto } from "../api/examContract";
 
 const TYPE_LABEL = { single: "Singola", multiple: "Multipla", open: "Aperta" };
 
-export default function TestViewer({ test, contextLabel, onClose }) {
-  if (!test) return null;
-  const questions = test.questions || [];
+export default function TestViewer({ exam, contextLabel, onClose }) {
+  if (!exam) return null;
+  const questions = [...(exam.questions || [])].sort((a, b) => a.position - b.position).map(questionFromDto);
+  const status = fromEnum(exam.status, EXAM_STATUS);
+  const closed = questions.filter(q => q.type !== "open").length;
 
   return (
     <Modal visible animationType="slide" onRequestClose={onClose}>
@@ -17,7 +20,7 @@ export default function TestViewer({ test, contextLabel, onClose }) {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10, backgroundColor: C.white, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: C.border }}>
           <TouchableOpacity onPress={onClose}><Ionicons name="close" size={28} color={C.text} /></TouchableOpacity>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: C.text, fontSize: 16, fontWeight: "600" }} numberOfLines={1}>{test.name}</Text>
+            <Text style={{ color: C.text, fontSize: 16, fontWeight: "600" }} numberOfLines={1}>{exam.name}</Text>
             {!!contextLabel && <Text style={{ color: C.textMuted, fontSize: 12 }} numberOfLines={1}>{contextLabel}</Text>}
           </View>
         </View>
@@ -25,18 +28,16 @@ export default function TestViewer({ test, contextLabel, onClose }) {
         <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }}>
           <View style={{ width: "100%", maxWidth: 760 }}>
             <Card style={{ marginBottom: 12, borderTopWidth: 8, borderTopColor: C.primary }}>
-              <Text style={{ fontSize: 24, fontWeight: "600", color: C.text }}>{test.name}</Text>
-              {!!test.description && <Text style={{ color: C.textMuted, marginTop: 6 }}>{test.description}</Text>}
+              <Text style={{ fontSize: 24, fontWeight: "600", color: C.text }}>{exam.name}</Text>
+              {!!exam.description && <Text style={{ color: C.textMuted, marginTop: 6 }}>{exam.description}</Text>}
               <Text style={{ color: C.text, marginTop: 12 }}>
-                {[test.numberOfStudents != null && `${test.numberOfStudents} studenti`,
-                  test.totalQuestions != null && `${test.totalQuestions} domande (${test.closedQuestions ?? 0} chiuse, ${test.openQuestions ?? 0} aperte)`,
-                  test.totalPoints != null && `${test.totalPoints} punti`].filter(Boolean).join(" · ")}
+                {EXAM_STATUS_LABEL[status]} · {formatDateTime(exam.availableFrom)} → {formatDateTime(exam.availableUntil)}
+              </Text>
+              <Text style={{ color: C.text, marginTop: 4 }}>
+                {exam.durationMinutes} min · soglia {exam.passingPercent}% · {questions.length} domande ({closed} chiuse, {questions.length - closed} aperte) · {exam.totalPoints} punti
+                {exam.assignedStudents ? ` · ${exam.assignedStudents.length} studenti` : ""}
               </Text>
             </Card>
-
-            {questions.length === 0 && (
-              <Text style={{ color: C.textMuted, textAlign: "center", marginTop: 20 }}>Le domande di questo test non sono disponibili.</Text>
-            )}
 
             {questions.map((q, i) => (
               <Card key={q.id} style={{ marginBottom: 12, borderLeftWidth: 5, borderLeftColor: C.primary }}>

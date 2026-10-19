@@ -1,10 +1,11 @@
 // src/components/TestBuilder.js
-// Creazione guidata di un test, a schermo intero:
-//   1. Dettagli — titolo, descrizione e numero di studenti;
+// Creazione guidata di un esame, a schermo intero:
+//   1. Dettagli — titolo, descrizione, classe e materia, finestra di disponibilità, durata, soglia, recupero;
 //   2. Domande — a sinistra l'indice delle domande (si selezionano e si riordinano trascinandole),
-//      a destra l'editor ampio della domanda scelta. Su schermi stretti i due pannelli si impilano.
+//      a destra l'editor ampio della domanda scelta. Su schermi stretti i due pannelli si impilano;
+//   3. Studenti — chi deve svolgere l'esame, con eventuale tempo aggiuntivo.
 // Il passo corrente è salvato nella bozza (draft.step), così si riprende da dove si era rimasti.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, ScrollView, Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
@@ -13,6 +14,12 @@ import { notify } from "../utils/dialogs";
 import Btn from "./Btn";
 import Card from "./Card";
 import DraggableList from "./DraggableList";
+import Input from "./Input";
+import SelectField from "./SelectField";
+import CheckboxField from "./CheckboxField";
+import DateTimeField from "./DateTimeField";
+import Loader from "./Loader";
+import { filterBySearch } from "../utils/search";
 
 export const QUESTION_TYPES = [
   { id: "single", label: "Singola", closed: true, icon: "radio-button-on-outline", hint: "Una sola risposta giusta" },
@@ -28,7 +35,10 @@ export const newQuestion = () => ({
   id: uid(), text: "", type: "single", options: [newOption(), newOption()],
   correct: [], points: "1", required: false,
 });
-export const newTestDraft = () => ({ step: 1, title: "", description: "", numberOfStudents: "", questions: [newQuestion()] });
+export const newTestDraft = () => ({
+  step: 1, title: "", description: "", classSubjectId: "", availableFrom: "", availableUntil: "",
+  durationMinutes: "30", passingPercent: "60", retakeOfExamId: "", students: [], questions: [newQuestion()],
+});
 
 // Conteggi da salvare insieme al test.
 export function summarize(draft) {
@@ -43,6 +53,7 @@ export function summarize(draft) {
 // Problema di una domanda (testo da mostrare) oppure null se è a posto.
 function questionIssue(q, i) {
   if (!q.text.trim()) return `La domanda ${i + 1} non ha il testo.`;
+  if (!(Number(q.points) > 0)) return `La domanda ${i + 1} deve avere un punteggio maggiore di zero.`;
   if (isClosed(q.type)) {
     const filled = q.options.filter(o => o.text.trim());
     if (filled.length < 2) return `La domanda ${i + 1} deve avere almeno due opzioni con testo.`;
@@ -51,11 +62,26 @@ function questionIssue(q, i) {
   return null;
 }
 
-// Controlli del primo passo della procedura (dettagli del test).
+// Controlli del primo passo della procedura (dettagli dell'esame).
 export function validateDetails(d) {
-  if (!d.title.trim()) return "Inserisci il titolo del test.";
-  if (!(Number(d.numberOfStudents) > 0)) return "Inserisci il numero di studenti.";
+  if (!d.title.trim()) return "Inserisci il titolo dell'esame.";
+  if (!d.classSubjectId) return "Seleziona la classe e la materia.";
+  const from = new Date(d.availableFrom);
+  const until = new Date(d.availableUntil);
+  if (!d.availableFrom || isNaN(from)) return "Imposta l'inizio della disponibilità.";
+  if (!d.availableUntil || isNaN(until)) return "Imposta la fine della disponibilità.";
+  if (!(from < until)) return "L'inizio della disponibilità deve precedere la fine.";
+  const duration = Number(d.durationMinutes);
+  if (!(duration > 5)) return "La durata deve essere maggiore di 5 minuti.";
+  if (duration * 60000 > until - from) return "La durata non può superare la finestra di disponibilità.";
+  const pass = Number(d.passingPercent);
+  if (!(pass > 0 && pass < 100)) return "La soglia di sufficienza deve essere maggiore di 0 e minore di 100.";
   return null;
+}
+
+// Per pubblicare servono anche gli studenti assegnati
+export function validateForPublish(d) {
+  return validateTestDraft(d) || (d.students.length === 0 ? "Assegna l'esame ad almeno uno studente." : null);
 }
 
 export function validateTestDraft(d) {
@@ -181,7 +207,7 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
   );
 }
 
-const STEPS = ["Dettagli", "Domande"];
+const STEPS = ["Dettagli", "Domande", "Studenti"];
 
 function Stepper({ step, onStep, compact }) {
   return (
@@ -208,29 +234,68 @@ function Stepper({ step, onStep, compact }) {
   );
 }
 
-// Passo 1: titolo, descrizione e numero di studenti
-function DetailsStep({ draft, onChange, onNext, onDiscard }) {
+const twoCols = (isDesktop) => ({ flexDirection: isDesktop ? "row" : "column", gap: isDesktop ? 16 : 0 });
+
+// Passo 1: dettagli dell'esame
+function DetailsStep({ draft, onChange, onNext, onDiscard, env, isDesktop }) {
+  const set = (patch) => onChange({ ...draft, ...patch });
+  const locked = !!draft.examId; // la classe-materia di un esame esistente non si può cambiare
+  const classSubjects = env?.classSubjects;
+  const hasList = Array.isArray(classSubjects) && classSubjects.length > 0;
+  const isRetake = !!draft.retakeOfExamId || !!draft.wantsRetake;
+  const retakeOptions = (env?.retakeOptions || []).filter(e => e.id !== draft.examId && (!e.classSubjectId || e.classSubjectId === draft.classSubjectId));
+
   return (
-    <Card style={{ padding: 28, gap: 18 }}>
-      <View>
-        <Text style={{ color: C.text, fontSize: 22, fontWeight: "800" }}>Nuovo test</Text>
-        <Text style={[s.itemSub, { marginTop: 4 }]}>Inizia dai dettagli: potrai modificarli in qualsiasi momento.</Text>
+    <Card style={{ padding: 28, gap: 6 }}>
+      <View style={{ marginBottom: 12 }}>
+        <Text style={{ color: C.text, fontSize: 22, fontWeight: "800" }}>{draft.examId ? "Modifica esame" : "Nuovo esame"}</Text>
+        <Text style={[s.itemSub, { marginTop: 4 }]}>Inizia dai dettagli: potrai modificarli finché l'esame è in bozza.</Text>
       </View>
-      <View>
-        <Text style={s.label}>Titolo del test</Text>
-        <TextInput style={[field, { fontSize: 18, fontWeight: "700" }]} placeholder="Es. Verifica di storia — Unità 3" placeholderTextColor={C.textLight}
-          value={draft.title} onChangeText={(title) => onChange({ ...draft, title })} autoFocus onSubmitEditing={onNext} />
-      </View>
+
+      <Input label="Titolo dell'esame" value={draft.title} onChangeText={(title) => set({ title })} placeholder="Es. Verifica di storia — Unità 3" autoFocus />
       <View>
         <Text style={s.label}>Descrizione</Text>
-        <TextInput style={[field, { minHeight: 110, textAlignVertical: "top" }]} placeholder="Istruzioni o note per gli studenti (facoltativa)" placeholderTextColor={C.textLight}
-          value={draft.description} onChangeText={(description) => onChange({ ...draft, description })} multiline />
+        <TextInput style={[field, { minHeight: 90, textAlignVertical: "top", marginBottom: 14 }]} placeholder="Istruzioni o note per gli studenti (facoltativa)" placeholderTextColor={C.textLight}
+          value={draft.description} onChangeText={(description) => set({ description })} multiline />
       </View>
-      <View>
-        <Text style={s.label}>Numero di studenti</Text>
-        <TextInput style={[field, { width: 120 }]} keyboardType="number-pad" value={String(draft.numberOfStudents)}
-          onChangeText={(v) => onChange({ ...draft, numberOfStudents: v.replace(/[^0-9]/g, "") })} onSubmitEditing={onNext} />
+
+      {hasList ? (
+        <SelectField label="Classe e materia" value={draft.classSubjectId} options={classSubjects} getLabel={(c) => c.label}
+          onSelect={(classSubjectId) => { if (!locked) set({ classSubjectId, students: [], retakeOfExamId: "" }); }}
+          placeholder="Seleziona classe e materia" emptyMessage="Nessuna classe disponibile" />
+      ) : (
+        <View>
+          <Input label="ID classe-materia" value={draft.classSubjectId} editable={!locked} autoCapitalize="none"
+            onChangeText={(classSubjectId) => set({ classSubjectId: classSubjectId.trim(), students: [] })}
+            placeholder="Identificativo (GUID) della materia nella classe" />
+          <Text style={[s.itemSub, { marginTop: -8, marginBottom: 14 }]}>
+            Il server non offre ancora l'elenco delle classi-materia: inserisci l'identificativo a mano.
+          </Text>
+        </View>
+      )}
+
+      <View style={twoCols(isDesktop)}>
+        <View style={{ flex: 1 }}><DateTimeField label="Disponibile da" value={draft.availableFrom} onChange={(availableFrom) => set({ availableFrom })} /></View>
+        <View style={{ flex: 1 }}><DateTimeField label="Disponibile fino a" value={draft.availableUntil} onChange={(availableUntil) => set({ availableUntil })} /></View>
       </View>
+      <View style={twoCols(isDesktop)}>
+        <View style={{ flex: 1 }}>
+          <Input label="Durata (minuti)" value={String(draft.durationMinutes)} keyboardType="number-pad"
+            onChangeText={(v) => set({ durationMinutes: v.replace(/[^0-9]/g, "") })} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Input label="Soglia di sufficienza (%)" value={String(draft.passingPercent)} keyboardType="number-pad"
+            onChangeText={(v) => set({ passingPercent: v.replace(/[^0-9]/g, "") })} />
+        </View>
+      </View>
+
+      <CheckboxField label="Esame di recupero" value={isRetake} onChange={(v) => set({ wantsRetake: v, retakeOfExamId: v ? draft.retakeOfExamId : "" })} />
+      {isRetake && (
+        <SelectField label="Recupero di" value={draft.retakeOfExamId} options={retakeOptions} getLabel={(e) => e.name}
+          onSelect={(retakeOfExamId) => set({ retakeOfExamId })} placeholder="Seleziona l'esame originale"
+          emptyMessage="Nessun esame della stessa classe e materia" />
+      )}
+
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 6, gap: 12 }}>
         <Btn label="Elimina bozza" variant="ghost" onPress={onDiscard} style={[s.smBtn, { borderColor: C.danger, backgroundColor: "transparent" }]} textStyle={[s.smBtnText, { color: C.danger }]} />
         <Btn label="Avanti: domande →" onPress={onNext} style={[s.smBtn, { paddingHorizontal: 20, paddingVertical: 10 }]} textStyle={s.smBtnText} />
@@ -239,7 +304,71 @@ function DetailsStep({ draft, onChange, onNext, onDiscard }) {
   );
 }
 
-export default function TestBuilder({ visible, contextLabel, draft, onChange, onSave, onClose, onDiscard, saving }) {
+// Passo 3: studenti assegnati, con tempo aggiuntivo facoltativo
+function StudentsStep({ draft, onChange, env }) {
+  const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    env.getStudents(draft.classSubjectId)
+      .then((data) => { if (!cancelled) setList(Array.isArray(data) ? data : []); })
+      .catch((e) => { if (!cancelled) setError(e.message); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [draft.classSubjectId]);
+
+  const selected = new Map(draft.students.map(st => [st.studentId, st]));
+  const visible = filterBySearch(list, search, st => [st.firstName, st.lastName]);
+  const setStudents = (students) => onChange({ ...draft, students });
+  const asEntry = (st) => selected.get(st.id) || { studentId: st.id, firstName: st.firstName, lastName: st.lastName, extraTimeMinutes: 0 };
+  const toggle = (st) => setStudents(selected.has(st.id) ? draft.students.filter(x => x.studentId !== st.id) : [...draft.students, asEntry(st)]);
+  const setExtra = (id, v) => setStudents(draft.students.map(x => x.studentId === id ? { ...x, extraTimeMinutes: v.replace(/[^0-9]/g, "") } : x));
+
+  return (
+    <Card style={{ padding: 28, gap: 12 }}>
+      <View>
+        <Text style={{ color: C.text, fontSize: 22, fontWeight: "800" }}>Studenti</Text>
+        <Text style={[s.itemSub, { marginTop: 4 }]}>
+          {draft.students.length} assegnati. Il tempo aggiuntivo (in minuti) si somma alla durata per chi ne ha diritto.
+        </Text>
+      </View>
+      <View style={{ flexDirection: "row", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+        <TextInput style={[s.input, { flex: 1, minWidth: 180 }]} placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
+        <Btn label="Seleziona tutti" variant="ghost" onPress={() => setStudents(list.map(asEntry))} style={s.smBtn} textStyle={s.smBtnText} />
+        <Btn label="Nessuno" variant="ghost" onPress={() => setStudents([])} style={s.smBtn} textStyle={s.smBtnText} />
+      </View>
+
+      {loading ? <Loader /> : error ? <Text style={{ color: C.danger }}>{error}</Text> : visible.length === 0 ? (
+        <Text style={{ color: C.textMuted }}>Nessuno studente trovato.</Text>
+      ) : visible.map(st => {
+        const on = selected.get(st.id);
+        return (
+          <View key={st.id} style={{ flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: C.border }}>
+            <TouchableOpacity onPress={() => toggle(st)} style={{ flexDirection: "row", alignItems: "center", gap: 10, flex: 1 }}>
+              <Ionicons name={on ? "checkbox" : "square-outline"} size={26} color={on ? C.primary : C.textLight} />
+              <Text style={{ color: C.text, fontSize: 15 }}>{st.lastName} {st.firstName}</Text>
+            </TouchableOpacity>
+            {on && (
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+                <Text style={s.itemSub}>+</Text>
+                <TextInput style={[field, { width: 64, textAlign: "center", paddingVertical: 6 }]} keyboardType="number-pad"
+                  value={String(on.extraTimeMinutes || 0)} onChangeText={(v) => setExtra(st.id, v)} />
+                <Text style={s.itemSub}>min</Text>
+              </View>
+            )}
+          </View>
+        );
+      })}
+    </Card>
+  );
+}
+
+export default function TestBuilder({ visible, contextLabel, draft, onChange, onSave, onClose, onDiscard, saving, env }) {
   const { isDesktop } = useLayout();
   const [selectedId, setSelectedId] = useState(null);
   if (!draft) return null;
@@ -297,7 +426,7 @@ export default function TestBuilder({ visible, contextLabel, draft, onChange, on
         <View style={{ flex: 1 }}>
           <Text style={{ color: C.text, fontWeight: "800", fontSize: 16 }} numberOfLines={2}>{draft.title}</Text>
           {!!draft.description.trim() && <Text style={[s.itemSub, { marginTop: 2 }]} numberOfLines={2}>{draft.description}</Text>}
-          <Text style={[s.itemSub, { marginTop: 2 }]}>{draft.numberOfStudents} studenti</Text>
+          <Text style={[s.itemSub, { marginTop: 2 }]}>{draft.students.length} studenti assegnati · {draft.durationMinutes} min</Text>
         </View>
         <Ionicons name="create-outline" size={20} color={C.primary} />
       </TouchableOpacity>
@@ -374,22 +503,34 @@ export default function TestBuilder({ visible, contextLabel, draft, onChange, on
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12, flex: 1 }}>
             <TouchableOpacity onPress={onClose} accessibilityLabel="Chiudi"><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
             <View style={{ flex: 1 }}>
-              <Text style={{ color: C.text, fontSize: 18, fontWeight: "800" }} numberOfLines={1}>{draft.title || "Nuovo test"}</Text>
+              <Text style={{ color: C.text, fontSize: 18, fontWeight: "800" }} numberOfLines={1}>{draft.title || "Nuovo esame"}</Text>
               {!!contextLabel && <Text style={{ color: C.textMuted, fontSize: 12 }} numberOfLines={1}>{contextLabel} · bozza salvata automaticamente</Text>}
             </View>
           </View>
           <Stepper step={step} onStep={goTo} compact={!isDesktop} />
           <View style={{ flex: isDesktop ? 1 : 0, alignItems: "flex-end" }}>
-            {step === 1
-              ? <Btn label="Avanti" onPress={() => goTo(2)} {...actionBtn} />
-              : <Btn label="Salva test" onPress={onSave} loading={saving} {...actionBtn} />}
+            {step === 1 && <Btn label="Avanti" onPress={() => goTo(2)} {...actionBtn} />}
+            {step === 2 && (
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <Btn label="Salva" variant="ghost" onPress={onSave} loading={saving} {...actionBtn} />
+                <Btn label="Avanti" onPress={() => goTo(3)} {...actionBtn} />
+              </View>
+            )}
+            {step === 3 && <Btn label="Salva" onPress={onSave} loading={saving} {...actionBtn} />}
           </View>
         </View>
 
         {step === 1 ? (
           <ScrollView contentContainerStyle={{ padding: isDesktop ? 40 : 16, alignItems: "center" }} keyboardShouldPersistTaps="handled">
             <View style={{ width: "100%", maxWidth: 640 }}>
-              <DetailsStep draft={draft} onChange={onChange} onNext={() => goTo(2)} onDiscard={onDiscard} />
+              <DetailsStep draft={draft} onChange={onChange} onNext={() => goTo(2)} onDiscard={onDiscard} env={env} isDesktop={isDesktop} />
+            </View>
+          </ScrollView>
+        ) : step === 3 ? (
+          <ScrollView contentContainerStyle={{ padding: isDesktop ? 40 : 16, alignItems: "center" }} keyboardShouldPersistTaps="handled">
+            <View style={{ width: "100%", maxWidth: 720 }}>
+              <StudentsStep draft={draft} onChange={onChange} env={env} />
+              <Btn label="Elimina bozza" variant="ghost" onPress={onDiscard} style={{ marginTop: 14, borderColor: C.danger }} textStyle={{ color: C.danger }} />
             </View>
           </ScrollView>
         ) : isDesktop ? (
