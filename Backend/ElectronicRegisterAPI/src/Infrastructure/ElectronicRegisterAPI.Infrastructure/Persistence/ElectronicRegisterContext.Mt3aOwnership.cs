@@ -21,11 +21,11 @@ public partial class ElectronicRegisterContext
             property
                 .HasColumnName("institution_id").HasColumnType("char(36)")
                 .UseCollation("ascii_general_ci").HasCharSet("ascii")
-                .HasDefaultValue(Guid.Empty).ValueGeneratedOnAdd();
+                .HasDefaultValue(Guid.Empty).ValueGeneratedOnAdd().IsConcurrencyToken();
         }
         modelBuilder.Entity<Entities.AuditEvent>().Property<Guid?>("InstitutionId")
             .HasColumnName("institution_id").HasColumnType("char(36)")
-            .UseCollation("ascii_general_ci").HasCharSet("ascii").ValueGeneratedOnAdd();
+            .UseCollation("ascii_general_ci").HasCharSet("ascii").ValueGeneratedOnAdd().IsConcurrencyToken();
 
         ReplaceCatalogIndex<Entities.Biennium>(modelBuilder, "uq_biennium", "StartYear", "EndYear");
         ReplaceCatalogIndex<Entities.Subject>(modelBuilder, "uq_subject_name", "Name");

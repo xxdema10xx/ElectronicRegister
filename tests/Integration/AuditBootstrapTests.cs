@@ -150,8 +150,21 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
         var endpoints = host.Services.GetRequiredService<Microsoft.AspNetCore.Routing.EndpointDataSource>().Endpoints
             .OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null).ToList();
-        Assert.Equal(78, endpoints.Count); // 73 unchanged legacy routes + five MT-2 routes.
-        var legacyEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionIdentityEndpointAttribute>() is null).ToList();
+        var schoolEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute>() is not null).ToList();
+        Assert.Equal(24, schoolEndpoints.Count);
+        var examEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is not null).ToList();
+        Assert.Equal(33, examEndpoints.Count);
+        var courseEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null).ToList();
+        Assert.Equal(19, courseEndpoints.Count);
+        Assert.All(courseEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
+            a => a.Policy == ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute.PolicyName));
+        Assert.Equal(78 + schoolEndpoints.Count + examEndpoints.Count + courseEndpoints.Count, endpoints.Count);
+        Assert.All(schoolEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
+            a => a.Policy == ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute.PolicyName));
+        var legacyEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionIdentityEndpointAttribute>() is null &&
+            e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute>() is null &&
+            e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is null &&
+            e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is null).ToList();
         Assert.Equal(73, legacyEndpoints.Count); // Preserve the complete original role-gate guarantee.
         foreach (var endpoint in legacyEndpoints)
         {

@@ -170,6 +170,8 @@ public partial class ElectronicRegisterContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_membership_role_membership");
         });
+        ConfigureMt4(modelBuilder);
+        ConfigureMt4c(modelBuilder);
 
     }
 }

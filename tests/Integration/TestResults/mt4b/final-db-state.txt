@@ -1,0 +1,78 @@
+{
+  "database": "electronic_register_test",
+  "version": "10.4.32-MariaDB",
+  "holding": "MT3A_LEGACY_TEST Provisioning",
+  "temporaryRowCounts": {
+    "campus": 0,
+    "course_edition": 0,
+    "course_edition_campus": 0,
+    "student_enrollment": 0,
+    "institution_membership": 0,
+    "institution_membership_role": 0,
+    "institution_student_profile": 0,
+    "institution_teacher_profile": 0
+  },
+  "ownerViolations": {
+    "audit_event": 0,
+    "biennium": 0,
+    "biennium_study_area": 0,
+    "biennium_study_path": 0,
+    "class": 0,
+    "class_subject": 0,
+    "exam": 0,
+    "exam_student": 0,
+    "exam_submission": 0,
+    "exam_violation": 0,
+    "grade": 0,
+    "mt3a_legacy_scope": 0,
+    "question": 0,
+    "question_option": 0,
+    "student": 0,
+    "study_area": 0,
+    "study_path": 0,
+    "subject": 0,
+    "submission_answer": 0,
+    "submission_answer_option": 0,
+    "teacher": 0
+  },
+  "mt4ForeignKeys": [
+    [
+      "fk_mt4_class_edition",
+      "RESTRICT",
+      "RESTRICT"
+    ],
+    [
+      "fk_mt4_ec_campus",
+      "RESTRICT",
+      "RESTRICT"
+    ],
+    [
+      "fk_mt4_ec_edition",
+      "RESTRICT",
+      "RESTRICT"
+    ],
+    [
+      "fk_mt4_edition_owner",
+      "RESTRICT",
+      "RESTRICT"
+    ],
+    [
+      "fk_mt4_edition_path",
+      "RESTRICT",
+      "RESTRICT"
+    ],
+    [
+      "fk_mt4_enrollment_edition",
+      "RESTRICT",
+      "RESTRICT"
+    ],
+    [
+      "fk_mt4_enrollment_student",
+      "RESTRICT",
+      "RESTRICT"
+    ]
+  ],
+  "compositeMt4FkCount": 6,
+  "triggerCount": 48,
+  "globalSqlMode": "NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION"
+}

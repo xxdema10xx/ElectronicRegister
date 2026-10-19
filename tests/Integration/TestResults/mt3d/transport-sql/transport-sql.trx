@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="e22404d9-3f75-4ceb-9f33-0f1d8a84e26c" name="LorenzoBaracchi@CES01622 2026-10-19 11:47:08" runUser="AzureAD\LorenzoBaracchi" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-19T11:47:08.3117335+02:00" queuing="2026-10-19T11:47:08.3117339+02:00" start="2026-10-19T11:47:01.5005541+02:00" finish="2026-10-19T11:47:09.2988165+02:00" />
+  <TestSettings name="default" id="6b38fba1-9cb0-4f4b-8a50-4c810fd6b44e">
+    <Deployment runDeploymentRoot="LorenzoBaracchi_CES01622_2026-10-19_11_47_08" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="b85a91bb-7252-4b76-a410-fa9347c00566" testId="3c106ff8-9dc4-7509-289e-a9cc8e1527f9" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites" computerName="CES01622" duration="00:00:03.6390606" startTime="2026-10-19T11:47:08.2922567+02:00" endTime="2026-10-19T11:47:08.2922776+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b85a91bb-7252-4b76-a410-fa9347c00566" />
+    <UnitTestResult executionId="abf67bc2-c2ca-478c-af89-f16a4a8f2d98" testId="946ef8f2-43b8-1480-f615-90524a18414f" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OversizedViolationBodyNeverPersistsAnEvent" computerName="CES01622" duration="00:00:00.7659395" startTime="2026-10-19T11:47:09.2282572+02:00" endTime="2026-10-19T11:47:09.2282573+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="abf67bc2-c2ca-478c-af89-f16a4a8f2d98" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="3c106ff8-9dc4-7509-289e-a9cc8e1527f9">
+      <Execution id="b85a91bb-7252-4b76-a410-fa9347c00566" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OversizedViolationBodyNeverPersistsAnEvent" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="946ef8f2-43b8-1480-f615-90524a18414f">
+      <Execution id="abf67bc2-c2ca-478c-af89-f16a4a8f2d98" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="OversizedViolationBodyNeverPersistsAnEvent" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="3c106ff8-9dc4-7509-289e-a9cc8e1527f9" executionId="b85a91bb-7252-4b76-a410-fa9347c00566" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="946ef8f2-43b8-1480-f615-90524a18414f" executionId="abf67bc2-c2ca-478c-af89-f16a4a8f2d98" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="2" executed="2" passed="2" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.56]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.64]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.64]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:07.09]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

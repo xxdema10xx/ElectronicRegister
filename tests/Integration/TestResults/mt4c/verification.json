@@ -1,0 +1,47 @@
+{
+  "previousTests": 644,
+  "previousIdentitiesPreserved": true,
+  "totalPassedEachFinalRun": 675,
+  "newTests": 31,
+  "failed": 0,
+  "skipped": 0,
+  "identicalFinalTestSets": true,
+  "runs": {
+    "baseline": [
+      {
+        "file": "mt4c\\baseline\\LorenzoBaracchi_CES01622_2026-10-19_16_33_00_net10.0.trx",
+        "passed": 51,
+        "sha256": "7bdddee392cd53d8af9275f6be663cfbb448d8bd303a11cb6de6580a1b305321"
+      },
+      {
+        "file": "mt4c\\baseline\\LorenzoBaracchi_CES01622_2026-10-19_16_33_04_net10.0.trx",
+        "passed": 593,
+        "sha256": "4977240308b53c2b3fa5d36db1c727e4021b67e7e1e81e8063a357ab6ee0f889"
+      }
+    ],
+    "final-1": [
+      {
+        "file": "mt4c\\final-1\\LorenzoBaracchi_CES01622_2026-10-19_17_01_27_net10.0.trx",
+        "passed": 51,
+        "sha256": "2702203223dd983c222f605649149964e81036b0f0775de1490d58d7966ca6cc"
+      },
+      {
+        "file": "mt4c\\final-1\\LorenzoBaracchi_CES01622_2026-10-19_17_01_31_net10.0.trx",
+        "passed": 624,
+        "sha256": "bba2934b12b61b5a80e30403e71c94861649baba226ff7a158d9c2b5b2a31df4"
+      }
+    ],
+    "final-2": [
+      {
+        "file": "mt4c\\final-2\\LorenzoBaracchi_CES01622_2026-10-19_17_20_32_net10.0.trx",
+        "passed": 51,
+        "sha256": "ff9a529784d47697520fbe855dbb94dc4dba2a866ab7a508be7aaa2f4767f973"
+      },
+      {
+        "file": "mt4c\\final-2\\LorenzoBaracchi_CES01622_2026-10-19_17_20_37_net10.0.trx",
+        "passed": 624,
+        "sha256": "a98956ecf1f0ffa064708f0c6fd36a6920f3ca61f0453911fb750104ee5166f0"
+      }
+    ]
+  }
+}

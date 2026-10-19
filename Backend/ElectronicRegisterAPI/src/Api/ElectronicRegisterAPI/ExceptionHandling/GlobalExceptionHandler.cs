@@ -13,6 +13,9 @@ internal class GlobalExceptionHandler : IExceptionHandler
     {
         var (statusCode, title) = exception switch
         {
+            BadHttpRequestException { StatusCode: StatusCodes.Status413PayloadTooLarge } =>
+                (StatusCodes.Status413PayloadTooLarge, "Richiesta troppo grande"),
+
             KeyNotFoundException => 
                 (StatusCodes.Status404NotFound, "La risorsa non esiste"),
 

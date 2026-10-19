@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="b3f736a5-1158-4dc1-9723-2ce7729df1a3" name="LorenzoBaracchi@CES01622 2026-10-19 10:25:49" runUser="AzureAD\LorenzoBaracchi" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-19T10:25:49.6668989+02:00" queuing="2026-10-19T10:25:49.6668995+02:00" start="2026-10-19T10:25:45.8425805+02:00" finish="2026-10-19T10:26:03.7662285+02:00" />
+  <TestSettings name="default" id="c0e12d10-971e-433f-a0e9-6eb6af6f32f0">
+    <Deployment runDeploymentRoot="LorenzoBaracchi_CES01622_2026-10-19_10_25_49" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="a01e31d3-05e5-4589-93e7-268335af2971" testId="26dfb329-91ce-d7be-9e97-7e15ff1ee50c" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.MembershipLinksNeedExistingActiveRoleAndUniqueProfile(family: &quot;teacher&quot;)" computerName="CES01622" duration="00:00:00.5017986" startTime="2026-10-19T10:25:49.7051895+02:00" endTime="2026-10-19T10:25:49.7051896+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a01e31d3-05e5-4589-93e7-268335af2971" />
+    <UnitTestResult executionId="46d1f593-e5c1-4a88-98fd-d25c0e2f9943" testId="fd4b8b7f-e523-827d-2942-8ffcf56d2dd9" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.TeacherDirectoryAndSelfProfileAreLocalForEveryRole" computerName="CES01622" duration="00:00:02.6598687" startTime="2026-10-19T10:25:55.5299200+02:00" endTime="2026-10-19T10:25:55.5299203+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="46d1f593-e5c1-4a88-98fd-d25c0e2f9943" />
+    <UnitTestResult executionId="695eaeba-0a9b-4440-88f6-ca61aee874fe" testId="0ffea5c6-24c6-2672-ad3a-0a84f9241b99" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ForeignLinksAreRejectedAtomicallyByManager(family: &quot;teacher&quot;, link: &quot;membership&quot;)" computerName="CES01622" duration="00:00:00.4529924" startTime="2026-10-19T10:26:02.9354928+02:00" endTime="2026-10-19T10:26:02.9354930+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="695eaeba-0a9b-4440-88f6-ca61aee874fe" />
+    <UnitTestResult executionId="36802478-4676-491c-8a02-509aa42e286f" testId="69b9a97c-d6f2-a86e-72dc-aed348ba2b12" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: &quot;teacher&quot;, method: &quot;DELETE&quot;)" computerName="CES01622" duration="00:00:00.5110730" startTime="2026-10-19T10:26:01.0002230+02:00" endTime="2026-10-19T10:26:01.0002234+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="36802478-4676-491c-8a02-509aa42e286f" />
+    <UnitTestResult executionId="79e93692-93e0-4237-8885-e844dfd82725" testId="139c7beb-0e62-eba2-946d-01c35a46aafa" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.StudentReadsRespectAdminTeacherAndOwnProfileAcrossBothTenants" computerName="CES01622" duration="00:00:02.1784564" startTime="2026-10-19T10:25:58.0516250+02:00" endTime="2026-10-19T10:25:58.0516253+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="79e93692-93e0-4237-8885-e844dfd82725" />
+    <UnitTestResult executionId="49f5f544-3ca0-4b23-8b92-6d69dd4b130f" testId="4ab714f4-de92-6f2a-a86a-6f8eafc93e18" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: &quot;teacher&quot;, role: &quot;student&quot;)" computerName="CES01622" duration="00:00:00.6897783" startTime="2026-10-19T10:25:51.8225681+02:00" endTime="2026-10-19T10:25:51.8225682+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="49f5f544-3ca0-4b23-8b92-6d69dd4b130f" />
+    <UnitTestResult executionId="eb510b6f-9a5f-4382-b646-7ab40fa09c7a" testId="7cace91b-7628-0139-3eee-f2bd0c20fc92" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: &quot;subject&quot;, role: &quot;teacher&quot;)" computerName="CES01622" duration="00:00:00.2170834" startTime="2026-10-19T10:25:50.0427919+02:00" endTime="2026-10-19T10:25:50.0427921+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eb510b6f-9a5f-4382-b646-7ab40fa09c7a">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Forbidden&#xD;
+Actual:   NotFound</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(String family, String role) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs:line 236&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="edc26952-aeba-4f83-80dd-b6867541e156" testId="3bf6306d-7366-aab7-00df-ab413fedfe4d" testName="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SharedGlobalUserResolvesDifferentTeacherProfilesAndDirectoryStaysInTenant" computerName="CES01622" duration="00:00:00.3676606" startTime="2026-10-19T10:25:48.7908189+02:00" endTime="2026-10-19T10:25:48.7909365+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="edc26952-aeba-4f83-80dd-b6867541e156" />
+    <UnitTestResult executionId="af01d942-564a-4802-9438-6937d2313f79" testId="4b0dab85-5223-122e-2c31-e3bc85b185bd" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: &quot;teacher&quot;)" computerName="CES01622" duration="00:00:00.7554090" startTime="2026-10-19T10:26:00.2607290+02:00" endTime="2026-10-19T10:26:00.2607293+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="af01d942-564a-4802-9438-6937d2313f79" />
+    <UnitTestResult executionId="5ad80964-357b-4453-8ee9-06af2515bc2c" testId="7feecea6-72d8-c62f-f389-711ca9bb80b0" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: &quot;teacher&quot;, method: &quot;PUT&quot;)" computerName="CES01622" duration="00:00:00.3786218" startTime="2026-10-19T10:26:01.5604314+02:00" endTime="2026-10-19T10:26:01.5604315+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5ad80964-357b-4453-8ee9-06af2515bc2c" />
+    <UnitTestResult executionId="d1e41e41-c77b-48d2-a735-765264296bc9" testId="dd184d83-d478-deee-430e-c6e07d9c561e" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SubjectsIntersectAssignmentsForAllLookupsIncludingByTeacher" computerName="CES01622" duration="00:00:00.3582549" startTime="2026-10-19T10:25:58.6221302+02:00" endTime="2026-10-19T10:25:58.6221307+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d1e41e41-c77b-48d2-a735-765264296bc9">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: OK&#xD;
+Actual:   NotFound</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ArrayResponse(String route, String token) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs:line 124&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SubjectsIntersectAssignmentsForAllLookupsIncludingByTeacher() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs:line 296&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="19049acf-46c3-44f1-aaf2-779558243c69" testId="50a8f251-93d5-fb9d-1e1a-3649a57782c9" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: &quot;teacher&quot;, method: &quot;GET&quot;)" computerName="CES01622" duration="00:00:00.4428290" startTime="2026-10-19T10:26:02.2421009+02:00" endTime="2026-10-19T10:26:02.2421011+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="19049acf-46c3-44f1-aaf2-779558243c69" />
+    <UnitTestResult executionId="6f273f20-b635-4eed-9568-f6e27d641bb3" testId="68b8a786-135d-5de0-7a6e-d0b25cee9e41" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: &quot;teacher-removed&quot;)" computerName="CES01622" duration="00:00:00.4810211" startTime="2026-10-19T10:25:59.2991164+02:00" endTime="2026-10-19T10:25:59.2991167+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6f273f20-b635-4eed-9568-f6e27d641bb3">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Forbidden&#xD;
+Actual:   NotFound</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(String fault) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs:line 413&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c9cb1e2c-9da0-49d9-ac41-44512d825bd3" testId="02b42365-5bb6-93bf-bcd8-404e4f610710" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.UnassignedTeacherAndStudentWithoutClassReceiveEmptyCollections" computerName="CES01622" duration="00:00:00.4371116" startTime="2026-10-19T10:26:03.5927269+02:00" endTime="2026-10-19T10:26:03.5927271+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c9cb1e2c-9da0-49d9-ac41-44512d825bd3">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: OK&#xD;
+Actual:   NotFound</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ArrayResponse(String route, String token) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs:line 124&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.UnassignedTeacherAndStudentWithoutClassReceiveEmptyCollections() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs:line 320&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7f0440fa-dc87-4931-b0a9-34cf4b3b4b81" testId="2e93587d-80bc-37f0-4d17-c93147ccd1ea" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: &quot;student&quot;, role: &quot;teacher&quot;)" computerName="CES01622" duration="00:00:00.5606764" startTime="2026-10-19T10:25:50.8634542+02:00" endTime="2026-10-19T10:25:50.8634544+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7f0440fa-dc87-4931-b0a9-34cf4b3b4b81" />
+    <UnitTestResult executionId="5056fbfa-6f5d-4f97-b6f8-796bd46051ae" testId="fd15ed02-a347-009a-0171-33acc1aebbac" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: &quot;teacher&quot;, role: &quot;teacher&quot;)" computerName="CES01622" duration="00:00:00.5155904" startTime="2026-10-19T10:25:52.6118707+02:00" endTime="2026-10-19T10:25:52.6118708+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5056fbfa-6f5d-4f97-b6f8-796bd46051ae" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: &quot;teacher&quot;, role: &quot;student&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="4ab714f4-de92-6f2a-a86a-6f8eafc93e18">
+      <Execution id="49f5f544-3ca0-4b23-8b92-6d69dd4b130f" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: &quot;teacher&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="4b0dab85-5223-122e-2c31-e3bc85b185bd">
+      <Execution id="af01d942-564a-4802-9438-6937d2313f79" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.MembershipLinksNeedExistingActiveRoleAndUniqueProfile(family: &quot;teacher&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="26dfb329-91ce-d7be-9e97-7e15ff1ee50c">
+      <Execution id="a01e31d3-05e5-4589-93e7-268335af2971" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="MembershipLinksNeedExistingActiveRoleAndUniqueProfile" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: &quot;subject&quot;, role: &quot;teacher&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="7cace91b-7628-0139-3eee-f2bd0c20fc92">
+      <Execution id="eb510b6f-9a5f-4382-b646-7ab40fa09c7a" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: &quot;teacher-removed&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="68b8a786-135d-5de0-7a6e-d0b25cee9e41">
+      <Execution id="6f273f20-b635-4eed-9568-f6e27d641bb3" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="CommittedRevocationBlocksAllActionsAndWrites" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.TeacherDirectoryAndSelfProfileAreLocalForEveryRole" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="fd4b8b7f-e523-827d-2942-8ffcf56d2dd9">
+      <Execution id="46d1f593-e5c1-4a88-98fd-d25c0e2f9943" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="TeacherDirectoryAndSelfProfileAreLocalForEveryRole" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SharedGlobalUserResolvesDifferentTeacherProfilesAndDirectoryStaysInTenant" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="3bf6306d-7366-aab7-00df-ab413fedfe4d">
+      <Execution id="edc26952-aeba-4f83-80dd-b6867541e156" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests" name="SharedGlobalUserResolvesDifferentTeacherProfilesAndDirectoryStaysInTenant" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: &quot;student&quot;, role: &quot;teacher&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="2e93587d-80bc-37f0-4d17-c93147ccd1ea">
+      <Execution id="7f0440fa-dc87-4931-b0a9-34cf4b3b4b81" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ForeignLinksAreRejectedAtomicallyByManager(family: &quot;teacher&quot;, link: &quot;membership&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="0ffea5c6-24c6-2672-ad3a-0a84f9241b99">
+      <Execution id="695eaeba-0a9b-4440-88f6-ca61aee874fe" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="ForeignLinksAreRejectedAtomicallyByManager" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SubjectsIntersectAssignmentsForAllLookupsIncludingByTeacher" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="dd184d83-d478-deee-430e-c6e07d9c561e">
+      <Execution id="d1e41e41-c77b-48d2-a735-765264296bc9" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="SubjectsIntersectAssignmentsForAllLookupsIncludingByTeacher" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.UnassignedTeacherAndStudentWithoutClassReceiveEmptyCollections" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="02b42365-5bb6-93bf-bcd8-404e4f610710">
+      <Execution id="c9cb1e2c-9da0-49d9-ac41-44512d825bd3" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="UnassignedTeacherAndStudentWithoutClassReceiveEmptyCollections" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.StudentReadsRespectAdminTeacherAndOwnProfileAcrossBothTenants" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="139c7beb-0e62-eba2-946d-01c35a46aafa">
+      <Execution id="79e93692-93e0-4237-8885-e844dfd82725" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="StudentReadsRespectAdminTeacherAndOwnProfileAcrossBothTenants" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: &quot;teacher&quot;, method: &quot;GET&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="50a8f251-93d5-fb9d-1e1a-3649a57782c9">
+      <Execution id="19049acf-46c3-44f1-aaf2-779558243c69" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: &quot;teacher&quot;, method: &quot;DELETE&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="69b9a97c-d6f2-a86e-72dc-aed348ba2b12">
+      <Execution id="36802478-4676-491c-8a02-509aa42e286f" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: &quot;teacher&quot;, method: &quot;PUT&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="7feecea6-72d8-c62f-f389-711ca9bb80b0">
+      <Execution id="5ad80964-357b-4453-8ee9-06af2515bc2c" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: &quot;teacher&quot;, role: &quot;teacher&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="fd15ed02-a347-009a-0171-33acc1aebbac">
+      <Execution id="5056fbfa-6f5d-4f97-b6f8-796bd46051ae" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="26dfb329-91ce-d7be-9e97-7e15ff1ee50c" executionId="a01e31d3-05e5-4589-93e7-268335af2971" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fd4b8b7f-e523-827d-2942-8ffcf56d2dd9" executionId="46d1f593-e5c1-4a88-98fd-d25c0e2f9943" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0ffea5c6-24c6-2672-ad3a-0a84f9241b99" executionId="695eaeba-0a9b-4440-88f6-ca61aee874fe" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="69b9a97c-d6f2-a86e-72dc-aed348ba2b12" executionId="36802478-4676-491c-8a02-509aa42e286f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="139c7beb-0e62-eba2-946d-01c35a46aafa" executionId="79e93692-93e0-4237-8885-e844dfd82725" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4ab714f4-de92-6f2a-a86a-6f8eafc93e18" executionId="49f5f544-3ca0-4b23-8b92-6d69dd4b130f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7cace91b-7628-0139-3eee-f2bd0c20fc92" executionId="eb510b6f-9a5f-4382-b646-7ab40fa09c7a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3bf6306d-7366-aab7-00df-ab413fedfe4d" executionId="edc26952-aeba-4f83-80dd-b6867541e156" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4b0dab85-5223-122e-2c31-e3bc85b185bd" executionId="af01d942-564a-4802-9438-6937d2313f79" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7feecea6-72d8-c62f-f389-711ca9bb80b0" executionId="5ad80964-357b-4453-8ee9-06af2515bc2c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dd184d83-d478-deee-430e-c6e07d9c561e" executionId="d1e41e41-c77b-48d2-a735-765264296bc9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="50a8f251-93d5-fb9d-1e1a-3649a57782c9" executionId="19049acf-46c3-44f1-aaf2-779558243c69" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="68b8a786-135d-5de0-7a6e-d0b25cee9e41" executionId="6f273f20-b635-4eed-9568-f6e27d641bb3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="02b42365-5bb6-93bf-bcd8-404e4f610710" executionId="c9cb1e2c-9da0-49d9-ac41-44512d825bd3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2e93587d-80bc-37f0-4d17-c93147ccd1ea" executionId="7f0440fa-dc87-4931-b0a9-34cf4b3b4b81" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fd15ed02-a347-009a-0171-33acc1aebbac" executionId="5056fbfa-6f5d-4f97-b6f8-796bd46051ae" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="16" executed="16" passed="12" failed="4" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.40]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.47]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.47]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:03.51]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:03.51]       Expected: Forbidden&#xD;
+[xUnit.net 00:00:03.51]       Actual:   NotFound&#xD;
+[xUnit.net 00:00:03.51]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.51]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs(236,0): at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(String family, String role)&#xD;
+[xUnit.net 00:00:03.51]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:12.09]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:12.09]       Expected: OK&#xD;
+[xUnit.net 00:00:12.09]       Actual:   NotFound&#xD;
+[xUnit.net 00:00:12.09]       Stack Trace:&#xD;
+[xUnit.net 00:00:12.09]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs(124,0): at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ArrayResponse(String route, String token)&#xD;
+[xUnit.net 00:00:12.09]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs(296,0): at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SubjectsIntersectAssignmentsForAllLookupsIncludingByTeacher()&#xD;
+[xUnit.net 00:00:12.09]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:12.77]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:12.77]       Expected: Forbidden&#xD;
+[xUnit.net 00:00:12.77]       Actual:   NotFound&#xD;
+[xUnit.net 00:00:12.77]       Stack Trace:&#xD;
+[xUnit.net 00:00:12.77]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs(413,0): at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(String fault)&#xD;
+[xUnit.net 00:00:12.77]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:17.06]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:17.06]       Expected: OK&#xD;
+[xUnit.net 00:00:17.06]       Actual:   NotFound&#xD;
+[xUnit.net 00:00:17.06]       Stack Trace:&#xD;
+[xUnit.net 00:00:17.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs(124,0): at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ArrayResponse(String route, String token)&#xD;
+[xUnit.net 00:00:17.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3cHttpTests.cs(320,0): at ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.UnassignedTeacherAndStudentWithoutClassReceiveEmptyCollections()&#xD;
+[xUnit.net 00:00:17.06]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:17.08]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T10:25:50.0410258+02:00">
+        <Text>[xUnit.net 00:00:03.51]     ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: "subject", role: "teacher") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T10:25:58.6198742+02:00">
+        <Text>[xUnit.net 00:00:12.09]     ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SubjectsIntersectAssignmentsForAllLookupsIncludingByTeacher [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T10:25:59.2988811+02:00">
+        <Text>[xUnit.net 00:00:12.77]     ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: "teacher-removed") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T10:26:03.5922178+02:00">
+        <Text>[xUnit.net 00:00:17.06]     ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.UnassignedTeacherAndStudentWithoutClassReceiveEmptyCollections [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

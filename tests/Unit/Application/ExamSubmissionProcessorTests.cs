@@ -25,6 +25,23 @@ namespace ElectronicRegisterAPI.Tests.Unit.Application
         private readonly Mock<IAuditRepository> _auditRepoMock = new();
 
         private static readonly DateTime Now = new(2026, 10, 17, 10, 0, 0, DateTimeKind.Utc);
+        [Theory]
+        [InlineData(QuestionType.Open)]
+        [InlineData(QuestionType.Single)]
+        [InlineData(QuestionType.Multiple)]
+        public async Task Mt3dRequiredQuestionIdWithEmptyContentIsRejected(QuestionType type)
+        {
+            var processor = CreateProcessor();
+            var submission = new ExamSubmission { Id = Guid.NewGuid(), DeadlineAt = Now.AddMinutes(10), Answers = new() };
+            ConfigureSubmission(submission);
+            var question = new Question { Id = Guid.NewGuid(), Type = type, Required = true, Text = "Required", Points = 1 };
+            _examRepoMock.Setup(r => r.GetByIdAsync(submission.ExamId, true)).ReturnsAsync(new Exam { Name = "Test", PassingPercent = 60, Questions = new() { question } });
+            _gradingMock.Setup(g => g.GradeClosedQuestions(It.IsAny<Exam>(), It.IsAny<IReadOnlyList<SubmissionAnswer>>())).Returns(new ClosedGradingResult { ClosedScore = 0, MaxScore = 1, PassingScore = .6m });
+            _gradingMock.Setup(g => g.EvaluateAfterSubmit(It.IsAny<Exam>(), It.IsAny<ClosedGradingResult>())).Returns(new SubmissionEvaluation { Status = SubmissionStatus.Graded, TotalScore = 0 });
+            var dto = new SubmitExamDto { ClientRevision = 1, Answers = new() { new() { QuestionId = question.Id, OpenText = type == QuestionType.Open ? "   " : null, SelectedOptionIds = new() } } };
+            await Assert.ThrowsAsync<InvalidOperationException>(() => processor.ProcessSubmitAsync(submission.Id, dto, SubmitReason.Manual, new ClaimsContext(Guid.NewGuid(), UserRole.Student, submission.StudentId, null)));
+            _gradeRepoMock.Verify(r => r.AddAsync(It.IsAny<Grade>()), Times.Never);
+        }
         private readonly Dictionary<Guid, Grade> _grades = new();
 
         private void ConfigureSubmission(ExamSubmission submission)

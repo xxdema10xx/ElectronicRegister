@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using ElectronicRegisterAPI.Domain.Models;
 using Grade = ElectronicRegisterAPI.Domain.Models.Grade;
@@ -10,21 +11,25 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 internal class GradeRepository : IGradeRepository
 {
     private readonly ElectronicRegisterContext _context;
+    private readonly InstitutionExamDataScope? _scope;
+    private IQueryable<T> Rows<T>() where T : class => _scope?.Query<T>() ?? _context.Set<T>();
+    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync() : _scope.SaveAsync();
 
-    public GradeRepository(ElectronicRegisterContext context)
+    public GradeRepository(ElectronicRegisterContext context, InstitutionExamDataScope? scope = null)
     {
         _context = context;
+        _scope = scope;
     }
 
     public async Task<Grade?> GetByIdAsync(Guid id)
     {
-        var grade = await _context.Grades.FirstOrDefaultAsync(g => g.Id == id);
+        var grade = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().FirstOrDefaultAsync(g => g.Id == id);
         return grade == null ? null : MapToModel(grade);
     }
 
     public async Task<List<Grade>> GetAllAsync(Guid? teacherId, Guid? studentId)
     {
-        var query = _context.Grades.AsQueryable();
+        var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().AsNoTracking();
         if (teacherId.HasValue)
         {
             query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
@@ -38,7 +43,7 @@ internal class GradeRepository : IGradeRepository
 
     public async Task<int> CountAsync(Guid? teacherId = null, Guid? studentId = null)
     {
-        var query = _context.Grades.AsQueryable();
+        var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().AsNoTracking();
         if (teacherId.HasValue)
         {
             query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
@@ -52,7 +57,7 @@ internal class GradeRepository : IGradeRepository
 
     public async Task<List<Grade>> GetByDateAsync(DateOnly date, Guid? studentId = null, Guid? teacherId = null)
     {
-        var query = _context.Grades.Where(g => g.Date == date);
+        var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().Where(g => g.Date == date);
 
         if (studentId.HasValue) query = query.Where(g => g.StudentId == studentId.Value);
         if (teacherId.HasValue) query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
@@ -62,7 +67,7 @@ internal class GradeRepository : IGradeRepository
 
     public async Task<List<Grade>> GetBySubjectNameAsync(string subjectName, Guid? studentId = null, Guid? teacherId = null)
     {
-        var query = _context.Grades
+        var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>()
             .Where(g => g.ClassSubject.Subject.Name == subjectName);
         if (studentId.HasValue) query = query.Where(g => g.StudentId == studentId.Value);
         if (teacherId.HasValue) query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
@@ -79,7 +84,7 @@ internal class GradeRepository : IGradeRepository
         Guid? restrictToTeacherId
     )
     {
-        var query = _context.Grades.AsQueryable();
+        var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().AsNoTracking();
 
         if (restrictToStudentId.HasValue) query = query.Where(g => g.StudentId == restrictToStudentId.Value);
         if (restrictToTeacherId.HasValue) query = query.Where(g => g.ClassSubject.TeacherId == restrictToTeacherId.Value);
@@ -107,7 +112,7 @@ internal class GradeRepository : IGradeRepository
     }
     public async Task<GradeStatistics> GetStatisticsAsync(Guid? teacherId, Guid? studentId)
     {
-        var query = _context.Grades.AsQueryable();
+        var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().AsNoTracking();
 
         if(teacherId.HasValue) query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
         
@@ -140,7 +145,7 @@ internal class GradeRepository : IGradeRepository
 
     public async Task<List<Grade>> GetByStudentIdAsync(Guid studentId)
     {
-        return await _context.Grades
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>()
             .Where(g => g.StudentId == studentId)
             .Select(g => MapToModel(g)).ToListAsync();
     }
@@ -156,7 +161,7 @@ internal class GradeRepository : IGradeRepository
             Date = grade.Date
         };
         await _context.Grades.AddAsync(gradeEntity);
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 
     public async Task UpdateAsync(Grade grade)
@@ -164,7 +169,7 @@ internal class GradeRepository : IGradeRepository
         var gradeEntity = await MapToEntity(grade);
         if (gradeEntity == null) return;
         _context.Grades.Update(gradeEntity);
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 
     public async Task DeleteAsync(Grade grade)
@@ -172,16 +177,16 @@ internal class GradeRepository : IGradeRepository
         var gradeEntity = await MapToEntity(grade);
         if (gradeEntity == null) return;
         _context.Grades.Remove(gradeEntity);
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 
     public async Task<bool> ExistsForStudentAsync(Guid studentId)
     {
-        return await _context.Grades.AnyAsync(g => g.StudentId == studentId);
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().AnyAsync(g => g.StudentId == studentId);
     }
 
     public Task<bool> IsLinkedToExamSubmissionAsync(Guid gradeId) =>
-        _context.ExamSubmissions.AnyAsync(s => s.GradeId == gradeId);
+        Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AnyAsync(s => s.GradeId == gradeId);
 
     private static Grade MapToModel(GradeEntity gradeEntity)
     {
@@ -197,7 +202,7 @@ internal class GradeRepository : IGradeRepository
 
     private async Task<GradeEntity?> MapToEntity(Grade grade)
     {
-        var entity = await _context.Grades.FirstOrDefaultAsync(g => g.Id == grade.Id);
+        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().FirstOrDefaultAsync(g => g.Id == grade.Id);
         if (entity is null) return null;
 
         entity.Id = grade.Id;

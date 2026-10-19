@@ -1,0 +1,19 @@
+{
+  "totalPassed": 644,
+  "previous607IdentitiesPreserved": true,
+  "newCases": 37,
+  "failed": 0,
+  "skipped": 0,
+  "trx": [
+    {
+      "file": "mt4b\\final-1\\LorenzoBaracchi_CES01622_2026-10-19_15_35_14_net10.0.trx",
+      "passed": 51,
+      "sha256": "9946c03b1153905422f296ee08e03b5858f47ed4697d2eed6a82d8257d961191"
+    },
+    {
+      "file": "mt4b\\final-1\\LorenzoBaracchi_CES01622_2026-10-19_15_35_18_net10.0.trx",
+      "passed": 593,
+      "sha256": "841b88fa9001e411324f7b903dc5283da4a188bc0e9776ec2d5238b3d10b442c"
+    }
+  ]
+}

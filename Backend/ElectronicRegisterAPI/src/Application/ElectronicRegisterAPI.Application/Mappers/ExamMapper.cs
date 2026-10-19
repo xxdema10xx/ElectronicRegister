@@ -103,6 +103,7 @@ internal static class ExamMapper
             ExtraTimeMinutes = assignment.ExtraTimeMinutes,
             Status = exam.Status,
             SubmissionStatus = submission?.Status,
+            SubmissionId = submission?.Id,
             StartedAt = submission?.StartedAt,
             DeadlineAt = submission?.DeadlineAt,
             SubmittedAt = submission?.SubmittedAt,

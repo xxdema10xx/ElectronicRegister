@@ -1,0 +1,279 @@
+electronic_register_test	10.4.32-MariaDB	NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION	NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION
+audit_event	idx_audit_actor	1	actor_user_id
+audit_event	idx_audit_actor	2	created_at
+audit_event	idx_audit_entity	1	entity_type
+audit_event	idx_audit_entity	2	entity_id
+audit_event	idx_audit_entity	3	created_at
+audit_event	idx_mt3a_audit_owner_created	1	institution_id
+audit_event	idx_mt3a_audit_owner_created	2	created_at
+audit_event	PRIMARY	1	id
+biennium	PRIMARY	1	id
+biennium	uq_biennium	1	institution_id
+biennium	uq_biennium	2	start_year
+biennium	uq_biennium	3	end_year
+biennium	uq_mt3a_biennium_owner	1	institution_id
+biennium	uq_mt3a_biennium_owner	2	id
+biennium_study_area	idx_bsa_area	1	study_area_id
+biennium_study_area	idx_mt3a_bsa_area	1	institution_id
+biennium_study_area	idx_mt3a_bsa_area	2	study_area_id
+biennium_study_area	idx_mt3a_bsa_biennium	1	institution_id
+biennium_study_area	idx_mt3a_bsa_biennium	2	biennium_id
+biennium_study_area	PRIMARY	1	id
+biennium_study_area	uq_biennium_area	1	biennium_id
+biennium_study_area	uq_biennium_area	2	study_area_id
+biennium_study_area	uq_mt3a_biennium_study_area_owner	1	institution_id
+biennium_study_area	uq_mt3a_biennium_study_area_owner	2	id
+biennium_study_path	idx_bsp_path	1	study_path_id
+biennium_study_path	idx_mt3a_bsp_bsa	1	institution_id
+biennium_study_path	idx_mt3a_bsp_bsa	2	biennium_study_area_id
+biennium_study_path	idx_mt3a_bsp_path	1	institution_id
+biennium_study_path	idx_mt3a_bsp_path	2	study_path_id
+biennium_study_path	PRIMARY	1	id
+biennium_study_path	uq_bsa_path	1	biennium_study_area_id
+biennium_study_path	uq_bsa_path	2	study_path_id
+biennium_study_path	uq_mt3a_biennium_study_path_owner	1	institution_id
+biennium_study_path	uq_mt3a_biennium_study_path_owner	2	id
+campus	idx_campus_institution	1	institution_id
+campus	PRIMARY	1	id
+campus	uq_mt4_campus_owner	1	institution_id
+campus	uq_mt4_campus_owner	2	id
+class	idx_class_bsp	1	biennium_study_path_id
+class	idx_mt3a_class_bsp	1	institution_id
+class	idx_mt3a_class_bsp	2	biennium_study_path_id
+class	idx_mt4_class_edition	1	institution_id
+class	idx_mt4_class_edition	2	course_edition_id
+class	PRIMARY	1	id
+class	uq_class	1	biennium_study_path_id
+class	uq_class	2	name
+class	uq_mt3a_class_owner	1	institution_id
+class	uq_mt3a_class_owner	2	id
+class_subject	idx_cs_subject	1	subject_id
+class_subject	idx_cs_teacher	1	teacher_id
+class_subject	idx_mt3a_cs_class	1	institution_id
+class_subject	idx_mt3a_cs_class	2	class_id
+class_subject	idx_mt3a_cs_subject	1	institution_id
+class_subject	idx_mt3a_cs_subject	2	subject_id
+class_subject	idx_mt3a_cs_teacher	1	institution_id
+class_subject	idx_mt3a_cs_teacher	2	teacher_id
+class_subject	PRIMARY	1	id
+class_subject	uq_class_subject	1	class_id
+class_subject	uq_class_subject	2	subject_id
+class_subject	uq_mt3a_class_subject_owner	1	institution_id
+class_subject	uq_mt3a_class_subject_owner	2	id
+course_edition	idx_mt4_edition_path	1	institution_id
+course_edition	idx_mt4_edition_path	2	study_path_id
+course_edition	PRIMARY	1	id
+course_edition	uq_mt4_edition_code	1	institution_id
+course_edition	uq_mt4_edition_code	2	code
+course_edition	uq_mt4_edition_owner	1	institution_id
+course_edition	uq_mt4_edition_owner	2	id
+course_edition_campus	idx_mt4_edition_campus	1	institution_id
+course_edition_campus	idx_mt4_edition_campus	2	campus_id
+course_edition_campus	PRIMARY	1	institution_id
+course_edition_campus	PRIMARY	2	course_edition_id
+course_edition_campus	PRIMARY	3	campus_id
+exam	idx_exam_class_subject	1	class_subject_id
+exam	idx_exam_retake_of	1	retake_of_exam_id
+exam	idx_exam_status_window	1	status
+exam	idx_exam_status_window	2	available_from
+exam	idx_exam_status_window	3	available_until
+exam	idx_mt3a_exam_class_subject	1	institution_id
+exam	idx_mt3a_exam_class_subject	2	class_subject_id
+exam	idx_mt3a_exam_retake_of	1	retake_institution_id
+exam	idx_mt3a_exam_retake_of	2	retake_of_exam_id
+exam	PRIMARY	1	id
+exam	uq_mt3a_exam_owner	1	institution_id
+exam	uq_mt3a_exam_owner	2	id
+exam_student	idx_exam_student_student	1	student_id
+exam_student	idx_exam_student_student	2	exam_id
+exam_student	idx_mt3a_exam_student_exam	1	institution_id
+exam_student	idx_mt3a_exam_student_exam	2	exam_id
+exam_student	idx_mt3a_exam_student_student	1	institution_id
+exam_student	idx_mt3a_exam_student_student	2	student_id
+exam_student	PRIMARY	1	exam_id
+exam_student	PRIMARY	2	student_id
+exam_submission	fk_exam_submission_reviewer	1	reviewed_by_user_id
+exam_submission	idx_exam_submission_exam_status	1	exam_id
+exam_submission	idx_exam_submission_exam_status	2	status
+exam_submission	idx_exam_submission_expiration	1	status
+exam_submission	idx_exam_submission_expiration	2	deadline_at
+exam_submission	idx_exam_submission_student_status	1	student_id
+exam_submission	idx_exam_submission_student_status	2	status
+exam_submission	idx_mt3a_exam_submission_grade	1	grade_institution_id
+exam_submission	idx_mt3a_exam_submission_grade	2	grade_id
+exam_submission	idx_mt3a_exam_submission_student	1	institution_id
+exam_submission	idx_mt3a_exam_submission_student	2	student_id
+exam_submission	PRIMARY	1	id
+exam_submission	uq_exam_submission_grade	1	grade_id
+exam_submission	uq_exam_submission_student	1	exam_id
+exam_submission	uq_exam_submission_student	2	student_id
+exam_submission	uq_mt3a_exam_submission_owner	1	institution_id
+exam_submission	uq_mt3a_exam_submission_owner	2	id
+exam_submission	uq_mt3a_submission_exam	1	institution_id
+exam_submission	uq_mt3a_submission_exam	2	exam_id
+exam_submission	uq_mt3a_submission_exam	3	id
+exam_violation	idx_exam_violation_submission	1	submission_id
+exam_violation	idx_exam_violation_submission	2	occurred_at
+exam_violation	idx_mt3a_exam_violation_submission	1	institution_id
+exam_violation	idx_mt3a_exam_violation_submission	2	submission_id
+exam_violation	PRIMARY	1	id
+grade	idx_grade_class_subject	1	class_subject_id
+grade	idx_grade_student	1	student_id
+grade	idx_mt3a_grade_class_subject	1	institution_id
+grade	idx_mt3a_grade_class_subject	2	class_subject_id
+grade	idx_mt3a_grade_student	1	institution_id
+grade	idx_mt3a_grade_student	2	student_id
+grade	PRIMARY	1	id
+grade	uq_mt3a_grade_owner	1	institution_id
+grade	uq_mt3a_grade_owner	2	id
+institution	PRIMARY	1	id
+institution	uq_institution_code	1	code
+institution_membership	AK_institution_membership_institution_id_id	1	institution_id
+institution_membership	AK_institution_membership_institution_id_id	2	id
+institution_membership	idx_membership_institution	1	institution_id
+institution_membership	PRIMARY	1	id
+institution_membership	uq_membership_user_institution	1	user_id
+institution_membership	uq_membership_user_institution	2	institution_id
+institution_membership_role	PRIMARY	1	membership_id
+institution_membership_role	PRIMARY	2	role
+institution_student_profile	idx_mt3a_student_profile	1	institution_id
+institution_student_profile	idx_mt3a_student_profile	2	student_id
+institution_student_profile	PRIMARY	1	institution_id
+institution_student_profile	PRIMARY	2	membership_id
+institution_student_profile	uq_institution_student_profile_student	1	student_id
+institution_teacher_profile	idx_mt3a_teacher_profile	1	institution_id
+institution_teacher_profile	idx_mt3a_teacher_profile	2	teacher_id
+institution_teacher_profile	PRIMARY	1	institution_id
+institution_teacher_profile	PRIMARY	2	membership_id
+institution_teacher_profile	uq_institution_teacher_profile_teacher	1	teacher_id
+mt3a_legacy_scope	institution_id	1	institution_id
+mt3a_legacy_scope	PRIMARY	1	scope
+question	idx_question_exam	1	exam_id
+question	PRIMARY	1	id
+question	uq_mt3a_question_exam	1	institution_id
+question	uq_mt3a_question_exam	2	exam_id
+question	uq_mt3a_question_exam	3	id
+question	uq_mt3a_question_owner	1	institution_id
+question	uq_mt3a_question_owner	2	id
+question	uq_question_position	1	exam_id
+question	uq_question_position	2	position
+question_option	idx_question_option_question	1	question_id
+question_option	PRIMARY	1	id
+question_option	uq_mt3a_option_question	1	institution_id
+question_option	uq_mt3a_option_question	2	question_id
+question_option	uq_mt3a_option_question	3	id
+question_option	uq_question_option_position	1	question_id
+question_option	uq_question_option_position	2	position
+student	idx_mt3a_student_class	1	class_institution_id
+student	idx_mt3a_student_class	2	class_id
+student	idx_student_class	1	class_id
+student	PRIMARY	1	id
+student	uq_mt3a_student_owner	1	institution_id
+student	uq_mt3a_student_owner	2	id
+student_enrollment	idx_mt4_enrollment_edition	1	institution_id
+student_enrollment	idx_mt4_enrollment_edition	2	course_edition_id
+student_enrollment	PRIMARY	1	id
+student_enrollment	uq_mt4_enrollment_owner	1	institution_id
+student_enrollment	uq_mt4_enrollment_owner	2	id
+student_enrollment	uq_mt4_enrollment_student	1	institution_id
+student_enrollment	uq_mt4_enrollment_student	2	student_id
+student_enrollment	uq_mt4_enrollment_student	3	course_edition_id
+study_area	PRIMARY	1	id
+study_area	uq_mt3a_study_area_owner	1	institution_id
+study_area	uq_mt3a_study_area_owner	2	id
+study_area	uq_study_area_name	1	institution_id
+study_area	uq_study_area_name	2	name
+study_path	PRIMARY	1	id
+study_path	uq_mt3a_study_path_owner	1	institution_id
+study_path	uq_mt3a_study_path_owner	2	id
+study_path	uq_study_path_name	1	institution_id
+study_path	uq_study_path_name	2	name
+subject	PRIMARY	1	id
+subject	uq_mt3a_subject_owner	1	institution_id
+subject	uq_mt3a_subject_owner	2	id
+subject	uq_subject_name	1	institution_id
+subject	uq_subject_name	2	name
+submission_answer	idx_mt3a_submission_answer_question	1	institution_id
+submission_answer	idx_mt3a_submission_answer_question	2	exam_id
+submission_answer	idx_mt3a_submission_answer_question	3	question_id
+submission_answer	idx_mt3a_submission_answer_submission	1	institution_id
+submission_answer	idx_mt3a_submission_answer_submission	2	exam_id
+submission_answer	idx_mt3a_submission_answer_submission	3	submission_id
+submission_answer	idx_submission_answer_question	1	question_id
+submission_answer	idx_submission_answer_submission	1	submission_id
+submission_answer	PRIMARY	1	id
+submission_answer	uq_mt3a_answer_question	1	institution_id
+submission_answer	uq_mt3a_answer_question	2	question_id
+submission_answer	uq_mt3a_answer_question	3	id
+submission_answer	uq_submission_answer	1	submission_id
+submission_answer	uq_submission_answer	2	question_id
+submission_answer_option	idx_mt3a_submission_answer_option_answer	1	institution_id
+submission_answer_option	idx_mt3a_submission_answer_option_answer	2	question_id
+submission_answer_option	idx_mt3a_submission_answer_option_answer	3	submission_answer_id
+submission_answer_option	idx_mt3a_submission_answer_option_option	1	institution_id
+submission_answer_option	idx_mt3a_submission_answer_option_option	2	question_id
+submission_answer_option	idx_mt3a_submission_answer_option_option	3	option_id
+submission_answer_option	idx_submission_answer_option_option	1	option_id
+submission_answer_option	PRIMARY	1	submission_answer_id
+submission_answer_option	PRIMARY	2	option_id
+teacher	PRIMARY	1	id
+teacher	uq_mt3a_teacher_owner	1	institution_id
+teacher	uq_mt3a_teacher_owner	2	id
+user	idx_user_student	1	student_id
+user	idx_user_teacher	1	teacher_id
+user	PRIMARY	1	id
+user	uq_user_email	1	email
+mt3a_audit_insert
+mt3a_audit_update
+mt3a_biennium_insert
+mt3a_biennium_study_area_insert
+mt3a_biennium_study_area_update
+mt3a_biennium_study_path_insert
+mt3a_biennium_study_path_update
+mt3a_biennium_update
+mt3a_class_insert
+mt3a_class_subject_insert
+mt3a_class_subject_update
+mt3a_class_update
+mt3a_exam_insert
+mt3a_exam_student_insert
+mt3a_exam_student_update
+mt3a_exam_submission_insert
+mt3a_exam_submission_update
+mt3a_exam_update
+mt3a_exam_violation_insert
+mt3a_exam_violation_update
+mt3a_grade_insert
+mt3a_grade_update
+mt3a_question_insert
+mt3a_question_option_insert
+mt3a_question_option_update
+mt3a_question_update
+mt3a_student_insert
+mt3a_student_update
+mt3a_study_area_insert
+mt3a_study_area_update
+mt3a_study_path_insert
+mt3a_study_path_update
+mt3a_subject_insert
+mt3a_subject_update
+mt3a_submission_answer_insert
+mt3a_submission_answer_option_insert
+mt3a_submission_answer_option_update
+mt3a_submission_answer_update
+mt3a_teacher_insert
+mt3a_teacher_update
+mt4_bsp_update
+mt4_class_insert
+mt4_class_update
+mt4_course_edition_campus_update
+mt4_course_edition_insert
+mt4_course_edition_update
+mt4_student_enrollment_insert
+mt4_student_enrollment_update
+
+Hash                                                            
+----                                                            
+80797A2C793366040D9B231544FA1AC7CD0770E5706F7AB6EDB806E88BBC022A
+
+

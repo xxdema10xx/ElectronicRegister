@@ -1,0 +1,3958 @@
+[
+  {
+    "method": "GET",
+    "route": "/openapi/{documentName}.json",
+    "controller": null,
+    "action": null,
+    "scheme": "anonymous/gate",
+    "policy": [],
+    "roles": [],
+    "managers": [],
+    "repositories": [],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "/scalar/scalar.js",
+    "controller": null,
+    "action": null,
+    "scheme": "anonymous/gate",
+    "policy": [],
+    "roles": [],
+    "managers": [],
+    "repositories": [],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "/scalar/scalar.aspnetcore.js",
+    "controller": null,
+    "action": null,
+    "scheme": "anonymous/gate",
+    "policy": [],
+    "roles": [],
+    "managers": [],
+    "repositories": [],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "/scalar/favicon.svg",
+    "controller": null,
+    "action": null,
+    "scheme": "anonymous/gate",
+    "policy": [],
+    "roles": [],
+    "managers": [],
+    "repositories": [],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "/scalar/{documentName?}",
+    "controller": null,
+    "action": null,
+    "scheme": "anonymous/gate",
+    "policy": [],
+    "roles": [],
+    "managers": [],
+    "repositories": [],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/count",
+    "controller": "Biennium",
+    "action": "Count",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "IBienniumRepository",
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium",
+    "controller": "Biennium",
+    "action": "GetAll",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "IBienniumRepository",
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/active",
+    "controller": "Biennium",
+    "action": "GetActiveBiennia",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "IBienniumRepository",
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/inactive",
+    "controller": "Biennium",
+    "action": "GetInactiveBiennia",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "IBienniumRepository",
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/{id}",
+    "controller": "Biennium",
+    "action": "GetById",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "IBienniumRepository",
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/byname/{name}",
+    "controller": "Biennium",
+    "action": "GetSubjectByName",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "IBienniumRepository",
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/byteacher/{id}",
+    "controller": "Biennium",
+    "action": "GetSubjectByTeacherId",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "IBienniumRepository",
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Biennium/update/{id}",
+    "controller": "Biennium",
+    "action": "Update",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "IBienniumRepository",
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Biennium",
+    "controller": "Biennium",
+    "action": "Add",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "IBienniumRepository",
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Biennium/{id}",
+    "controller": "Biennium",
+    "action": "Delete",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "IBienniumRepository",
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/login",
+    "controller": "Auth",
+    "action": "Login",
+    "scheme": "anonymous/gate",
+    "policy": [],
+    "roles": [],
+    "managers": [
+      "IAuthManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/microsoft-login",
+    "controller": "Auth",
+    "action": "MicrosoftLogin",
+    "scheme": "anonymous/gate",
+    "policy": [],
+    "roles": [],
+    "managers": [
+      "IAuthManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/register",
+    "controller": "Auth",
+    "action": "Register",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IAuthManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/RegisterForAdmin",
+    "controller": "Auth",
+    "action": "RegisterForAdmin",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IAuthManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Auth/me",
+    "controller": "Auth",
+    "action": "GetCurrentUser",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "IAuthManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam",
+    "controller": "Exam",
+    "action": "GetAll",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/{id}",
+    "controller": "Exam",
+    "action": "GetById",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/assigned",
+    "controller": "Exam",
+    "action": "GetAssigned",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "student"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam",
+    "controller": "Exam",
+    "action": "Add",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Exam/{id}",
+    "controller": "Exam",
+    "action": "Update",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Exam/{id}/students",
+    "controller": "Exam",
+    "action": "UpdateStudents",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/publish",
+    "controller": "Exam",
+    "action": "Publish",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/close",
+    "controller": "Exam",
+    "action": "Close",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/cancel",
+    "controller": "Exam",
+    "action": "Cancel",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Exam/{id}",
+    "controller": "Exam",
+    "action": "Delete",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/start",
+    "controller": "Exam",
+    "action": "Start",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "student"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/answers/save",
+    "controller": "Exam",
+    "action": "SaveAnswers",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "student"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/submit",
+    "controller": "Exam",
+    "action": "Submit",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "student"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/{examId}/submissions",
+    "controller": "Exam",
+    "action": "GetSubmissions",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/submission/{id}/review",
+    "controller": "Exam",
+    "action": "GetReview",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Exam/submission/{id}/review",
+    "controller": "Exam",
+    "action": "Review",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/submission/{id}/finalize",
+    "controller": "Exam",
+    "action": "FinalizeSubmission",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/submission/{id}/result",
+    "controller": "Exam",
+    "action": "GetResult",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repositories": [
+      "IExamRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository",
+      "IGradeRepository",
+      "IExamSubmissionRepository",
+      "IAuditRepository",
+      "ISubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/count",
+    "controller": "Grade",
+    "action": "Count",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/statistics",
+    "controller": "Grade",
+    "action": "GetStatistics",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/filters",
+    "controller": "Grade",
+    "action": "GetFiltered",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/paged",
+    "controller": "Grade",
+    "action": "GetPaged",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade",
+    "controller": "Grade",
+    "action": "GetAll",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/{id}",
+    "controller": "Grade",
+    "action": "GetById",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/bystudentid/{id}",
+    "controller": "Grade",
+    "action": "GetGradesByStudentId",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/bysubject/{subject}",
+    "controller": "Grade",
+    "action": "GetGradesBySubjectName",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/bydate/{date}",
+    "controller": "Grade",
+    "action": "GetGradesByDate",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Grade",
+    "controller": "Grade",
+    "action": "Add",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Grade/update/{id}",
+    "controller": "Grade",
+    "action": "Update",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Grade/{id}",
+    "controller": "Grade",
+    "action": "Delete",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IGradeManager"
+    ],
+    "repositories": [
+      "IGradeRepository",
+      "ISubjectRepository",
+      "IStudentRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/campuses",
+    "controller": "InstitutionCampus",
+    "action": "List",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/class-subjects",
+    "controller": "InstitutionClassSubject",
+    "action": "GetAll",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions",
+    "controller": "InstitutionCourseEdition",
+    "action": "List",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}",
+    "controller": "InstitutionCourseEdition",
+    "action": "Get",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/by-code/{code}",
+    "controller": "InstitutionCourseEdition",
+    "action": "ByCode",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions",
+    "controller": "InstitutionCourseEdition",
+    "action": "Create",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/course-editions/{id:guid}",
+    "controller": "InstitutionCourseEdition",
+    "action": "Update",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/campuses",
+    "controller": "InstitutionCourseEdition",
+    "action": "Campuses",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions/{id:guid}/campuses",
+    "controller": "InstitutionCourseEdition",
+    "action": "LinkCampus",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/classes",
+    "controller": "InstitutionCourseEdition",
+    "action": "Classes",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions/{editionId:guid}/classes/{classId:guid}",
+    "controller": "InstitutionCourseEdition",
+    "action": "AssignClass",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/enrollments",
+    "controller": "InstitutionCourseEdition",
+    "action": "Enrollments",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/audit",
+    "controller": "InstitutionCourseEdition",
+    "action": "Audit",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/{id:guid}",
+    "controller": "InstitutionEnrollment",
+    "action": "Get",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments",
+    "controller": "InstitutionEnrollment",
+    "action": "List",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/enrollments",
+    "controller": "InstitutionEnrollment",
+    "action": "Create",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/me",
+    "controller": "InstitutionEnrollment",
+    "action": "Me",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/enrollments/{id:guid}/transition",
+    "controller": "InstitutionEnrollment",
+    "action": "Transition",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/enrollments/{id:guid}/completion-date",
+    "controller": "InstitutionEnrollment",
+    "action": "CorrectCompletion",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/{id:guid}/history",
+    "controller": "InstitutionEnrollment",
+    "action": "History",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "ICourseStructureRepository"
+    ],
+    "dataAccess": "MT4B scoped course projections/writers",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 CourseApi",
+    "authorizationTest": "Mt4b all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams",
+    "controller": "InstitutionExam",
+    "action": "GetAll",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}",
+    "controller": "InstitutionExam",
+    "action": "GetById",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/assigned",
+    "controller": "InstitutionExam",
+    "action": "Assigned",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}/eligible-students",
+    "controller": "InstitutionExam",
+    "action": "EligibleStudents",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams",
+    "controller": "InstitutionExam",
+    "action": "Add",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/exams/{id:guid}",
+    "controller": "InstitutionExam",
+    "action": "Update",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/exams/{id:guid}/students",
+    "controller": "InstitutionExam",
+    "action": "Assign",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/publish",
+    "controller": "InstitutionExam",
+    "action": "Publish",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/close",
+    "controller": "InstitutionExam",
+    "action": "Close",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/cancel",
+    "controller": "InstitutionExam",
+    "action": "Cancel",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/exams/{id:guid}",
+    "controller": "InstitutionExam",
+    "action": "Delete",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/start",
+    "controller": "InstitutionExam",
+    "action": "Start",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}/submissions",
+    "controller": "InstitutionExam",
+    "action": "Submissions",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades",
+    "controller": "InstitutionGrade",
+    "action": "GetAll",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/{id:guid}",
+    "controller": "InstitutionGrade",
+    "action": "GetById",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/count",
+    "controller": "InstitutionGrade",
+    "action": "Count",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/paged",
+    "controller": "InstitutionGrade",
+    "action": "Paged",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/filters",
+    "controller": "InstitutionGrade",
+    "action": "Filters",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/statistics",
+    "controller": "InstitutionGrade",
+    "action": "Statistics",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/grades",
+    "controller": "InstitutionGrade",
+    "action": "Add",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/grades/{id:guid}",
+    "controller": "InstitutionGrade",
+    "action": "Update",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/grades/{id:guid}",
+    "controller": "InstitutionGrade",
+    "action": "Delete",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/identity/login",
+    "controller": "InstitutionIdentity",
+    "action": "Login",
+    "scheme": "anonymous/gate",
+    "policy": [],
+    "roles": [],
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository"
+    ],
+    "dataAccess": "global identity; only verified caller memberships",
+    "tenantScope": "identity selection, not school access",
+    "rollout": "MT2 verified identity",
+    "authorizationTest": "Mt2IdentityTests"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/identity/microsoft-login",
+    "controller": "InstitutionIdentity",
+    "action": "MicrosoftLogin",
+    "scheme": "anonymous/gate",
+    "policy": [],
+    "roles": [],
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository"
+    ],
+    "dataAccess": "global identity; only verified caller memberships",
+    "tenantScope": "identity selection, not school access",
+    "rollout": "MT2 verified identity",
+    "authorizationTest": "Mt2IdentityTests"
+  },
+  {
+    "method": "GET",
+    "route": "api/Auth/institutions",
+    "controller": "InstitutionIdentity",
+    "action": "Institutions",
+    "scheme": "InstitutionSelection",
+    "policy": [
+      "InstitutionSelection"
+    ],
+    "roles": [],
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository"
+    ],
+    "dataAccess": "global identity; only verified caller memberships",
+    "tenantScope": "identity selection, not school access",
+    "rollout": "MT2 verified identity",
+    "authorizationTest": "Mt2IdentityTests"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/select-institution",
+    "controller": "InstitutionIdentity",
+    "action": "Select",
+    "scheme": "InstitutionSelection",
+    "policy": [
+      "InstitutionSelection"
+    ],
+    "roles": [],
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository"
+    ],
+    "dataAccess": "global identity; only verified caller memberships",
+    "tenantScope": "identity selection, not school access",
+    "rollout": "MT2 verified identity",
+    "authorizationTest": "Mt2IdentityTests"
+  },
+  {
+    "method": "GET",
+    "route": "api/Auth/context",
+    "controller": "InstitutionIdentity",
+    "action": "Context",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionAccess"
+    ],
+    "roles": [],
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository"
+    ],
+    "dataAccess": "global identity; only verified caller memberships",
+    "tenantScope": "identity selection, not school access",
+    "rollout": "MT2 verified identity",
+    "authorizationTest": "Mt2IdentityTests"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students",
+    "controller": "InstitutionStudent",
+    "action": "GetAll",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionStudentRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/count",
+    "controller": "InstitutionStudent",
+    "action": "Count",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionStudentRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/{id:guid}",
+    "controller": "InstitutionStudent",
+    "action": "GetById",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionStudentRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/bylastname/{lastName}",
+    "controller": "InstitutionStudent",
+    "action": "ByLastName",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionStudentRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/me",
+    "controller": "InstitutionStudent",
+    "action": "Me",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionStudentRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/students",
+    "controller": "InstitutionStudent",
+    "action": "Add",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionStudentRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/students/{id:guid}",
+    "controller": "InstitutionStudent",
+    "action": "Update",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionStudentRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/students/{id:guid}",
+    "controller": "InstitutionStudent",
+    "action": "Delete",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionStudentRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects",
+    "controller": "InstitutionSubject",
+    "action": "GetAll",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionSubjectRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/count",
+    "controller": "InstitutionSubject",
+    "action": "Count",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionSubjectRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/{id:guid}",
+    "controller": "InstitutionSubject",
+    "action": "GetById",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionSubjectRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/byname/{name}",
+    "controller": "InstitutionSubject",
+    "action": "ByName",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionSubjectRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/byteacher/{teacherId:guid}",
+    "controller": "InstitutionSubject",
+    "action": "ByTeacher",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionSubjectRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/subjects",
+    "controller": "InstitutionSubject",
+    "action": "Add",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionSubjectRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/subjects/{id:guid}",
+    "controller": "InstitutionSubject",
+    "action": "Update",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionSubjectRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/subjects/{id:guid}",
+    "controller": "InstitutionSubject",
+    "action": "Delete",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionSubjectRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/session",
+    "controller": "InstitutionSubmission",
+    "action": "Session",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/submissions/{id:guid}/answers",
+    "controller": "InstitutionSubmission",
+    "action": "Save",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/submit",
+    "controller": "InstitutionSubmission",
+    "action": "Submit",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/submit-expired",
+    "controller": "InstitutionSubmission",
+    "action": "SubmitExpired",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/violations",
+    "controller": "InstitutionSubmission",
+    "action": "ReportViolation",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/violations",
+    "controller": "InstitutionSubmission",
+    "action": "Violations",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/review",
+    "controller": "InstitutionSubmission",
+    "action": "Review",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/submissions/{id:guid}/review",
+    "controller": "InstitutionSubmission",
+    "action": "Review",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/finalize",
+    "controller": "InstitutionSubmission",
+    "action": "FinalizeSubmission",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/result",
+    "controller": "InstitutionSubmission",
+    "action": "Result",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionExamRepositoryFactory"
+    ],
+    "dataAccess": "bound Exam/Submission/Grade/Audit; SQL InstitutionId \u002B assignment/owner",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi \u0026\u0026 ExamApi",
+    "authorizationTest": "Mt3d all actions JWT/revocation/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers",
+    "controller": "InstitutionTeacher",
+    "action": "GetAll",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionTeacherRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/count",
+    "controller": "InstitutionTeacher",
+    "action": "Count",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionTeacherRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/{id:guid}",
+    "controller": "InstitutionTeacher",
+    "action": "GetById",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionTeacherRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/bylastname/{lastName}",
+    "controller": "InstitutionTeacher",
+    "action": "ByLastName",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionTeacherRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/me",
+    "controller": "InstitutionTeacher",
+    "action": "Me",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "Teacher"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionTeacherRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/teachers",
+    "controller": "InstitutionTeacher",
+    "action": "Add",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionTeacherRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/teachers/{id:guid}",
+    "controller": "InstitutionTeacher",
+    "action": "Update",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionTeacherRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/teachers/{id:guid}",
+    "controller": "InstitutionTeacher",
+    "action": "Delete",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionTeacherRepository"
+    ],
+    "dataAccess": "MT3B scoped SQL",
+    "tenantScope": "verified TenantContext",
+    "rollout": "SchoolApi",
+    "authorizationTest": "Mt3c all actions JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/Student/count",
+    "controller": "Student",
+    "action": "Count",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IStudentManager"
+    ],
+    "repositories": [
+      "IStudentRepository",
+      "IGradeRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Student",
+    "controller": "Student",
+    "action": "GetAll",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IStudentManager"
+    ],
+    "repositories": [
+      "IStudentRepository",
+      "IGradeRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Student/{id}",
+    "controller": "Student",
+    "action": "GetById",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IStudentManager"
+    ],
+    "repositories": [
+      "IStudentRepository",
+      "IGradeRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Student/bylastname/{lastName}",
+    "controller": "Student",
+    "action": "GetStudentsByName",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "IStudentManager"
+    ],
+    "repositories": [
+      "IStudentRepository",
+      "IGradeRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Student/update/{id}",
+    "controller": "Student",
+    "action": "Update",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IStudentManager"
+    ],
+    "repositories": [
+      "IStudentRepository",
+      "IGradeRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Student",
+    "controller": "Student",
+    "action": "Add",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IStudentManager"
+    ],
+    "repositories": [
+      "IStudentRepository",
+      "IGradeRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Student/{id}",
+    "controller": "Student",
+    "action": "Delete",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IStudentManager"
+    ],
+    "repositories": [
+      "IStudentRepository",
+      "IGradeRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/count",
+    "controller": "Subject",
+    "action": "Count",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject",
+    "controller": "Subject",
+    "action": "GetAll",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/{id}",
+    "controller": "Subject",
+    "action": "GetById",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/byname/{name}",
+    "controller": "Subject",
+    "action": "GetSubjectByName",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/byteacher/{id}",
+    "controller": "Subject",
+    "action": "GetSubjectByTeacherId",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Subject/update/{id}",
+    "controller": "Subject",
+    "action": "Update",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Subject",
+    "controller": "Subject",
+    "action": "Add",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Subject/{id}",
+    "controller": "Subject",
+    "action": "Delete",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "repositories": [
+      "ISubjectRepository",
+      "IClassSubjectRepository",
+      "IStudentRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Teacher/count",
+    "controller": "Teacher",
+    "action": "Count",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "repositories": [
+      "ITeacherRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Teacher",
+    "controller": "Teacher",
+    "action": "GetAll",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "repositories": [
+      "ITeacherRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Teacher/{id}",
+    "controller": "Teacher",
+    "action": "GetById",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "repositories": [
+      "ITeacherRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Teacher/update/{id}",
+    "controller": "Teacher",
+    "action": "Update",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "repositories": [
+      "ITeacherRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Teacher",
+    "controller": "Teacher",
+    "action": "Add",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "repositories": [
+      "ITeacherRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Teacher/{id}",
+    "controller": "Teacher",
+    "action": "Delete",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "repositories": [
+      "ITeacherRepository",
+      "IClassSubjectRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Users/count",
+    "controller": "Users",
+    "action": "Count",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IUserManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Users",
+    "controller": "Users",
+    "action": "GetAll",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IUserManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/Users/{id}",
+    "controller": "Users",
+    "action": "GetById",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IUserManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Users/update/{id}",
+    "controller": "Users",
+    "action": "Update",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IUserManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Users/updatepassword/{id}",
+    "controller": "Users",
+    "action": "UpdatePassword",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "student,teacher,admin"
+    ],
+    "managers": [
+      "IUserManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "POST",
+    "route": "api/Users",
+    "controller": "Users",
+    "action": "Add",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IUserManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Users/{id}",
+    "controller": "Users",
+    "action": "Delete",
+    "scheme": "Bearer (legacy default)",
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "managers": [
+      "IUserManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IStudentRepository",
+      "ITeacherRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  }
+]

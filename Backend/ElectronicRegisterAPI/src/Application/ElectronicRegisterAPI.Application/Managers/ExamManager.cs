@@ -54,15 +54,15 @@ namespace ElectronicRegisterAPI.Application.Managers
         }
 
 
-        public async Task<List<ExamSummaryDto>> GetAllAsync(ClaimsContext caller)
+        public async Task<List<ExamSummaryDto>> GetAllAsync(ExamPrincipal caller)
         {
             ArgumentNullException.ThrowIfNull(caller);
-            if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+            if (!caller.IsAdmin && !caller.IsTeacher)
                 throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare gli esami.");
 
             Guid? teacherId = null;
 
-            if (caller.Role == UserRole.Teacher)
+            if (caller.IsTeacher)
             {
                 teacherId = caller.TeacherId
                     ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
@@ -73,13 +73,13 @@ namespace ElectronicRegisterAPI.Application.Managers
 
 
 
-        public async Task<ExamDetailDto?> GetByIdAsync(Guid id, ClaimsContext caller)
+        public async Task<ExamDetailDto?> GetByIdAsync(Guid id, ExamPrincipal caller)
         {
             ArgumentNullException.ThrowIfNull(caller);
-            if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+            if (!caller.IsAdmin && !caller.IsTeacher)
                 throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare gli esami.");
 
-            if (caller.Role == UserRole.Teacher && !caller.TeacherId.HasValue)
+            if (caller.IsTeacher && !caller.TeacherId.HasValue)
                 throw new UnauthorizedAccessException("Identificativo docente non presente.");
 
             var exam = await _examRepository.GetByIdAsync(id, includeStructure: true, includeStudents: true);
@@ -93,7 +93,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             if (exam.AssignedStudents is null)
                 throw new InvalidOperationException("La struttura dell'esame è incompleta: studenti assegnati mancanti.");
 
-            if (caller.Role == UserRole.Teacher)
+            if (caller.IsTeacher)
             {
                 Guid teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
 
@@ -114,10 +114,10 @@ namespace ElectronicRegisterAPI.Application.Managers
 
 
 
-        public async Task<List<AssignedExamDto>> GetAssignedAsync(ClaimsContext caller)
+        public async Task<List<AssignedExamDto>> GetAssignedAsync(ExamPrincipal caller)
         {
             ArgumentNullException.ThrowIfNull(caller);
-            if (caller.Role != UserRole.Student)
+            if (!caller.IsStudent)
                 throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare gli esami assegnati.");
 
             var studentId = caller.StudentId ?? throw new UnauthorizedAccessException("Identificativo studente non presente.");
@@ -137,14 +137,14 @@ namespace ElectronicRegisterAPI.Application.Managers
             }).ToList();
         }
 
-        public async Task<Guid> AddAsync(CreateExamDto dto, ClaimsContext caller)
+        public async Task<Guid> AddAsync(CreateExamDto dto, ExamPrincipal caller)
         {
             Guid createdId = default;
             await _transactionManager.ExecuteAsync(async () =>
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+                if (!caller.IsAdmin && !caller.IsTeacher)
                     throw new UnauthorizedAccessException("Non sei autorizzato a creare esami.");
 
                 ArgumentNullException.ThrowIfNull(dto);
@@ -163,7 +163,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                 _subjectService.EnsureClassSubjectExists(classSubject);
 
                 // Autorizzazione docente: rimane nel Manager
-                if (caller.Role == UserRole.Teacher)
+                if (caller.IsTeacher)
                 {
                     var teacherId = caller.TeacherId
                         ?? throw new UnauthorizedAccessException(
@@ -206,13 +206,13 @@ namespace ElectronicRegisterAPI.Application.Managers
         }
 
 
-        public async Task UpdateAsync(Guid id, UpdateExamDto dto, ClaimsContext caller)
+        public async Task UpdateAsync(Guid id, UpdateExamDto dto, ExamPrincipal caller)
         {
             await _transactionManager.ExecuteAsync(async () =>
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+                if (!caller.IsAdmin && !caller.IsTeacher)
                     throw new UnauthorizedAccessException("Non sei autorizzato a modificare esami.");
 
                 ArgumentNullException.ThrowIfNull(dto);
@@ -220,7 +220,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                 var exam = await _examRepository.GetByIdForUpdateAsync(id)
                     ?? throw new KeyNotFoundException("L'esame non esiste.");
 
-                if (caller.Role == UserRole.Teacher)
+                if (caller.IsTeacher)
                 {
                     var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
                     var classSubject = await _classSubjectRepository.GetByIdAsync(exam.ClassSubjectId);
@@ -274,13 +274,13 @@ namespace ElectronicRegisterAPI.Application.Managers
             });
         }
 
-        public async Task UpdateStudentsAsync(Guid id, UpdateExamStudentsDto dto, ClaimsContext caller)
+        public async Task UpdateStudentsAsync(Guid id, UpdateExamStudentsDto dto, ExamPrincipal caller)
         {
             await _transactionManager.ExecuteAsync(async () =>
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+                if (!caller.IsAdmin && !caller.IsTeacher)
                     throw new UnauthorizedAccessException("Non sei autorizzato a modificare gli studenti assegnati.");
 
                 ArgumentNullException.ThrowIfNull(dto);
@@ -288,7 +288,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                 var exam = await _examRepository.GetByIdForUpdateAsync(id)
                     ?? throw new KeyNotFoundException("L'esame non esiste.");
 
-                if (caller.Role == UserRole.Teacher)
+                if (caller.IsTeacher)
                 {
                     var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
                     var classSubject = await _classSubjectRepository.GetByIdAsync(exam.ClassSubjectId);
@@ -325,19 +325,19 @@ namespace ElectronicRegisterAPI.Application.Managers
             });
         }
 
-        public async Task PublishAsync(Guid id, ClaimsContext caller)
+        public async Task PublishAsync(Guid id, ExamPrincipal caller)
         {
             await _transactionManager.ExecuteAsync(async () =>
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+                if (!caller.IsAdmin && !caller.IsTeacher)
                     throw new UnauthorizedAccessException("Non sei autorizzato a pubblicare esami.");
 
                 var exam = await _examRepository.GetByIdForUpdateAsync(id)
                     ?? throw new KeyNotFoundException("L'esame non esiste.");
 
-                if (caller.Role == UserRole.Teacher)
+                if (caller.IsTeacher)
                 {
                     var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
                     var classSubject = await _classSubjectRepository.GetByIdAsync(exam.ClassSubjectId);
@@ -363,19 +363,19 @@ namespace ElectronicRegisterAPI.Application.Managers
             });
         }
 
-        public async Task CloseAsync(Guid id, ClaimsContext caller)
+        public async Task CloseAsync(Guid id, ExamPrincipal caller)
         {
             await _transactionManager.ExecuteAsync(async () =>
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+                if (!caller.IsAdmin && !caller.IsTeacher)
                     throw new UnauthorizedAccessException("Non sei autorizzato a chiudere esami.");
 
                 var exam = await _examRepository.GetByIdForUpdateAsync(id)
                     ?? throw new KeyNotFoundException("L'esame non esiste.");
 
-                if (caller.Role == UserRole.Teacher)
+                if (caller.IsTeacher)
                 {
                     var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
                     var classSubject = await _classSubjectRepository.GetByIdAsync(exam.ClassSubjectId);
@@ -396,19 +396,19 @@ namespace ElectronicRegisterAPI.Application.Managers
             });
         }
 
-        public async Task CancelAsync(Guid id, ClaimsContext caller)
+        public async Task CancelAsync(Guid id, ExamPrincipal caller)
         {
             await _transactionManager.ExecuteAsync(async () =>
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+                if (!caller.IsAdmin && !caller.IsTeacher)
                     throw new UnauthorizedAccessException("Non sei autorizzato ad annullare esami.");
 
                 var exam = await _examRepository.GetByIdForUpdateAsync(id)
                     ?? throw new KeyNotFoundException("L'esame non esiste.");
 
-                if (caller.Role == UserRole.Teacher)
+                if (caller.IsTeacher)
                 {
                     var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
                     var classSubject = await _classSubjectRepository.GetByIdAsync(exam.ClassSubjectId);
@@ -429,19 +429,19 @@ namespace ElectronicRegisterAPI.Application.Managers
             });
         }
 
-        public async Task DeleteAsync(Guid id, ClaimsContext caller)
+        public async Task DeleteAsync(Guid id, ExamPrincipal caller)
         {
             await _transactionManager.ExecuteAsync(async () =>
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+                if (!caller.IsAdmin && !caller.IsTeacher)
                     throw new UnauthorizedAccessException("Non sei autorizzato a eliminare esami.");
 
                 var exam = await _examRepository.GetByIdForUpdateAsync(id)
                     ?? throw new KeyNotFoundException("L'esame non esiste.");
 
-                if (caller.Role == UserRole.Teacher)
+                if (caller.IsTeacher)
                 {
                     var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
                     var classSubject = await _classSubjectRepository.GetByIdAsync(exam.ClassSubjectId);
@@ -459,14 +459,14 @@ namespace ElectronicRegisterAPI.Application.Managers
             });
         }
 
-        public async Task<StartExamDto> StartAsync(Guid id, ClaimsContext caller)
+        public async Task<StartExamDto> StartAsync(Guid id, ExamPrincipal caller)
         {
             StartExamDto started = null!;
             await _transactionManager.ExecuteAsync(async () =>
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (caller.Role != UserRole.Student)
+                if (!caller.IsStudent)
                     throw new UnauthorizedAccessException("Non sei autorizzato ad iniziare esami.");
 
                 var studentId = caller.StudentId ?? throw new UnauthorizedAccessException("Identificativo studente non presente.");
@@ -484,7 +484,8 @@ namespace ElectronicRegisterAPI.Application.Managers
                 _examService.EnsureStartAllowed(exam, existing, studentId, nowUtc);
 
                 var submissionId = Guid.NewGuid();
-                var startedAt = nowUtc;
+                // DATETIME(6) persists microseconds; return the same instant that resume reads.
+                var startedAt = caller.Tenant is null ? nowUtc : new DateTime(nowUtc.Ticks / 10 * 10, DateTimeKind.Utc);
                 var deadlineAt = startedAt.AddMinutes(exam.DurationMinutes + assignment.ExtraTimeMinutes);
 
                 var submission = new ExamSubmission
@@ -508,11 +509,11 @@ namespace ElectronicRegisterAPI.Application.Managers
             return started;
         }
 
-        public async Task<SaveAnswersResponseDto> SaveAnswersAsync(Guid id, SaveExamAnswersDto dto, ClaimsContext caller)
+        public async Task<SaveAnswersResponseDto> SaveAnswersAsync(Guid id, SaveExamAnswersDto dto, ExamPrincipal caller)
         {
             ArgumentNullException.ThrowIfNull(caller);
 
-            if (caller.Role != UserRole.Student)
+            if (!caller.IsStudent)
                 throw new UnauthorizedAccessException("Non sei autorizzato a salvare risposte.");
 
             ArgumentNullException.ThrowIfNull(dto);
@@ -541,11 +542,11 @@ namespace ElectronicRegisterAPI.Application.Managers
             return ExamSubmissionMapper.ToSaveResponseDto(result);
         }
 
-        public async Task<SubmissionResultDto> SubmitAsync(Guid id, SubmitExamDto dto, ClaimsContext caller)
+        public async Task<SubmissionResultDto> SubmitAsync(Guid id, SubmitExamDto dto, ExamPrincipal caller)
         {
             ArgumentNullException.ThrowIfNull(caller);
 
-            if (caller.Role != UserRole.Student)
+            if (!caller.IsStudent)
                 throw new UnauthorizedAccessException("Non sei autorizzato a inviare esami.");
 
             ArgumentNullException.ThrowIfNull(dto);
@@ -562,25 +563,25 @@ namespace ElectronicRegisterAPI.Application.Managers
 
             // Delegate processing to shared processor. Processor will persist DTO answers and mark the submission as begun
             // only after acquiring the necessary lock and verifying timing constraints.
-            var processorResult = await _examSubmissionProcessor.ProcessSubmitAsync(id, dto, SubmitReason.Manual, caller);
+            var processorResult = await (caller.Tenant is null ? _examSubmissionProcessor.ProcessSubmitAsync(id, dto, SubmitReason.Manual, caller.VisibilityCaller) : _examSubmissionProcessor.ProcessInstitutionAsync(id, dto, SubmitReason.Manual, caller));
 
             return processorResult;
         }
 
-        public async Task<SubmissionResultDto> GetResultAsync(Guid id, ClaimsContext caller)
+        public async Task<SubmissionResultDto> GetResultAsync(Guid id, ExamPrincipal caller)
         {
             ArgumentNullException.ThrowIfNull(caller);
 
             var submission = await _examSubmissionRepository.GetByIdAsync(id, withAnswers: false)
                 ?? throw new KeyNotFoundException("La submission non esiste.");
 
-            if (caller.Role == UserRole.Student)
+            if (caller.IsStudent)
             {
                 var studentId = caller.StudentId ?? throw new UnauthorizedAccessException("Identificativo studente non presente.");
                 if (submission.StudentId != studentId)
                     throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
             }
-            else if (caller.Role == UserRole.Teacher)
+            else if (caller.IsTeacher)
             {
                 var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
                 var exam = await _examService.EnsureExamExistsAsync(submission.ExamId);
@@ -589,7 +590,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                     throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
             }
 
-            else if (caller.Role != UserRole.Admin)
+            else if (!caller.IsAdmin)
                 throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
 
             // When returning result, resolve official grade value if present via grade repository
@@ -604,7 +605,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                 officialGrade = grade.Value;
             }
 
-            return ExamSubmissionMapper.ToSubmissionResultDto(submission, officialGrade, caller);
+            return ExamSubmissionMapper.ToSubmissionResultDto(submission, officialGrade, caller.VisibilityCaller);
         }
         private async Task ValidateRetakeAsync(Guid examId, Guid? originalId, Guid classSubjectId)
         {
@@ -624,11 +625,26 @@ namespace ElectronicRegisterAPI.Application.Managers
             exam.Status, exam.PublishedAt, exam.ClosedAt, exam.CancelledAt, exam.RetakeOfExamId
         });
 
-        private Task WriteLifecycleAuditAsync(Exam exam, ClaimsContext caller, string action, string beforeJson) =>
+        private Task WriteLifecycleAuditAsync(Exam exam, ExamPrincipal caller, string action, string beforeJson) =>
             _auditRepository.AddAsync(new AuditEvent
             {
                 Id = Guid.NewGuid(), ActorUserId = caller.UserId, EntityType = "exam", EntityId = exam.Id,
                 Action = action, BeforeJson = beforeJson, AfterJson = LifecycleJson(exam), CreatedAt = DateTime.UtcNow
             });
+
+        Task<List<ExamSummaryDto>> IExamManager.GetAllAsync(ClaimsContext caller) => GetAllAsync(ExamPrincipal.Legacy(caller));
+        Task<ExamDetailDto?> IExamManager.GetByIdAsync(Guid id, ClaimsContext caller) => GetByIdAsync(id, ExamPrincipal.Legacy(caller));
+        Task<List<AssignedExamDto>> IExamManager.GetAssignedAsync(ClaimsContext caller) => GetAssignedAsync(ExamPrincipal.Legacy(caller));
+        Task<Guid> IExamManager.AddAsync(CreateExamDto dto, ClaimsContext caller) => AddAsync(dto, ExamPrincipal.Legacy(caller));
+        Task IExamManager.UpdateAsync(Guid id, UpdateExamDto dto, ClaimsContext caller) => UpdateAsync(id, dto, ExamPrincipal.Legacy(caller));
+        Task IExamManager.UpdateStudentsAsync(Guid id, UpdateExamStudentsDto dto, ClaimsContext caller) => UpdateStudentsAsync(id, dto, ExamPrincipal.Legacy(caller));
+        Task IExamManager.PublishAsync(Guid id, ClaimsContext caller) => PublishAsync(id, ExamPrincipal.Legacy(caller));
+        Task IExamManager.CloseAsync(Guid id, ClaimsContext caller) => CloseAsync(id, ExamPrincipal.Legacy(caller));
+        Task IExamManager.CancelAsync(Guid id, ClaimsContext caller) => CancelAsync(id, ExamPrincipal.Legacy(caller));
+        Task IExamManager.DeleteAsync(Guid id, ClaimsContext caller) => DeleteAsync(id, ExamPrincipal.Legacy(caller));
+        Task<StartExamDto> IExamManager.StartAsync(Guid id, ClaimsContext caller) => StartAsync(id, ExamPrincipal.Legacy(caller));
+        Task<SaveAnswersResponseDto> IExamManager.SaveAnswersAsync(Guid id, SaveExamAnswersDto dto, ClaimsContext caller) => SaveAnswersAsync(id, dto, ExamPrincipal.Legacy(caller));
+        Task<SubmissionResultDto> IExamManager.SubmitAsync(Guid id, SubmitExamDto dto, ClaimsContext caller) => SubmitAsync(id, dto, ExamPrincipal.Legacy(caller));
+        Task<SubmissionResultDto> IExamManager.GetResultAsync(Guid id, ClaimsContext caller) => GetResultAsync(id, ExamPrincipal.Legacy(caller));
     }
 }

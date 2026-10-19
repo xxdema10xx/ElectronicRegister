@@ -1,0 +1,13 @@
+{
+  "institutionRowAndStateUnchanged": true,
+  "temporaryRowCounts": {
+    "campus": 0,
+    "course_edition": 0,
+    "course_edition_campus": 0,
+    "student_enrollment": 0,
+    "institution_membership": 0,
+    "institution_membership_role": 0,
+    "institution_student_profile": 0,
+    "institution_teacher_profile": 0
+  }
+}

@@ -1,0 +1,11 @@
+Using ServerVersion '10.4.32-mariadb'.
+The column 'campus.is_active' would normally be mapped to a non-nullable bool property, but it has a default constraint. Such a column is mapped to a nullable bool property to allow a difference between setting the property to false and invoking the default constraint. See https://go.microsoft.com/fwlink/?linkid=851278 for details.
+
+Algorithm       Hash                                                                   Path                            
+---------       ----                                                                   ----                            
+SHA256          BC323D04F5AF0FB50FAD8B996EC77895427B0692A7B939CCFD4D9AC3AEBC5958       C:\Users\LorenzoBaracchi\Desk...
+SHA256          B5B7C7DEFB40949007A6912D972C8F085519FB7F02044C3DDD4794023E3C077F       C:\Users\LorenzoBaracchi\Desk...
+SHA256          A0A83F47AF310E75D0BF88FB4092FAC0059460060B22697B8DA60CBFADE63910       C:\Users\LorenzoBaracchi\Desk...
+Review candidate. Copy only three new entities; reconcile MT4 sidecar and hook. Preserve all MT1/MT3/MT3A sidecars and legacy generated files.
+
+

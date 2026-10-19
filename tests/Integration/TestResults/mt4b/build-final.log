@@ -1,0 +1,13 @@
+  ElectronicRegisterAPI.Domain -> C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Domain\ElectronicRegisterAPI.Domain\bin\Debug\net10.0\ElectronicRegisterAPI.Domain.dll
+  ElectronicRegisterAPI.Business -> C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Business\ElectronicRegisterAPI.Business\bin\Debug\net10.0\ElectronicRegisterAPI.Business.dll
+  ElectronicRegisterAPI.Infrastructure -> C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\bin\Debug\net10.0\ElectronicRegisterAPI.Infrastructure.dll
+  ElectronicRegisterAPI.Application -> C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\bin\Debug\net10.0\ElectronicRegisterAPI.Application.dll
+  Unit.Tests -> C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll
+  ElectronicRegisterAPI -> C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\bin\Debug\net10.0\ElectronicRegisterAPI.dll
+  Integration.Tests -> C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll
+
+Compilazione completata.
+    Avvisi: 0
+    Errori: 0
+
+Tempo trascorso 00:00:01.17

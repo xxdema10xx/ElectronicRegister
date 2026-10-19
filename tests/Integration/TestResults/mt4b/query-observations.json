@@ -1,0 +1,9 @@
+{
+  "observedCourseRelatedCommands": 32,
+  "commandsStartingSelect": 25,
+  "commandsStartingInsert": 4,
+  "commandsStartingUpdate": 1,
+  "unscopedGeneratedTimestampReadbackPresent": false,
+  "selectStarPresent": false,
+  "scope": "Course-related commands from mixed A/B functional scenario; excludes identity/authentication, clock scalar, transaction/session overhead. Not a throughput benchmark."
+}

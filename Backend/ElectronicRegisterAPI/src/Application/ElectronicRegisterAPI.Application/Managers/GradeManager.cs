@@ -31,23 +31,23 @@ namespace ElectronicRegisterAPI.Application.Managers
             _gradeService = gradeService;
         }
 
-        public async Task<int> CountAsync(ClaimsContext caller)
+        public async Task<int> CountAsync(ExamPrincipal caller)
         {
-            var studentId = caller.Role == UserRole.Student
+            var studentId = caller.IsStudent
                 ? caller.StudentId
                 : null;
-            var teacherId = caller.Role == UserRole.Teacher
+            var teacherId = (caller.IsTeacher && !caller.CombinedRead)
                 ? caller.TeacherId
                 : null;
             return await _gradeRepository.CountAsync(teacherId, studentId);
         }
-        public async Task<List<GradeDto>> GetAllAsync(ClaimsContext caller)
+        public async Task<List<GradeDto>> GetAllAsync(ExamPrincipal caller)
         {
-            var studentId = caller.Role == UserRole.Student
+            var studentId = caller.IsStudent
                 ? caller.StudentId
                 : null;
 
-            var teacherId = caller.Role == UserRole.Teacher
+            var teacherId = (caller.IsTeacher && !caller.CombinedRead)
                 ? caller.TeacherId
                 : null;
 
@@ -58,20 +58,20 @@ namespace ElectronicRegisterAPI.Application.Managers
             return await MapToDtosAsync(grades);
         }
 
-        public async Task<GradeDto?> GetByIdAsync(Guid id, ClaimsContext caller)
+        public async Task<GradeDto?> GetByIdAsync(Guid id, ExamPrincipal caller)
         {
             var grade = await _gradeRepository.GetByIdAsync(id);
 
             if (grade is null)
                 return null;
 
-            if (caller.Role == UserRole.Student &&
+            if (caller.IsStudent &&
                 grade.StudentId != caller.StudentId)
             {
                 return null;
             }
 
-            if (caller.Role == UserRole.Teacher)
+            if ((caller.IsTeacher && !caller.CombinedRead))
             {
                 var classSubject =
                     await _classSubjectRepository.GetByIdAsync(
@@ -96,14 +96,14 @@ namespace ElectronicRegisterAPI.Application.Managers
             Guid? subjectId, 
             Guid? studentId, 
             DateOnly? date, 
-            ClaimsContext caller
+            ExamPrincipal caller
         )
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1 || pageSize > 100) pageSize = 20;
 
-            Guid? restrictToStudentId = caller.Role == UserRole.Student ? caller.StudentId : null;
-            Guid? restrictToTeacherId = caller.Role == UserRole.Teacher ? caller.TeacherId : null;
+            Guid? restrictToStudentId = caller.IsStudent ? caller.StudentId : null;
+            Guid? restrictToTeacherId = (caller.IsTeacher && !caller.CombinedRead) ? caller.TeacherId : null;
 
             var (grades, totalCount) = await _gradeRepository.GetPagedAsync(
                 pageNumber, pageSize, subjectId, studentId, date, restrictToStudentId, restrictToTeacherId);
@@ -113,10 +113,10 @@ namespace ElectronicRegisterAPI.Application.Managers
             return new GradePageDto { Items = items, TotalCount = totalCount };
         }
 
-        public async Task<GradeStatisticsDto?> GetStatisticsAsync(ClaimsContext caller)
+        public async Task<GradeStatisticsDto?> GetStatisticsAsync(ExamPrincipal caller)
         {
-            Guid? teacherId = caller.Role == UserRole.Teacher ? caller.TeacherId : null;
-            Guid? studentId = caller.Role == UserRole.Student ? caller.StudentId : null;
+            Guid? teacherId = (caller.IsTeacher && !caller.CombinedRead) ? caller.TeacherId : null;
+            Guid? studentId = caller.IsStudent ? caller.StudentId : null;
 
             var hasAnyGrade = await _gradeRepository.CountAsync(teacherId, studentId) > 0;
             if (!hasAnyGrade) return null;
@@ -128,14 +128,14 @@ namespace ElectronicRegisterAPI.Application.Managers
             };
         }
 
-        public async Task<GradeFiltersDto> GetFiltersAsync(ClaimsContext caller)
+        public async Task<GradeFiltersDto> GetFiltersAsync(ExamPrincipal caller)
         {
             Guid? teacherId = null;
             Guid? studentId = null;
 
-            if (caller.Role == UserRole.Teacher)
+            if ((caller.IsTeacher && !caller.CombinedRead))
                 teacherId = caller.TeacherId;
-            else if (caller.Role == UserRole.Student)
+            else if (caller.IsStudent)
                 studentId = caller.StudentId;
 
             var grades = await _gradeRepository.GetAllAsync(
@@ -205,15 +205,15 @@ namespace ElectronicRegisterAPI.Application.Managers
             return await MapToDtosAsync(grades);
         }
 
-        public async Task<List<GradeDto>?>GetGradesBySubjectNameAsync(string subjectName, ClaimsContext caller)
+        public async Task<List<GradeDto>?>GetGradesBySubjectNameAsync(string subjectName, ExamPrincipal caller)
         {
             Guid? studentId =
-                caller.Role == UserRole.Student
+                caller.IsStudent
                     ? caller.StudentId
                     : null;
 
             Guid? teacherId =
-                caller.Role == UserRole.Teacher
+                (caller.IsTeacher && !caller.CombinedRead)
                     ? caller.TeacherId
                     : null;
 
@@ -226,15 +226,15 @@ namespace ElectronicRegisterAPI.Application.Managers
             return await MapToDtosAsync(grades);
         }
 
-        public async Task<List<GradeDto>>GetGradesByDateAsync(DateOnly date, ClaimsContext caller)
+        public async Task<List<GradeDto>>GetGradesByDateAsync(DateOnly date, ExamPrincipal caller)
         {
             Guid? studentId =
-                caller.Role == UserRole.Student
+                caller.IsStudent
                     ? caller.StudentId
                     : null;
 
             Guid? teacherId =
-                caller.Role == UserRole.Teacher
+                (caller.IsTeacher && !caller.CombinedRead)
                     ? caller.TeacherId
                     : null;
 
@@ -247,7 +247,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             return await MapToDtosAsync(grades);
         }
 
-        public async Task<Guid?> AddAsync(CreateGradeDto dto, ClaimsContext caller)
+        public async Task<Guid?> AddAsync(CreateGradeDto dto, ExamPrincipal caller)
         {
             _gradeService.EnsureValidGradeValue(dto.Value);
 
@@ -275,7 +275,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                     student,
                     classSubject);
 
-            if (caller.Role == UserRole.Teacher)
+            if ((caller.IsTeacher && !caller.CombinedRead))
             {
                 if (!caller.TeacherId.HasValue)
                     throw new UnauthorizedAccessException();
@@ -300,7 +300,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             return grade.Id;
         }
 
-        public async Task<bool> UpdateAsync(Guid id, UpdateGradeDto dto, ClaimsContext caller)
+        public async Task<bool> UpdateAsync(Guid id, UpdateGradeDto dto, ExamPrincipal caller)
         {
             var grade =
                 await _gradeRepository.GetByIdAsync(id);
@@ -310,7 +310,7 @@ namespace ElectronicRegisterAPI.Application.Managers
 
             _gradeService.EnsureValidGradeValue(dto.Value);
 
-            if (caller.Role == UserRole.Teacher)
+            if ((caller.IsTeacher && !caller.CombinedRead))
             {
                 if (!caller.TeacherId.HasValue)
                     throw new UnauthorizedAccessException();
@@ -345,7 +345,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                     student,
                     classSubject);
 
-            if (caller.Role == UserRole.Teacher)
+            if ((caller.IsTeacher && !caller.CombinedRead))
             {
                 await _gradeService.EnsureTeacherTeachesClassSubjectAsync(
                         caller.TeacherId!.Value,
@@ -414,5 +414,16 @@ namespace ElectronicRegisterAPI.Application.Managers
                 subjects,
                 students);
         }
+
+        Task<int> IGradeManager.CountAsync(ClaimsContext caller) => CountAsync(ExamPrincipal.Legacy(caller));
+        Task<List<GradeDto>> IGradeManager.GetAllAsync(ClaimsContext caller) => GetAllAsync(ExamPrincipal.Legacy(caller));
+        Task<GradeDto?> IGradeManager.GetByIdAsync(Guid id, ClaimsContext caller) => GetByIdAsync(id, ExamPrincipal.Legacy(caller));
+        Task<GradePageDto> IGradeManager.GetPagedAsync(int pageNumber, int pageSize, Guid? subjectId, Guid? studentId, DateOnly? date, ClaimsContext caller) => GetPagedAsync(pageNumber, pageSize, subjectId, studentId, date, ExamPrincipal.Legacy(caller));
+        Task<GradeStatisticsDto?> IGradeManager.GetStatisticsAsync(ClaimsContext caller) => GetStatisticsAsync(ExamPrincipal.Legacy(caller));
+        Task<GradeFiltersDto> IGradeManager.GetFiltersAsync(ClaimsContext caller) => GetFiltersAsync(ExamPrincipal.Legacy(caller));
+        Task<List<GradeDto>?> IGradeManager.GetGradesBySubjectNameAsync(string subjectName, ClaimsContext caller) => GetGradesBySubjectNameAsync(subjectName, ExamPrincipal.Legacy(caller));
+        Task<List<GradeDto>> IGradeManager.GetGradesByDateAsync(DateOnly date, ClaimsContext caller) => GetGradesByDateAsync(date, ExamPrincipal.Legacy(caller));
+        Task<Guid?> IGradeManager.AddAsync(CreateGradeDto dto, ClaimsContext caller) => AddAsync(dto, ExamPrincipal.Legacy(caller));
+        Task<bool> IGradeManager.UpdateAsync(Guid id, UpdateGradeDto dto, ClaimsContext caller) => UpdateAsync(id, dto, ExamPrincipal.Legacy(caller));
     }
 }

@@ -1,3 +1,144 @@
+# Estensione dei confini MT-4C
+
+MT-4C completata: due suite 675/675 Passed, zero Failed/Skipped; 644 identita precedenti preservate. Rollout chiuso. Questa matrice aggiorna lo snapshot MT4B sottostante.
+[Lifecycle e audit](ENROLLMENT_LIFECYCLE_AND_AUDIT.md),
+[report MT4C](../../tests/Integration/MULTITENANCY_MT4C_REPORT.md).
+
+| Operazione | Autorizzazione | SQL / atomicita | Negazioni |
+| --- | --- | --- | --- |
+| Transizione Enrollment | InstitutionAdmin della membership corrente | lock owner/id; update owner/id/revision; evento stesso commit | altro tenant 404, terminale/revision obsoleta 409, motivo/data mancanti 400 |
+| Rettifica CompletionDate | InstitutionAdmin corrente | solo terminale, vecchio/nuovo valore e incremento revision | stato/EnrollmentDate/Student/edizione/owner immutabili |
+| History Enrollment | InstitutionAdmin corrente | owner/enrollment prima di proiezione/paging | Teacher/Student 403, fuori tenant 404 |
+| Audit edizione | InstitutionAdmin corrente | owner/edition prima di proiezione/paging | nessuna directory globale o ricerca audit anonima |
+| Attore storico | User globale + membership dello stesso tenant | FK tripla owner/membership/User, ruolo Active verificato in INSERT | UserId/Guid non autorizzano; nessuna somma tra membership |
+| Eventi amministrativi | soltanto writer del manager istituzionale | append nello stesso commit, SIGNAL su UPDATE/DELETE normali | nessun tipo platform/exam fittizio; nessuna route di modifica evento |
+| Retry lifecycle | stessa intenzione, identita e membership | PK tenant/EventId + hash canonico; stesso receipt | contenuto/attore differente 409, nessun incremento duplicato |
+| Legacy /me | Student e profilo della membership selezionata | owner + StudentId in SQL, nessun motivo/attore interno | nessun fallback a profilo di altra fondazione |
+
+FK RESTRICT proteggono Enrollment/edizione/Campus/Class/identita referenziati. Nessuna nuova FK
+CASCADE. Il registro non certifica modifiche precedenti a MT4C o DML di DBA. La sola eccezione
+root di teardown delle fixture MT4B_uuid32 nel database test e esplicitata nel modello, non e una
+facolta HTTP. Quattro flag restano default false; CourseApi richiede anche SchoolApi.
+
+---
+
+# Confini HTTP MT-4B
+
+**MT-4B completata: due suite consecutive 644/644 Passed, zero Failed/Skipped;
+607 test precedenti preservati e 37 nuovi Passed. Rollout chiuso; nessun MT-4C/cutover.**
+
+| Risorsa | Autorizzazione HTTP | SQL e scritture | Operazioni chiuse |
+| --- | --- | --- | --- |
+| CourseEdition | InstitutionAdmin corrente, InstitutionCourseAccess | owner in proiezioni e update; StudyPath scoped; UNIQUE tenant/code; token snapshot + row lock | Status update, owner/path update, DELETE |
+| Campus e ponte | InstitutionAdmin corrente | owner nei due parent e INSERT ponte; due FK composite; unicita PK | Unlink, sede principale implicita, cancellazione storico |
+| Class/edition | InstitutionAdmin corrente | owner shadow esplicito esistente; predicato owner/id + concurrency token CourseEditionId; trigger percorso/immutabilita | Trasferimento classe, modifica Student.ClassId/ClassSubject |
+| Enrollment admin | InstitutionAdmin corrente | Student/edition scoped; INSERT owner esplicito; UNIQUE tenant/student/edition; join owner sui due lati | Transizioni, rettifiche date, reingresso, DELETE |
+| Enrollment personale | Student e profilo membership corrente | InstitutionId + StudentId in SQL; DTO senza StudentId | StudentId client come autorizzazione, fallback profilo altro tenant |
+| Teacher | Nessuna directory/gestione nuova | Nessun repository invocato dalle action negate | Privilegi amministrativi automatici |
+| Gate | Solo JWT InstitutionAccess, Active/ruoli rivalidati, CourseApi && SchoolApi | Nessun prefisso URL usato come bypass | Marker combinati, AllowAnonymous, schemi/policy alternative, JWT legacy/selection |
+| Audit | Nessuna nuova API globale | EntityType nuovi non supportati dall'audit MT3A: non mascherati | Storia completa/transizioni senza policy e audit atomico |
+
+Liste paginate prima della materializzazione, nessun accesso globale o filtro in memoria. Owner non
+selezionabile da input; DTO di scrittura rifiutano campi sconosciuti. Errori esterni/mancanti 404,
+conflitti SQL/concorrenza 409 sanitizzati. Nuovi writer senza fallback holding. Quattro flag default
+false; worker indipendente da CourseApi, Exam/Grade/Submission preservati.
+
+[Contratti](../api/COURSE_FRONTEND_CONTRACTS.md),
+[prove e limiti](../../tests/Integration/MULTITENANCY_MT4B_REPORT.md).
+Le matrici sottostanti conservano il significato storico precedente.
+
+---
+
+# Isolamento persistente MT-4A
+
+**MT-4A completata nel perimetro persistente: due suite 607/607, zero Failed/Skipped,
+577 test precedenti preservati e 30 nuovi Passed. Rollout chiuso; MT-4B non iniziata.**
+
+| Risorsa/confine | SQL | Repository/esposizione |
+| --- | --- | --- |
+| CourseEdition | Owner Institution; FK(tenant,StudyPathId); UNIQUE(tenant,Code); owner/percorso immutabili | Letture/proiezioni WHERE InstitutionId; nessuna route |
+| CourseEditionCampus | PK(tenant,edition,campus); due FK composite RESTRICT; link immutabile | Precheck di entrambi i parent nello scope; nessun unlink/delete |
+| StudentEnrollment | FK composite Student/edition; UNIQUE(tenant,student,edition); identita/date iniziali immutabili | Query per tenant e StudentId; aggiornamento stato sulla riga scoped; nessun delete |
+| Class -> CourseEdition | Nullable; FK composite RESTRICT e trigger percorso coerente; attribuzione non trasferita | Precheck Class/BienniumStudyPath/edition; nessuna mutazione Student.ClassId |
+| Date/stati | Trigger indipendenti da C#, nessun CHECK ignorato su MySQL 5.7 | Validazioni strutturali Domain, nessun workflow normativo inventato |
+| Backfill | Nessuna attribuzione senza manifest; legacy NULL preservati | Validatore offline MT3A esteso con controllo grafo MT4, non whitelist indiscriminata |
+| Autorizzazione | Le FK non autorizzano letture | Contratto TenantContext verificato dal caller; nessuna API MT4A, manager/ruoli MT4B da progettare |
+
+[Definizioni e limiti storici](ITS_ACADEMY_COURSE_MODEL.md); [prove A/B e verdetto](../../tests/Integration/MULTITENANCY_MT4A_REPORT.md).
+I tre flag operativi restano default false. MT3E/worker/grading/JWT e frontend preservati.
+
+---
+
+# ElectronicRegister - stato corrente MT-3E
+
+Worker istituzionale senza JWT: capability SubmissionExpiryWork immutabile e legata a tenant/submission/Exam/Student/ClassSubject persistiti, repository tecnici bound, lock sulla sola submission e rivalidazione dopo il lock. Nessun TenantContext HTTP, ruolo fittizio, SuperAdmin o caller nullo istituzionale. [Report MT3E](../../tests/Integration/MULTITENANCY_MT3E_REPORT.md), [release gate](MULTITENANCY_RELEASE_GATE.md).
+
+Multitenancy:InstitutionWorker:Enabled e server-side default false, separato dai flag SchoolApi/ExamApi. Abilita solo dispatch interno, mai API legacy. Active e Suspended possono completare prove gia avviate; revoche continuano a negare accesso interattivo. Provisioning/holding escluse dal nuovo ramo, lane legacy preservata. Nessuna configurazione operativa aperta, nessun cutover.
+
+Batch 50, poll 15 secondi, SQL status/deadline/owner/assegnazione, cursore keyset e cutoff per sweep; errori per item non fermano gli altri e sono riprovati in sweep successivi. Scope DI/DbContext/transazione separati per item. Grade e submission.submit atomici; actor tecnico nullo, RequestId worker e owner dalla risorsa. Risposte, revision, deadline, tentativo ed Exam.Status preservati; grading/formule/recuperi invariati.
+
+| Confine | Garanzia e prova |
+| --- | --- |
+| Worker flag | falso/assente/non valido non fa dispatch istituzionale; nessuna apertura JWT/route |
+| Capability | costruttore non pubblico/nessun JSON binding; A+ID B non risolve; non conferisce privilegi interattivi |
+| SQL/lock | InstitutionId in selezione e FOR UPDATE target; parent coerenti dopo lock, nessun lock Exam aggiuntivo |
+| Scritture | owner esplicito e concurrency token; soli campi tecnici consentiti; SaveAnswers/review/add submission negati |
+| Audit | owner da risorsa, null actor tecnico, source/UTC/RequestId; evento e Grade unici al commit |
+| Recovery | errori prima/dopo Grade/audit e cancellazione rollbackano; nuovo sweep/istanza recupera; crash hardware non certificato |
+| Concorrenza | worker/worker, HTTP expiry/manual/autosave/review/finalize/Close; A/B con lock distinti simultanei |
+| Account/membership | User globale e registrazione ancora legacy gated; nessuna nuova API ruoli/provisioning o auto-membership |
+| Release | test locali non certificano staging/produzione; TLS, CORS, rate limiting, restore, alerting e governance restano gate |
+
+I documenti e gli inventari MT3E prevalgono sugli snapshot sotto. Frontend invariato; nessun DDL o GLOBAL sql_mode modificato. Solo sessioni test strict sul database electronic_register_test; holding tecnica Provisioning.
+
+## Snapshot storico precedente MT-3D
+
+# ElectronicRegister - stato corrente MT-3D
+
+MT-3D completata nel perimetro HTTP istituzionale: 33 nuove action per ClassSubject, Exam, Submission e Grade; filtro Student per ClassId. Due suite complete **540/540 Passed**, zero Failed/Skipped, tutti i 482 test precedenti preservati e 58 nuovi casi. [Report MT3D](../../tests/Integration/MULTITENANCY_MT3D_REPORT.md), [contratto frontend](../api/EXAM_FRONTEND_CONTRACTS.md).
+
+Il marker InstitutionExamEndpoint richiede la policy InstitutionExamAccess, esclusivamente JWT InstitutionAccess MT2, membership/Institution Active e TenantContext verificati. Occorrono entrambi i flag server-side SchoolApi ed ExamApi, default false. Il LegacyEndpointGate mantiene chiuse le 73 action legacy; inventario runtime totale 135 action. Nessun cutover operativo.
+
+InstitutionExamManager conserva i ruoli multipli della membership senza User.Role globale: Teacher limitato alle proprie ClassSubject, Student al proprio profilo/assegnazioni, InstitutionAdmin al tenant. I repository bound applicano InstitutionId in SQL e controlli di risorsa; insert owner espliciti e concurrency token owner proteggono le scritture. Lock row-level, transazioni, audit atomico e grading condiviso preservati.
+
+AssignedExam espone SubmissionId persistito; resume conserva deadline, risposte e revision senza nuovi tentativi o soluzioni. Required semantico si applica solo al submit manuale. Submit-expired autenticato dal proprietario usa solo risposte persistite, e idempotente e non chiude Exam. Passed distingue esito didattico da Status; recuperi mantengono Grade indipendenti. Violazioni idempotenti e limitate non applicano penalita automatiche.
+
+**Confine MT-3E:** scansione/dispatch worker istituzionale offline e contesto tecnico interno non completati; il worker resta registrato ma limitato alla holding legacy, il processor rifiuta caller nullo per submission istituzionali. La consegna offline multi-tenant non e dichiarata operativa. Nessuna modifica GLOBAL SQL, DDL o frontend; sessioni strict solo test, holding provisioning. Rollout operativo chiuso.
+
+## Snapshot storico precedente MT-3C
+
+# MULTITENANCY ISOLATION MATRIX - stato corrente MT-3C
+
+**MT-3C HTTP selettivo Student/Teacher/Subject completata: due suite 482/482, zero Failed/Skipped, 426 precedenti preservati e 56 nuovi casi. Rollout operativo default-deny, nessun cutover e MT-3D non iniziata.** [Report, matrice delle 24 action e prove](../../tests/Integration/MULTITENANCY_MT3C_REPORT.md). Inventario dinamico completo di 102 action in [routes-Production.json](../../tests/Integration/TestResults/mt3c/routes-Production.json): 73 legacy, cinque identita MT2, 24 scolastiche.
+
+| Confine / risorsa | Policy HTTP / percorso | Isolamento e garanzia testata |
+| --- | --- | --- |
+| Tutte le nuove action | marker InstitutionSchoolEndpoint + InstitutionSchoolAccess; solo schema InstitutionAccess | JWT validato MT2; DB membership/Institution Active e ruoli correnti; accessor scoped, niente bearer legacy/selection |
+| Rollout | Multitenancy:SchoolApi:Enabled assente/falso/invalido nega | JWT valido non apre nessuna delle 24 action senza flag; nessuna mutazione |
+| Gate globale | esenzione solo marker/policy corretti, identita e contesto presenti | niente URL prefix o eccezione generica per token/tenant Active; metadata errati/contesto assente negano |
+| Student directory/count/detail/lastname | InstitutionAdmin oppure Teacher -> IInstitutionStudentManager | tenant; Teacher soltanto classi ClassSubject assegnate; Student directory negata |
+| Student me | Student -> GetOwnProfileAsync | User+Institution+Membership+owner profilo; nessun StudentId client o fallback User |
+| Teacher directory/detail/lastname | InstitutionAdmin/Teacher/Student -> IInstitutionTeacherManager | directory soltanto locale; profilo corrente richiesto ai non admin |
+| Teacher count/me | count Admin/Teacher; me Teacher | count SQL scoped; self-profile membership corrente A/B |
+| Subject list/count/detail/name | InstitutionAdmin/Teacher/Student -> IInstitutionSubjectManager | Admin catalogo tenant, Teacher proprie assegnazioni, Student propria classe |
+| Subject byTeacher | stessi ruoli, VisibleAssignments MT3B | stessa ClassSubject visibile, anche materia in piu classi; TeacherId B e Student senza classe non ampliano accesso |
+| POST tre famiglie | InstitutionAdmin, owner server | 201 GUID reale e Location scoped recuperata; classe/membership B rifiutate; membership esistente Active/ruolo corretto/link coerente |
+| PUT/DELETE tre famiglie | InstitutionAdmin, owner+ID in query | ID B e inesistente entrambi 404; digest persistiti A/B invariati per tentativi illeciti |
+| Dipendenze/unicita | regole manager/repository MT3B preservate | Grade/assegnazioni -> 409; nomi Subject uguali A/B ammessi; duplicato locale 409 |
+| Revoca | ricontrollo policy e manager dopo commit DB | membership/istituto sospesi, ruoli rimossi/aggiunti -> 403 per tutte le action, B resta disponibile |
+| Ruoli multipli / concorrenza | membership selezionata, scope per richiesta | Admin+Teacher A non conferisce Admin B; richieste HTTP condivise A/B senza scambio contesto |
+| SQL / prestazioni | SQL-only MT3A + repository MT3B invariati | FK composite/immutabilita/UNIQUE; scoped SQL, EXISTS/COUNT, AsNoTracking, 3 query Admin / 5 T-S incluse autorizzazioni; no N+1 |
+| Bootstrap | Program.cs reale Development/Production | DI e schemi/policy validi, route non duplicate, worker registrato, arresto ordinato; OpenAPI 24 action solo Development |
+| Legacy, Exam/Submission/Grade/User/Biennium e lookup non migrati | gate legacy e schema Bearer storico | ticket e scoped A/B rifiutati su ogni action protetta corrente; nessuna policy istituzionale acquisita |
+| Worker/audit didattico/CourseEdition | nessuna migrazione MT3C | codice invariato, ulteriori checkpoint necessari; nessun privilegio globale |
+| Holding / operativita | MT3A_LEGACY_TEST provisioning | nessuna membership permanente, solo tenant A/B temporanei in test; rollout chiuso |
+
+JWT, policy HTTP, manager, repository e SQL sono livelli distinti: nessuno sostituisce gli altri. Le prove HTTP non dimostrano isolamento di percorsi ancora legacy. Revoca non retroattiva sulle operazioni gia autorizzate, dati piccoli non sono benchmark produttivi, backup verificati non sono restore certificato. Il database XAMPP iniziale mancava dell'enforcement MT3A: ripristinato esplicitamente sul solo DB test prima della baseline verde, senza bypass delle assertion. Dettagli e risultati completi nel report.
+
+---
+
+## Snapshot storico MT-3B
+
 # MULTITENANCY ISOLATION MATRIX - stato corrente MT-3B
 
 **Student/Teacher/Subject tenant-aware nel livello Application/Infrastructure. MT-3 complessiva PARZIALE; HTTP scolastico ancora legacy, gate chiuso.** Dettagli e 426/426 test in due run: [report MT-3B](../../tests/Integration/MULTITENANCY_MT3B_REPORT.md).

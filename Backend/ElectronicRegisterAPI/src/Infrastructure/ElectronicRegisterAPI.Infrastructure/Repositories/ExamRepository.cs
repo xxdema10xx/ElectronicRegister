@@ -1,4 +1,5 @@
-﻿using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Infrastructure.Repositories;
+using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Models;
 using ElectronicRegisterAPI.Infrastructure.Mappers;
@@ -14,15 +15,19 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
     internal class ExamRepository : IExamRepository
     {
         private readonly ElectronicRegisterContext _context;
+    private readonly InstitutionExamDataScope? _scope;
+    private IQueryable<T> Rows<T>() where T : class => _scope?.Query<T>() ?? _context.Set<T>();
+    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync() : _scope.SaveAsync();
 
-        public ExamRepository(ElectronicRegisterContext context)
+        public ExamRepository(ElectronicRegisterContext context, InstitutionExamDataScope? scope = null)
         {
             _context = context;
+        _scope = scope;
         }
 
         public async Task<Exam?> GetByIdAsync( Guid id, bool includeStructure = false, bool includeStudents = false)
         {
-            IQueryable<ExamEntity> query = _context.Exams.AsNoTracking();
+            IQueryable<ExamEntity> query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().AsNoTracking();
 
             if (includeStructure)
             {
@@ -46,17 +51,24 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         {
             if (_context.Database.CurrentTransaction is null)
                 throw new InvalidOperationException("Exam row lock requires an ambient transaction.");
-            var entity = await _context.Exams.FromSqlRaw("SELECT * FROM exam WHERE id = {0} FOR UPDATE", id)
+            if (_scope is not null)
+            {
+                if (await _scope.LockExam(id).AsTracking().FirstOrDefaultAsync() is null) return null;
+                var scoped = await _scope.Exams.AsTracking().Where(e => e.Id == id)
+                    .Include(e => e.Questions).ThenInclude(q => q.QuestionOptions).Include(e => e.ExamStudents).FirstOrDefaultAsync();
+                return scoped is null ? null : MapToModel(scoped);
+            }
+            var entity = await (_scope is null ? _context.Exams.FromSqlRaw("SELECT * FROM exam WHERE id = {0} FOR UPDATE", id) : _scope.LockExam(id))
                 .AsTracking().Include(e => e.Questions).ThenInclude(q => q.QuestionOptions)
                 .Include(e => e.ExamStudents).FirstOrDefaultAsync();
             return entity is null ? null : MapToModel(entity);
         }
 
         public Task<bool> HasRetakesAsync(Guid examId) =>
-            _context.Exams.AnyAsync(e => e.RetakeOfExamId == examId);
+            Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().AnyAsync(e => e.RetakeOfExamId == examId);
         public async Task<List<Exam>> GetAllAsync(Guid? teacherId = null)
         {
-            var query = _context.Exams
+            var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>()
                 .AsNoTracking()
                 .AsQueryable();
 
@@ -89,7 +101,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         }
         public async Task<List<ExamSummaryDto>> GetSummariesAsync(Guid? teacherId = null)
         {
-            var query = _context.Exams.AsNoTracking();
+            var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().AsNoTracking();
 
             if (teacherId.HasValue)
                 query = query.Where(e => e.ClassSubject.TeacherId == teacherId.Value);
@@ -123,22 +135,22 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
                 Description = r.Description,
                 ClassSubjectId = r.ClassSubjectId,
                 RetakeOfExamId = r.RetakeOfExamId,
-                AvailableFrom = r.AvailableFrom,
-                AvailableUntil = r.AvailableUntil,
+                AvailableFrom = DbUtc.Read(r.AvailableFrom),
+                AvailableUntil = DbUtc.Read(r.AvailableUntil),
                 DurationMinutes = r.DurationMinutes,
                 PassingPercent = r.PassingPercent,
                 TotalPoints = r.TotalPoints,
                 Status = ExamStatusMapper.FromDbString(r.Status),
                 AssignedStudentsCount = r.AssignedStudentsCount,
-                PublishedAt = r.PublishedAt,
-                ClosedAt = r.ClosedAt,
-                CancelledAt = r.CancelledAt
+                PublishedAt = DbUtc.Read(r.PublishedAt),
+                ClosedAt = DbUtc.Read(r.ClosedAt),
+                CancelledAt = DbUtc.Read(r.CancelledAt)
             }).ToList();
         }
 
         public async Task<List<Exam>> GetAssignedToStudentAsync(Guid studentId)
         {
-            var entities = await _context.Exams
+            var entities = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>()
                 .AsNoTracking()
                 .Where(e =>
                     e.ExamStudents.Any(es => es.StudentId == studentId))
@@ -153,7 +165,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
 
         public async Task<List<Exam>> GetByClassSubjectAsync(Guid classSubjectId)
         {
-            var entities = await _context.Exams
+            var entities = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>()
                 .AsNoTracking()
                 .Where(e => e.ClassSubjectId == classSubjectId)
                 .OrderByDescending(e => e.AvailableFrom)
@@ -163,7 +175,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         }
         public Task<bool> HasSubmissionsAsync(Guid examId)
         {
-            return _context.ExamSubmissions.AnyAsync(s => s.ExamId == examId);
+            return Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AnyAsync(s => s.ExamId == examId);
         }
         public Task<bool> HasInProgressSubmissionsAsync(Guid examId)
         {
@@ -173,7 +185,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
             // Close acquires the Exam lock before any consistent read establishes a snapshot.
             // All earlier Starts have committed; later Starts wait for Close to commit/rollback.
             // Do not lock submissions: Submit/worker own those locks and can read exam structure.
-            return _context.ExamSubmissions.AnyAsync(s => s.ExamId == examId && s.Status == "in_progress");
+            return Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AnyAsync(s => s.ExamId == examId && s.Status == "in_progress");
         }
         public async Task AddAsync(Exam exam)
         {
@@ -240,11 +252,11 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
 
             await _context.Exams.AddAsync(entity);
 
-            await _context.SaveChangesAsync();
+            await SaveAsync();
         }
         public async Task UpdateAsync(Exam exam)
         {
-            var entity = await _context.Exams.FirstOrDefaultAsync(e => e.Id == exam.Id);
+            var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().FirstOrDefaultAsync(e => e.Id == exam.Id);
 
             if (entity is null) return;
 
@@ -262,11 +274,11 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
             entity.ClosedAt = exam.ClosedAt;
             entity.CancelledAt = exam.CancelledAt;
 
-            await _context.SaveChangesAsync();
+            await SaveAsync();
         }
         public async Task ReplaceStructureAsync(Exam exam)
         {
-            var entity = await _context.Exams
+            var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>()
                 .Include(e => e.Questions)
                     .ThenInclude(q => q.QuestionOptions)
                 .FirstOrDefaultAsync(e => e.Id == exam.Id);
@@ -280,7 +292,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
             // The application owns the transaction across this save and the following saves.
             if (_context.Database.CurrentTransaction is null)
                 throw new InvalidOperationException("Structure replacement requires an ambient transaction.");
-            await _context.SaveChangesAsync();
+            await SaveAsync();
 
             foreach (var question in exam.Questions)
             {
@@ -314,11 +326,11 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
 
             entity.TotalPoints = exam.TotalPoints;
 
-            await _context.SaveChangesAsync();
+            await SaveAsync();
         }
         public async Task ReplaceAssignedStudentsAsync(Guid examId, IReadOnlyCollection<ExamStudent> students)
         {
-            var currentStudents = await _context.ExamStudents
+            var currentStudents = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamStudent>()
                 .Where(es => es.ExamId == examId)
                 .ToListAsync();
 
@@ -337,18 +349,18 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
 
             await _context.ExamStudents.AddRangeAsync(newEntities);
 
-            await _context.SaveChangesAsync();
+            await SaveAsync();
         }
         public async Task DeleteDraftAsync(Guid examId)
         {
-            var entity = await _context.Exams
+            var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>()
                 .FirstOrDefaultAsync(e => e.Id == examId);
 
             if (entity is null) return;
 
             _context.Exams.Remove(entity);
 
-            await _context.SaveChangesAsync();
+            await SaveAsync();
         }
 
         private static Exam MapToModel(ExamEntity entity)
@@ -360,15 +372,15 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
                 RetakeOfExamId = entity.RetakeOfExamId,
                 Name = entity.Name,
                 Description = entity.Description,
-                AvailableFrom = entity.AvailableFrom,
-                AvailableUntil = entity.AvailableUntil,
+                AvailableFrom = DbUtc.Read(entity.AvailableFrom),
+                AvailableUntil = DbUtc.Read(entity.AvailableUntil),
                 DurationMinutes = entity.DurationMinutes,
                 PassingPercent = entity.PassingPercent,
                 TotalPoints = entity.TotalPoints,
                 Status = ExamStatusMapper.FromDbString(entity.Status),
-                PublishedAt = entity.PublishedAt,
-                ClosedAt = entity.ClosedAt,
-                CancelledAt = entity.CancelledAt,
+                PublishedAt = DbUtc.Read(entity.PublishedAt),
+                ClosedAt = DbUtc.Read(entity.ClosedAt),
+                CancelledAt = DbUtc.Read(entity.CancelledAt),
                 Questions = entity.Questions
                     .OrderBy(q => q.Position)
                     .Select(q => new Question

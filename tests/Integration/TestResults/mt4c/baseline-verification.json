@@ -1,0 +1,18 @@
+{
+  "passed": 644,
+  "failed": 0,
+  "skipped": 0,
+  "identicalMt4bTestIdentities": true,
+  "trx": [
+    {
+      "file": "mt4c\\baseline\\LorenzoBaracchi_CES01622_2026-10-19_16_33_00_net10.0.trx",
+      "passed": 51,
+      "sha256": "7bdddee392cd53d8af9275f6be663cfbb448d8bd303a11cb6de6580a1b305321"
+    },
+    {
+      "file": "mt4c\\baseline\\LorenzoBaracchi_CES01622_2026-10-19_16_33_04_net10.0.trx",
+      "passed": 593,
+      "sha256": "4977240308b53c2b3fa5d36db1c727e4021b67e7e1e81e8063a357ab6ee0f889"
+    }
+  ]
+}

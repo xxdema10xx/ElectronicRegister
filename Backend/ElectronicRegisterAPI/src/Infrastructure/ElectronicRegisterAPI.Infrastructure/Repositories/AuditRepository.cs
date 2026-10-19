@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Infrastructure.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Models;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
@@ -7,10 +8,14 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 internal class AuditRepository : IAuditRepository
 {
     private readonly ElectronicRegisterContext _context;
+    private readonly InstitutionExamDataScope? _scope;
+    private IQueryable<T> Rows<T>() where T : class => _scope?.Query<T>() ?? _context.Set<T>();
+    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync() : _scope.SaveAsync();
 
-    public AuditRepository(ElectronicRegisterContext context)
+    public AuditRepository(ElectronicRegisterContext context, InstitutionExamDataScope? scope = null)
     {
         _context = context;
+        _scope = scope;
     }
 
     public async Task AddAsync(AuditEvent auditEvent)
@@ -29,6 +34,6 @@ internal class AuditRepository : IAuditRepository
         };
 
         _context.AuditEvents.Add(entity);
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 }

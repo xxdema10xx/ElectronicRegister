@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Student = ElectronicRegisterAPI.Domain.Models.Student;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
@@ -9,10 +10,14 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 internal class StudentRepository : IStudentRepository
 {
     private readonly ElectronicRegisterContext _context;
+    private readonly InstitutionExamDataScope? _scope;
+    private IQueryable<T> Rows<T>() where T : class => _scope?.Query<T>() ?? _context.Set<T>();
+    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync() : _scope.SaveAsync();
 
-    public StudentRepository(ElectronicRegisterContext context)
+    public StudentRepository(ElectronicRegisterContext context, InstitutionExamDataScope? scope = null)
     {
         _context = context;
+        _scope = scope;
     }
 
     public async Task<int> CountAsync(Guid? teacherId = null)
@@ -34,7 +39,7 @@ internal class StudentRepository : IStudentRepository
 
     public async Task<List<Student>> GetByIdsAsync(IEnumerable<Guid> ids)
     {
-        var students = await _context.Students.Where(s => ids.Contains(s.Id)).ToListAsync();
+        var students = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Student>().Where(s => ids.Contains(s.Id)).ToListAsync();
         return students.Select(MapToModel).ToList();
     }
 
@@ -54,7 +59,7 @@ internal class StudentRepository : IStudentRepository
             ClassId = student.ClassId
         };
         _context.Students.Add(studentEntity);
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 
     public async Task UpdateAsync(Student student)
@@ -62,7 +67,7 @@ internal class StudentRepository : IStudentRepository
         var entity = await MapToEntityAsync(student);
         if (entity == null) return;
         _context.Students.Update(entity);
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 
     public async Task DeleteAsync(Student student)
@@ -70,11 +75,11 @@ internal class StudentRepository : IStudentRepository
         var entity = await MapToEntityAsync(student);
         if (entity == null) return;
         _context.Students.Remove(entity);
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 
     private IQueryable<StudentEntity> VisibleToTeacher(Guid? teacherId) =>
-        _context.Students.AsNoTracking().Where(s => !teacherId.HasValue ||
+        Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Student>().AsNoTracking().Where(s => !teacherId.HasValue ||
             (s.Class != null && s.Class.ClassSubjects.Any(cs => cs.TeacherId == teacherId.Value)));
 
     private static Student MapToModel(StudentEntity student)
@@ -90,7 +95,7 @@ internal class StudentRepository : IStudentRepository
 
     private async Task<StudentEntity?> MapToEntityAsync(Student student)
     {
-        var entity = await _context.Students.FirstOrDefaultAsync(s => s.Id == student.Id);
+        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Student>().FirstOrDefaultAsync(s => s.Id == student.Id);
         if (entity is null) return null;
 
         entity.Id = student.Id;

@@ -24,7 +24,8 @@ public class TransactionManager : ITransactionManager
         }
         catch
         {
-            await transaction.RollbackAsync(cancellationToken);
+            // Cancellation must not cancel cleanup of a transaction that already wrote rows.
+            await transaction.RollbackAsync(CancellationToken.None);
             throw;
         }
     }

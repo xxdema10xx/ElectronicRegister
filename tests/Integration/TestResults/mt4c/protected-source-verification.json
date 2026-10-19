@@ -1,0 +1,22 @@
+{
+  "baseline": "MT4B final source freeze",
+  "unchanged": [
+    "Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\BackgroundServices\\ExpiredExamSubmissionWorker.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\InstitutionAuthentication.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\LegacyEndpointGate.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\ExamManager.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\GradeManager.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionAuthManager.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Services\\ExamSubmissionProcessor.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Services\\InstitutionSchoolAuthorization.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ClassSubject.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Student.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\User.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Mt3aOwnership.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Mt4.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\ClassSubject.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Student.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\User.cs"
+  ],
+  "count": 16
+}

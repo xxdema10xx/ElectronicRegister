@@ -1,0 +1,8 @@
+{
+  "sha256": "80797A2C793366040D9B231544FA1AC7CD0770E5706F7AB6EDB806E88BBC022A",
+  "tables": 31,
+  "readable": true,
+  "dumpCompleted": true,
+  "restoreTested": false,
+  "privateFile": "20261019-165115-0036.sql"
+}

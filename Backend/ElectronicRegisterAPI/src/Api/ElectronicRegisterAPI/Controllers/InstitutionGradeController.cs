@@ -1,0 +1,30 @@
+using ElectronicRegisterAPI.Api.Security;
+using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.Interfaces.Managers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ElectronicRegisterAPI.Api.Controllers;
+
+[ApiController, InstitutionExamEndpoint, Route("api/institution/grades")]
+public sealed class InstitutionGradeController(IInstitutionExamManager manager) : ControllerBase
+{
+    [HttpGet, Authorize(Roles = "InstitutionAdmin,Teacher,Student")]
+    public async Task<ActionResult<List<GradeDto>>> GetAll() => Ok(await manager.GradesAsync());
+    [HttpGet("{id:guid}"), Authorize(Roles = "InstitutionAdmin,Teacher,Student")]
+    public async Task<ActionResult<GradeDto>> GetById(Guid id) => await manager.GradeAsync(id) is { } row ? Ok(row) : NotFound();
+    [HttpGet("count"), Authorize(Roles = "InstitutionAdmin,Teacher,Student")]
+    public async Task<ActionResult<int>> Count() => Ok(await manager.GradeCountAsync());
+    [HttpGet("paged"), Authorize(Roles = "InstitutionAdmin,Teacher,Student")]
+    public async Task<ActionResult<GradePageDto>> Paged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20, [FromQuery] Guid? subjectId = null, [FromQuery] Guid? studentId = null, [FromQuery] DateOnly? date = null) => Ok(await manager.GradePageAsync(pageNumber, pageSize, subjectId, studentId, date));
+    [HttpGet("filters"), Authorize(Roles = "InstitutionAdmin,Teacher,Student")]
+    public async Task<ActionResult<GradeFiltersDto>> Filters() => Ok(await manager.GradeFiltersAsync());
+    [HttpGet("statistics"), Authorize(Roles = "InstitutionAdmin,Teacher,Student")]
+    public async Task<ActionResult<GradeStatisticsDto>> Statistics() => await manager.GradeStatisticsAsync() is { } row ? Ok(row) : NotFound();
+    [HttpPost, Authorize(Roles = "InstitutionAdmin,Teacher")]
+    public async Task<ActionResult<Guid>> Add(CreateGradeDto dto) => await manager.AddGradeAsync(dto) is { } id ? CreatedAtAction(nameof(GetById), new { id }, id) : NotFound();
+    [HttpPut("{id:guid}"), Authorize(Roles = "InstitutionAdmin,Teacher")]
+    public async Task<IActionResult> Update(Guid id, UpdateGradeDto dto) => await manager.UpdateGradeAsync(id, dto) ? NoContent() : NotFound();
+    [HttpDelete("{id:guid}"), Authorize(Roles = "InstitutionAdmin")]
+    public async Task<IActionResult> Delete(Guid id) => await manager.DeleteGradeAsync(id) ? NoContent() : NotFound();
+}

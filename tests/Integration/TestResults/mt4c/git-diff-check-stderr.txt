@@ -1,0 +1,67 @@
+git : warning: in the working copy of 
+'Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/ExceptionHandling/GlobalExceptionHandler.cs', LF will be 
+replaced by CRLF the next time Git touches it
+In riga:7 car:1
++ git diff --check > tests/Integration/TestResults/mt4c/git-diff-check. ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+warning: in the working copy of 
+'Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/InstitutionAuthentication.cs', LF will be 
+replaced by CRLF the next time Git touches it
+warning: in the working copy of 
+'Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/LegacyEndpointGate.cs', LF will be replaced by 
+CRLF the next time Git touches it
+warning: in the working copy of 
+'Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/appsettings.example.json', LF will be replaced by CRLF 
+the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Depend
+encyInjection/AddApplicationManagers.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 
+'Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/ExamManager.cs', LF will be 
+replaced by CRLF the next time Git touches it
+warning: in the working copy of 
+'Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/ExamSubmissionManager.cs', 
+LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Manage
+rs/InstitutionStudentManager.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 
+'Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/AssignedExamDto.cs', LF will be replaced 
+by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Manag
+ers/IInstitutionSchoolManagers.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repos
+itories/IInstitutionSchoolRepositories.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/
+Persistence/ElectronicRegisterContext.Mt3aOwnership.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/
+Persistence/ElectronicRegisterContext.Multitenancy.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/
+Repositories/AuditRepository.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/
+Repositories/ClassSubjectRepository.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/
+Repositories/ExamRepository.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/
+Repositories/ExamSubmissionRepository.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/
+Repositories/GradeRepository.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/
+Repositories/InstitutionStudentRepository.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/
+Repositories/StudentRepository.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/
+Repositories/SubjectRepository.cs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/architecture/MULTITENANCY_DESIGN.md', LF will be replaced by CRLF the next time 
+Git touches it
+warning: in the working copy of 'docs/architecture/MULTITENANCY_ISOLATION_MATRIX.md', LF will be replaced by CRLF the 
+next time Git touches it
+warning: in the working copy of 'tests/Integration/AuditBootstrapTests.cs', LF will be replaced by CRLF the next time 
+Git touches it
+warning: in the working copy of 'tests/Integration/EXAM_BUSINESS_RULES_UPDATE.md', LF will be replaced by CRLF the 
+next time Git touches it
+warning: in the working copy of 'tests/Integration/Mt2IdentityTests.cs', LF will be replaced by CRLF the next time Git 
+touches it
+warning: in the working copy of 'tests/Unit/Application/ExamSubmissionProcessorTests.cs', LF will be replaced by CRLF 
+the next time Git touches it

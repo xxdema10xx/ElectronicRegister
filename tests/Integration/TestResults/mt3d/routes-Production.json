@@ -1,0 +1,3812 @@
+[
+  {
+    "method": "GET",
+    "route": "api/Biennium/count",
+    "controller": "Biennium",
+    "action": "Count",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Int32]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium",
+    "controller": "Biennium",
+    "action": "GetAll",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.BienniumDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/active",
+    "controller": "Biennium",
+    "action": "GetActiveBiennia",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.BienniumDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/inactive",
+    "controller": "Biennium",
+    "action": "GetInactiveBiennia",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.BienniumDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/{id}",
+    "controller": "Biennium",
+    "action": "GetById",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.BienniumDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/byname/{name}",
+    "controller": "Biennium",
+    "action": "GetSubjectByName",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "name",
+        "type": "String"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubjectDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/byteacher/{id}",
+    "controller": "Biennium",
+    "action": "GetSubjectByTeacherId",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.SubjectDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/Biennium/update/{id}",
+    "controller": "Biennium",
+    "action": "Update",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateBienniumDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Biennium",
+    "controller": "Biennium",
+    "action": "Add",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateBienniumDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Biennium/{id}",
+    "controller": "Biennium",
+    "action": "Delete",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/login",
+    "controller": "Auth",
+    "action": "Login",
+    "roles": [],
+    "policy": [],
+    "managers": [
+      "IAuthManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "LoginDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/microsoft-login",
+    "controller": "Auth",
+    "action": "MicrosoftLogin",
+    "roles": [],
+    "policy": [],
+    "managers": [
+      "IAuthManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "MicrosoftLoginDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/register",
+    "controller": "Auth",
+    "action": "Register",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IAuthManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "RegisterDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/RegisterForAdmin",
+    "controller": "Auth",
+    "action": "RegisterForAdmin",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IAuthManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "RegisterForAdminDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Auth/me",
+    "controller": "Auth",
+    "action": "GetCurrentUser",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "IAuthManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.UserDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam",
+    "controller": "Exam",
+    "action": "GetAll",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.ExamSummaryDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/{id}",
+    "controller": "Exam",
+    "action": "GetById",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.ExamDetailDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/assigned",
+    "controller": "Exam",
+    "action": "GetAssigned",
+    "roles": [
+      "student"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.AssignedExamDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam",
+    "controller": "Exam",
+    "action": "Add",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateExamDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/Exam/{id}",
+    "controller": "Exam",
+    "action": "Update",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateExamDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/Exam/{id}/students",
+    "controller": "Exam",
+    "action": "UpdateStudents",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateExamStudentsDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/publish",
+    "controller": "Exam",
+    "action": "Publish",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/close",
+    "controller": "Exam",
+    "action": "Close",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/cancel",
+    "controller": "Exam",
+    "action": "Cancel",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Exam/{id}",
+    "controller": "Exam",
+    "action": "Delete",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/start",
+    "controller": "Exam",
+    "action": "Start",
+    "roles": [
+      "student"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.StartExamDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/answers/save",
+    "controller": "Exam",
+    "action": "SaveAnswers",
+    "roles": [
+      "student"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "SaveExamAnswersDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SaveAnswersResponseDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/submit",
+    "controller": "Exam",
+    "action": "Submit",
+    "roles": [
+      "student"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "SubmitExamDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubmissionResultDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/{examId}/submissions",
+    "controller": "Exam",
+    "action": "GetSubmissions",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "examId",
+        "type": "Guid"
+      },
+      {
+        "Name": "status",
+        "type": "Nullable\u00601"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.SubmissionSummaryDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/submission/{id}/review",
+    "controller": "Exam",
+    "action": "GetReview",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubmissionReviewDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/Exam/submission/{id}/review",
+    "controller": "Exam",
+    "action": "Review",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "ReviewOpenAnswersDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/submission/{id}/finalize",
+    "controller": "Exam",
+    "action": "FinalizeSubmission",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "FinalizeSubmissionDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/submission/{id}/result",
+    "controller": "Exam",
+    "action": "GetResult",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubmissionResultDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/count",
+    "controller": "Grade",
+    "action": "Count",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Int32]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/statistics",
+    "controller": "Grade",
+    "action": "GetStatistics",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.GradeStatisticsDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/filters",
+    "controller": "Grade",
+    "action": "GetFiltered",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.GradeFiltersDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/paged",
+    "controller": "Grade",
+    "action": "GetPaged",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      },
+      {
+        "Name": "subjectId",
+        "type": "Nullable\u00601"
+      },
+      {
+        "Name": "studentId",
+        "type": "Nullable\u00601"
+      },
+      {
+        "Name": "date",
+        "type": "Nullable\u00601"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.GradePageDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade",
+    "controller": "Grade",
+    "action": "GetAll",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.GradeDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/{id}",
+    "controller": "Grade",
+    "action": "GetById",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.GradeDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/bystudentid/{id}",
+    "controller": "Grade",
+    "action": "GetGradesByStudentId",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.GradeDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/bysubject/{subject}",
+    "controller": "Grade",
+    "action": "GetGradesBySubjectName",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [
+      {
+        "Name": "subject",
+        "type": "String"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.GradeDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/bydate/{date}",
+    "controller": "Grade",
+    "action": "GetGradesByDate",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [
+      {
+        "Name": "date",
+        "type": "DateOnly"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.GradeDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Grade",
+    "controller": "Grade",
+    "action": "Add",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateGradeDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/Grade/update/{id}",
+    "controller": "Grade",
+    "action": "Update",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateGradeDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Grade/{id}",
+    "controller": "Grade",
+    "action": "Delete",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IGradeManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/campuses",
+    "controller": "InstitutionCampus",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      },
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/class-subjects",
+    "controller": "InstitutionClassSubject",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.ClassSubjectChoiceDto]]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions",
+    "controller": "InstitutionCourseEdition",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "studyPathId",
+        "type": "Nullable\u00601"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      },
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}",
+    "controller": "InstitutionCourseEdition",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/by-code/{code}",
+    "controller": "InstitutionCourseEdition",
+    "action": "ByCode",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "code",
+        "type": "String"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions",
+    "controller": "InstitutionCourseEdition",
+    "action": "Create",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateCourseEditionDto"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/course-editions/{id:guid}",
+    "controller": "InstitutionCourseEdition",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateCourseEditionDto"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/campuses",
+    "controller": "InstitutionCourseEdition",
+    "action": "Campuses",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      },
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions/{id:guid}/campuses",
+    "controller": "InstitutionCourseEdition",
+    "action": "LinkCampus",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "LinkEditionCampusDto"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/classes",
+    "controller": "InstitutionCourseEdition",
+    "action": "Classes",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      },
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions/{editionId:guid}/classes/{classId:guid}",
+    "controller": "InstitutionCourseEdition",
+    "action": "AssignClass",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "editionId",
+        "type": "Guid"
+      },
+      {
+        "Name": "classId",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/enrollments",
+    "controller": "InstitutionCourseEdition",
+    "action": "Enrollments",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      },
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/audit",
+    "controller": "InstitutionCourseEdition",
+    "action": "Audit",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      },
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/{id:guid}",
+    "controller": "InstitutionEnrollment",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments",
+    "controller": "InstitutionEnrollment",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "studentId",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      },
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/enrollments",
+    "controller": "InstitutionEnrollment",
+    "action": "Create",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateStudentEnrollmentDto"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/me",
+    "controller": "InstitutionEnrollment",
+    "action": "Me",
+    "roles": [
+      "Student"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      },
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/enrollments/{id:guid}/transition",
+    "controller": "InstitutionEnrollment",
+    "action": "Transition",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "TransitionEnrollmentDto"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/enrollments/{id:guid}/completion-date",
+    "controller": "InstitutionEnrollment",
+    "action": "CorrectCompletion",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "CorrectEnrollmentCompletionDto"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/{id:guid}/history",
+    "controller": "InstitutionEnrollment",
+    "action": "History",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "managers": [
+      "IInstitutionCourseManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      },
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams",
+    "controller": "InstitutionExam",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.ExamSummaryDto]]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}",
+    "controller": "InstitutionExam",
+    "action": "GetById",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.ExamDetailDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/assigned",
+    "controller": "InstitutionExam",
+    "action": "Assigned",
+    "roles": [
+      "Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.AssignedExamDto]]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}/eligible-students",
+    "controller": "InstitutionExam",
+    "action": "EligibleStudents",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.StudentDto]]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams",
+    "controller": "InstitutionExam",
+    "action": "Add",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateExamDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Guid]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/exams/{id:guid}",
+    "controller": "InstitutionExam",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateExamDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/exams/{id:guid}/students",
+    "controller": "InstitutionExam",
+    "action": "Assign",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateExamStudentsDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/publish",
+    "controller": "InstitutionExam",
+    "action": "Publish",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/close",
+    "controller": "InstitutionExam",
+    "action": "Close",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/cancel",
+    "controller": "InstitutionExam",
+    "action": "Cancel",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/exams/{id:guid}",
+    "controller": "InstitutionExam",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/start",
+    "controller": "InstitutionExam",
+    "action": "Start",
+    "roles": [
+      "Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.StartExamDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}/submissions",
+    "controller": "InstitutionExam",
+    "action": "Submissions",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "status",
+        "type": "Nullable\u00601"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.SubmissionSummaryDto]]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades",
+    "controller": "InstitutionGrade",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.GradeDto]]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/{id:guid}",
+    "controller": "InstitutionGrade",
+    "action": "GetById",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.GradeDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/count",
+    "controller": "InstitutionGrade",
+    "action": "Count",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Int32]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/paged",
+    "controller": "InstitutionGrade",
+    "action": "Paged",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      },
+      {
+        "Name": "subjectId",
+        "type": "Nullable\u00601"
+      },
+      {
+        "Name": "studentId",
+        "type": "Nullable\u00601"
+      },
+      {
+        "Name": "date",
+        "type": "Nullable\u00601"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.GradePageDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/filters",
+    "controller": "InstitutionGrade",
+    "action": "Filters",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.GradeFiltersDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/statistics",
+    "controller": "InstitutionGrade",
+    "action": "Statistics",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.GradeStatisticsDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/grades",
+    "controller": "InstitutionGrade",
+    "action": "Add",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateGradeDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Guid]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/grades/{id:guid}",
+    "controller": "InstitutionGrade",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateGradeDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/grades/{id:guid}",
+    "controller": "InstitutionGrade",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/identity/login",
+    "controller": "InstitutionIdentity",
+    "action": "Login",
+    "roles": [],
+    "policy": [],
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "input": [
+      {
+        "Name": "input",
+        "type": "LoginDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.IdentityTicketDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/identity/microsoft-login",
+    "controller": "InstitutionIdentity",
+    "action": "MicrosoftLogin",
+    "roles": [],
+    "policy": [],
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "input": [
+      {
+        "Name": "input",
+        "type": "MicrosoftLoginDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.IdentityTicketDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Auth/institutions",
+    "controller": "InstitutionIdentity",
+    "action": "Institutions",
+    "roles": [],
+    "policy": [
+      "InstitutionSelection"
+    ],
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "input": [
+      {
+        "Name": "cancellationToken",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.IReadOnlyList\u00601[ElectronicRegisterAPI.Domain.DTOs.InstitutionChoiceDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/select-institution",
+    "controller": "InstitutionIdentity",
+    "action": "Select",
+    "roles": [],
+    "policy": [
+      "InstitutionSelection"
+    ],
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "input": [
+      {
+        "Name": "input",
+        "type": "SelectInstitutionDto"
+      },
+      {
+        "Name": "cancellationToken",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.InstitutionAccessDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Auth/context",
+    "controller": "InstitutionIdentity",
+    "action": "Context",
+    "roles": [],
+    "policy": [
+      "InstitutionAccess"
+    ],
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "input": [],
+    "output": "Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.TenantContextDto]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students",
+    "controller": "InstitutionStudent",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "classId",
+        "type": "Nullable\u00601"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.StudentDto]]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/count",
+    "controller": "InstitutionStudent",
+    "action": "Count",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Int32]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/{id:guid}",
+    "controller": "InstitutionStudent",
+    "action": "GetById",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.StudentDto]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/bylastname/{lastName}",
+    "controller": "InstitutionStudent",
+    "action": "ByLastName",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "lastName",
+        "type": "String"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.StudentDto]]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/me",
+    "controller": "InstitutionStudent",
+    "action": "Me",
+    "roles": [
+      "Student"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.StudentDto]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/students",
+    "controller": "InstitutionStudent",
+    "action": "Add",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateStudentDto"
+      },
+      {
+        "Name": "classId",
+        "type": "Nullable\u00601"
+      },
+      {
+        "Name": "membershipId",
+        "type": "Nullable\u00601"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Guid]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/students/{id:guid}",
+    "controller": "InstitutionStudent",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateStudentDto"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/students/{id:guid}",
+    "controller": "InstitutionStudent",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects",
+    "controller": "InstitutionSubject",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.SubjectDto]]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/count",
+    "controller": "InstitutionSubject",
+    "action": "Count",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Int32]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/{id:guid}",
+    "controller": "InstitutionSubject",
+    "action": "GetById",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubjectDto]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/byname/{name}",
+    "controller": "InstitutionSubject",
+    "action": "ByName",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "name",
+        "type": "String"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubjectDto]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/byteacher/{teacherId:guid}",
+    "controller": "InstitutionSubject",
+    "action": "ByTeacher",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "teacherId",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.SubjectDto]]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/subjects",
+    "controller": "InstitutionSubject",
+    "action": "Add",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateSubjectDto"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Guid]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/subjects/{id:guid}",
+    "controller": "InstitutionSubject",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateSubjectDto"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/subjects/{id:guid}",
+    "controller": "InstitutionSubject",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionSubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/session",
+    "controller": "InstitutionSubmission",
+    "action": "Session",
+    "roles": [
+      "Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubmissionSessionDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/submissions/{id:guid}/answers",
+    "controller": "InstitutionSubmission",
+    "action": "Save",
+    "roles": [
+      "Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "SaveExamAnswersDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SaveAnswersResponseDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/submit",
+    "controller": "InstitutionSubmission",
+    "action": "Submit",
+    "roles": [
+      "Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "SubmitExamDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubmissionResultDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/submit-expired",
+    "controller": "InstitutionSubmission",
+    "action": "SubmitExpired",
+    "roles": [
+      "Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubmissionResultDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/violations",
+    "controller": "InstitutionSubmission",
+    "action": "ReportViolation",
+    "roles": [
+      "Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "InstitutionViolationDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.ViolationReceiptDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/violations",
+    "controller": "InstitutionSubmission",
+    "action": "Violations",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.ViolationEventDto]]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/review",
+    "controller": "InstitutionSubmission",
+    "action": "Review",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubmissionReviewDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/submissions/{id:guid}/review",
+    "controller": "InstitutionSubmission",
+    "action": "Review",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "ReviewOpenAnswersDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/finalize",
+    "controller": "InstitutionSubmission",
+    "action": "FinalizeSubmission",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "FinalizeSubmissionDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/result",
+    "controller": "InstitutionSubmission",
+    "action": "Result",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "managers": [
+      "IInstitutionExamManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubmissionResultDto]]",
+    "institutionExam": true,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers",
+    "controller": "InstitutionTeacher",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.TeacherDto]]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/count",
+    "controller": "InstitutionTeacher",
+    "action": "Count",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Int32]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/{id:guid}",
+    "controller": "InstitutionTeacher",
+    "action": "GetById",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.TeacherDto]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/bylastname/{lastName}",
+    "controller": "InstitutionTeacher",
+    "action": "ByLastName",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "lastName",
+        "type": "String"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.TeacherDto]]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/me",
+    "controller": "InstitutionTeacher",
+    "action": "Me",
+    "roles": [
+      "Teacher"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.TeacherDto]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/teachers",
+    "controller": "InstitutionTeacher",
+    "action": "Add",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateTeacherDto"
+      },
+      {
+        "Name": "membershipId",
+        "type": "Nullable\u00601"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Guid]]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/teachers/{id:guid}",
+    "controller": "InstitutionTeacher",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateTeacherDto"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/teachers/{id:guid}",
+    "controller": "InstitutionTeacher",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "managers": [
+      "IInstitutionTeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": true
+  },
+  {
+    "method": "GET",
+    "route": "api/Student/count",
+    "controller": "Student",
+    "action": "Count",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IStudentManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Int32]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Student",
+    "controller": "Student",
+    "action": "GetAll",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IStudentManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.StudentDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Student/{id}",
+    "controller": "Student",
+    "action": "GetById",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.StudentDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Student/bylastname/{lastName}",
+    "controller": "Student",
+    "action": "GetStudentsByName",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "lastName",
+        "type": "String"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.StudentDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/Student/update/{id}",
+    "controller": "Student",
+    "action": "Update",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateStudentDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Student",
+    "controller": "Student",
+    "action": "Add",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateStudentDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Student/{id}",
+    "controller": "Student",
+    "action": "Delete",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IStudentManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/count",
+    "controller": "Subject",
+    "action": "Count",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Int32]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject",
+    "controller": "Subject",
+    "action": "GetAll",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.SubjectDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/{id}",
+    "controller": "Subject",
+    "action": "GetById",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubjectDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/byname/{name}",
+    "controller": "Subject",
+    "action": "GetSubjectByName",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "name",
+        "type": "String"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.SubjectDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/byteacher/{id}",
+    "controller": "Subject",
+    "action": "GetSubjectByTeacherId",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.SubjectDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/Subject/update/{id}",
+    "controller": "Subject",
+    "action": "Update",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateSubjectDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Subject",
+    "controller": "Subject",
+    "action": "Add",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateSubjectDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Subject/{id}",
+    "controller": "Subject",
+    "action": "Delete",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "ISubjectManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Teacher/count",
+    "controller": "Teacher",
+    "action": "Count",
+    "roles": [
+      "teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Int32]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Teacher",
+    "controller": "Teacher",
+    "action": "GetAll",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.TeacherDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Teacher/{id}",
+    "controller": "Teacher",
+    "action": "GetById",
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "policy": [],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.TeacherDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/Teacher/update/{id}",
+    "controller": "Teacher",
+    "action": "Update",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateTeacherDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Teacher",
+    "controller": "Teacher",
+    "action": "Add",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateTeacherDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Teacher/{id}",
+    "controller": "Teacher",
+    "action": "Delete",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "ITeacherManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Users/count",
+    "controller": "Users",
+    "action": "Count",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IUserManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Int32]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Users",
+    "controller": "Users",
+    "action": "GetAll",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IUserManager"
+    ],
+    "input": [],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[System.Collections.Generic.List\u00601[ElectronicRegisterAPI.Domain.DTOs.UserDto]]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/Users/{id}",
+    "controller": "Users",
+    "action": "GetById",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IUserManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult\u00601[ElectronicRegisterAPI.Domain.DTOs.UserDto]]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/Users/update/{id}",
+    "controller": "Users",
+    "action": "Update",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IUserManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdateUserDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "PUT",
+    "route": "api/Users/updatepassword/{id}",
+    "controller": "Users",
+    "action": "UpdatePassword",
+    "roles": [
+      "student,teacher,admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IUserManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "dto",
+        "type": "UpdatePasswordDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Users",
+    "controller": "Users",
+    "action": "Add",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IUserManager"
+    ],
+    "input": [
+      {
+        "Name": "dto",
+        "type": "CreateUserDto"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Users/{id}",
+    "controller": "Users",
+    "action": "Delete",
+    "roles": [
+      "admin"
+    ],
+    "policy": [],
+    "managers": [
+      "IUserManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.ActionResult]",
+    "institutionExam": false,
+    "school": false
+  }
+]

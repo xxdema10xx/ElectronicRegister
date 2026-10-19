@@ -1,0 +1,2 @@
+git diff --check: Passed
+New source/document/script UTF-8 and whitespace: Passed

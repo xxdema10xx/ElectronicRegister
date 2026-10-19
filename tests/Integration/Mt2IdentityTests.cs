@@ -291,8 +291,17 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
         var sources = _host.Host.Services.GetRequiredService<Microsoft.AspNetCore.Routing.EndpointDataSource>();
         var endpoints = sources.Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null &&
-                e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionIdentityEndpointAttribute>() is null).ToArray();
-        Assert.Equal(73, endpoints.Length);
+                e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionIdentityEndpointAttribute>() is null &&
+                e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute>() is null &&
+                e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is null &&
+                e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is null).ToArray();
+        Assert.Equal(19, sources.Endpoints.Count(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null));
+        // Discover every current legacy action; new explicitly migrated endpoints have their own HTTP suite.
+        Assert.Equal(73, endpoints.Length); // Preserved baseline plus dynamic traversal of every discovered action below.
+        Assert.Contains(endpoints, e => e.RoutePattern.RawText!.StartsWith("api/Student", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(endpoints, e => e.RoutePattern.RawText!.StartsWith("api/Exam", StringComparison.OrdinalIgnoreCase));
+        Assert.All(endpoints, e => Assert.DoesNotContain(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
+            p => p.Policy is InstitutionTokenContract.AccessScheme or ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute.PolicyName or ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute.PolicyName));
         var before = await LegacyCounts();
         foreach (var endpoint in endpoints)
         {

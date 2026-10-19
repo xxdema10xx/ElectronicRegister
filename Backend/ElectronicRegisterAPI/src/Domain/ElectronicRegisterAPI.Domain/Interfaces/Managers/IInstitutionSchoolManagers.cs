@@ -5,6 +5,7 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Managers;
 // Context comes exclusively from the existing scoped ICurrentTenant, never a DTO.
 public interface IInstitutionStudentManager
 {
+    Task<List<StudentDto>> GetForClassAsync(Guid classId, CancellationToken ct = default);
     Task<List<StudentDto>> GetAllAsync(CancellationToken ct = default);
     Task<int> CountAsync(CancellationToken ct = default);
     Task<StudentDto?> GetByIdAsync(Guid id, CancellationToken ct = default);

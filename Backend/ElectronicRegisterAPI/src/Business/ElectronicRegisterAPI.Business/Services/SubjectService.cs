@@ -5,7 +5,7 @@ using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Business.Services;
 
-internal class SubjectService : ISubjectService
+public class SubjectService : ISubjectService
 {
     private readonly ISubjectRepository _subjectRepository;
     private readonly IClassSubjectRepository _classSubjectRepository;

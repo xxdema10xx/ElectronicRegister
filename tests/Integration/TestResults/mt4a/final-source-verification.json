@@ -1,0 +1,9 @@
+{
+  "frozenSourceCount": 346,
+  "allSourceHashesUnchanged": true,
+  "newEntitiesExactlyMatchDatabaseScaffold": {
+    "CourseEdition": "62a926762056d7725c1408e6609611e4f49f0aa20fb6f7934dcd1d14ce7e94ad",
+    "CourseEditionCampus": "b5b7c7defb40949007a6912d972c8f085519fb7f02044c3ddd4794023e3c077f",
+    "StudentEnrollment": "c3d4ca58f528060f8e5e22de5fd12510419541e900430596dcfc8b63cc0776c4"
+  }
+}

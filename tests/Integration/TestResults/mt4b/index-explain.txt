@@ -1,0 +1,49 @@
+table_name	index_name	seq_in_index	column_name
+campus	idx_campus_institution	1	institution_id
+campus	PRIMARY	1	id
+campus	uq_mt4_campus_owner	1	institution_id
+campus	uq_mt4_campus_owner	2	id
+class	idx_class_bsp	1	biennium_study_path_id
+class	idx_mt3a_class_bsp	1	institution_id
+class	idx_mt3a_class_bsp	2	biennium_study_path_id
+class	idx_mt4_class_edition	1	institution_id
+class	idx_mt4_class_edition	2	course_edition_id
+class	PRIMARY	1	id
+class	uq_class	1	biennium_study_path_id
+class	uq_class	2	name
+class	uq_mt3a_class_owner	1	institution_id
+class	uq_mt3a_class_owner	2	id
+course_edition	idx_mt4_edition_path	1	institution_id
+course_edition	idx_mt4_edition_path	2	study_path_id
+course_edition	PRIMARY	1	id
+course_edition	uq_mt4_edition_code	1	institution_id
+course_edition	uq_mt4_edition_code	2	code
+course_edition	uq_mt4_edition_owner	1	institution_id
+course_edition	uq_mt4_edition_owner	2	id
+course_edition_campus	idx_mt4_edition_campus	1	institution_id
+course_edition_campus	idx_mt4_edition_campus	2	campus_id
+course_edition_campus	PRIMARY	1	institution_id
+course_edition_campus	PRIMARY	2	course_edition_id
+course_edition_campus	PRIMARY	3	campus_id
+student_enrollment	idx_mt4_enrollment_edition	1	institution_id
+student_enrollment	idx_mt4_enrollment_edition	2	course_edition_id
+student_enrollment	PRIMARY	1	id
+student_enrollment	uq_mt4_enrollment_owner	1	institution_id
+student_enrollment	uq_mt4_enrollment_owner	2	id
+student_enrollment	uq_mt4_enrollment_student	1	institution_id
+student_enrollment	uq_mt4_enrollment_student	2	student_id
+student_enrollment	uq_mt4_enrollment_student	3	course_edition_id
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	SIMPLE	course_edition	ref	uq_mt4_edition_owner,uq_mt4_edition_code,idx_mt4_edition_path	uq_mt4_edition_owner	36	const	1	Using index condition; Using where; Using filesort
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	SIMPLE	NULL	NULL	NULL	NULL	NULL	NULL	NULL	Impossible WHERE noticed after reading const tables
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	SIMPLE	course_edition	ref	uq_mt4_edition_owner,uq_mt4_edition_code,idx_mt4_edition_path	uq_mt4_edition_owner	36	const	1	Using index condition; Using where; Using filesort
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	SIMPLE	student_enrollment	ref	uq_mt4_enrollment_owner,uq_mt4_enrollment_student,idx_mt4_enrollment_edition	uq_mt4_enrollment_owner	36	const	1	Using index condition; Using where; Using filesort
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	SIMPLE	student_enrollment	ref	uq_mt4_enrollment_owner,uq_mt4_enrollment_student,idx_mt4_enrollment_edition	uq_mt4_enrollment_owner	36	const	1	Using index condition; Using where; Using filesort
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	SIMPLE	course_edition_campus	ref	PRIMARY,idx_mt4_edition_campus	PRIMARY	72	const,const	1	Using where; Using index
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	SIMPLE	class	ref	uq_mt3a_class_owner,idx_mt3a_class_bsp,idx_mt4_class_edition	uq_mt3a_class_owner	36	const	1	Using index condition; Using where; Using filesort

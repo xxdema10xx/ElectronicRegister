@@ -20,7 +20,10 @@ public static class ServiceCollectionExtensions
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
         services.AddDbContext<ElectronicRegisterContext>(options =>
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+        {
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            if (TestDatabaseSession.Enabled) options.AddInterceptors(new TestDatabaseSession());
+        });
 
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
         services.Configure<AzureAdOptions>(configuration.GetSection(AzureAdOptions.SectionName));
@@ -34,9 +37,12 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMembershipAuthorizationRepository, MembershipAuthorizationRepository>();
         services.AddScoped<IInstitutionProfileRepository, InstitutionProfileRepository>();
         services.AddScoped<InstitutionSchoolQueries>();
+        services.AddScoped<ICourseStructureRepository, CourseStructureRepository>();
         services.AddScoped<IInstitutionStudentRepository, InstitutionStudentRepository>();
         services.AddScoped<IInstitutionTeacherRepository, InstitutionTeacherRepository>();
         services.AddScoped<IInstitutionSubjectRepository, InstitutionSubjectRepository>();
+        services.AddScoped<IInstitutionExamRepositoryFactory, InstitutionExamRepositoryFactory>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.ISubmissionExpiryStore, SubmissionExpiryStore>();
         services.AddScoped<IInstitutionTokens, InstitutionTokens>();
         services.AddScoped<ILegacyAccess, LegacyAccess>();
         services.AddScoped<IMicrosoftIdentityLink, MicrosoftIdentityLink>();

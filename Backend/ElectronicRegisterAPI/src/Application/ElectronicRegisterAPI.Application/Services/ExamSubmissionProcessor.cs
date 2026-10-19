@@ -38,15 +38,44 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
         _timeProvider = timeProvider;
     }
 
-        public async Task<SubmissionResultDto> ProcessSubmitAsync(Guid submissionId, SubmitExamDto? dto, SubmitReason reason, ClaimsContext? caller)
+    public Task<SubmissionResultDto> ProcessInstitutionAsync(Guid submissionId, SubmitExamDto? dto, SubmitReason reason, ExamPrincipal principal)
+    {
+        if (principal.Tenant is null || !principal.IsStudent || principal.StudentId is null ||
+            _submissionRepository is not IInstitutionBoundRepository bound || !bound.Matches(principal))
+            throw new UnauthorizedAccessException("Contesto di elaborazione non autorizzato.");
+        if (reason is not (SubmitReason.Manual or SubmitReason.TimeExpired)) throw new ArgumentException("Motivo non valido.");
+        return ProcessCoreAsync(submissionId, dto, reason, principal.VisibilityCaller);
+    }
+
+    public async Task<SubmissionResultDto> ProcessSubmitAsync(Guid submissionId, SubmitExamDto? dto, SubmitReason reason, ClaimsContext? caller)
+    {
+        // Legacy worker cannot dispatch institution-owned submissions until MT3E.
+        if (_submissionRepository is IInstitutionBoundRepository bound && bound.InstitutionId != Guid.Empty)
+            throw new UnauthorizedAccessException("Usare il contesto istituzionale esplicito.");
+        if (caller is null && _submissionRepository is ILegacySubmissionBoundary legacy && !await legacy.IsLegacySubmissionAsync(submissionId))
+            throw new UnauthorizedAccessException("Submission fuori dal confine legacy.");
+        return await ProcessCoreAsync(submissionId, dto, reason, caller);
+    }
+
+    internal Task<SubmissionResultDto> ProcessExpiryAsync(SubmissionExpiryWork work, CancellationToken ct)
+    {
+        if (_submissionRepository is not ISubmissionExpiryBoundRepository bound || !bound.Matches(work))
+            throw new UnauthorizedAccessException("Contesto tecnico non corrispondente.");
+        return ProcessCoreAsync(work.SubmissionId, null, SubmitReason.TimeExpired, null, work, ct);
+    }
+
+    private async Task<SubmissionResultDto> ProcessCoreAsync(Guid submissionId, SubmitExamDto? dto, SubmitReason reason, ClaimsContext? caller, SubmissionExpiryWork? work = null, CancellationToken ct = default)
         {
             SubmissionResultDto? result = null;
 
         await _transactionManager.ExecuteAsync(async () =>
         {
+            ct.ThrowIfCancellationRequested();
             // Acquire row lock
             var submission = await _submissionRepository.GetByIdForUpdateAsync(submissionId, withAnswers: true)
                 ?? throw new KeyNotFoundException("La submission non esiste.");
+            if (work is not null && (submission.Id != work.SubmissionId || submission.ExamId != work.ExamId || submission.StudentId != work.StudentId))
+                throw new UnauthorizedAccessException("Ownership tecnica non corrispondente.");
 
             // idempotency: if already submitted (for any reason) return persisted result without reprocessing
             if (submission.SubmittedAt.HasValue)
@@ -67,11 +96,13 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
 
             // Re-read deadline after acquiring row lock and use time provider
             var nowUtc = _timeProvider.UtcNow;
+            if (work is not null && submission.Status != SubmissionStatus.InProgress)
+                throw new InvalidOperationException("Submission tecnica non in corso.");
 
             // - automatic submit (TimeExpired) must not run before deadline
             if (reason == SubmitReason.TimeExpired && submission.DeadlineAt > nowUtc)
             {
-                throw new InvalidOperationException("Non è ancora tempo di eseguire il submit automatico.");
+                throw ElectronicRegisterAPI.Domain.Exceptions.SubmissionErrors.Conflict("Non è ancora tempo di eseguire il submit automatico.");
             }
 
             // If this is a manual submit arriving after deadline, reject explicitly and do not apply DTO or change submission metadata.
@@ -136,16 +167,15 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
                 ?? throw new KeyNotFoundException("Esame non trovato.");
 
             // validate required questions only for manual submit when DTO was applied
-            if (reason == SubmitReason.Manual && applyDto)
+            if (reason == SubmitReason.Manual)
             {
                 var missingRequired = exam.Questions
                     .Where(q => q.Required)
-                    .Select(q => q.Id)
-                    .Except(submission.Answers?.Select(a => a.QuestionId) ?? Enumerable.Empty<Guid>())
-                    .Any();
+                    .Any(q => !(submission.Answers ?? new List<SubmissionAnswer>()).Any(a => a.QuestionId == q.Id &&
+                        (q.Type == QuestionType.Open ? !string.IsNullOrWhiteSpace(a.OpenText) : a.SelectedOptionIds?.Count > 0)));
 
                 if (missingRequired)
-                    throw new InvalidOperationException("Non tutte le domande obbligatorie sono state compilate.");
+                    throw ElectronicRegisterAPI.Domain.Exceptions.SubmissionErrors.InvalidRequest("Non tutte le domande obbligatorie sono state compilate.");
             }
 
             // Use persisted answers for grading
@@ -205,7 +235,10 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
                 Action = "submission.submit",
                 EntityType = "exam_submission",
                 EntityId = submission.Id,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = nowUtc,
+                RequestId = work is null ? null : "worker:" + work.SubmissionId.ToString("N"),
+                BeforeJson = work is null ? null : System.Text.Json.JsonSerializer.Serialize(new { status = "in_progress" }),
+                AfterJson = work is null ? null : System.Text.Json.JsonSerializer.Serialize(new { source = "institution-worker", reason = "TimeExpired", status = submission.Status.ToString() })
             });
 
             var current2 = await _submissionRepository.GetByIdAsync(submissionId, withAnswers: true);
@@ -218,7 +251,8 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
                 finalOfficialGrade = g.Value;
             }
             result = ExamSubmissionMapper.ToSubmissionResultDto(finalTarget, finalOfficialGrade, caller);
-        });
+            ct.ThrowIfCancellationRequested();
+        }, ct);
 
         return result!;
     }

@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Infrastructure.Repositories;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using DomainSubject = ElectronicRegisterAPI.Domain.Models.Subject;
@@ -7,20 +8,24 @@ using SubjectEntity = ElectronicRegisterAPI.Infrastructure.Persistence.Entities.
 internal class SubjectRepository : ISubjectRepository
 {
     private readonly ElectronicRegisterContext _context;
+    private readonly InstitutionExamDataScope? _scope;
+    private IQueryable<T> Rows<T>() where T : class => _scope?.Query<T>() ?? _context.Set<T>();
+    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync() : _scope.SaveAsync();
 
-    public SubjectRepository(ElectronicRegisterContext context)
+    public SubjectRepository(ElectronicRegisterContext context, InstitutionExamDataScope? scope = null)
     {
         _context = context;
+        _scope = scope;
     }
 
     public async Task<int> CountAsync()
     {
-        return await _context.Subjects.CountAsync();
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Subject>().CountAsync();
     }
 
     public async Task<List<DomainSubject>> GetAllAsync()
     {
-        return await _context.Subjects
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Subject>()
             .AsNoTracking()
             .Select(s => new DomainSubject
             {
@@ -32,7 +37,7 @@ internal class SubjectRepository : ISubjectRepository
 
     public async Task<DomainSubject?> GetByIdAsync(Guid id)
     {
-        return await _context.Subjects
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Subject>()
             .AsNoTracking()
             .Where(s => s.Id == id)
             .Select(s => new DomainSubject
@@ -45,7 +50,7 @@ internal class SubjectRepository : ISubjectRepository
 
     public async Task<List<DomainSubject>> GetByIdsAsync(IEnumerable<Guid> ids)
     {
-        return await _context.Subjects
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Subject>()
             .AsNoTracking()
             .Where(s => ids.Contains(s.Id))
             .Select(s => new DomainSubject
@@ -58,7 +63,7 @@ internal class SubjectRepository : ISubjectRepository
 
     public async Task<DomainSubject?> GetByNameAsync(string name)
     {
-        return await _context.Subjects
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Subject>()
             .AsNoTracking()
             .Where(s => s.Name == name)
             .Select(s => new DomainSubject
@@ -78,12 +83,12 @@ internal class SubjectRepository : ISubjectRepository
         };
 
         await _context.Subjects.AddAsync(entity);
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 
     public async Task UpdateAsync(DomainSubject subject)
     {
-        var entity = await _context.Subjects
+        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Subject>()
             .FirstOrDefaultAsync(s => s.Id == subject.Id);
 
         if (entity is null)
@@ -91,18 +96,18 @@ internal class SubjectRepository : ISubjectRepository
 
         entity.Name = subject.Name;
 
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 
     public async Task DeleteAsync(DomainSubject subject)
     {
-        var entity = await _context.Subjects
+        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Subject>()
             .FirstOrDefaultAsync(s => s.Id == subject.Id);
 
         if (entity is null)
             return;
 
         _context.Subjects.Remove(entity);
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 }

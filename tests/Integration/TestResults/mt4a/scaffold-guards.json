@@ -1,0 +1,14 @@
+{
+    "allPersistenceSourceHashesUnchanged":  true,
+    "guards":  [
+                   {
+                       "blockedBeforeCopy":  true,
+                       "script":  "migrations/mt1/Scaffold-Mt1.ps1"
+                   },
+                   {
+                       "blockedBeforeCopy":  true,
+                       "script":  "migrations/mt3/Scaffold-Mt3.ps1"
+                   }
+               ],
+    "mt4ReconciliationReproducible":  true
+}

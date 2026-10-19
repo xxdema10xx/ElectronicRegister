@@ -1,0 +1,45 @@
+{
+  "previousTests": 577,
+  "previousIdentitiesPreserved": true,
+  "identicalFinalSets": true,
+  "failed": 0,
+  "skipped": 0,
+  "runs": {
+    "baseline": {
+      "unit": {
+        "file": "tests\\Integration\\TestResults\\mt4a\\baseline-corrected\\LorenzoBaracchi_CES01622_2026-10-19_13_58_20_net10.0.trx",
+        "sha256": "689ef50141ccba0cbaba4c670cc1b0ae004054ef3e708d39b1b39c334c17b606",
+        "passed": 51
+      },
+      "integration": {
+        "file": "tests\\Integration\\TestResults\\mt4a\\baseline-corrected\\LorenzoBaracchi_CES01622_2026-10-19_13_58_25_net10.0.trx",
+        "sha256": "feebe5b4368c7388c9cfa7ba7c61a0de3fa37568e988c1b93b76b05e3fef3c85",
+        "passed": 526
+      }
+    },
+    "final-1": {
+      "unit": {
+        "file": "tests\\Integration\\TestResults\\mt4a\\final-1\\LorenzoBaracchi_CES01622_2026-10-19_14_20_56_net10.0.trx",
+        "sha256": "4390358b6a05ba8f036ebde5b1109aab12acebca31774e9e1b8d0d75fb52b839",
+        "passed": 51
+      },
+      "integration": {
+        "file": "tests\\Integration\\TestResults\\mt4a\\final-1\\LorenzoBaracchi_CES01622_2026-10-19_14_21_00_net10.0.trx",
+        "sha256": "df7068d10e9ad2549029a62abd7740958885e68f3af9db5e88ead85fdd300991",
+        "passed": 556
+      }
+    },
+    "final-2": {
+      "unit": {
+        "file": "tests\\Integration\\TestResults\\mt4a\\final-2\\LorenzoBaracchi_CES01622_2026-10-19_14_37_03_net10.0.trx",
+        "sha256": "b12a4d752dbc89ad20eb784644df4d244825def295af4305dbbcad74f491d9ea",
+        "passed": 51
+      },
+      "integration": {
+        "file": "tests\\Integration\\TestResults\\mt4a\\final-2\\LorenzoBaracchi_CES01622_2026-10-19_14_37_08_net10.0.trx",
+        "sha256": "11688ad4567eb67af64a2de5c33ee38a4dc8f71dfa1c912a1452ab44a9300aa8",
+        "passed": 556
+      }
+    }
+  }
+}

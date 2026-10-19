@@ -1,0 +1,5 @@
+Esecuzione dei test per C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll (.NETCoreApp,Version=v10.0)
+Un totale di 1 file di test corrisponde al criterio specificato.
+File di risultati: C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestResults\mt4b\targeted-3\LorenzoBaracchi_CES01622_2026-10-19_15_29_25_net10.0.trx
+
+Superato!     - Non superati:     0. Superati:    81. Ignorati:     0. Totale:    81. Durata: 2 m 37 s - Integration.Tests.dll (net10.0)

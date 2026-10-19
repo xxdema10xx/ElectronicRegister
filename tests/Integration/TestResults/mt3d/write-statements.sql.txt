@@ -1,0 +1,119 @@
+INSERT INTO `exam` (`id`, `available_from`, `available_until`, `cancelled_at`, `class_subject_id`, `closed_at`, `description`, `duration_minutes`, `institution_id`, `name`, `passing_percent`, `published_at`, `retake_of_exam_id`, `status`, `total_points`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14);
+SELECT `created_at`, `updated_at`
+FROM `exam`
+WHERE ROW_COUNT() = 1 AND `id` = @p0;
+
+INSERT INTO `exam_student` (`exam_id`, `student_id`, `assigned_at`, `extra_time_minutes`, `institution_id`)
+VALUES (@p15, @p16, @p17, @p18, @p19);
+INSERT INTO `question` (`id`, `exam_id`, `institution_id`, `points`, `position`, `required`, `text`, `type`)
+VALUES (@p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27);
+INSERT INTO `question_option` (`id`, `institution_id`, `is_correct`, `position`, `question_id`, `text`)
+VALUES (@p28, @p29, @p30, @p31, @p32, @p33),
+(@p34, @p35, @p36, @p37, @p38, @p39);
+
+
+SELECT `e`.`id`, `e`.`available_from`, `e`.`available_until`, `e`.`cancelled_at`, `e`.`class_subject_id`, `e`.`closed_at`, `e`.`created_at`, `e`.`description`, `e`.`duration_minutes`, `e`.`institution_id`, `e`.`name`, `e`.`passing_percent`, `e`.`published_at`, `e`.`retake_of_exam_id`, `e`.`status`, `e`.`total_points`, `e`.`updated_at`
+FROM (
+    SELECT * FROM exam WHERE id=@p0 AND institution_id=@p1 FOR UPDATE
+) AS `e`
+LIMIT 1
+
+UPDATE `exam` SET `published_at` = @p0, `status` = @p1
+WHERE `id` = @p2 AND `institution_id` = @p3;
+SELECT `updated_at`
+FROM `exam`
+WHERE ROW_COUNT() = 1 AND `id` = @p2;
+
+
+
+SET AUTOCOMMIT = 1;
+INSERT INTO `audit_event` (`id`, `action`, `actor_user_id`, `after_json`, `before_json`, `created_at`, `entity_id`, `entity_type`, `institution_id`, `request_id`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+
+
+SELECT `e`.`id`, `e`.`available_from`, `e`.`available_until`, `e`.`cancelled_at`, `e`.`class_subject_id`, `e`.`closed_at`, `e`.`created_at`, `e`.`description`, `e`.`duration_minutes`, `e`.`institution_id`, `e`.`name`, `e`.`passing_percent`, `e`.`published_at`, `e`.`retake_of_exam_id`, `e`.`status`, `e`.`total_points`, `e`.`updated_at`
+FROM (
+    SELECT * FROM exam WHERE id=@p0 AND institution_id=@p1 FOR UPDATE
+) AS `e`
+LIMIT 1
+
+INSERT INTO `exam_submission` (`id`, `closed_score`, `created_at`, `deadline_at`, `exam_id`, `finalized_at`, `grade_id`, `institution_id`, `last_client_revision`, `max_score`, `open_max_points`, `open_score`, `override_reason`, `passed`, `passing_score`, `reviewed_by_user_id`, `started_at`, `status`, `student_id`, `submit_reason`, `submitted_at`, `suggested_grade`, `total_score`, `violation_count`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23);
+SELECT `updated_at`
+FROM `exam_submission`
+WHERE ROW_COUNT() = 1 AND `id` = @p0;
+
+
+
+SELECT `e`.`id`, `e`.`closed_score`, `e`.`created_at`, `e`.`deadline_at`, `e`.`exam_id`, `e`.`finalized_at`, `e`.`grade_id`, `e`.`institution_id`, `e`.`last_client_revision`, `e`.`max_score`, `e`.`open_max_points`, `e`.`open_score`, `e`.`override_reason`, `e`.`passed`, `e`.`passing_score`, `e`.`reviewed_by_user_id`, `e`.`started_at`, `e`.`status`, `e`.`student_id`, `e`.`submit_reason`, `e`.`submitted_at`, `e`.`suggested_grade`, `e`.`total_score`, `e`.`updated_at`, `e`.`violation_count`
+FROM (
+    SELECT * FROM exam_submission WHERE id=@p0 AND institution_id=@p1 AND (@p2=1 OR student_id=@p3) FOR UPDATE
+) AS `e`
+LIMIT 1
+
+SELECT `e0`.`id`, `e0`.`closed_score`, `e0`.`created_at`, `e0`.`deadline_at`, `e0`.`exam_id`, `e0`.`finalized_at`, `e0`.`grade_id`, `e0`.`institution_id`, `e0`.`last_client_revision`, `e0`.`max_score`, `e0`.`open_max_points`, `e0`.`open_score`, `e0`.`override_reason`, `e0`.`passed`, `e0`.`passing_score`, `e0`.`reviewed_by_user_id`, `e0`.`started_at`, `e0`.`status`, `e0`.`student_id`, `e0`.`submit_reason`, `e0`.`submitted_at`, `e0`.`suggested_grade`, `e0`.`total_score`, `e0`.`updated_at`, `e0`.`violation_count`, `s2`.`id`, `s2`.`awarded_points`, `s2`.`institution_id`, `s2`.`is_correct`, `s2`.`last_saved_at`, `s2`.`open_text`, `s2`.`question_id`, `s2`.`submission_id`, `s2`.`teacher_comment`, `s2`.`submission_answer_id`, `s2`.`option_id`, `s2`.`institution_id0`, `s2`.`id0`, `s2`.`institution_id00`, `s2`.`is_correct0`, `s2`.`position`, `s2`.`question_id0`, `s2`.`text`
+FROM (
+    SELECT `e`.`id`, `e`.`closed_score`, `e`.`created_at`, `e`.`deadline_at`, `e`.`exam_id`, `e`.`finalized_at`, `e`.`grade_id`, `e`.`institution_id`, `e`.`last_client_revision`, `e`.`max_score`, `e`.`open_max_points`, `e`.`open_score`, `e`.`override_reason`, `e`.`passed`, `e`.`passing_score`, `e`.`reviewed_by_user_id`, `e`.`started_at`, `e`.`status`, `e`.`student_id`, `e`.`submit_reason`, `e`.`submitted_at`, `e`.`suggested_grade`, `e`.`total_score`, `e`.`updated_at`, `e`.`violation_count`
+    FROM (
+        SELECT * FROM exam_submission WHERE id=@p0 AND institution_id=@p1 AND (@p2=1 OR student_id=@p3) FOR UPDATE
+    ) AS `e`
+    LIMIT 1
+) AS `e0`
+LEFT JOIN (
+    SELECT `s`.`id`, `s`.`awarded_points`, `s`.`institution_id`, `s`.`is_correct`, `s`.`last_saved_at`, `s`.`open_text`, `s`.`question_id`, `s`.`submission_id`, `s`.`teacher_comment`, `s1`.`submission_answer_id`, `s1`.`option_id`, `s1`.`institution_id` AS `institution_id0`, `s1`.`id` AS `id0`, `s1`.`institution_id0` AS `institution_id00`, `s1`.`is_correct` AS `is_correct0`, `s1`.`position`, `s1`.`question_id` AS `question_id0`, `s1`.`text`
+    FROM `submission_answer` AS `s`
+    LEFT JOIN (
+        SELECT `s0`.`submission_answer_id`, `s0`.`option_id`, `s0`.`institution_id`, `q`.`id`, `q`.`institution_id` AS `institution_id0`, `q`.`is_correct`, `q`.`position`, `q`.`question_id`, `q`.`text`
+        FROM `submission_answer_option` AS `s0`
+        INNER JOIN `question_option` AS `q` ON `s0`.`option_id` = `q`.`id`
+    ) AS `s1` ON `s`.`id` = `s1`.`submission_answer_id`
+) AS `s2` ON `e0`.`id` = `s2`.`submission_id`
+ORDER BY `e0`.`id`, `s2`.`id`, `s2`.`submission_answer_id`, `s2`.`option_id`
+
+UPDATE `exam_submission` SET `last_client_revision` = @p0
+WHERE `id` = @p1 AND `institution_id` = @p2;
+SELECT `updated_at`
+FROM `exam_submission`
+WHERE ROW_COUNT() = 1 AND `id` = @p1;
+
+INSERT INTO `submission_answer` (`id`, `awarded_points`, `institution_id`, `is_correct`, `last_saved_at`, `open_text`, `question_id`, `submission_id`, `teacher_comment`)
+VALUES (@p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+INSERT INTO `submission_answer_option` (`option_id`, `submission_answer_id`, `institution_id`)
+VALUES (@p12, @p13, @p14);
+
+
+SELECT `e`.`id`, `e`.`closed_score`, `e`.`created_at`, `e`.`deadline_at`, `e`.`exam_id`, `e`.`finalized_at`, `e`.`grade_id`, `e`.`institution_id`, `e`.`last_client_revision`, `e`.`max_score`, `e`.`open_max_points`, `e`.`open_score`, `e`.`override_reason`, `e`.`passed`, `e`.`passing_score`, `e`.`reviewed_by_user_id`, `e`.`started_at`, `e`.`status`, `e`.`student_id`, `e`.`submit_reason`, `e`.`submitted_at`, `e`.`suggested_grade`, `e`.`total_score`, `e`.`updated_at`, `e`.`violation_count`
+FROM (
+    SELECT * FROM exam_submission WHERE id=@p0 AND institution_id=@p1 AND (@p2=1 OR student_id=@p3) FOR UPDATE
+) AS `e`
+LIMIT 1
+
+UPDATE `exam_submission` SET `status` = @p0, `submit_reason` = @p1, `submitted_at` = @p2
+WHERE `id` = @p3 AND `institution_id` = @p4;
+SELECT `updated_at`
+FROM `exam_submission`
+WHERE ROW_COUNT() = 1 AND `id` = @p3;
+
+
+
+SET AUTOCOMMIT = 1;
+INSERT INTO `grade` (`id`, `class_subject_id`, `date`, `institution_id`, `student_id`, `value`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+
+
+UPDATE `exam_submission` SET `closed_score` = @p0, `grade_id` = @p1, `open_max_points` = @p2, `open_score` = @p3, `passed` = @p4, `status` = @p5, `suggested_grade` = @p6, `total_score` = @p7
+WHERE `id` = @p8 AND `institution_id` = @p9;
+SELECT `updated_at`
+FROM `exam_submission`
+WHERE ROW_COUNT() = 1 AND `id` = @p8;
+
+UPDATE `submission_answer` SET `last_saved_at` = @p10
+WHERE `id` = @p11 AND `institution_id` = @p12;
+SELECT ROW_COUNT();
+
+
+
+SET AUTOCOMMIT = 1;
+INSERT INTO `audit_event` (`id`, `action`, `actor_user_id`, `after_json`, `before_json`, `created_at`, `entity_id`, `entity_type`, `institution_id`, `request_id`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);

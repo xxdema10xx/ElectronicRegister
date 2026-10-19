@@ -44,18 +44,18 @@ internal class ExamSubmissionManager : IExamSubmissionManager
         _classSubjectRepository = classSubjectRepository;
     }
 
-    public async Task<List<SubmissionSummaryDto>> GetByExamAsync(Guid examId, SubmissionStatus? status, ClaimsContext caller)
+    public async Task<List<SubmissionSummaryDto>> GetByExamAsync(Guid examId, SubmissionStatus? status, ExamPrincipal caller)
     {
         ArgumentNullException.ThrowIfNull(caller);
         if (status.HasValue && !Enum.IsDefined(status.Value))
             throw new ArgumentException("Stato submission non valido.", nameof(status));
         // Only Admin or the Teacher owning the ClassSubject for the exam are allowed
-        if (caller.Role == UserRole.Admin)
+        if (caller.IsAdmin)
         {
             _ = await _examRepository.GetByIdAsync(examId)
                 ?? throw new KeyNotFoundException("Esame non trovato.");
         }
-        else if (caller.Role == UserRole.Teacher)
+        else if (caller.IsTeacher)
         {
             if (!caller.TeacherId.HasValue)
                 throw new UnauthorizedAccessException("Identificativo docente non presente.");
@@ -96,27 +96,27 @@ internal class ExamSubmissionManager : IExamSubmissionManager
         }).ToList();
     }
 
-    public async Task<SubmissionReviewDto> GetByIdAsync(Guid id, ClaimsContext caller)
+    public async Task<SubmissionReviewDto> GetByIdAsync(Guid id, ExamPrincipal caller)
     {
         ArgumentNullException.ThrowIfNull(caller);
 
         var submission = await _submissionRepository.GetByIdAsync(id, withAnswers: true)
             ?? throw new KeyNotFoundException("La submission non esiste.");
 
-        if (caller.Role is not (UserRole.Student or UserRole.Teacher or UserRole.Admin))
+        if (!caller.IsStudent && !caller.IsTeacher && !caller.IsAdmin)
             throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
 
         // authorization: teacher/admin or the student who owns it
-        if (caller.Role == UserRole.Student && caller.StudentId != submission.StudentId)
+        if (caller.IsStudent && caller.StudentId != submission.StudentId)
             throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
 
-        if (caller.Role == UserRole.Teacher)
+        if (caller.IsTeacher)
         {
             var exam = await _examRepository.GetByIdAsync(submission.ExamId);
             if (exam is null) throw new KeyNotFoundException("Esame non trovato.");
 
             // teacher can view only if they are assigned to the classSubject
-            if (caller.Role == UserRole.Teacher)
+            if (caller.IsTeacher)
             {
                 if (!caller.TeacherId.HasValue)
                     throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
@@ -223,14 +223,14 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             Answers = answers
         };
 
-        return SubmissionVisibility.Apply(dto, caller);
+        return SubmissionVisibility.Apply(dto, caller.VisibilityCaller);
     }
 
-    public async Task ReviewAsync(Guid id, ReviewOpenAnswersDto dto, ClaimsContext caller)
+    public async Task ReviewAsync(Guid id, ReviewOpenAnswersDto dto, ExamPrincipal caller)
     {
         ArgumentNullException.ThrowIfNull(caller);
         ArgumentNullException.ThrowIfNull(dto);
-        if (caller.Role != UserRole.Teacher && caller.Role != UserRole.Admin)
+        if (!caller.IsTeacher && !caller.IsAdmin)
             throw new UnauthorizedAccessException("Non sei autorizzato a revisionare submissions.");
         if (dto.Answers is null || dto.Answers.Any(a => a is null))
             throw new ArgumentException("La lista delle risposte non può essere nulla o contenere elementi null.");
@@ -241,7 +241,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
                 ?? throw new KeyNotFoundException("La submission non esiste.");
 
             // Authorization: if teacher, must own the classSubject
-            if (caller.Role == UserRole.Teacher)
+            if (caller.IsTeacher)
             {
                 if (!caller.TeacherId.HasValue) throw new UnauthorizedAccessException("Identificativo docente non presente.");
                 var examCheck = await _examRepository.GetByIdAsync(submission.ExamId);
@@ -306,12 +306,12 @@ internal class ExamSubmissionManager : IExamSubmissionManager
         });
     }
 
-    public async Task FinalizeAsync(Guid id, FinalizeSubmissionDto dto, ClaimsContext caller)
+    public async Task FinalizeAsync(Guid id, FinalizeSubmissionDto dto, ExamPrincipal caller)
     {
         ArgumentNullException.ThrowIfNull(caller);
         ArgumentNullException.ThrowIfNull(dto);
 
-        if (caller.Role != UserRole.Teacher && caller.Role != UserRole.Admin)
+        if (!caller.IsTeacher && !caller.IsAdmin)
             throw new UnauthorizedAccessException("Non sei autorizzato a finalizzare submissions.");
 
         // create grade and update submission in a transaction with DB row lock
@@ -321,7 +321,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
                 ?? throw new KeyNotFoundException("La submission non esiste.");
 
             // Authorization: if teacher, must own the classSubject
-            if (caller.Role == UserRole.Teacher)
+            if (caller.IsTeacher)
             {
                 if (!caller.TeacherId.HasValue) throw new UnauthorizedAccessException("Identificativo docente non presente.");
                 var examCheck = await _examRepository.GetByIdAsync(submission.ExamId);
@@ -436,7 +436,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             submission.FinalizedAt = DateTime.UtcNow;
 
             // ReviewedByUserId must reference a persisted User.Id (authenticated actor)
-            if (caller.Role == UserRole.Teacher || caller.Role == UserRole.Admin)
+            if (caller.IsTeacher || caller.IsAdmin)
                 submission.ReviewedByUserId = caller.UserId;
 
             submission.Status = SubmissionStatus.Finalized;
@@ -461,4 +461,9 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             });
         });
     }
+
+        Task<List<SubmissionSummaryDto>> IExamSubmissionManager.GetByExamAsync(Guid examId, SubmissionStatus? status, ClaimsContext caller) => GetByExamAsync(examId, status, ExamPrincipal.Legacy(caller));
+        Task<SubmissionReviewDto> IExamSubmissionManager.GetByIdAsync(Guid id, ClaimsContext caller) => GetByIdAsync(id, ExamPrincipal.Legacy(caller));
+        Task IExamSubmissionManager.ReviewAsync(Guid id, ReviewOpenAnswersDto dto, ClaimsContext caller) => ReviewAsync(id, dto, ExamPrincipal.Legacy(caller));
+        Task IExamSubmissionManager.FinalizeAsync(Guid id, FinalizeSubmissionDto dto, ClaimsContext caller) => FinalizeAsync(id, dto, ExamPrincipal.Legacy(caller));
 }

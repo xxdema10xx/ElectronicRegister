@@ -12,6 +12,13 @@ internal sealed class InstitutionStudentRepository(ElectronicRegisterContext db,
     private static IQueryable<Student> Project(IQueryable<E.Student> rows) => rows.Select(s => new Student
         { Id = s.Id, FirstName = s.FirstName, LastName = s.LastName, ClassId = s.ClassId });
     public Task<List<Student>> GetAllAsync(TenantContext t, CancellationToken ct) => Project(q.VisibleStudents(t)).ToListAsync(ct);
+    public async Task<List<Student>> GetForClassAsync(TenantContext t, Guid classId, CancellationToken ct)
+    {
+        if (!await q.Owned<E.Class>(t).AnyAsync(c => c.Id == classId &&
+            (t.Roles.Contains(Domain.Enums.InstitutionRole.InstitutionAdmin) || q.VisibleAssignments(t).Any(cs => cs.ClassId == c.Id)), ct))
+            throw InstitutionSchoolQueries.Missing();
+        return await Project(q.VisibleStudents(t).Where(s => s.ClassId == classId)).ToListAsync(ct);
+    }
     public Task<int> CountAsync(TenantContext t, CancellationToken ct) => q.VisibleStudents(t).CountAsync(ct);
     public Task<Student?> GetByIdAsync(TenantContext t, Guid id, CancellationToken ct) => Project(q.VisibleStudents(t).Where(s => s.Id == id)).SingleOrDefaultAsync(ct);
     public Task<List<Student>> GetByIdsAsync(TenantContext t, IReadOnlyCollection<Guid> ids, CancellationToken ct) => Project(q.VisibleStudents(t).Where(s => ids.Contains(s.Id))).ToListAsync(ct);

@@ -5,7 +5,7 @@ using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Business.Services;
 
-internal class GradeService : IGradeService
+public class GradeService : IGradeService
 {
     private readonly IGradeRepository _gradeRepository;
     private readonly IClassSubjectRepository _classSubjectRepository;

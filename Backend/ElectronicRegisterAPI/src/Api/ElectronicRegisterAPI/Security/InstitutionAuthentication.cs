@@ -44,6 +44,18 @@ public static class InstitutionAuthentication
                 .AddAuthenticationSchemes(InstitutionTokenContract.SelectionScheme).RequireAuthenticatedUser().AddRequirements(new InstitutionRequirement(true)));
             options.AddPolicy(InstitutionTokenContract.AccessScheme, p => p
                 .AddAuthenticationSchemes(InstitutionTokenContract.AccessScheme).RequireAuthenticatedUser().AddRequirements(new InstitutionRequirement(false)));
+            options.AddPolicy(InstitutionSchoolEndpointAttribute.PolicyName, p => p
+                .AddAuthenticationSchemes(InstitutionTokenContract.AccessScheme)
+                .RequireAuthenticatedUser().AddRequirements(new InstitutionRequirement(false))
+                .RequireAssertion(_ => InstitutionSchoolEndpointAttribute.Enabled(configuration)));
+            options.AddPolicy(InstitutionCourseEndpointAttribute.PolicyName, p => p
+                .AddAuthenticationSchemes(InstitutionTokenContract.AccessScheme)
+                .RequireAuthenticatedUser().AddRequirements(new InstitutionRequirement(false))
+                .RequireAssertion(_ => InstitutionCourseEndpointAttribute.Enabled(configuration)));
+            options.AddPolicy(InstitutionExamEndpointAttribute.PolicyName, p => p
+                .AddAuthenticationSchemes(InstitutionTokenContract.AccessScheme)
+                .RequireAuthenticatedUser().AddRequirements(new InstitutionRequirement(false))
+                .RequireAssertion(_ => InstitutionExamEndpointAttribute.Enabled(configuration)));
         });
         return services;
     }

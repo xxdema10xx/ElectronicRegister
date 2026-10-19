@@ -1,0 +1,42 @@
+[
+  {
+    "path": "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\BackgroundServices\\ExpiredExamSubmissionWorker.cs",
+    "sha256": "2DE42600D6647F13728E153F0CBE72ECDBE24319A427010D7691F6606B2BAE42"
+  },
+  {
+    "path": "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\ExamManager.cs",
+    "sha256": "B95034DC934898BCF2DA1387FB0DBC2624B3213DBC051C3EC35E1D53EBDFE591"
+  },
+  {
+    "path": "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\GradeManager.cs",
+    "sha256": "9857522CEF4E737D417CA51930C00C630F9697E754F87CAAF703E1C9BB72DF27"
+  },
+  {
+    "path": "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Services\\ExamSubmissionProcessor.cs",
+    "sha256": "0576A4CFFEEE6264F631A1D7AFA8C6A1BE39BB9FC8D7FCA62C050139DEBCA8CA"
+  },
+  {
+    "path": "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ClassSubject.cs",
+    "sha256": "3EB294ED874345692DD51D131E3ED723E9A9C0E9BFF2240ABA7C71E3E14EEE36"
+  },
+  {
+    "path": "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Student.cs",
+    "sha256": "60D18CF8FF976EC7A95A728A45914606EF8422E2CB8237BA8479D6407FEFF4C9"
+  },
+  {
+    "path": "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\User.cs",
+    "sha256": "16216495D516DEC984B22EA02FC0E2AA32916946C6B0EC9D41F2DDD943CCC118"
+  },
+  {
+    "path": "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\ClassSubject.cs",
+    "sha256": "1023B99E4653411189CB2EC0231686C08F036C6BFC4CC96C09F22DBED81F93DA"
+  },
+  {
+    "path": "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Student.cs",
+    "sha256": "F7B30F55F24D6279466C4B495CCCC206B05DB48367107B92D517870011ADA814"
+  },
+  {
+    "path": "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\User.cs",
+    "sha256": "322E93631A7926DA3EA2552CBE79A4FB53064CC361B0DD89E5B4CEBA052CE40A"
+  }
+]

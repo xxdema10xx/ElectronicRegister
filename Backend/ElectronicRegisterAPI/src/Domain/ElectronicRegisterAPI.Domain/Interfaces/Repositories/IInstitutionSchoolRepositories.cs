@@ -6,6 +6,7 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 // No institution-id overloads, legacy UserRole, or unscoped school lookups.
 public interface IInstitutionStudentRepository
 {
+    Task<List<Student>> GetForClassAsync(TenantContext tenant, Guid classId, CancellationToken ct = default);
     Task<List<Student>> GetAllAsync(TenantContext tenant, CancellationToken ct = default);
     Task<int> CountAsync(TenantContext tenant, CancellationToken ct = default);
     Task<Student?> GetByIdAsync(TenantContext tenant, Guid id, CancellationToken ct = default);

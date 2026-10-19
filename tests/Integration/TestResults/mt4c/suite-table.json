@@ -1,0 +1,50 @@
+[
+  {
+    "run": "baseline",
+    "project": "Unit",
+    "passed": 51,
+    "failed": 0,
+    "skipped": 0,
+    "trx": "LorenzoBaracchi_CES01622_2026-10-19_16_33_00_net10.0.trx"
+  },
+  {
+    "run": "baseline",
+    "project": "Integration",
+    "passed": 593,
+    "failed": 0,
+    "skipped": 0,
+    "trx": "LorenzoBaracchi_CES01622_2026-10-19_16_33_04_net10.0.trx"
+  },
+  {
+    "run": "final-1",
+    "project": "Unit",
+    "passed": 51,
+    "failed": 0,
+    "skipped": 0,
+    "trx": "LorenzoBaracchi_CES01622_2026-10-19_17_01_27_net10.0.trx"
+  },
+  {
+    "run": "final-1",
+    "project": "Integration",
+    "passed": 624,
+    "failed": 0,
+    "skipped": 0,
+    "trx": "LorenzoBaracchi_CES01622_2026-10-19_17_01_31_net10.0.trx"
+  },
+  {
+    "run": "final-2",
+    "project": "Unit",
+    "passed": 51,
+    "failed": 0,
+    "skipped": 0,
+    "trx": "LorenzoBaracchi_CES01622_2026-10-19_17_20_32_net10.0.trx"
+  },
+  {
+    "run": "final-2",
+    "project": "Integration",
+    "passed": 624,
+    "failed": 0,
+    "skipped": 0,
+    "trx": "LorenzoBaracchi_CES01622_2026-10-19_17_20_37_net10.0.trx"
+  }
+]

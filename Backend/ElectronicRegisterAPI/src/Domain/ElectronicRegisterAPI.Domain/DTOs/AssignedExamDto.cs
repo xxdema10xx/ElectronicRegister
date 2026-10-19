@@ -14,6 +14,7 @@ public class AssignedExamDto
     public int ExtraTimeMinutes { get; set; }
     public ExamStatus Status { get; set; }
     public SubmissionStatus? SubmissionStatus { get; set; }
+    public Guid? SubmissionId { get; set; }
     public DateTime? StartedAt { get; set; }
     public DateTime? DeadlineAt { get; set; }
     public DateTime? SubmittedAt { get; set; }

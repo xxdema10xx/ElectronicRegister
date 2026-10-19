@@ -10,9 +10,12 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplicationManagers(this IServiceCollection services)
     {
         services.AddScoped<ElectronicRegisterAPI.Application.Services.InstitutionSchoolAuthorization>();
+        services.AddScoped<IInstitutionCourseManager, InstitutionCourseManager>();
         services.AddScoped<IInstitutionStudentManager, InstitutionStudentManager>();
         services.AddScoped<IInstitutionTeacherManager, InstitutionTeacherManager>();
         services.AddScoped<IInstitutionSubjectManager, InstitutionSubjectManager>();
+        services.AddScoped<IInstitutionExamManager, InstitutionExamManager>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionExpiryService, ElectronicRegisterAPI.Application.Services.InstitutionExpiryService>();
         services.AddScoped<IBienniumManager, BienniumManager>();
         services.AddScoped<IStudyAreaManager, StudyAreaManager>();
         services.AddScoped<IStudyPathManager, StudyPathManager>();

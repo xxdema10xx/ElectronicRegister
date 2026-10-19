@@ -1,0 +1,1 @@
+git diff --check and new source/document checks: PASS

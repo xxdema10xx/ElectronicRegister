@@ -1,0 +1,57 @@
+constraint_name	table_name	referenced_table_name	column_name	referenced_column_name	ordinal_position
+fk_mt4_class_edition	class	course_edition	institution_id	institution_id	1
+fk_mt4_class_edition	class	course_edition	course_edition_id	id	2
+fk_mt4_ec_campus	course_edition_campus	campus	institution_id	institution_id	1
+fk_mt4_ec_campus	course_edition_campus	campus	campus_id	id	2
+fk_mt4_ec_edition	course_edition_campus	course_edition	institution_id	institution_id	1
+fk_mt4_ec_edition	course_edition_campus	course_edition	course_edition_id	id	2
+fk_mt4_edition_owner	course_edition	institution	institution_id	id	1
+fk_mt4_edition_path	course_edition	study_path	institution_id	institution_id	1
+fk_mt4_edition_path	course_edition	study_path	study_path_id	id	2
+fk_mt4_enrollment_edition	student_enrollment	course_edition	institution_id	institution_id	1
+fk_mt4_enrollment_edition	student_enrollment	course_edition	course_edition_id	id	2
+fk_mt4_enrollment_student	student_enrollment	student	institution_id	institution_id	1
+fk_mt4_enrollment_student	student_enrollment	student	student_id	id	2
+trigger_name	action_statement
+mt3a_audit_insert	BEGIN
+\n DECLARE resolved CHAR(36) CHARACTER SET ascii COLLATE ascii_general_ci;
+\n
+\n IF NEW.entity_type='platform' THEN
+\n IF NEW.institution_id IS NOT NULL OR NEW.entity_id IS NOT NULL OR NEW.before_json IS NOT NULL OR NEW.after_json IS NOT NULL OR NEW.action NOT LIKE 'platform.%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A platform shape required'; END IF;
+\n ELSE
+\n IF NEW.entity_type='exam' THEN SET resolved=(SELECT institution_id FROM exam WHERE id=NEW.entity_id);
+\n ELSEIF NEW.entity_type='exam_submission' THEN SET resolved=(SELECT institution_id FROM exam_submission WHERE id=NEW.entity_id);
+\n ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit classification required'; END IF;
+\n IF resolved IS NULL THEN
+\n   IF 'INSERT'='INSERT' OR NEW.institution_id IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit entity unresolved'; END IF;
+\n ELSE
+\n   IF NEW.institution_id IS NULL THEN SET NEW.institution_id=resolved; END IF;
+\n   IF NEW.institution_id<>resolved THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit owner mismatch'; END IF;
+\n END IF;
+\n END IF;
+\n END
+mt3a_audit_update	BEGIN
+\n DECLARE resolved CHAR(36) CHARACTER SET ascii COLLATE ascii_general_ci;
+\n IF NOT(NEW.institution_id <=> OLD.institution_id) OR NOT(NEW.entity_type <=> OLD.entity_type) OR NOT(NEW.entity_id <=> OLD.entity_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit attribution immutable'; END IF;
+\n IF NEW.entity_type='platform' THEN
+\n IF NEW.institution_id IS NOT NULL OR NEW.entity_id IS NOT NULL OR NEW.before_json IS NOT NULL OR NEW.after_json IS NOT NULL OR NEW.action NOT LIKE 'platform.%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A platform shape required'; END IF;
+\n ELSE
+\n IF NEW.entity_type='exam' THEN SET resolved=(SELECT institution_id FROM exam WHERE id=NEW.entity_id);
+\n ELSEIF NEW.entity_type='exam_submission' THEN SET resolved=(SELECT institution_id FROM exam_submission WHERE id=NEW.entity_id);
+\n ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit classification required'; END IF;
+\n IF resolved IS NULL THEN
+\n   IF 'UPDATE'='INSERT' OR NEW.institution_id IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit entity unresolved'; END IF;
+\n ELSE
+\n   IF NEW.institution_id IS NULL THEN SET NEW.institution_id=resolved; END IF;
+\n   IF NEW.institution_id<>resolved THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit owner mismatch'; END IF;
+\n END IF;
+\n END IF;
+\n END
+mt4_bsp_update	BEGIN\n IF NOT (NEW.study_path_id<=>OLD.study_path_id) AND EXISTS(SELECT 1 FROM class WHERE biennium_study_path_id=OLD.id AND course_edition_id IS NOT NULL)\n THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT4 assigned class path is historical'; END IF;\nEND
+mt4_class_insert	BEGIN\n IF NEW.course_edition_id IS NOT NULL AND NOT EXISTS(\n SELECT 1 FROM course_edition ce JOIN biennium_study_path bsp ON bsp.id=NEW.biennium_study_path_id AND bsp.institution_id=ce.institution_id AND bsp.study_path_id=ce.study_path_id\n WHERE ce.id=NEW.course_edition_id AND ce.institution_id=NEW.institution_id)\n THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT4 class edition path mismatch'; END IF;\nEND
+mt4_class_update	BEGIN\n IF OLD.course_edition_id IS NOT NULL AND NOT (NEW.course_edition_id<=>OLD.course_edition_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT4 class attribution is immutable'; END IF;\n IF NEW.course_edition_id IS NOT NULL AND NOT EXISTS(\n SELECT 1 FROM course_edition ce JOIN biennium_study_path bsp ON bsp.id=NEW.biennium_study_path_id AND bsp.institution_id=ce.institution_id AND bsp.study_path_id=ce.study_path_id\n WHERE ce.id=NEW.course_edition_id AND ce.institution_id=NEW.institution_id)\n THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT4 class edition path mismatch'; END IF;\nEND
+mt4_course_edition_insert	BEGIN\n IF NEW.code NOT REGEXP '[^[:space:]]' OR NEW.name NOT REGEXP '[^[:space:]]' OR BINARY NEW.status NOT IN ('planned','active','completed','cancelled') OR (NEW.start_date IS NOT NULL AND YEAR(NEW.start_date)<1000) OR (NEW.end_date IS NOT NULL AND YEAR(NEW.end_date)<1000) OR (NEW.start_date IS NOT NULL AND NEW.end_date IS NOT NULL AND NEW.end_date<NEW.start_date) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT4 invalid structure or immutable identity'; END IF;\nEND
+mt4_course_edition_update	BEGIN\n IF NEW.code NOT REGEXP '[^[:space:]]' OR NEW.name NOT REGEXP '[^[:space:]]' OR BINARY NEW.status NOT IN ('planned','active','completed','cancelled') OR (NEW.start_date IS NOT NULL AND YEAR(NEW.start_date)<1000) OR (NEW.end_date IS NOT NULL AND YEAR(NEW.end_date)<1000) OR (NEW.start_date IS NOT NULL AND NEW.end_date IS NOT NULL AND NEW.end_date<NEW.start_date) OR NOT (NEW.id<=>OLD.id) OR NOT (NEW.institution_id<=>OLD.institution_id) OR NOT (NEW.study_path_id<=>OLD.study_path_id) OR NOT (NEW.created_at<=>OLD.created_at) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT4 invalid structure or immutable identity'; END IF;\nEND
+mt4_course_edition_campus_update	BEGIN\n IF NOT (NEW.institution_id<=>OLD.institution_id) OR NOT (NEW.course_edition_id<=>OLD.course_edition_id) OR NOT (NEW.campus_id<=>OLD.campus_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT4 invalid structure or immutable identity'; END IF;\nEND
+mt4_student_enrollment_insert	BEGIN\n IF YEAR(NEW.enrollment_date)<1000 OR BINARY NEW.status NOT IN ('enrolled','completed','withdrawn','cancelled') OR (NEW.completion_date IS NOT NULL AND NEW.completion_date<NEW.enrollment_date) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT4 invalid structure or immutable identity'; END IF;\nEND
+mt4_student_enrollment_update	BEGIN\n IF YEAR(NEW.enrollment_date)<1000 OR BINARY NEW.status NOT IN ('enrolled','completed','withdrawn','cancelled') OR (NEW.completion_date IS NOT NULL AND NEW.completion_date<NEW.enrollment_date) OR NOT (NEW.id<=>OLD.id) OR NOT (NEW.institution_id<=>OLD.institution_id) OR NOT (NEW.student_id<=>OLD.student_id) OR NOT (NEW.course_edition_id<=>OLD.course_edition_id) OR NOT (NEW.enrollment_date<=>OLD.enrollment_date) OR NOT (NEW.created_at<=>OLD.created_at) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT4 invalid structure or immutable identity'; END IF;\nEND

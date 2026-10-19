@@ -1,0 +1,132 @@
+﻿{
+    "baseline":  {
+                     "total":  426,
+                     "allPreserved":  true,
+                     "integration":  378,
+                     "unit":  48
+                 },
+    "final1":  {
+                   "total":  482,
+                   "failed":  0,
+                   "skipped":  0,
+                   "integration":  434,
+                   "unit":  48
+               },
+    "final2":  {
+                   "total":  482,
+                   "failed":  0,
+                   "skipped":  0,
+                   "integration":  434,
+                   "unit":  48
+               },
+    "identicalFinalTestSets":  true,
+    "newTests":  [
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: \"student\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: \"subject\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: \"teacher\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ClientInstitutionIdentifiersCannotSelectOwnerOrContext",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: \"admin-removed\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: \"institution\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: \"membership\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: \"roles-added\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: \"teacher-removed\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ConcurrentHttpRequestsOfSharedIdentityKeepSeparateTenantScopes",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"student\", method: \"DELETE\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"student\", method: \"GET\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"student\", method: \"PUT\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"subject\", method: \"DELETE\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"subject\", method: \"GET\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"subject\", method: \"PUT\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"teacher\", method: \"DELETE\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"teacher\", method: \"GET\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"teacher\", method: \"PUT\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.DefaultRolloutRejectsValidScopedTokensForAllActions",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"audience\", expected: 401)",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"expired\", expected: 401)",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"legacy\", expected: 401)",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"none\", expected: 401)",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"other-user\", expected: 403)",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"selection\", expected: 401)",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ForeignLinksAreRejectedAtomicallyByManager(family: \"student\", link: \"class\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ForeignLinksAreRejectedAtomicallyByManager(family: \"student\", link: \"membership\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ForeignLinksAreRejectedAtomicallyByManager(family: \"teacher\", link: \"membership\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.GateMetadataCannotBypassMissingContextOrWrongPolicy(wrongPolicy: False)",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.GateMetadataCannotBypassMissingContextOrWrongPolicy(wrongPolicy: True)",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.HttpQueriesKeepTenantSqlServerCountAndConstantListCost",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.InvalidBodiesAreBadRequestsWithoutWrites(family: \"student\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.InvalidBodiesAreBadRequestsWithoutWrites(family: \"subject\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.InvalidBodiesAreBadRequestsWithoutWrites(family: \"teacher\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.MembershipLinksNeedExistingActiveRoleAndUniqueProfile(family: \"student\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.MembershipLinksNeedExistingActiveRoleAndUniqueProfile(family: \"teacher\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.MultipleRolesStayWithinSelectedMembershipAndProfilesNeverFallBackToUser",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NamesAreUniqueOnlyWithinInstitutionAndDependenciesRemainConflicts",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"student\", role: \"student\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"student\", role: \"teacher\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"subject\", role: \"student\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"subject\", role: \"teacher\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"teacher\", role: \"student\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"teacher\", role: \"teacher\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.RealBootstrapHasExactPoliciesUnambiguousRoutesOpenApiAndWorker(environment: \"Development\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.RealBootstrapHasExactPoliciesUnambiguousRoutesOpenApiAndWorker(environment: \"Production\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SearchAndCountNeverRevealForeignOnlyNames(family: \"student\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SearchAndCountNeverRevealForeignOnlyNames(family: \"subject\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SearchAndCountNeverRevealForeignOnlyNames(family: \"teacher\")",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.StudentReadsRespectAdminTeacherAndOwnProfileAcrossBothTenants",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SubjectsIntersectAssignmentsForAllLookupsIncludingByTeacher",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.TeacherDirectoryAndSelfProfileAreLocalForEveryRole",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.UnassignedTeacherAndStudentWithoutClassReceiveEmptyCollections",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ValidLinksCreateProfilesWithoutCreatingUsersMembershipsOrRoles",
+                     "ElectronicRegisterAPI.Tests.Integration.Mt3cPreflightTests.DefaultRolloutNeverOpensSchoolRoutesWithoutAuthorization"
+                 ],
+    "newTestCount":  56,
+    "files":  [
+                  {
+                      "file":  "baseline/unit.trx",
+                      "total":  48,
+                      "passed":  48,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "8941D48910A85F1D096F72085F1108106479DC0EF42BBA62AFBD7B97E11396A9"
+                  },
+                  {
+                      "file":  "baseline-ready/integration.trx",
+                      "total":  378,
+                      "passed":  378,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "CABCCD8D776318F9499CBB77A60F3ACD2DF70511F15D94844058E28C5F67E8F2"
+                  },
+                  {
+                      "file":  "final-1/unit.trx",
+                      "total":  48,
+                      "passed":  48,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "C1A3A52C643AC71DCEC8FEDF0AD5B501BB6C684491E456BFB6FEA832895FA97B"
+                  },
+                  {
+                      "file":  "final-1/integration.trx",
+                      "total":  434,
+                      "passed":  434,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "26ADBE434638024CB40DD92C4F2D07B9D3FA91297E45359AE4CF1F6CB61BD6C4"
+                  },
+                  {
+                      "file":  "final-2/unit.trx",
+                      "total":  48,
+                      "passed":  48,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "944760674A76AAF719152884E231D1AB62D3FD2658DCA3CDA008F2B90EA5BB3E"
+                  },
+                  {
+                      "file":  "final-2/integration.trx",
+                      "total":  434,
+                      "passed":  434,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "CA1A9FF4128570BE01AB2ECE6E69EBC271E14BECFEB2AD9C262BCE407A742EC7"
+                  }
+              ]
+}

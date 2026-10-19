@@ -1,4 +1,5 @@
-﻿using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+using ElectronicRegisterAPI.Infrastructure.Repositories;
+using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using DomainClassSubject = ElectronicRegisterAPI.Domain.Models.ClassSubject;
@@ -10,15 +11,19 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 internal class ClassSubjectRepository : IClassSubjectRepository
 {
     private readonly ElectronicRegisterContext _context;
+    private readonly InstitutionExamDataScope? _scope;
+    private IQueryable<T> Rows<T>() where T : class => _scope?.Query<T>() ?? _context.Set<T>();
+    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync() : _scope.SaveAsync();
 
-    public ClassSubjectRepository(ElectronicRegisterContext context)
+    public ClassSubjectRepository(ElectronicRegisterContext context, InstitutionExamDataScope? scope = null)
     {
         _context = context;
+        _scope = scope;
     }
 
     public async Task<DomainClassSubject?> GetByIdAsync(Guid id)
     {
-        var entity = await _context.ClassSubjects
+        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
             .AsNoTracking()
             .FirstOrDefaultAsync(cs => cs.Id == id);
 
@@ -27,7 +32,7 @@ internal class ClassSubjectRepository : IClassSubjectRepository
 
     public async Task<List<DomainClassSubject>> GetByIdsAsync(IEnumerable<Guid> ids)
     {
-        return await _context.ClassSubjects
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
             .AsNoTracking()
             .Where(cs => ids.Contains(cs.Id))
             .Select(cs => new DomainClassSubject
@@ -42,7 +47,7 @@ internal class ClassSubjectRepository : IClassSubjectRepository
 
     public async Task<DomainClassSubject?> GetAsync(Guid classId, Guid subjectId, Guid? teacherId = null)
     {
-        var query = _context.ClassSubjects
+        var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
             .AsNoTracking()
             .Where(cs =>
                 cs.ClassId == classId &&
@@ -57,7 +62,7 @@ internal class ClassSubjectRepository : IClassSubjectRepository
 
     public async Task<List<DomainClassSubject>> GetByTeacherIdAsync(Guid teacherId)
     {
-        return await _context.ClassSubjects
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
             .AsNoTracking()
             .Where(cs => cs.TeacherId == teacherId)
             .Select(cs => new DomainClassSubject
@@ -72,7 +77,7 @@ internal class ClassSubjectRepository : IClassSubjectRepository
 
     public async Task<List<DomainClassSubject>> GetBySubjectIdAsync(Guid subjectId)
     {
-        return await _context.ClassSubjects
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
             .AsNoTracking()
             .Where(cs => cs.SubjectId == subjectId)
             .Select(cs => new DomainClassSubject
@@ -87,7 +92,7 @@ internal class ClassSubjectRepository : IClassSubjectRepository
 
     public async Task<List<DomainClassSubject>> GetByClassIdAsync(Guid classId)
     {
-        return await _context.ClassSubjects
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
             .AsNoTracking()
             .Where(cs => cs.ClassId == classId)
             .Select(cs => new DomainClassSubject
@@ -102,12 +107,12 @@ internal class ClassSubjectRepository : IClassSubjectRepository
 
     public Task<bool> ExistsForTeacherAsync(Guid teacherId)
     {
-        return _context.ClassSubjects.AnyAsync(cs => cs.TeacherId == teacherId);
+        return Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>().AnyAsync(cs => cs.TeacherId == teacherId);
     }
 
     public Task<bool> ExistsForSubjectAsync(Guid subjectId)
     {
-        return _context.ClassSubjects.AnyAsync(cs => cs.SubjectId == subjectId);
+        return Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>().AnyAsync(cs => cs.SubjectId == subjectId);
     }
 
     private static DomainClassSubject MapToModel(ClassSubjectEntity entity)

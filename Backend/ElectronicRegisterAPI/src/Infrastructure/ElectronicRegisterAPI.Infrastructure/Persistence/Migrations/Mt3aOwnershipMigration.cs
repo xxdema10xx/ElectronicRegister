@@ -25,6 +25,7 @@ public static class Mt3aOwnershipMigration
         try
         {
             await c.OpenAsync();
+            await TestDatabaseSession.ConfigureAsync(c);
             if ((string?)await new MySqlCommand("SELECT DATABASE()", c).ExecuteScalarAsync() != "electronic_register_test")
                 throw new InvalidOperationException("Wrong selected database.");
             var mode = (string)(await new MySqlCommand("SELECT @@SESSION.sql_mode", c).ExecuteScalarAsync())!;
@@ -90,6 +91,7 @@ public static class Mt3aOwnershipMigration
     {
         if (legacy == Guid.Empty) throw new ArgumentException("Explicit legacy InstitutionId required.");
         var known = OwnedTables.Concat(["audit_event", "user", "institution", "campus", "institution_membership", "institution_membership_role", "institution_student_profile", "institution_teacher_profile", "mt3a_legacy_scope"]).ToHashSet(StringComparer.Ordinal);
+        known.UnionWith(await Mt4CourseStructureIntegrity.ValidateIfPresentAsync(c, tx));
         await using (var tables = new MySqlCommand("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()",c,tx))
         {
             await using var reader=await tables.ExecuteReaderAsync();
@@ -219,7 +221,12 @@ public static class Mt3aOwnershipMigration
         if (database != "electronic_register_test" || !mode.Contains("STRICT_", StringComparison.Ordinal)) throw new InvalidOperationException("DDL target/mode changed.");
         var start = new ProcessStartInfo(Environment.GetEnvironmentVariable("MYSQLDUMP_EXE") ?? "C:/Program Files/MySQL/MySQL Server 8.0/bin/mysqldump.exe")
         { UseShellExecute = false, CreateNoWindow = true, RedirectStandardError = true, RedirectStandardOutput = true };
-        foreach (var arg in new[] { "--host=" + b.Server, "--port=" + b.Port, "--user=" + b.UserID, "--single-transaction", "--column-statistics=0", "--no-tablespaces", "--set-gtid-purged=OFF", "--skip-add-drop-table", "--result-file=" + path, database }) start.ArgumentList.Add(arg);
+        foreach (var arg in new[] { "--host=" + b.Server, "--port=" + b.Port, "--user=" + b.UserID, "--single-transaction", "--skip-add-drop-table", "--result-file=" + path }) start.ArgumentList.Add(arg);
+        // XAMPP's MariaDB client does not support the MySQL 8 dump flags. Explicit
+        // operator opt-in only; backup target, completeness and digest checks remain identical.
+        if (!string.Equals(Environment.GetEnvironmentVariable("MYSQLDUMP_FLAVOR"), "MariaDB", StringComparison.Ordinal))
+            foreach (var arg in new[] { "--column-statistics=0", "--no-tablespaces", "--set-gtid-purged=OFF" }) start.ArgumentList.Add(arg);
+        start.ArgumentList.Add(database);
         // The open connector hides passwords by default. Only the original env
         // connection can supply the dump credential; never log it or use argv.
         var original = new MySqlConnectionStringBuilder(Environment.GetEnvironmentVariable("TEST_MYSQL_CONNECTION") ?? throw new InvalidOperationException("Explicit test connection required for backups."));

@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace ElectronicRegisterAPI.Api.BackgroundServices
 {
@@ -17,11 +19,16 @@ namespace ElectronicRegisterAPI.Api.BackgroundServices
         private readonly ILogger<ExpiredExamSubmissionWorker> _logger;
         private readonly TimeSpan _interval = TimeSpan.FromSeconds(15);
         private readonly int _batchSize = 50;
+        private readonly IConfiguration _configuration;
+        private ExpiryCandidate? _cursor;
+        private DateTime? _sweepUntil;
+        private readonly SemaphoreSlim _cycle = new(1, 1);
 
-        public ExpiredExamSubmissionWorker(IServiceScopeFactory scopeFactory, ILogger<ExpiredExamSubmissionWorker> logger)
+        public ExpiredExamSubmissionWorker(IServiceScopeFactory scopeFactory, ILogger<ExpiredExamSubmissionWorker> logger, IConfiguration? configuration = null)
         {
             _scopeFactory = scopeFactory;
             _logger = logger;
+            _configuration = configuration ?? new ConfigurationBuilder().Build();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -44,7 +51,7 @@ namespace ElectronicRegisterAPI.Api.BackgroundServices
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "Error processing expired submissions batch.");
+                        _logger.LogError("Expired submissions batch failed ({ErrorType}).", ex.GetType().Name);
                     }
                 }
             }
@@ -56,6 +63,45 @@ namespace ElectronicRegisterAPI.Api.BackgroundServices
 
         // The timer and integration tests invoke the same selection/dispatch path.
         internal async Task ProcessBatchAsync(CancellationToken cancellationToken)
+        {
+            await _cycle.WaitAsync(cancellationToken);
+            try
+            {
+                // A legacy scan failure must not suppress the independent institutional lane.
+                try { await ProcessLegacyBatchAsync(cancellationToken); }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
+                catch (Exception ex) { _logger.LogError("Legacy expiry scan failed ({ErrorType}).", ex.GetType().Name); }
+                if (!bool.TryParse(_configuration["Multitenancy:InstitutionWorker:Enabled"], out var enabled) || !enabled) return;
+                List<ExpiryCandidate> candidates;
+                using (var scan = _scopeFactory.CreateScope())
+                {
+                    _sweepUntil ??= scan.ServiceProvider.GetRequiredService<ITimeProvider>().UtcNow;
+                    candidates = await scan.ServiceProvider.GetRequiredService<ISubmissionExpiryStore>().SelectAsync(
+                        _sweepUntil.Value, _cursor, _batchSize, cancellationToken);
+                }
+                if (candidates.Count == 0) { _cursor = null; _sweepUntil = null; return; }
+                foreach (var candidate in candidates)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    try
+                    {
+                        using var item = _scopeFactory.CreateScope();
+                        await item.ServiceProvider.GetRequiredService<IInstitutionExpiryService>().ProcessAsync(candidate, cancellationToken);
+                    }
+                    catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
+                    catch (Exception ex)
+                    {
+                        // No exception text/SQL/answers/tokens in operational logs.
+                        _logger.LogError("Institution expiry failed for {InstitutionId}/{SubmissionId} ({ErrorType}).", candidate.InstitutionId, candidate.SubmissionId, ex.GetType().Name);
+                    }
+                    // Advance after failure too; retry on the next bounded sweep, no starvation.
+                    _cursor = candidate;
+                }
+            }
+            finally { _cycle.Release(); }
+        }
+
+        private async Task ProcessLegacyBatchAsync(CancellationToken cancellationToken)
         {
             // First scope: query expired submissions (lightweight, no answers)
             using (var listScope = _scopeFactory.CreateScope())

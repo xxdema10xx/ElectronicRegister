@@ -1,0 +1,755 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="d4426b81-4586-47b8-a511-3708278a0b1a" name="LorenzoBaracchi@CES01622 2026-10-19 14:15:28" runUser="CES01622\CodexSandboxOffline" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-19T14:15:28.9263763+02:00" queuing="2026-10-19T14:15:28.9263768+02:00" start="2026-10-19T14:15:26.3506437+02:00" finish="2026-10-19T14:15:28.9781708+02:00" />
+  <TestSettings name="default" id="32f96564-7514-4252-8641-4a9eacc2e96a">
+    <Deployment runDeploymentRoot="LorenzoBaracchi_CES01622_2026-10-19_14_15_28" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="60804725-eba8-4318-b343-ead2e55b9da6" testId="4ed86475-d142-1ed4-8616-3b104bdf7ff4" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: &quot;enrollment-status&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9068785+02:00" endTime="2026-10-19T14:15:28.9068786+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="60804725-eba8-4318-b343-ead2e55b9da6">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8b0e782b-4239-4fbe-8de7-456ca24e99b8" testId="06338293-5724-9ab1-f0fa-43a263775464" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.MultipleCampusesAndEditionsLoadWithEf" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9139538+02:00" endTime="2026-10-19T14:15:28.9139538+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8b0e782b-4239-4fbe-8de7-456ca24e99b8">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c590e08b-a647-4f5e-b839-7c7f8a10269f" testId="9443bc17-b662-46bd-3e40-0c21f55a043a" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ClassCannotUseDifferentPathWithinSameTenant" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9181355+02:00" endTime="2026-10-19T14:15:28.9181356+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c590e08b-a647-4f5e-b839-7c7f8a10269f">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="902bd845-53e5-450d-8739-ffd77fb7c215" testId="21aeb36d-05a5-bf7e-f38f-059622a6bf23" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ClassPathMustMatchAndLegacyRemainsNullable" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9179768+02:00" endTime="2026-10-19T14:15:28.9179768+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="902bd845-53e5-450d-8739-ffd77fb7c215">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="07e14e9e-203c-4edd-a064-84c03a50fcfa" testId="504e14d4-ee68-8f25-3ae7-653fe8c5aa02" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: &quot;student-a&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9150820+02:00" endTime="2026-10-19T14:15:28.9150820+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="07e14e9e-203c-4edd-a064-84c03a50fcfa">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ed365251-e2ee-4ff0-ac32-22c54b0e75a8" testId="022bbfeb-5e7e-b281-95e5-11e9ca9f7586" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: &quot;enrollment-dates&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9061430+02:00" endTime="2026-10-19T14:15:28.9061431+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ed365251-e2ee-4ff0-ac32-22c54b0e75a8">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="f9378edd-32d1-4cf2-85b3-73df8d1fe0e3" testId="59eb8d74-6313-edc3-a8ca-9c7887055ed6" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: &quot;blank-code&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9040233+02:00" endTime="2026-10-19T14:15:28.9040375+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f9378edd-32d1-4cf2-85b3-73df8d1fe0e3">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="50ec5ee5-8bfc-44a3-8ed9-fd8aadc27863" testId="567c4f94-9d13-3f9f-b962-b36c92398076" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: &quot;campus&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9147382+02:00" endTime="2026-10-19T14:15:28.9147382+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="50ec5ee5-8bfc-44a3-8ed9-fd8aadc27863">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="6c58cdf6-9f73-4c50-873d-2fab6700615d" testId="a540e48a-45cd-0730-ee2d-7c2e8924bfb5" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: &quot;edition-path&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9167276+02:00" endTime="2026-10-19T14:15:28.9167277+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6c58cdf6-9f73-4c50-873d-2fab6700615d">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="551ce58c-f410-444e-97b9-27d26c48e3a8" testId="a515aa78-330a-0b0d-495b-1430be24b841" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnersCodesAndScopedQueries" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9174671+02:00" endTime="2026-10-19T14:15:28.9174672+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="551ce58c-f410-444e-97b9-27d26c48e3a8">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="59743bf1-1c2d-4219-a991-dedaa1030808" testId="0c050741-c147-29df-3e91-3da3b46dab86" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.InformationSchemaHasCompositeRestrictConstraints" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9189115+02:00" endTime="2026-10-19T14:15:28.9189116+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="59743bf1-1c2d-4219-a991-dedaa1030808">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="f51f5a3c-c5ca-47db-9cf7-011a240301ac" testId="a82551a3-3bdc-1cdf-9f48-8075a36689e8" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ConcurrentScopesRemainSeparate" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9141406+02:00" endTime="2026-10-19T14:15:28.9141407+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f51f5a3c-c5ca-47db-9cf7-011a240301ac">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a5bd9881-5cab-4bcd-87b5-52358b23781a" testId="f15e24ea-93a0-ed35-98f9-fe524ba3ca3c" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: &quot;enrollment_date&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9137555+02:00" endTime="2026-10-19T14:15:28.9137556+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a5bd9881-5cab-4bcd-87b5-52358b23781a">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c49f949b-858e-4b50-9fae-c2e9b32ef3c5" testId="e9e4f325-e9cc-596a-82a1-fa9d74a0fa25" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: &quot;campus-owner&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9169180+02:00" endTime="2026-10-19T14:15:28.9169181+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c49f949b-858e-4b50-9fae-c2e9b32ef3c5">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="76212a86-e394-4518-9997-b8b83d6a1864" testId="42fb5cad-d3f7-c90e-bb08-62f380b5cb7a" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: &quot;link-owner&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9171157+02:00" endTime="2026-10-19T14:15:28.9171158+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="76212a86-e394-4518-9997-b8b83d6a1864">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3e623269-585a-4024-8f5c-06b2b91a8d51" testId="d7acfbcf-c60d-0322-8e6f-89f8ddd55f44" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.RepositoryValidatesDatesAndStatusesWithoutWriting" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9178064+02:00" endTime="2026-10-19T14:15:28.9178064+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3e623269-585a-4024-8f5c-06b2b91a8d51">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="957902c7-b626-447e-9d89-67a5035277c8" testId="9cea986a-8b40-7a3e-1c1e-0f6be3f59b1e" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: &quot;class&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9143572+02:00" endTime="2026-10-19T14:15:28.9143573+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="957902c7-b626-447e-9d89-67a5035277c8">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="92305496-55ee-4627-b20e-fad0c2a46d3d" testId="4c40bbba-d453-7ca3-c743-994409a0f395" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: &quot;edition-owner&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9152615+02:00" endTime="2026-10-19T14:15:28.9152615+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="92305496-55ee-4627-b20e-fad0c2a46d3d">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ae57b82f-a79a-45aa-8b37-9042a30caddd" testId="718c423e-66d7-391b-cfa4-0b03ce0cb092" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: &quot;edition-status&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9067025+02:00" endTime="2026-10-19T14:15:28.9067025+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ae57b82f-a79a-45aa-8b37-9042a30caddd">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8d2e19eb-95ec-4624-b65c-15896a38ba91" testId="f898d5b6-583b-3cf0-f93e-c7d2b76fb7ee" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: &quot;course_edition_id&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9073594+02:00" endTime="2026-10-19T14:15:28.9073595+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8d2e19eb-95ec-4624-b65c-15896a38ba91">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c599faf6-b200-4365-9de1-8d2902d6e4d3" testId="4afbb925-68fa-3770-c931-1714f0d6647c" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.RepositoryRejectsForgedOwnerAndForeignResources" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9172958+02:00" endTime="2026-10-19T14:15:28.9172958+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c599faf6-b200-4365-9de1-8d2902d6e4d3">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="d6d8877f-2b26-42e2-8687-a20b683dddfa" testId="5dae7d64-0e28-0c37-bc77-7a0135fd0c27" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: &quot;student_id&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9075366+02:00" endTime="2026-10-19T14:15:28.9075366+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d6d8877f-2b26-42e2-8687-a20b683dddfa">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c718a9c8-6ea2-483f-8f98-6a898f9cf6d5" testId="5b0e229a-0227-2ed9-f442-69066a4ec059" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentHistorySurvivesStatusAndClassIsUnchanged" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9187468+02:00" endTime="2026-10-19T14:15:28.9187469+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c718a9c8-6ea2-483f-8f98-6a898f9cf6d5">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="13b9703f-def2-4b46-ae4d-a7c85863a1f3" testId="65de0959-91ca-602b-b84f-b4cc9cd13c0e" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ReadQueriesFilterOwnerBeforeMaterialization" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9072037+02:00" endTime="2026-10-19T14:15:28.9072038+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="13b9703f-def2-4b46-ae4d-a7c85863a1f3">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="41e59f59-1a08-41f8-94e4-573b3219f6b6" testId="06d9de6c-0fc6-fe72-6b61-92a5a44a0464" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: &quot;student-b&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9145541+02:00" endTime="2026-10-19T14:15:28.9145541+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="41e59f59-1a08-41f8-94e4-573b3219f6b6">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="6df71ad2-2838-4566-9bfe-1c32b20b025a" testId="035375d5-dea3-ed4c-4d15-9b0c59f09512" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9176354+02:00" endTime="2026-10-19T14:15:28.9176354+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6df71ad2-2838-4566-9bfe-1c32b20b025a">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="72bf47f2-f410-48ea-91aa-196d1a4842c2" testId="6d1dfd50-5221-8dcb-192e-dc911bc2f2cd" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: &quot;institution_id&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9076990+02:00" endTime="2026-10-19T14:15:28.9076990+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="72bf47f2-f410-48ea-91aa-196d1a4842c2">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="fdfc985c-71c6-461a-92b6-2178ee44602e" testId="ff3038e1-36f2-9fac-2d6b-8d22a8606171" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: &quot;edition-dates&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9070266+02:00" endTime="2026-10-19T14:15:28.9070267+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fdfc985c-71c6-461a-92b6-2178ee44602e">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7c92c3a3-2146-4a3d-8bcd-d568237f9d09" testId="557298b5-0cba-0b35-dde9-e76a66367af3" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: &quot;edition-path&quot;)" computerName="CES01622" duration="00:00:00.0010000" startTime="2026-10-19T14:15:28.9149099+02:00" endTime="2026-10-19T14:15:28.9149099+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7c92c3a3-2146-4a3d-8bcd-d568237f9d09">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 144&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs:line 49&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs:line 71</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.InformationSchemaHasCompositeRestrictConstraints" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="0c050741-c147-29df-3e91-3da3b46dab86">
+      <Execution id="59743bf1-1c2d-4219-a991-dedaa1030808" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="InformationSchemaHasCompositeRestrictConstraints" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnersCodesAndScopedQueries" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="a515aa78-330a-0b0d-495b-1430be24b841">
+      <Execution id="551ce58c-f410-444e-97b9-27d26c48e3a8" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="OwnersCodesAndScopedQueries" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: &quot;institution_id&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="6d1dfd50-5221-8dcb-192e-dc911bc2f2cd">
+      <Execution id="72bf47f2-f410-48ea-91aa-196d1a4842c2" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="EnrollmentIdentityIsImmutable" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: &quot;course_edition_id&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="f898d5b6-583b-3cf0-f93e-c7d2b76fb7ee">
+      <Execution id="8d2e19eb-95ec-4624-b65c-15896a38ba91" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="EnrollmentIdentityIsImmutable" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: &quot;student_id&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="5dae7d64-0e28-0c37-bc77-7a0135fd0c27">
+      <Execution id="d6d8877f-2b26-42e2-8687-a20b683dddfa" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="EnrollmentIdentityIsImmutable" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentHistorySurvivesStatusAndClassIsUnchanged" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="5b0e229a-0227-2ed9-f442-69066a4ec059">
+      <Execution id="c718a9c8-6ea2-483f-8f98-6a898f9cf6d5" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="EnrollmentHistorySurvivesStatusAndClassIsUnchanged" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="035375d5-dea3-ed4c-4d15-9b0c59f09512">
+      <Execution id="6df71ad2-2838-4566-9bfe-1c32b20b025a" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="ExistingBackfillIsIdempotentWithAttributedMt4Graph" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: &quot;enrollment_date&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="f15e24ea-93a0-ed35-98f9-fe524ba3ca3c">
+      <Execution id="a5bd9881-5cab-4bcd-87b5-52358b23781a" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="EnrollmentIdentityIsImmutable" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: &quot;link-owner&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="42fb5cad-d3f7-c90e-bb08-62f380b5cb7a">
+      <Execution id="76212a86-e394-4518-9997-b8b83d6a1864" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="OwnershipCannotBeTransferred" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: &quot;edition-status&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="718c423e-66d7-391b-cfa4-0b03ce0cb092">
+      <Execution id="ae57b82f-a79a-45aa-8b37-9042a30caddd" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="SqlValidatesStructure" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: &quot;enrollment-dates&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="022bbfeb-5e7e-b281-95e5-11e9ca9f7586">
+      <Execution id="ed365251-e2ee-4ff0-ac32-22c54b0e75a8" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="SqlValidatesStructure" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.MultipleCampusesAndEditionsLoadWithEf" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="06338293-5724-9ab1-f0fa-43a263775464">
+      <Execution id="8b0e782b-4239-4fbe-8de7-456ca24e99b8" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="MultipleCampusesAndEditionsLoadWithEf" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ConcurrentScopesRemainSeparate" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="a82551a3-3bdc-1cdf-9f48-8075a36689e8">
+      <Execution id="f51f5a3c-c5ca-47db-9cf7-011a240301ac" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="ConcurrentScopesRemainSeparate" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: &quot;edition-dates&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="ff3038e1-36f2-9fac-2d6b-8d22a8606171">
+      <Execution id="fdfc985c-71c6-461a-92b6-2178ee44602e" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="SqlValidatesStructure" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: &quot;edition-path&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="557298b5-0cba-0b35-dde9-e76a66367af3">
+      <Execution id="7c92c3a3-2146-4a3d-8bcd-d568237f9d09" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="CompositeForeignKeysRejectOtherTenant" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ReadQueriesFilterOwnerBeforeMaterialization" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="65de0959-91ca-602b-b84f-b4cc9cd13c0e">
+      <Execution id="13b9703f-def2-4b46-ae4d-a7c85863a1f3" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="ReadQueriesFilterOwnerBeforeMaterialization" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.RepositoryValidatesDatesAndStatusesWithoutWriting" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="d7acfbcf-c60d-0322-8e6f-89f8ddd55f44">
+      <Execution id="3e623269-585a-4024-8f5c-06b2b91a8d51" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="RepositoryValidatesDatesAndStatusesWithoutWriting" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: &quot;campus&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="567c4f94-9d13-3f9f-b962-b36c92398076">
+      <Execution id="50ec5ee5-8bfc-44a3-8ed9-fd8aadc27863" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="CompositeForeignKeysRejectOtherTenant" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: &quot;enrollment-status&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="4ed86475-d142-1ed4-8616-3b104bdf7ff4">
+      <Execution id="60804725-eba8-4318-b343-ead2e55b9da6" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="SqlValidatesStructure" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: &quot;class&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="9cea986a-8b40-7a3e-1c1e-0f6be3f59b1e">
+      <Execution id="957902c7-b626-447e-9d89-67a5035277c8" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="CompositeForeignKeysRejectOtherTenant" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: &quot;student-a&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="504e14d4-ee68-8f25-3ae7-653fe8c5aa02">
+      <Execution id="07e14e9e-203c-4edd-a064-84c03a50fcfa" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="CompositeForeignKeysRejectOtherTenant" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: &quot;student-b&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="06d9de6c-0fc6-fe72-6b61-92a5a44a0464">
+      <Execution id="41e59f59-1a08-41f8-94e4-573b3219f6b6" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="CompositeForeignKeysRejectOtherTenant" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: &quot;campus-owner&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="e9e4f325-e9cc-596a-82a1-fa9d74a0fa25">
+      <Execution id="c49f949b-858e-4b50-9fae-c2e9b32ef3c5" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="OwnershipCannotBeTransferred" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ClassPathMustMatchAndLegacyRemainsNullable" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="21aeb36d-05a5-bf7e-f38f-059622a6bf23">
+      <Execution id="902bd845-53e5-450d-8739-ffd77fb7c215" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="ClassPathMustMatchAndLegacyRemainsNullable" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.RepositoryRejectsForgedOwnerAndForeignResources" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="4afbb925-68fa-3770-c931-1714f0d6647c">
+      <Execution id="c599faf6-b200-4365-9de1-8d2902d6e4d3" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="RepositoryRejectsForgedOwnerAndForeignResources" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ClassCannotUseDifferentPathWithinSameTenant" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="9443bc17-b662-46bd-3e40-0c21f55a043a">
+      <Execution id="c590e08b-a647-4f5e-b839-7c7f8a10269f" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="ClassCannotUseDifferentPathWithinSameTenant" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: &quot;edition-path&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="a540e48a-45cd-0730-ee2d-7c2e8924bfb5">
+      <Execution id="6c58cdf6-9f73-4c50-873d-2fab6700615d" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="OwnershipCannotBeTransferred" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: &quot;edition-owner&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="4c40bbba-d453-7ca3-c743-994409a0f395">
+      <Execution id="92305496-55ee-4627-b20e-fad0c2a46d3d" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="OwnershipCannotBeTransferred" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: &quot;blank-code&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="59eb8d74-6313-edc3-a8ca-9c7887055ed6">
+      <Execution id="f9378edd-32d1-4cf2-85b3-73df8d1fe0e3" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="SqlValidatesStructure" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="4ed86475-d142-1ed4-8616-3b104bdf7ff4" executionId="60804725-eba8-4318-b343-ead2e55b9da6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="06338293-5724-9ab1-f0fa-43a263775464" executionId="8b0e782b-4239-4fbe-8de7-456ca24e99b8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9443bc17-b662-46bd-3e40-0c21f55a043a" executionId="c590e08b-a647-4f5e-b839-7c7f8a10269f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="21aeb36d-05a5-bf7e-f38f-059622a6bf23" executionId="902bd845-53e5-450d-8739-ffd77fb7c215" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="504e14d4-ee68-8f25-3ae7-653fe8c5aa02" executionId="07e14e9e-203c-4edd-a064-84c03a50fcfa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="022bbfeb-5e7e-b281-95e5-11e9ca9f7586" executionId="ed365251-e2ee-4ff0-ac32-22c54b0e75a8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="59eb8d74-6313-edc3-a8ca-9c7887055ed6" executionId="f9378edd-32d1-4cf2-85b3-73df8d1fe0e3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="567c4f94-9d13-3f9f-b962-b36c92398076" executionId="50ec5ee5-8bfc-44a3-8ed9-fd8aadc27863" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a540e48a-45cd-0730-ee2d-7c2e8924bfb5" executionId="6c58cdf6-9f73-4c50-873d-2fab6700615d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a515aa78-330a-0b0d-495b-1430be24b841" executionId="551ce58c-f410-444e-97b9-27d26c48e3a8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0c050741-c147-29df-3e91-3da3b46dab86" executionId="59743bf1-1c2d-4219-a991-dedaa1030808" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a82551a3-3bdc-1cdf-9f48-8075a36689e8" executionId="f51f5a3c-c5ca-47db-9cf7-011a240301ac" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f15e24ea-93a0-ed35-98f9-fe524ba3ca3c" executionId="a5bd9881-5cab-4bcd-87b5-52358b23781a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e9e4f325-e9cc-596a-82a1-fa9d74a0fa25" executionId="c49f949b-858e-4b50-9fae-c2e9b32ef3c5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="42fb5cad-d3f7-c90e-bb08-62f380b5cb7a" executionId="76212a86-e394-4518-9997-b8b83d6a1864" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d7acfbcf-c60d-0322-8e6f-89f8ddd55f44" executionId="3e623269-585a-4024-8f5c-06b2b91a8d51" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9cea986a-8b40-7a3e-1c1e-0f6be3f59b1e" executionId="957902c7-b626-447e-9d89-67a5035277c8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4c40bbba-d453-7ca3-c743-994409a0f395" executionId="92305496-55ee-4627-b20e-fad0c2a46d3d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="718c423e-66d7-391b-cfa4-0b03ce0cb092" executionId="ae57b82f-a79a-45aa-8b37-9042a30caddd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f898d5b6-583b-3cf0-f93e-c7d2b76fb7ee" executionId="8d2e19eb-95ec-4624-b65c-15896a38ba91" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4afbb925-68fa-3770-c931-1714f0d6647c" executionId="c599faf6-b200-4365-9de1-8d2902d6e4d3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5dae7d64-0e28-0c37-bc77-7a0135fd0c27" executionId="d6d8877f-2b26-42e2-8687-a20b683dddfa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5b0e229a-0227-2ed9-f442-69066a4ec059" executionId="c718a9c8-6ea2-483f-8f98-6a898f9cf6d5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="65de0959-91ca-602b-b84f-b4cc9cd13c0e" executionId="13b9703f-def2-4b46-ae4d-a7c85863a1f3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="06d9de6c-0fc6-fe72-6b61-92a5a44a0464" executionId="41e59f59-1a08-41f8-94e4-573b3219f6b6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="035375d5-dea3-ed4c-4d15-9b0c59f09512" executionId="6df71ad2-2838-4566-9bfe-1c32b20b025a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6d1dfd50-5221-8dcb-192e-dc911bc2f2cd" executionId="72bf47f2-f410-48ea-91aa-196d1a4842c2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ff3038e1-36f2-9fac-2d6b-8d22a8606171" executionId="fdfc985c-71c6-461a-92b6-2178ee44602e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="557298b5-0cba-0b35-dde9-e76a66367af3" executionId="7c92c3a3-2146-4a3d-8bcd-d568237f9d09" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="29" executed="29" passed="0" failed="29" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.70]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.77]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.78]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:02.04]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.04]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.04]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.04]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.04]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.04]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.04]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.04]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.04]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.04]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.04]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.05]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.06]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.06]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.06]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.06]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.06]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.06]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.06]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.06]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.06]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.06]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.06]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.06]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.06]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.06]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.06]       System.InvalidOperationException : Lo schema del database 'electronic_register_test' non corrisponde al modello EF. EnsureCreated non aggiorna schemi esistenti: ricreare manualmente il database di test vuoto. Problemi: indice mancante course_edition.IX_course_edition_study_path_id (study_path_id); indice mancante student_enrollment.IX_student_enrollment_student_id (student_id)&#xD;
+[xUnit.net 00:00:02.06]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(144,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.VerifyAsync(MySqlConnection connection, String database, IModel model)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestDatabaseSchema.cs(49,0): at ElectronicRegisterAPI.Tests.Integration.TestDatabaseSchema.EnsureAsync(String connectionString, ElectronicRegisterContext ctx)&#xD;
+[xUnit.net 00:00:02.06]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\IntegrationFixture.cs(71,0): at ElectronicRegisterAPI.Tests.Integration.IntegrationFixture.InitializeAsync()&#xD;
+[xUnit.net 00:00:02.06]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9097038+02:00">
+        <Text>[xUnit.net 00:00:02.04]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: "blank-code") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9099739+02:00">
+        <Text>[xUnit.net 00:00:02.04]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: "enrollment-dates") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9100036+02:00">
+        <Text>[xUnit.net 00:00:02.04]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: "edition-status") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9100216+02:00">
+        <Text>[xUnit.net 00:00:02.04]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: "enrollment-status") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9100483+02:00">
+        <Text>[xUnit.net 00:00:02.04]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: "edition-dates") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9100996+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ReadQueriesFilterOwnerBeforeMaterialization [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9103995+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: "course_edition_id") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9104497+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: "student_id") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9106675+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: "institution_id") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9334528+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: "enrollment_date") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9334955+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.MultipleCampusesAndEditionsLoadWithEf [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9335252+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ConcurrentScopesRemainSeparate [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9335499+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: "class") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9335748+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: "student-b") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9336059+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: "campus") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9336294+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: "edition-path") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9336543+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: "student-a") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9336796+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: "edition-owner") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9651686+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: "edition-path") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9652184+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: "campus-owner") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9652382+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: "link-owner") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9652570+02:00">
+        <Text>[xUnit.net 00:00:02.06]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.RepositoryRejectsForgedOwnerAndForeignResources [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9652762+02:00">
+        <Text>[xUnit.net 00:00:02.06]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnersCodesAndScopedQueries [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9652973+02:00">
+        <Text>[xUnit.net 00:00:02.06]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9653192+02:00">
+        <Text>[xUnit.net 00:00:02.06]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.RepositoryValidatesDatesAndStatusesWithoutWriting [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9653482+02:00">
+        <Text>[xUnit.net 00:00:02.06]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ClassPathMustMatchAndLegacyRemainsNullable [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9653666+02:00">
+        <Text>[xUnit.net 00:00:02.06]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ClassCannotUseDifferentPathWithinSameTenant [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9670702+02:00">
+        <Text>[xUnit.net 00:00:02.06]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentHistorySurvivesStatusAndClassIsUnchanged [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T14:15:28.9670986+02:00">
+        <Text>[xUnit.net 00:00:02.06]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.InformationSchemaHasCompositeRestrictConstraints [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

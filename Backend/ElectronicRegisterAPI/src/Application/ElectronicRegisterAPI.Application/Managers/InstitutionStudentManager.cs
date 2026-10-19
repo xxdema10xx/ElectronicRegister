@@ -10,6 +10,8 @@ internal sealed class InstitutionStudentManager(InstitutionSchoolAuthorization a
     IInstitutionStudentRepository students, ITransactionManager transactions) : IInstitutionStudentManager
 {
     private static StudentDto Map(Student s) => new() { Id = s.Id, FirstName = s.FirstName, LastName = s.LastName };
+    public async Task<List<StudentDto>> GetForClassAsync(Guid classId, CancellationToken ct) =>
+        (await students.GetForClassAsync(await access.ReadAsync(true, ct), classId, ct)).Select(Map).ToList();
     public async Task<List<StudentDto>> GetAllAsync(CancellationToken ct) => (await students.GetAllAsync(await access.ReadAsync(true, ct), ct)).Select(Map).ToList();
     public async Task<int> CountAsync(CancellationToken ct) => await students.CountAsync(await access.ReadAsync(true, ct), ct);
     public async Task<StudentDto?> GetByIdAsync(Guid id, CancellationToken ct)

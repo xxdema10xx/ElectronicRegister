@@ -1,0 +1,136 @@
+﻿{
+    "baseline":  {
+                     "total":  482,
+                     "allPreserved":  true,
+                     "integration":  434,
+                     "unit":  48
+                 },
+    "final1":  {
+                   "total":  540,
+                   "failed":  0,
+                   "skipped":  0,
+                   "integration":  489,
+                   "unit":  51
+               },
+    "final2":  {
+                   "total":  540,
+                   "failed":  0,
+                   "skipped":  0,
+                   "integration":  489,
+                   "unit":  51
+               },
+    "identicalFinalSets":  true,
+    "newTestCount":  58,
+    "newUnit":  [
+                    "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Multiple)",
+                    "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Open)",
+                    "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Single)"
+                ],
+    "newIntegration":  [
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnotherStudentInSameInstitutionCannotReadResumeSubmitOrReportEvents",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: \"duplicate-option\", status: 400)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: \"duplicate-question\", status: 400)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: \"foreign-option\", status: 404)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: \"foreign-question\", status: 404)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: \"single-many-options\", status: 400)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssignedSubmissionIdResumeAndRevisionSurviveNewLoginWithoutNewAttempt",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssignmentsRejectForeignWrongClassDuplicatesAndInvalidExtraTimeAtomically",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.BothRolloutFlagsAreRequiredForEveryNewAction(school: False, exam: False)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.BothRolloutFlagsAreRequiredForEveryNewAction(school: False, exam: True)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.BothRolloutFlagsAreRequiredForEveryNewAction(school: True, exam: False)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: \"admin-removed\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: \"institution\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: \"membership\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: \"roles-added\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: \"teacher-removed\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ConcurrentDeviceRevisionsAndAutosaveSubmitNeverLoseAcceptedRevision",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CrossTenantEventIdCollisionRollsBackCountAndDoesNotRevealForeignEvent",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.DraftUpdateDeleteAndUnstartedCancellationUseInstitutionalLocationsAndAudit",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.DropdownAndStudentClassFilterAreScopedAndAssignmentSpecific",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"audience\", status: 401)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"expired\", status: 401)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"legacy\", status: 401)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"none\", status: 401)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"other-user\", status: 403)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"selection\", status: 401)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: \"admin\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: \"teacher\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.GradeCrudPagingFiltersStatisticsAndTeacherOwnershipRemainScoped",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.LateManualAndExpiryRaceCreatesOnlyOneOfficialGrade",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.LegacyWorkerAndNullCallerCannotProcessInstitutionalSubmissions",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Multiple)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Open)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Single)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.MultipleRequiredNeedsOneSelectionNotAllCorrectOptions",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OfficialClosedResultPassedAndGenericGradeProtectionArePreserved(correct: False)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OfficialClosedResultPassedAndGenericGradeProtectionArePreserved(correct: True)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 5)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 6)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 9)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OversizedViolationBodyNeverPersistsAnEvent",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.RealBootstrapInventoriesAllPoliciesRoutesOpenApiAndRetainsWorker(environment: \"Development\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.RealBootstrapInventoriesAllPoliciesRoutesOpenApiAndRetainsWorker(environment: \"Production\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ReviewFinalizeRaceLeavesOneOfficialGradeAndAtomicAudit",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.SharedGlobalStudentConcurrentSessionsNeverMixAnswersOrInstitution",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StaffMultiRoleDoesNotNeedImplicitTeacherProfileOrGrantPrivilegesInB",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StartRacesPreserveExamLockAndSingleAttempt(opponent: \"cancel\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StartRacesPreserveExamLockAndSingleAttempt(opponent: \"close\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StartRacesPreserveExamLockAndSingleAttempt(opponent: \"start\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.TeacherStudentMembershipCombinesReadPermissionsWithoutExposingProvisionalOwnResult",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.UninitializedContextAndManuallyConstructedPrincipalNeverAuthorizeARepository",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: \"fullscreen_exit\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: \"tab_hidden\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: \"window_blur\")"
+                       ],
+    "files":  [
+                  {
+                      "file":  "baseline/unit.trx",
+                      "total":  48,
+                      "passed":  48,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "57A6545E2DEBC377FA82D433D24F61A35EC1EFC7923B7545F912949F8FD0EC82"
+                  },
+                  {
+                      "file":  "baseline/integration.trx",
+                      "total":  434,
+                      "passed":  434,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "61B58F1C7DFF5F26203747F3ADEDE290EBEC837D5CB68D7C0DC6D5007D5BE58E"
+                  },
+                  {
+                      "file":  "final-1/unit.trx",
+                      "total":  51,
+                      "passed":  51,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "2398A996E192C92E70BDDAE615DDF20D42253DAEC69B39F26BADE223538DCAD0"
+                  },
+                  {
+                      "file":  "final-1/integration.trx",
+                      "total":  489,
+                      "passed":  489,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "19A973864A0CD1C0246DC48A8C69D69910F2E97EC1AC060237351725B60C8387"
+                  },
+                  {
+                      "file":  "final-2/unit.trx",
+                      "total":  51,
+                      "passed":  51,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "C164D6CDB3101C4689D26A96B9C63C70B82FC5FB386F2CB757025C6F31A057E8"
+                  },
+                  {
+                      "file":  "final-2/integration.trx",
+                      "total":  489,
+                      "passed":  489,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "6BF435DBDD914DBDD57C4970D2847E09E1D03442D1D9D8FB07C3B46AA6A2522D"
+                  }
+              ]
+}

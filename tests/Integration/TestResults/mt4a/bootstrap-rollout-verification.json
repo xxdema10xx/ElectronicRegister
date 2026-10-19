@@ -1,0 +1,32 @@
+{
+  "final-1": [
+    {
+      "testName": "ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: \"Development\")",
+      "outcome": "Passed",
+      "duration": "00:00:03.1252247"
+    },
+    {
+      "testName": "ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: \"Production\")",
+      "outcome": "Passed",
+      "duration": "00:00:03.6429662"
+    }
+  ],
+  "final-2": [
+    {
+      "testName": "ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: \"Production\")",
+      "outcome": "Passed",
+      "duration": "00:00:03.4994278"
+    },
+    {
+      "testName": "ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: \"Development\")",
+      "outcome": "Passed",
+      "duration": "00:00:03.1507858"
+    }
+  ],
+  "rolloutDefaults": {
+    "SchoolApi": false,
+    "ExamApi": false,
+    "InstitutionWorker": false
+  },
+  "globalSqlModeUnchanged": true
+}
