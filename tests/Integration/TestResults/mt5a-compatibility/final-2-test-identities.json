@@ -1,0 +1,3557 @@
+[
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseDuringSubmit_PreservesInvariantAndAllowsRetry(automatic: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OfficialClosedResultPassedAndGenericGradeProtectionArePreserved(correct: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"teacher\", role: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.MultipleRolesStayWithinSelectedMembershipAndProfilesNeverFallBackToUser",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.AfterOverride_ResultReturnsOfficialGradeAndPassed",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: \"manual\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.CurrentStateRevokesBothActionsAndDoesNotAffectOtherTenant(change: \"add-role\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ContextCannotInventPermissions(fault: \"wrong-tenant\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: True, course: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.NonOwnerTeacher_ForbiddenAtHttpAndApplicationLevels(operation: \"review\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.ConcurrentPublish_ProducesOneTransitionAndOneAudit",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"expired\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ReadQueriesFilterOwnerBeforeMaterialization",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 6)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSql_DifferentTenantsCanHoldEnrollmentLocksAndWriteEventsConcurrently",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"legacy\", expected: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"no-context\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.TeacherStudentMembershipCombinesReadPermissionsWithoutExposingProvisionalOwnResult",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.FinalizeConcurrencyTests.ConcurrentFinalize_CreatesSingleGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"institution-archived\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.ReviewApis_RejectStudentAndAnonymous(operation: \"review\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.MissingStudentProfileAndNonHttpScopeFailClosed",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ClientInstitutionIdentifiersCannotSelectOwnerOrContext",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.BackfilledLegacyBridgeAlsoChecksCurrentAuthorization(change: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: \"edition-dates\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"expired\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.ManualSubmit_RollsBackReplacementAndCompletedWrites(closedOnly: False, failAfterAudit: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: \"tab_hidden\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.InvalidBodiesAreBadRequestsWithoutWrites(family: \"subject\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_EnrolledTerminatesWithExplicitDateReasonRevisionAndHistory(state: \"cancelled\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"student\", method: \"DELETE\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eIndependentTenantWorkersHoldSubmissionLocksConcurrently",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"duplicate-role\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: \"institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"teacher\", method: \"DELETE\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"status=Active\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: \"roles-added\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"biennium_study_path\", column: \"biennium_study_area_id\", parent: \"biennium_study_area\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Submit_InvalidAnswerSnapshot_RollsBack",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.Admin_CanOverride",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.ManualSubmit_RollsBackReplacementAndCompletedWrites(closedOnly: False, failAfterAudit: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ManualAndAutomaticSubmit_BothLockOrdersDeliverExactlyOnce(automaticFirst: True, closedOnly: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.InstitutionDeleteRestrictsAndCannotCascadeSchoolData",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: \"admin-removed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.StudentStart_RequiresPublishedAndCurrentWindow(state: \"draft\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_EnrolledTerminatesWithExplicitDateReasonRevisionAndHistory(state: \"withdrawn\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.HistoricalParentsCannotBeCascadeDeleted(parent: \"user\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.TeacherNonOwner_CannotOverride",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.StudentSubmitResponse_OnlyPublishesPersistedOfficialGrade(closedOnly: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.MultipleCampusesBelongToExactlyOneFoundationAndInactiveFalsePersists",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: \"options\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: \"name\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"selection\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.MultiRoleAdminUsesAdminPermissionButTeacherOperationRequiresItsOwnProfile",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"student\", column: \"class_id\", parent: \"class\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MembershipRolesNeverInheritGlobalAdminOrAnotherTenantAdmin(name: \"teacher\", b: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Multiple)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.InvalidBodiesAreBadRequestsWithoutWrites(family: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: \"publish\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CancelAndStart_AreSerializedWithoutCancelledExamAttempts(cancelFirst: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: \"list\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InvalidForeignKeysAreRejectedByMySql(kind: \"role-membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: \"http\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: \"id\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.OverrideWithInvalidGrade_IsRejectedWithoutChanges",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: \"missing-object\", accepted: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: \"institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.RealBootstrapInventoriesAllPoliciesRoutesOpenApiAndRetainsWorker(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CrossTenantEventIdCollisionRollsBackCountAndDoesNotRevealForeignEvent",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.GateMetadataCannotBypassMissingContextOrWrongPolicy(wrongPolicy: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.ClosedOnly_BelowThreshold_NeverPasses",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_ConversionAndOverrideTests.FullyReviewed_CalculatesAndPersistsSuggestedGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"student\", role: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eCapabilityCannotBeForgedOrRetargetedAndNoHttpSurfaceExists",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.Finalize_RollsBackNewOrUpdatedGradeAndAudit(isOverride: True, existingGrade: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.GlobalUserCanHaveDifferentAndMultipleRolesPerFoundation",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_RevocationAfterJwtBlocksEveryLifecycleAction(change: \"role\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.UnpublishedStates_NeverExposeProvisionalValues(status: InProgress)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"connection\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.DeleteReferencedOriginal_IsConflict_AndDeleteUnreferencedDraftIsSafe",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.NonDraft_RejectsUpdatesPublishAndDelete(state: \"closed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ForeignLinksAreRejectedAtomicallyByManager(family: \"student\", link: \"class\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: \"foreign-issuer\", accepted: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 9)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerAllowsCloseOnlyAfterLastInProgressAndDoesNotPenalizeViolations",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.AdminForeignResourceMatrixIsIndistinguishableFromMissingAndLeavesBothGraphsIntact",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: \"student\", delete: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.TeacherNonOwner_CannotReview",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"exam_submission\", column: \"grade_id\", parent: \"grade\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: \"student_id\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.FailedReplace_RollsBackAllChanges",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: \"missing\", number: 1452)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SubjectNamesAreIndependentAndAllLookupsUseVisibility(role: \"student\", expected: 1)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"institution\", status: 403)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.NewOperationRechecksRevocationAndNeverFallsBack(change: \"institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ConcurrencyIntegrationTests.AutosaveAfterDeadline_NoWrite",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"none\", expected: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSql_EveryMt4bMutationRollsBackWhenItsAuditFails(operation: \"class\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: \"fullscreen_exit\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSql_EveryMt4bMutationRollsBackWhenItsAuditFails(operation: \"create-edition\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: \"close\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.RepositoryValidatesDatesAndStatusesWithoutWriting",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"wrong-marker-policy\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"pending\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamSecurityTests.Student_CannotSeeCorrectOptions",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSql_EveryMt4bMutationRollsBackWhenItsAuditFails(operation: \"campus\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"missing-membership\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_RevocationAfterJwtBlocksEveryLifecycleAction(change: \"institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.CatalogNamesAndBienniumDatesAreIndependentAndProfilesHaveNoInventedUsers",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: \"schedule\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"student\", method: \"GET\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: \"pending_review\", blocked: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.BackfilledLegacyBridgeAlsoChecksCurrentAuthorization(change: \"institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.RetakeLinks_RejectSelfCyclesMissingAndOtherClassSubject_WithoutChanges",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.RetakeFullHttpFlow_KeepsOriginalGradeAndSubmissionIndependent",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.UpdateAssignments_UsesClassIdAndPersistsExtraTime",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.LateManualAndExpiryRaceCreatesOnlyOneOfficialGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerFlagDoesNotOpenGlobalAccountOrMembershipAdministration",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"exam_submission\", column: \"exam_id\", parent: \"exam\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.CurrentStateRevokesBothActionsAndDoesNotAffectOtherTenant(change: \"institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"submission_answer\", column: \"question_id\", parent: \"question\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_WorkerRecoveryTests.ItemFailureAfterSql_DoesNotStopBatch_AndNextBatchRecoversWithFreshScope",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.ReviewThenFinalize_CreatesExactlyOneGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_TerminalTransitionsAndReentryAreAlwaysRejected(initial: \"cancelled\", target: \"completed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.HistoricalParentsCannotBeCascadeDeleted(parent: \"institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnotherStudentInSameInstitutionCannotReadResumeSubmitOrReportEvents",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"status=unknown\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"missing-role\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.ManualSubmit_RollsBackReplacementAndCompletedWrites(closedOnly: True, failAfterAudit: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.StudentStart_RequiresPublishedAndCurrentWindow(state: \"future\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"membership\", status: 403)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: \"wrong-user\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_RevalidatesPersistedDraft_AndFailureLeavesNoAudit(kind: \"students\", status: 409)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: \"edition-path\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"identity\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Review_InProgress_IsRejected",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.PlatformAuditRequiresExplicitMetadataOnlyShapeAndNeverClaimsSchoolData",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"teacher\", method: \"GET\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: \"policy\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"signature\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: \"none\", blocked: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_TerminalTransitionsAndReentryAreAlwaysRejected(initial: \"withdrawn\", target: \"enrolled\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.RealBootstrapHasExactPoliciesUnambiguousRoutesOpenApiAndWorker(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.NonDraft_RejectsUpdatesPublishAndDelete(state: \"cancelled\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.OverrideWithoutReason_IsRejected",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.GateMetadataCannotBypassMissingContextOrWrongPolicy(wrongPolicy: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.StudentStart_RequiresPublishedAndCurrentWindow(state: \"expired\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ContextCannotInventPermissions(fault: \"forged-role\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EditionStatusMustBeExplicitAndIsNeverDerivedFromDates(status: \"completed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipToolRejectsUnauthorizedDatabaseBeforeNetwork(database: \"other_database\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ConcurrentScopedCallsAndTwoAdministratorsHaveNoContextOrOwnershipLeak",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"audience\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: \"cancel\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"question\", column: \"exam_id\", parent: \"exam\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: \"missing-membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SubjectNamesAreIndependentAndAllLookupsUseVisibility(role: \"admin\", expected: 2)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.BootstrapPoliciesReadOnlyRoutesAndClosedDefaultAreExplicit(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.NewOperationRechecksRevocationAndNeverFallsBack(change: \"role-added\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.IncompatibleLegacyRoleBlocksBackfillWithoutChangingAnyLegacyCell",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.RepositoryUsesOneBoundedSqlProjectionPerReadAndNoTrackedEntities",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: \"numeric-role\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StaffMultiRoleDoesNotNeedImplicitTeacherProfileOrGrantPrivilegesInB",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: \"course_edition_id\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.TeacherOverride_SevenToFive_MarksFailed",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: \"subject\", delete: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.NonDraft_RejectsUpdatesPublishAndDelete(state: \"published\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ValidLinksCreateProfilesWithoutCreatingUsersMembershipsOrRoles",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.RepositoryRejectsForgedOwnerAndForeignResources",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.PendingReview_DoesNotPublishOfficialGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_NonAdminsCannotMutateOrReadReasons(role: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.ClosedOnly_70Percent_CreatesSuggestedAndOfficialSeven",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.MultipleRequiredNeedsOneSelectionNotAllCorrectOptions",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"submission_answer_option\", column: \"option_id\", parent: \"question_option\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: \"enrollment-dates\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_WorkerRecoveryTests.ControlledStopBeforeDispatch_NewWorkerRecoversPersistedExpiredBatch",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: \"blank-code\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.UnpublishedStates_NeverExposeProvisionalValues(status: PendingReview)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"pageNumber=2147483647\u0026pageSize=100\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"submission_answer\", column: \"submission_id\", parent: \"exam_submission\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: \"subject\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFinalInventoryIncludesEveryRegisteredRouteAndNoTechnicalHttpApi(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: \"Student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: \"questions\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.NewOperationRechecksRevocationAndNeverFallsBack(change: \"role-removed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: \"expired\", blocked: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.GlobalIdentityResolvesDifferentProfilesAndBothRolesInEachFoundation",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: \"subject\", delete: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_SelectionAnonymousAndClosedFlagsCannotUseNewActions",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"timeout\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: \"worker\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ScopedCrudWritesExplicitOwnerAndLeavesBUnchanged(family: \"subject\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.ProfileOwnershipCannotBeMovedOrRelinked(kind: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.GradeMappingTests.Submit_Idempotent_ReturnsPersistedOfficialGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"policy\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CampusLinksAreManyToManyScopedUniqueAndPreservedWhenInactive",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: \"email-only\", accepted: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"none\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.ConcurrentDifferentOverrides_OnlyOneWins",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.StudentSubmitResponse_OnlyPublishesPersistedOfficialGrade(closedOnly: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnersCodesAndScopedQueries",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AllCompositeConstraintsAndSupportingIndexesExistWithStrictGuidTypes",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ReviewAndFinalize_BothLockOrdersUseOnlyCommittedCompleteReview(finalizeFirst: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: \"cancelled\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Multiple)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: \"enrollment-status\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: \"teacher\", delete: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.DraftUpdate_ApplicationPersistsStructureAndLink",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"roles-added\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: \"mixed\", blocked: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: \"finalized\", blocked: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_TerminalTransitionsAndReentryAreAlwaysRejected(initial: \"completed\", target: \"enrolled\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.StudentOwnWork_RedactsInProgressAndReviewedPending(reviewed: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: \"duration\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.IdentitySelectionSeparatesFoundationsAndRolesWithoutLegacyProfiles",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_TerminalTransitionsAndReentryAreAlwaysRejected(initial: \"withdrawn\", target: \"completed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"other-user\", expected: 403)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: \"failed_auto\", blocked: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: \"Biennium\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OversizedViolationBodyNeverPersistsAnEvent",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: \"wrong-marker-policy\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ManualAndAutomaticSubmit_BothLockOrdersDeliverExactlyOnce(automaticFirst: False, closedOnly: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: \"student\", delete: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"duplicate-sub\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: False, course: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cPreflightTests.DefaultRolloutNeverOpensSchoolRoutesWithoutAuthorization",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"purpose\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"subject\", role: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: \"teacher-removed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.MissingRoleIdentity_ForbiddenInsteadOfUnrestrictedQueries",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidAssignments_AreRejectedWithoutChanges(kind: \"duplicate\", status: 400)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.NonOwnerTeacher_ForbiddenAtHttpAndApplicationLevels(operation: \"read\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.StudentReadsRespectAdminTeacherAndOwnProfileAcrossBothTenants",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_RevalidatesPersistedDraft_AndFailureLeavesNoAudit(kind: \"expired\", status: 409)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eStaleCapabilityAndIncoherentAssignmentFailClosedUnderLock",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.AssignmentUpdate_FaultAfterSql_RestoresPreviousExtraTime",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.TeacherAndStudentCannotUseAdministrativeWriters(family: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(teacherProfile: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"issuer\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentHistorySurvivesStatusAndClassIsUnchanged",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"pageNumber=0\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.UnassignedTeacherAndStudentWithoutClassReceiveEmptyCollections",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Close_RejectsIllegalSourceState(state: \"draft\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ReviewFinalizeRaceLeavesOneOfficialGradeAndAtomicAudit",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RealAdminMembershipDoesNotImplyTeacherOrStudentProfile",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"pageSize=101\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: \"enrolled\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: \"foreign-question\", status: 404)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: \"identity\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_IdenticalRetryAfterLostResponseIsIdempotentAndChangedIntentConflicts",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"teacher\", role: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.AbsentOrInvalidCourseFlagCannotBeEnabledByClientAndWorkerFlagDoesNotOpenHttp",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.FinalizeRetry_IsIdempotentAndDoesNotDuplicateAudit",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamSecurityTests.TeacherNonOwner_CannotListExamSubmissions",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Autosave_DuplicateQuestion_IsRejected",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: \"deleted-user\", accepted: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.OpenScoreDoubleCountTests.OpenScore_IgnoresClosedAnswerAwardedPoints",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.StudentStart_RequiresPublishedAndCurrentWindow(state: \"cancelled\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.BackfilledLegacyBridgeAlsoChecksCurrentAuthorization(change: \"role\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EnrollmentHistoryAndPersonalMembershipProfilesStaySeparateAcrossSharedUser",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.DeleteBusinessRulesAndScopedNameUniquenessRemainEffective",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: \"role\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: \"missing-profile\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesAdministrativeActionsWithoutPartialOfficialGrade(action: \"review\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"grade\", column: \"class_subject_id\", parent: \"class_subject\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ImmutableFieldsInvalidDatesAndUnapprovedMutationsAreRejected",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFailedItemDoesNotBlockOtherTenantAndNewSweepRecovers",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NamesAreUniqueOnlyWithinInstitutionAndDependenciesRemainConflicts",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipToolRejectsUnauthorizedDatabaseBeforeNetwork(database: \"electronic_register\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: \"admin-no-profile\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ParallelTenantQueriesAndPostsNeverMixDataAndSqlWritersCarryOwner",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: \"duplicate\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ScopedCrudWritesExplicitOwnerAndLeavesBUnchanged(family: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.TeacherNonOwner_CannotFinalize",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.UnpublishedStates_NeverExposeProvisionalValues(status: FailedAuto)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StartRacesPreserveExamLockAndSingleAttempt(opponent: \"cancel\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.StudentOwnWork_RedactsInProgressAndReviewedPending(reviewed: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"exam\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InstitutionCodeIsUniqueIncludingCaseVariants(lowerCase: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSql_EveryMt4bMutationRollsBackWhenItsAuditFails(operation: \"update-edition\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ConcurrentDuplicateSubjectIsOneSuccessAndOneBusinessError",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSql_EveryMt4bMutationRollsBackWhenItsAuditFails(operation: \"create-enrollment\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: \"scheme\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AnswersCannotUseAnotherExamOrAnOptionOfAnotherQuestionInTheSameTenant",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.DraftUpdate_FaultAfterSql_RestoresStructureAndProperties(failOnSave: 3)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InstitutionCodeIsUniqueIncludingCaseVariants(lowerCase: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: \"student-a\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.ReviewApis_RejectStudentAndAnonymous(operation: \"list\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"search=\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.StudentStart_RequiresPublishedAndCurrentWindow(state: \"closed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: \"duplicate-question\", status: 400)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: \"exam\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: \"institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.GradeMappingTests.Result_ManualFinalization_ReturnsPersistedOfficialGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: \"linked\", accepted: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: \"duplicate\", number: 1062)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"teacher\", method: \"PUT\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EditionStatusMustBeExplicitAndIsNeverDerivedFromDates(status: \"cancelled\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SearchAndCountNeverRevealForeignOnlyNames(family: \"subject\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.DifferentMaxScore_UsesPassingPercentNotPassingScore",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: \"missing\", number: 1452)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_CorrectionKeepsThePreviousTerminalDateAndCannotCorrectEnrolled",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.LegacyWorkerAndNullCallerCannotProcessInstitutionalSubmissions",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"school\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.PreparatoryRepositoryDoesNotActivateFoundations",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.Override_PersistsReasonActorAndTimestamp",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Review_ClosedQuestion_IsRejected",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MembershipRolesNeverInheritGlobalAdminOrAnotherTenantAdmin(name: \"admin\", b: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: \"roles\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Single)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: \"membership\", number: 1452)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: \"admin-removed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.FullReplace_NoUniqueConstraintViolation",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: \"wrong-membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: \"position\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"left\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.TokenPurposesCannotBeInterchangedAndNoMembershipIsPublic",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CapturedQueriesFilterInSqlHaveServerCountAndNoListNPlusOne",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFinalInventoryIncludesEveryRegisteredRouteAndNoTechnicalHttpApi(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_EnrolledTerminatesWithExplicitDateReasonRevisionAndHistory(state: \"completed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: \"another-user\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: \"students\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"anonymous\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"duplicate-property\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EditionStatusMustBeExplicitAndIsNeverDerivedFromDates(status: \"active\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: \"grade\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(correctIssuer: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.ControlledLegacyBackfillPreservesEveryGuidAndCellAndIsIdempotent",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.GradeMappingTests.Result_ClosedOnly_ReturnsPersistedOfficialGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidAssignments_AreRejectedWithoutChanges(kind: \"wrong-class\", status: 400)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.SharedGlobalStudentConcurrentSessionsNeverMixAnswersOrInstitution",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: \"institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.InformationSchemaHasCompositeRestrictConstraints",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: \"\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: \"delete-admin\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.MultipleFoundationsInSameRegionRemainDistinctAndProvisioning",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: \"publish\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RootOwnershipRequiresAnExistingInstitutionAndLegacyFallbackIsExplicit",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.FiltersSearchAndPaginationAreLocalDeterministicAndReadOnly",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: \"points\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.BackfilledLegacyBridgeAlsoChecksCurrentAuthorization(change: \"global-role\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.UninitializedContextAndManuallyConstructedPrincipalNeverAuthorizeARepository",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: \"unowned-role\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"exam_violation\", column: \"submission_id\", parent: \"exam_submission\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_ForeignAndMissingResourcesAreIndistinguishableAndTenantRolesNeverCombine",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.Admin_CanReviewAndFinalize",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.GradeMappingTests.Result_PendingReview_HasNoOfficialGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: \"cancel\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SubjectsIntersectAssignmentsForAllLookupsIncludingByTeacher",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"audience\", expected: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseWithActiveSubmission_IsRejected_AndClosesAfterAutomaticDelivery",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"pageSize=0\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.FinalGradeValidationTests.Finalize_WithFinalGradeAtLowerBound_Succeeds",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: \"admin\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.FinalizeWithoutOverride_UsesSuggestedGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidAssignments_AreRejectedWithoutChanges(kind: \"missing\", status: 404)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.ReviewApis_RejectStudentAndAnonymous(operation: \"finalize\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"type\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_TerminalTransitionsAndReentryAreAlwaysRejected(initial: \"completed\", target: \"withdrawn\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: \"update-admin\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.DefaultRolloutRejectsValidScopedTokensForAllActions",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: \"duplicate\", number: 1062)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: \"wrong-institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: \"school\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.ConcurrentReviewAndFinalize_PreservesFinalizedGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"other-user\", status: 403)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: \"missing-institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: \"single-many-options\", status: 400)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.BootstrapPoliciesReadOnlyRoutesAndClosedDefaultAreExplicit(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.NonAdminsCannotUseAnyAdministrativeAction(role: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: \"duplicate-binding\", accepted: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_InvalidDatesReasonsMissingRevisionAndImmutableFieldsFailWithoutWrites",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ContextCannotInventPermissions(fault: \"wrong-membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSql_FailedEventBeforeOrAfterInsertRollsBackStateAndRevision(after: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.NewOperationRechecksRevocationAndNeverFallsBack(change: \"missing-profile\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.MembershipOperationsRejectAnotherInstitutionGuid",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: \"name\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_BienniumUpdatePreservesDateValidation",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.Review_DoesNotFinalizeWithoutGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ConcurrencyIntegrationTests.AutosaveConcurrentToSubmit_NoAnswerSavedAfterSubmit",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"status=\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MissingLegacySelectionExpiredAndSuspendedTokensCannotRead",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"missing-sub\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"other-user\", status: 403)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_WorkerRecoveryTests.HostedWorker_ResolvesWithScopeValidation",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.Override_CreatesAuditEventInSameTransaction",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: \"update-teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.TeacherWithNoAssignmentsSeesNoStudentOrSubjectAndNeverFallsBackToGlobalRole",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.MissingSelectedStudentProfileNeverFallsBackToOtherInstitution",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.ProfileOwnershipCannotBeMovedOrRelinked(kind: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: \"false\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: \"class\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ForeignLinksAreRejectedAtomicallyByManager(family: \"student\", link: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.InvalidBodiesAreBadRequestsWithoutWrites(family: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"role=\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.HttpQueriesKeepTenantSqlServerCountAndConstantListCost",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssignmentsRejectForeignWrongClassDuplicatesAndInvalidExtraTimeAtomically",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InvalidForeignKeysAreRejectedByMySql(kind: \"campus-institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.OwnerAndAdmin_ReviewFinalizeRetryAndConflict(admin: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.DropdownAndStudentClassFilterAreScopedAndAssignmentSpecific",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"exam\", column: \"retake_of_exam_id\", parent: \"exam\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: \"student-b\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.FinalGradeValidationTests.Finalize_WithFinalGradeNegative_IsRejectedAndNoPersistence",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: \"expired\", accepted: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: \"enrollment_date\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: \"teacher\", delete: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"selection\", expected: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseAndStart_AreSerializedInBothOrders(closeFirst: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"class_subject\", column: \"teacher_id\", parent: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ConcurrentScopesRemainSeparate",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: \"close\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.BothRolloutFlagsAreRequiredForEveryNewAction(school: False, exam: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.DraftUpdate_FaultAfterSql_RestoresStructureAndProperties(failOnSave: 1)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_WorkerRecoveryTests.TwoWorkers_SelectSameBatch_CommitOneDeliveryEachWithoutTechnicalFailures",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentOwnProfileIsDistinctFromDirectoryAndSubjectByTeacherKeepsClassIntersection",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: \"read\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: \"campus\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: \"autosave\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MembershipRolesNeverInheritGlobalAdminOrAnotherTenantAdmin(name: \"multi\", b: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: \"wrong-institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_ConcurrentSameEventIsIdempotentAndCompetingRevisionsHaveOneWinner",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"legacy\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"unknown-role\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: \"grade-before\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.CanonicalExpandIsRerunnableAndDoesNotChangeLegacyData",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.Summary_UsesPersistedMetadataAndStatusFilter",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ConcurrentDeviceRevisionsAndAutosaveSubmitNeverLoseAcceptedRevision",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"class\", column: \"biennium_study_path_id\", parent: \"biennium_study_path\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesAdministrativeActionsWithoutPartialOfficialGrade(action: \"close\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"grade\", column: \"student_id\", parent: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: \"anonymous\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"role=1\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseDuringSubmit_PreservesInvariantAndAllowsRetry(automatic: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"teacher-removed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.BothRolloutFlagsAreRequiredForEveryNewAction(school: False, exam: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ConcurrentUniquenessClassAssignmentAndDescriptionUpdatesHaveSingleWinners",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: \"expired\", expected: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.ManualSubmit_RollsBackReplacementAndCompletedWrites(closedOnly: True, failAfterAudit: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.TotalScore_DoesNotDoubleCountClosedAnswers",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.MigrationRejectsAnyOtherDatabaseBeforeConnecting(database: \"electronic_register\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ForeignLinksAreRejectedAtomicallyByManager(family: \"teacher\", link: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: \"roles\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Autosave_ForeignOption_IsRejected",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.NewOperationRechecksRevocationAndNeverFallsBack(change: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudyAreaDependencyUsesStudyAreaForeignKey",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.InvalidInputsAndMissingResources_UseSafeHttpErrors",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.SuspensionPreservesMembershipRolesIdentityAndEveryLegacyCell",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InvalidForeignKeysAreRejectedByMySql(kind: \"membership-user\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.LegacyEfWritersStillReceiveTriggerDerivedOwners",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentCreationLinksOnlyExistingAuthorizedMembershipWithoutDuplicatingGlobalIdentity",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"question_option\", column: \"question_id\", parent: \"question\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"duplicate\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_RevocationAfterJwtBlocksEveryLifecycleAction(change: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_RevalidatesPersistedDraft_AndFailureLeavesNoAudit(kind: \"total\", status: 409)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"roles-removed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesAdministrativeActionsWithoutPartialOfficialGrade(action: \"finalize\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.LegacyNeedsExplicitEnablementAndUnbackfilledOptIn(enabled: True, unbackfilled: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AuditIsAttributedFromEntityAndCannotClaimAnotherInstitution",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.UnknownGlobalPrivilegeCannotBeInsertedAsMembershipRole",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"missing-jti\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.ReviewApis_RejectStudentAndAnonymous(operation: \"read\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.NonOwnerTeacher_ForbiddenAtHttpAndApplicationLevels(operation: \"list\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"legacy-role\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CancelAndStart_AreSerializedWithoutCancelledExamAttempts(cancelFirst: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_GradeReadsCannotEscapeOwnership(otherStudent: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"missing-institution\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Open)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: \"withdrawn\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EditionStatusMustBeExplicitAndIsNeverDerivedFromDates(status: \"planned\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.Student_CannotReadOthersOrInvokeReviewManagers",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.FinalizeWithoutOverride_UsesSuggestedAndOrdinaryAudit",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"exam_student\", column: \"student_id\", parent: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.MigrationToolRejectsOtherDatabaseBeforeOpeningConnection(backfill: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: \"untrusted-signature\", accepted: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.NonAdminsCannotUseAnyAdministrativeAction(role: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StartRacesPreserveExamLockAndSingleAttempt(opponent: \"close\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.DuplicateMembershipAndDuplicateRoleAreRejectedByMySql",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_AllMt4bMutationsAreAuditedAtomicallyWithoutDuplicateClassEvents",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_ConversionAndOverrideTests.ClosedOnly_60Percent_CreatesGradeSix",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: \"graded\", blocked: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: \"campus-owner\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: \"passing\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.ClosedOnly_Override_UpdatesExistingGradeWithoutDuplication",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ConcurrencyIntegrationTests.ConcurrentSubmit_OneDeliveryOnly",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.MigrationRejectsAnyOtherDatabaseBeforeConnecting(database: \"other_database\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.UnpublishedStates_NeverExposeProvisionalValues(status: Finalized)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.FinalGradeValidationTests.Finalize_WithFinalGradeTooLarge_IsRejectedAndNoPersistence",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_RevalidatesPersistedDraft_AndFailureLeavesNoAudit(kind: \"passing\", status: 400)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ScopedCrudWritesExplicitOwnerAndLeavesBUnchanged(family: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SearchAndCountNeverRevealForeignOnlyNames(family: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.UnpublishedStates_NeverExposeProvisionalValues(status: Graded)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MembershipRolesNeverInheritGlobalAdminOrAnotherTenantAdmin(name: \"student\", b: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StartRacesPreserveExamLockAndSingleAttempt(opponent: \"start\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.AutomaticSubmit_RollsBackGradeSubmissionAndAudit(closedOnly: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssignedSubmissionIdResumeAndRevisionSurviveNewLoginWithoutNewAttempt",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_CorrectionPreservesOldValuesAndLegacyHistoryIsNotFabricated",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eDispatcherSqlAndWriteScopesAreMeasuredAndBounded",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.FinalGradeValidationTests.Finalize_WithFinalGradeAtUpperBound_Succeeds",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"admin-removed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ForeignKeysAndImmutableOwnerStillProtectManagerCreatedRecords",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"biennium_study_area\", column: \"study_area_id\", parent: \"study_area\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: \"update\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OfficialClosedResultPassedAndGenericGradeProtectionArePreserved(correct: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"user-deleted\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ContextCannotInventPermissions(fault: \"none\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.Finalize_RollsBackNewOrUpdatedGradeAndAudit(isOverride: False, existingGrade: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: \"teacher-removed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.RealBootstrapHasExactPoliciesUnambiguousRoutesOpenApiAndWorker(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"subject\", method: \"DELETE\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.InvalidClassOrMembershipRejectsAndDuplicateLinkRollsBackNewProfile",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Single)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: \"invalid\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.GradeCrudPagingFiltersStatisticsAndTeacherOwnershipRemainScoped",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.TeacherAndStudentCannotUseAdministrativeWriters(family: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.EveryLegacyEndpointRejectsBothScopedAndSelectionTokensBeforeReadingOrWriting",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_RevalidatesPersistedDraft_AndFailureLeavesNoAudit(kind: \"options\", status: 400)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"search=%20\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ClassCannotUseDifferentPathWithinSameTenant",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"membership-deleted\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ConflictingOwnershipRollsBackEntireBackfill",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ConcurrentHttpRequestsOfSharedIdentityKeepSeparateTenantScopes",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: \"duplicate-option\", status: 400)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"biennium_study_path\", column: \"study_path_id\", parent: \"study_path\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ConcurrencyIntegrationTests.ConcurrentSaveAnswers_HigherRevisionWins",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.MissingResourcesAndDraftWithSubmission_ReturnAppropriateErrors",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.TeacherOverride_FiveToSeven_MarksPassed",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: \"class\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.RetakeAssignments_AreExplicitAndAdminCanReplaceThemInDraft",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ClassPathMustMatchAndLegacyRemainsNullable",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.Finalize_RollsBackNewOrUpdatedGradeAndAudit(isOverride: True, existingGrade: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: \"link-owner\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"student\", role: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SharedGlobalUserResolvesDifferentTeacherProfilesAndDirectoryStaysInTenant",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_NonAdminsCannotMutateOrReadReasons(role: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_PersistsSingleAtomicLifecycleAudit",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.FinalGradeValidationTests.Finalize_WithFinalGradeZero_IsRejectedAndNoPersistence",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: \"delete\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Autosave_ForeignQuestion_IsRejected",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: \"edition-owner\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: \"window_blur\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"institution-suspended\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"role=admin\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"subject\", method: \"PUT\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudentTeacherSubjectsCannotBypassClassVisibility",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.MultipleCampusesAndEditionsLoadWithEf",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.FinalizeTwice_RemainsIdempotent",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.LegacyNeedsExplicitEnablementAndUnbackfilledOptIn(enabled: False, unbackfilled: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SearchAndCountNeverRevealForeignOnlyNames(family: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: \"institution_id\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"exam_submission\", column: \"student_id\", parent: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.BothRolloutFlagsAreRequiredForEveryNewAction(school: True, exam: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.SelectionLegacyAndAnonymousTokensCannotUseNewRoutesOrOpenGlobalUserApi",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"duplicate-audience\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"unowned-role\", status: 403)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: \"audit-before\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(teacherProfile: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.TeacherDirectoryAndSelfProfileAreLocalForEveryRole",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.HistoricalParentsCannotBeCascadeDeleted(parent: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: \"count\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.RealBootstrapInventoriesAllPoliciesRoutesOpenApiAndRetainsWorker(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: \"membership\", number: 1452)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidAssignments_AreRejectedWithoutChanges(kind: \"negative\", status: 400)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.NonOwnerTeacher_ForbiddenAtHttpAndApplicationLevels(operation: \"finalize\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"suspended\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"subject\", method: \"GET\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"course\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: \"edition-status\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.MembershipLinksNeedExistingActiveRoleAndUniqueProfile(family: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.OverrideWithWhitespaceReason_IsRejected",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.AssignedRetake_VisibleOnlyToAssignedStudent_AndCancelledCannotStart",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.MembershipLinksNeedExistingActiveRoleAndUniqueProfile(family: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: False, course: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Open)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: \"audit-after\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.DraftUpdateDeleteAndUnstartedCancellationUseInstitutionalLocationsAndAudit",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ManualAndAutomaticSubmit_BothLockOrdersDeliverExactlyOnce(automaticFirst: True, closedOnly: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: \"cancel\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.ExpiredLastSubmission_WorkerDeliveryAllowsHttpClose",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_GradeReadsCannotEscapeOwnership(otherStudent: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitClassAssignmentIsPathScopedImmutableAndNeverChangesStudentClass",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SuspendedAdminCannotWriteAnyFamilyAndBRemainsAvailable(institution: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Review_Finalized_IsRejectedWithoutChanges",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: \"wrong-audience\", accepted: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 5)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: \"create\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: \"completed\", blocked: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSql_AppendOnlyCompositeOwnersAndUtcAreEnforcedByRealMariaDb",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.TeacherOwner_CanReviewAndFinalize",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.DraftUpdate_PersistsRetakeLinkAndRejectsClassSubjectChange",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: \"institution-provisioning\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ManualAndAutomaticSubmit_BothLockOrdersDeliverExactlyOnce(automaticFirst: False, closedOnly: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ReviewAndFinalize_BothLockOrdersUseOnlyCommittedCompleteReview(finalizeFirst: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: \"wrong-object\", accepted: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InvalidForeignKeysAreRejectedByMySql(kind: \"membership-institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: \"retake\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"scheme\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.OwnerAndAdmin_ReviewFinalizeRetryAndConflict(admin: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSql_FailedEventBeforeOrAfterInsertRollsBackStateAndRevision(after: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: \"institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.TimingGuards_RejectEarlyAutomaticAndLateManualWithoutWrites",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cLifecycle_TerminalTransitionsAndReentryAreAlwaysRejected(initial: \"cancelled\", target: \"enrolled\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_LoginWithoutPasswordHashIsUnauthorized",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"biennium_study_area\", column: \"biennium_id\", parent: \"biennium\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: \"student\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: \"Users\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.CalculateOpenScore_OnlyOpenQuestionsCounted",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SuspendedAdminCannotWriteAnyFamilyAndBRemainsAvailable(institution: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealHostedTimerDeliversOfflineAndStopsCleanly",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"class_subject\", column: \"subject_id\", parent: \"subject\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"class_subject\", column: \"class_id\", parent: \"class\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: \"wrong-tenant\", accepted: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: \"grade-after\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_OrdinaryGradeRemainsEditableAndDeletable",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Finalize_InProgress_IsRejectedWithoutGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Close_RejectsIllegalSourceState(state: \"cancelled\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.CurrentStateRevokesBothActionsAndDoesNotAffectOtherTenant(change: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: \"exam\", column: \"class_subject_id\", parent: \"class_subject\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.MigrationToolRejectsOtherDatabaseBeforeOpeningConnection(backfill: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: \"empty-institution\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SubjectNamesAreIndependentAndAllLookupsUseVisibility(role: \"teacher\", expected: 1)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: \"student\", method: \"PUT\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eCancellationAndRestartDoNotLoseExpiredSubmission",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.TeacherAndStudentCannotUseAdministrativeWriters(family: \"subject\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.CurrentStateRevokesBothActionsAndDoesNotAffectOtherTenant(change: \"remove-role\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: \"audience\", status: 401)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: \"in_progress\", blocked: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: \"edition-path\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: \"roles-added\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(correctIssuer: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: \"foreign-option\", status: 404)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: \"completed\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SimultaneousRequestsNeverShareTenantContext",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: \"subject\", role: \"teacher\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ControlledProfileBackfillPreservesEveryLegacyCellAndIsIdempotent",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseAndStart_AreSerializedInBothOrders(closeFirst: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentDirectoryFiltersAllLookupsAndSqlCountForAdminAndAssignedTeacher",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.AutomaticSubmit_RollsBackGradeSubmissionAndAudit(closedOnly: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"grading\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRetryPreservesIndependentRetakeGrades",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.Review_RollsBackActuallyWrittenPointsCommentAndSuggestedGrade",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eBoundedKeysetScanAdvancesPastFailureAndResetsOnRestart",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidAssignments_AreRejectedWithoutChanges(kind: \"null\", status: 400)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_ManualRejected",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 1, max: 0, passingPercent: 60)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.ExamLifecycleServiceTests.ExistingAttempt_AlwaysPreventsAnotherStart(status: Graded)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.ExamLifecycleServiceTests.Close_RequiresPublished(status: Cancelled)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 0, max: 100, passingPercent: 60, expected: 1)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DeadlineReached_NoNewAnswersButExistingProcessed",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 90, max: 100, passingPercent: 60, expected: 9)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.ExamLifecycleServiceTests.Close_RequiresPublished(status: Draft)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.AutoSubmit_NoDto_NoCaller_UsesPersistedAnswers",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_12of20_with60pct_IsSix",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveMembershipIsNeverSelectable(status: Left)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 100, max: 100, passingPercent: 60, expected: 10)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_ExactThreshold_IsSix",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.ClosedOnly_GradedAndGradeCreated",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenQuestions_PendingReview_NoGradeCreated",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.ExamLifecycleServiceTests.ExistingAttempt_AlwaysPreventsAnotherStart(status: PendingReview)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.PersistenceError_RollsBack_AndThrows",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Single)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 80, max: 100, passingPercent: 60, expected: 8)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.SubmitWithDifferentReason_NoReprocess",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveMembershipIsNeverSelectable(status: Suspended)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_AutoAllowed",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BelowThreshold_StaysBelowSix",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.FailedAuto_NoGradeCreated",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.ExamLifecycleServiceTests.ExistingAttempt_AlwaysPreventsAnotherStart(status: Finalized)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DoubleSubmit_NoDuplicateGradeCreated",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenAnswersEmpty_TreatedAsZeroPoints",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 60, max: 100, passingPercent: 60, expected: 6)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EmptyInstitutionIsNotAnImplicitTenant",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_14of20_with60pct_IsSeven",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.ExamLifecycleServiceTests.Publish_RejectsInconsistentStoredTotal",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.ExamLifecycleServiceTests.ExistingAttempt_AlwaysPreventsAnotherStart(status: InProgress)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveInstitutionIsNeverSelectable(status: Archived)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Multiple)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.ExamLifecycleServiceTests.Close_RequiresPublished(status: Closed)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: -1, max: 100, passingPercent: 60)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.ExamLifecycleServiceTests.PassingPercent100_IsRejectedBeforeItCanReachConversion",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Open)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveInstitutionIsNeverSelectable(status: Suspended)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 50, max: 100, passingPercent: 100)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 50, max: 100, passingPercent: 0)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 101, max: 100, passingPercent: 60)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.ExamLifecycleServiceTests.ExistingAttempt_AlwaysPreventsAnotherStart(status: FailedAuto)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 70, max: 100, passingPercent: 60, expected: 7)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 40, max: 100, passingPercent: 60, expected: 4,33)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveInstitutionIsNeverSelectable(status: Provisioning)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.RolesAreCopiedAndCannotBeChangedAfterContextCreation",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 50, max: 100, passingPercent: 60, expected: 5,17)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 20, max: 100, passingPercent: 60, expected: 2,67)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveMembershipIsNeverSelectable(status: Pending)",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.SameRolesInAnotherInstitutionOrIdentityDoNotAuthorize",
+        "Outcome":  "Passed",
+        "Project":  "Unit"
+    }
+]

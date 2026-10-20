@@ -363,7 +363,10 @@ public sealed partial class Mt4bHttpTests(IntegrationFixture fixture) : IAsyncLi
         Assert.Equal(new[]{InstitutionTokenContract.AccessScheme},policy!.AuthenticationSchemes);
         var all=host.Host.Services.GetRequiredService<Microsoft.AspNetCore.Routing.EndpointDataSource>().Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>().ToArray();
         var mvc=all.Where(e=>e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null).ToArray();
-        Assert.Equal(154,mvc.Length);Assert.Equal(135,mvc.Count(e=>e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null));
+        Assert.Equal(156,mvc.Length);
+        Assert.Equal(2,mvc.Count(e=>e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is not null));
+        var previous=mvc.Where(e=>e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null).ToArray();
+        Assert.Equal(154,previous.Length);Assert.Equal(135,previous.Count(e=>e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null));
         var rows=all.SelectMany(e=>(e.Metadata.GetMetadata<Microsoft.AspNetCore.Routing.HttpMethodMetadata>()?.HttpMethods??new[]{"GET"}).Select(method=>new {
             method,route=e.RoutePattern.RawText,course=e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is not null,
             policy=e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>().Select(a=>a.Policy).Where(p=>!string.IsNullOrEmpty(p)).ToArray(),
@@ -488,6 +491,7 @@ public sealed partial class Mt4bHttpTests(IntegrationFixture fixture) : IAsyncLi
         if (_host is not null) await _host.DisposeAsync();
         await Db(async db=>
         {
+            await using var purge = await MembershipFixturePurge.AllowAsync(db, new[]{_a,_b});
             // Privileged fixture maintenance, never an HTTP operation; scope cannot address holding/real tenants.
             await db.Database.OpenConnectionAsync();
             foreach(var owner in new[]{_a,_b})

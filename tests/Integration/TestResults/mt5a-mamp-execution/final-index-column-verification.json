@@ -1,0 +1,7 @@
+{
+    "PreexistingIndexesMatched":  131,
+    "NewExplicitIndexesMatched":  4,
+    "NewAutomaticFkSupportIndexesMatched":  4,
+    "FinalIndexes":  139,
+    "LedgerColumnTypesAndNullabilityMatched":  20
+}

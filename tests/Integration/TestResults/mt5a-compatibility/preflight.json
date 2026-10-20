@@ -1,0 +1,11 @@
+{
+    "Tables":  32,
+    "Triggers":  53,
+    "ForeignKeys":  98,
+    "Indexes":  139,
+    "Mt4aChecks":  7,
+    "Mt4cChecks":  5,
+    "CredentialFileReadSafely":  true,
+    "ChildTargetPort":  13306,
+    "NoMigrationsExecuted":  true
+}

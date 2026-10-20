@@ -1,0 +1,12 @@
+{
+    "ClientVersion":  "8.0.44",
+    "ServerVersion":  "5.7.24",
+    "Port":  13306,
+    "ColumnStatisticsOptionAccepted":  true,
+    "NoTablespacesOptionAccepted":  true,
+    "GtidPurgedOffAccepted":  true,
+    "Tables":  32,
+    "Triggers":  53,
+    "SHA256":  "AE82F10E9EA39499FE9FCC1D8B2201485B384678C1B6F2F8D96AF38D087E0D7E",
+    "Verified":  true
+}

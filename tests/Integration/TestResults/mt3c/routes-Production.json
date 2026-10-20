@@ -1398,6 +1398,34 @@
   },
   {
     "method": "GET",
+    "route": "api/institution/admin/members",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "List",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/members/{membershipId:guid}",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "Detail",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ]
+  },
+  {
+    "method": "GET",
     "route": "api/institution/students",
     "controller": "InstitutionStudent",
     "action": "GetAll",

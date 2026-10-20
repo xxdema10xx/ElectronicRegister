@@ -1,0 +1,86 @@
+[
+    {
+        "Run":  "fixes",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites",
+        "Outcome":  "Passed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_40_22_net10.0.trx",
+        "SHA256":  "A88C435A90D8BFC089F38000AB8B8B41A3DF63E3A8516CC412F490CE92555434"
+    },
+    {
+        "Run":  "fixes",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"grading\")",
+        "Outcome":  "Passed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_40_22_net10.0.trx",
+        "SHA256":  "A88C435A90D8BFC089F38000AB8B8B41A3DF63E3A8516CC412F490CE92555434"
+    },
+    {
+        "Run":  "fixes",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"timeout\")",
+        "Outcome":  "Failed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_40_22_net10.0.trx",
+        "SHA256":  "A88C435A90D8BFC089F38000AB8B8B41A3DF63E3A8516CC412F490CE92555434"
+    },
+    {
+        "Run":  "fixes",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"connection\")",
+        "Outcome":  "Passed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_40_22_net10.0.trx",
+        "SHA256":  "A88C435A90D8BFC089F38000AB8B8B41A3DF63E3A8516CC412F490CE92555434"
+    },
+    {
+        "Run":  "fixes-2",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"grading\")",
+        "Outcome":  "Passed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_41_17_net10.0.trx",
+        "SHA256":  "EC4FCAB6360F61900B608341ECD48DAD9AE3E4224C6EB1B9AFECE114D030AED7"
+    },
+    {
+        "Run":  "fixes-2",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites",
+        "Outcome":  "Passed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_41_17_net10.0.trx",
+        "SHA256":  "EC4FCAB6360F61900B608341ECD48DAD9AE3E4224C6EB1B9AFECE114D030AED7"
+    },
+    {
+        "Run":  "fixes-2",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"timeout\")",
+        "Outcome":  "Failed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_41_17_net10.0.trx",
+        "SHA256":  "EC4FCAB6360F61900B608341ECD48DAD9AE3E4224C6EB1B9AFECE114D030AED7"
+    },
+    {
+        "Run":  "fixes-2",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"connection\")",
+        "Outcome":  "Passed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_41_17_net10.0.trx",
+        "SHA256":  "EC4FCAB6360F61900B608341ECD48DAD9AE3E4224C6EB1B9AFECE114D030AED7"
+    },
+    {
+        "Run":  "fixes-3",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites",
+        "Outcome":  "Passed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_41_58_net10.0.trx",
+        "SHA256":  "7A0CEFF6CDDF1BD85311BFB28A17A4288AADBEF65A12DCDDB7F9B2D9E43A7564"
+    },
+    {
+        "Run":  "fixes-3",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"timeout\")",
+        "Outcome":  "Passed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_41_58_net10.0.trx",
+        "SHA256":  "7A0CEFF6CDDF1BD85311BFB28A17A4288AADBEF65A12DCDDB7F9B2D9E43A7564"
+    },
+    {
+        "Run":  "fixes-3",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"connection\")",
+        "Outcome":  "Passed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_41_58_net10.0.trx",
+        "SHA256":  "7A0CEFF6CDDF1BD85311BFB28A17A4288AADBEF65A12DCDDB7F9B2D9E43A7564"
+    },
+    {
+        "Run":  "fixes-3",
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"grading\")",
+        "Outcome":  "Passed",
+        "TRX":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_41_58_net10.0.trx",
+        "SHA256":  "7A0CEFF6CDDF1BD85311BFB28A17A4288AADBEF65A12DCDDB7F9B2D9E43A7564"
+    }
+]

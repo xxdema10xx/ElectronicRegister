@@ -1,0 +1,10 @@
+[
+    {
+        "Project":  "Unit",
+        "ExitCode":  0
+    },
+    {
+        "Project":  "Integration",
+        "ExitCode":  1
+    }
+]

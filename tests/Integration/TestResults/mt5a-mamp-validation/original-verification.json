@@ -1,0 +1,9 @@
+{
+    "OriginalPort":  3306,
+    "OriginalMetadataAndStateUnchanged":  true,
+    "BeforeSHA256":  "599891D4994047BAD77F86F3BE3AE09FFFA9C5322B53CFCF7748768E93136CE0",
+    "AfterSHA256":  "599891D4994047BAD77F86F3BE3AE09FFFA9C5322B53CFCF7748768E93136CE0",
+    "NoOriginalBackupExportInThisPhase":  true,
+    "NoDdlOrDmlOnOriginal":  true,
+    "ChildConnectionsObservedOn13306":  true
+}

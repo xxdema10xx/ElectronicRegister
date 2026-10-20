@@ -1,0 +1,17 @@
+{
+    "Verdict":  "MT-4C RESTORED ON ISOLATED MAMP INSTANCE - READY FOR TEST VALIDATION",
+    "OriginalPort":  3306,
+    "IsolatedPort":  13306,
+    "IsolatedPID":  24340,
+    "Tables":  32,
+    "Triggers":  53,
+    "ForeignKeys":  98,
+    "Indexes":  139,
+    "ForeignKeyOrphans":  0,
+    "OriginalLogicalDumpUnchanged":  true,
+    "OriginalDataTablesPreserved":  31,
+    "ApplicationSourcesUnchanged":  true,
+    "CanonicalMigrationsUnchanged":  true,
+    "NoSuitesExecuted":  true,
+    "Mt5aCompleted":  false
+}

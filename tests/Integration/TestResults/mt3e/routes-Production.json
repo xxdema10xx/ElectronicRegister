@@ -2367,6 +2367,54 @@
   },
   {
     "method": "GET",
+    "route": "api/institution/admin/members",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "List",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionMembershipDirectoryRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/members/{membershipId:guid}",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "Detail",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionMembershipDirectoryRepository"
+    ],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
     "route": "api/institution/students",
     "controller": "InstitutionStudent",
     "action": "GetAll",

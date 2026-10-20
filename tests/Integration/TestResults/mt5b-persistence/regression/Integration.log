@@ -1,0 +1,64 @@
+Esecuzione dei test per C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll (.NETCoreApp,Version=v10.0)
+Un totale di 1 file di test corrisponde al criterio specificato.
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched [257 ms]
+  Messaggio di errore:
+   Assert.Contains() Failure: Sub-string not found
+String:    "Unclassified table: institution_membershi"···
+Not found: "audit_unresolved"
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 237
+   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 238
+   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 239
+--- End of stack trace from previous location ---
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows [21 ms]
+  Messaggio di errore:
+   System.InvalidOperationException : Unclassified table: institution_membership_security_state
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.ValidateGraphAsync(MySqlConnection c, Guid legacy, MySqlTransaction tx) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 98
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.ValidateGraphAsync(MySqlConnection c, Guid legacy, MySqlTransaction tx) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 98
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.ValidateGraphAsync(MySqlConnection c, Guid legacy, MySqlTransaction tx) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 99
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.BackfillConnectionAsync(MySqlConnection c, Guid legacy) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 128
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.BackfillConnectionAsync(MySqlConnection c, Guid legacy) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 133
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.BackfillAsync(String connectionString, Guid legacy) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 114
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.BackfillAsync(String connectionString, Guid legacy) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 114
+   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 216
+   at ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3aOwnershipTests.cs:line 219
+--- End of stack trace from previous location ---
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph [153 ms]
+  Messaggio di errore:
+   System.InvalidOperationException : Unclassified table: institution_membership_security_state
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.ValidateGraphAsync(MySqlConnection c, Guid legacy, MySqlTransaction tx) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 98
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.ValidateGraphAsync(MySqlConnection c, Guid legacy, MySqlTransaction tx) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 98
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.ValidateGraphAsync(MySqlConnection c, Guid legacy, MySqlTransaction tx) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 99
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.BackfillConnectionAsync(MySqlConnection c, Guid legacy) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 128
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.BackfillConnectionAsync(MySqlConnection c, Guid legacy) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 133
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.BackfillAsync(String connectionString, Guid legacy) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 114
+   at ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.BackfillAsync(String connectionString, Guid legacy) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Persistence\Migrations\Mt3aOwnershipMigration.cs:line 114
+   at ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.<ExistingBackfillIsIdempotentWithAttributedMt4Graph>b__26_0(Graph a, Graph b) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt4aCourseStructureTests.cs:line 196
+   at ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.Pair(Func`3 action) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt4aCourseStructureTests.cs:line 55
+   at ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.Pair(Func`3 action) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt4aCourseStructureTests.cs:line 56
+--- End of stack trace from previous location ---
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_ForeignAndMissingResourcesAreIndistinguishableAndTenantRolesNeverCombine [604 ms]
+  Messaggio di errore:
+   MySqlConnector.MySqlException : MT5B use explicit role insert/delete
+  Analisi dello stack:
+     at MySqlConnector.Core.ServerSession.ReceiveReplyAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 1081
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 37
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 131
+   at MySqlConnector.MySqlDataReader.InitAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 487
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 56
+   at MySqlConnector.MySqlCommand.ExecuteNonQueryAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 309
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Execute(String sql, ValueTuple`2[] values) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 53
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Execute(String sql, ValueTuple`2[] values) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 53
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Execute(String sql, ValueTuple`2[] values) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 53
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_ForeignAndMissingResourcesAreIndistinguishableAndTenantRolesNeverCombine() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt4cEnrollmentTests.cs:line 168
+--- End of stack trace from previous location ---
+File di risultati: C:\Users\Lorenzo\ElectronicRegister\migrations\mt4\private\mt5a-mamp-13306\persistence-results\regression\Integration\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_39_28_net10.0.trx
+
+Non superato! - Non superati:     4. Superati:   683. Ignorati:     0. Totale:   687. Durata: 3 m 14 s - Integration.Tests.dll (net10.0)
+
+[xUnit.net 00:00:34.77]     ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched [FAIL]
+[xUnit.net 00:00:41.63]     ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows [FAIL]
+[xUnit.net 00:02:29.16]     ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph [FAIL]
+[xUnit.net 00:03:00.47]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_ForeignAndMissingResourcesAreIndistinguishableAndTenantRolesNeverCombine [FAIL]

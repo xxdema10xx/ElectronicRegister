@@ -21,7 +21,7 @@ public sealed class Mt3aOwnershipTests(IntegrationFixture fixture) : IAsyncLifet
     private readonly Dictionary<string,Guid[]> _ids=new();
     private Guid Id(string table,bool b=false)
     { if(!_ids.TryGetValue(table,out var ids)) _ids[table]=ids=new[]{Guid.NewGuid(),Guid.NewGuid()}; return ids[b?1:0]; }
-    private async Task<MySqlConnection> Open() => await Mt3aOwnershipMigration.OpenAsync(fixture.ConnectionString);
+    private async Task<MySqlConnection> Open() => await Mt3aOwnershipMigration.OpenAsync(new MySqlConnectionStringBuilder(fixture.ConnectionString) { AllowUserVariables = true }.ConnectionString);
     private async Task<int> Sql(string sql,params (string,object?)[] parameters)
     { await using var c=await Open();await using var cmd=new MySqlCommand(sql,c);foreach(var (name,value) in parameters) cmd.Parameters.AddWithValue(name,value);return await cmd.ExecuteNonQueryAsync(); }
     private async Task<object?> Scalar(string sql,params (string,object?)[] parameters)
@@ -300,6 +300,7 @@ public sealed class Mt3aOwnershipTests(IntegrationFixture fixture) : IAsyncLifet
     public async Task DisposeAsync()
     {
         await using var c=await Open();
+        await using var purge = await MembershipFixturePurge.AllowAsync(c, new[]{_a,_b});
         foreach(var table in new[]{"institution_student_profile","institution_teacher_profile","audit_event","submission_answer_option","submission_answer","exam_violation","exam_submission","grade","exam_student","question_option","question","exam","student","class_subject","class","biennium_study_path","biennium_study_area","subject","teacher","study_path","study_area","biennium"})
         { await using var cmd=new MySqlCommand($"DELETE FROM `{table}` WHERE institution_id IN (@a,@b)",c);cmd.Parameters.AddWithValue("@a",_a);cmd.Parameters.AddWithValue("@b",_b);await cmd.ExecuteNonQueryAsync(); }
         await using var cleanup=new MySqlCommand("DELETE r FROM institution_membership_role r JOIN institution_membership m ON m.id=r.membership_id WHERE m.user_id=@u; DELETE FROM institution_membership WHERE user_id=@u; DELETE FROM user WHERE id=@u; DELETE FROM institution WHERE id IN (@a,@b)",c);

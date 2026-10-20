@@ -1,0 +1,479 @@
+[
+    {
+        "Name":  "mt3a_audit_insert",
+        "Table":  "audit_event",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "D087E3C8C9D956EEC3F768543A5BF41C0FC23620E8196453236A683188FB876B",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_audit_update",
+        "Table":  "audit_event",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "24468A06074AA29196DB54823E35758701A0B7CE1F3819C10852F2F518EA3549",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_biennium_insert",
+        "Table":  "biennium",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "9BA22916EC212D139B521A4A1A15B4D4F68720F49DAD23866723CC1F5CEF9F83",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_biennium_study_area_insert",
+        "Table":  "biennium_study_area",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "3BC01FB480952DE387E843392173EEDF7998B1013E96043D51F9CA9A8C548488",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_biennium_study_area_update",
+        "Table":  "biennium_study_area",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_biennium_study_path_insert",
+        "Table":  "biennium_study_path",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "18BBB3A97A8C069051042DEBC30B12F1ED19FDB109018A822FD0F8119E52DB4C",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_biennium_study_path_update",
+        "Table":  "biennium_study_path",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_biennium_update",
+        "Table":  "biennium",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_class_insert",
+        "Table":  "class",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "C25DE821EAEEFB03F455B32B4C2281C500D019BBCCB0BEA2798F743B1B47C8FA",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_class_subject_insert",
+        "Table":  "class_subject",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "E761052D82F5891A9B6B79E53434F089E23A431F893C7A9101F60C74F75F6DA4",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_class_subject_update",
+        "Table":  "class_subject",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_class_update",
+        "Table":  "class",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_exam_insert",
+        "Table":  "exam",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "8BE015E3A2A505C8564C0D4E09F9FC56060877B2D3898E0534F2DB1871678FA8",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_exam_student_insert",
+        "Table":  "exam_student",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "0203E7F32CF92F179BEB2D448217546C2CBC0213AEECEED5D899D9F5C1116AA9",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_exam_student_update",
+        "Table":  "exam_student",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_exam_submission_insert",
+        "Table":  "exam_submission",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "6333E05BED1533596BE8B2571C032B39A97CC5A4BBAB57C989C10BBF6C6D409C",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_exam_submission_update",
+        "Table":  "exam_submission",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F87EB7DF5F6071457390528B02EA7AB279D38F68C3BC1DAF3299B10A798868D8",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_exam_update",
+        "Table":  "exam",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "A0E7BA016D15D04BFEE133B69908AB8D755AC5F13E92504664C04174EA5BA52F",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_exam_violation_insert",
+        "Table":  "exam_violation",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "6F7297ED5AE2ADFB84E93336C7B0D3DA399B4E4C5C7FC09ECA6F0A7B935293EA",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_exam_violation_update",
+        "Table":  "exam_violation",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_grade_insert",
+        "Table":  "grade",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "56CAF0B5869B7DC01AA6557373C09E4CB35086C9D45340CF8FD180ACA507ABEB",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_grade_update",
+        "Table":  "grade",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_question_insert",
+        "Table":  "question",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "0203E7F32CF92F179BEB2D448217546C2CBC0213AEECEED5D899D9F5C1116AA9",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_question_option_insert",
+        "Table":  "question_option",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "2C269B23C7086339BBF785BD8817CAC51A2BCCE2E516B6C27127936B21AB51BA",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_question_option_update",
+        "Table":  "question_option",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_question_update",
+        "Table":  "question",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_student_insert",
+        "Table":  "student",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "EACE18C57C1B826F5F8903D1A2EED7B2181BA1A57BE17FC4BB388D98EA695360",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_student_update",
+        "Table":  "student",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "23F4B98080F86904920CC4C86DD47E4D9E6E431A46B64B68BF3F99F00920817D",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_study_area_insert",
+        "Table":  "study_area",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "9BA22916EC212D139B521A4A1A15B4D4F68720F49DAD23866723CC1F5CEF9F83",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_study_area_update",
+        "Table":  "study_area",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_study_path_insert",
+        "Table":  "study_path",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "9BA22916EC212D139B521A4A1A15B4D4F68720F49DAD23866723CC1F5CEF9F83",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_study_path_update",
+        "Table":  "study_path",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_subject_insert",
+        "Table":  "subject",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "9BA22916EC212D139B521A4A1A15B4D4F68720F49DAD23866723CC1F5CEF9F83",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_subject_update",
+        "Table":  "subject",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_submission_answer_insert",
+        "Table":  "submission_answer",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "1715025BA5CB3BDAE8AE55D6C5A0924C227DE33E34F5EBC61966D6DEFEC3EC61",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_submission_answer_option_insert",
+        "Table":  "submission_answer_option",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "B0AB150EA0E72A99045B63112CEBFF32F850AC1D4E4FF054D5E6E91EEDD6EC98",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_submission_answer_option_update",
+        "Table":  "submission_answer_option",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "3CD41B239FAEAB261FF1E9ACA50A72B9C256CD17942E7E18B3E38B32AA0F0861",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_submission_answer_update",
+        "Table":  "submission_answer",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "7D1C90533F4ADC34A87E1CBEAB6D0B9F83E7886E31600CDD5247AEC9A6367392",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_teacher_insert",
+        "Table":  "teacher",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "9BA22916EC212D139B521A4A1A15B4D4F68720F49DAD23866723CC1F5CEF9F83",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt3a_teacher_update",
+        "Table":  "teacher",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "F8BFC6DE05A7840C78092F40FA733B8692941932780D63B1A248D9F565D0ECB1",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4c_course_event_delete",
+        "Table":  "course_administration_event",
+        "Timing":  "BEFORE",
+        "Event":  "DELETE",
+        "BodySHA256":  "126DD4E738FDE4DD5B1AAD937168AAB6CB89C75F49F1F4E7C97C4EB39393B417",
+        "CanonicalMt4c":  true,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4c_course_event_insert",
+        "Table":  "course_administration_event",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "4125A9B7E941F7072C3B511A44A2CCE69C1E7A638814CCCB8FE27AEF27E3F5EE",
+        "CanonicalMt4c":  true,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4c_course_event_update",
+        "Table":  "course_administration_event",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "3A7FAF6E981AA65B11F1ECBC5046AD37252A6FBE2BE9DC7B4389625833695570",
+        "CanonicalMt4c":  true,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4c_enrollment_revision_insert",
+        "Table":  "student_enrollment",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "070AB7F866290E113BFD55F2A539038627660DAF4F56C048786FDC8C27CA3351",
+        "CanonicalMt4c":  true,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4c_enrollment_revision_update",
+        "Table":  "student_enrollment",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "CE1D784970B79B79C1FE7884E23EBC54555F4E9C8FDAEC3EE3BED7FC0ADE8BD3",
+        "CanonicalMt4c":  true,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4_bsp_update",
+        "Table":  "biennium_study_path",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "A6ADE72AEC3B658C28DE0BA9429B0BEB6248EC28AEC8D9D12F0659ABA7A30459",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4_class_insert",
+        "Table":  "class",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "5C148D4BF1C05F8C30D88D1090C8B824B82B79CDA6B9FF52C20F53F0108DCF3E",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4_class_update",
+        "Table":  "class",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "DC49E8C7777DD05451CD70AA361D54981A958372584281A39E27892A8EB3EEE6",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4_course_edition_campus_update",
+        "Table":  "course_edition_campus",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "523E46AB98F9D4365DC31DEB227063215E5D7CB76FD7676D548988E4A9E188E3",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4_course_edition_insert",
+        "Table":  "course_edition",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "D8D889F8B03AEFFC80A54F0E6E3A9A27DEF380B6B4565D8407B36F01ACC21B84",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4_course_edition_update",
+        "Table":  "course_edition",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "0651244A6566E3D7F1A65ADD90898EEB8E38B8C3FCDBA33DF52C54C0152CAC37",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4_student_enrollment_insert",
+        "Table":  "student_enrollment",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "BodySHA256":  "DBF44040B6472162EBD2EB01C339A28F99713D1CB9591F5B8827288B0DBBF0FC",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    },
+    {
+        "Name":  "mt4_student_enrollment_update",
+        "Table":  "student_enrollment",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "BodySHA256":  "7EBC690375F36CE286D6D2E9402C0B87153422AF2A8E25FF468D887C18B30F9A",
+        "CanonicalMt4c":  false,
+        "Matches":  true
+    }
+]

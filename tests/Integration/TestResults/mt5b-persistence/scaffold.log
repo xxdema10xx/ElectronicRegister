@@ -1,0 +1,9 @@
+Using ServerVersion '5.7.24-mysql'.
+Referenced table `institution_membership` is not in dictionary.
+
+Algorithm       Hash                                                                   Path                            
+---------       ----                                                                   ----                            
+SHA256          16BE2160FF0C49AC78DC32A06CB6267DCA743834542777B77DE16C5F105B1E4B       C:\Users\Lorenzo\ElectronicRe...
+Candidate only: no legacy entities/context overwritten. Review FK sidecar explicitly.
+
+

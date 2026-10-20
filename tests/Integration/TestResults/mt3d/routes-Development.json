@@ -2287,6 +2287,74 @@
   },
   {
     "method": "GET",
+    "route": "api/institution/admin/members",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "List",
+    "roles": [],
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ],
+    "input": [
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      },
+      {
+        "Name": "pageNumber",
+        "type": "Int32"
+      },
+      {
+        "Name": "pageSize",
+        "type": "Int32"
+      },
+      {
+        "Name": "status",
+        "type": "String"
+      },
+      {
+        "Name": "role",
+        "type": "String"
+      },
+      {
+        "Name": "search",
+        "type": "String"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/members/{membershipId:guid}",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "Detail",
+    "roles": [],
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ],
+    "input": [
+      {
+        "Name": "membershipId",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
     "route": "api/institution/students",
     "controller": "InstitutionStudent",
     "action": "GetAll",

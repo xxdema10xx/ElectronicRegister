@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="7719fa84-96f6-4f15-a13c-984f546550bd" name="Lorenzo@DESKTOP-QUOAG32 2026-10-20 20:19:10" runUser="DESKTOP-QUOAG32\CodexSandboxOffline" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-20T20:19:10.0276919+02:00" queuing="2026-10-20T20:19:10.0276920+02:00" start="2026-10-20T20:19:09.3874944+02:00" finish="2026-10-20T20:19:10.0314894+02:00" />
+  <TestSettings name="default" id="f0166652-8424-4895-a7d5-2717cd69d47d">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-20_20_19_10" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="81fe2366-6d4e-4532-90fc-8fc798f2c0f9" testId="8acb2a0f-2496-e978-90ee-e72b7dd35a26" testName="ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets" computerName="DESKTOP-QUOAG32" duration="00:00:00.0010000" startTime="2026-10-20T20:19:09.9555387+02:00" endTime="2026-10-20T20:19:09.9555615+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="81fe2366-6d4e-4532-90fc-8fc798f2c0f9">
+      <Output>
+        <ErrorInfo>
+          <Message>System.AggregateException : An error occurred while writing to logger(s). (Cannot open log for source '.NET Runtime'. You may not have write access.)&#xD;
+---- System.InvalidOperationException : Cannot open log for source '.NET Runtime'. You may not have write access.&#xD;
+-------- System.ComponentModel.Win32Exception : Accesso negato.</Message>
+          <StackTrace>   at Microsoft.Extensions.Logging.Logger.ThrowLoggingError(List`1 exceptions)&#xD;
+   at Microsoft.Extensions.Logging.Logger.Log[TState](LogLevel logLevel, EventId eventId, TState state, Exception exception, Func`3 formatter)&#xD;
+   at Microsoft.Extensions.Logging.LoggerExtensions.Log(ILogger logger, LogLevel logLevel, EventId eventId, Exception exception, String message, Object[] args)&#xD;
+   at Microsoft.Extensions.Logging.LoggerExtensions.LogError(ILogger logger, EventId eventId, Exception exception, String message, Object[] args)&#xD;
+   at Microsoft.Extensions.Hosting.Internal.HostingLoggerExtensions.HostedServiceStartupFaulted(ILogger logger, Exception ex)&#xD;
+   at Microsoft.Extensions.Hosting.Internal.Host.&lt;StartAsync&gt;g__LogAndRethrow|14_3(&lt;&gt;c__DisplayClass14_0&amp;)&#xD;
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)&#xD;
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)&#xD;
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)&#xD;
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)&#xD;
+   at Program.&lt;Main&gt;$(String[] args) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Program.cs:line 68&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.Diagnostics.EventLogInternal.OpenForWrite(String currentMachineName)&#xD;
+   at System.Diagnostics.EventLogInternal.InternalWriteEvent(UInt32 eventID, UInt16 category, EventLogEntryType type, String[] strings, Byte[] rawData, String currentMachineName)&#xD;
+   at System.Diagnostics.EventLogInternal.WriteEvent(EventInstance instance, Byte[] data, Object[] values)&#xD;
+   at Microsoft.Extensions.Logging.EventLog.WindowsEventLog.WriteEntry(String message, EventLogEntryType type, Int32 eventID, Int16 category)&#xD;
+   at Microsoft.Extensions.Logging.EventLog.EventLogLogger.WriteMessage(String message, EventLogEntryType eventLogEntryType, Int32 eventId)&#xD;
+   at Microsoft.Extensions.Logging.EventLog.EventLogLogger.Log[TState](LogLevel logLevel, EventId eventId, TState state, Exception exception, Func`3 formatter)&#xD;
+   at Microsoft.Extensions.Logging.Logger.&lt;Log&gt;g__LoggerLog|14_0[TState](LogLevel logLevel, EventId eventId, ILogger logger, Exception exception, Func`3 formatter, List`1&amp; exceptions, TState&amp; state)&#xD;
+----- Inner Stack Trace -----&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="8acb2a0f-2496-e978-90ee-e72b7dd35a26">
+      <Execution id="81fe2366-6d4e-4532-90fc-8fc798f2c0f9" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests" name="DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="8acb2a0f-2496-e978-90ee-e72b7dd35a26" executionId="81fe2366-6d4e-4532-90fc-8fc798f2c0f9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" passed="0" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.06]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.12]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.12]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:00.28]       System.AggregateException : An error occurred while writing to logger(s). (Cannot open log for source '.NET Runtime'. You may not have write access.)&#xD;
+[xUnit.net 00:00:00.28]       ---- System.InvalidOperationException : Cannot open log for source '.NET Runtime'. You may not have write access.&#xD;
+[xUnit.net 00:00:00.28]       -------- System.ComponentModel.Win32Exception : Accesso negato.&#xD;
+[xUnit.net 00:00:00.28]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Logging.Logger.ThrowLoggingError(List`1 exceptions)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Logging.Logger.Log[TState](LogLevel logLevel, EventId eventId, TState state, Exception exception, Func`3 formatter)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Logging.LoggerExtensions.Log(ILogger logger, LogLevel logLevel, EventId eventId, Exception exception, String message, Object[] args)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Logging.LoggerExtensions.LogError(ILogger logger, EventId eventId, Exception exception, String message, Object[] args)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Hosting.Internal.HostingLoggerExtensions.HostedServiceStartupFaulted(ILogger logger, Exception ex)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Hosting.Internal.Host.&lt;StartAsync&gt;g__LogAndRethrow|14_3(&lt;&gt;c__DisplayClass14_0&amp;)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)&#xD;
+[xUnit.net 00:00:00.28]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Program.cs(68,0): at Program.&lt;Main&gt;$(String[] args)&#xD;
+[xUnit.net 00:00:00.28]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.28]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.28]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:00.28]            at System.Diagnostics.EventLogInternal.OpenForWrite(String currentMachineName)&#xD;
+[xUnit.net 00:00:00.28]            at System.Diagnostics.EventLogInternal.InternalWriteEvent(UInt32 eventID, UInt16 category, EventLogEntryType type, String[] strings, Byte[] rawData, String currentMachineName)&#xD;
+[xUnit.net 00:00:00.28]            at System.Diagnostics.EventLogInternal.WriteEvent(EventInstance instance, Byte[] data, Object[] values)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Logging.EventLog.WindowsEventLog.WriteEntry(String message, EventLogEntryType type, Int32 eventID, Int16 category)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Logging.EventLog.EventLogLogger.WriteMessage(String message, EventLogEntryType eventLogEntryType, Int32 eventId)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Logging.EventLog.EventLogLogger.Log[TState](LogLevel logLevel, EventId eventId, TState state, Exception exception, Func`3 formatter)&#xD;
+[xUnit.net 00:00:00.28]            at Microsoft.Extensions.Logging.Logger.&lt;Log&gt;g__LoggerLog|14_0[TState](LogLevel logLevel, EventId eventId, ILogger logger, Exception exception, Func`3 formatter, List`1&amp; exceptions, TState&amp; state)&#xD;
+[xUnit.net 00:00:00.28]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:00.28]         &#xD;
+[xUnit.net 00:00:00.28]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-20T20:19:09.9530948+02:00">
+        <Text>[xUnit.net 00:00:00.28]     ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

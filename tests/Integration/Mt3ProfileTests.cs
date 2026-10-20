@@ -207,6 +207,10 @@ public sealed class Mt3ProfileTests(IntegrationFixture fixture) : IAsyncLifetime
         await Db(async db=>
         {
             var institutions=new[]{_a,_b,_legacy};
+            await using var purge = await MembershipFixturePurge.AllowAsync(db, institutions);
+            await db.Institutions.Where(i => i.Id == _legacy && i.Code == Mt1SchemaMigration.LegacyMigrationCode &&
+                i.Name == "MT3 controlled legacy holding - not a legal identity")
+                .ExecuteUpdateAsync(s => s.SetProperty(i => i.Code, "MT3_REHEARSAL_" + _legacy.ToString("N")));
             await db.InstitutionTeacherProfiles.Where(p=>institutions.Contains(p.InstitutionId)).ExecuteDeleteAsync();
             await db.InstitutionStudentProfiles.Where(p=>institutions.Contains(p.InstitutionId)).ExecuteDeleteAsync();
             var memberships=await db.InstitutionMemberships.Where(m=>institutions.Contains(m.InstitutionId)).Select(m=>m.Id).ToListAsync();

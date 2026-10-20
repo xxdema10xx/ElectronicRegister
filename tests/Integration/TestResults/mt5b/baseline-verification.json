@@ -1,0 +1,36 @@
+{
+    "Run":  "baseline",
+    "Valid":  true,
+    "ExpectedTotal":  711,
+    "Total":  711,
+    "Unit":  51,
+    "Integration":  660,
+    "Passed":  711,
+    "Failed":  0,
+    "OtherOutcomes":  0,
+    "PreviousIdentitiesMissing":  0,
+    "NewIdentities":  0,
+    "Files":  [
+                  {
+                      "File":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b\\baseline\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_59_43_net10.0.trx",
+                      "SHA256":  "C262220A873928C96D37D4C531B4DA43376952E90215E49B296D90BD0FBBFD15",
+                      "Total":  660,
+                      "Executed":  660,
+                      "Passed":  660,
+                      "Failed":  0,
+                      "NotExecuted":  0
+                  },
+                  {
+                      "File":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b\\baseline\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_59_38_net10.0.trx",
+                      "SHA256":  "6BEB97D6D4CC85840DBC6CAFF6DC8C40AB8F6670ABD66E2514E25794D6DF7EBF",
+                      "Total":  51,
+                      "Executed":  51,
+                      "Passed":  51,
+                      "Failed":  0,
+                      "NotExecuted":  0
+                  }
+              ],
+    "NonPassed":  [
+
+                  ]
+}

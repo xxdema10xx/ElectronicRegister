@@ -1,0 +1,12 @@
+{
+    "Version":  "5.7.24",
+    "Hostname":  "DESKTOP-QUOAG32",
+    "Port":  13306,
+    "Datadir":  "C:\\Users\\Lorenzo\\ElectronicRegister\\migrations\\mt4\\private\\mt5a-mamp-13306\\data\\",
+    "Database":  "electronic_register_test",
+    "GlobalSqlMode":  "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+    "SessionSqlMode":  "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+    "ForeignKeyChecks":  "1",
+    "UniqueChecks":  "1",
+    "PID":  24340
+}

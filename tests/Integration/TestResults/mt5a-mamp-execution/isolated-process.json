@@ -1,0 +1,8 @@
+{
+    "PID":  24340,
+    "PIDFile":  24340,
+    "Binary":  "C:\\MAMP\\bin\\mysql\\bin\\mysqld.exe",
+    "Listener":  "TCP    127.0.0.1:13306        0.0.0.0:0              LISTENING       24340",
+    "LoopbackOnly":  true,
+    "ServiceInstalled":  false
+}

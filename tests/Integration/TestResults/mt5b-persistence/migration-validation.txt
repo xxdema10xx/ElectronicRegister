@@ -1,0 +1,6 @@
+missing_state	0
+invalid_owner_or_orphan	0
+negative_generation	0
+duplicate_membership_identity	0
+missing_triggers	0
+missing_restrict_fk	0

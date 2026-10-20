@@ -1,0 +1,1464 @@
+[
+    {
+        "Constraint":  "fk_audit_actor",
+        "Table":  "audit_event",
+        "Columns":  [
+                        "actor_user_id"
+                    ],
+        "Parent":  "user",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "SET NULL",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_bsa_area",
+        "Table":  "biennium_study_area",
+        "Columns":  [
+                        "study_area_id"
+                    ],
+        "Parent":  "study_area",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_bsa_biennium",
+        "Table":  "biennium_study_area",
+        "Columns":  [
+                        "biennium_id"
+                    ],
+        "Parent":  "biennium",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_bsp_bsa",
+        "Table":  "biennium_study_path",
+        "Columns":  [
+                        "biennium_study_area_id"
+                    ],
+        "Parent":  "biennium_study_area",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_bsp_path",
+        "Table":  "biennium_study_path",
+        "Columns":  [
+                        "study_path_id"
+                    ],
+        "Parent":  "study_path",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_campus_institution",
+        "Table":  "campus",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_class_bsp",
+        "Table":  "class",
+        "Columns":  [
+                        "biennium_study_path_id"
+                    ],
+        "Parent":  "biennium_study_path",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_cs_class",
+        "Table":  "class_subject",
+        "Columns":  [
+                        "class_id"
+                    ],
+        "Parent":  "class",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_cs_subject",
+        "Table":  "class_subject",
+        "Columns":  [
+                        "subject_id"
+                    ],
+        "Parent":  "subject",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_cs_teacher",
+        "Table":  "class_subject",
+        "Columns":  [
+                        "teacher_id"
+                    ],
+        "Parent":  "teacher",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_exam_class_subject",
+        "Table":  "exam",
+        "Columns":  [
+                        "class_subject_id"
+                    ],
+        "Parent":  "class_subject",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_exam_retake_of",
+        "Table":  "exam",
+        "Columns":  [
+                        "retake_of_exam_id"
+                    ],
+        "Parent":  "exam",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "SET NULL",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_exam_student_exam",
+        "Table":  "exam_student",
+        "Columns":  [
+                        "exam_id"
+                    ],
+        "Parent":  "exam",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_exam_student_student",
+        "Table":  "exam_student",
+        "Columns":  [
+                        "student_id"
+                    ],
+        "Parent":  "student",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_exam_submission_exam",
+        "Table":  "exam_submission",
+        "Columns":  [
+                        "exam_id"
+                    ],
+        "Parent":  "exam",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_exam_submission_grade",
+        "Table":  "exam_submission",
+        "Columns":  [
+                        "grade_id"
+                    ],
+        "Parent":  "grade",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "SET NULL",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_exam_submission_reviewer",
+        "Table":  "exam_submission",
+        "Columns":  [
+                        "reviewed_by_user_id"
+                    ],
+        "Parent":  "user",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "SET NULL",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_exam_submission_student",
+        "Table":  "exam_submission",
+        "Columns":  [
+                        "student_id"
+                    ],
+        "Parent":  "student",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_exam_violation_submission",
+        "Table":  "exam_violation",
+        "Columns":  [
+                        "submission_id"
+                    ],
+        "Parent":  "exam_submission",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_grade_class_subject",
+        "Table":  "grade",
+        "Columns":  [
+                        "class_subject_id"
+                    ],
+        "Parent":  "class_subject",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_grade_student",
+        "Table":  "grade",
+        "Columns":  [
+                        "student_id"
+                    ],
+        "Parent":  "student",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_membership_institution",
+        "Table":  "institution_membership",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_membership_role_membership",
+        "Table":  "institution_membership_role",
+        "Columns":  [
+                        "membership_id"
+                    ],
+        "Parent":  "institution_membership",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_membership_user",
+        "Table":  "institution_membership",
+        "Columns":  [
+                        "user_id"
+                    ],
+        "Parent":  "user",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_audit_owner",
+        "Table":  "audit_event",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_biennium_owner",
+        "Table":  "biennium",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_biennium_study_area_owner",
+        "Table":  "biennium_study_area",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_biennium_study_path_owner",
+        "Table":  "biennium_study_path",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_bsa_area",
+        "Table":  "biennium_study_area",
+        "Columns":  [
+                        "institution_id",
+                        "study_area_id"
+                    ],
+        "Parent":  "study_area",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_bsa_biennium",
+        "Table":  "biennium_study_area",
+        "Columns":  [
+                        "institution_id",
+                        "biennium_id"
+                    ],
+        "Parent":  "biennium",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_bsp_bsa",
+        "Table":  "biennium_study_path",
+        "Columns":  [
+                        "institution_id",
+                        "biennium_study_area_id"
+                    ],
+        "Parent":  "biennium_study_area",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_bsp_path",
+        "Table":  "biennium_study_path",
+        "Columns":  [
+                        "institution_id",
+                        "study_path_id"
+                    ],
+        "Parent":  "study_path",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_class_bsp",
+        "Table":  "class",
+        "Columns":  [
+                        "institution_id",
+                        "biennium_study_path_id"
+                    ],
+        "Parent":  "biennium_study_path",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_class_owner",
+        "Table":  "class",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_class_subject_owner",
+        "Table":  "class_subject",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_cs_class",
+        "Table":  "class_subject",
+        "Columns":  [
+                        "institution_id",
+                        "class_id"
+                    ],
+        "Parent":  "class",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_cs_subject",
+        "Table":  "class_subject",
+        "Columns":  [
+                        "institution_id",
+                        "subject_id"
+                    ],
+        "Parent":  "subject",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_cs_teacher",
+        "Table":  "class_subject",
+        "Columns":  [
+                        "institution_id",
+                        "teacher_id"
+                    ],
+        "Parent":  "teacher",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_class_subject",
+        "Table":  "exam",
+        "Columns":  [
+                        "institution_id",
+                        "class_subject_id"
+                    ],
+        "Parent":  "class_subject",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_owner",
+        "Table":  "exam",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_retake_of",
+        "Table":  "exam",
+        "Columns":  [
+                        "retake_institution_id",
+                        "retake_of_exam_id"
+                    ],
+        "Parent":  "exam",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "SET NULL",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_student_exam",
+        "Table":  "exam_student",
+        "Columns":  [
+                        "institution_id",
+                        "exam_id"
+                    ],
+        "Parent":  "exam",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_student_owner",
+        "Table":  "exam_student",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_student_student",
+        "Table":  "exam_student",
+        "Columns":  [
+                        "institution_id",
+                        "student_id"
+                    ],
+        "Parent":  "student",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_submission_exam",
+        "Table":  "exam_submission",
+        "Columns":  [
+                        "institution_id",
+                        "exam_id"
+                    ],
+        "Parent":  "exam",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_submission_grade",
+        "Table":  "exam_submission",
+        "Columns":  [
+                        "grade_institution_id",
+                        "grade_id"
+                    ],
+        "Parent":  "grade",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "SET NULL",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_submission_owner",
+        "Table":  "exam_submission",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_submission_student",
+        "Table":  "exam_submission",
+        "Columns":  [
+                        "institution_id",
+                        "student_id"
+                    ],
+        "Parent":  "student",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_violation_owner",
+        "Table":  "exam_violation",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_exam_violation_submission",
+        "Table":  "exam_violation",
+        "Columns":  [
+                        "institution_id",
+                        "submission_id"
+                    ],
+        "Parent":  "exam_submission",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_grade_class_subject",
+        "Table":  "grade",
+        "Columns":  [
+                        "institution_id",
+                        "class_subject_id"
+                    ],
+        "Parent":  "class_subject",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_grade_owner",
+        "Table":  "grade",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_grade_student",
+        "Table":  "grade",
+        "Columns":  [
+                        "institution_id",
+                        "student_id"
+                    ],
+        "Parent":  "student",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_legacy_scope",
+        "Table":  "mt3a_legacy_scope",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_question_exam",
+        "Table":  "question",
+        "Columns":  [
+                        "institution_id",
+                        "exam_id"
+                    ],
+        "Parent":  "exam",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_question_option_owner",
+        "Table":  "question_option",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_question_option_question",
+        "Table":  "question_option",
+        "Columns":  [
+                        "institution_id",
+                        "question_id"
+                    ],
+        "Parent":  "question",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_question_owner",
+        "Table":  "question",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_student_class",
+        "Table":  "student",
+        "Columns":  [
+                        "class_institution_id",
+                        "class_id"
+                    ],
+        "Parent":  "class",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "SET NULL",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_student_owner",
+        "Table":  "student",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_student_profile_owner",
+        "Table":  "institution_student_profile",
+        "Columns":  [
+                        "institution_id",
+                        "student_id"
+                    ],
+        "Parent":  "student",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_study_area_owner",
+        "Table":  "study_area",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_study_path_owner",
+        "Table":  "study_path",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_subject_owner",
+        "Table":  "subject",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_submission_answer_option_answer",
+        "Table":  "submission_answer_option",
+        "Columns":  [
+                        "institution_id",
+                        "question_id",
+                        "submission_answer_id"
+                    ],
+        "Parent":  "submission_answer",
+        "ParentColumns":  [
+                              "institution_id",
+                              "question_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_submission_answer_option_option",
+        "Table":  "submission_answer_option",
+        "Columns":  [
+                        "institution_id",
+                        "question_id",
+                        "option_id"
+                    ],
+        "Parent":  "question_option",
+        "ParentColumns":  [
+                              "institution_id",
+                              "question_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_submission_answer_option_owner",
+        "Table":  "submission_answer_option",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_submission_answer_owner",
+        "Table":  "submission_answer",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_submission_answer_question",
+        "Table":  "submission_answer",
+        "Columns":  [
+                        "institution_id",
+                        "exam_id",
+                        "question_id"
+                    ],
+        "Parent":  "question",
+        "ParentColumns":  [
+                              "institution_id",
+                              "exam_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_submission_answer_submission",
+        "Table":  "submission_answer",
+        "Columns":  [
+                        "institution_id",
+                        "exam_id",
+                        "submission_id"
+                    ],
+        "Parent":  "exam_submission",
+        "ParentColumns":  [
+                              "institution_id",
+                              "exam_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_teacher_owner",
+        "Table":  "teacher",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt3a_teacher_profile_owner",
+        "Table":  "institution_teacher_profile",
+        "Columns":  [
+                        "institution_id",
+                        "teacher_id"
+                    ],
+        "Parent":  "teacher",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4_class_edition",
+        "Table":  "class",
+        "Columns":  [
+                        "institution_id",
+                        "course_edition_id"
+                    ],
+        "Parent":  "course_edition",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4_ec_campus",
+        "Table":  "course_edition_campus",
+        "Columns":  [
+                        "institution_id",
+                        "campus_id"
+                    ],
+        "Parent":  "campus",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4_ec_edition",
+        "Table":  "course_edition_campus",
+        "Columns":  [
+                        "institution_id",
+                        "course_edition_id"
+                    ],
+        "Parent":  "course_edition",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4_edition_owner",
+        "Table":  "course_edition",
+        "Columns":  [
+                        "institution_id"
+                    ],
+        "Parent":  "institution",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4_edition_path",
+        "Table":  "course_edition",
+        "Columns":  [
+                        "institution_id",
+                        "study_path_id"
+                    ],
+        "Parent":  "study_path",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4_enrollment_edition",
+        "Table":  "student_enrollment",
+        "Columns":  [
+                        "institution_id",
+                        "course_edition_id"
+                    ],
+        "Parent":  "course_edition",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4_enrollment_student",
+        "Table":  "student_enrollment",
+        "Columns":  [
+                        "institution_id",
+                        "student_id"
+                    ],
+        "Parent":  "student",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4c_actor",
+        "Table":  "course_administration_event",
+        "Columns":  [
+                        "actor_user_id"
+                    ],
+        "Parent":  "user",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4c_campus",
+        "Table":  "course_administration_event",
+        "Columns":  [
+                        "institution_id",
+                        "campus_id"
+                    ],
+        "Parent":  "campus",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4c_class",
+        "Table":  "course_administration_event",
+        "Columns":  [
+                        "institution_id",
+                        "class_id"
+                    ],
+        "Parent":  "class",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4c_edition",
+        "Table":  "course_administration_event",
+        "Columns":  [
+                        "institution_id",
+                        "course_edition_id"
+                    ],
+        "Parent":  "course_edition",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4c_enrollment",
+        "Table":  "course_administration_event",
+        "Columns":  [
+                        "institution_id",
+                        "enrollment_id"
+                    ],
+        "Parent":  "student_enrollment",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_mt4c_membership",
+        "Table":  "course_administration_event",
+        "Columns":  [
+                        "institution_id",
+                        "actor_membership_id",
+                        "actor_user_id"
+                    ],
+        "Parent":  "institution_membership",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id",
+                              "user_id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_question_exam",
+        "Table":  "question",
+        "Columns":  [
+                        "exam_id"
+                    ],
+        "Parent":  "exam",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_question_option_question",
+        "Table":  "question_option",
+        "Columns":  [
+                        "question_id"
+                    ],
+        "Parent":  "question",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_student_class",
+        "Table":  "student",
+        "Columns":  [
+                        "class_id"
+                    ],
+        "Parent":  "class",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "SET NULL",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_student_profile_membership",
+        "Table":  "institution_student_profile",
+        "Columns":  [
+                        "institution_id",
+                        "membership_id"
+                    ],
+        "Parent":  "institution_membership",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_student_profile_student",
+        "Table":  "institution_student_profile",
+        "Columns":  [
+                        "student_id"
+                    ],
+        "Parent":  "student",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_submission_answer_option_answer",
+        "Table":  "submission_answer_option",
+        "Columns":  [
+                        "submission_answer_id"
+                    ],
+        "Parent":  "submission_answer",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_submission_answer_option_option",
+        "Table":  "submission_answer_option",
+        "Columns":  [
+                        "option_id"
+                    ],
+        "Parent":  "question_option",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_submission_answer_question",
+        "Table":  "submission_answer",
+        "Columns":  [
+                        "question_id"
+                    ],
+        "Parent":  "question",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_submission_answer_submission",
+        "Table":  "submission_answer",
+        "Columns":  [
+                        "submission_id"
+                    ],
+        "Parent":  "exam_submission",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "CASCADE",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_teacher_profile_membership",
+        "Table":  "institution_teacher_profile",
+        "Columns":  [
+                        "institution_id",
+                        "membership_id"
+                    ],
+        "Parent":  "institution_membership",
+        "ParentColumns":  [
+                              "institution_id",
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_teacher_profile_teacher",
+        "Table":  "institution_teacher_profile",
+        "Columns":  [
+                        "teacher_id"
+                    ],
+        "Parent":  "teacher",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "RESTRICT",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_user_student",
+        "Table":  "user",
+        "Columns":  [
+                        "student_id"
+                    ],
+        "Parent":  "student",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "SET NULL",
+        "Violations":  0
+    },
+    {
+        "Constraint":  "fk_user_teacher",
+        "Table":  "user",
+        "Columns":  [
+                        "teacher_id"
+                    ],
+        "Parent":  "teacher",
+        "ParentColumns":  [
+                              "id"
+                          ],
+        "Update":  "RESTRICT",
+        "Delete":  "SET NULL",
+        "Violations":  0
+    }
+]

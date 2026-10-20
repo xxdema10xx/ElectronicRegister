@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="8f6fa14c-cad8-4de3-99d7-55a07c0e5685" name="Lorenzo@DESKTOP-QUOAG32 2026-10-20 20:19:23" runUser="DESKTOP-QUOAG32\CodexSandboxOffline" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-20T20:19:23.8075730+02:00" queuing="2026-10-20T20:19:23.8075731+02:00" start="2026-10-20T20:19:21.5724330+02:00" finish="2026-10-20T20:19:23.8113937+02:00" />
+  <TestSettings name="default" id="0b777fed-86f5-49e2-8f7b-54574d7a377d">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-20_20_19_23" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="a56858ca-38e3-403f-87f3-35bf8a5626a6" testId="8acb2a0f-2496-e978-90ee-e72b7dd35a26" testName="ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets" computerName="DESKTOP-QUOAG32" duration="00:00:00.6409559" startTime="2026-10-20T20:19:23.7488233+02:00" endTime="2026-10-20T20:19:23.7488411+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a56858ca-38e3-403f-87f3-35bf8a5626a6">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Collections differ&#xD;
+                        ↓ (pos 0)&#xD;
+Expected: string[]     ["Student", "Teacher"]&#xD;
+Actual:   List&lt;string&gt; ["Teacher", "Student"]&#xD;
+                        ↑ (pos 0)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt5aMembershipAdminTests.cs:line 177&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="8acb2a0f-2496-e978-90ee-e72b7dd35a26">
+      <Execution id="a56858ca-38e3-403f-87f3-35bf8a5626a6" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests" name="DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="8acb2a0f-2496-e978-90ee-e72b7dd35a26" executionId="a56858ca-38e3-403f-87f3-35bf8a5626a6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" passed="0" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.06]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.12]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.12]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:01.89]       Assert.Equal() Failure: Collections differ&#xD;
+[xUnit.net 00:00:01.89]                               ↓ (pos 0)&#xD;
+[xUnit.net 00:00:01.89]       Expected: string[]     ["Student", "Teacher"]&#xD;
+[xUnit.net 00:00:01.89]       Actual:   List&lt;string&gt; ["Teacher", "Student"]&#xD;
+[xUnit.net 00:00:01.89]                               ↑ (pos 0)&#xD;
+[xUnit.net 00:00:01.89]       Stack Trace:&#xD;
+[xUnit.net 00:00:01.89]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt5aMembershipAdminTests.cs(177,0): at ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets()&#xD;
+[xUnit.net 00:00:01.89]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:01.89]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-20T20:19:23.7472427+02:00">
+        <Text>[xUnit.net 00:00:01.89]     ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

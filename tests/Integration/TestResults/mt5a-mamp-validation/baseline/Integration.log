@@ -1,0 +1,29 @@
+Esecuzione dei test per C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll (.NETCoreApp,Version=v10.0)
+Un totale di 1 file di test corrisponde al criterio specificato.
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: "timeout") [1 s]
+  Messaggio di errore:
+   Assert.Contains() Failure: Sub-string not found
+String:    "System.InvalidCastException: Unable to ca"···
+Not found: "timeout"
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(String kind) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 273
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(String kind) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 275
+--- End of stack trace from previous location ---
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites [1 s]
+  Messaggio di errore:
+   Assert.DoesNotContain() Failure: Sub-string found
+                            ↓ (pos 19)
+String: "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO"···
+Found:  "STRICT_"
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.<>c.<<HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites>b__62_6>d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 773
+--- End of stack trace from previous location ---
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Db(Func`2 action) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 53
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 769
+--- End of stack trace from previous location ---
+File di risultati: C:\Users\Lorenzo\ElectronicRegister\migrations\mt4\private\mt5a-mamp-13306\validation-results\baseline\Integration\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_25_32_net10.0.trx
+
+Non superato! - Non superati:     2. Superati:   622. Ignorati:     0. Totale:   624. Durata: 2 m 48 s - Integration.Tests.dll (net10.0)
+
+[xUnit.net 00:01:08.65]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: "timeout") [FAIL]
+[xUnit.net 00:01:51.55]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites [FAIL]

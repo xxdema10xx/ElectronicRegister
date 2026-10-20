@@ -35,7 +35,7 @@ internal static class Mt3cHosting
     {
         internal IHost Host => host;
         internal HttpClient Client => client;
-        internal static async Task<ProgramHost> StartAsync(string connectionString, Guid legacyInstitution, Guid[] users, bool enabled = true, bool unbackfilled = true, bool? school = null, string environment = "Production", bool? exam = null, bool? course = null)
+        internal static async Task<ProgramHost> StartAsync(string connectionString, Guid legacyInstitution, Guid[] users, bool enabled = true, bool unbackfilled = true, bool? school = null, string environment = "Production", bool? exam = null, bool? course = null, bool? membershipAdmin = null)
         {
             using var observer = new HostObserver();
             using var subscription = DiagnosticListener.AllListeners.Subscribe(observer);
@@ -47,11 +47,12 @@ internal static class Mt3cHosting
                 "--AzureAd:TenantId=11111111-2222-3333-4444-555555555555", "--AzureAd:Audience=mt2-microsoft",
                 "--Identity:Legacy:Enabled=" + enabled, "--Identity:Legacy:InstitutionId=" + legacyInstitution,
                 "--Identity:Legacy:AllowUnbackfilledAccounts=" + unbackfilled,
-                "--Logging:LogLevel:Default=Critical"
+                "--Logging:LogLevel:Default=Critical", "--Logging:EventLog:LogLevel:Default=None"
             };
             if (school.HasValue) args.Add("--Multitenancy:SchoolApi:Enabled=" + school.Value);
             if (course.HasValue) args.Add("--Multitenancy:CourseApi:Enabled=" + course.Value);
             if (exam.HasValue) args.Add("--Multitenancy:ExamApi:Enabled=" + exam.Value);
+            if (membershipAdmin.HasValue) args.Add("--Multitenancy:MembershipAdminApi:Enabled=" + membershipAdmin.Value);
             args.AddRange(users.Select((id, i) => "--Identity:Legacy:UserIds:" + i + "=" + id));
             var run = Task.Run(async () =>
             {
@@ -64,6 +65,8 @@ internal static class Mt3cHosting
             var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
             var ready = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             using var registration = lifetime.ApplicationStarted.Register(() => ready.TrySetResult(true));
+            var started = await Task.WhenAny(ready.Task, run).WaitAsync(TimeSpan.FromSeconds(30));
+            if (started == run) await run; // Surface startup failures instead of masking them as readiness timeouts.
             await ready.Task.WaitAsync(TimeSpan.FromSeconds(30));
             Assert.Contains(host.Services.GetServices<IHostedService>(), s => s.GetType().Name == "ExpiredExamSubmissionWorker");
             var address = host.Services.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>()!.Addresses.Single();

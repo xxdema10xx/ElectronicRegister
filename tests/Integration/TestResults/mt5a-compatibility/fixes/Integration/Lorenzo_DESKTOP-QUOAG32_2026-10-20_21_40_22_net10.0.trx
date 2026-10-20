@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="a82cf0d3-1649-40d2-97a6-2dd40c677078" name="Lorenzo@DESKTOP-QUOAG32 2026-10-20 21:40:22" runUser="DESKTOP-QUOAG32\CodexSandboxOffline" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-20T21:40:22.6429731+02:00" queuing="2026-10-20T21:40:22.6429732+02:00" start="2026-10-20T21:40:17.5535727+02:00" finish="2026-10-20T21:40:25.7033161+02:00" />
+  <TestSettings name="default" id="2b5a21a7-7560-405f-851f-3be076616739">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_40_22" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="ba2c894a-9916-465a-8520-1ac7f505556d" testId="3c106ff8-9dc4-7509-289e-a9cc8e1527f9" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites" computerName="DESKTOP-QUOAG32" duration="00:00:01.3735183" startTime="2026-10-20T21:40:25.5677949+02:00" endTime="2026-10-20T21:40:25.5677950+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ba2c894a-9916-465a-8520-1ac7f505556d" />
+    <UnitTestResult executionId="932f36df-e36a-42e2-a155-5577743cb726" testId="aa3400d7-0ae9-c16e-1fff-4fc904e04780" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: &quot;grading&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.4792752" startTime="2026-10-20T21:40:24.0777722+02:00" endTime="2026-10-20T21:40:24.0777723+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="932f36df-e36a-42e2-a155-5577743cb726" />
+    <UnitTestResult executionId="510fbf22-4a42-46a5-a2ac-50cf3baeeaec" testId="8f3a367f-4841-f786-8036-35e5645d4eb8" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: &quot;timeout&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:02.2169612" startTime="2026-10-20T21:40:22.6232644+02:00" endTime="2026-10-20T21:40:22.6232784+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="510fbf22-4a42-46a5-a2ac-50cf3baeeaec">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Contains() Failure: Filter not matched in collection&#xD;
+Collection: [System.Collections.Generic.KeyNotFoundException: La submission non esiste.&#xD;
+   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass11_0.&lt;&lt;ProcessCoreAsync&gt;b__0&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 75&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Infrastructure.Repositories.TransactionManager.ExecuteAsync(Func`1 action, CancellationToken cancellationToken) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Repositories\TransactionRepository.cs:line 21&#xD;
+   at ElectronicRegisterAPI.Infrastructure.Repositories.TransactionManager.ExecuteAsync(Func`1 action, CancellationToken cancellationToken) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Repositories\TransactionRepository.cs:line 29&#xD;
+   at ElectronicRegisterAPI.Infrastructure.Repositories.TransactionManager.ExecuteAsync(Func`1 action, CancellationToken cancellationToken) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Repositories\TransactionRepository.cs:line 30&#xD;
+   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessCoreAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller, SubmissionExpiryWork work, CancellationToken ct) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 71&#xD;
+   at ElectronicRegisterAPI.Application.Services.InstitutionExpiryService.ProcessAsync(ExpiryCandidate candidate, CancellationToken ct) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\InstitutionExpiryService.cs:line 17&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 39&#xD;
+   at Xunit.Assert.RecordExceptionAsync(Func`1 testCode) in /_/src/xunit.assert/Asserts/Record.cs:line 126]</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(String kind) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 297&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(String kind) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 302&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="0b183800-7843-4b08-908c-c2427ca16b66" testId="b6704a24-3d85-5232-18ec-af54c65cfd3e" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: &quot;connection&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.7208434" startTime="2026-10-20T21:40:23.4865808+02:00" endTime="2026-10-20T21:40:23.4865809+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0b183800-7843-4b08-908c-c2427ca16b66" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: &quot;grading&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="aa3400d7-0ae9-c16e-1fff-4fc904e04780">
+      <Execution id="932f36df-e36a-42e2-a155-5577743cb726" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: &quot;connection&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="b6704a24-3d85-5232-18ec-af54c65cfd3e">
+      <Execution id="0b183800-7843-4b08-908c-c2427ca16b66" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="3c106ff8-9dc4-7509-289e-a9cc8e1527f9">
+      <Execution id="ba2c894a-9916-465a-8520-1ac7f505556d" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: &quot;timeout&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="8f3a367f-4841-f786-8036-35e5645d4eb8">
+      <Execution id="510fbf22-4a42-46a5-a2ac-50cf3baeeaec" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="3c106ff8-9dc4-7509-289e-a9cc8e1527f9" executionId="ba2c894a-9916-465a-8520-1ac7f505556d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="aa3400d7-0ae9-c16e-1fff-4fc904e04780" executionId="932f36df-e36a-42e2-a155-5577743cb726" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8f3a367f-4841-f786-8036-35e5645d4eb8" executionId="510fbf22-4a42-46a5-a2ac-50cf3baeeaec" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b6704a24-3d85-5232-18ec-af54c65cfd3e" executionId="0b183800-7843-4b08-908c-c2427ca16b66" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="4" executed="4" passed="3" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.40]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.52]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.52]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:04.64]       Assert.Contains() Failure: Filter not matched in collection&#xD;
+[xUnit.net 00:00:04.64]       Collection: [System.Collections.Generic.KeyNotFoundException: La submission non esiste.&#xD;
+[xUnit.net 00:00:04.64]          at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass11_0.&lt;&lt;ProcessCoreAsync&gt;b__0&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 75&#xD;
+[xUnit.net 00:00:04.64]       --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:04.64]          at ElectronicRegisterAPI.Infrastructure.Repositories.TransactionManager.ExecuteAsync(Func`1 action, CancellationToken cancellationToken) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Repositories\TransactionRepository.cs:line 21&#xD;
+[xUnit.net 00:00:04.64]          at ElectronicRegisterAPI.Infrastructure.Repositories.TransactionManager.ExecuteAsync(Func`1 action, CancellationToken cancellationToken) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Repositories\TransactionRepository.cs:line 29&#xD;
+[xUnit.net 00:00:04.64]          at ElectronicRegisterAPI.Infrastructure.Repositories.TransactionManager.ExecuteAsync(Func`1 action, CancellationToken cancellationToken) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Repositories\TransactionRepository.cs:line 30&#xD;
+[xUnit.net 00:00:04.64]          at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessCoreAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller, SubmissionExpiryWork work, CancellationToken ct) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 71&#xD;
+[xUnit.net 00:00:04.64]          at ElectronicRegisterAPI.Application.Services.InstitutionExpiryService.ProcessAsync(ExpiryCandidate candidate, CancellationToken ct) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\InstitutionExpiryService.cs:line 17&#xD;
+[xUnit.net 00:00:04.64]          at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 39&#xD;
+[xUnit.net 00:00:04.64]          at Xunit.Assert.RecordExceptionAsync(Func`1 testCode) in /_/src/xunit.assert/Asserts/Record.cs:line 126]&#xD;
+[xUnit.net 00:00:04.64]       Stack Trace:&#xD;
+[xUnit.net 00:00:04.64]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(297,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(String kind)&#xD;
+[xUnit.net 00:00:04.64]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(302,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(String kind)&#xD;
+[xUnit.net 00:00:04.64]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:07.67]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-20T21:40:22.6209988+02:00">
+        <Text>[xUnit.net 00:00:04.64]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: "timeout") [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

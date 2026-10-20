@@ -1,0 +1,462 @@
+[
+    {
+        "Table":  "audit_event",
+        "Constraint":  "fk_audit_actor",
+        "Violations":  0
+    },
+    {
+        "Table":  "audit_event",
+        "Constraint":  "fk_mt3a_audit_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "biennium_study_area",
+        "Constraint":  "fk_bsa_area",
+        "Violations":  0
+    },
+    {
+        "Table":  "biennium_study_area",
+        "Constraint":  "fk_bsa_biennium",
+        "Violations":  0
+    },
+    {
+        "Table":  "biennium_study_area",
+        "Constraint":  "fk_mt3a_biennium_study_area_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "biennium_study_area",
+        "Constraint":  "fk_mt3a_bsa_area",
+        "Violations":  0
+    },
+    {
+        "Table":  "biennium_study_area",
+        "Constraint":  "fk_mt3a_bsa_biennium",
+        "Violations":  0
+    },
+    {
+        "Table":  "biennium_study_path",
+        "Constraint":  "fk_bsp_bsa",
+        "Violations":  0
+    },
+    {
+        "Table":  "biennium_study_path",
+        "Constraint":  "fk_bsp_path",
+        "Violations":  0
+    },
+    {
+        "Table":  "biennium_study_path",
+        "Constraint":  "fk_mt3a_biennium_study_path_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "biennium_study_path",
+        "Constraint":  "fk_mt3a_bsp_bsa",
+        "Violations":  0
+    },
+    {
+        "Table":  "biennium_study_path",
+        "Constraint":  "fk_mt3a_bsp_path",
+        "Violations":  0
+    },
+    {
+        "Table":  "biennium",
+        "Constraint":  "fk_mt3a_biennium_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "campus",
+        "Constraint":  "fk_campus_institution",
+        "Violations":  0
+    },
+    {
+        "Table":  "class_subject",
+        "Constraint":  "fk_cs_class",
+        "Violations":  0
+    },
+    {
+        "Table":  "class_subject",
+        "Constraint":  "fk_cs_subject",
+        "Violations":  0
+    },
+    {
+        "Table":  "class_subject",
+        "Constraint":  "fk_cs_teacher",
+        "Violations":  0
+    },
+    {
+        "Table":  "class_subject",
+        "Constraint":  "fk_mt3a_class_subject_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "class_subject",
+        "Constraint":  "fk_mt3a_cs_class",
+        "Violations":  0
+    },
+    {
+        "Table":  "class_subject",
+        "Constraint":  "fk_mt3a_cs_subject",
+        "Violations":  0
+    },
+    {
+        "Table":  "class_subject",
+        "Constraint":  "fk_mt3a_cs_teacher",
+        "Violations":  0
+    },
+    {
+        "Table":  "class",
+        "Constraint":  "fk_class_bsp",
+        "Violations":  0
+    },
+    {
+        "Table":  "class",
+        "Constraint":  "fk_mt3a_class_bsp",
+        "Violations":  0
+    },
+    {
+        "Table":  "class",
+        "Constraint":  "fk_mt3a_class_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "class",
+        "Constraint":  "fk_mt4_class_edition",
+        "Violations":  0
+    },
+    {
+        "Table":  "course_edition_campus",
+        "Constraint":  "fk_mt4_ec_campus",
+        "Violations":  0
+    },
+    {
+        "Table":  "course_edition_campus",
+        "Constraint":  "fk_mt4_ec_edition",
+        "Violations":  0
+    },
+    {
+        "Table":  "course_edition",
+        "Constraint":  "fk_mt4_edition_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "course_edition",
+        "Constraint":  "fk_mt4_edition_path",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_student",
+        "Constraint":  "fk_exam_student_exam",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_student",
+        "Constraint":  "fk_exam_student_student",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_student",
+        "Constraint":  "fk_mt3a_exam_student_exam",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_student",
+        "Constraint":  "fk_mt3a_exam_student_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_student",
+        "Constraint":  "fk_mt3a_exam_student_student",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_submission",
+        "Constraint":  "fk_exam_submission_exam",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_submission",
+        "Constraint":  "fk_exam_submission_grade",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_submission",
+        "Constraint":  "fk_exam_submission_reviewer",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_submission",
+        "Constraint":  "fk_exam_submission_student",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_submission",
+        "Constraint":  "fk_mt3a_exam_submission_exam",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_submission",
+        "Constraint":  "fk_mt3a_exam_submission_grade",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_submission",
+        "Constraint":  "fk_mt3a_exam_submission_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_submission",
+        "Constraint":  "fk_mt3a_exam_submission_student",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_violation",
+        "Constraint":  "fk_exam_violation_submission",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_violation",
+        "Constraint":  "fk_mt3a_exam_violation_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam_violation",
+        "Constraint":  "fk_mt3a_exam_violation_submission",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam",
+        "Constraint":  "fk_exam_class_subject",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam",
+        "Constraint":  "fk_exam_retake_of",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam",
+        "Constraint":  "fk_mt3a_exam_class_subject",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam",
+        "Constraint":  "fk_mt3a_exam_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "exam",
+        "Constraint":  "fk_mt3a_exam_retake_of",
+        "Violations":  0
+    },
+    {
+        "Table":  "grade",
+        "Constraint":  "fk_grade_class_subject",
+        "Violations":  0
+    },
+    {
+        "Table":  "grade",
+        "Constraint":  "fk_grade_student",
+        "Violations":  0
+    },
+    {
+        "Table":  "grade",
+        "Constraint":  "fk_mt3a_grade_class_subject",
+        "Violations":  0
+    },
+    {
+        "Table":  "grade",
+        "Constraint":  "fk_mt3a_grade_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "grade",
+        "Constraint":  "fk_mt3a_grade_student",
+        "Violations":  0
+    },
+    {
+        "Table":  "institution_membership_role",
+        "Constraint":  "fk_membership_role_membership",
+        "Violations":  0
+    },
+    {
+        "Table":  "institution_membership",
+        "Constraint":  "fk_membership_institution",
+        "Violations":  0
+    },
+    {
+        "Table":  "institution_membership",
+        "Constraint":  "fk_membership_user",
+        "Violations":  0
+    },
+    {
+        "Table":  "institution_student_profile",
+        "Constraint":  "fk_mt3a_student_profile_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "institution_student_profile",
+        "Constraint":  "fk_student_profile_membership",
+        "Violations":  0
+    },
+    {
+        "Table":  "institution_student_profile",
+        "Constraint":  "fk_student_profile_student",
+        "Violations":  0
+    },
+    {
+        "Table":  "institution_teacher_profile",
+        "Constraint":  "fk_mt3a_teacher_profile_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "institution_teacher_profile",
+        "Constraint":  "fk_teacher_profile_membership",
+        "Violations":  0
+    },
+    {
+        "Table":  "institution_teacher_profile",
+        "Constraint":  "fk_teacher_profile_teacher",
+        "Violations":  0
+    },
+    {
+        "Table":  "mt3a_legacy_scope",
+        "Constraint":  "fk_mt3a_legacy_scope",
+        "Violations":  0
+    },
+    {
+        "Table":  "question_option",
+        "Constraint":  "fk_mt3a_question_option_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "question_option",
+        "Constraint":  "fk_mt3a_question_option_question",
+        "Violations":  0
+    },
+    {
+        "Table":  "question_option",
+        "Constraint":  "fk_question_option_question",
+        "Violations":  0
+    },
+    {
+        "Table":  "question",
+        "Constraint":  "fk_mt3a_question_exam",
+        "Violations":  0
+    },
+    {
+        "Table":  "question",
+        "Constraint":  "fk_mt3a_question_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "question",
+        "Constraint":  "fk_question_exam",
+        "Violations":  0
+    },
+    {
+        "Table":  "student_enrollment",
+        "Constraint":  "fk_mt4_enrollment_edition",
+        "Violations":  0
+    },
+    {
+        "Table":  "student_enrollment",
+        "Constraint":  "fk_mt4_enrollment_student",
+        "Violations":  0
+    },
+    {
+        "Table":  "student",
+        "Constraint":  "fk_mt3a_student_class",
+        "Violations":  0
+    },
+    {
+        "Table":  "student",
+        "Constraint":  "fk_mt3a_student_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "student",
+        "Constraint":  "fk_student_class",
+        "Violations":  0
+    },
+    {
+        "Table":  "study_area",
+        "Constraint":  "fk_mt3a_study_area_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "study_path",
+        "Constraint":  "fk_mt3a_study_path_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "subject",
+        "Constraint":  "fk_mt3a_subject_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "submission_answer_option",
+        "Constraint":  "fk_mt3a_submission_answer_option_answer",
+        "Violations":  0
+    },
+    {
+        "Table":  "submission_answer_option",
+        "Constraint":  "fk_mt3a_submission_answer_option_option",
+        "Violations":  0
+    },
+    {
+        "Table":  "submission_answer_option",
+        "Constraint":  "fk_mt3a_submission_answer_option_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "submission_answer_option",
+        "Constraint":  "fk_submission_answer_option_answer",
+        "Violations":  0
+    },
+    {
+        "Table":  "submission_answer_option",
+        "Constraint":  "fk_submission_answer_option_option",
+        "Violations":  0
+    },
+    {
+        "Table":  "submission_answer",
+        "Constraint":  "fk_mt3a_submission_answer_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "submission_answer",
+        "Constraint":  "fk_mt3a_submission_answer_question",
+        "Violations":  0
+    },
+    {
+        "Table":  "submission_answer",
+        "Constraint":  "fk_mt3a_submission_answer_submission",
+        "Violations":  0
+    },
+    {
+        "Table":  "submission_answer",
+        "Constraint":  "fk_submission_answer_question",
+        "Violations":  0
+    },
+    {
+        "Table":  "submission_answer",
+        "Constraint":  "fk_submission_answer_submission",
+        "Violations":  0
+    },
+    {
+        "Table":  "teacher",
+        "Constraint":  "fk_mt3a_teacher_owner",
+        "Violations":  0
+    },
+    {
+        "Table":  "user",
+        "Constraint":  "fk_user_student",
+        "Violations":  0
+    },
+    {
+        "Table":  "user",
+        "Constraint":  "fk_user_teacher",
+        "Violations":  0
+    }
+]

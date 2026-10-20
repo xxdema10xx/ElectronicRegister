@@ -1,0 +1,1506 @@
+[
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Unit\\SubmissionGradingServiceTests.cs",
+        "SHA256":  "55F3B74A55C8BA2CE7A49711303BFFDDDD6FE5A9414D41FEA062C3ACB3582127"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Unit\\MembershipAuthorizationTests.cs",
+        "SHA256":  "045CBBD5B64F85ACA2A8A88ED0D0AB43589D3AE73325E9188F7451BC06948583"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Unit\\ExamLifecycleServiceTests.cs",
+        "SHA256":  "56DA8935CF5CC407543E79D01C0F614719F0D28EAF5B25139D268EDB330BF74D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Unit\\Application\\ExamSubmissionProcessorTests.cs",
+        "SHA256":  "1EA9516F3BE675FC3FF78479A2B10C83F4135E2811FC075EADFDA3E2102AEEC0"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Services\\SystemTimeProvider.cs",
+        "SHA256":  "C07028B46A17444FF5DD468C9F360265FA5B27F26E1CA5F5FDF71CBE48E63A58"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\MicrosoftTokenValidator.cs",
+        "SHA256":  "818B93AC4CB8459051C5F48F9DD31CE1773FE8A48DA96A3F68C8C3B2474838D0"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\MicrosoftIdentityLink.cs",
+        "SHA256":  "6CABBC278228F508883B557C2F8101AB91B511EBF6EDBC2C3D5452467B642F47"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\LegacyAccess.cs",
+        "SHA256":  "021E8A0FEBD6EBFD0045638AE97E1D7DCD1878A6AD295713113E879FC809EA3B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\JwtTokenGenerator.cs",
+        "SHA256":  "2ED01B3ADB6F046E34C81E338B5AEA85F29BE8E6F2B799CAFF502D0C89468650"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\InstitutionTokens.cs",
+        "SHA256":  "FA45E80CBD105A111DF54B231EB3530798FE123A7CC8670C028382FABCE907A4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\BcryptPasswordHasher.cs",
+        "SHA256":  "25D93BF5A18798AF9C9E78A07B70CB32C5B3A0A51402D82A7BA47886F1AA825F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\DependencyInjection\\ServiceCollectionExtensions.cs",
+        "SHA256":  "113FB22F488750500B44CB525F5DCEFA115DE7573EF57EBBBF1BAB65AE519074"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\UserRepository.cs",
+        "SHA256":  "A69B7CBC9F4AE9532D70F85599067A90C6C5351C61799F727EEC3A30C01B3D4E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\TransactionRepository.cs",
+        "SHA256":  "A399E4696EECFC2650150C3537BBB7C245D3964C875DCBF797062098C7870CE9"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\TeacherRepository.cs",
+        "SHA256":  "AF0C9A8AB7A56BA1FFDB3FA98D6CD9B65085D61DFD757A43A7A54CC1B80E37B8"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\SubmissionExpiryStore.cs",
+        "SHA256":  "9AA0D9E75C43F59187F26C66C980BCD13948B66E0CB781F0EB88CE2B9A703C1F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\SubjectRepository.cs",
+        "SHA256":  "B67D6DE85346462D6D387C752FBDBF2A2437C557950C31173B21D04ECB98993A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\StudyPathRepository.cs",
+        "SHA256":  "882CC7F8B247506D070C505ECDE643660FABD11128330757B96A6FF5F72359F6"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\StudyAreaRepository.cs",
+        "SHA256":  "EBE750D39D37B4108AC0BC6D6784F11A5C8E3E5552F1136EDC236105F3BFB924"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\StudentRepository.cs",
+        "SHA256":  "4933DB9EA1FAF1F7EA0A78C387B961B5CD7E5D53FE84F557BE337EC91C84901D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\MembershipAuthorizationRepository.cs",
+        "SHA256":  "3DB8F45DDDB99F8A7B91211FE0851D14D0BD25DB128A6E2AC562CEAE7D50840C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionTeacherRepository.cs",
+        "SHA256":  "E710D95475FCB0E2F5974EE9AD91AD77D300992213C9D564AFAD166FDA27BE14"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionSubjectRepository.cs",
+        "SHA256":  "72335379955D28AF74FD580837922F0BBF8E36C530167F47DC796D63D60A7EBC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionStudentRepository.cs",
+        "SHA256":  "F325E03B28A8C219E8F885621CC79B7C466CD8AC30CB1331EEBF76E733E914E4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionSchoolQueries.cs",
+        "SHA256":  "3D0C67BC19EEF02A1DF90328A251BD9772C40AE48C16C34BCE2168B52DA0CECE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionRepository.cs",
+        "SHA256":  "857E34E1F51947C81274B9AE61AC0D2E72F521FB69BC251589EAFDB4DC6A40D1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionProfileRepository.cs",
+        "SHA256":  "FAA886DB7FA146173BD637AD047365987E6687C32A256C3A2D924422CC7FB2FE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionMembershipSecurityStateRepository.cs",
+        "SHA256":  "7E200B87CAB52A4D25F457146B6A404A559C5ACD03E9EA792AEB27838E987D72"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionMembershipRepository.cs",
+        "SHA256":  "30BA37B75C68CCFFF67BF67AD1F6722A092EDB4D3C13A5882B8DC603C55EEFCD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionMembershipDirectoryRepository.cs",
+        "SHA256":  "BDE41786F25880E7E83CD16A86CF96EE77E8E98238373B55AD3CA13E35ABEF97"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionExamRepositoryFactory.cs",
+        "SHA256":  "81EE84DA20239F3EAD4AAE1E74F1ED3BBB9DB73936A034B95F48D2E4C7D7D51E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionExamDataScope.cs",
+        "SHA256":  "3AC010EE384AB4CBE7AF9656E3F67A8202CF0A7C8F3355D80895C1E38C4F8C20"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\GradeRepository.cs",
+        "SHA256":  "180CE7C741072862935CB0E315A83555688BB497F830B4EA97A2E2DCDF63A188"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\ExamSubmissionRepository.cs",
+        "SHA256":  "4FE51B353373A5D5B774FC66D0A37E4E60B337F3F4756C8499F9FC5110B7D280"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\ExamRepository.cs",
+        "SHA256":  "055B1E75BD62217B488EE090CD4B951611E06D899403EDC1A92F168C7C227A54"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\CourseStructureRepository.Queries.cs",
+        "SHA256":  "8D532359F9FE97363BD26B3BC18AA1DB68A848EB410B385D9C9A08A8ADC0D7CF"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\CourseStructureRepository.Lifecycle.cs",
+        "SHA256":  "24B4109865486898D14165D55B8B1669FCC700B588DD1327C0DCA2945476DA34"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\CourseStructureRepository.cs",
+        "SHA256":  "72B674451498F858100DC77D065D13E8FB7CF70734051580BDD42F26F74FAED9"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\ClassSubjectRepository.cs",
+        "SHA256":  "48F874534BAA3016175557C5C8E0303635382F97D18CEDA1BEE157F03EF13AF4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\CampusRepository.cs",
+        "SHA256":  "FA805434B9A0B1FE85720833C01A9C9C82AEB7D72778E4D31D2BFF61DE6CAE0C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\BienniumRepository.cs",
+        "SHA256":  "9141A19288C48370289E7360A15D870892E9FF9C055312FDD1E3444CF9411E0D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\AuditRepository.cs",
+        "SHA256":  "2023D385365AF51E2455C557B30ECC45AE5083CC483FBFA19C045FCC16B369FC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI\\Infrastructure\\DependencyInjection\\ServiceCollectionExtensions.cs",
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\UserService.cs",
+        "SHA256":  "64FAD5DFA7F4188F0920524C1F2AE0928F055F7DFAFA4F850B2FE01F5F94E904"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\TestDatabaseSession.cs",
+        "SHA256":  "DE427B56E1ECA579AC83056FD55CE56FE6E5856E190BB5C63127119187862F93"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\TeacherService.cs",
+        "SHA256":  "A867CACD9FC051390D8D676318DBADFD765A1AF8E850DDDD387536AF5E323056"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\SubmissionGradingService.cs",
+        "SHA256":  "C4B1F6E57864819EE33C8FD71DDBC6F550E28576FD4B70901CB94F6A2AEA94ED"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\SubjectService.cs",
+        "SHA256":  "996B69BBDAAADB23C9315939B790DC4784DBA21C4D8F51730809A0C598B68271"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\StudyPathService.cs",
+        "SHA256":  "42B309D913716B164F9294CAE0810A46775BDD5B25FE400D94E9C619949531D0"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\StudyAreaService.cs",
+        "SHA256":  "3FAB2D33F10EC907F0F3B6AF8A18A91FE3F342B3A139A07DB57B0E2602A457C7"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\StudentService.cs",
+        "SHA256":  "388E19167AAD3500C23677F42D98B767C24A095FEB792AF387E6AFC49DEFCBBD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\MembershipAuthorizationRules.cs",
+        "SHA256":  "FA44B7368C4F5D01D159574650ED674DB20B14AA7174698B3B942B7114246C88"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\GradeService.cs",
+        "SHA256":  "7641E7EFB5759B76D237118B56BEE29BF993E9A14DE3157E0074094B77F77554"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\ExamService.cs",
+        "SHA256":  "A1FD496DBFF761CB772B1D0901E3D6CAFB0115238F479F05A0433D74FCEFE59A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\BienniumService.cs",
+        "SHA256":  "45C788539B9DC882D656CD1941D7C8C2ABD067E745B0AA2526B5FBF381735FBA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\DependencyInjection\\ServiceCollectionExtensions.cs",
+        "SHA256":  "E80831A27D9D15C7240875D46D9931C8F46E0D1DEEF9004BD61CFBA1AEB23B76"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Migrations\\Mt4CourseStructureIntegrity.cs",
+        "SHA256":  "FB87A43FD88FE9967F6C9E9F99E06FB0F32F7B31BF071BC9B4C2C941BBF6F7D2"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Migrations\\Mt3ProfileBackfill.cs",
+        "SHA256":  "9DF33FB24D7BF2D46E83A69F7D0014B5A6AAE14DAADC16C2EB5B1E846936CAD2"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Migrations\\Mt3aOwnershipMigration.cs",
+        "SHA256":  "5161BAF1DBA6153DE19A71F8743797CD8FFD95E78B26BD8A582CEABBDB312EB1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Migrations\\Mt1SchemaMigration.cs",
+        "SHA256":  "45D0D2E3DE27F49FF98AED22D1C06DA20E8E6C7E4DB010677FD047C6FF505A45"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Results\\SubmissionEvaluation.cs",
+        "SHA256":  "F8F545885F57062B7D982715AE93537E404ED73D47DE4DED23BAF0A955E2B438"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Results\\SaveAnswersResult.cs",
+        "SHA256":  "2472E852DA031C452410F07D01CD7E7A6200F1FF1AB5C5CEA2AB1412D92A6AFE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Results\\ClosedGradingResult.cs",
+        "SHA256":  "9520C47236040F212F43943763ABA1A79A8A18CB3FC223BADB86CE2532176A68"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\User.cs",
+        "SHA256":  "322E93631A7926DA3EA2552CBE79A4FB53064CC361B0DD89E5B4CEBA052CE40A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Teacher.cs",
+        "SHA256":  "625263E6824FEAC9F95F08BFED8178E19964781DCF1981C21BB71B12C5BDF70F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\SubmissionAnswer.cs",
+        "SHA256":  "87CA7B611259F5198ECA234FD2332471EA1FB00C49D3531F7BCF1897B51328DF"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Subject.cs",
+        "SHA256":  "F3C9C2C2BA6771DCA16AD95A3720030AD39A55E5981AAD87DAA8E76194ED5A66"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\StudyPath.cs",
+        "SHA256":  "11E078BF4C090F535333BB4E502D96D45131207266158FC9C8C9A755AFD3E1A6"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\StudyArea.cs",
+        "SHA256":  "F05C66C01C2AD572DBEA4660F1A2A93E2EBDADFDA07042D756B9F480445435D6"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\StudentEnrollment.cs",
+        "SHA256":  "C3D4CA58F528060F8E5E22DE5FD12510419541E900430596DCFC8B63CC0776C4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Student.cs",
+        "SHA256":  "F7B30F55F24D6279466C4B495CCCC206B05DB48367107B92D517870011ADA814"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\QuestionOption.cs",
+        "SHA256":  "5A3A3CF7BCB45D2461B87BD62A326067988435289D17B864D4D71D2B66BE404A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Question.cs",
+        "SHA256":  "5075083724F27B2DAA3B2EF9845560F8F6365B3F536F307A5C59841C1DD76B69"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\InstitutionTeacherProfile.cs",
+        "SHA256":  "719BA9A8DF68800B8E6FDBC4739FE1BF3AF47A2F2F21366ABE4AC9D5DEC83AB8"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\InstitutionStudentProfile.cs",
+        "SHA256":  "3B00EDD0363CF94A6B7CCFD9FDD1B8470E6AEB28559EC36E78AB7CD82C95C63E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\InstitutionMembershipSecurityState.cs",
+        "SHA256":  "16BE2160FF0C49AC78DC32A06CB6267DCA743834542777B77DE16C5F105B1E4B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\InstitutionMembershipRole.cs",
+        "SHA256":  "184D11176EB6A6881033BA81A25DBE2EE9D3270B474A40E7406E5E595BEEA864"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\InstitutionMembership.cs",
+        "SHA256":  "B1E66B004AB1893CD9E488362DE3CB9AA28F272751825848AB7C840DD282EE8C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Institution.cs",
+        "SHA256":  "EBD5A141B33767773452ABDB74005E949E8F2EE0F9B73AD3A49AB0DAED59589E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Grade.cs",
+        "SHA256":  "18BF3C8CC15BFA7A06D0191699E103E58EDDBD20551F17B87FFBA9AED057CB30"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\ExamViolation.cs",
+        "SHA256":  "CFF2CCFFFF9FCB2757C7FA9418BB6CBE0597BBDE1B4D12636DF4ABA62643B565"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\ExamSubmission.cs",
+        "SHA256":  "03113CD72B5CA9BF89BCA4134967573A56151E91B79D0FC2C304C5C81AD53A44"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\ExamStudent.cs",
+        "SHA256":  "E7374D83FCD78F2627B9D81904A16FE5215F78F0A391413E22572553AD101190"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Exam.cs",
+        "SHA256":  "ACD56123076954495C1A532637D3308419AFE99EE435258EA4432A35A89D44C1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\CourseEditionCampus.cs",
+        "SHA256":  "B5B7C7DEFB40949007A6912D972C8F085519FB7F02044C3DDD4794023E3C077F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\CourseEdition.cs",
+        "SHA256":  "62A926762056D7725C1408E6609611E4F49F0AA20FB6F7934DCD1D14CE7E94AD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\CourseAdministrationEvent.cs",
+        "SHA256":  "8D9E9FE48B19527E0D3379CB7384C34DABDC3B9D1C0DA003F5866E0F58C54CA4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\ClassSubject.cs",
+        "SHA256":  "1023B99E4653411189CB2EC0231686C08F036C6BFC4CC96C09F22DBED81F93DA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Class.cs",
+        "SHA256":  "5F800B8EF7305BBC5B48C459F744ACB976E6A13D4664C58B4B8E71E9C6B2A052"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Campus.cs",
+        "SHA256":  "33856A2C01F39188F3DDCC7AD5F85C8AA3C4E3FCE2B3EE265649CCD2957EA0C5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\BienniumStudyPath.cs",
+        "SHA256":  "85D45CC148D160DABA9AD63CBB8A254F240CA26A068C1E539F2A82C66DB8364A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\BienniumStudyArea.cs",
+        "SHA256":  "99BD3676EE988C118DCD8F2AA6578D83E0CE9A999170A6DE16A2215FFD1A71CE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\LegacyEndpointGate.cs",
+        "SHA256":  "8A9C9CEFD56D2C0361F8CA9C86ABB02C2BEE5D33FC1CF1BA9150B9DD71E67532"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\InstitutionSchoolEndpointAttribute.cs",
+        "SHA256":  "BF0EB6BC280658CC2776C71CA5F840E75256DE6AB86F1DD90B527BA6495A1E92"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\InstitutionMembershipAdminEndpointAttribute.cs",
+        "SHA256":  "11BC77D048E638943D11A6ECDAAA27A38501BF4E3D0867D2782AD8B8F7A78D68"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Biennium.cs",
+        "SHA256":  "174770391379228F52D5CF217C7D42A13F5A81A5C754CBF897C1289F6E7C5DC6"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\InstitutionExamEndpointAttribute.cs",
+        "SHA256":  "6C33CA7F2E001557D42B8A907E7146BBF7EB15D9D3E04EB4F6A03495F53ED9AE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\InstitutionCourseEndpointAttribute.cs",
+        "SHA256":  "EFBDF28F880DB4BA5BA541F1A21A3DC340027FCB2C6F519FA22EA2257DA05910"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\InstitutionAuthentication.cs",
+        "SHA256":  "A9CB71875887A895C71A26DA1996B7256935B73C30919A341F748DD328976F4D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\AuditEvent.cs",
+        "SHA256":  "A7C0BAFB1FA6962B62E2A074CA97EB6F38A30F53928FAA31E37360AA14E3517F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Multitenancy.cs",
+        "SHA256":  "FB0709ED6D8C5D774543C2A650F6F07FB2B7F68FE9CC2D0CEC01663AE0E9AC75"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Mt5bSecurity.cs",
+        "SHA256":  "93662EB7FB329C538F7C13E7DC15A3CC368CDFADBFC547D31B0CF1531F94DA2D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Mt4c.cs",
+        "SHA256":  "9DD257A641CDBD0734446879E9B149CCAED0F0E6F20139F3ADFC9BBDA3391DA8"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Mt4.cs",
+        "SHA256":  "A6EC1503DD7E7B3E0B3F4146DE6AE43BEFF3A0AA94AF3EFBB817BCCC0E0EEA21"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Mt3Profiles.cs",
+        "SHA256":  "FCB0D471EC910D134EC32EEC124296BA98743A5CB8325DA267D2A81D8CCC693B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Mt3aOwnership.cs",
+        "SHA256":  "0EE25CE88793ED4141E9EEC193C5A4F3F2772F52BFCA7F11A60CED1D327E002F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.cs",
+        "SHA256":  "E07E4B7B8E66DC84950848CBDE28508F155A905FA17F0037AB57F6BE07A9E7F5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\DbUtc.cs",
+        "SHA256":  "7A3B216026B66E5025F897D91158C35BC4B8F37529DBD73E4D5EBE538D5B8762"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\User.cs",
+        "SHA256":  "16216495D516DEC984B22EA02FC0E2AA32916946C6B0EC9D41F2DDD943CCC118"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\TenantContext.cs",
+        "SHA256":  "703ABF758BF7A39F463EB4CF73FBD70A73D1AA728B1FEA1135425548377AB8FC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Teacher.cs",
+        "SHA256":  "360BDF90ADFBDFE29EBCC369CE2EAF96577D0B0E10B73127D7B2E0EF48AC7222"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\SubmissionExpiryWork.cs",
+        "SHA256":  "9350AA8FE1149487DF13C76FAEC1B5D9FF077DB2F96E9F16FD0A38741B169D98"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\SubmissionAnswer.cs",
+        "SHA256":  "52F44F8FBE0A2AD16E47D1C28DBD2831A65ACDC369519B7808627B624F939D7F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Subject.cs",
+        "SHA256":  "C6A1EFC753FF7CDE24114D5B4F54B0140F56512AE1740277988D52D3CA322A90"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\StudyPath.cs",
+        "SHA256":  "A133D8B3C999C10D8F80B92A09CFBCE6F8181741C736496C6B0D38E90788B1C1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\StudyArea.cs",
+        "SHA256":  "8C6287DCB517F9819971E8B54929436A48D80C9C6E29BF89D3C884592916B87A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Student.cs",
+        "SHA256":  "60D18CF8FF976EC7A95A728A45914606EF8422E2CB8237BA8479D6407FEFF4C9"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\QuestionOption.cs",
+        "SHA256":  "79799FCD32B92927B6C0DAF1EE93D8CD8C7E248FFB2143EAC6E12573338FDD64"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Question.cs",
+        "SHA256":  "A2CD39D7671F249A1AEDD440884A889A709205A0FE5EEB097C849F8D8E158ADF"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ItsClass.cs",
+        "SHA256":  "B3B7B7D454A956D71248E16396F9DA2F45E3962802C360A09C18CA6684A16131"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\InstitutionMembership.cs",
+        "SHA256":  "D4B42992CB7D9F0FC5F953462A25BEBB79FAADBA8A95DEE935965B3C9B8E423A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Institution.cs",
+        "SHA256":  "F7C650A0CF8D41DCE2B9F2EEA3F8B70913882F7DBCF29C8EFF1A3B1BE7005B4D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\GradeStatistics.cs",
+        "SHA256":  "09432D13B459871AD84AE63B18E64D94F223D8E10A5E932886F0A7288D9ABD6B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Grade.cs",
+        "SHA256":  "B262708B50D5F7474FDFF497497ACDBBAC243330305DF49E0653367780CDC59E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ExamViolation.cs",
+        "SHA256":  "3244870BA7ED0BC8839C8DD096E0DFF9F73F53C2F08964185FB2E82B23784D15"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ExamSubmission.cs",
+        "SHA256":  "B02B593D726775B1AF04019692CC8C4AA368C4C5D76D08EF7DA36AF56CBCB38A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ExamStudent.cs",
+        "SHA256":  "CD58B9ABC1407ABA6D2822A7E9ECFB492D68873B7669A04C219B6A327198E51F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ExamPrincipal.cs",
+        "SHA256":  "B1DE47E626154869A8A3565B1845F2EE426646F814EAF28D46C3E059743846BA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Exam.cs",
+        "SHA256":  "7BD0EAB6FA7E916AAA157EEFB42B55C091D0122C441D6379EC61A1FC4A08BB36"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\CourseEdition.cs",
+        "SHA256":  "44B564AB70950855A2F9B719EFF26FA18418850679C9B2EF1389945ECDBB5A9B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ClassSubject.cs",
+        "SHA256":  "3EB294ED874345692DD51D131E3ED723E9A9C0E9BFF2240ABA7C71E3E14EEE36"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Campus.cs",
+        "SHA256":  "C9D6B76D7851B9330D5216C4A32C8E25E03906410EE22264D1DD8CEEF5B995B1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Biennium.cs",
+        "SHA256":  "7AE5511E4287C00880767342F605B2DA83BF4F9AE2EEEB2677B5D710043B7B2A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\AuditEvent.cs",
+        "SHA256":  "F7AB615E0DE0F9C4F1B91D1194E363893935B4266424F30D5C94BFE896EA8B2E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Properties\\AssemblyInfo.cs",
+        "SHA256":  "46C7AA5C83A08043F62D35B1413682F244F4EF69FEA5FB2C227F6BB97734EDDE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Program.cs",
+        "SHA256":  "CA5A38379563D0AACDED8FEC304BA910FC3F480B2DE28648154F3A28C4F13EE2"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Options\\JwtOptions.cs",
+        "SHA256":  "9F9DC1CF7A19579A45BF39D4454A3ACE32E2004493E835DCDCF4BB86DC2A51EE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Services\\InstitutionSchoolAuthorization.cs",
+        "SHA256":  "DCB879F821AB1FB0275C6BEB8C47E6FC3E52BF4E7C73840EE1B8CE2E746D03D1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Services\\InstitutionProfileResolver.cs",
+        "SHA256":  "9B9F212EAD7A711D39F56D7D54C435C04079080E7D04F95187B3002B72FA9E69"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Services\\InstitutionExpiryService.cs",
+        "SHA256":  "FF7E51F10C1E6E8311D7155ED97654030ADF58CBAB507C7F15B93175EB3B33FC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Services\\ExamSubmissionProcessor.cs",
+        "SHA256":  "0576A4CFFEEE6264F631A1D7AFA8C6A1BE39BB9FC8D7FCA62C050139DEBCA8CA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Options\\IdentityMigrationOptions.cs",
+        "SHA256":  "F1EEC16976915BE4D8B73B5DD4018465880CA86B531A7AADA3041D85734781DD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Options\\AzureAdOptions.cs",
+        "SHA256":  "8BD4B436F59CAD549ED84FD14263991A3CEA6DB643E49171FEBBBB109C7112DC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\ExceptionHandling\\GlobalExceptionHandler.cs",
+        "SHA256":  "2949CCA1D94366BFC8C372DD7578ED373CF120043BC8B6CBE9B9763465A68572"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\ExceptionHandling\\CourseApiErrorsAttribute.cs",
+        "SHA256":  "C522093F379879430BE3A522499369C1213F4CB18DE645086C24A6135D572E2A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\SubmissionVisibility.cs",
+        "SHA256":  "1669EEA93B39BF06DFC4530191506E4EB4625ADA60306F2585EF1BACEC059131"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\GradeMapper.cs",
+        "SHA256":  "DA6FB204162A7C8439B0C6A1C1975A1909C30213F0719457C39C559A691A8CF6"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\ExamSubmissionMapper.cs",
+        "SHA256":  "36948466B7010174AB1E7568E0A154B10F0E42DC5404BBC478ACAA313722BEA6"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\ExamStudentMapper.cs",
+        "SHA256":  "B81BAE6A3C38B46DDA44FB7FB6C86094118A5323603630D7B62B355E075CD604"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\ExamMapper.cs",
+        "SHA256":  "C55F7C5E0BC71F2F54E6BA0D9175BE0B486FD0111AA83DC6BE7DD311E41665B1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\ExamCreationMapper.cs",
+        "SHA256":  "DF6D2359525693149902BA5FEC0E35EA6C798B16D598F24F6034BC0C3A9B3CEE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\DependencyInjection\\ServiceCollectionExtensions.cs",
+        "SHA256":  "2AB5F2E40C5E86EB842DA71903F130AA8E271E2CABF192E6B560F16134FE6A77"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IUserService.cs",
+        "SHA256":  "6CCEEEC611A2233883D8D1EF510B3907295BF57EA8B3A415E40AB29622EFBF74"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\ITimeProvider.cs",
+        "SHA256":  "5F180CDA7E361398828CDB9D8EE67BF477EBC12AA81ECA85C80A090E2B116E3E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\ITeacherService.cs",
+        "SHA256":  "998121FAAB6A74BE51FBCA45253F51BADC5A3636111AC817A794C824087EE34D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\ISubmissionGradingService.cs",
+        "SHA256":  "012452A52DCFB6BB2528AC8AD7CBC811FA11E945A2C5547EF2640AE672FD595F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\ISubjectService.cs",
+        "SHA256":  "61E43B9ECA6759CC32F6B41C0EE567526F414E608BE0F1A38C206FF7A6E08156"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IStudyPathService.cs",
+        "SHA256":  "AB172B56F45CB371CE4582D9A674E1DD7ACE3E43536C200818896B0FB1931090"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IStudyAreaService.cs",
+        "SHA256":  "9211160433124858AB4E8B5DC77F755DB696378188FB86F1C2A81CA3AE9C5E05"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IStudentService.cs",
+        "SHA256":  "6FE1034C04869AFDC562094698CB23CE59D54D47B0F1257F1AF826EAB857AC70"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IInstitutionProfileResolver.cs",
+        "SHA256":  "0581D4453EE837F736BFE1CD7C7F7BFF73B555A4073DCEF3E7807E00C27A1D8A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IGradeService.cs",
+        "SHA256":  "25B4336B409B0434128479412DDF28312D50741031DE77215D60233D05D55571"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IExamSubmissionProcessor.cs",
+        "SHA256":  "5E2D992C37CFF0A5C7BE5FAEBF9BE7D1E44C3653ED375B8F355F7DD22E225F81"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IExamService.cs",
+        "SHA256":  "BEC7CC856AFFD029087154ADE19EC343575E94E7F6D0566D33D6289E038C2498"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IBienniumService.cs",
+        "SHA256":  "3B11C31C652DC893983EB6941B06831872F37A31457E3B536733E3A2EE66007B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\UserManager.cs",
+        "SHA256":  "60FFA09C359B066753A3AD936226C0D6CF42E092097888D3F35FAB279DA9F9C9"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\TeacherManager.cs",
+        "SHA256":  "2E59EF190CDCC12051372655F86D1801DC0DB041E89204912642867770EF425C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\SubjectManager.cs",
+        "SHA256":  "D01DC08B0C7A59151392F219C3BBD53C55A08C15089403AC04FD48F564598AE3"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\StudyPathManager.cs",
+        "SHA256":  "3897619E1341943823DF54156B9187C17C669E01C644086E5B64C65338832D0F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\StudyAreaManager.cs",
+        "SHA256":  "4FF37EB0B820A197350A12863199D81FBB96C72745BC36E65E231E70FF4A2220"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\StudentManager.cs",
+        "SHA256":  "9CB4F4FBC818EC68EC907274A73CD42E697F2822CEBFE7C4AC0417402914F9A9"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionTeacherManager.cs",
+        "SHA256":  "EE6DE7872DCB8E65E9653F79B7BF2D45B0DA22409EBE0C534602495EAF12D30F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionSubjectManager.cs",
+        "SHA256":  "B93DC96AA0CAECA65BE950BAFAEC8CADB9A4DB6542F006A23B648CC802FD7DE1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionStudentManager.cs",
+        "SHA256":  "7E3F67780D1A0A57C61C27D657C90C8C4D74EBFFD917DBA17920974263E610A2"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionMembershipAdminManager.cs",
+        "SHA256":  "55268FD6541E5AEEEF295ED28EDC24E181D290CB8453D508AB7A7B30FAE19413"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionExamManager.cs",
+        "SHA256":  "72A21264F622DFB42BD7681E683E4E45C41CF889A6E25CBE9B57032C743F8270"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionCourseManager.cs",
+        "SHA256":  "EEC41E5A0995FCC315AB132F301C5CE6A01B9010B72F6C1FEDB69EDED2612B17"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionAuthManager.cs",
+        "SHA256":  "F1EBE256637A68C5AD04A1218E509252222429608952C158E130DE5CC777BA3D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\GradeManager.cs",
+        "SHA256":  "9857522CEF4E737D417CA51930C00C630F9697E754F87CAAF703E1C9BB72DF27"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\ExamSubmissionManager.cs",
+        "SHA256":  "5B306C292D4FBB8480C9A716C280BA8C85D4E340AEB6FC1826DCE86DC653A2AB"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\ExamManager.cs",
+        "SHA256":  "B95034DC934898BCF2DA1387FB0DBC2624B3213DBC051C3EC35E1D53EBDFE591"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\BienniumManager.cs",
+        "SHA256":  "0139141E642FF78C650A4053CDF47831E369B0710A21BF9A7A25BD5E0AEBF2A5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\AuthManager.cs",
+        "SHA256":  "6F8B6385CECCF941DC3DC924E188D9107AD66926CF7117F95B132A16A309CDCF"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Security\\IPasswordHasher.cs",
+        "SHA256":  "6DEAB478B471171D6410D0EFED8FA6F6D3A5145D2BC911A592C4725FC79705EF"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Security\\IMicrosoftTokenValidator.cs",
+        "SHA256":  "3986EE130E24843F72FD3713F32C2A965435188A827375EFD0FB8E6AE7672257"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Security\\IJwtTokenGenerator.cs",
+        "SHA256":  "B416CCCB9D69AFAC9F9605B8F908CE303AF0CF89ABBFD31DFFCAA25738261033"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Security\\IInstitutionTokens.cs",
+        "SHA256":  "23E4DA6659122F82C6041C62AFA0F116EA3AFFF84108064E1D39367F342DF0CD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Mappers\\SubmitReasonMapper.cs",
+        "SHA256":  "84AAE734F53FDFB78E0B49DE15A4A0B70F17846ABED50C2398E4E033BAF4349C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Mappers\\SubmissionStatusMapper.cs",
+        "SHA256":  "3271E6FF2B958819A2EEECDB9216D54B536DB6F56BE83D92D4575319EC36D0E3"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Mappers\\RoleMapper.cs",
+        "SHA256":  "AEBACA6AD8C053F34A2F3D0E0C94C352182EB2699ECD3F4519F434AF24D2B9D8"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Mappers\\QuestionTypeMapper.cs",
+        "SHA256":  "62268A32A42CAE4CAAE08ABC8E9BED510BC18C32E18D701D177B4C5C2B749F74"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Mappers\\ExamStatusMapper.cs",
+        "SHA256":  "00F978D86A41BD5296F7199FA9E0D529BF2D106BCF2D620015476B99D2040638"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\UserController.cs",
+        "SHA256":  "FE9F5B85A6C5C35ACC68E8FE09CD31F6AC90215AA12A992EFF9D4B12832851B0"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\TeacherController.cs",
+        "SHA256":  "8E69428BAB898E695FEA66FCDD198EC91897A31078B266EA201C09DD3E3C1FD8"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\SubjectController.cs",
+        "SHA256":  "2C2D40E5D4C5D0DD9B1C31C0E958F6FF0C046FE2C54A42AC9820F9A66A601FC4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\StudentController.cs",
+        "SHA256":  "3FD11129A9EB20298801BC7A8C031B61E78C90C5958DE4B1F9FF5EB4A62C4B3A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionTeacherController.cs",
+        "SHA256":  "BE8653D64FCAE28BD3AA072A22385CBB7C652FB2071B00F8CA7C43EAE1A8C511"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionSubmissionController.cs",
+        "SHA256":  "6430CE51A704498034D44E5A7DF3F0D96400CABC498B3F81347D1CDA16E12BBA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionSubjectController.cs",
+        "SHA256":  "9C216FEEF2C079E70037C5C95BA7F03586745729CC94101ABEC8C57DEDB3FF2D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionStudentController.cs",
+        "SHA256":  "7838C49375CE91DC7DB22086E1AA5F66526B8AADBDC9F7B1F26641A0A2089105"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionMembershipAdminController.cs",
+        "SHA256":  "11C3867737DA18FC995565BB5771817E47A9C7E504464F35B2E9BB0D63517CB4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionIdentityController.cs",
+        "SHA256":  "BDECF1512946938649595D8604040D9859839922666BE213D3C75EF2432073EF"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionGradeController.cs",
+        "SHA256":  "F1D3BD507EF5FF603A258E941FB9A784CDBAFA222719E72F907EF5A948E1FDDA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionExamController.cs",
+        "SHA256":  "C7BB4C05209D1564E9C41F3F9AE2572B0A9B6C36E767E4F09DBA2A3A70AA397A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionEnrollmentController.cs",
+        "SHA256":  "7DC072217B6C1A023BCF53D330AF363AD055D7E03A2560E084ADE9AE04176A96"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionCourseEditionController.cs",
+        "SHA256":  "463D96E1A7D8AF4BA9FC65CD83BE5539FB12D2CC118C417FB75A5A2358917D50"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionClassSubjectController.cs",
+        "SHA256":  "214F3876916BD4E1F4C1E8F93521C40FD00E2E05B64AE5508D0C6E8BC5171AD0"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionCampusController.cs",
+        "SHA256":  "D2CBC1CF9BB5C6711FF903F714358EBD437757CFA654E0BF543A44DFA5CCA8BD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\GradeController.cs",
+        "SHA256":  "5C69E4D163D8687469DFAB6D0FA89FDDEE9CAB69442894B642C76112E4A1ACDB"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\ExamController.cs",
+        "SHA256":  "AD3774DFE5A49F8F8CEFB33879141DE9CC8F9E78AAFE6154683D3D58179CA2F4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\BienniumController.cs",
+        "SHA256":  "C0F7649574B57A13151B967C2DB0137823F298968FA8373427FCA9639DE1ABD5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\AuthController.cs",
+        "SHA256":  "5A3CF1C0154E9BD329DC594EA919F5E8EAE17DD1F8BA23A5B8E304A8CF224D97"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\ApiControllerBase.cs",
+        "SHA256":  "1D67E323217510CCCB8E527DAC1A9AA2A1C91E33196258597463104D05C3DC78"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\DependencyInjection\\AddApplicationManagers.cs",
+        "SHA256":  "DFF80AD18FAA6C503BA43C3B4B878F98C99F61D2837A88C4594B2CE2582DA6AC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Phase2B_ConversionAndOverrideTests.cs",
+        "SHA256":  "C3F015263A1901969F3FFEF6AAA23153F8422577AF48F6D5C9B30E958C45040D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Phase2B_AdditionalTests.cs",
+        "SHA256":  "100BD8FF12E7860E5B3D15969492D6663CD50DCA58F3160763E63F7CD798208F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\OpenScoreDoubleCountTests.cs",
+        "SHA256":  "981B16256668C4F5783C903F4F841564E72B4A1E262290141A8845055F253EDE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt5bSecurityStateTests.cs",
+        "SHA256":  "D46A53A514B5E30DECEE96C002ABF0C2B70EC6E4168C67D51FD9D084D3B41625"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt5aMembershipAdminTests.cs",
+        "SHA256":  "91841BF1D4B00EECB9647F3BEC1F2235C316A3CE1C449FEBE08D265B7BEC4119"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt4cEnrollmentTests.cs",
+        "SHA256":  "1A10EF034CE8C8E35A550D89A742288F60071DD88715369373C1A29FE3E8C33A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt4bHttpTests.cs",
+        "SHA256":  "D2ABBF9FED0F07C719CC50449D39B446F5321DA36CE60A9C25BD7AAA24C56395"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt4aCourseStructureTests.cs",
+        "SHA256":  "FA92F9F719FD857DF9333FAA6265FA567472F31AEA6ECCD90269732BD911CAEF"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt3ProfileTests.cs",
+        "SHA256":  "24E06CCA047ACD88EC9BAC114139ACEA507AE093411D23671DF21F99D8E073D5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt3eWorkerTests.cs",
+        "SHA256":  "8FFF6B6CA04C4805BA81671B0CD20CC82B3732D1AB103F2E081E3E83ABDE609E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt3dHttpTests.cs",
+        "SHA256":  "4832F7ACA4A94E1C93F36AF24EDBAD421ECB4583E61741B07AF5BB6DE49BC0BC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt3cProgramHost.cs",
+        "SHA256":  "679609FA54F7F4805B4DE1C94D847EE92D65FB67B0BFC57CDB6134DEAE031A2F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt3cPreflightTests.cs",
+        "SHA256":  "8ACF07D55D49424361F1077A1C676C3F9952173C386CE8B65337C3906F5161B5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt3cHttpTests.cs",
+        "SHA256":  "F7BA8BACFCE3503DE5603A0F6487A6432674C5C8E14E20677F01B64D1AD089E6"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt3bSchoolTests.cs",
+        "SHA256":  "40E9D29E6023C9E231226B9804A4A4C2B6D9F3AC7FB42D2269264488C2E5B87E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt3aOwnershipTests.cs",
+        "SHA256":  "CAE902AB296C3AADD4E10F62139D28558D33DAEA0FEBD668317D5804818CCF24"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt2MicrosoftIdentityTests.cs",
+        "SHA256":  "9F6D5A291CF5D149546B2D9B47425A74CE70594A380546CE69544D59C8AD5093"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt2IdentityTests.cs",
+        "SHA256":  "0B168B40177F7A3A668183C61AFFDD61C4CB85BBEE2376E676676D08F1F31E85"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Mt1IntegrityTests.cs",
+        "SHA256":  "5AE5AB11826665D5CC166B23C086105FF3FEE9A62C09648CB1C31838C1C5342D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\MembershipFixturePurge.cs",
+        "SHA256":  "15758F7CC167907BE0276CAE640776E276EB6BE2542AE313E585D43180E2E4EC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\IntegrationFixture.cs",
+        "SHA256":  "41F1DB6CA7CCC904ABA81AC148178646B971F1BA19F85EB0C1692E9A3C3B826A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\GradeMappingTests.cs",
+        "SHA256":  "E2A543E7527EB4E1D263B599175799F81ACE5ABFF6FDD2C3836726B2AE871747"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\FinalizeConcurrencyTests.cs",
+        "SHA256":  "C53D9BAC40BBEB526A53C84BEA321164A9CDC4F58B2D4F093D5A417CBCF9713A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\FinalGradeValidationTests.cs",
+        "SHA256":  "B0E6BA2D0CFC99F88F6146FD2EC1242124F9F18A820A8400CC6A1C64D5127E61"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\ExamValidationTests.cs",
+        "SHA256":  "D220750CE19F6494885390BE69D0AE2BE24FD6AF650F2657B6779B43A4E62980"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\ExamSecurityTests.cs",
+        "SHA256":  "6BCF23F5C6C6AA7E810EC193067E44D4A8B5033B76A6421917069347AD0F3271"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\ExamRegressionTests.cs",
+        "SHA256":  "DC7B79C16CEBEE708A7129589D5F1BA8EDDD43EBBF5DF323CAD46669C3E8C6F7"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\ExamBusinessRulesUpdateTests.cs",
+        "SHA256":  "7E5F6C20104C8B6183D2C29346ED42DF098F3D500FB2FF6BF417F1B0A9BF24F4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\ConcurrencyIntegrationTests.cs",
+        "SHA256":  "A27EE3AA1B64D18F05277DF3FC9904DB4423D3024D1E8CC27979B9042EF6C458"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\AuditRegressionTests.cs",
+        "SHA256":  "1804F577803783AFF05367DC785AB636ED12E4BF07B1F314E45856DC5B9C73C7"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\AuditMicrosoftTests.cs",
+        "SHA256":  "17ABB99CE1A5B934AD99B7320D51137B3F81C09591E1FE96D65D31B35FD2DAAA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\AuditBootstrapTests.cs",
+        "SHA256":  "5898B1B49A834FB8768024C0F20CBC090EB63BA6135631B25BEF38454F8A1D32"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\BackgroundServices\\ExpiredExamSubmissionWorker.cs",
+        "SHA256":  "2DE42600D6647F13728E153F0CBE72ECDBE24319A427010D7691F6606B2BAE42"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IUserRepository.cs",
+        "SHA256":  "FD8AFD7A30325AABE61421D7C543CDE5B5B980C7AA4E4C99A722FFE6BA98AC49"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\ITransactionManager.cs",
+        "SHA256":  "576802610F441B5210CF1273A05A6C928A4B2BA555E6689EB034EF3503860852"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\ITeacherRepository.cs",
+        "SHA256":  "EB35A599E2920EFE86FB13477C70F0202BA2F7358BB1A4F950B4FBA1C2EF2F19"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\ISubjectRepository.cs",
+        "SHA256":  "477DFB4AC9359EFF573EBA7B913F58C2A345420FE9393C8B6697178BDD1AF30C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IStudyPathRepository.cs",
+        "SHA256":  "A38A80ED913F40234DC7C67CAAD2166E95A752634EEC7D7AF6D6087DCA717211"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IStudyAreaRepository.cs",
+        "SHA256":  "B8FD826A25F297E7A0439BEEF7BBB9C8E6C2701CEFBB84AD766BBEA0B37684BD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IStudentRepository.cs",
+        "SHA256":  "7F1E46A7D23820AEF33909E72D641BE8E7E8C04793A18FE764735ED2AC5C2F8E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IMembershipAuthorizationRepository.cs",
+        "SHA256":  "0630F24D9BED7D4C9194AF79F724383C2382A2B397DC24A2CC96E989995B0476"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionSchoolRepositories.cs",
+        "SHA256":  "D34DAA3415A906A14DDEC92BACB699366196C8304C24F259559332D5AD0E33DA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionRepository.cs",
+        "SHA256":  "C73A37DE995245C1263C0B261AC02B97E91DCCDA61817ECB8B7FAC4BE468FA27"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionProfileRepository.cs",
+        "SHA256":  "2CA35EF51645445238F56E65550400A07E3FE942946291F3910FCB966E2F37C5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionMembershipSecurityStateRepository.cs",
+        "SHA256":  "5B2BF21CF2932F3DCA192AD4005D13D703C5BF33257C763C1981C6F2EE68C1E0"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionMembershipRepository.cs",
+        "SHA256":  "B0820A5BE0A87CE6862C9BE1A302FF8EA30352F4AA877C18B8BA6966634D1BF3"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionMembershipDirectoryRepository.cs",
+        "SHA256":  "D7F93DCC59DB9BE29AF74B607547FC8CAF357147082577C63BBEF81FBF8CBE96"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionExamRepositories.cs",
+        "SHA256":  "299FABE50734235930357FF549F3D76D74BEAC089DB6D8DBDEF8F6E6521B0D3F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IGradeRepository.cs",
+        "SHA256":  "C5865D36B776059B73AB20E6D1F65212074AF839B861A069701637EF1E35C5BA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IExamSubmissionRepository.cs",
+        "SHA256":  "39968B6ADA09BE8F9D4531403146911BF6574B1088AFA4FB9A3D282281E1912C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IExamRepository.cs",
+        "SHA256":  "97DDD1C08CFB0E2ECEB51707AD3EDB2194C1DE6A8445E7D3AE0CF761B4DD3F2B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\ICourseStructureRepository.cs",
+        "SHA256":  "BA8B637C9A4C43687CE921E45AC4A32EAAEE587E7D6D6863B8E4B598229956FA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IClassSubjectRepository.cs",
+        "SHA256":  "7CE9CCD1D00FDB5E434DD2DDFC6F9A2FC2CC72F2F6847D601BC4DCD5B4829B59"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\ICampusRepository.cs",
+        "SHA256":  "A9E47F0FE1055E584E08517B60425C88043D7F84A24844262386F9DA6E0A381D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IBienniumRepository.cs",
+        "SHA256":  "BAB7120B49AFAB2C9CB960005AD0EA958162BB98613B60434C9F6DD4DC622C65"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IAuditRepository.cs",
+        "SHA256":  "E15F68955322356234990217048F8ADB45AC51C51012FC1AB89105AA31AC3568"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\UserRole.cs",
+        "SHA256":  "7090AF635178811BEB33D8C52095D775EC3A6CF71664F466F0B3EFDC768AEA6E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\SubmitReason.cs",
+        "SHA256":  "530C32D4D959DAD9FD8B87A40E38C5496ACC09EB0A3A3304D118F3B512F8F2C6"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\SubmissionStatus.cs",
+        "SHA256":  "83528F2D78680FAE1756F581E2D384CD67F2B19E4C0FFC124BB92BFCDA50437A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\QuestionType.cs",
+        "SHA256":  "4AD172F82C9F19CE07C5B36631F493B207F328CECCE9136BE92C558160BA0EC6"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\MembershipStatus.cs",
+        "SHA256":  "EA3F0D71D0652BEDA491D1CDC7B8377E8D5A01D330A221B85B3B9615208379CC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\InstitutionStatus.cs",
+        "SHA256":  "AB0D059B670917A7E1F4B87B2A09423FFE5F1F176829E6D26947B655F2A0F477"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\InstitutionRole.cs",
+        "SHA256":  "BC20E5E447A4FD5AF915B4FD10E1816B876C3226C218BEEC2DCDF609E0166C7F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\ExamStatus.cs",
+        "SHA256":  "C0EEB25DF2118BB81363CDF960F0B0C7F61F5EE2FF6473D6F7CC7A42BB190EFA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\SeedData.cs",
+        "SHA256":  "8A5EAA5AD1C6396642E83B8B4555B4726A8CFF9D22A4C28F12D701B771659AF5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Phase4_ExamValidationAndAtomicityTests.cs",
+        "SHA256":  "D00AEA93FC430472CF67C94E51CB1E0448E1ADD152F551FF2DDCF1E00917F84B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Phase4_ExamLifecycleTests.cs",
+        "SHA256":  "D780044BB384FC4D578E23B0703AAB6B5A9E66600245382B922DF267606DAF68"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Phase3_WorkerRecoveryTests.cs",
+        "SHA256":  "97F4C8548ED80C9F20B9606DE81C797DE539495CBF0B9C461775241E4BD23008"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Phase3_TransactionRollbackTests.cs",
+        "SHA256":  "C8620B0E71D41445327B13F2593CB4A7B77D753F89046D78D02855468640DBDF"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Phase3_TestSupport.cs",
+        "SHA256":  "59CBF1DA4422E7166DC50C66508111DB8A29DB2E1096D7C57E936D68135CCAB5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Phase3_ConcurrencyTests.cs",
+        "SHA256":  "8B7F1706AFFBE8241E3ABBB667BD662F6941BF9EBACD1F0F186138362FFA8E0F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Phase2C_VisibilityTests.cs",
+        "SHA256":  "D52DF77DDDC7608DAB6F06A0DD270C4D2A7926E225E0BC262134F37F1315F4A1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Phase2C_HttpHost.cs",
+        "SHA256":  "77F5B6185F69C154728E8A01EBCD7E6C87E9BEB4612ABB3D66BB81932F086C4A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\Phase2C_ApiTests.cs",
+        "SHA256":  "3627C0B7B130411C9957C5E5A07E994E3331F13A82FB421DDBBD28E1F6F78D97"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IUserManager.cs",
+        "SHA256":  "5EB10376C70B9FF029DFA6B2F8E6DE0C72DC5D6646DE01ADFA725EA0FF3C363B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\ITeacherManager.cs",
+        "SHA256":  "A5AB985970393FCAEE8B56613A78E3C6170314CD02AF26CB8B01F018C6AA2445"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\ISubjectManager.cs",
+        "SHA256":  "0B686BA0D26927D460FF57B1681162E4788BD137DED866E2DA6AC3E06B9FE8FB"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IStudyPathManager.cs",
+        "SHA256":  "99947F4FCF2AAA44E810D8836CBCDD85F17345FC7FA681C9DA72FEEF1C65F4E7"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IStudyAreaManager.cs",
+        "SHA256":  "29C5A52BB2D18C6DF7382AC5A8F628174B57DDAA6D61DA83764767FAE23EFEAF"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IStudentManager.cs",
+        "SHA256":  "D322FF7B1F478AEA6B75FC4E4568FA9E5CFD29346A017C2A7CF1EFC9DD5E91AC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IInstitutionSchoolManagers.cs",
+        "SHA256":  "259AF54673FB870673E2CF0C652826EB5759ABC39FE422934172C52BCE7E492F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IInstitutionMembershipAdminManager.cs",
+        "SHA256":  "F70D906BFC1066C8E3A701C15EE976B8EDE13D58617365F3916D3489D384268E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IInstitutionExamManager.cs",
+        "SHA256":  "5343909804EFD4BF0C92CCFA2C96A328C8759DD59D07EBC6338337589C5F7069"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IInstitutionCourseManager.cs",
+        "SHA256":  "9E5168AD4D27B32E51A872A0ECDB37422A9894B7FBCF1CEB9A2DF98405A3E6BE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IInstitutionAuthManager.cs",
+        "SHA256":  "CD2BE0A647827C3AA01B1E43EE27CDA0227983F80CEC58137D5AB68805CAB49F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IGradeManager.cs",
+        "SHA256":  "B640FD93632A1F2E886688718F1E0FDAE8E63753F699A5949D299F5345FC0E06"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IExamSubmissionManager.cs",
+        "SHA256":  "C4212F7605D06AA6A19E6131B4B07330E428C21479942D848017F4449304A5E4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IExamManager.cs",
+        "SHA256":  "A0A56F341BC8650B5A2D1BF4A2F356632F51424D46E77DBE90B1309F63308381"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IBienniumManager.cs",
+        "SHA256":  "4042A1CF61E4085BD2B1FA488EBD16EFF3F886AA07ED60A07B542F3FBDE9BFDF"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IAuthManager.cs",
+        "SHA256":  "B633B79F0D06D6712E2B523955D47C107DED9A3FECEBE6184B3AE7EAF5DA0119"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Exceptions\\SubmissionErrors.cs",
+        "SHA256":  "69A1831EF229E7871989A041A60AF78100F8E7C1E953216EA094E75090368C8D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Exceptions\\CourseConflictException.cs",
+        "SHA256":  "68C8FBA6E403A147F6CE0903C429BB9136DAC825900494CB50D7891B44DE2850"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Exceptions\\BusinessRuleException.cs",
+        "SHA256":  "0CBCD7FFA8A1CCC0977557B429D6AF571CF3EAD7610702E8C71D88CCB4B95A9D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestDatabaseSchema.cs",
+        "SHA256":  "E5D02ED9102FE38D0EFB3ED6B790AD02F071924FA61DA815DD124C99925116FA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UserDto.cs",
+        "SHA256":  "535BE6DE231C321A4FB5777C5EFFE43465B38A491F93FCF927F76B5317F24263"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateUserDto.cs",
+        "SHA256":  "DC9D05B1540BDFC86564801DB924E6287D594B8796BAB6264F2CCD5C1F0B49B1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateTeacherDto.cs",
+        "SHA256":  "81C5CF262E6CEDB22C661C5F9B79307797F27221100CCF79DE6DA6F0885C1277"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateSubjectDto.cs",
+        "SHA256":  "E120DCA0CEE6B673F055F1AA661C5C45CCF1AF2CC1BA251D124B5311F927A178"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateStudyPathDto.cs",
+        "SHA256":  "8F044E15DA3BA316AF4E71C51191E52350ABAF802B3DA05AB89742E0B1A0B6B0"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateStudyAreaDto.cs",
+        "SHA256":  "1A8A338C2D2B2C006FFD58DD67FAEF43A1D4C114066B326CC3962598CC3616A1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateStudentDto.cs",
+        "SHA256":  "83748E5D95664EA244B3E9B7DD6361E04E5767744AC8DD470ED4B29DD8933599"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdatePasswordDto.cs",
+        "SHA256":  "4EA8DE53E7B552519DC602A2EFB0C37A8790FC6A162D10F67AB7CD6339669BD1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateGradeDto.cs",
+        "SHA256":  "B7233D4CFC00AE218A566FB6FE6286D70D7D863A40B287DA401F59C1CD64EEF6"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateExamStudentsDto.cs",
+        "SHA256":  "E06E131A65E151A483DFFBC9875D5952C0CAA3FE4A7D230508BB982788ED8C55"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateExamDto.cs",
+        "SHA256":  "B51FBD0EA183F35E9AB4440E5EC1882DBCEEFF10C304C0ABD3DC767E879A1AE0"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateBienniumDto.cs",
+        "SHA256":  "1AEA588C1B9DA45CFE480635D02231B3666307BCE5CBA84B0267ADA9DECF7CC5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\TeacherDto.cs",
+        "SHA256":  "AEFF0769C1AEB6ADF271205AFA69C35616C7F7424BFA9B40C51A528CF9FD264C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmitExamDto.cs",
+        "SHA256":  "EF765EC9888582137912E165D95DBC5E53F95CCF75334E210788F2F84B5A645A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmissionSummaryDto.cs",
+        "SHA256":  "3B49FBFCE300FD9AE93B2E548310803EAA949E15FD9C2B7B5EE940D4C8A0B6BD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmissionReviewDto.cs",
+        "SHA256":  "6A492F735839A5F714E793B29A6CD50A8CC929214B056B13830B37728B80FC05"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmissionResultDto.cs",
+        "SHA256":  "F4160EB0FD59085D53A382B71969251998A192D457D5569E4635A60371253170"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmissionAnswerReviewDto.cs",
+        "SHA256":  "BB4F7343661ECB5E2788C88324D00A0B87D21671AE5A6F9B7076D4FA79D0721E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmissionAnswerOptionReviewDto.cs",
+        "SHA256":  "82802DB0F465238683C68775A4F4380DCB73EDEA62386599C6501D3943752DCD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubjectDto.cs",
+        "SHA256":  "AD70FB821511745BA37FDF5FEE0BB2482863536E121D7082C4BC63DEBDBD0C2C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\StudyPathDto.cs",
+        "SHA256":  "AD038BBE161EF5F3B4DB19AB3279587AC4FF448E7B49AE3B4B5B17EC37573AF7"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\StudyAreaDto.cs",
+        "SHA256":  "5E0CBB51118C510CF1B95F8DE81AF3C8E0A5D0002BA42415B1B5C90DC1557930"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\StudentDto.cs",
+        "SHA256":  "1F1925797633E5BCABA5825C667B17BF0BF3426828F9AB236F382E5674B09B1E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\StartExamDto.cs",
+        "SHA256":  "640345810C55697024F5471439A47B34A17DC409703A16A67B78CE0F1E90BA10"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SaveExamAnswersDto.cs",
+        "SHA256":  "8BC4172D6E58C35B19EEF6D56AB66A9C2F023D19458626BC695CB344D326A8AA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SaveAnswersResponseDto.cs",
+        "SHA256":  "FB7FA6EC9AFEDAD87F41E68F331AFDBA9DF6D7D4411B588D9501910BE12F63E8"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ReviewOpenAnswersDto.cs",
+        "SHA256":  "DDBA52DF317FA478F11512D3888233D2F27DE2B31785C8F31FFBBA5F59E6EB3B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ReportViolationDto.cs",
+        "SHA256":  "A7C03A4DC85AF997F4868612C358C9EA35B20C99FB8D10EB75F4FFE529AE6457"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\RegisterForAdminDto.cs",
+        "SHA256":  "4846B04DA643E38140ED364FE3785F044A94DA28467477AF39F0E70A5D910036"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\RegisterDto.cs",
+        "SHA256":  "8EDB1835ADD3FDB9B1A8998E53A959FD0FE236C0E249BA0F3802BF1BBD42EB2B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionOptionInputDto.cs",
+        "SHA256":  "1F4E2A9F792B912E94973F330595FCFA43731C8426F35F8EC821D7BF7298C821"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionOptionForStudentDto.cs",
+        "SHA256":  "192E9BA4664F4FF80DE1BC95CB15635AB40A1FF6FB8BED096C59B619102CBC32"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionOptionDto.cs",
+        "SHA256":  "BE0EA81A1080274606A7979CD20A6B6ACE830F0DEF3432E720318E2595C51100"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionInputDto.cs",
+        "SHA256":  "B2037347FBF48424CB93E821D77179F10D63D7FB7CF87B0B823FA9805A536CCD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionForStudentDto.cs",
+        "SHA256":  "4E7ADBB87A4CC6B446CB99686BAABC1099FED9E1E974BECC79B39472AFB78396"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionDto.cs",
+        "SHA256":  "9662BEFA1C3D7CF7A2C51CECD0AED099F82FFAEC353083BDE058823E79B6E4A4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\OpenAnswerReviewInputDto.cs",
+        "SHA256":  "D267DB038DB7162CCA38FDC3DA51FF6E01BA0A49215AC008CEFA012F97F4BBAD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\MicrosoftLoginDto.cs",
+        "SHA256":  "1FE982E5557E7AF470CCBF98A806D7948AED958186B43D4D5516F075DF1DA4DC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\LoginDto.cs",
+        "SHA256":  "35693A9D718EFA14295D8F9064A02D914F2F5AF8B5348C7A77622D2D3149D830"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\InstitutionMemberDto.cs",
+        "SHA256":  "E23740490B72C83082718037AC83A0C30101EF7D1B5CD221012D8ABF24A02CA6"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\InstitutionExamDtos.cs",
+        "SHA256":  "2B964A7861162967AA119DD15BFED36EA1499A861E33B593ADAFFB0B29611427"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\InstitutionAuthDtos.cs",
+        "SHA256":  "9BD87C9254AD4B176B4057D8D5E87C951EA50FAE413E489030979CE369E204EE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\GradeStatisticsDto.cs",
+        "SHA256":  "692215C635B032AAA2C18FB7D1BEC35DC673383B9B2AFE74344EC8A8E6977553"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\GradePageDto.cs",
+        "SHA256":  "D97C219D4D268AA16EF279EBE2BBFFE4982A63E5F8BAA220ADA88A4C02A2F4E7"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\GradeFiltersDto.cs",
+        "SHA256":  "6129F46DFBDFFE6A39DA4C4A6D4EEF26E191013B861D7750CBFD37107FA5C9D4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\GradeDto.cs",
+        "SHA256":  "486CC514D02F45932630B0440D0FC6472413323FD06E33742CDF2844BCD8EC37"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\FinalizeSubmissionDto.cs",
+        "SHA256":  "8EE95A4C360327D83C34DFBBCC9C8A841E33176572F2D5218A53122CD18E253E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ExamSummaryDto.cs",
+        "SHA256":  "4BE267E998FEED2E6F265110FC96149761E80DF4B52B3276C92212428790639C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ExamStudentInputDto.cs",
+        "SHA256":  "11CAA323A535B0664FA3A362F731A0825EDB2BD18BDA6CDE3536F3BF269D1A1F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ExamForStudentDto.cs",
+        "SHA256":  "1E615CB2B4EADFE0DD6A7D4A3356B6FBEA779FA731B212BE5A48CC2309DA18E7"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ExamDetailDto.cs",
+        "SHA256":  "96E4F304DFE8348FE0B264782C2C931020CD22FC95AE4E06684DDCED2AE7C01F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ExamAssignedStudentDto.cs",
+        "SHA256":  "876EA2272ED8B67E7AE59A64F4BF30C01182503F90D8ADA3C9A63EED12975693"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\EnrollmentLifecycleDtos.cs",
+        "SHA256":  "9CDE631CE1F6D7C1FEC2EFBF07386B5EE68362B1269C2628D8330163553A3F44"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateUserDto.cs",
+        "SHA256":  "CC12789D04F9E3276BEBE46DBA243AFBEF981502A8A6E1D91CE656957732D0AB"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateTeacherDto.cs",
+        "SHA256":  "BAE76E28132ED799527FABA42975C14005435C990846E9AAB2CB072751C715EA"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateSubjectDto.cs",
+        "SHA256":  "8ACEDDD82AFAC2E1FCE2079C40402364FB60AEFAD6C9B43BA0408A79B7BE05D4"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateStudyPathDto.cs",
+        "SHA256":  "12F1588ABDD27B0267225047AAB83A678AB8A8AC5ED977F209868A8FE0C32B22"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateStudyAreaDto.cs",
+        "SHA256":  "A5586EBEAA41E9402D16E74BF2BFF5F4DC85135DB46BA988F3F66127DAF51C08"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateStudentDto.cs",
+        "SHA256":  "228703DBFD0082E023345E6FCD39CB8C9A2C2AEC4A9BB9A511DF6161ABCF804A"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateGradeDto.cs",
+        "SHA256":  "3AE6F9A539A8CF9DEA5CAC0ADC84F4144DB294EFF3F1F01A16C0B5284D49C8BD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateExamDto.cs",
+        "SHA256":  "FDE34DB3E15244E88DD0852ED9EFC1C4EBE3395443CC4A2B9E834F7B3974490F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateBienniumDto.cs",
+        "SHA256":  "5C7BEDE49654E1EB10CC03D63CDB89C66ECF87BAE8BB11ED6781B4DB69613AB9"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CourseDtos.cs",
+        "SHA256":  "EB5851EFDA7AD76AAD71998758AE9ACEDB41D3B4A65A2868229B5BDB7B11F043"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ClaimsContext.cs",
+        "SHA256":  "C88B1EB702E1CAB9351F3EACEAB1BB8AEF2BE7FF46C657D61F6032D2126D073B"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\BienniumDto.cs",
+        "SHA256":  "59A77B1CEA13638036FE0433FE4464C22C50A862D8DAAAD74B9DBD252848C658"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\AssignedExamDto.cs",
+        "SHA256":  "DD89522ED56A149480CBABB902DC5BCBB0D66DF0B2D2F7541260A9412D6BC4D7"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\AnswerInputDto.cs",
+        "SHA256":  "828A81B145B9739CA1BDE373694A7AF30C44F65CF2B5F76098AD2CCF362B15CD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Constants\\CustomClaimTypes.cs",
+        "SHA256":  "8D8121171FEE68F35095D5816332EEF528FBB406090EDB8688213EBD04561A9B"
+    }
+]

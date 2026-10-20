@@ -245,8 +245,31 @@ public sealed partial class Mt3dHttpTests
     private sealed class CommandTimeoutFault : DbCommandInterceptor
     {
         internal bool Fired;
+        internal readonly System.Diagnostics.Stopwatch Elapsed = new();
+        internal Exception? ProviderFailure;
+        public override Task CommandFailedAsync(DbCommand command, CommandErrorEventData data, CancellationToken ct = default)
+        {
+            if (Fired && command.CommandText.Contains("SLEEP(5)")) ProviderFailure = data.Exception;
+            return Task.CompletedTask;
+        }
         public override ValueTask<InterceptionResult<DbDataReader>> ReaderExecutingAsync(DbCommand command,CommandEventData data,InterceptionResult<DbDataReader> result,CancellationToken ct=default)
-        {if(!Fired&&command.CommandText.Contains("FOR UPDATE")){Fired=true;command.CommandText="SELECT SLEEP(5)";command.CommandTimeout=1;}return ValueTask.FromResult(result);}
+        {
+            if (!Fired && command.CommandText.Contains("FOR UPDATE"))
+            {
+                // Match only the worker's exact owned-parent locking read, including all five parameters.
+                var pattern = @"SELECT \* FROM exam_submission WHERE id=(@p\d+) AND id=(@p\d+) AND institution_id=(@p\d+) AND student_id=(@p\d+) AND exam_id=(@p\d+) FOR UPDATE";
+                var matches = System.Text.RegularExpressions.Regex.Matches(command.CommandText, pattern);
+                var match = Assert.Single(matches.Cast<System.Text.RegularExpressions.Match>());
+                Assert.All(match.Groups.Cast<System.Text.RegularExpressions.Group>().Skip(1),
+                    g => Assert.True(command.Parameters.Contains(g.Value)));
+                var delayed = match.Value.Replace(" FOR UPDATE", " AND SLEEP(5)=0 FOR UPDATE");
+                command.CommandText = command.CommandText.Remove(match.Index, match.Length).Insert(match.Index, delayed);
+                command.CommandTimeout = 1;
+                Fired = true;
+                Elapsed.Start();
+            }
+            return ValueTask.FromResult(result);
+        }
     }
     private sealed class GradingFault(ISubmissionGradingService inner) : ISubmissionGradingService
     {
@@ -266,14 +289,42 @@ public sealed partial class Mt3dHttpTests
         var s=await Start(await Create());await Expire(s.SubmissionId);var a=await Digest(false);var b=await Digest(true);
         var connection=new ConnectionFault();var timeout=new CommandTimeoutFault();
         var services=Phase3.Services(fixture,null,kind=="connection"?connection:kind=="timeout"?timeout:new ExpiryFault("unused"));
+        if (kind == "timeout")
+        {
+            // Test-only hard cancellation: MySQL 5.7 can swallow KILL QUERY inside SLEEP.
+            // Keep the owned query intact and require the provider's actual timeout error.
+            var settings = new MySqlConnector.MySqlConnectionStringBuilder(fixture.ConnectionString) { CancellationTimeout = -1 };
+            services.AddDbContext<ElectronicRegisterContext>(options =>
+                options.UseMySql(settings.ConnectionString, ServerVersion.AutoDetect(fixture.ConnectionString)));
+        }
         if(kind=="grading")services.AddScoped<ISubmissionGradingService>(_=>new GradingFault(new ElectronicRegisterAPI.Business.Services.SubmissionGradingService()));
         await using(var provider=services.BuildServiceProvider())
         {
             var error=await Assert.ThrowsAnyAsync<Exception>(()=>Technical(s.SubmissionId,provider:provider));
-            if(kind=="timeout"){Assert.True(timeout.Fired);Assert.Contains("timeout",error.ToString(),StringComparison.OrdinalIgnoreCase);}
+            if(kind=="timeout")
+            {
+                timeout.Elapsed.Stop();
+                Assert.True(timeout.Fired);
+                var chain = new List<Exception>();
+                for (Exception? current = error; current is not null; current = current.InnerException) chain.Add(current);
+                Assert.DoesNotContain(chain, e => e is InvalidCastException);
+                // Capture at the command boundary: rollback on a hard-closed connection may
+                // replace the original provider error. Never classify that wrapper as a timeout.
+                var providerError = Assert.IsType<MySqlConnector.MySqlException>(timeout.ProviderFailure);
+                Assert.Equal(MySqlConnector.MySqlErrorCode.CommandTimeoutExpired, providerError.ErrorCode);
+                if (!chain.Contains(providerError))
+                {
+                    Assert.IsType<InvalidOperationException>(error);
+                    Assert.Equal("Connection must be Open; current state is Closed", error.Message);
+                }
+                Assert.True(timeout.Elapsed.Elapsed >= TimeSpan.FromMilliseconds(800), "Server-side delay was not observed");
+            }
             if(kind=="connection")Assert.True(connection.Fired);
         }
         Assert.Equal(a,await Digest(false));Assert.Equal(b,await Digest(true));await Technical(s.SubmissionId);await AssertTechnical(s.SubmissionId);
+        var recovered = await Digest(false);
+        await Technical(s.SubmissionId);await AssertTechnical(s.SubmissionId);
+        Assert.Equal(recovered, await Digest(false));Assert.Equal(b, await Digest(true));
     }
 
     [Fact]

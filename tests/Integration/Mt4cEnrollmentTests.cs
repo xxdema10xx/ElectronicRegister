@@ -165,7 +165,9 @@ public sealed partial class Mt4bHttpTests
         var a=await CreateEdition();var b=await CreateEdition(true);var id=await CreateEnrollment(a);var foreign=await CreateEnrollment(b,true);var token=await Access();
         foreach(var (path,method,body) in LifecycleActions(foreign,b))await Expect(await Request(path,token,body,method),HttpStatusCode.NotFound);
         foreach(var (path,method,body) in LifecycleActions(Guid.NewGuid(),Guid.NewGuid()))await Expect(await Request(path,token,body,method),HttpStatusCode.NotFound);
-        await Execute("UPDATE institution_membership_role SET role='Teacher' WHERE membership_id=@id",("@id",Id("admin-membership",true)));
+        // Fixture role replacement uses the guarded explicit primitives; assertions and
+        // resulting B role remain unchanged. No operational IAM path is bypassed.
+        await Execute("START TRANSACTION; DELETE FROM institution_membership_role WHERE membership_id=@id; INSERT INTO institution_membership_role(membership_id,role) VALUES(@id,'Teacher'); COMMIT",("@id",Id("admin-membership",true)));
         var scopedB=await Access(b:true);foreach(var (path,method,body) in LifecycleActions(foreign,b))await Expect(await Request(path,scopedB,body,method),HttpStatusCode.Forbidden);
         await Expect(await Request(Enrollments+"/"+id+"/transition",token,TransitionInput(),"POST"),HttpStatusCode.OK);
         await Db(async db=>Assert.Equal(0,await db.StudentEnrollments.AsNoTracking().Where(e=>e.InstitutionId==_b && e.Id==foreign).Select(e=>EF.Property<long>(e,"Revision")).SingleAsync()));

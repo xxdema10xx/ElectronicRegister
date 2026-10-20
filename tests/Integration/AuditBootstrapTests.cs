@@ -158,13 +158,18 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
         Assert.Equal(19, courseEndpoints.Count);
         Assert.All(courseEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
             a => a.Policy == ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute.PolicyName));
-        Assert.Equal(78 + schoolEndpoints.Count + examEndpoints.Count + courseEndpoints.Count, endpoints.Count);
+        var membershipEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is not null).ToList();
+        Assert.Equal(2, membershipEndpoints.Count);
+        Assert.All(membershipEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
+            a => a.Policy == ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute.PolicyName));
+        Assert.Equal(78 + schoolEndpoints.Count + examEndpoints.Count + courseEndpoints.Count + membershipEndpoints.Count, endpoints.Count);
         Assert.All(schoolEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
             a => a.Policy == ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute.PolicyName));
         var legacyEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionIdentityEndpointAttribute>() is null &&
             e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute>() is null &&
             e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is null &&
-            e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is null).ToList();
+            e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is null &&
+            e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is null).ToList();
         Assert.Equal(73, legacyEndpoints.Count); // Preserve the complete original role-gate guarantee.
         foreach (var endpoint in legacyEndpoints)
         {

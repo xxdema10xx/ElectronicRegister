@@ -41,6 +41,12 @@ public sealed class Mt1IntegrityTests(IntegrationFixture fixture, ITestOutputHel
     {
         using var scope = fixture.ScopeFactory.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
+        await using var purge = await MembershipFixturePurge.AllowAsync(db, _institutions);
+        // Only this rehearsal's temporary holding; never relabel the configured holding.
+        foreach (var owner in _institutions)
+            await db.Institutions.Where(i => i.Id == owner && i.Code == Mt1SchemaMigration.LegacyMigrationCode &&
+                i.Name == "Legacy migration holding record - test rehearsal, not an official ITS name")
+                .ExecuteUpdateAsync(s => s.SetProperty(i => i.Code, "MT1_REHEARSAL_" + owner.ToString("N")));
         var memberships = await db.InstitutionMemberships.Where(m => _institutions.Contains(m.InstitutionId)).Select(m => m.Id).ToListAsync();
         await db.InstitutionMembershipRoles.Where(r => memberships.Contains(r.MembershipId)).ExecuteDeleteAsync();
         await db.InstitutionMemberships.Where(m => _institutions.Contains(m.InstitutionId)).ExecuteDeleteAsync();

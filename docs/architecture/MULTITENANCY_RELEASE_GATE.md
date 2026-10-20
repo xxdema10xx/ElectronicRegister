@@ -1,3 +1,64 @@
+> Aggiornamento MT5B: **PARZIALE, scritture non implementate e chiuse**. Baseline
+> nuova 711/711 Passed su MAMP MySQL 5.7.24 isolato 13306; nessun DDL o codice
+> applicativo modificato. Restano da definire il contratto attribuito dei writer
+> tecnici MT1 e da verificare un contatore monotono compatibile con INSERT SELECT/
+> DELETE JOIN esistenti. Nessuna garanzia Last Admin/audit/revoca monotona nuova.
+> [Design e blocchi MT5B](INSTITUTION_MEMBERSHIP_MUTATIONS_AND_AUDIT.md),
+> [report MT5B](../../tests/Integration/MULTITENANCY_MT5B_REPORT.md).
+> MT5A resta completata (due711/711); le precedenti descrizioni PARZIALE sotto sono
+> storiche. Rollout chiuso, nessuna nuova POST o API audit, nessun MT5C/cutover.
+
+# Release gate MT-5A — validazione locale completata, rollout chiuso
+
+## Evidenza successiva — certificazione locale completata, rollout chiuso
+
+MT5A certificata sulla copia MAMP MySQL 5.7.24, porta 13306: due suite consecutive
+**711/711 Passed**, ciascuna 51 unit + 660 integration, zero Failed/Skipped/NotExecuted.
+Baseline 675 e nuovi 36 verdi; identita e hash verificati, integrita SQL finale verde,
+originale 3306 invariato negli snapshot. Correzioni limitate ai due test autorizzati.
+[Evidenze e limiti](../../tests/Integration/MULTITENANCY_MT5A_TEST_COMPATIBILITY_FIX.md).
+
+Lo stato PARZIALE nei paragrafi seguenti appartiene ai tentativi storici conservati;
+la validazione locale MT5A e ora completata. Il **gate di rollout resta chiuso**:
+MembershipAdminApi default false, nessun cutover, dichiarazione di prontezza produzione
+o avvio MT5B. Nessuna equivalenza automatica con MariaDB 10.4.32.
+
+## Evidenza aggiornata — MAMP isolato, 20 ottobre 2026
+
+**Gate chiuso; MT-5A PARZIALE — VALIDATION BLOCKED.** Lo schema MT4C della copia
+MySQL 5.7.24 su 13306 supera preflight e controlli finali (32 tabelle, 53 trigger,
+98 FK). Build e smoke 4/4 superati. Baseline: 673/675 Passed, 2 Failed,
+zero Skipped/NotExecuted; tutte le 675 identita storiche preservate.
+
+Falliscono l'assunzione GLOBAL non strict e il caso timeout della fault injection
+SLEEP. Nessuna correzione applicata: nuovi 36 e due suite 711 non avviati.
+[Diagnosi, TRX e proposte](../../tests/Integration/MULTITENANCY_MT5A_FINAL_VALIDATION.md).
+Richiesti risoluzione revisionata dei due blocchi senza perdita di copertura, baseline
+verde, nuovi 36 e due suite consecutive 711/711. Queste evidenze riguardano MySQL
+5.7.24, non una certificazione MariaDB 10.4.32. Nessuna prontezza produzione dichiarata;
+MembershipAdminApi resta default false, nessun cutover o avvio MT5B.
+
+Il testo seguente conserva gli esiti storici anteriori alla recovery isolata.
+
+MembershipAdminApi e il quinto flag server-side, default false e indipendente da SchoolApi.
+Abilita soltanto le due GET membership per InstitutionAdmin con InstitutionAccess e contesto
+MT2 rivalidato. Non abilita provisioning, inviti, ruoli, credenziali, account globali o altre API.
+L'esempio versionato conserva tutti i flag false; nessun cutover autorizzato.
+
+Le prove mirate MT5A sono verdi sul MySQL 5.7.24 effettivamente disponibile, ma il database test
+non ha schema MT4 e non e il MariaDB dei report storici. La baseline completa fallisce prima
+dei test integration. Non aprire la directory sulla base del solo verde mirato.
+Servono schema MT4C e ambiente MariaDB autorizzati/verificati, baseline675 preservata,
+due suite complete consecutive verdi e verifica del gate prima di rivalutare il checkpoint.
+MT5A non applica migrazioni per correggere questo disallineamento.
+
+[Report MT5A](../../tests/Integration/MULTITENANCY_MT5A_REPORT.md),
+[governance e prerequisiti MT5B](INSTITUTION_MEMBERSHIP_GOVERNANCE.md),
+[contratti directory](../api/MEMBERSHIP_ADMIN_FRONTEND_CONTRACTS.md).
+Last-admin transazionale, audit membership distinto e onboarding verificato sono progettati;
+le relative mutazioni rimangono chiuse fino al checkpoint successivo esplicitamente autorizzato.
+I risultati seguenti sono snapshot dei precedenti checkpoint, non certificazioni del DB corrente.
+
 # Aggiornamento del release gate MT-4C
 
 MT-4C completata tecnicamente: due suite 675/675 Passed, zero Failed/Skipped e 644 identita precedenti preservate. **Nessun cutover autorizzato, quattro rollout default false**.

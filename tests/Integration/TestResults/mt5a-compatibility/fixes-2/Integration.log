@@ -1,0 +1,26 @@
+Esecuzione dei test per C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll (.NETCoreApp,Version=v10.0)
+Un totale di 1 file di test corrisponde al criterio specificato.
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: "timeout") [2 s]
+  Messaggio di errore:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: [System.InvalidOperationException: Connection must be Open; current state is Closed
+   at MySqlConnector.MySqlConnection.get_Session() in /_/src/MySqlConnector/MySqlConnection.cs:line 887
+   at MySqlConnector.MySqlTransaction.DoRollback(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlTransaction.cs:line 272
+   at MySqlConnector.MySqlTransaction.RollbackAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlTransaction.cs:line 71
+   at Microsoft.EntityFrameworkCore.Storage.RelationalTransaction.RollbackAsync(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalTransaction.RollbackAsync(CancellationToken cancellationToken)
+   at ElectronicRegisterAPI.Infrastructure.Repositories.TransactionManager.ExecuteAsync(Func`1 action, CancellationToken cancellationToken) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Repositories\TransactionRepository.cs:line 28
+   at ElectronicRegisterAPI.Infrastructure.Repositories.TransactionManager.ExecuteAsync(Func`1 action, CancellationToken cancellationToken) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\Repositories\TransactionRepository.cs:line 30
+   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessCoreAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller, SubmissionExpiryWork work, CancellationToken ct) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 71
+   at ElectronicRegisterAPI.Application.Services.InstitutionExpiryService.ProcessAsync(ExpiryCandidate candidate, CancellationToken ct) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\InstitutionExpiryService.cs:line 17
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 39
+   at Xunit.Assert.RecordExceptionAsync(Func`1 testCode) in /_/src/xunit.assert/Asserts/Record.cs:line 126]
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(String kind) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 305
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(String kind) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 310
+--- End of stack trace from previous location ---
+File di risultati: C:\Users\Lorenzo\ElectronicRegister\migrations\mt4\private\mt5a-mamp-13306\compatibility-results\fixes-2\Integration\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_41_17_net10.0.trx
+
+Non superato! - Non superati:     1. Superati:     3. Ignorati:     0. Totale:     4. Durata: 5 s - Integration.Tests.dll (net10.0)
+
+[xUnit.net 00:00:13.53]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: "timeout") [FAIL]

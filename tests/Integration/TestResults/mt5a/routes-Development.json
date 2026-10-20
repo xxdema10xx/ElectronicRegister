@@ -1,0 +1,16 @@
+[
+  {
+    "route": "api/institution/admin/members",
+    "methods": [
+      "GET"
+    ],
+    "policy": "InstitutionMembershipAdminAccess"
+  },
+  {
+    "route": "api/institution/admin/members/{membershipId:guid}",
+    "methods": [
+      "GET"
+    ],
+    "policy": "InstitutionMembershipAdminAccess"
+  }
+]

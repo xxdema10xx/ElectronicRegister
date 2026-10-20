@@ -659,6 +659,7 @@ public sealed class Mt3cHttpTests(IntegrationFixture fixture) : IAsyncLifetime
         if (_host is not null) await _host.DisposeAsync();
         await Db(async db=>
         {
+            await using var purge = await MembershipFixturePurge.AllowAsync(db, new[]{_a,_b});
             foreach(var table in new[]{"institution_student_profile","institution_teacher_profile","grade","class_subject","student","teacher","subject","class","biennium_study_path","biennium_study_area","study_path","study_area","biennium"})
             {
                 // Closed identifier allowlist; tenant GUIDs remain SQL parameters.

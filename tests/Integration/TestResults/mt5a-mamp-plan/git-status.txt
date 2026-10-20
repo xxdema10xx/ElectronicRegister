@@ -1,0 +1,29 @@
+ M Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/InstitutionAuthentication.cs
+ M Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/LegacyEndpointGate.cs
+ M Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/appsettings.example.json
+ M Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/DependencyInjection/AddApplicationManagers.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/DependencyInjection/ServiceCollectionExtensions.cs
+ M docs/architecture/MULTITENANCY_DESIGN.md
+ M docs/architecture/MULTITENANCY_ISOLATION_MATRIX.md
+ M docs/architecture/MULTITENANCY_RELEASE_GATE.md
+ M tests/Integration/AuditBootstrapTests.cs
+ M tests/Integration/Mt2IdentityTests.cs
+ M tests/Integration/Mt3cProgramHost.cs
+ M tests/Integration/Mt3dHttpTests.cs
+ M tests/Integration/Mt4bHttpTests.cs
+?? Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionMembershipAdminController.cs
+?? Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/InstitutionMembershipAdminEndpointAttribute.cs
+?? Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionMembershipAdminManager.cs
+?? Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/InstitutionMemberDto.cs
+?? Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IInstitutionMembershipAdminManager.cs
+?? Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionMembershipDirectoryRepository.cs
+?? Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionMembershipDirectoryRepository.cs
+?? docs/api/MEMBERSHIP_ADMIN_FRONTEND_CONTRACTS.md
+?? docs/architecture/INSTITUTION_MEMBERSHIP_GOVERNANCE.md
+?? tests/Integration/MULTITENANCY_MT5A_MAMP_RECOVERY_PLAN.md
+?? tests/Integration/MULTITENANCY_MT5A_RECOVERY_REPORT.md
+?? tests/Integration/MULTITENANCY_MT5A_REPORT.md
+?? tests/Integration/Mt5aMembershipAdminTests.cs
+?? tests/Integration/TestResults/mt5a-mamp-plan/
+?? tests/Integration/TestResults/mt5a-recovery/
+?? tests/Integration/TestResults/mt5a/

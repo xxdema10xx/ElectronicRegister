@@ -1,0 +1,7 @@
+invalid_edition_path	0
+invalid_campus_link	0
+invalid_enrollment	0
+invalid_class_path	0
+invalid_edition_state_dates	0
+invalid_enrollment_state_dates	0
+missing_restrict_fk	0

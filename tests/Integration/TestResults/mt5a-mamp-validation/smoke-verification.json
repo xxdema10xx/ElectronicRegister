@@ -1,0 +1,27 @@
+{
+    "Run":  "smoke",
+    "Valid":  true,
+    "ExpectedTotal":  4,
+    "Total":  4,
+    "Unit":  0,
+    "Integration":  4,
+    "Passed":  4,
+    "Failed":  0,
+    "OtherOutcomes":  0,
+    "PreviousIdentitiesMissing":  0,
+    "NewIdentities":  0,
+    "Files":  [
+                  {
+                      "File":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-mamp-validation\\smoke\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_24_39_net10.0.trx",
+                      "SHA256":  "62AC8CB1507ABF60F9F5B0E88A3AC38D5D0718962B229A4558F34975CBD1126E",
+                      "Total":  4,
+                      "Executed":  4,
+                      "Passed":  4,
+                      "Failed":  0,
+                      "NotExecuted":  0
+                  }
+              ],
+    "NonPassed":  [
+
+                  ]
+}

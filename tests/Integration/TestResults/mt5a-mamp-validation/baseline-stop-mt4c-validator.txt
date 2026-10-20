@@ -1,0 +1,5 @@
+invalid_revision	0
+invalid_actor	0
+invalid_edition	0
+invalid_enrollment	0
+missing_fk	0

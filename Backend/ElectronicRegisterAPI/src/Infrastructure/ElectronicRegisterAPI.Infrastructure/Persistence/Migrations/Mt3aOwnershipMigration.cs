@@ -92,6 +92,7 @@ public static class Mt3aOwnershipMigration
         if (legacy == Guid.Empty) throw new ArgumentException("Explicit legacy InstitutionId required.");
         var known = OwnedTables.Concat(["audit_event", "user", "institution", "campus", "institution_membership", "institution_membership_role", "institution_student_profile", "institution_teacher_profile", "mt3a_legacy_scope"]).ToHashSet(StringComparer.Ordinal);
         known.UnionWith(await Mt4CourseStructureIntegrity.ValidateIfPresentAsync(c, tx));
+        known.UnionWith(await Mt5bSecurityStateIntegrity.ValidateIfPresentAsync(c, tx));
         await using (var tables = new MySqlCommand("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()",c,tx))
         {
             await using var reader=await tables.ExecuteReaderAsync();

@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<ElectronicRegisterAPI.Application.Services.InstitutionSchoolAuthorization>();
         services.AddScoped<IInstitutionCourseManager, InstitutionCourseManager>();
+        services.AddScoped<IInstitutionMembershipAdminManager, InstitutionMembershipAdminManager>();
         services.AddScoped<IInstitutionStudentManager, InstitutionStudentManager>();
         services.AddScoped<IInstitutionTeacherManager, InstitutionTeacherManager>();
         services.AddScoped<IInstitutionSubjectManager, InstitutionSubjectManager>();

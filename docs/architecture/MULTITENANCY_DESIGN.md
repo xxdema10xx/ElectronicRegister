@@ -1,3 +1,29 @@
+> Aggiornamento MT5B: **PARZIALE, scritture non implementate e chiuse**. Baseline
+> nuova 711/711 Passed su MAMP MySQL 5.7.24 isolato 13306; nessun DDL o codice
+> applicativo modificato. Restano da definire il contratto attribuito dei writer
+> tecnici MT1 e da verificare un contatore monotono compatibile con INSERT SELECT/
+> DELETE JOIN esistenti. Nessuna garanzia Last Admin/audit/revoca monotona nuova.
+> [Design e blocchi MT5B](INSTITUTION_MEMBERSHIP_MUTATIONS_AND_AUDIT.md),
+> [report MT5B](../../tests/Integration/MULTITENANCY_MT5B_REPORT.md).
+> MT5A resta completata (due711/711); le precedenti descrizioni PARZIALE sotto sono
+> storiche. Rollout chiuso, nessuna nuova POST o API audit, nessun MT5C/cutover.
+
+# Directory amministrativa MT-5A
+
+Directory e dettaglio membership in sola lettura, policy InstitutionMembershipAdminAccess,
+solo InstitutionAccess e InstitutionAdmin corrente rivalidati da MT2. Repository dedicato
+filtra InstitutionId in SQL prima di proiezione/paging; User resta globale, ruoli per membership.
+Flag MembershipAdminApi indipendente da SchoolApi, default false; marker dedicato nel gate.
+Nessuna mutazione/DDL/invito/provisioning o modifica di credenziali.
+
+**MT-5A PARZIALE**: 36 nuovi test HTTP/SQL mirati verdi sul MySQL 5.7.24 disponibile;
+baseline completa bloccata dallo schema MT4 assente e MariaDB richiesto non disponibile.
+Nessuna certificazione di regressione completa o rollout.
+[Governance, inventario e last-admin](INSTITUTION_MEMBERSHIP_GOVERNANCE.md),
+[contratti](../api/MEMBERSHIP_ADMIN_FRONTEND_CONTRACTS.md),
+[report](../../tests/Integration/MULTITENANCY_MT5A_REPORT.md).
+Le sezioni successive conservano i risultati storici dei precedenti ambienti/checkpoint.
+
 # Lifecycle e audit MT-4C
 
 MT-4C completata: due suite 675/675 Passed, zero Failed/Skipped; 644 identita precedenti preservate. Nessun rollout/cutover. Questa estensione prevale sulle limitazioni

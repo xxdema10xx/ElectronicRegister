@@ -1,0 +1,13 @@
+{
+    "TargetPort":  13306,
+    "OriginalTables":  32,
+    "OriginalTriggers":  53,
+    "OriginalFK":  98,
+    "NewProofTables":  [
+                           "mt5b_probe_20261020_membership",
+                           "mt5b_probe_20261020_role",
+                           "mt5b_probe_20261020_security"
+                       ],
+    "ProofDDLHash":  "97BE29F8F539ABDD7874B9778C23B5A0AFA0263A339E018349EA8FF93ECF3EAB",
+    "CleanupAuthorizedAfterSuccess":  true
+}

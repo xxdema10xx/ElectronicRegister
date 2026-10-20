@@ -685,9 +685,10 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         Assert.Equal(new[] { InstitutionTokenContract.AccessScheme }, policy!.AuthenticationSchemes);
         var endpoints = host.Host.Services.GetRequiredService<Microsoft.AspNetCore.Routing.EndpointDataSource>().Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null).ToArray();
-        Assert.Equal(135, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null));
+        Assert.Equal(135, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null && e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null));
+        Assert.Equal(2, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is not null));
         Assert.Equal(19, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is not null));
-        Assert.Equal(154, endpoints.Length);
+        Assert.Equal(156, endpoints.Length);
         var rows = endpoints.SelectMany(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Routing.HttpMethodMetadata>()!.HttpMethods.Select(method =>
         {
             var action = e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()!;
@@ -739,6 +740,8 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
     [Fact]
     public async Task HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites()
     {
+        string globalBefore = null!;
+        await Db(async db => globalBefore = await db.Database.SqlQueryRaw<string>("SELECT @@GLOBAL.sql_mode AS Value").SingleAsync());
         using var observer = new SqlObserver(); using var subscription = DiagnosticListener.AllListeners.Subscribe(observer);
         var exam = await Create(); var start = await Start(exam); var teacher = await Access("teacher"); var student = await Access("student");
         await Expect(await Request(Submission(start.SubmissionId, "submit"), student, new SubmitExamDto { ClientRevision = 1, Answers = Answers(exam) }, "POST"), HttpStatusCode.OK);
@@ -769,7 +772,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         {
             var session = await db.Database.SqlQueryRaw<string>("SELECT @@SESSION.sql_mode AS Value").SingleAsync();
             var global = await db.Database.SqlQueryRaw<string>("SELECT @@GLOBAL.sql_mode AS Value").SingleAsync();
-            Assert.Contains("STRICT_TRANS_TABLES", session); Assert.DoesNotContain("STRICT_", global);
+            Assert.Contains("STRICT_TRANS_TABLES", session); Assert.Equal(globalBefore, global);
         });
     }
 
@@ -897,6 +900,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         if (_host is not null) await _host.DisposeAsync();
         await Db(async db=>
         {
+            await using var purge = await MembershipFixturePurge.AllowAsync(db, new[]{_a,_b});
             foreach(var table in new[]{"institution_student_profile","institution_teacher_profile","audit_event","exam_violation","submission_answer_option","submission_answer","exam_submission","exam_student","question_option","question","exam","grade","class_subject","student","teacher","subject","class","biennium_study_path","biennium_study_area","study_path","study_area","biennium"})
             {
                 // Closed identifier allowlist; tenant GUIDs remain SQL parameters.

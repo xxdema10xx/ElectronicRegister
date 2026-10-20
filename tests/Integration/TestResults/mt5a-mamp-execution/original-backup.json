@@ -1,0 +1,10 @@
+{
+    "File":  "original-mamp-before.sql",
+    "SHA256":  "8508D8F09C79128D206E707ACD5109BA9C8E72AB93B2F06482AAA61D0744C06E",
+    "Bytes":  137496,
+    "Tables":  28,
+    "Triggers":  40,
+    "DumpCompleted":  true,
+    "SourcePort":  3306,
+    "ProcessEnvironmentOnly":  true
+}

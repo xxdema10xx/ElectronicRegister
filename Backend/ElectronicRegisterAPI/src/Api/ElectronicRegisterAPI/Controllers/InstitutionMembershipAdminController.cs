@@ -1,0 +1,21 @@
+using ElectronicRegisterAPI.Api.Security;
+using ElectronicRegisterAPI.Domain.Interfaces.Managers;
+using Microsoft.AspNetCore.Mvc;
+namespace ElectronicRegisterAPI.Api.Controllers;
+
+[ApiController, Route("api/institution/admin/members"), InstitutionMembershipAdminEndpoint]
+public sealed class InstitutionMembershipAdminController(IInstitutionMembershipAdminManager manager) : ControllerBase
+{
+    [HttpGet]
+    public async Task<IActionResult> List(CancellationToken ct, int pageNumber = 1, int pageSize = 20,
+        string? status = null, string? role = null, string? search = null) =>
+        Ok(await manager.ListAsync(pageNumber, pageSize, Filter("status", status), Filter("role", role), Filter("search", search), ct));
+
+    // MVC normalizes whitespace strings to null. Present-but-empty filters are invalid,
+    // while absent filters mean no restriction.
+    private string? Filter(string name, string? value) => value ?? (Request.Query.ContainsKey(name) ? "" : null);
+
+    [HttpGet("{membershipId:guid}")]
+    public async Task<IActionResult> Detail(Guid membershipId, CancellationToken ct) =>
+        Ok(await manager.GetAsync(membershipId, ct));
+}

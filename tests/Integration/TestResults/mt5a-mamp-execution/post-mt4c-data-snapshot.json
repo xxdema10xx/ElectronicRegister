@@ -1,0 +1,188 @@
+[
+    {
+        "Table":  "audit_event",
+        "Columns":  10,
+        "Rows":  10,
+        "SHA256":  "EE7C8014D995384F4106AE2CBE8EB14E94CD28315ABFF9B1723315427A720E89"
+    },
+    {
+        "Table":  "biennium",
+        "Columns":  4,
+        "Rows":  1,
+        "SHA256":  "3BE59D54C333079A805C086EDE5ED8DED94CA274A182F14E4F2E03AB5AE68941"
+    },
+    {
+        "Table":  "biennium_study_area",
+        "Columns":  4,
+        "Rows":  1,
+        "SHA256":  "1CFF8EBB2054212F6A7C8B282F0F52928448F7A339786BE35DEEC29A0C7CF161"
+    },
+    {
+        "Table":  "biennium_study_path",
+        "Columns":  4,
+        "Rows":  1,
+        "SHA256":  "4717AF2D55C679077D82C08FF32761824BDC1426826E28E3E39CDD188CEEC60F"
+    },
+    {
+        "Table":  "campus",
+        "Columns":  7,
+        "Rows":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Table":  "class",
+        "Columns":  5,
+        "Rows":  1,
+        "SHA256":  "BA32115CAE44FAD708FC4ECB14145D4A82EB601DEABE50D85783AAEF000C94A8"
+    },
+    {
+        "Table":  "class_subject",
+        "Columns":  5,
+        "Rows":  1,
+        "SHA256":  "00303364DF554259750D21F1A2E7D15590002A06E0667E85E4D9CFC74CC33E15"
+    },
+    {
+        "Table":  "course_edition",
+        "Columns":  10,
+        "Rows":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Table":  "course_edition_campus",
+        "Columns":  3,
+        "Rows":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Table":  "exam",
+        "Columns":  18,
+        "Rows":  12,
+        "SHA256":  "60B17475FC4CD858EDE4838A10501CB12016619E7401A1A67B5E6F336A563858"
+    },
+    {
+        "Table":  "exam_student",
+        "Columns":  5,
+        "Rows":  12,
+        "SHA256":  "8259B2016DF5BD7182575418E491C5258747A29B2AF56B201383010FC722D28D"
+    },
+    {
+        "Table":  "exam_submission",
+        "Columns":  26,
+        "Rows":  12,
+        "SHA256":  "15178BBF4432DABD917698CF30BE46172179A4730F4FE8E46B8CB087177308CC"
+    },
+    {
+        "Table":  "exam_violation",
+        "Columns":  6,
+        "Rows":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Table":  "grade",
+        "Columns":  6,
+        "Rows":  4,
+        "SHA256":  "90B424C67E0C93CA2CC03781AFC49D30F58011AE318D1F2FE5E0D5CAEA3D899A"
+    },
+    {
+        "Table":  "institution",
+        "Columns":  8,
+        "Rows":  1,
+        "SHA256":  "D2A50E44DC33FDAD1D1A3E2BDC3C114FCA44E37F92A598D6A1451C5ADF081FEA"
+    },
+    {
+        "Table":  "institution_membership",
+        "Columns":  6,
+        "Rows":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Table":  "institution_membership_role",
+        "Columns":  2,
+        "Rows":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Table":  "institution_student_profile",
+        "Columns":  3,
+        "Rows":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Table":  "institution_teacher_profile",
+        "Columns":  3,
+        "Rows":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Table":  "mt3a_legacy_scope",
+        "Columns":  2,
+        "Rows":  1,
+        "SHA256":  "F3BCB88B7EE76C46ECD60E03AE389C0421637DF86B1B08E2D2C2EDBEA5D955B3"
+    },
+    {
+        "Table":  "question",
+        "Columns":  8,
+        "Rows":  24,
+        "SHA256":  "30E9C2341B203C16CD0546B4E2016DF97324433F2CDBA37A19BC810E7DFC915C"
+    },
+    {
+        "Table":  "question_option",
+        "Columns":  6,
+        "Rows":  24,
+        "SHA256":  "7C444863BB40C2FDFD0E728981585112B7FE98205A44AC0E36211C6A91D2F2CC"
+    },
+    {
+        "Table":  "student",
+        "Columns":  6,
+        "Rows":  12,
+        "SHA256":  "E217FFDE5B68B876F19232C17A524C09DC5C9AE23F5FD363203622F13210EE42"
+    },
+    {
+        "Table":  "student_enrollment",
+        "Columns":  9,
+        "Rows":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Table":  "study_area",
+        "Columns":  4,
+        "Rows":  1,
+        "SHA256":  "2B61A2415F765D7868A76723724ABD51C72B33E7BBDBD95D22B9611096193C31"
+    },
+    {
+        "Table":  "study_path",
+        "Columns":  4,
+        "Rows":  1,
+        "SHA256":  "81973E01D9C286202C5EFE5D19FBD4067054165A53B149765639303C31B7E9B1"
+    },
+    {
+        "Table":  "subject",
+        "Columns":  3,
+        "Rows":  1,
+        "SHA256":  "CFAADA503BDB8E8BC73C1569E7D076861497CFFDC4A52A24C30E86E9FBBBE3EB"
+    },
+    {
+        "Table":  "submission_answer",
+        "Columns":  10,
+        "Rows":  22,
+        "SHA256":  "8D36DA42571120049C06ECA99A0619D8ADF6D47DF19009F759F063901AFC9AB4"
+    },
+    {
+        "Table":  "submission_answer_option",
+        "Columns":  4,
+        "Rows":  13,
+        "SHA256":  "26A38E24D7FDBAA05386C4A9950955D18954CC737F7D294F2A27C84FB23029EF"
+    },
+    {
+        "Table":  "teacher",
+        "Columns":  4,
+        "Rows":  2,
+        "SHA256":  "FCA1F2F9842442C2BF15368ECB099BECBC8387B1DF88A9F26DB318C8C62DD0B4"
+    },
+    {
+        "Table":  "user",
+        "Columns":  6,
+        "Rows":  15,
+        "SHA256":  "12B0770AEDBFDAD3661610E8F8144A3CD92721C46011B058351E52370CBD8803"
+    }
+]

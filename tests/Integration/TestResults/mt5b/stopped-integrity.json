@@ -1,0 +1,19 @@
+{
+    "Label":  "stopped",
+    "Version":  "5.7.24",
+    "Port":  13306,
+    "Tables":  32,
+    "Triggers":  53,
+    "ForeignKeys":  98,
+    "Indexes":  139,
+    "ForeignKeyOrphans":  0,
+    "TriggerDefinitionsUnchanged":  true,
+    "IndexDefinitionsUnchanged":  true,
+    "HoldingOnly":  true,
+    "NoInstitutionalFixtureResidues":  true,
+    "UserCount":  15,
+    "GlobalSqlModeUnchanged":  true,
+    "Mt4aChecks":  7,
+    "Mt4cChecks":  5,
+    "NoManualCleanup":  true
+}

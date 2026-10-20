@@ -1,0 +1,54 @@
+[
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\baseline\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_18_24_net10.0.trx",
+        "SHA256":  "2547DAD0221E22D543AD3C7A4133D3D9AC9F7C7A639A945B2BE70355E9591615"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\baseline\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_18_19_net10.0.trx",
+        "SHA256":  "6D228C3CA813F89BAC53F77EB09C10BAD16D5F789542AC7636AD4B882D7828C5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\compatibility\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_45_42_net10.0.trx",
+        "SHA256":  "3386F2627B615D518EF2E475B9C25F675404B575387E5ACF58EA374DC8AF6BEE"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\historical\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_36_44_net10.0.trx",
+        "SHA256":  "F2A8B7CB058E925CC379365D237CB233B0AC2A6EDAB8808A0BCF809B32B2860C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\proof-sql\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_27_59_net10.0.trx",
+        "SHA256":  "82DF3D29F9D4D1286CD9B27D7E550390AD1969CD7637F6762C75D5CD8900AB52"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\proof-sql-2\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_29_14_net10.0.trx",
+        "SHA256":  "49A283672429ACEC35E2BD825ED91C2B093FD63A3AAB172FA5EC6BE25490EA1C"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\regression\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_39_28_net10.0.trx",
+        "SHA256":  "E425E33AA1F798AE8585836EF63CEE85E39E0F4E1669AEF17B5E234F3BA60154"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\regression\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_39_24_net10.0.trx",
+        "SHA256":  "AD67EFE02A8981732696CD68059B41831987FF47F74B45FCAED548DD6CDFF6AC"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\regression-2\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_46_54_net10.0.trx",
+        "SHA256":  "2E0D6732573AD6A33B0F1C2E76B52B92E20DB7EE226817CB9555DC95A7080B15"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\regression-2\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_46_50_net10.0.trx",
+        "SHA256":  "5235BBA9949E471E08234510124D68E35602357E818A2CCB27570DA379420990"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\security\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_34_28_net10.0.trx",
+        "SHA256":  "3FA463F19DB806ABB7474FE37FD0D4344A03BA3C40EE680F840F14FBF0AA9704"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\security-2\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_36_38_net10.0.trx",
+        "SHA256":  "DE47672EE92590D9EE335F830879BDCB3AA28D58155EA69534BEB8FD8FCE8EB5"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\security-3\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_39_20_net10.0.trx",
+        "SHA256":  "933000EA8D82143458F2C39C7104A7069F73F00C7EC02A82A16EBB2EEDCBA16A"
+    }
+]

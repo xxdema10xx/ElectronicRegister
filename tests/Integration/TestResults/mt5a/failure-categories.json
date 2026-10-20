@@ -1,0 +1,17 @@
+[
+    {
+        "Run":  "baseline",
+        "Failed":  624,
+        "SchemaPreflightFailures":  624
+    },
+    {
+        "Run":  "final-1",
+        "Failed":  624,
+        "SchemaPreflightFailures":  624
+    },
+    {
+        "Run":  "final-2",
+        "Failed":  624,
+        "SchemaPreflightFailures":  624
+    }
+]

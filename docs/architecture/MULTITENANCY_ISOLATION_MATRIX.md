@@ -1,3 +1,29 @@
+> Aggiornamento MT5B: **PARZIALE, scritture non implementate e chiuse**. Baseline
+> nuova 711/711 Passed su MAMP MySQL 5.7.24 isolato 13306; nessun DDL o codice
+> applicativo modificato. Restano da definire il contratto attribuito dei writer
+> tecnici MT1 e da verificare un contatore monotono compatibile con INSERT SELECT/
+> DELETE JOIN esistenti. Nessuna garanzia Last Admin/audit/revoca monotona nuova.
+> [Design e blocchi MT5B](INSTITUTION_MEMBERSHIP_MUTATIONS_AND_AUDIT.md),
+> [report MT5B](../../tests/Integration/MULTITENANCY_MT5B_REPORT.md).
+> MT5A resta completata (due711/711); le precedenti descrizioni PARZIALE sotto sono
+> storiche. Rollout chiuso, nessuna nuova POST o API audit, nessun MT5C/cutover.
+
+# Confini membership MT-5A
+
+MT-5A PARZIALE; rollout chiuso. [Report](../../tests/Integration/MULTITENANCY_MT5A_REPORT.md).
+
+| Risorsa | Autorizzazione | SQL e privacy | Negazioni |
+| --- | --- | --- | --- |
+| GET admin/members | InstitutionAccess + MT2 Active/set ruoli + InstitutionAdmin | InstitutionId prima di proiezione/paging, EXISTS ruolo, filtro stato/email locale, max100 | Teacher/Student/legacy/selection; nessun lookup globale |
+| GET admin/members/{membershipId} | stessa policy e manager rivalidato | InstitutionId AND MembershipId; UserId globale non autorizza | B e inesistente identico404 |
+| DTO | solo admin del tenant corrente | membership/UserId/Email/stato/ruoli/date reali; nessun profilo/secret/ruolo legacy | nessuna union ruoli A/B, nessun nome inventato |
+| Rollout | MembershipAdminApi server-side default false | indipendente dai flag didattici/worker | flag non attribuisce permessi; marker/policy/schema/contesto verificati dal gate |
+| Mutazioni | nessuna nuova route | nessuna scrittura HTTP User/membership/role, nessun DDL | inviti/provisioning/trasferimenti/last-admin rinviati |
+
+[Governance](INSTITUTION_MEMBERSHIP_GOVERNANCE.md) definisce lock tenant e audit distinto per
+MT5B. Test mirati reali disponibili su MySQL; schema MT4 mancante blocca regressioni complete,
+quindi i risultati storici sotto non attestano il database corrente.
+
 # Estensione dei confini MT-4C
 
 MT-4C completata: due suite 675/675 Passed, zero Failed/Skipped; 644 identita precedenti preservate. Rollout chiuso. Questa matrice aggiorna lo snapshot MT4B sottostante.

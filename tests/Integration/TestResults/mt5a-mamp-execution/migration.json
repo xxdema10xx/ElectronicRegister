@@ -1,0 +1,11 @@
+{
+    "Migration004ExecutedOnce":  true,
+    "CanonicalSqlUnchanged":  true,
+    "Mt4aChecksPassed":  7,
+    "Mt4cChecksPassed":  5,
+    "Tables":  32,
+    "Triggers":  53,
+    "ForeignKeys":  98,
+    "OriginalDataTablesPreserved":  31,
+    "ArtificialHistoryCreated":  false
+}

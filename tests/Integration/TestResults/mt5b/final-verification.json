@@ -1,0 +1,17 @@
+{
+    "Status":  "MT5B PARTIAL",
+    "CSharpSourcesChecked":  370,
+    "CSharpSourcesChanged":  0,
+    "CanonicalSqlChecked":  6,
+    "CanonicalSqlChanged":  0,
+    "OriginalSnapshotMatchesMt5a":  true,
+    "OriginalSnapshotSHA256":  "599891D4994047BAD77F86F3BE3AE09FFFA9C5322B53CFCF7748768E93136CE0",
+    "ChildEnvironmentRestored":  true,
+    "GlobalSqlModeUnchanged":  true,
+    "NoDdlExecuted":  true,
+    "NoApplicationChanges":  true,
+    "NewMt5bTests":  0,
+    "Mt5bFinalSuites":  0,
+    "BaselinePassed":  711,
+    "Mt5bCertified":  false
+}

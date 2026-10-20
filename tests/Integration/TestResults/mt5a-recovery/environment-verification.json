@@ -1,0 +1,7 @@
+{
+    "Equal":  true,
+    "BeforeSHA256":  "599891D4994047BAD77F86F3BE3AE09FFFA9C5322B53CFCF7748768E93136CE0",
+    "AfterSHA256":  "599891D4994047BAD77F86F3BE3AE09FFFA9C5322B53CFCF7748768E93136CE0",
+    "RecoveryTestsExecuted":  false,
+    "Reason":  "Required MT4C schema not found. Read-only diagnosis only."
+}

@@ -1739,6 +1739,40 @@
   },
   {
     "method": "GET",
+    "route": "api/institution/admin/members",
+    "course": false,
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "manager": [
+      "IInstitutionMembershipAdminManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "MissingSelectedStudentProfileNeverFallsBackToOtherInstitution"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/members/{membershipId:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "manager": [
+      "IInstitutionMembershipAdminManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "MissingSelectedStudentProfileNeverFallsBackToOtherInstitution"
+  },
+  {
+    "method": "GET",
     "route": "api/institution/students",
     "course": false,
     "policy": [

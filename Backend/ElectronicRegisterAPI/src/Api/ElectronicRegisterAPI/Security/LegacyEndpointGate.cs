@@ -22,15 +22,18 @@ internal sealed class LegacyEndpointGate(ILegacyAccess legacy, IOptions<LegacyId
         var school = metadata.OfType<InstitutionSchoolEndpointAttribute>().ToArray();
         var exam = metadata.OfType<InstitutionExamEndpointAttribute>().ToArray();
         var course = metadata.OfType<InstitutionCourseEndpointAttribute>().ToArray();
-        var markerCount=identity.Length+school.Length+exam.Length+course.Length;
+        var members = metadata.OfType<InstitutionMembershipAdminEndpointAttribute>().ToArray();
+        var markerCount=identity.Length+school.Length+exam.Length+course.Length+members.Length;
         if(markerCount>1) { context.Result=Denied(); return; }
         if(identity.Length==1) return;
         if(markerCount==1)
         {
             var policies=metadata.OfType<IAuthorizeData>().ToArray();
-            var expectedPolicy=course.Length==1 ? InstitutionCourseEndpointAttribute.PolicyName :
+            var expectedPolicy=members.Length==1 ? InstitutionMembershipAdminEndpointAttribute.PolicyName :
+                course.Length==1 ? InstitutionCourseEndpointAttribute.PolicyName :
                 exam.Length==1 ? InstitutionExamEndpointAttribute.PolicyName : InstitutionSchoolEndpointAttribute.PolicyName;
-            var enabled=course.Length==1 ? InstitutionCourseEndpointAttribute.Enabled(configuration) :
+            var enabled=members.Length==1 ? InstitutionMembershipAdminEndpointAttribute.Enabled(configuration) :
+                course.Length==1 ? InstitutionCourseEndpointAttribute.Enabled(configuration) :
                 exam.Length==1 ? InstitutionExamEndpointAttribute.Enabled(configuration) : InstitutionSchoolEndpointAttribute.Enabled(configuration);
             if(metadata.OfType<IAllowAnonymous>().Any() ||
                 policies.Count(p=>p.Policy==expectedPolicy)!=1 ||

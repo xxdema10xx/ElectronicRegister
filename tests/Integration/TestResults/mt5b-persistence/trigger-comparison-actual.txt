@@ -1,0 +1,11 @@
+BEGIN
+ 
+ 
+ IF NOT(DATABASE()='electronic_register_test' AND @@port=13306
+  AND REPLACE(@@datadir,CHAR(92),'/') LIKE '%/migrations/mt4/private/mt5a-mamp-13306/data/'
+  AND SUBSTRING_INDEX(USER(),'@',1)='root'
+  AND FIND_IN_SET(OLD.institution_id,COALESCE(@er_mt5b_fixture_owners,''))>0
+  AND EXISTS(SELECT 1 FROM institution i WHERE i.id=OLD.institution_id
+   AND i.code REGEXP '^MT[1-5][A-Z0-9_]*_[0-9A-Fa-f]{32}$'))
+ THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT5B security state retention required'; END IF;
+END

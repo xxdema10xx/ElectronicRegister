@@ -40,6 +40,11 @@ public static class InstitutionAuthentication
         services.AddScoped<IAuthorizationHandler, InstitutionAuthorizationHandler>();
         services.AddAuthorization(options =>
         {
+            options.AddPolicy(InstitutionMembershipAdminEndpointAttribute.PolicyName, p => p
+                .AddAuthenticationSchemes(InstitutionTokenContract.AccessScheme)
+                .RequireAuthenticatedUser().AddRequirements(new InstitutionRequirement(false))
+                .RequireRole(nameof(InstitutionRole.InstitutionAdmin))
+                .RequireAssertion(_ => InstitutionMembershipAdminEndpointAttribute.Enabled(configuration)));
             options.AddPolicy(InstitutionTokenContract.SelectionScheme, p => p
                 .AddAuthenticationSchemes(InstitutionTokenContract.SelectionScheme).RequireAuthenticatedUser().AddRequirements(new InstitutionRequirement(true)));
             options.AddPolicy(InstitutionTokenContract.AccessScheme, p => p

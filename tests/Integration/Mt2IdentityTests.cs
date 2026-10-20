@@ -159,6 +159,7 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
             {
                 var ids = change == "user-deleted" ? new[] { _ma, _mb } : new[] { _ma };
                 await db.InstitutionMembershipRoles.Where(r => ids.Contains(r.MembershipId)).ExecuteDeleteAsync();
+                await using var purge = await MembershipFixturePurge.AllowAsync(db, new[]{_a,_b});
                 await db.InstitutionMemberships.Where(m => ids.Contains(m.Id)).ExecuteDeleteAsync();
                 if (change == "user-deleted") await db.Users.Where(u => u.Id == _user).ExecuteDeleteAsync();
             }
@@ -294,7 +295,9 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
                 e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionIdentityEndpointAttribute>() is null &&
                 e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute>() is null &&
                 e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is null &&
-                e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is null).ToArray();
+                e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is null &&
+                e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is null).ToArray();
+        Assert.Equal(2, sources.Endpoints.Count(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is not null));
         Assert.Equal(19, sources.Endpoints.Count(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null));
         // Discover every current legacy action; new explicitly migrated endpoints have their own HTTP suite.
         Assert.Equal(73, endpoints.Length); // Preserved baseline plus dynamic traversal of every discovered action below.
@@ -401,7 +404,8 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
         {
             var ids = new[] { _ma, _mb, _otherMembership, _legacyMembership };
             await db.InstitutionMembershipRoles.Where(r => ids.Contains(r.MembershipId)).ExecuteDeleteAsync();
-            await db.InstitutionMemberships.Where(m => ids.Contains(m.Id)).ExecuteDeleteAsync();
+            await using var purge = await MembershipFixturePurge.AllowAsync(db, new[]{_a,_b});
+                await db.InstitutionMemberships.Where(m => ids.Contains(m.Id)).ExecuteDeleteAsync();
             await db.Institutions.Where(i => i.Id == _a || i.Id == _b).ExecuteDeleteAsync();
             await db.Users.Where(u => u.Id == _user || u.Id == _other || u.Id == _legacy).ExecuteDeleteAsync();
         }); }
