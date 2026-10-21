@@ -46,6 +46,7 @@ export default function StudentExamsScreen() {
   const [starting, setStarting] = useState(false);
   const [taking, setTaking] = useState(null); // consegna in svolgimento (schermo bloccato)
   const [view, setView] = useState(null); // esito: { item, result, meta, loading }
+  const [tab, setTab] = useState("list"); // "list" | "booklet"
 
   // Gli esami nuovi si evidenziano in questa visita; entrando nella sezione il pallino sparisce
   const newOnEntry = useRef(null);
@@ -176,6 +177,16 @@ export default function StudentExamsScreen() {
     );
   }
 
+  // ── Libretto: un esame per riga, voto/esito a destra, più recenti in alto ────────────────────
+  const booklet = assigned
+    .filter(a => !!a.submissionStatus)
+    .map(a => {
+      const run = getRun(a.id);
+      const r = resultView(run?.result || { status: a.submissionStatus });
+      return { item: a, r, when: a.submittedAt || a.availableFrom };
+    })
+    .sort((x, y) => new Date(y.when) - new Date(x.when));
+
   // ── Elenco ─────────────────────────────────────────────────────────────────────────────────
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
@@ -187,42 +198,78 @@ export default function StudentExamsScreen() {
           </View>
         )}
         {!!error && <Text style={{ color: C.danger, marginBottom: 8 }}>{error}</Text>}
+        <View style={{ flexDirection: "row", gap: 8, marginBottom: 12 }}>
+          {[["list", "Esami"], ["booklet", "Libretto"]].map(([key, label]) => (
+            <TouchableOpacity key={key} onPress={() => setTab(key)}
+              style={{ paddingVertical: 7, paddingHorizontal: 16, borderRadius: 18, borderWidth: 1, borderColor: tab === key ? C.primary : C.border, backgroundColor: tab === key ? C.primary : C.white }}>
+              <Text style={{ color: tab === key ? C.white : C.text, fontWeight: "600" }}>{label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
 
-      {!loaded ? <Loader /> : assigned.length === 0 ? <EmptyState message="Nessun esame assegnato" /> : (
-        <FlatList
-          data={assigned}
-          keyExtractor={a => String(a.id)}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
-          ListFooterComponent={api.isMock() ? (
-            <TouchableOpacity onPress={() => { resetStudentDemo(); reload(); }} style={{ marginTop: 8, alignItems: "center" }}>
-              <Text style={{ color: C.textLight, fontSize: 12 }}>Ripristina la prova (solo demo)</Text>
-            </TouchableOpacity>
-          ) : null}
-          renderItem={({ item }) => {
-            const st = stateOf(item);
-            const isNew = newOnEntry.current?.has(item.id) && item.canStart;
-            return (
-              <TouchableOpacity activeOpacity={st.action ? 0.7 : 1} onPress={() => press(item)}>
+      {tab === "booklet" ? (
+        !loaded ? <Loader /> : booklet.length === 0 ? <EmptyState message="Nessun esame svolto" /> : (
+          <FlatList
+            data={booklet}
+            keyExtractor={x => String(x.item.id)}
+            contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+            renderItem={({ item: { item, r } }) => (
+              <TouchableOpacity activeOpacity={0.7} onPress={() => openResult(item)}>
                 <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
-                  <View style={[s.avatar, { backgroundColor: st.tone === "green" ? "#D1FAE5" : "#FDE68A" }]}>
-                    <Ionicons name={st.tone === "green" ? "checkmark" : "document-text-outline"} size={24} color={st.tone === "green" ? "#065F46" : "#92400E"} />
-                  </View>
-                  <View style={{ flex: 1, marginLeft: 12 }}>
+                  <View style={{ flex: 1 }}>
                     <Text style={s.itemTitle}>{item.name}{item.isRetake ? " · Recupero" : ""}</Text>
-                    <Text style={s.itemSub}>Fino al {formatDateTime(item.availableUntil)}</Text>
-                    <Text style={s.itemSub}>{item.durationMinutes}{item.extraTimeMinutes ? ` +${item.extraTimeMinutes}` : ""} min</Text>
+                    <Text style={s.itemSub}>{formatDateTime(item.submittedAt) || formatDateTime(item.availableFrom)}</Text>
                   </View>
-                  <View style={{ alignItems: "flex-end", gap: 4 }}>
-                    {isNew && <Text style={{ backgroundColor: C.danger, color: C.white, fontSize: 11, fontWeight: "700", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10, overflow: "hidden" }}>NUOVO</Text>}
-                    <StatusChip label={st.label} tone={st.tone} />
-                    {st.action === "resume" && <Text style={{ color: C.primary, fontSize: 12, fontWeight: "600" }}>Riprendi</Text>}
-                  </View>
+                  {r.showGrade ? (
+                    <Text style={{ fontSize: 20, fontWeight: "800", color: r.passed === false ? C.danger : C.success }}>{fmt(r.grade)}</Text>
+                  ) : (
+                    <StatusChip label={r.title} tone={r.status === "pending_review" ? "amber" : r.status === "failed_auto" ? "red" : "gray"} />
+                  )}
                 </Card>
               </TouchableOpacity>
-            );
-          }}
-        />
+            )}
+          />
+        )
+      ) : (
+        !loaded ? <Loader /> : assigned.length === 0 ? <EmptyState message="Nessun esame assegnato" /> : (
+          <FlatList
+            data={assigned}
+            keyExtractor={a => String(a.id)}
+            contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+            ListFooterComponent={api.isMock() ? (
+              <TouchableOpacity onPress={() => { resetStudentDemo(); reload(); }} style={{ marginTop: 8, alignItems: "center" }}>
+                <Text style={{ color: C.textLight, fontSize: 12 }}>Ripristina la prova (solo demo)</Text>
+              </TouchableOpacity>
+            ) : null}
+            renderItem={({ item }) => {
+              const st = stateOf(item);
+              const isNew = newOnEntry.current?.has(item.id) && item.canStart;
+              return (
+                <TouchableOpacity activeOpacity={st.action && st.action !== "resume" ? 0.7 : 1} onPress={() => st.action !== "resume" && press(item)}>
+                  <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+                    <View style={[s.avatar, { backgroundColor: st.tone === "green" ? "#D1FAE5" : "#FDE68A" }]}>
+                      <Ionicons name={st.tone === "green" ? "checkmark" : "document-text-outline"} size={24} color={st.tone === "green" ? "#065F46" : "#92400E"} />
+                    </View>
+                    <View style={{ flex: 1, marginLeft: 12 }}>
+                      <Text style={s.itemTitle}>{item.name}{item.isRetake ? " · Recupero" : ""}</Text>
+                      <Text style={s.itemSub}>Fino al {formatDateTime(item.availableUntil)}</Text>
+                      <Text style={s.itemSub}>{item.durationMinutes}{item.extraTimeMinutes ? ` +${item.extraTimeMinutes}` : ""} min</Text>
+                    </View>
+                    {st.action === "resume" ? (
+                      <Btn label="Riprendi l'esame" onPress={() => press(item)} style={{ paddingHorizontal: 16, paddingVertical: 10 }} />
+                    ) : (
+                      <View style={{ alignItems: "flex-end", gap: 4 }}>
+                        {isNew && <Text style={{ backgroundColor: C.danger, color: C.white, fontSize: 11, fontWeight: "700", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10, overflow: "hidden" }}>NUOVO</Text>}
+                        <StatusChip label={st.label} tone={st.tone} />
+                      </View>
+                    )}
+                  </Card>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        )
       )}
 
       {taking && <ExamTaker run={taking} api={api} onFinish={(outcome) => finish(taking, outcome)} />}

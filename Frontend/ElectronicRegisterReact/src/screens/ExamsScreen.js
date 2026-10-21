@@ -2,7 +2,7 @@
 // Esami per docenti e amministratori: elenco, creazione/modifica con l'editor guidato, pubblicazione,
 // chiusura, annullamento, eliminazione, consegne e correzione. Dati: ExamController (src/api/examApi.js).
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
@@ -21,6 +21,7 @@ import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
 import { resetMockExams } from "../api/mockExamBackend";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, detailToDraft, draftToDto, fromEnum, formatDateTime } from "../api/examContract";
+import { getRetakeGroups } from "../api/examInsights";
 
 // La bozza in corso sopravvive al refresh (F5) su web grazie a sessionStorage.
 const DRAFT_KEY = "examDraft4";
@@ -48,6 +49,8 @@ export default function ExamsScreen() {
   const [saving, setSaving] = useState(false);
   const [viewing, setViewing] = useState(null);
   const [submissionsFor, setSubmissionsFor] = useState(null);
+  const [tab, setTab] = useState("active"); // "active" | "history"
+  const [retakes, setRetakes] = useState(null); // null: chiuso, altrimenti { loading, groups }
 
   const csLabel = (id) => classSubjects?.find(c => c.id === id)?.label;
 
@@ -62,7 +65,17 @@ export default function ExamsScreen() {
   }, [api]);
   useEffect(() => { load(); }, [load]);
 
-  const visible = filterBySearch(exams, search, e => [e.name, e.description, csLabel(e.classSubjectId)]);
+  const inHistory = (e) => { const st = fromEnum(e.status, EXAM_STATUS); return st === "closed" || st === "cancelled"; };
+  const scoped = exams.filter(e => (tab === "history") === inHistory(e));
+  const visible = filterBySearch(scoped, search, e => [e.name, e.description, csLabel(e.classSubjectId)]);
+
+  // Elenco di chi deve recuperare: raggruppa per studente le consegne non superate (bocciate o "non superabile")
+  // su tutti gli esami pubblicati/chiusi. Richiede una chiamata per esame: va bene per i volumi di un registro di classe.
+  async function openRetakes() {
+    setRetakes({ loading: true, groups: [] });
+    try { setRetakes({ loading: false, groups: await getRetakeGroups(api, exams) }); }
+    catch (e) { notify("Errore", e.message); setRetakes(null); }
+  }
 
   function updateDraft(d) { setDraft(d); d ? draftStore.set(d) : draftStore.clear(); }
   function startNew() {
@@ -140,12 +153,23 @@ export default function ExamsScreen() {
         {isDesktop ? (
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginTop: 8, marginBottom: 12 }}>
             <TextInput style={[s.input, { flex: 1 }]} placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
+            {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={s.smBtn} textStyle={s.smBtnText} />}
             {newBtn}
           </View>
         ) : (<>
           <SectionHeader title="Esami" action={newBtn} />
           <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
+          {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={[s.smBtn, { marginBottom: 12, alignSelf: "flex-start" }]} textStyle={s.smBtnText} />}
         </>)}
+
+        <View style={{ flexDirection: "row", gap: 8, marginBottom: 12 }}>
+          {[["active", "Attivi"], ["history", "Storico"]].map(([key, label]) => (
+            <TouchableOpacity key={key} onPress={() => setTab(key)}
+              style={{ paddingVertical: 7, paddingHorizontal: 16, borderRadius: 18, borderWidth: 1, borderColor: tab === key ? C.primary : C.border, backgroundColor: tab === key ? C.primary : C.white }}>
+              <Text style={{ color: tab === key ? C.white : C.text, fontWeight: "600" }}>{label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
         {api.isMock() && (
           <View style={{ backgroundColor: "#FEF3C7", borderRadius: 10, padding: 10, marginBottom: 8, flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
@@ -162,7 +186,7 @@ export default function ExamsScreen() {
         )}
       </View>
 
-      {loading ? <Loader /> : visible.length === 0 ? <EmptyState message="Nessun esame trovato" /> : (
+      {loading ? <Loader /> : visible.length === 0 ? <EmptyState message={tab === "history" ? "Nessun esame nello storico" : "Nessun esame trovato"} /> : (
         <FlatList
           data={visible}
           keyExtractor={e => String(e.id)}
@@ -208,6 +232,37 @@ export default function ExamsScreen() {
 
       <TestViewer exam={viewing} contextLabel={csLabel(viewing?.classSubjectId)} onClose={() => setViewing(null)} />
       {submissionsFor && <ExamSubmissions exam={submissionsFor} api={api} onClose={() => setSubmissionsFor(null)} />}
+
+      {retakes && (
+        <Modal visible animationType="slide" onRequestClose={() => setRetakes(null)}>
+          <View style={{ flex: 1, backgroundColor: C.bg }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 10, backgroundColor: C.white, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: C.border }}>
+              <TouchableOpacity onPress={() => setRetakes(null)}><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: C.text, fontSize: 16, fontWeight: "700" }}>Chi deve recuperare</Text>
+                <Text style={{ color: C.textMuted, fontSize: 12 }}>Studenti non in regola su almeno un esame pubblicato o chiuso</Text>
+              </View>
+            </View>
+            {retakes.loading ? <Loader /> : retakes.groups.length === 0 ? <EmptyState message="Nessuno studente da recuperare" /> : (
+              <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }}>
+                <View style={{ width: "100%", maxWidth: 760 }}>
+                  {retakes.groups.map(g => (
+                    <Card key={g.studentId} style={{ marginBottom: 10 }}>
+                      <Text style={s.itemTitle}>{g.lastName} {g.firstName}</Text>
+                      {g.exams.map(e => (
+                        <View key={e.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 6 }}>
+                          <Text style={{ color: C.text, flex: 1 }} numberOfLines={1}>{e.name}{csLabel(e.classSubjectId) ? ` · ${csLabel(e.classSubjectId)}` : ""}</Text>
+                          <StatusChip label={EXAM_STATUS_LABEL[e.status] || e.status} tone={EXAM_TONE[e.status]} />
+                        </View>
+                      ))}
+                    </Card>
+                  ))}
+                </View>
+              </ScrollView>
+            )}
+          </View>
+        </Modal>
+      )}
       <TestBuilder visible={editing && !!draft} contextLabel={draft?.examId ? "Modifica della bozza" : "Nuovo esame"} draft={draft} env={env}
         onChange={updateDraft} onSave={save} saving={saving} onClose={() => setEditing(false)} onDiscard={draft?.examId ? () => { updateDraft(null); setEditing(false); } : discardDraft} />
     </View>

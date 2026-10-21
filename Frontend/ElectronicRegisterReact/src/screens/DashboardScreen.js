@@ -18,6 +18,8 @@ import { getSubjects } from "../api/subjectService";
 import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
 import { getUsers } from "../api/userService";
+import { getMyClasses } from "../api/classService";
+import { getRetakeGroups } from "../api/examInsights";
 
 const toList = d => Array.isArray(d) ? d : d ? [d] : [];
 
@@ -66,6 +68,8 @@ export default function DashboardScreen({ navigate }) {
   const [subjects, setSubjects] = useState([]);
   const [exams, setExams] = useState(null);
   const [counts, setCounts] = useState({});
+  const [myClasses, setMyClasses] = useState(null);
+  const [retakeGroups, setRetakeGroups] = useState(null);
 
   // Ogni richiesta è indipendente: se una fallisce il riquadro resta vuoto, la home si apre comunque.
   useEffect(() => {
@@ -83,8 +87,18 @@ export default function DashboardScreen({ navigate }) {
       getTeachers(token).then(d => set(() => setCounts(c => ({ ...c, teachers: toList(d).length })))).catch(() => {});
       getUsers("", token).then(d => set(() => setCounts(c => ({ ...c, users: toList(d).length })))).catch(() => {});
     }
+    if (role === "teacher") getMyClasses(user?.teacherId, token).then(d => set(() => setMyClasses(toList(d)))).catch(() => set(() => setMyClasses([])));
     return () => { alive = false; };
-  }, [token, role, examApi]);
+  }, [token, role, examApi, user]);
+
+  // "Chi deve recuperare": richiede l'elenco delle consegne di ogni esame, quindi parte solo dopo che gli esami sono arrivati.
+  useEffect(() => {
+    if (role !== "teacher" && role !== "admin") return;
+    if (!exams) return;
+    let alive = true;
+    getRetakeGroups(examApi, exams).then(g => { if (alive) setRetakeGroups(g); }).catch(() => { if (alive) setRetakeGroups([]); });
+    return () => { alive = false; };
+  }, [role, exams, examApi]);
 
   const gradeItems = (grades?.items || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
   const recentGrades = gradeItems.slice(0, isDesktop ? 8 : 5);
@@ -96,6 +110,7 @@ export default function DashboardScreen({ navigate }) {
     .filter(e => ["draft", "published"].includes(fromEnum(e.status, EXAM_STATUS)) && parseUtc(e.availableUntil).getTime() >= now)
     .sort((a, b) => parseUtc(a.availableFrom) - parseUtc(b.availableFrom)).slice(0, isDesktop ? 8 : 5);
   const pendingTests = assigned.filter(a => a.canStart);
+  const doneExams = (exams || []).filter(e => fromEnum(e.status, EXAM_STATUS) === "closed");
 
   // Card delle sezioni: servono solo quando non c'è la sidebar (la tab bar mobile ha solo Home e Profilo)
   const nav = (icon, label, screen, dot) => ({ icon: <Ionicons name={icon} size={32} color={C.footer} />, label, screen, dot });
@@ -158,6 +173,20 @@ export default function DashboardScreen({ navigate }) {
     </Panel>
   );
 
+  const myClassesPanel = role === "teacher" && (
+    <Panel title="Le mie classi" onMore={() => navigate("myClasses")}>
+      {myClasses === null ? <Empty text="Caricamento…" /> : myClasses.length === 0 ? <Empty text="Nessuna classe assegnata" /> : myClasses.map(c => (
+        <TouchableOpacity key={c.id} onPress={() => navigate("myClasses")} style={[s.profileRow, { alignItems: "center" }]}>
+          <View style={{ flex: 1 }}>
+            <Text style={s.itemTitle}>{c.name}</Text>
+            <Text style={s.itemSub} numberOfLines={1}>{c.subjects.map(sb => sb.subjectName).join(", ") || "—"}</Text>
+          </View>
+          <Text style={{ color: C.textMuted, fontWeight: "600" }}>{c.students.length} studenti</Text>
+        </TouchableOpacity>
+      ))}
+    </Panel>
+  );
+
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       {!isDesktop && <View style={[s.dashHeader, { position: "relative" }]}>
@@ -186,9 +215,9 @@ export default function DashboardScreen({ navigate }) {
             <StatTile icon="library-outline" label="Materie" value={counts.subjects} onPress={() => navigate("subjects")} />
           </>}
           {role === "teacher" && <>
-            <StatTile icon="school-outline" label="Studenti" value={counts.students} onPress={() => navigate("students")} />
-            <StatTile icon="ribbon-outline" label="Voti inseriti" value={grades ? grades.totalCount : null} onPress={() => navigate("grades")} />
             <StatTile icon="document-text-outline" label="Esami in programma" value={exams ? upcomingExams.length : null} onPress={() => navigate("exams")} />
+            <StatTile icon="checkmark-done-outline" label="Esami fatti" value={exams ? doneExams.length : null} onPress={() => navigate("exams")} />
+            <StatTile icon="alert-circle-outline" label="Da recuperare" value={retakeGroups ? retakeGroups.length : null} onPress={() => navigate("exams")} />
             <StatTile icon="library-outline" label="Materie" value={counts.subjects} onPress={() => navigate("subjects")} />
           </>}
           {role === "admin" && <>
@@ -203,6 +232,7 @@ export default function DashboardScreen({ navigate }) {
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
           {role !== "admin" && gradesPanel}
           {examsPanel}
+          {myClassesPanel}
         </View>
 
         {/* Sezioni (solo senza sidebar) */}
