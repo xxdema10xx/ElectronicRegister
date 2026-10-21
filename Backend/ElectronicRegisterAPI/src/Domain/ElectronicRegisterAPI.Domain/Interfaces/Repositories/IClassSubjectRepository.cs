@@ -19,4 +19,6 @@ public interface IClassSubjectRepository
     Task<bool> ExistsForTeacherAsync(Guid teacherId);
 
     Task<bool> ExistsForSubjectAsync(Guid subjectId);
+
+    Task UpdateTotalHoursAsync(Guid classSubjectId, int totalHours);
 }

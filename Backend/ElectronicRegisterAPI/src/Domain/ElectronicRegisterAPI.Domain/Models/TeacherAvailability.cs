@@ -1,4 +1,5 @@
-﻿
+﻿using ElectronicRegisterAPI.Domain.Enums;
+
 namespace ElectronicRegisterAPI.Domain.Models
 {
     public class TeacherAvailability
@@ -10,5 +11,7 @@ namespace ElectronicRegisterAPI.Domain.Models
         public DateTime AvailableFrom { get; set; }
         public DateTime AvailableTo { get; set; }
         public DateOnly AvailableDate { get; set; }
+        public AvailabilityStatus Status { get; set; }
+        public int Hours => (int)(AvailableTo - AvailableFrom).TotalHours;
     }
 }
