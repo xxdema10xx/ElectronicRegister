@@ -93,6 +93,7 @@ public static class Mt3aOwnershipMigration
         var known = OwnedTables.Concat(["audit_event", "user", "institution", "campus", "institution_membership", "institution_membership_role", "institution_student_profile", "institution_teacher_profile", "mt3a_legacy_scope"]).ToHashSet(StringComparer.Ordinal);
         known.UnionWith(await Mt4CourseStructureIntegrity.ValidateIfPresentAsync(c, tx));
         known.UnionWith(await Mt5bSecurityStateIntegrity.ValidateIfPresentAsync(c, tx));
+        known.UnionWith(await Mt5dMembershipEventIntegrity.ValidateIfPresentAsync(c, tx));
         await using (var tables = new MySqlCommand("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()",c,tx))
         {
             await using var reader=await tables.ExecuteReaderAsync();
@@ -225,7 +226,10 @@ public static class Mt3aOwnershipMigration
         foreach (var arg in new[] { "--host=" + b.Server, "--port=" + b.Port, "--user=" + b.UserID, "--single-transaction", "--skip-add-drop-table", "--result-file=" + path }) start.ArgumentList.Add(arg);
         // XAMPP's MariaDB client does not support the MySQL 8 dump flags. Explicit
         // operator opt-in only; backup target, completeness and digest checks remain identical.
-        if (!string.Equals(Environment.GetEnvironmentVariable("MYSQLDUMP_FLAVOR"), "MariaDB", StringComparison.Ordinal))
+        var dumpFlavor = Environment.GetEnvironmentVariable("MYSQLDUMP_FLAVOR");
+        if (string.Equals(dumpFlavor, "MySQL57", StringComparison.Ordinal))
+            start.ArgumentList.Add("--set-gtid-purged=OFF");
+        else if (!string.Equals(dumpFlavor, "MariaDB", StringComparison.Ordinal))
             foreach (var arg in new[] { "--column-statistics=0", "--no-tablespaces", "--set-gtid-purged=OFF" }) start.ArgumentList.Add(arg);
         start.ArgumentList.Add(database);
         // The open connector hides passwords by default. Only the original env

@@ -6,8 +6,17 @@ using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 namespace ElectronicRegisterAPI.Application.Managers;
 
 internal sealed class InstitutionMembershipAdminManager(InstitutionSchoolAuthorization authorization,
-    IInstitutionMembershipDirectoryRepository repository) : IInstitutionMembershipAdminManager
+    IInstitutionMembershipDirectoryRepository repository,
+    IInstitutionMembershipMutationRepository mutations) : IInstitutionMembershipAdminManager
 {
+    public async Task<ElectronicRegisterAPI.Domain.Models.MembershipMutationResult> MutateAsync(
+        ElectronicRegisterAPI.Domain.Models.MembershipMutation request, CancellationToken ct = default)
+    {
+        var actor=await authorization.AdminAsync(ct);
+        ElectronicRegisterAPI.Domain.Models.MembershipMutationRules.Validate(request);
+        // Repository repeats authorization under the institution mutex, including replay.
+        return await mutations.MutateAsync(actor,request,ct);
+    }
     public async Task<IReadOnlyList<InstitutionMemberDto>> ListAsync(int pageNumber = 1, int pageSize = 20,
         string? status = null, string? role = null, string? search = null, CancellationToken ct = default)
     {

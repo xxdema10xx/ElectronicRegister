@@ -53,7 +53,8 @@ public sealed class Mt3ProfileTests(IntegrationFixture fixture) : IAsyncLifetime
         InstitutionMembershipRoles=new List<E.InstitutionMembershipRole>{new(){MembershipId=id,Role="Teacher"},new(){MembershipId=id,Role="Student"}}};
     private async Task<Guid> Resolve(bool teacher,bool b=false,TenantContext? context=null)
     { using var scope=fixture.ScopeFactory.CreateScope(); var resolver=scope.ServiceProvider.GetRequiredService<IInstitutionProfileResolver>();
-      return teacher ? await resolver.RequireTeacherAsync(context??Context(b)) : await resolver.RequireStudentAsync(context??Context(b)); }
+      var tenant=await PersistedTestTenant.ReadAsync(scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>(),context??Context(b));
+      return teacher ? await resolver.RequireTeacherAsync(tenant) : await resolver.RequireStudentAsync(tenant); }
 
     [Fact]
     public async Task GlobalIdentityResolvesDifferentProfilesAndBothRolesInEachFoundation()

@@ -1,5 +1,27 @@
 # MT-5B — contratto di sicurezza delle mutazioni IAM
 
+## Implementazione MT-5B-D (backend interno, nessuna nuova route)
+
+Il manager amministrativo espone ora `MutateAsync(MembershipMutation)` per aggiunta/
+rimozione ruolo e sospensione/riattivazione. Il protocollo sotto è implementato
+dal repository IAM separato dai writer tecnici Provisioning. ExpectedRevision è
+esattamente la security generation persistita: lettura separata sotto lock,
+avanzamento dei soli trigger, nessun secondo contatore C#. No-op, revision obsolete
+e riutilizzi conflittuali di EventId producono MembershipConflictException.
+Pending/Left non sono onboarding o rejoin impliciti. Tutte le automutazioni sono negate.
+
+Il ledger `institution_membership_event` conserva intento SHA256, attore verificato,
+target owner-scoped, snapshot minimi e revision prima/dopo. Il replay rivalida sempre
+l'attore corrente e lo stato di sicurezza del target, poi restituisce il risultato
+originale. Mutazione, generation e audit condividono commit/rollback. FK composite,
+immutabilità SQL, snapshot con ruoli stringa piatti e purge limitato alle sole fixture
+completano la persistenza additiva. Nessun evento tecnico/storico inventato.
+
+Le sezioni «storico/proposto/futuro» seguenti descrivono i checkpoint precedenti;
+non rappresentano più lo stato del writer interno. Le route amministrative scriventi
+restano assenti e chiuse. Migrazioni in `migrations/mt5/iam-d/`; risultati effettivi
+nel report `tests/Integration/MULTITENANCY_MT5B_D_IMPLEMENTATION_REPORT.md`.
+
 ## Checkpoint B — persistenza pronta, workflow IAM ancora chiuso
 
 **MT-5B PERSISTENCE READY.** Contratto e persistenza verificati su MAMP MySQL5.7.24,
@@ -66,20 +88,29 @@ storico sconosciuto non viene ricostruito. Non si usa course_administration_even
 L'autorizzazione tecnica non deriva dal ruolo globale admin o da un booleano inviato
 dal client; i metadati di processo non conferiscono accesso didattico globale.
 
-### Integrazione JWT rinviata, migrazione fail-closed
+### Integrazione JWT — MT-5B-C
 
-Login globale e selection ticket restano invariati. Il futuro SelectAsync leggera
-generation/ruoli/membership coerenti prima di emettere InstitutionAccess. Token con
-generation vecchia verra negato anche dopo ripristino esatto di stato/ruoli; modifica A
-non cambia generation B dello stesso User. Nessuna cache di revoche.
+Login globale e selection ticket restano separati dall'accesso istituzionale.
+SelectAsync legge generation nullable, ruoli, membership, User e Institution in
+un solo statement/snapshot AsNoTracking/AsSingleQuery. Missing-state non e zero:
+impedisce selezione ed emissione. InstitutionAccess contiene obbligatoriamente
+`security_generation`, numero JSON Int64 canonico non negativo, senza array,
+duplicati, stringhe numeriche o fallback. Il ticket di selezione non puo contenerlo.
 
-TenantContext e parser dovranno richiedere una sola generation Int64 non negativa,
-confrontarla con il persistito e negare missing-state. Attivazione coordinata su tutti
-i nodi, scritture ancora chiuse finche esistono validator vecchi: i token gia emessi
-senza generation saranno rifiutati e richiederanno una nuova selezione legittima,
-senza accettazione permissiva v1 o fallback legacy. Nessun cutover di questo tipo e
-stato eseguito. Oggi i JWT non leggono la generation: il rischio documentato MT5A
-non viene dichiarato risolto finche questa integrazione non viene certificata.
+Il parser e l'authorization handler richiedono generation e identita complete;
+ogni richiesta protetta confronta generation, identita e set ruoli con il persistito,
+oltre agli stati attivi di membership/Institution. Generation vecchie sono negate
+anche dopo ripristino di ruoli/status della membership. Mutazioni A non revocano B
+dello stesso User. Nessuna cache di revoche, privilegio da User.Role globale o
+fallback legacy. Un TenantContext interno privo di generation non puo autorizzare
+o emettere un JWT; null resta distinto da zero.
+
+I JWT precedenti senza claim vengono rifiutati: occorre una nuova selezione
+legittima. Un eventuale deployment richiede attivazione coordinata su tutti i nodi,
+senza validator vecchi o accettazione permissiva v1. Non viene effettuato un
+deployment esterno qui. Writer amministrativi, LastAdmin e audit IAM restano
+chiusi. Evidenze di implementazione e test reali nel
+[report MT-5B-C](../../tests/Integration/MULTITENANCY_MT5B_C_IMPLEMENTATION_REPORT.md).
 
 ## Storico checkpoint A — analisi precedente alla persistenza
 

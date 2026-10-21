@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Globalization;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -95,7 +96,7 @@ public static class InstitutionAuthentication
                         throw new SecurityTokenException();
                     if (selection)
                     {
-                        if (principal.HasClaim(c => c.Type is InstitutionTokenContract.Institution or InstitutionTokenContract.Membership or InstitutionTokenContract.Role))
+                        if (principal.HasClaim(c => c.Type is InstitutionTokenContract.Institution or InstitutionTokenContract.Membership or InstitutionTokenContract.Role or InstitutionTokenContract.SecurityGeneration))
                             throw new SecurityTokenException();
                     }
                     else _ = ParseTenant(principal);
@@ -103,6 +104,10 @@ public static class InstitutionAuthentication
                     var raw = context.Request.Headers.Authorization.ToString()["Bearer ".Length..];
                     using var payload = JsonDocument.Parse(Base64UrlEncoder.DecodeBytes(raw.Split('.')[1]));
                     if (payload.RootElement.EnumerateObject().GroupBy(p => p.Name).Any(g => g.Count() != 1))
+                        throw new SecurityTokenException();
+                    if (!selection && (!payload.RootElement.TryGetProperty(InstitutionTokenContract.SecurityGeneration, out var generation) ||
+                        generation.ValueKind != JsonValueKind.Number || !generation.TryGetInt64(out var value) || value < 0 ||
+                        generation.GetRawText() != value.ToString(CultureInfo.InvariantCulture)))
                         throw new SecurityTokenException();
                 }
                 catch (Exception ex) when (ex is ArgumentException or SecurityTokenException or JsonException or IndexOutOfRangeException)
@@ -130,12 +135,16 @@ public static class InstitutionAuthentication
 
     internal static TenantContext ParseTenant(ClaimsPrincipal principal)
     {
+        var generationText = One(principal, InstitutionTokenContract.SecurityGeneration);
+        if (!long.TryParse(generationText, NumberStyles.None, CultureInfo.InvariantCulture, out var generation) ||
+            generation < 0 || generationText != generation.ToString(CultureInfo.InvariantCulture))
+            throw new SecurityTokenException();
         var raw = principal.FindAll(InstitutionTokenContract.Role).Select(c => c.Value).ToArray();
         if (raw.Length == 0 || raw.Distinct().Count() != raw.Length) throw new SecurityTokenException();
         var roles = raw.Select(v => Enum.TryParse<InstitutionRole>(v, out var role) && Enum.IsDefined(role) && role.ToString() == v
             ? role : throw new SecurityTokenException()).ToArray();
         return new(GuidClaim(principal, "sub"), GuidClaim(principal, InstitutionTokenContract.Institution),
-            GuidClaim(principal, InstitutionTokenContract.Membership), roles);
+            GuidClaim(principal, InstitutionTokenContract.Membership), roles, generation);
     }
 }
 

@@ -2382,7 +2382,8 @@
       "IUserRepository",
       "IMembershipAuthorizationRepository",
       "IInstitutionProfileRepository",
-      "IInstitutionMembershipDirectoryRepository"
+      "IInstitutionMembershipDirectoryRepository",
+      "IInstitutionMembershipMutationRepository"
     ],
     "dataAccess": "legacy global graph or development schema; gated",
     "tenantScope": "no institutional school access",
@@ -2406,7 +2407,8 @@
       "IUserRepository",
       "IMembershipAuthorizationRepository",
       "IInstitutionProfileRepository",
-      "IInstitutionMembershipDirectoryRepository"
+      "IInstitutionMembershipDirectoryRepository",
+      "IInstitutionMembershipMutationRepository"
     ],
     "dataAccess": "legacy global graph or development schema; gated",
     "tenantScope": "no institutional school access",

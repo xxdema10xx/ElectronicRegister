@@ -55,7 +55,10 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             "--Identity:Legacy:Enabled=true", "--Identity:Legacy:InstitutionId=71000000-0000-0000-0000-000000000001",
             "--Identity:Legacy:AllowUnbackfilledAccounts=true",
             "--Identity:Legacy:UserIds:0=" + id,
-            "--Logging:LogLevel:Default=Information"
+            "--Logging:LogLevel:Default=Information",
+            // Match the other in-process Program fixtures: Windows EventLog is
+            // not writable by the test account and must not mask HTTP errors.
+            "--Logging:EventLog:LogLevel:Default=None"
         };
         // Execute the actual assembly entry point. No replacement host, registration, worker or middleware.
         var run = Task.Run(async () =>
@@ -114,7 +117,8 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             await CheckEndpointRoleGatesAsync(host, client, id);
             var error = await client.PostAsync($"/api/Exam/{Guid.NewGuid()}/close", null);
-            Assert.Equal(HttpStatusCode.NotFound, error.StatusCode);
+            Assert.True(error.StatusCode == HttpStatusCode.NotFound,
+                "Expected NotFound; actual " + error.StatusCode + "; " + string.Join("\n", logs.Errors));
             var problem = await error.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
             Assert.Equal(404, problem.GetProperty("status").GetInt32());
             Assert.False(problem.TryGetProperty("stackTrace", out _));
@@ -222,7 +226,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
             public bool IsEnabled(LogLevel level) => level >= LogLevel.Error;
             public void Log<TState>(LogLevel level, EventId eventId, TState state, Exception? error, Func<TState, Exception?, string> formatter)
-            { if (level >= LogLevel.Error) errors.Enqueue(category + ": " + formatter(state, error)); }
+            { if (level >= LogLevel.Error) errors.Enqueue(category + ": " + formatter(state, error) + "; " + error); }
         }
     }
 }

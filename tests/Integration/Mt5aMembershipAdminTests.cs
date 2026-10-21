@@ -260,7 +260,8 @@ public sealed class Mt5aMembershipAdminTests : IAsyncLifetime
         await Expect(await Request(token: legacy), HttpStatusCode.Unauthorized);
         using var scope = _host.Host.Services.CreateScope();
         var tokens = scope.ServiceProvider.GetRequiredService<IInstitutionTokens>();
-        var suspended = tokens.Access(new(_users["suspended"], _a, Member("suspended"), new[] { ElectronicRegisterAPI.Domain.Enums.InstitutionRole.InstitutionAdmin }));
+        var suspended = tokens.Access(await PersistedTestTenant.ReadAsync(scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>(),
+            new(_users["suspended"], _a, Member("suspended"), new[] { ElectronicRegisterAPI.Domain.Enums.InstitutionRole.InstitutionAdmin })));
         await Expect(await Request(token: suspended), HttpStatusCode.Forbidden);
         foreach (var path in new[] { "/api/Users", "/api/Users/count", "/api/institution/users" })
             Assert.Contains((await Request(path, token)).StatusCode, new[] { HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden, HttpStatusCode.NotFound });

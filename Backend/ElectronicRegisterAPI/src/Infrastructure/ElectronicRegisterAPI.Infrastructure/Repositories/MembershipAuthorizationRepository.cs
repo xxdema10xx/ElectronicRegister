@@ -22,10 +22,14 @@ internal sealed class MembershipAuthorizationRepository(ElectronicRegisterContex
                 (!institutionId.HasValue || m.InstitutionId == institutionId.Value) &&
                 (!membershipId.HasValue || m.Id == membershipId.Value))
             .Select(m => new { m.Id, m.UserId, m.InstitutionId, m.Status, Name = m.Institution.Name,
-                InstitutionStatus = m.Institution.Status, Roles = m.InstitutionMembershipRoles.Select(r => r.Role).ToList() })
+                InstitutionStatus = m.Institution.Status,
+                Generation = db.InstitutionMembershipSecurityStates
+                    .Where(s => s.InstitutionId == m.InstitutionId && s.MembershipId == m.Id)
+                    .Select(s => (long?)s.SecurityGeneration).FirstOrDefault(),
+                Roles = m.InstitutionMembershipRoles.Select(r => r.Role).ToList() })
             .ToListAsync(ct);
         return rows.Select(m => new MembershipAuthorization(m.UserId, m.InstitutionId, m.Id, m.Name,
             Enum.Parse<InstitutionStatus>(m.InstitutionStatus, true), Enum.Parse<MembershipStatus>(m.Status, true),
-            m.Roles.Select(r => Enum.Parse<InstitutionRole>(r)).ToArray())).ToArray();
+            m.Roles.Select(r => Enum.Parse<InstitutionRole>(r)).ToArray(), m.Generation)).ToArray();
     }
 }

@@ -38,7 +38,17 @@ public sealed class Mt3bSchoolTests(IntegrationFixture fixture) : IAsyncLifetime
     private Guid Id(string kind,bool b=false) { if(!_ids.TryGetValue(kind,out var ids))_ids[kind]=ids=new[]{Guid.NewGuid(),Guid.NewGuid()};return ids[b?1:0]; }
     private TenantContext Context(string role="admin",bool b=false) => new(role=="teacher"?_teacherUser:role=="student"?_studentUser:_adminUser,b?_b:_a,Id(role+"-membership",b),new[]{role=="teacher"?InstitutionRole.Teacher:role=="student"?InstitutionRole.Student:InstitutionRole.InstitutionAdmin});
     private async Task<T> Call<TService,T>(TenantContext? tenant,Func<TService,Task<T>> action) where TService:notnull
-    { using var scope=_provider.CreateScope();if(tenant!=null)scope.ServiceProvider.GetRequiredService<TestCurrent>().Set(tenant);return await action(scope.ServiceProvider.GetRequiredService<TService>()); }
+    {
+        using var scope=_provider.CreateScope();
+        if(tenant!=null)
+        {
+            // Token issuance/setup precedes the measured service operation.
+            using var identityScope=fixture.ScopeFactory.CreateScope();
+            var verified=await PersistedTestTenant.ReadAsync(identityScope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>(),tenant);
+            scope.ServiceProvider.GetRequiredService<TestCurrent>().Set(verified);
+        }
+        return await action(scope.ServiceProvider.GetRequiredService<TService>());
+    }
     private async Task Call<TService>(TenantContext? t,Func<TService,Task> action) where TService:notnull
     { await Call<TService,bool>(t,async service=>{await action(service);return true;}); }
     private async Task Db(Func<ElectronicRegisterContext,Task> action)
@@ -327,7 +337,7 @@ public sealed class Mt3bSchoolTests(IntegrationFixture fixture) : IAsyncLifetime
         _sql.Clear();await Call<IInstitutionSubjectManager,List<SubjectDto>>(Context("student"),m=>m.GetAllAsync());Assert.InRange(_sql.Commands.Count,1,4);Assert.Contains("class_id",_sql.Commands.Last().Sql);Assert.Contains("institution_id",_sql.Commands.Last().Sql);
         var directory=Path.Combine(AppContext.BaseDirectory,"..","..","..","..","..","Backend","ElectronicRegisterAPI","mt3b-evidence");Directory.CreateDirectory(directory);
         await File.WriteAllTextAsync(Path.Combine(directory,"generated-subject-query.sql.txt"),_sql.Commands.Last().Sql);
-        using var scope=_provider.CreateScope();scope.ServiceProvider.GetRequiredService<TestCurrent>().Set(Context());
+        using var scope=_provider.CreateScope();scope.ServiceProvider.GetRequiredService<TestCurrent>().Set(await PersistedTestTenant.ReadAsync(scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>(),Context()));
         await scope.ServiceProvider.GetRequiredService<IInstitutionTeacherManager>().GetAllAsync();Assert.Empty(scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().ChangeTracker.Entries());
         Assert.Equal("StudentManager",scope.ServiceProvider.GetRequiredService<IStudentManager>().GetType().Name);
     }

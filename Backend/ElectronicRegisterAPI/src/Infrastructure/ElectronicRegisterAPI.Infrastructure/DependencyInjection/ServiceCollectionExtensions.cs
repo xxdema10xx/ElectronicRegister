@@ -36,6 +36,7 @@ public static class ServiceCollectionExtensions
         services.Configure<MicrosoftIdentityOptions>(configuration.GetSection("Identity:Microsoft"));
         services.AddScoped<IMembershipAuthorizationRepository, MembershipAuthorizationRepository>();
         services.AddScoped<IInstitutionMembershipDirectoryRepository, InstitutionMembershipDirectoryRepository>();
+        services.AddScoped<IInstitutionMembershipMutationRepository, InstitutionMembershipMutationRepository>();
         services.AddScoped<IInstitutionMembershipSecurityStateRepository, InstitutionMembershipSecurityStateRepository>();
         services.AddScoped<IInstitutionProfileRepository, InstitutionProfileRepository>();
         services.AddScoped<InstitutionSchoolQueries>();

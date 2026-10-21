@@ -247,6 +247,98 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
         Assert.Equal(2, await Generation(_a, _ma)); Assert.Equal(0, await Generation(_b, _mb));
     }
 
+    [Theory]
+    [InlineData("owner")][InlineData("membership")][InlineData("negative")]
+    public async Task Sql_SidecarIdentityAndNegativeGenerationAreRejected(string kind)
+    {
+        var sql = kind switch
+        {
+            "owner" => $"UPDATE {State} SET institution_id=@b WHERE membership_id=@m",
+            "membership" => $"UPDATE {State} SET membership_id=@other WHERE membership_id=@m",
+            _ => $"UPDATE {State} SET security_generation=-1 WHERE membership_id=@m"
+        };
+        Assert.Equal(1644, (await Assert.ThrowsAsync<MySqlException>(() =>
+            Exec(sql, ("@b", _b), ("@m", _ma), ("@other", Guid.NewGuid())))).Number);
+        Assert.Equal(0, await Generation(_a, _ma));
+        Assert.Equal(0, await Generation(_b, _mb));
+    }
+
+    [Theory]
+    [InlineData("status-noop")][InlineData("role-noop")][InlineData("role-delete")]
+    public async Task Sql_MissingStateRejectsNoopsAndRoleDelete(string kind)
+    {
+        await Add("Teacher");
+        await using var c = await Open(); await using var tx = await c.BeginTransactionAsync();
+        await using (var remove = Cmd(c, $"SET @er_mt5b_fixture_owners=@o; DELETE FROM {State} WHERE membership_id=@m; SET @er_mt5b_fixture_owners=NULL", tx, ("@o", _a.ToString()), ("@m", _ma)))
+            await remove.ExecuteNonQueryAsync();
+        var sql = kind switch
+        {
+            "status-noop" => $"UPDATE {Members} SET status=status WHERE id=@m",
+            "role-noop" => $"UPDATE {Roles} SET role=role WHERE membership_id=@m",
+            _ => $"DELETE FROM {Roles} WHERE membership_id=@m"
+        };
+        await using (var mutation = Cmd(c, sql, tx, ("@m", _ma)))
+            Assert.Equal(1644, (await Assert.ThrowsAsync<MySqlException>(async () => { await mutation.ExecuteNonQueryAsync(); })).Number);
+        await tx.RollbackAsync();
+        Assert.Equal(1, await Generation(_a, _ma));
+    }
+
+    [Theory]
+    [InlineData(-1L)][InlineData(1L)]
+    public async Task Sql_NewStateRejectsAnyNonzeroInitialGeneration(long generation)
+    {
+        await using var c = await Open(); await using var tx = await c.BeginTransactionAsync();
+        await using (var remove = Cmd(c, $"SET @er_mt5b_fixture_owners=@o; DELETE FROM {State} WHERE membership_id=@m; SET @er_mt5b_fixture_owners=NULL", tx, ("@o", _a.ToString()), ("@m", _ma)))
+            await remove.ExecuteNonQueryAsync();
+        await using (var insert = Cmd(c, $"INSERT INTO {State}(institution_id,membership_id,security_generation) VALUES(@o,@m,@g)", tx, ("@o", _a), ("@m", _ma), ("@g", generation)))
+            Assert.Equal(1644, (await Assert.ThrowsAsync<MySqlException>(async () => { await insert.ExecuteNonQueryAsync(); })).Number);
+        await tx.RollbackAsync();
+        Assert.Equal(0, await Generation(_a, _ma));
+    }
+
+    [Fact]
+    public async Task Sql_SuspendedTimestampAloneDoesNotAdvanceGeneration()
+    {
+        await Exec($"UPDATE {Members} SET suspended_at=@time WHERE id=@m", ("@time", DateTime.UtcNow), ("@m", _ma));
+        Assert.Equal(0, await Generation(_a, _ma));
+        Assert.Equal(0, await Generation(_b, _mb));
+    }
+
+    [Fact]
+    public async Task Sql_OverflowRejectsRoleDeleteWithoutLosingRole()
+    {
+        await Add("Teacher");
+        await using var c = await Open(); await using var tx = await c.BeginTransactionAsync();
+        await using (var advance = Cmd(c, $"UPDATE {State} SET security_generation=9223372036854775807 WHERE membership_id=@m", tx, ("@m", _ma)))
+            await advance.ExecuteNonQueryAsync();
+        await using (var remove = Cmd(c, $"DELETE FROM {Roles} WHERE membership_id=@m", tx, ("@m", _ma)))
+            Assert.Equal(1644, (await Assert.ThrowsAsync<MySqlException>(async () => { await remove.ExecuteNonQueryAsync(); })).Number);
+        await using (var read = Cmd(c, $"SELECT COUNT(*) FROM {Roles} WHERE membership_id=@m AND role='Teacher'", tx, ("@m", _ma)))
+            Assert.Equal(1L, Convert.ToInt64(await read.ExecuteScalarAsync()));
+        await tx.RollbackAsync();
+        Assert.Equal(1, await Generation(_a, _ma));
+    }
+
+    [Fact]
+    public async Task Sql_FixtureGuardRequiresExplicitOwnerAndSyntheticCodeAndExcludesHolding()
+    {
+        await using var c = await Open(); await using var tx = await c.BeginTransactionAsync();
+        await using (var owners = Cmd(c, "SET @er_mt5b_fixture_owners=@b", tx, ("@b", _b.ToString())))
+            await owners.ExecuteNonQueryAsync();
+        await using (var remove = Cmd(c, $"DELETE FROM {State} WHERE membership_id=@m", tx, ("@m", _ma)))
+            Assert.Equal(1644, (await Assert.ThrowsAsync<MySqlException>(async () => { await remove.ExecuteNonQueryAsync(); })).Number);
+        await using (var setup = Cmd(c, "SET @er_mt5b_fixture_owners=@a; UPDATE institution SET code=@code WHERE id=@a", tx, ("@a", _a.ToString()), ("@code", "UNLISTED_" + _a.ToString("N"))))
+            await setup.ExecuteNonQueryAsync();
+        await using (var remove = Cmd(c, $"DELETE FROM {State} WHERE membership_id=@m", tx, ("@m", _ma)))
+            Assert.Equal(1644, (await Assert.ThrowsAsync<MySqlException>(async () => { await remove.ExecuteNonQueryAsync(); })).Number);
+        // Observe the real holding only. Never use its data as a mutation fixture.
+        await using (var holding = Cmd(c, "SELECT COUNT(*) FROM institution WHERE code='MT3A_LEGACY_TEST' AND NOT(BINARY code REGEXP '^MT(1|1_REHEARSAL|2|3|3_REHEARSAL|3A|3B|3C|3D|4|4B|5A|5BP)_[0-9a-fA-F]{32}$')", tx))
+            Assert.Equal(1L, Convert.ToInt64(await holding.ExecuteScalarAsync()));
+        await tx.RollbackAsync();
+        await using var clear = Cmd(c, "SET @er_mt5b_fixture_owners=NULL"); await clear.ExecuteNonQueryAsync();
+        Assert.Equal(0, await Generation(_a, _ma));
+    }
+
     private async Task Services(Func<IServiceProvider, Task> action)
     {
         var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string,string?>

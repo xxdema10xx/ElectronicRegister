@@ -41,7 +41,8 @@ internal sealed class InstitutionAuthManager(IUserRepository users, IPasswordHas
         if (input.RequestedRole is not null && (!Enum.TryParse<InstitutionRole>(input.RequestedRole, out var role) ||
             !Enum.IsDefined(role) || role.ToString() != input.RequestedRole || !membership.Roles.Contains(role)))
             throw new UnauthorizedAccessException("Contesto non autorizzato.");
-        return new(tokens.Access(new(userId, membership.InstitutionId, membership.MembershipId, membership.Roles)), 900);
+        return new(tokens.Access(new(userId, membership.InstitutionId, membership.MembershipId,
+            membership.Roles, membership.SecurityGeneration)), 900);
     }
 
     public async Task<TenantContext?> AuthorizeAsync(TenantContext token, CancellationToken cancellationToken)
