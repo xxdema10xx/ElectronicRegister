@@ -11,13 +11,12 @@ import { useStudentExams } from "../data/studentExams";
 import { useExamApi } from "../hooks/useExamApi";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
 import { useLayout } from "../hooks/useLayout";
-import { getGradesPage } from "../api/gradeService";
 import { getSubjects } from "../api/subjectService";
 import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
 import { getUsers } from "../api/userService";
 import { getMyClasses } from "../api/classService";
-import { getExamInsights } from "../api/examInsights";
+import { getExamInsights, buildStudentBooklet } from "../api/examInsights";
 import { getClassesForPicker, getClassSchedule, getTeacherSchedule, getStudentSchedule, addLesson, updateLesson, deleteLesson } from "../api/lessonService";
 import LessonCalendar from "../components/LessonCalendar";
 import SelectField from "../components/SelectField";
@@ -62,11 +61,10 @@ const Empty = ({ text }) => <Text style={[s.itemSub, { paddingVertical: 8 }]}>{t
 export default function DashboardScreen({ navigate }) {
   const { token, user } = useAuth();
   const role = user?.role?.toLowerCase();
-  const { assigned, unseenCount, isSeen } = useStudentExams();
+  const { assigned, loaded: examsLoaded, unseenCount, isSeen } = useStudentExams();
   const examApi = useExamApi();
   const { isDesktop, isWide } = useLayout();
 
-  const [grades, setGrades] = useState(null);       // { items, totalCount }
   const [subjects, setSubjects] = useState([]);
   const [exams, setExams] = useState(null);
   const [counts, setCounts] = useState({});
@@ -82,9 +80,6 @@ export default function DashboardScreen({ navigate }) {
     let alive = true;
     const set = fn => { if (alive) fn(); };
     getSubjects(undefined, token).then(d => set(() => { setSubjects(toList(d)); setCounts(c => ({ ...c, subjects: toList(d).length })); })).catch(() => {});
-    if (role !== "admin") getGradesPage({ pageNumber: 1, pageSize: 100 }, token)
-      .then(d => set(() => setGrades({ items: toList(d?.items), totalCount: d?.totalCount ?? toList(d?.items).length })))
-      .catch(() => set(() => setGrades({ items: [], totalCount: 0 })));
     if (role !== "student") {
       examApi.listExams().then(d => set(() => setExams(toList(d)))).catch(() => set(() => setExams([])));
       getStudents(undefined, token).then(d => set(() => setCounts(c => ({ ...c, students: toList(d).length })))).catch(() => {});
@@ -129,8 +124,12 @@ export default function DashboardScreen({ navigate }) {
   function editSlot(id, patch) { updateLesson(id, patch); reloadLessons(); }
   function removeSlot(id) { deleteLesson(id); reloadLessons(); }
 
-  const gradeItems = (grades?.items || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
-  const average = gradeItems.length ? (gradeItems.reduce((sum, g) => sum + Number(g.value), 0) / gradeItems.length).toFixed(1) : "—";
+  // Media voti e "da recuperare": dal libretto (esiti degli esami), non dai voti del registro — è la
+  // stessa fonte che lo studente vede in "Voti", niente numeri che non tornano tra le due schermate.
+  const studentBooklet = buildStudentBooklet(assigned);
+  const bookletGraded = studentBooklet.filter(b => b.r.showGrade);
+  const average = bookletGraded.length ? (bookletGraded.reduce((sum, b) => sum + Number(b.r.grade), 0) / bookletGraded.length).toFixed(1) : "—";
+  const myRetakes = studentBooklet.filter(b => b.r.status === "failed_auto" || (b.r.showGrade && b.r.passed === false));
 
   const now = Date.now();
   const upcomingExams = (exams || [])
@@ -238,10 +237,9 @@ export default function DashboardScreen({ navigate }) {
         {/* Numeri chiave */}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
           {role === "student" && <>
-            <StatTile icon="stats-chart-outline" label="Media voti" value={grades ? average : null} onPress={() => navigate("grades")} />
-            <StatTile icon="ribbon-outline" label="Voti ricevuti" value={grades ? grades.totalCount : null} onPress={() => navigate("grades")} />
-            <StatTile icon="document-text-outline" label="Esami da svolgere" value={pendingTests.length} onPress={() => navigate("exams")} />
-            <StatTile icon="library-outline" label="Materie" value={counts.subjects} onPress={() => navigate("subjects")} />
+            <StatTile icon="document-text-outline" label="Esami da svolgere" hint="Pubblicati, da completare entro la scadenza" value={pendingTests.length} onPress={() => navigate("exams")} />
+            <StatTile icon="alert-circle-outline" label="Da recuperare" hint="Esami non superati, in attesa di recupero" value={examsLoaded ? myRetakes.length : null} onPress={() => navigate("exams")} />
+            <StatTile icon="stats-chart-outline" label="Media voti" hint="Calcolata sugli esami già valutati" value={examsLoaded ? average : null} onPress={() => navigate("grades")} />
           </>}
           {role === "teacher" && <>
             <StatTile icon="document-text-outline" label="Esami in programma" hint="Pubblicati, ancora aperti agli studenti" value={exams ? upcomingExams.length : null} onPress={() => navigate("exams")} />

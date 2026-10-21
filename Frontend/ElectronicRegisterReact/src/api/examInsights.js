@@ -1,7 +1,22 @@
 // src/api/examInsights.js
 // Aggregazioni sugli esami che richiedono una chiamata per esame (elenco consegne): isolate qui per
 // essere riusate sia dalla home che dall'elenco esami, senza duplicare la logica.
-import { EXAM_STATUS, SUBMISSION_STATUS, fromEnum } from "./examContract";
+import { EXAM_STATUS, SUBMISSION_STATUS, fromEnum, resultView } from "./examContract";
+import { getRun } from "../data/studentExams";
+
+// Libretto dello studente: un esame (appello) per riga, con l'esito calcolato come lo vede lui
+// (voto mascherato finché la correzione non è conclusa). Usato sia dalla schermata "Voti" sia dalla
+// home, così i due restano sempre coerenti tra loro.
+export function buildStudentBooklet(assigned) {
+  return assigned
+    .filter(a => !!a.submissionStatus)
+    .map(a => {
+      const run = getRun(a.id);
+      const r = resultView(run?.result || { status: a.submissionStatus, totalScore: a.totalScore, maxScore: a.maxScore, grade: a.grade, passed: a.passed });
+      return { item: a, r, when: a.submittedAt || a.availableFrom };
+    })
+    .sort((x, y) => new Date(y.when) - new Date(x.when));
+}
 
 // Esami per cui ha senso guardare le consegne (pubblicati o chiusi)
 export function relevantForSubmissions(exams) {

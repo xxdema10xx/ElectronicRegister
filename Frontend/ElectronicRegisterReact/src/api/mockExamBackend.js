@@ -37,6 +37,14 @@ function load() {
 }
 export function resetMockExams() { state = seed(); persist(); }
 
+// SOLO SVILUPPO: elimina la consegna di un unico studente su un unico esame, per poterlo rifare
+// mentre si testa l'app. Non è una funzione del backend reale: va chiamata solo dietro __DEV__.
+export function devDiscardAttempt(studentId, examId) {
+  const st = load();
+  st.submissions = Object.fromEntries(Object.entries(st.submissions).filter(([, s]) => !(s.studentId === studentId && s.examId === examId)));
+  persist();
+}
+
 // ── Regole ──────────────────────────────────────────────────────────────────────────────────
 export function convertToGrade(total, max, passingPercent) {
   const p = total / max;

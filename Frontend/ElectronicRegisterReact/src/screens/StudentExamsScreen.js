@@ -6,14 +6,16 @@ import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useExamApi } from "../hooks/useExamApi";
+import { useAuth } from "../hooks/useAuth";
 import Card from "../components/Card";
 import Btn from "../components/Btn";
 import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
 import StatusChip from "../components/StatusChip";
 import ExamTaker, { MAX_VIOLATIONS, enterFullscreen, exitFullscreen } from "../components/ExamTaker";
-import { useStudentExams, markSeen, getRun, saveRun, notifyStudentExamsChanged, resetStudentDemo } from "../data/studentExams";
-import { notify } from "../utils/dialogs";
+import { useStudentExams, markSeen, getRun, saveRun, clearRun, notifyStudentExamsChanged, resetStudentDemo } from "../data/studentExams";
+import { devDiscardAttempt } from "../api/mockExamBackend";
+import { notify, confirmAction } from "../utils/dialogs";
 import {
   EXAM_STATUS, SUBMISSION_STATUS, fromEnum, formatDateTime, parseUtc, resultView, studentQuestionFromDto, isAnswered,
 } from "../api/examContract";
@@ -41,7 +43,9 @@ function stateOf(a) {
 
 export default function StudentExamsScreen() {
   const api = useExamApi();
+  const { user } = useAuth();
   const { assigned, loaded, error, reload, isSeen } = useStudentExams();
+  const canDevRetake = __DEV__ && api.isMock(); // solo in sviluppo e solo in modalità mock: mai in produzione
   const [intro, setIntro] = useState(null); // esame scelto, prima dell'inizio
   const [starting, setStarting] = useState(false);
   const [taking, setTaking] = useState(null); // consegna in svolgimento (schermo bloccato)
@@ -116,6 +120,18 @@ export default function StudentExamsScreen() {
     else if (st.action === "result") openResult(item);
   }
 
+  // SOLO SVILUPPO: cancella la propria consegna per rifare l'esame da capo durante i test. Non tocca
+  // gli altri studenti né è disponibile fuori da __DEV__ + modalità mock.
+  function devRetake(item) {
+    confirmAction("Solo sviluppo", `Rifare "${item.name}" da capo? La consegna attuale (solo la tua) verrà cancellata.`, () => {
+      devDiscardAttempt(user?.studentId || "stu-me", item.id);
+      clearRun(item.id);
+      setView(null);
+      reload();
+      notifyStudentExamsChanged();
+    }, "Rifai");
+  }
+
   // ── Esito ──────────────────────────────────────────────────────────────────────────────────
   if (view) {
     const r = resultView(view.result);
@@ -140,6 +156,11 @@ export default function StudentExamsScreen() {
           {view.meta?.violations > 0 && <Text style={s.itemSub}>Uscite dall'esame registrate: {view.meta.violations}</Text>}
         </Card>
         <Btn label="Torna agli esami" onPress={() => { setView(null); reload(); }} style={{ marginTop: 20, minWidth: 220 }} />
+        {canDevRetake && (
+          <TouchableOpacity onPress={() => devRetake(view.item)} style={{ marginTop: 14 }}>
+            <Text style={{ color: C.textLight, fontSize: 12 }}>Rifai per prova (solo sviluppo)</Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }
@@ -220,6 +241,11 @@ export default function StudentExamsScreen() {
                       <View style={{ alignItems: "flex-end", gap: 4 }}>
                         {isNew && <Text style={{ backgroundColor: C.danger, color: C.white, fontSize: 11, fontWeight: "700", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10, overflow: "hidden" }}>NUOVO</Text>}
                         <StatusChip label={st.label} tone={st.tone} />
+                        {canDevRetake && !!item.submissionStatus && (
+                          <TouchableOpacity onPress={() => devRetake(item)}>
+                            <Text style={{ color: C.textLight, fontSize: 10 }}>Rifai (dev)</Text>
+                          </TouchableOpacity>
+                        )}
                       </View>
                     )}
                   </Card>

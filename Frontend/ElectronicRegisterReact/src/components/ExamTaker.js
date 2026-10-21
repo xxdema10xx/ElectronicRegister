@@ -5,7 +5,7 @@
 // l'esame viene consegnato automaticamente. Le risposte si salvano da sole sul server; la scadenza è quella
 // decisa dal server (deadlineAt), non un timer del dispositivo.
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AppState, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Animated, AppState, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import Btn from "./Btn";
@@ -38,7 +38,8 @@ export default function ExamTaker({ run, api, onFinish }) {
   const [violations, setViolations] = useState(0);
   const [paused, setPaused] = useState(null); // messaggio mostrato mentre l'esame è in pausa per un'uscita
   const [confirming, setConfirming] = useState(false);
-  const [missing, setMissing] = useState([]); // domande obbligatorie senza risposta
+  const [missing, setMissing] = useState([]); // domande obbligatorie senza risposta: bloccano la consegna
+  const [unanswered, setUnanswered] = useState([]); // tutte le domande senza risposta: solo evidenziate
   const [saveState, setSaveState] = useState(null); // "saving" | "saved" | "error"
   const [submitting, setSubmitting] = useState(false);
   const [failure, setFailure] = useState(null); // consegna automatica non riuscita
@@ -47,6 +48,18 @@ export default function ExamTaker({ run, api, onFinish }) {
   const submittingRef = useRef(false);
   const pausedRef = useRef(false);
   const violationsRef = useRef(0);
+
+  // Il bottone "Riprendi" pulsa finché l'esame è in pausa, per farlo notare subito.
+  const pulse = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    if (!paused) return;
+    const loop = Animated.loop(Animated.sequence([
+      Animated.timing(pulse, { toValue: 1.06, duration: 550, useNativeDriver: true }),
+      Animated.timing(pulse, { toValue: 1, duration: 550, useNativeDriver: true }),
+    ]));
+    loop.start();
+    return () => loop.stop();
+  }, [paused, pulse]);
   const answersRef = useRef(answers);
   answersRef.current = answers;
   const revisionRef = useRef(run.revision || 0);
@@ -109,7 +122,9 @@ export default function ExamTaker({ run, api, onFinish }) {
 
   function askConfirm() {
     const notDone = questions.map((q, i) => (q.required && !isAnswered(q, answers[q.id]) ? i + 1 : null)).filter(Boolean);
+    const notAnswered = questions.map((q, i) => (!isAnswered(q, answers[q.id]) ? i + 1 : null)).filter(Boolean);
     setMissing(notDone);
+    setUnanswered(notAnswered);
     if (notDone.length === 0) { setFailure(null); setConfirming(true); }
   }
 
@@ -154,8 +169,8 @@ export default function ExamTaker({ run, api, onFinish }) {
     return () => sub.remove();
   }, [registerViolation]);
 
-  const setAnswer = (qid, value) => { setMissing([]); setAnswers(a => ({ ...a, [qid]: value })); };
-  const toggleMulti = (qid, oid) => { setMissing([]); setAnswers(a => {
+  const setAnswer = (qid, value) => { setMissing([]); setUnanswered([]); setAnswers(a => ({ ...a, [qid]: value })); };
+  const toggleMulti = (qid, oid) => { setMissing([]); setUnanswered([]); setAnswers(a => {
     const cur = a[qid] || [];
     return { ...a, [qid]: cur.includes(oid) ? cur.filter(x => x !== oid) : [...cur, oid] };
   }); };
@@ -183,7 +198,7 @@ export default function ExamTaker({ run, api, onFinish }) {
             {!!exam.description && <Text style={{ color: C.textMuted, marginBottom: 12 }}>{exam.description}</Text>}
 
             {questions.map((q, i) => (
-              <Card key={q.id} style={{ marginBottom: 12, borderLeftWidth: 5, borderLeftColor: missing.includes(i + 1) ? C.danger : C.primary }}>
+              <Card key={q.id} style={{ marginBottom: 12, borderLeftWidth: 5, borderLeftColor: unanswered.includes(i + 1) ? C.danger : C.primary }}>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10 }}>
                   <Text style={{ flex: 1, color: C.text, fontSize: 15, fontWeight: "600" }}>{i + 1}. {q.text}{q.required ? " *" : ""}</Text>
                   <Text style={{ color: C.textMuted }}>{q.points} pt</Text>
@@ -210,9 +225,13 @@ export default function ExamTaker({ run, api, onFinish }) {
               </Card>
             ))}
 
-            {missing.length > 0 && (
+            {missing.length > 0 ? (
               <Text style={{ color: C.danger, marginBottom: 12 }}>
                 Rispondi alle domande obbligatorie (*): {missing.join(", ")}.
+              </Text>
+            ) : unanswered.length > 0 && (
+              <Text style={{ color: C.danger, marginBottom: 12 }}>
+                Domande senza risposta (evidenziate): {unanswered.join(", ")}.
               </Text>
             )}
             {failure && !failure.reason && <Text style={{ color: C.danger, marginBottom: 12 }}>{failure.message}</Text>}
@@ -236,14 +255,24 @@ export default function ExamTaker({ run, api, onFinish }) {
 
         {/* Esame in pausa dopo un'uscita: non si vede né si fa nulla finché non si riprende */}
         {paused && (
-          <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: C.primary, alignItems: "center", justifyContent: "center", padding: 24, zIndex: 10 }}>
-            <Ionicons name="warning-outline" size={56} color="#FCD34D" />
-            <Text style={{ color: C.white, fontSize: 20, fontWeight: "700", marginTop: 12, textAlign: "center" }}>Esame in pausa</Text>
-            <Text style={{ color: "#E2E8F0", marginTop: 8, textAlign: "center", maxWidth: 420 }}>{paused}</Text>
-            <Text style={{ color: "#FCA5A5", marginTop: 8, textAlign: "center", maxWidth: 420 }}>
-              Uscita {violations} di {MAX_VIOLATIONS}: alla {MAX_VIOLATIONS}ª l'esame viene consegnato automaticamente. Il tempo continua a scorrere.
-            </Text>
-            <Btn label="Riprendi l'esame" onPress={resume} style={{ marginTop: 20, minWidth: 220 }} />
+          <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(10,20,35,0.97)", alignItems: "center", justifyContent: "center", padding: 24, zIndex: 10 }}>
+            <View style={{ width: "100%", maxWidth: 480, borderRadius: 20, borderWidth: 3, borderColor: "#FCD34D", backgroundColor: C.primary, padding: 28, alignItems: "center" }}>
+              <Ionicons name="warning" size={76} color="#FCD34D" />
+              <Text style={{ color: C.white, fontSize: 26, fontWeight: "800", marginTop: 14, textAlign: "center" }}>Esame in pausa</Text>
+              <Text style={{ color: "#E2E8F0", fontSize: 16, marginTop: 10, textAlign: "center" }}>{paused}</Text>
+              <View style={{ backgroundColor: "rgba(252,165,165,0.15)", borderRadius: 10, padding: 12, marginTop: 14 }}>
+                <Text style={{ color: "#FCA5A5", fontWeight: "700", textAlign: "center" }}>
+                  Uscita {violations} di {MAX_VIOLATIONS}: alla {MAX_VIOLATIONS}ª l'esame viene consegnato automaticamente.
+                </Text>
+                <Text style={{ color: "#FCA5A5", textAlign: "center", marginTop: 4 }}>Il tempo continua a scorrere.</Text>
+              </View>
+
+              <Animated.View style={{ transform: [{ scale: pulse }], width: "100%", marginTop: 24 }}>
+                <Btn label="▶  Riprendi l'esame" variant="success" onPress={resume}
+                  style={{ width: "100%", paddingVertical: 18, shadowColor: "#000", shadowOpacity: 0.3, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 6 }}
+                  textStyle={{ fontSize: 19, fontWeight: "800" }} />
+              </Animated.View>
+            </View>
           </View>
         )}
 

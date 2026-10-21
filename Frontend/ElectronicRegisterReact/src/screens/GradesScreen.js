@@ -20,8 +20,9 @@ import { getSubjects } from "../api/subjectService";
 import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
 import { useExamApi } from "../hooks/useExamApi";
-import { useStudentExams, getRun, resetStudentDemo } from "../data/studentExams";
-import { resultView, formatDateTime } from "../api/examContract";
+import { useStudentExams, resetStudentDemo } from "../data/studentExams";
+import { formatDateTime } from "../api/examContract";
+import { buildStudentBooklet } from "../api/examInsights";
 
 const GRADES_PAGE_SIZE = 20;
 const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n * 100) / 100));
@@ -32,14 +33,7 @@ function StudentBooklet() {
   const api = useExamApi();
   const { assigned, loaded, error, reload } = useStudentExams();
 
-  const booklet = assigned
-    .filter(a => !!a.submissionStatus)
-    .map(a => {
-      const run = getRun(a.id);
-      const r = resultView(run?.result || { status: a.submissionStatus, totalScore: a.totalScore, maxScore: a.maxScore, grade: a.grade, passed: a.passed });
-      return { item: a, r, when: a.submittedAt || a.availableFrom };
-    })
-    .sort((x, y) => new Date(y.when) - new Date(x.when));
+  const booklet = buildStudentBooklet(assigned);
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>

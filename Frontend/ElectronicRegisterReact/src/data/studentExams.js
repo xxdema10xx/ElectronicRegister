@@ -40,6 +40,11 @@ export function saveRun(examId, patch) {
   runs = { ...runs, [examId]: { ...(runs[examId] || {}), ...patch } };
   write(RUNS_KEY, runs);
 }
+export function clearRun(examId) {
+  const { [examId]: _removed, ...rest } = runs;
+  runs = rest;
+  write(RUNS_KEY, runs);
+}
 export function notifyStudentExamsChanged() { emit(); }
 
 // Solo per la prova: riporta tutto allo stato iniziale
