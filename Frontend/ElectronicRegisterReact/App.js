@@ -10,13 +10,14 @@ import LoginScreen from "./src/screens/LoginScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import AppNav from "./src/navigation/AppNav";
 
-// Il token sopravvive al refresh (F5) su web grazie a localStorage: senza, ogni reload perdeva lo
-// stato React e rimandava al login anche con un token ancora valido.
+// Il token sopravvive al refresh (F5) su web grazie a sessionStorage: senza, ogni reload perdeva lo
+// stato React e rimandava al login anche con un token ancora valido. A differenza di localStorage,
+// sessionStorage è isolato per scheda: così si può restare loggati con account diversi in schede diverse.
 const TOKEN_KEY = "authToken";
 const tokenStore = {
-  get() { try { return Platform.OS === "web" ? window.localStorage.getItem(TOKEN_KEY) : null; } catch { return null; } },
-  set(t) { try { if (Platform.OS === "web") window.localStorage.setItem(TOKEN_KEY, t); } catch {} },
-  clear() { try { if (Platform.OS === "web") window.localStorage.removeItem(TOKEN_KEY); } catch {} },
+  get() { try { return Platform.OS === "web" ? window.sessionStorage.getItem(TOKEN_KEY) : null; } catch { return null; } },
+  set(t) { try { if (Platform.OS === "web") window.sessionStorage.setItem(TOKEN_KEY, t); } catch {} },
+  clear() { try { if (Platform.OS === "web") window.sessionStorage.removeItem(TOKEN_KEY); } catch {} },
 };
 
 export default function App() {

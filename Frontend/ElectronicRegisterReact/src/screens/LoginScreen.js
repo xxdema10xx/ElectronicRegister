@@ -1,6 +1,6 @@
 // src/screens/LoginScreen.js
 import { useEffect, useState } from "react";
-import { Alert, Image, SafeAreaView, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import { s } from "../constants/theme";
 import Card from "../components/Card";
@@ -64,32 +64,35 @@ export default function LoginScreen({ onLogin, goRegister }) {
   return (
     <SafeAreaView style={s.authBg}>
       <StatusBar barStyle="light-content" backgroundColor={s.authBg.backgroundColor} />
-      <View style={s.authHeader}>
-        <Image source={require("../../assets/images/logoits.png")} style={{ width: 150, height: 100 }} />
-        <Text style={s.authTitle}>Electronic Register</Text>
-        <Text style={s.authSubtitle}>ITS Umbria</Text>
-      </View>
-      <View style={[s.authBody, isDesktop && s.authBodyDesktop]}>
-        <Card>
-          <Text style={s.cardTitle}>Accedi</Text>
-          <Input label="Email" value={email} onChangeText={setEmail} keyboardType="email-address"
-            autoCapitalize="none" placeholder="allievo_nome@itsumbria.it" />
-          <Input label="Password" value={password} onChangeText={setPassword} secureTextEntry placeholder="••••••••" />
-          <Btn label="Entra" onPress={submit} loading={loading} style={{ marginTop: 4 }} />
+      <ScrollView contentContainerStyle={[{ flexGrow: 1 }, isDesktop && { justifyContent: "center", alignItems: "center", padding: 24 }]}
+        keyboardShouldPersistTaps="handled">
+        <View style={[s.authHeader, isDesktop && s.authHeaderDesktop]}>
+          <Image source={require("../../assets/images/logoits.png")} style={isDesktop ? { width: 100, height: 66 } : { width: 150, height: 100 }} />
+          <Text style={[s.authTitle, isDesktop && { fontSize: 20 }]}>Electronic Register</Text>
+          <Text style={s.authSubtitle}>ITS Umbria</Text>
+        </View>
+        <View style={[s.authBody, isDesktop && s.authBodyDesktop]}>
+          <Card>
+            <Text style={s.cardTitle}>Accedi</Text>
+            <Input label="Email" value={email} onChangeText={setEmail} keyboardType="email-address"
+              autoCapitalize="none" placeholder="allievo_nome@itsumbria.it" />
+            <Input label="Password" value={password} onChangeText={setPassword} secureTextEntry placeholder="••••••••" />
+            <Btn label="Entra" onPress={submit} loading={loading} style={{ marginTop: 4 }} />
 
-          <Btn
-            label="Accedi con Microsoft"
-            onPress={() => promptAsync()}
-            loading={msLoading}
-            disabled={!request}
-            style={{ marginTop: 10, backgroundColor: "#2F2F2F" }}
-          />
+            <Btn
+              label="Accedi con Microsoft"
+              onPress={() => promptAsync()}
+              loading={msLoading}
+              disabled={!request}
+              style={{ marginTop: 10, backgroundColor: "#2F2F2F" }}
+            />
 
-          <TouchableOpacity onPress={goRegister} style={{ marginTop: 14, alignItems: "center" }}>
-            <Text style={{ color: s.authBg.backgroundColor, fontWeight: "600" }}>Non hai un account? Registrati</Text>
-          </TouchableOpacity>
-        </Card>
-      </View>
+            <TouchableOpacity onPress={goRegister} style={{ marginTop: 14, alignItems: "center" }}>
+              <Text style={{ color: s.authBg.backgroundColor, fontWeight: "600" }}>Non hai un account? Registrati</Text>
+            </TouchableOpacity>
+          </Card>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

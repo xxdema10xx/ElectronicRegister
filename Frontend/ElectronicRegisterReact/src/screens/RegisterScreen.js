@@ -27,11 +27,13 @@ export default function RegisterScreen({ onBack }) {
   return (
     <SafeAreaView style={s.authBg}>
       <StatusBar barStyle="light-content" backgroundColor={C.primary} />
-      <View style={s.authHeader}>
-        <Image source={require("../../assets/images/logoits.png")} style={{ width: 150, height: 100 }} />
-        <Text style={s.authTitle}>Electronic Register</Text>
+      <View style={[s.authHeader, isDesktop && s.authHeaderDesktop]}>
+        <Image source={require("../../assets/images/logoits.png")} style={isDesktop ? { width: 100, height: 66 } : { width: 150, height: 100 }} />
+        <Text style={[s.authTitle, isDesktop && { fontSize: 20 }]}>Electronic Register</Text>
       </View>
-      <ScrollView contentContainerStyle={[s.authBody, isDesktop && s.authBodyDesktop]}>
+      <ScrollView contentContainerStyle={[{ flexGrow: 1 }, isDesktop && { justifyContent: "center", alignItems: "center", padding: 24 }]}
+        keyboardShouldPersistTaps="handled">
+        <View style={[s.authBody, isDesktop && s.authBodyDesktop]}>
         <Card>
           <Text style={s.cardTitle}>Crea account</Text>
           <Input label="Nome" value={form.firstName} onChangeText={v => set("firstName", v)} placeholder="Mario" />
@@ -45,6 +47,7 @@ export default function RegisterScreen({ onBack }) {
             <Text style={{ color: C.primary, fontWeight: "600" }}>Hai già un account? Accedi</Text>
           </TouchableOpacity>
         </Card>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

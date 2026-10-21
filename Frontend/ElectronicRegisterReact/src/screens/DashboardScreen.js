@@ -5,14 +5,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import Badge from "../components/Badge";
 import Card from "../components/Card";
-import GradeCircle from "../components/GradeCircle";
 import { useAuth } from "../hooks/useAuth";
 import NotificationDot from "../components/NotificationDot";
 import { useStudentExams } from "../data/studentExams";
 import { useExamApi } from "../hooks/useExamApi";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
 import { useLayout } from "../hooks/useLayout";
-import { formatDateForDisplay } from "../utils/dateUtils";
 import { getGradesPage } from "../api/gradeService";
 import { getSubjects } from "../api/subjectService";
 import { getStudents } from "../api/studentService";
@@ -20,6 +18,9 @@ import { getTeachers } from "../api/teacherService";
 import { getUsers } from "../api/userService";
 import { getMyClasses } from "../api/classService";
 import { getRetakeGroups } from "../api/examInsights";
+import { getClassesForPicker, getClassSchedule, getTeacherSchedule, getStudentSchedule, addLesson, updateLesson, deleteLesson } from "../api/lessonService";
+import LessonCalendar from "../components/LessonCalendar";
+import SelectField from "../components/SelectField";
 
 const toList = d => Array.isArray(d) ? d : d ? [d] : [];
 
@@ -70,6 +71,10 @@ export default function DashboardScreen({ navigate }) {
   const [counts, setCounts] = useState({});
   const [myClasses, setMyClasses] = useState(null);
   const [retakeGroups, setRetakeGroups] = useState(null);
+  const [classOptions, setClassOptions] = useState([]);
+  const [calClassId, setCalClassId] = useState(null);
+  const [lessons, setLessons] = useState([]);
+  const [fullWeek, setFullWeek] = useState(false);
 
   // Ogni richiesta è indipendente: se una fallisce il riquadro resta vuoto, la home si apre comunque.
   useEffect(() => {
@@ -100,10 +105,28 @@ export default function DashboardScreen({ navigate }) {
     return () => { alive = false; };
   }, [role, exams, examApi]);
 
+  // Orario delle lezioni: admin sceglie la classe da vedere/modificare; docente e studente vedono il proprio.
+  useEffect(() => {
+    if (role === "admin") {
+      const opts = getClassesForPicker();
+      setClassOptions(opts);
+      setCalClassId(prev => prev || opts[0]?.id || null);
+    }
+  }, [role]);
+
+  function reloadLessons() {
+    if (role === "admin") setLessons(calClassId ? getClassSchedule(calClassId) : []);
+    else if (role === "teacher") setLessons(getTeacherSchedule(user?.teacherId));
+    else if (role === "student") setLessons(getStudentSchedule(user?.studentId));
+  }
+  useEffect(reloadLessons, [role, calClassId, user]);
+
+  function addSlot(input) { addLesson(input); reloadLessons(); }
+  function editSlot(id, patch) { updateLesson(id, patch); reloadLessons(); }
+  function removeSlot(id) { deleteLesson(id); reloadLessons(); }
+
   const gradeItems = (grades?.items || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
-  const recentGrades = gradeItems.slice(0, isDesktop ? 8 : 5);
   const average = gradeItems.length ? (gradeItems.reduce((sum, g) => sum + Number(g.value), 0) / gradeItems.length).toFixed(1) : "—";
-  const subjectName = id => subjects.find(x => x.id === id)?.name || "—";
 
   const now = Date.now();
   const upcomingExams = (exams || [])
@@ -132,19 +155,25 @@ export default function DashboardScreen({ navigate }) {
 
   const name = user?.studentFirstName || user?.teacherFirstName || user?.email?.split(".")[0] || "Utente";
 
-  const gradesPanel = (
-    <Panel title="Ultimi voti" onMore={() => navigate("grades")}>
-      {grades === null ? <Empty text="Caricamento…" /> : recentGrades.length === 0 ? <Empty text="Nessun voto presente" /> :
-        recentGrades.map(g => (
-          <View key={g.id} style={[s.profileRow, { alignItems: "center" }]}>
-            <GradeCircle value={g.value} />
-            <View style={{ flex: 1, marginLeft: 12 }}>
-              <Text style={s.itemTitle}>{subjectName(g.subjectId)}</Text>
-              <Text style={s.itemSub}>{formatDateForDisplay(g.date)}</Text>
-            </View>
-          </View>
-        ))}
-    </Panel>
+  const lessonsPanel = (
+    <View style={{ flexGrow: 1, flexBasis: 420 }}>
+      <Card>
+        <View style={s.sectionHeader}>
+          <Text style={s.sectionTitle}>Orario delle lezioni</Text>
+          <TouchableOpacity onPress={() => setFullWeek(v => !v)}>
+            <Text style={{ color: C.primary, fontWeight: "700" }}>{fullWeek ? "Mostra meno ‹" : "Tutta la settimana ›"}</Text>
+          </TouchableOpacity>
+        </View>
+        {role === "admin" && (
+          <SelectField label="Classe" value={calClassId} options={classOptions} onSelect={setCalClassId}
+            getLabel={c => c.name} placeholder="Seleziona classe" emptyMessage="Nessuna classe" />
+        )}
+        {role === "admin" && !calClassId ? <Empty text="Nessuna classe disponibile" /> : (
+          <LessonCalendar lessons={lessons} compact={!fullWeek} editable={role === "admin"} classId={calClassId}
+            onAdd={addSlot} onEdit={editSlot} onDelete={removeSlot} />
+        )}
+      </Card>
+    </View>
   );
 
   const examsPanel = role === "student" ? (
@@ -230,9 +259,9 @@ export default function DashboardScreen({ navigate }) {
 
         {/* Ultime attività */}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
-          {role !== "admin" && gradesPanel}
           {examsPanel}
           {myClassesPanel}
+          {lessonsPanel}
         </View>
 
         {/* Sezioni (solo senza sidebar) */}
