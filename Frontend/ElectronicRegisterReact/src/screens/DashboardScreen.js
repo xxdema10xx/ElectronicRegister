@@ -17,24 +17,25 @@ import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
 import { getUsers } from "../api/userService";
 import { getMyClasses } from "../api/classService";
-import { getRetakeGroups } from "../api/examInsights";
+import { getExamInsights } from "../api/examInsights";
 import { getClassesForPicker, getClassSchedule, getTeacherSchedule, getStudentSchedule, addLesson, updateLesson, deleteLesson } from "../api/lessonService";
 import LessonCalendar from "../components/LessonCalendar";
 import SelectField from "../components/SelectField";
 
 const toList = d => Array.isArray(d) ? d : d ? [d] : [];
 
-// Numero grande con etichetta
-function StatTile({ icon, label, value, onPress }) {
+// Numero grande con etichetta e, se serve, una riga di spiegazione sotto
+function StatTile({ icon, label, hint, value, onPress }) {
   return (
     <TouchableOpacity activeOpacity={onPress ? 0.7 : 1} onPress={onPress} style={{ flexGrow: 1, flexBasis: 180 }}>
       <Card style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={[s.avatar, { backgroundColor: "#E0EEF8", marginRight: 14 }]}>
           <Ionicons name={icon} size={24} color={C.primary} />
         </View>
-        <View>
+        <View style={{ flex: 1 }}>
           <Text style={{ fontSize: 24, fontWeight: "800", color: C.text }}>{value ?? "…"}</Text>
           <Text style={s.itemSub}>{label}</Text>
+          {!!hint && <Text style={[s.itemSub, { fontSize: 11, marginTop: 1 }]} numberOfLines={2}>{hint}</Text>}
         </View>
       </Card>
     </TouchableOpacity>
@@ -71,10 +72,10 @@ export default function DashboardScreen({ navigate }) {
   const [counts, setCounts] = useState({});
   const [myClasses, setMyClasses] = useState(null);
   const [retakeGroups, setRetakeGroups] = useState(null);
+  const [pendingReview, setPendingReview] = useState(null);
   const [classOptions, setClassOptions] = useState([]);
   const [calClassId, setCalClassId] = useState(null);
   const [lessons, setLessons] = useState([]);
-  const [fullWeek, setFullWeek] = useState(false);
 
   // Ogni richiesta è indipendente: se una fallisce il riquadro resta vuoto, la home si apre comunque.
   useEffect(() => {
@@ -96,12 +97,15 @@ export default function DashboardScreen({ navigate }) {
     return () => { alive = false; };
   }, [token, role, examApi, user]);
 
-  // "Chi deve recuperare": richiede l'elenco delle consegne di ogni esame, quindi parte solo dopo che gli esami sono arrivati.
+  // "Chi deve recuperare" e "Da correggere": richiedono l'elenco delle consegne di ogni esame, quindi
+  // partono solo dopo che gli esami sono arrivati.
   useEffect(() => {
     if (role !== "teacher" && role !== "admin") return;
     if (!exams) return;
     let alive = true;
-    getRetakeGroups(examApi, exams).then(g => { if (alive) setRetakeGroups(g); }).catch(() => { if (alive) setRetakeGroups([]); });
+    getExamInsights(examApi, exams)
+      .then(({ retakeGroups, pendingReviewCount }) => { if (alive) { setRetakeGroups(retakeGroups); setPendingReview(pendingReviewCount); } })
+      .catch(() => { if (alive) { setRetakeGroups([]); setPendingReview(0); } });
     return () => { alive = false; };
   }, [role, exams, examApi]);
 
@@ -133,7 +137,6 @@ export default function DashboardScreen({ navigate }) {
     .filter(e => ["draft", "published"].includes(fromEnum(e.status, EXAM_STATUS)) && parseUtc(e.availableUntil).getTime() >= now)
     .sort((a, b) => parseUtc(a.availableFrom) - parseUtc(b.availableFrom)).slice(0, isDesktop ? 8 : 5);
   const pendingTests = assigned.filter(a => a.canStart);
-  const doneExams = (exams || []).filter(e => fromEnum(e.status, EXAM_STATUS) === "closed");
 
   // Card delle sezioni: servono solo quando non c'è la sidebar (la tab bar mobile ha solo Home e Profilo)
   const nav = (icon, label, screen, dot) => ({ icon: <Ionicons name={icon} size={32} color={C.footer} />, label, screen, dot });
@@ -143,7 +146,7 @@ export default function DashboardScreen({ navigate }) {
       nav("pencil-outline", "Professori", "teachers"), nav("document-text-outline", "Esami", "exams", unseenCount > 0),
     ] : []),
     ...(role === "teacher" ? [
-      nav("ribbon-outline", "Voti", "grades"), nav("school-outline", "Classi", "myClasses"),
+      nav("school-outline", "Classi", "myClasses"),
       nav("library-outline", "Materie", "subjects"), nav("document-text-outline", "Esami", "exams"),
     ] : []),
     ...(role === "admin" ? [
@@ -160,16 +163,13 @@ export default function DashboardScreen({ navigate }) {
       <Card>
         <View style={s.sectionHeader}>
           <Text style={s.sectionTitle}>Orario delle lezioni</Text>
-          <TouchableOpacity onPress={() => setFullWeek(v => !v)}>
-            <Text style={{ color: C.primary, fontWeight: "700" }}>{fullWeek ? "Mostra meno ‹" : "Tutta la settimana ›"}</Text>
-          </TouchableOpacity>
         </View>
         {role === "admin" && (
           <SelectField label="Classe" value={calClassId} options={classOptions} onSelect={setCalClassId}
             getLabel={c => c.name} placeholder="Seleziona classe" emptyMessage="Nessuna classe" />
         )}
         {role === "admin" && !calClassId ? <Empty text="Nessuna classe disponibile" /> : (
-          <LessonCalendar lessons={lessons} compact={!fullWeek} editable={role === "admin"} classId={calClassId}
+          <LessonCalendar lessons={lessons} editable={role === "admin"} classId={calClassId}
             onAdd={addSlot} onEdit={editSlot} onDelete={removeSlot} />
         )}
       </Card>
@@ -244,10 +244,9 @@ export default function DashboardScreen({ navigate }) {
             <StatTile icon="library-outline" label="Materie" value={counts.subjects} onPress={() => navigate("subjects")} />
           </>}
           {role === "teacher" && <>
-            <StatTile icon="document-text-outline" label="Esami in programma" value={exams ? upcomingExams.length : null} onPress={() => navigate("exams")} />
-            <StatTile icon="checkmark-done-outline" label="Esami fatti" value={exams ? doneExams.length : null} onPress={() => navigate("exams")} />
-            <StatTile icon="alert-circle-outline" label="Da recuperare" value={retakeGroups ? retakeGroups.length : null} onPress={() => navigate("exams")} />
-            <StatTile icon="library-outline" label="Materie" value={counts.subjects} onPress={() => navigate("subjects")} />
+            <StatTile icon="document-text-outline" label="Esami in programma" hint="Pubblicati, ancora aperti agli studenti" value={exams ? upcomingExams.length : null} onPress={() => navigate("exams")} />
+            <StatTile icon="create-outline" label="Da correggere" hint="Domande aperte in attesa di valutazione" value={pendingReview} onPress={() => navigate("exams")} />
+            <StatTile icon="alert-circle-outline" label="Studenti da recuperare" hint="Non in regola su almeno un esame" value={retakeGroups ? retakeGroups.length : null} onPress={() => navigate("exams")} />
           </>}
           {role === "admin" && <>
             <StatTile icon="school-outline" label="Studenti" value={counts.students} onPress={() => navigate("students")} />
@@ -257,10 +256,10 @@ export default function DashboardScreen({ navigate }) {
           </>}
         </View>
 
-        {/* Ultime attività */}
+        {/* Ultime attività: per il docente resta solo il calendario, esami e classi si vedono dalle rispettive sezioni */}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
-          {examsPanel}
-          {myClassesPanel}
+          {role !== "teacher" && examsPanel}
+          {role !== "teacher" && myClassesPanel}
           {lessonsPanel}
         </View>
 

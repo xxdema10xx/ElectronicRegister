@@ -8,12 +8,15 @@ export function relevantForSubmissions(exams) {
   return exams.filter(e => { const st = fromEnum(e.status, EXAM_STATUS); return st === "published" || st === "closed"; });
 }
 
-// Per ogni studente in difficoltà, l'elenco degli esami non superati (bocciato o "non superabile")
-export async function getRetakeGroups(api, exams) {
+// Una chiamata per esame (pubblicati o chiusi), riusata da tutte le aggregazioni sotto.
+async function fetchSubmissionLists(api, exams) {
   const relevant = relevantForSubmissions(exams);
-  const lists = await Promise.all(
+  return Promise.all(
     relevant.map(e => api.listSubmissions(e.id).then(items => ({ exam: e, items })).catch(() => ({ exam: e, items: [] })))
   );
+}
+
+function buildRetakeGroups(lists) {
   const byStudent = new Map();
   for (const { exam, items } of lists) {
     for (const it of items) {
@@ -26,4 +29,23 @@ export async function getRetakeGroups(api, exams) {
     }
   }
   return [...byStudent.values()].sort((a, b) => `${a.lastName}${a.firstName}`.localeCompare(`${b.lastName}${b.firstName}`));
+}
+
+const countPendingReview = (lists) => lists.reduce((n, { items }) =>
+  n + items.filter(it => fromEnum(it.status, SUBMISSION_STATUS) === "pending_review").length, 0);
+
+// Per ogni studente in difficoltà, l'elenco degli esami non superati (bocciato o "non superabile")
+export async function getRetakeGroups(api, exams) {
+  return buildRetakeGroups(await fetchSubmissionLists(api, exams));
+}
+
+// Consegne con domande aperte ancora da correggere: lavoro concreto che aspetta il docente.
+export async function getPendingReviewCount(api, exams) {
+  return countPendingReview(await fetchSubmissionLists(api, exams));
+}
+
+// Le due aggregazioni insieme, con una sola serie di chiamate (utile per la dashboard).
+export async function getExamInsights(api, exams) {
+  const lists = await fetchSubmissionLists(api, exams);
+  return { retakeGroups: buildRetakeGroups(lists), pendingReviewCount: countPendingReview(lists) };
 }

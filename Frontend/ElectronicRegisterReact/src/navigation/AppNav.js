@@ -43,7 +43,7 @@ export default function AppNav({ user, onLogout }) {
   // Sulla sidebar (schermi larghi) c'è spazio per tutte le sezioni, non solo per quelle della tab bar.
   const sideTabs = [
     { key: "dashboard", icon: "home-outline", label: "Home" },
-    ...(role !== "admin" ? [{ key: "grades", icon: "ribbon-outline", label: "Voti" }] : []),
+    ...(role === "student" ? [{ key: "grades", icon: "ribbon-outline", label: "Voti" }] : []),
     ...(role === "admin" ? [{ key: "classes", icon: "people-outline", label: "Classi" }] : []),
     ...(role === "teacher" ? [{ key: "myClasses", icon: "school-outline", label: "Classi" }] : []),
     ...(role === "admin" ? [{ key: "students", icon: "school-outline", label: "Studenti" }] : []),

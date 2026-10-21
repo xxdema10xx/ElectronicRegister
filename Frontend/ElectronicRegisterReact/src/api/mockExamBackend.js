@@ -224,6 +224,43 @@ function reviewDto(s, exam, me) {
   };
 }
 
+// Consegna di esempio già corretta dal motore (usata sia per i dati iniziali sia per il libretto demo
+// che si genera al primo accesso di un vero studente, così c'è sempre qualcosa da vedere).
+const answerPlan = (exam, wrongClosed = [], skipOpen = false) => exam.questions.map((q, i) => {
+  const type = fromEnum(q.type, QUESTION_TYPE);
+  if (type === "open") return skipOpen ? null : { questionId: q.id, openText: "Risposta di esempio dello studente.", selectedOptionIds: [] };
+  const correct = q.options.filter(o => o.isCorrect).map(o => o.id);
+  const wrong = q.options.filter(o => !o.isCorrect).map(o => o.id);
+  const ids = wrongClosed.includes(i) ? (wrong.length ? [wrong[0]] : []) : correct;
+  return { questionId: q.id, openText: null, selectedOptionIds: ids };
+}).filter(Boolean);
+
+function buildSubmission(st, exam, studentId, { wrongClosed = [], skipOpen = false, finalize = false, hoursAgo = 3 } = {}) {
+  const t = Date.now();
+  const start = new Date(t - hoursAgo * 3600000).toISOString();
+  const sub = {
+    id: uid(), examId: exam.id, studentId, status: "in_progress", startedAt: start,
+    deadlineAt: new Date(t - hoursAgo * 3600000 + exam.durationMinutes * 60000).toISOString(), revision: 1, answers: [], violationCount: 0,
+  };
+  applyAnswers(sub, answerPlan(exam, wrongClosed, skipOpen));
+  submitCore(exam, sub, "manual");
+  if (finalize) {
+    for (const a of sub.answers) {
+      const q = exam.questions.find(x => x.id === a.questionId);
+      if (fromEnum(q.type, QUESTION_TYPE) === "open") { a.awardedPoints = Math.round(q.points * 0.7); a.teacherComment = "Buon lavoro."; }
+    }
+    sub.openScore = sub.answers.reduce((n, a) => n + (fromEnum(exam.questions.find(x => x.id === a.questionId).type, QUESTION_TYPE) === "open" ? a.awardedPoints || 0 : 0), 0);
+    sub.totalScore = sub.closedScore + sub.openScore;
+    sub.suggestedGrade = convertToGrade(sub.totalScore, sub.maxScore, exam.passingPercent);
+    sub.finalGrade = sub.suggestedGrade;
+    sub.passed = sub.suggestedGrade >= 6;
+    sub.status = "finalized";
+    sub.finalizedAt = new Date(t - hoursAgo * 3600000 + 2 * 3600000).toISOString();
+  }
+  st.submissions[sub.id] = sub;
+  return sub;
+}
+
 // ── Dati iniziali ───────────────────────────────────────────────────────────────────────────
 function seed() {
   const st = { exams: {}, submissions: {} };
@@ -251,39 +288,8 @@ function seed() {
   }
   state = st;
 
-  // Consegne di esempio, già corrette dal motore
-  const answerPlan = (exam, wrongClosed = [], skipOpen = false) => exam.questions.map((q, i) => {
-    const type = fromEnum(q.type, QUESTION_TYPE);
-    if (type === "open") return skipOpen ? null : { questionId: q.id, openText: "Risposta di esempio dello studente.", selectedOptionIds: [] };
-    const correct = q.options.filter(o => o.isCorrect).map(o => o.id);
-    const wrong = q.options.filter(o => !o.isCorrect).map(o => o.id);
-    const ids = wrongClosed.includes(i) ? (wrong.length ? [wrong[0]] : []) : correct;
-    return { questionId: q.id, openText: null, selectedOptionIds: ids };
-  }).filter(Boolean);
-  const make = (examKey, studentId, wrongClosed, skipOpen, finalize) => {
-    const exam = st.exams[byKey[examKey]];
-    const start = new Date(t - 3 * 3600000).toISOString();
-    const sub = {
-      id: uid(), examId: exam.id, studentId, status: "in_progress", startedAt: start,
-      deadlineAt: new Date(t - 3 * 3600000 + exam.durationMinutes * 60000).toISOString(), revision: 1, answers: [], violationCount: 0,
-    };
-    applyAnswers(sub, answerPlan(exam, wrongClosed, skipOpen));
-    submitCore(exam, sub, "manual");
-    if (finalize) {
-      for (const a of sub.answers) {
-        const q = exam.questions.find(x => x.id === a.questionId);
-        if (fromEnum(q.type, QUESTION_TYPE) === "open") { a.awardedPoints = Math.round(q.points * 0.7); a.teacherComment = "Buon lavoro."; }
-      }
-      sub.openScore = sub.answers.reduce((n, a) => n + (fromEnum(exam.questions.find(x => x.id === a.questionId).type, QUESTION_TYPE) === "open" ? a.awardedPoints || 0 : 0), 0);
-      sub.totalScore = sub.closedScore + sub.openScore;
-      sub.suggestedGrade = convertToGrade(sub.totalScore, sub.maxScore, exam.passingPercent);
-      sub.finalGrade = sub.suggestedGrade;
-      sub.passed = sub.suggestedGrade >= 6;
-      sub.status = "finalized";
-      sub.finalizedAt = new Date(t - 3600000).toISOString();
-    }
-    st.submissions[sub.id] = sub;
-  };
+  const make = (examKey, studentId, wrongClosed, skipOpen, finalize) =>
+    buildSubmission(st, st.exams[byKey[examKey]], studentId, { wrongClosed, skipOpen, finalize });
   make("manzoni", "stu-a1", [], false);          // chiuse tutte giuste, aperte da correggere → in correzione
   make("manzoni", "stu-a2", [0], false);         // una chiusa sbagliata → in correzione
   make("js", "stu-a3", [0, 1, 2, 3], true);      // chiuse tutte sbagliate e aperte vuote → non superato in automatico
@@ -294,10 +300,34 @@ function seed() {
   return st;
 }
 
+// Al primo accesso di un vero studente (id diverso da quelli finti sopra) non c'è nessuna consegna
+// a suo nome: gli si genera un libretto di esempio variato, così la UI non è mai vuota per davvero.
+function ensureStudentDemo(studentId) {
+  const st = load();
+  if (!studentId || Object.values(st.submissions).some(s => s.studentId === studentId)) return;
+  const plan = [
+    ["grammar", { wrongClosed: [] }],            // solo chiuse, tutto giusto → voto immediato, superato
+    ["manzoni", { wrongClosed: [0] }],            // una chiusa sbagliata, aperte da correggere → in correzione
+    ["js", { wrongClosed: [0, 1, 2, 3], skipOpen: true }], // non superato in automatico
+    ["react", { finalize: true }],                // già valutato dal docente
+  ];
+  let hoursAgo = 72;
+  let any = false;
+  for (const [key, opts] of plan) {
+    const exam = st.exams[`ex-${key}`]; // stesso schema di id usato in seed()
+    if (!exam) continue;
+    try { buildSubmission(st, exam, studentId, { ...opts, hoursAgo }); any = true; }
+    catch { /* un esempio che fallisce non deve bloccare gli altri */ }
+    hoursAgo -= 18;
+  }
+  if (any) persist();
+}
+
 // ── API di prova ────────────────────────────────────────────────────────────────────────────
 export function createMockExamApi(user) {
   const role = user?.role?.toLowerCase();
   const me = { id: user?.studentId || "stu-me", firstName: user?.studentFirstName, lastName: user?.studentLastName };
+  if (role === "student") ensureStudentDemo(me.id);
   const wrap = (fn) => async (...args) => { load(); return clone(await fn(...args)); };
   const exam = (id) => load().exams[id] || (() => { throw missing("L'esame non esiste."); })();
   const sub = (id) => load().submissions[id] || (() => { throw missing("La submission non esiste."); })();
@@ -411,11 +441,16 @@ export function createMockExamApi(user) {
         .filter(e => e.status === "published" || mine.some(s => s.examId === e.id))
         .map(e => {
           const s = mine.find(x => x.examId === e.id);
+          // Stesso mascheramento di resultDto: niente voto/punteggio finché la correzione non è conclusa.
+          const hidden = s && (s.status === "pending_review" || s.status === "failed_auto");
+          const grade = s && (s.status === "finalized" || s.status === "graded") ? (s.finalGrade ?? s.suggestedGrade ?? null) : null;
           return {
             id: e.id, classSubjectId: e.classSubjectId, name: e.name, description: e.description, availableFrom: e.availableFrom,
             availableUntil: e.availableUntil, durationMinutes: e.durationMinutes, extraTimeMinutes: 0, status: statusInt(e.status),
             submissionStatus: s ? toEnum(s.status, SUBMISSION_STATUS) : null, startedAt: s?.startedAt ?? null, deadlineAt: s?.deadlineAt ?? null,
             submittedAt: s?.submittedAt ?? null,
+            totalScore: s && !hidden ? s.totalScore ?? null : null, maxScore: s && !hidden ? s.maxScore ?? null : null,
+            grade: hidden ? null : grade, passed: s && !hidden ? s.passed ?? null : null,
             canStart: e.status === "published" && now >= new Date(e.availableFrom) && now < new Date(e.availableUntil) && !s, isRetake: !!e.retakeOfExamId,
           };
         });

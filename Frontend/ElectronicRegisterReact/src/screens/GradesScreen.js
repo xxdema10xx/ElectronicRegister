@@ -14,14 +14,84 @@ import SelectField from "../components/SelectField";
 import DateField from "../components/DateField";
 import FormModal from "../components/FormModal";
 import GradeCircle from "../components/GradeCircle";
+import StatusChip from "../components/StatusChip";
 import { getGradesPage, getGradeFilters, createGrade, updateGrade, deleteGrade } from "../api/gradeService";
 import { getSubjects } from "../api/subjectService";
 import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
+import { useExamApi } from "../hooks/useExamApi";
+import { useStudentExams, getRun, resetStudentDemo } from "../data/studentExams";
+import { resultView, formatDateTime } from "../api/examContract";
 
 const GRADES_PAGE_SIZE = 20;
+const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n * 100) / 100));
+
+// Libretto dello studente: un esame (appello) per riga, voto o esito a destra, più recenti in alto.
+// Sostituisce l'elenco voti del registro, che per lo studente è meno significativo degli esiti d'esame.
+function StudentBooklet() {
+  const api = useExamApi();
+  const { assigned, loaded, error, reload } = useStudentExams();
+
+  const booklet = assigned
+    .filter(a => !!a.submissionStatus)
+    .map(a => {
+      const run = getRun(a.id);
+      const r = resultView(run?.result || { status: a.submissionStatus, totalScore: a.totalScore, maxScore: a.maxScore, grade: a.grade, passed: a.passed });
+      return { item: a, r, when: a.submittedAt || a.availableFrom };
+    })
+    .sort((x, y) => new Date(y.when) - new Date(x.when));
+
+  return (
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
+      <View style={s.screenPad}>
+        <SectionHeader title="Libretto" />
+        {api.isMock() && (
+          <View style={{ backgroundColor: "#FEF3C7", borderRadius: 10, padding: 10, marginBottom: 8, flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <Text style={{ color: "#92400E", flex: 1, minWidth: 200 }}>
+              Modalità prova: il server non espone ancora gli esami (/Exam), i dati sono locali a questo browser.
+            </Text>
+            <TouchableOpacity onPress={() => { resetStudentDemo(); reload(); }}>
+              <Text style={{ color: "#92400E", fontWeight: "700" }}>Rigenera esempi</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {!!error && <Text style={{ color: C.danger, marginBottom: 8 }}>{error}</Text>}
+      </View>
+      {!loaded ? <Loader /> : booklet.length === 0 ? <EmptyState message="Nessun esame svolto" /> : (
+        <FlatList
+          data={booklet}
+          keyExtractor={x => String(x.item.id)}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          renderItem={({ item: { item, r } }) => (
+            <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+              <View style={{ flex: 1 }}>
+                <Text style={s.itemTitle}>{item.name}{item.isRetake ? " · Recupero" : ""}</Text>
+                <Text style={s.itemSub}>{formatDateTime(item.submittedAt) || formatDateTime(item.availableFrom)}</Text>
+              </View>
+              {r.showGrade ? (
+                <View style={{ alignItems: "flex-end", gap: 4 }}>
+                  <Text style={{ fontSize: 20, fontWeight: "800", color: r.passed === false ? C.danger : C.success }}>{fmt(r.grade)}</Text>
+                  {r.passed === true && <StatusChip label="Superato" tone="green" />}
+                </View>
+              ) : (
+                <StatusChip label={r.title} tone={r.status === "pending_review" ? "amber" : r.status === "failed_auto" ? "red" : "gray"} />
+              )}
+            </Card>
+          )}
+        />
+      )}
+    </View>
+  );
+}
 
 export default function GradesScreen() {
+  const { user } = useAuth();
+  const role = user?.role?.toLowerCase();
+  return role === "student" ? <StudentBooklet /> : <TeacherAdminGrades />;
+}
+
+// Elenco voti del registro, con filtri e (per docente/admin) inserimento/modifica/eliminazione.
+function TeacherAdminGrades() {
   const { token, user } = useAuth();
   const role = user?.role?.toLowerCase();
   const [grades, setGrades] = useState([]);
