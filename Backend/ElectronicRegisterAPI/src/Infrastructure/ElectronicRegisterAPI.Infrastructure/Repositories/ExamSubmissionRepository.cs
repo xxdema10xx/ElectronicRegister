@@ -156,6 +156,7 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository, IInstitutio
         if (_scope?.IsTechnical == true) throw new UnauthorizedAccessException();
         var entity = new SubmissionEntity
         {
+            DisplayOrderJson = submission.DisplayOrderJson,
             Id = submission.Id,
             ExamId = submission.ExamId,
             StudentId = submission.StudentId,
@@ -448,6 +449,7 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository, IInstitutio
     {
         var model = new ExamSubmission
         {
+            DisplayOrderJson = entity.DisplayOrderJson,
             Id = entity.Id,
             ExamId = entity.ExamId,
             StudentId = entity.StudentId,

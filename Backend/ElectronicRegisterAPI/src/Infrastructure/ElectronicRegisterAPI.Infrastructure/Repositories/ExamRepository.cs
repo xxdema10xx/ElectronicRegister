@@ -27,7 +27,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
 
         public async Task<Exam?> GetByIdAsync( Guid id, bool includeStructure = false, bool includeStudents = false)
         {
-            IQueryable<ExamEntity> query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().AsNoTracking();
+            IQueryable<ExamEntity> query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking();
 
             if (includeStructure)
             {
@@ -54,12 +54,12 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
             if (_scope is not null)
             {
                 if (await _scope.LockExam(id).AsTracking().FirstOrDefaultAsync() is null) return null;
-                var scoped = await _scope.Exams.AsTracking().Where(e => e.Id == id)
+                var scoped = await _scope.Exams.AsTracking().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).Where(e => e.Id == id)
                     .Include(e => e.Questions).ThenInclude(q => q.QuestionOptions).Include(e => e.ExamStudents).FirstOrDefaultAsync();
                 return scoped is null ? null : MapToModel(scoped);
             }
             var entity = await (_scope is null ? _context.Exams.FromSqlRaw("SELECT * FROM exam WHERE id = {0} FOR UPDATE", id) : _scope.LockExam(id))
-                .AsTracking().Include(e => e.Questions).ThenInclude(q => q.QuestionOptions)
+                .AsTracking().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).Include(e => e.Questions).ThenInclude(q => q.QuestionOptions)
                 .Include(e => e.ExamStudents).FirstOrDefaultAsync();
             return entity is null ? null : MapToModel(entity);
         }
@@ -69,7 +69,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         public async Task<List<Exam>> GetAllAsync(Guid? teacherId = null)
         {
             var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>()
-                .AsNoTracking()
+                .Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking()
                 .AsQueryable();
 
             if (teacherId.HasValue)
@@ -85,7 +85,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
                     Id = e.Id,
                     ClassSubjectId = e.ClassSubjectId,
                     RetakeOfExamId = e.RetakeOfExamId,
-                    Name = e.Name,
+                    Name = e.ClassSubject.Subject.Name,
                     Description = e.Description,
                     AvailableFrom = e.AvailableFrom,
                     AvailableUntil = e.AvailableUntil,
@@ -101,7 +101,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         }
         public async Task<List<ExamSummaryDto>> GetSummariesAsync(Guid? teacherId = null)
         {
-            var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().AsNoTracking();
+            var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking();
 
             if (teacherId.HasValue)
                 query = query.Where(e => e.ClassSubject.TeacherId == teacherId.Value);
@@ -111,7 +111,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
                 .Select(e => new
                 {
                     e.Id,
-                    e.Name,
+                    Name = e.ClassSubject.Subject.Name,
                     e.Description,
                     e.ClassSubjectId,
                     e.RetakeOfExamId,
@@ -151,7 +151,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         public async Task<List<Exam>> GetAssignedToStudentAsync(Guid studentId)
         {
             var entities = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>()
-                .AsNoTracking()
+                .Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking()
                 .Where(e =>
                     e.ExamStudents.Any(es => es.StudentId == studentId))
                 .Where(e => e.Status != "draft")
@@ -166,7 +166,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         public async Task<List<Exam>> GetByClassSubjectAsync(Guid classSubjectId)
         {
             var entities = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>()
-                .AsNoTracking()
+                .Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking()
                 .Where(e => e.ClassSubjectId == classSubjectId)
                 .OrderByDescending(e => e.AvailableFrom)
                 .ToListAsync();
@@ -187,8 +187,28 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
             // Do not lock submissions: Submit/worker own those locks and can read exam structure.
             return Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AnyAsync(s => s.ExamId == examId && s.Status == "in_progress");
         }
+        private async Task DeriveNameForWriteAsync(Exam exam)
+        {
+            var subjectId = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
+                .Where(cs => cs.Id == exam.ClassSubjectId).Select(cs => cs.SubjectId).SingleAsync();
+            // A current locking read serializes with subject renames, even under REPEATABLE READ.
+            // ClassSubject was resolved through the caller's authorized scope before this lock.
+            var subject = await _context.Subjects.FromSqlInterpolated(
+                $"SELECT * FROM subject WHERE id = {subjectId} FOR UPDATE").AsNoTracking().SingleAsync();
+            exam.Name = subject.Name;
+        }
+
         public async Task AddAsync(Exam exam)
         {
+            // Creation and administrative reassignment share the tenant-first order.
+            // Existing exams already prevent reassignment, so updates need no new lock.
+            if (_scope is not null)
+            {
+                await _scope.LockExamCreationTenantAsync();
+                if (await _scope.LockAssignmentForExamWrite(exam.ClassSubjectId).AsNoTracking().SingleOrDefaultAsync() is null)
+                    throw new KeyNotFoundException("Assegnazione non disponibile.");
+            }
+            await DeriveNameForWriteAsync(exam);
             var entity = new ExamEntity
             {
                 Id = exam.Id,
@@ -256,6 +276,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         }
         public async Task UpdateAsync(Exam exam)
         {
+            await DeriveNameForWriteAsync(exam);
             var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().FirstOrDefaultAsync(e => e.Id == exam.Id);
 
             if (entity is null) return;
@@ -370,7 +391,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
                 Id = entity.Id,
                 ClassSubjectId = entity.ClassSubjectId,
                 RetakeOfExamId = entity.RetakeOfExamId,
-                Name = entity.Name,
+                Name = entity.ClassSubject.Subject.Name,
                 Description = entity.Description,
                 AvailableFrom = DbUtc.Read(entity.AvailableFrom),
                 AvailableUntil = DbUtc.Read(entity.AvailableUntil),

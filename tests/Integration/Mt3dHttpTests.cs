@@ -469,7 +469,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
     {
         var endpoints = _host.Host.Services.GetRequiredService<Microsoft.AspNetCore.Routing.EndpointDataSource>().Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<InstitutionExamEndpointAttribute>() is not null).ToArray();
-        Assert.Equal(33, endpoints.Length);
+        Assert.Equal(37, endpoints.Length);
         foreach (var endpoint in endpoints)
         foreach (var method in endpoint.Metadata.GetMetadata<Microsoft.AspNetCore.Routing.HttpMethodMetadata>()!.HttpMethods)
             yield return (method, "/" + Regex.Replace(endpoint.RoutePattern.RawText!, "\\{[^}]+\\}", _ => Guid.NewGuid().ToString()));
@@ -685,9 +685,9 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         Assert.Equal(new[] { InstitutionTokenContract.AccessScheme }, policy!.AuthenticationSchemes);
         var endpoints = host.Host.Services.GetRequiredService<Microsoft.AspNetCore.Routing.EndpointDataSource>().Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null).ToArray();
-        Assert.Equal(135, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null && e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null && e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()!.ControllerName!="InvitationAcceptance"));
+        Assert.Equal(167, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null && e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null && e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()!.ControllerName!="InvitationAcceptance"));
         MembershipHttpSurface.AssertRoutes(endpoints); Assert.Equal(MembershipHttpSurface.AdminCount, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is not null));
-        Assert.Equal(19, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is not null));
+        Assert.Equal(23, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is not null));
         Assert.Equal(MembershipHttpSurface.MvcCount, endpoints.Length);
         var rows = endpoints.SelectMany(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Routing.HttpMethodMetadata>()!.HttpMethods.Select(method =>
         {
@@ -704,7 +704,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         Assert.All(rows.Where(r => r.institutionExam), r =>
         {
             Assert.Equal(new[] { InstitutionExamEndpointAttribute.PolicyName }, r.policy);
-            Assert.Equal(new[] { nameof(IInstitutionExamManager) }, r.managers); Assert.Single(r.roles);
+            Assert.Equal(new[] { r.controller == "InstitutionClassSubject" ? nameof(IInstitutionClassSubjectManager) : nameof(IInstitutionExamManager) }, r.managers); Assert.Single(r.roles);
             Assert.DoesNotContain("institutionId", r.route!, StringComparison.OrdinalIgnoreCase);
         });
         await File.WriteAllTextAsync(Path.Combine(EvidenceDirectory(), "routes-" + environment + ".json"), System.Text.Json.JsonSerializer.Serialize(rows, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));

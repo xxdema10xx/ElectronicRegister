@@ -156,7 +156,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                     throw new ArgumentException("La lista delle domande non può essere nulla.");
 
                 var classSubject = await _subjectService.EnsureValidClassSubjectId(dto.ClassSubjectId);
-                _examService.EnsureValidName(dto.Name);
+
                 _examService.EnsureValidSchedule(dto.AvailableFrom, dto.AvailableUntil, dto.DurationMinutes);
                 _examService.EnsureValidPassingPercent(dto.PassingPercent);
 
@@ -196,7 +196,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                 // Delegare la validazione delle assegnazioni allo service
                 _examService.EnsureValidAssignedStudents(assignedStudents, students, classSubject.ClassId);
 
-                var exam = ExamCreationMapper.MapToExam(dto, examId, questions, assignedStudents);
+                var exam = ExamCreationMapper.MapToExam(dto, examId, questions, assignedStudents, classSubject.SubjectName);
 
                 await _examRepository.AddAsync(exam);
 
@@ -233,7 +233,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                     throw new ArgumentException("ClassSubjectId cannot be changed for an existing exam.");
                 await ValidateRetakeAsync(exam.Id, dto.RetakeOfExamId, exam.ClassSubjectId);
 
-                _examService.EnsureValidName(dto.Name);
+
                 _examService.EnsureValidSchedule(dto.AvailableFrom, dto.AvailableUntil, dto.DurationMinutes);
                 _examService.EnsureValidPassingPercent(dto.PassingPercent);
 
@@ -242,7 +242,6 @@ namespace ElectronicRegisterAPI.Application.Managers
                 {
                     ClassSubjectId = dto.ClassSubjectId,
                     RetakeOfExamId = dto.RetakeOfExamId,
-                    Name = dto.Name,
                     Description = dto.Description,
                     AvailableFrom = dto.AvailableFrom,
                     AvailableUntil = dto.AvailableUntil,
@@ -256,7 +255,9 @@ namespace ElectronicRegisterAPI.Application.Managers
 
                 // Update exam properties
                 exam.RetakeOfExamId = dto.RetakeOfExamId;
-                exam.Name = dto.Name;
+                var namingSubject = await _classSubjectRepository.GetByIdAsync(exam.ClassSubjectId)
+                    ?? throw new KeyNotFoundException("ClassSubject not found.");
+                exam.Name = namingSubject.SubjectName;
                 exam.Description = dto.Description;
                 exam.AvailableFrom = dto.AvailableFrom;
                 exam.AvailableUntil = dto.AvailableUntil;
@@ -499,12 +500,13 @@ namespace ElectronicRegisterAPI.Application.Managers
                     Revision = 0,
                     MaxScore = exam.TotalPoints,
                     PassingScore = exam.TotalPoints * exam.PassingPercent / 100m,
+                    DisplayOrderJson = StudentExamPresentation.CreateOrder(exam),
                     Answers = new List<SubmissionAnswer>()
                 };
 
                 await _examSubmissionRepository.AddAsync(submission);
 
-                started = ExamStudentMapper.ToStartExamDto(exam, submissionId, startedAt, deadlineAt);
+                started = ExamStudentMapper.ToStartExamDto(exam, submission);
             });
             return started;
         }

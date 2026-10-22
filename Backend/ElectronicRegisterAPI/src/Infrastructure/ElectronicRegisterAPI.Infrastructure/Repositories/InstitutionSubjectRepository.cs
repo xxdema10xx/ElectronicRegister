@@ -38,6 +38,8 @@ internal sealed class InstitutionSubjectRepository(ElectronicRegisterContext db,
         {
             if (await q.Owned<E.Subject>(t).Where(s => s.Id == subject.Id).ExecuteUpdateAsync(set => set.SetProperty(s => s.Name, subject.Name), ct) == 0)
                 throw InstitutionSchoolQueries.Missing();
+            await q.Owned<E.Exam>(t).Where(e => e.ClassSubject.SubjectId == subject.Id)
+                .ExecuteUpdateAsync(set => set.SetProperty(e => e.Name, subject.Name), ct);
         });
     }
     public async Task DeleteAsync(TenantContext t, Guid id, CancellationToken ct)

@@ -55,6 +55,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IInstitutionStudentRepository, InstitutionStudentRepository>();
         services.AddScoped<IInstitutionTeacherRepository, InstitutionTeacherRepository>();
         services.AddScoped<IInstitutionSubjectRepository, InstitutionSubjectRepository>();
+        services.AddScoped<IInstitutionClassRepository, InstitutionClassRepository>();
+        services.AddScoped<IInstitutionAcademicCatalogRepository, InstitutionAcademicCatalogRepository>();
+        services.AddScoped<IInstitutionClassSubjectRepository, InstitutionClassSubjectRepository>();
+        services.AddScoped<IInstitutionCampusRepository, InstitutionCampusRepository>();
+        services.AddScoped<InstitutionAdministrationPersistence>();
         services.AddScoped<IInstitutionExamRepositoryFactory, InstitutionExamRepositoryFactory>();
         services.AddScoped<ElectronicRegisterAPI.Domain.Models.ISubmissionExpiryStore, SubmissionExpiryStore>();
         services.AddScoped<IInstitutionTokens, InstitutionTokens>();

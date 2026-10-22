@@ -1,4 +1,10 @@
-# Portable local test database through MT-5D
+# Portable local test database through institutional academic management
+
+Current consolidated inventory: **42 tables, 94 triggers, 122 FKs, 170 indexes**.
+Historical inventories below describe their respective earlier delivery phases.
+Never adopt or overwrite an existing instance on 3306 or 13306. Create a new
+datadir and verify a free port; if 13306 is occupied, preserve it and provision a
+separate environment rather than changing or bypassing the existing test guard.
 
 Prerequisites: Windows, PowerShell 5.1+, Python 3.10+, .NET 10 SDK and the supported
 MAMP MySQL **5.7.24** binaries (mysql, mysqld, mysqladmin, mysqldump). Allow at least
@@ -105,3 +111,39 @@ explicit external configuration and verified TLS; no default secrets are supplie
 See [release operations](RELEASE_OPERATIONS.md) for health/readiness, public-only
 packaging, CI, artifact publication and the NEW-instance cold recovery drill.
 Neither the bootstrap nor the drill adopts/resets the current13306 instance.
+
+## Institution Class CRUD 20261022.2
+
+The public consolidated schema now contains 41 tables, 91 triggers, 120 FKs and
+167 indexes. It includes the prior exam presentation migration and the new
+append-only institution_class_event ledger. New instances use the bootstrap once;
+never replay the expand scripts afterward. Existing isolated 13306 instances use
+tools/Invoke-InstitutionClassMigration.ps1 after stopping writers, with a new private
+evidence directory and a verified backup. See migrations/institution-class/README.md
+and docs/api/INSTITUTION_CLASSES.md. Class retirement with dependencies is not a
+physical delete workflow. The original Class schema and CourseEdition assignment
+workflow remain unchanged.
+
+## Institution administration 20261022.3
+
+The bootstrap includes `institution_administration_event` for StudyArea, StudyPath,
+Biennium, both catalog associations, ClassSubject and Campus. It retains the Exam
+presentation column and independent Class ledger. Business tables are reused;
+historical actors/events are not fabricated. Fresh bootstrap is a one-time path,
+not followed by historical expansion scripts.
+
+For an explicitly newly provisioned isolated test instance with the preceding
+schema, the additive runner requires its exact datadir and a new evidence path:
+
+```powershell
+./tools/Invoke-InstitutionAdministrationMigration.ps1 -MySqlBin C:\MAMP\bin\mysql\bin `
+  -Port 13307 -ExpectedDataDirectory '<clone>/.exam-private/new-test/data' `
+  -PrivateEvidenceDirectory '<clone>/.exam-private/new-evidence' -Password $password -Apply
+```
+
+The runner attests version, port and datadir, refuses 3306/replay/active writers,
+checks parent schema, takes and hashes a full backup, then applies DDL once and
+validates it. Any partial DDL failure stops execution without replay or restore.
+Backups, credentials and datadir remain outside Git candidates. See
+`migrations/institution-administration/README.md` and
+`docs/api/INSTITUTION_ACADEMIC_MANAGEMENT.md`. Operational rollout flags stay false.

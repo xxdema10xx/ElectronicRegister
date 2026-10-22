@@ -28,7 +28,7 @@ internal sealed class InstitutionSubjectManager(InstitutionSchoolAuthorization a
         return row.Id;
     }
     public async Task UpdateAsync(Guid id, UpdateSubjectDto dto, CancellationToken ct)
-    { var t = await access.AdminAsync(ct); await subjects.UpdateAsync(t, new Subject { Id = id, Name = InstitutionSchoolAuthorization.Name(dto.Name, 150) }, ct); }
+    { var t = await access.AdminAsync(ct); await transactions.ExecuteAsync(() => subjects.UpdateAsync(t, new Subject { Id = id, Name = InstitutionSchoolAuthorization.Name(dto.Name, 150) }, ct), ct); }
     public async Task DeleteAsync(Guid id, CancellationToken ct)
     { var t = await access.AdminAsync(ct); await transactions.ExecuteAsync(() => subjects.DeleteAsync(t, id, ct), ct); }
 }

@@ -63,6 +63,13 @@ internal sealed class InstitutionExamDataScope
     // Permission joins are evaluated AFTER acquisition, so a waiting Start/Close or
     // Finalize cannot establish a stale REPEATABLE READ snapshot before the lock.
     internal IQueryable<E.Exam> LockExam(Guid id) => work is not null ? throw new UnauthorizedAccessException("Il worker non blocca Exam.") : db.Exams.FromSqlInterpolated($"SELECT * FROM exam WHERE id={id} AND institution_id={InstitutionId} FOR UPDATE");
+    // Current ownership/teacher predicate after waiting for an administrative reassignment.
+    internal Task LockExamCreationTenantAsync() => work is not null
+        ? throw new UnauthorizedAccessException("Operazione non consentita al worker.")
+        : db.Database.ExecuteSqlInterpolatedAsync($"SELECT id FROM institution WHERE id={InstitutionId} FOR UPDATE");
+    internal IQueryable<E.ClassSubject> LockAssignmentForExamWrite(Guid id) => work is not null
+        ? throw new UnauthorizedAccessException("Operazione non consentita al worker.")
+        : db.ClassSubjects.FromSqlInterpolated($"SELECT * FROM class_subject WHERE id={id} AND institution_id={InstitutionId} AND ({actor.IsAdmin}=1 OR teacher_id={actor.TeacherId}) FOR UPDATE");
     internal IQueryable<E.ExamSubmission> LockSubmission(Guid id) => work is not null
         ? db.ExamSubmissions.FromSqlInterpolated($"SELECT * FROM exam_submission WHERE id={id} AND id={work.SubmissionId} AND institution_id={InstitutionId} AND student_id={work.StudentId} AND exam_id={work.ExamId} FOR UPDATE")
         : db.ExamSubmissions.FromSqlInterpolated($"SELECT * FROM exam_submission WHERE id={id} AND institution_id={InstitutionId} AND ({!actor.IsStudent}=1 OR student_id={actor.StudentId}) FOR UPDATE");

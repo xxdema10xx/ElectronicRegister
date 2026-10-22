@@ -24,7 +24,7 @@ internal class ClassSubjectRepository : IClassSubjectRepository
     public async Task<DomainClassSubject?> GetByIdAsync(Guid id)
     {
         var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
-            .AsNoTracking()
+            .Include(cs => cs.Subject).AsNoTracking()
             .FirstOrDefaultAsync(cs => cs.Id == id);
 
         return entity is null ? null : MapToModel(entity);
@@ -33,13 +33,14 @@ internal class ClassSubjectRepository : IClassSubjectRepository
     public async Task<List<DomainClassSubject>> GetByIdsAsync(IEnumerable<Guid> ids)
     {
         return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
-            .AsNoTracking()
+            .Include(cs => cs.Subject).AsNoTracking()
             .Where(cs => ids.Contains(cs.Id))
             .Select(cs => new DomainClassSubject
             {
                 Id = cs.Id,
                 ClassId = cs.ClassId,
                 SubjectId = cs.SubjectId,
+                SubjectName = cs.Subject.Name,
                 TeacherId = cs.TeacherId
             })
             .ToListAsync();
@@ -48,7 +49,7 @@ internal class ClassSubjectRepository : IClassSubjectRepository
     public async Task<DomainClassSubject?> GetAsync(Guid classId, Guid subjectId, Guid? teacherId = null)
     {
         var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
-            .AsNoTracking()
+            .Include(cs => cs.Subject).AsNoTracking()
             .Where(cs =>
                 cs.ClassId == classId &&
                 cs.SubjectId == subjectId);
@@ -63,13 +64,14 @@ internal class ClassSubjectRepository : IClassSubjectRepository
     public async Task<List<DomainClassSubject>> GetByTeacherIdAsync(Guid teacherId)
     {
         return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
-            .AsNoTracking()
+            .Include(cs => cs.Subject).AsNoTracking()
             .Where(cs => cs.TeacherId == teacherId)
             .Select(cs => new DomainClassSubject
             {
                 Id = cs.Id,
                 ClassId = cs.ClassId,
                 SubjectId = cs.SubjectId,
+                SubjectName = cs.Subject.Name,
                 TeacherId = cs.TeacherId
             })
             .ToListAsync();
@@ -78,13 +80,14 @@ internal class ClassSubjectRepository : IClassSubjectRepository
     public async Task<List<DomainClassSubject>> GetBySubjectIdAsync(Guid subjectId)
     {
         return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
-            .AsNoTracking()
+            .Include(cs => cs.Subject).AsNoTracking()
             .Where(cs => cs.SubjectId == subjectId)
             .Select(cs => new DomainClassSubject
             {
                 Id = cs.Id,
                 ClassId = cs.ClassId,
                 SubjectId = cs.SubjectId,
+                SubjectName = cs.Subject.Name,
                 TeacherId = cs.TeacherId
             })
             .ToListAsync();
@@ -93,13 +96,14 @@ internal class ClassSubjectRepository : IClassSubjectRepository
     public async Task<List<DomainClassSubject>> GetByClassIdAsync(Guid classId)
     {
         return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>()
-            .AsNoTracking()
+            .Include(cs => cs.Subject).AsNoTracking()
             .Where(cs => cs.ClassId == classId)
             .Select(cs => new DomainClassSubject
             {
                 Id = cs.Id,
                 ClassId = cs.ClassId,
                 SubjectId = cs.SubjectId,
+                SubjectName = cs.Subject.Name,
                 TeacherId = cs.TeacherId
             })
             .ToListAsync();
@@ -122,6 +126,7 @@ internal class ClassSubjectRepository : IClassSubjectRepository
             Id = entity.Id,
             ClassId = entity.ClassId,
             SubjectId = entity.SubjectId,
+            SubjectName = entity.Subject.Name,
             TeacherId = entity.TeacherId
         };
     }

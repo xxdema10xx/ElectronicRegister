@@ -223,6 +223,12 @@ max-allowed-packet=64M
         names = self.query('SHOW FULL TABLES;').splitlines()
         inventory=expected['inventory']
         require(len(names)==inventory['tables'] and all(x.endswith('\tBASE TABLE') for x in names), 'Wrong tables/views')
+        require(self.query("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='exam_submission' AND COLUMN_NAME='display_order_json' AND DATA_TYPE='longtext' AND IS_NULLABLE='YES';")=='1', 'Submission display-order contract mismatch')
+        require(self.query("SELECT COUNT(*) FROM exam_submission WHERE display_order_json IS NOT NULL AND NOT JSON_VALID(display_order_json);")=='0', 'Invalid persisted submission display order')
+        class_checks = self.query((ROOT/'migrations/institution-class/002_validate.sql').read_text(encoding='utf-8')).splitlines()
+        require(len(class_checks)>=3 and all(row.split('\t')[-1]=='0' for row in class_checks[:3]), 'Class audit validation failed')
+        administration_checks = self.query((ROOT/'migrations/institution-administration/002_validate.sql').read_text(encoding='utf-8')).splitlines()
+        require(len(administration_checks)==4 and all(row.split('\t')[-1]=='0' for row in administration_checks), 'Institution administration audit validation failed')
         for table, ddl in expected['tables'].items():
             actual = self.query('SHOW CREATE TABLE `'+table+'`;').split('\t',1)[1]
             require(normalize_ddl(actual)==ddl, 'Table/column/index/FK definition mismatch: '+table)

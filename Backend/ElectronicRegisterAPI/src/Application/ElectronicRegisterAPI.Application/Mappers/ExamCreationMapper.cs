@@ -65,7 +65,7 @@ internal static class ExamCreationMapper
         return (questions, assignedStudents);
     }
 
-        public static Exam MapToExam(CreateExamDto dto, Guid examId, List<Question> questions, List<ExamStudent> assignedStudents)
+        public static Exam MapToExam(CreateExamDto dto, Guid examId, List<Question> questions, List<ExamStudent> assignedStudents, string subjectName)
         {
             if (dto is null) throw new ArgumentNullException(nameof(dto));
             if (questions is null) throw new ArgumentNullException(nameof(questions));
@@ -76,7 +76,7 @@ internal static class ExamCreationMapper
                 Id = examId,
                 ClassSubjectId = dto.ClassSubjectId,
                 RetakeOfExamId = dto.RetakeOfExamId,
-                Name = dto.Name,
+                Name = subjectName,
                 Description = dto.Description,
                 AvailableFrom = dto.AvailableFrom,
                 AvailableUntil = dto.AvailableUntil,

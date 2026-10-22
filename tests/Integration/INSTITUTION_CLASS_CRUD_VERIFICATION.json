@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-22",
+  "branch": "refactor-database-entities",
+  "build": "passed",
+  "mysql": "5.7.24",
+  "database_port": 13306,
+  "baseline_identities": 979,
+  "current_identities": 1034,
+  "missing_baseline_identities": 0,
+  "unit": {
+    "total": 90,
+    "passed": 90,
+    "failed": 0,
+    "skipped": 0
+  },
+  "integration": {
+    "total": 944,
+    "passed": 944,
+    "failed": 0,
+    "skipped": 0
+  },
+  "targeted_new": {
+    "unit": 14,
+    "integration": 41
+  },
+  "targeted_with_offline_guards": {
+    "unit": 14,
+    "integration": 48
+  },
+  "schema": {
+    "tables": 41,
+    "triggers": 91,
+    "fks": 120,
+    "indexes": 167,
+    "definitionErrors": []
+  },
+  "migration_version": "20261022.2",
+  "migration_replay_refused": true,
+  "sql_validators": {
+    "invalid_class_events": 0,
+    "foreign_class_actors": 0,
+    "class_event_trigger_count": 0
+  },
+  "portability": {
+    "manifestFiles": 133,
+    "manifestSha256": "8ECC23D0EEDB263D0499D744D90CD70150FB53AD535249897BEA34D80E2384AE",
+    "artifactErrors": [],
+    "priorWorkChangedUnexpectedly": [],
+    "gitDiffCheckExit": 0
+  },
+  "logs_sha256": {
+    "unit": "7A29F7C969D01B873A35B5E16660AF0E9FC1EFE0C43FA815E08F0CEA56FE68AE",
+    "integration": "5812C3A16CDB769B055ABE82EE71D6CDECF4BC473185C393226507B7971BFCDD"
+  },
+  "new_git_candidates": [
+    "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionClassController.cs",
+    "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionClassManager.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/InstitutionClassDtos.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IInstitutionClassManager.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionClassRepository.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/InstitutionClassRules.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.InstitutionClasses.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/InstitutionClassEvent.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/InstitutionClassIntegrity.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionClassRepository.cs",
+    "docs/api/INSTITUTION_CLASSES.md",
+    "migrations/institution-class/001_expand.sql",
+    "migrations/institution-class/002_validate.sql",
+    "migrations/institution-class/README.md",
+    "tests/Integration/INSTITUTION_CLASS_CRUD_REPORT.md",
+    "tests/Integration/INSTITUTION_CLASS_CRUD_VERIFICATION.json",
+    "tests/Integration/InstitutionClassCrudFixture.cs",
+    "tests/Integration/InstitutionClassCrudSecurityTests.cs",
+    "tests/Integration/InstitutionClassCrudTests.cs",
+    "tests/Unit/InstitutionClassRulesTests.cs",
+    "tools/Invoke-InstitutionClassMigration.ps1"
+  ]
+}

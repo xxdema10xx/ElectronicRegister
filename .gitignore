@@ -113,3 +113,22 @@ __pycache__/
 /release-private/
 /.r6f/
 /.r6fr/
+
+# Versioned exam presentation migration; never backups.
+!/migrations/exam-presentation/001_expand.sql
+!/migrations/exam-presentation/002_validate.sql
+
+/.exam-private/
+
+# Raw test logs stay local; sanitized verification summary is versioned.
+/tests/**/TestResults/exam-presentation-*.trx
+
+# Institution Class additive schema and validators.
+!/migrations/institution-class/001_expand.sql
+!/migrations/institution-class/002_validate.sql
+/tests/**/TestResults/institution-class-*.trx
+
+# Shared institution administration ledger.
+!/migrations/institution-administration/001_expand.sql
+!/migrations/institution-administration/002_validate.sql
+/tests/**/TestResults/institution-administration-*.trx

@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-22",
+  "branch": "refactor-database-entities",
+  "mysql": "5.7.24",
+  "port": 13306,
+  "build": "passed",
+  "unit": {
+    "total": 76,
+    "passed": 76,
+    "failed": 0,
+    "skipped": 0
+  },
+  "integration": {
+    "total": 903,
+    "passed": 903,
+    "failed": 0,
+    "skipped": 0
+  },
+  "retained_existing_tests": 966,
+  "new_unit_tests": 7,
+  "new_integration_tests": 6,
+  "source_identity_check": {
+    "existingSourceFilesCompared": 64,
+    "changedTestDescriptors": []
+  },
+  "schema": {
+    "mysql": "5.7.24\t13306",
+    "tableContracts": 40,
+    "triggerContracts": 88,
+    "foreignKeys": 118,
+    "indexes": 164,
+    "failures": []
+  },
+  "raw_log_sha256": {
+    "unit": "FDEB63C80160D7E575B937C6B66A7863CE80603ACC63F563294ACD49B0476D91",
+    "integration": "656248FDC53EB5A6180E514F484BF92C54BD6139AC429D679DDFFF33FD8D4DD8"
+  },
+  "migration": {
+    "migration": "20261022.1",
+    "ddlCompleted": "20261022.1",
+    "backupPresent": true,
+    "tableContracts": 40,
+    "failures": []
+  },
+  "portability": {
+    "manifestFiles": 128,
+    "manifestSha256": "0830196247D6C34037EF4104A4B244A45F4240E9F477A486200CC4826E9DAAC5",
+    "privateCandidateFiles": 0,
+    "failures": []
+  }
+}

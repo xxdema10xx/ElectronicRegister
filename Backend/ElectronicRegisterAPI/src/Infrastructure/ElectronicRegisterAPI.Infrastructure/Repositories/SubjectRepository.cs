@@ -88,15 +88,15 @@ internal class SubjectRepository : ISubjectRepository
 
     public async Task UpdateAsync(DomainSubject subject)
     {
-        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Subject>()
-            .FirstOrDefaultAsync(s => s.Id == subject.Id);
-
-        if (entity is null)
+        await using var transaction = _context.Database.CurrentTransaction is null
+            ? await _context.Database.BeginTransactionAsync() : null;
+        var rows = Rows<SubjectEntity>().Where(s => s.Id == subject.Id);
+        if (await rows.ExecuteUpdateAsync(set => set.SetProperty(s => s.Name, subject.Name)) == 0)
             return;
-
-        entity.Name = subject.Name;
-
-        await SaveAsync();
+        await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>()
+            .Where(e => e.ClassSubject.SubjectId == subject.Id)
+            .ExecuteUpdateAsync(set => set.SetProperty(e => e.Name, subject.Name));
+        if (transaction is not null) await transaction.CommitAsync();
     }
 
     public async Task DeleteAsync(DomainSubject subject)

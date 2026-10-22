@@ -41,3 +41,6 @@
 /Directory.Build.props text eol=lf
 **/packages.lock.json text eol=lf
 /.dockerignore text eol=lf
+
+/docs/api/INSTITUTION_CLASSES.md text eol=lf
+/docs/api/INSTITUTION_ACADEMIC_MANAGEMENT.md text eol=lf

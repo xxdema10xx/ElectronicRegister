@@ -18,6 +18,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IInstitutionStudentManager, InstitutionStudentManager>();
         services.AddScoped<IInstitutionTeacherManager, InstitutionTeacherManager>();
         services.AddScoped<IInstitutionSubjectManager, InstitutionSubjectManager>();
+        services.AddScoped<IInstitutionClassManager, InstitutionClassManager>();
+        services.AddScoped<IInstitutionAcademicCatalogManager, InstitutionAcademicCatalogManager>();
+        services.AddScoped<IInstitutionClassSubjectManager, InstitutionClassSubjectManager>();
+        services.AddScoped<IInstitutionCampusManager, InstitutionCampusManager>();
         services.AddScoped<IInstitutionExamManager, InstitutionExamManager>();
         services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionExpiryService, ElectronicRegisterAPI.Application.Services.InstitutionExpiryService>();
         services.AddScoped<IBienniumManager, BienniumManager>();

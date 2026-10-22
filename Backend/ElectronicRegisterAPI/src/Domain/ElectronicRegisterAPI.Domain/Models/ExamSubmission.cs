@@ -7,7 +7,8 @@ namespace ElectronicRegisterAPI.Domain.Models
 {
     public class ExamSubmission
     {
-        public Guid Id { get; set; }
+        public string? DisplayOrderJson { get; set; }
+    public Guid Id { get; set; }
 
         public Guid ExamId { get; set; }
         public Guid StudentId { get; set; }

@@ -155,11 +155,11 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             .OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null).ToList();
         var schoolEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute>() is not null).ToList();
-        Assert.Equal(24, schoolEndpoints.Count);
+        Assert.Equal(52, schoolEndpoints.Count);
         var examEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is not null).ToList();
-        Assert.Equal(33, examEndpoints.Count);
+        Assert.Equal(37, examEndpoints.Count);
         var courseEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null).ToList();
-        Assert.Equal(19, courseEndpoints.Count);
+        Assert.Equal(23, courseEndpoints.Count);
         Assert.All(courseEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
             a => a.Policy == ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute.PolicyName));
         var membershipEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is not null).ToList();

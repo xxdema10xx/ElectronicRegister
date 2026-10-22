@@ -69,16 +69,7 @@ internal sealed class InstitutionExamRepositoryFactory(ElectronicRegisterContext
                 SubmissionId = submission.Id, ExamId = exam.Id, Status = submission.Status, StartedAt = DateTime.SpecifyKind(submission.StartedAt, DateTimeKind.Utc),
                 DeadlineAt = DateTime.SpecifyKind(submission.DeadlineAt, DateTimeKind.Utc), SubmittedAt = submission.SubmittedAt is { } submitted ? DateTime.SpecifyKind(submitted, DateTimeKind.Utc) : null, CurrentRevision = submission.Revision,
                 Answers = submission.Answers.Select(a => new AnswerInputDto { QuestionId = a.QuestionId, OpenText = a.OpenText, SelectedOptionIds = a.SelectedOptionIds }).ToList(),
-                Exam = new ExamForStudentDto
-                {
-                    Id = exam.Id, Name = exam.Name, Description = exam.Description, AvailableUntil = DbUtc.Read(exam.AvailableUntil),
-                    DurationMinutes = exam.DurationMinutes, TotalPoints = exam.TotalPoints,
-                    Questions = exam.Questions.OrderBy(q => q.Position).ThenBy(q => q.Id).Select(q => new QuestionForStudentDto
-                    {
-                        Id = q.Id, Position = q.Position, Text = q.Text, Type = q.Type, Points = q.Points, Required = q.Required,
-                        Options = q.Options.OrderBy(o => o.Position).ThenBy(o => o.Id).Select(o => new QuestionOptionForStudentDto { Id = o.Id, Position = o.Position, Text = o.Text }).ToList()
-                    }).ToList()
-                }
+                Exam = ElectronicRegisterAPI.Domain.Models.StudentExamPresentation.Build(exam, submission.DisplayOrderJson)
             };
         }
         public async Task<ViolationReceiptDto> ReportViolationAsync(Guid submissionId, InstitutionViolationDto dto)

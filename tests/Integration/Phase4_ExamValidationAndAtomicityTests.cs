@@ -151,8 +151,20 @@ public partial class Phase4_ExamLifecycleTests
         using var scope = fixture.ScopeFactory.CreateScope();
         var ctx = scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
         var count = await ctx.Exams.CountAsync();
-        Assert.Equal(HttpStatusCode.BadRequest, (await _host.As(Teacher).PostAsJsonAsync("/api/Exam", dto)).StatusCode);
-        Assert.Equal(count, await ctx.Exams.CountAsync());
+        if (kind == "name")
+        {
+            var response = await _host.As(Teacher).PostAsJsonAsync("/api/Exam", dto);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var id = await response.Content.ReadFromJsonAsync<Guid>();
+            var subjectName = await ctx.ClassSubjects.Where(cs => cs.Id == dto.ClassSubjectId).Select(cs => cs.Subject.Name).SingleAsync();
+            Assert.Equal(subjectName, (await DetailAsync(id))!.Name);
+            Assert.Equal(count + 1, await ctx.Exams.CountAsync());
+        }
+        else
+        {
+            Assert.Equal(HttpStatusCode.BadRequest, (await _host.As(Teacher).PostAsJsonAsync("/api/Exam", dto)).StatusCode);
+            Assert.Equal(count, await ctx.Exams.CountAsync());
+        }
     }
 
     [Theory]
@@ -229,7 +241,7 @@ public partial class Phase4_ExamLifecycleTests
         {
             if (probe.Saves != failOnSave) return;
             if (failOnSave == 1) Assert.Equal(0, await ctx.Questions.AsNoTracking().CountAsync(q => q.ExamId == id));
-            else Assert.Equal(dto.Name, await ctx.Exams.AsNoTracking().Where(e => e.Id == id).Select(e => e.Name).SingleAsync());
+            else Assert.Equal(await ctx.ClassSubjects.Where(cs => cs.Id == dto.ClassSubjectId).Select(cs => cs.Subject.Name).SingleAsync(), await ctx.Exams.AsNoTracking().Where(e => e.Id == id).Select(e => e.Name).SingleAsync());
             throw new Phase3.InjectedFailure();
         };
         await using (var provider = Phase3.Provider(fixture, null, probe))

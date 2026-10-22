@@ -299,7 +299,7 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
                 e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is null).ToArray();
         MembershipHttpSurface.AssertRoutes(sources.Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>());
         Assert.Equal(MembershipHttpSurface.AdminCount, sources.Endpoints.Count(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is not null));
-        Assert.Equal(19, sources.Endpoints.Count(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null));
+        Assert.Equal(23, sources.Endpoints.Count(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null));
         // Discover every current legacy action; new explicitly migrated endpoints have their own HTTP suite.
         Assert.Equal(73, endpoints.Length); // Preserved baseline plus dynamic traversal of every discovered action below.
         Assert.Contains(endpoints, e => e.RoutePattern.RawText!.StartsWith("api/Student", StringComparison.OrdinalIgnoreCase));

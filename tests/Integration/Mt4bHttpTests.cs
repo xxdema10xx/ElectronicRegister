@@ -366,7 +366,7 @@ public sealed partial class Mt4bHttpTests(IntegrationFixture fixture) : IAsyncLi
         Assert.Equal(MembershipHttpSurface.MvcCount,mvc.Length);
         MembershipHttpSurface.AssertRoutes(mvc); Assert.Equal(MembershipHttpSurface.AdminCount,mvc.Count(e=>e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is not null));
         var previous=mvc.Where(e=>e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null && e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()!.ControllerName!="InvitationAcceptance").ToArray();
-        Assert.Equal(154,previous.Length);Assert.Equal(135,previous.Count(e=>e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null));
+        Assert.Equal(190,previous.Length);Assert.Equal(167,previous.Count(e=>e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null));
         var rows=all.SelectMany(e=>(e.Metadata.GetMetadata<Microsoft.AspNetCore.Routing.HttpMethodMetadata>()?.HttpMethods??new[]{"GET"}).Select(method=>new {
             method,route=e.RoutePattern.RawText,course=e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is not null,
             policy=e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>().Select(a=>a.Policy).Where(p=>!string.IsNullOrEmpty(p)).ToArray(),
@@ -378,9 +378,10 @@ public sealed partial class Mt4bHttpTests(IntegrationFixture fixture) : IAsyncLi
             positiveTest=e.RoutePattern.RawText!.Contains("/transition")?nameof(Mt4cLifecycle_EnrolledTerminatesWithExplicitDateReasonRevisionAndHistory):e.RoutePattern.RawText.Contains("/completion-date")?nameof(Mt4cLifecycle_CorrectionKeepsThePreviousTerminalDateAndCannotCorrectEnrolled):e.RoutePattern.RawText.Contains("/history")||e.RoutePattern.RawText.Contains("/audit")?nameof(Mt4cLifecycle_AllMt4bMutationsAreAuditedAtomicallyWithoutDuplicateClassEvents):e.RoutePattern.RawText.Contains("enrollments")?nameof(EnrollmentHistoryAndPersonalMembershipProfilesStaySeparateAcrossSharedUser):e.RoutePattern.RawText.Contains("campuses")?nameof(CampusLinksAreManyToManyScopedUniqueAndPreservedWhenInactive):e.RoutePattern.RawText.Contains("classes")?nameof(ExplicitClassAssignmentIsPathScopedImmutableAndNeverChangesStudentClass):nameof(CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath),
             negativeTest=e.RoutePattern.RawText.Contains("/me")?nameof(MissingSelectedStudentProfileNeverFallsBackToOtherInstitution):nameof(NonAdminsCannotUseAnyAdministrativeAction)
         })).ToArray();
-        var added=rows.Where(e=>e.course).ToArray();Assert.Equal(19,added.Length);
-        Assert.All(added,e=>{Assert.Equal(new[]{InstitutionCourseEndpointAttribute.PolicyName},e.policy);Assert.Equal(new[]{nameof(IInstitutionCourseManager)},e.manager);Assert.Single(e.roles);Assert.Contains(e.roles[0],new[]{"InstitutionAdmin","Student"});});
-        Assert.DoesNotContain(added,e=>e.method=="DELETE");
+        var added=rows.Where(e=>e.course).ToArray();Assert.Equal(23,added.Length);
+        Assert.All(added,e=>{Assert.Equal(new[]{InstitutionCourseEndpointAttribute.PolicyName},e.policy);Assert.Equal(new[]{e.route!.StartsWith("api/institution/campuses")?nameof(IInstitutionCampusManager):nameof(IInstitutionCourseManager)},e.manager);Assert.Single(e.roles);Assert.Contains(e.roles[0],new[]{"InstitutionAdmin","Student"});});
+        Assert.Equal("api/institution/campuses/{id:guid}",Assert.Single(added.Where(e=>e.method=="DELETE")).route);
+        Assert.DoesNotContain(added.Where(e=>!e.route!.StartsWith("api/institution/campuses")),e=>e.method=="DELETE");
         await File.WriteAllTextAsync(Path.Combine(EvidenceDirectory(),"routes-"+environment+".json"),System.Text.Json.JsonSerializer.Serialize(rows,new System.Text.Json.JsonSerializerOptions {WriteIndented=true}));
         await Expect(await Request(Editions,await Access(),host:host),HttpStatusCode.OK);
         await Expect(await Request("/api/Users",await Access(),host:host),HttpStatusCode.Unauthorized);

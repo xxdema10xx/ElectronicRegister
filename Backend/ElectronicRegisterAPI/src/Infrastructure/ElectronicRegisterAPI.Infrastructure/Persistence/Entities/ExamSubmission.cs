@@ -5,6 +5,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
 public partial class ExamSubmission
 {
+    public string? DisplayOrderJson { get; set; }
     public Guid Id { get; set; }
 
     public Guid ExamId { get; set; }
