@@ -229,6 +229,8 @@ max-allowed-packet=64M
         require(len(class_checks)>=3 and all(row.split('\t')[-1]=='0' for row in class_checks[:3]), 'Class audit validation failed')
         administration_checks = self.query((ROOT/'migrations/institution-administration/002_validate.sql').read_text(encoding='utf-8')).splitlines()
         require(len(administration_checks)==4 and all(row.split('\t')[-1]=='0' for row in administration_checks), 'Institution administration audit validation failed')
+        transfer_checks = self.query((ROOT/'migrations/student-class-transfer/002_validate.sql').read_text(encoding='utf-8')).splitlines()
+        require(len(transfer_checks)==5 and all(row.split('\t')[-1]=='0' for row in transfer_checks), 'Student transfer integrity validation failed')
         for table, ddl in expected['tables'].items():
             actual = self.query('SHOW CREATE TABLE `'+table+'`;').split('\t',1)[1]
             require(normalize_ddl(actual)==ddl, 'Table/column/index/FK definition mismatch: '+table)

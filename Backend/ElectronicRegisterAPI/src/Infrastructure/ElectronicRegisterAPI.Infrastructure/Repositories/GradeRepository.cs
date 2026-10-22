@@ -118,6 +118,7 @@ internal class GradeRepository : IGradeRepository
         
         if(studentId.HasValue) query = query.Where(g => g.StudentId == studentId.Value);
 
+        if(_scope is not null) query=_scope.CurrentCareerGrades(query);
         var yearlyAverage = await query.Select(g => (decimal?)g.Value).AverageAsync() ?? 0;
 
         var monthlyData = await query

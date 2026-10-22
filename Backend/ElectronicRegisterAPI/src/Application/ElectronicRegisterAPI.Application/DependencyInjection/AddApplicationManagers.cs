@@ -16,6 +16,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionGovernanceManager, InstitutionGovernanceManager>();
         services.AddScoped<ElectronicRegisterAPI.Domain.Models.IMembershipAuditManager, MembershipAuditManager>();
         services.AddScoped<IInstitutionStudentManager, InstitutionStudentManager>();
+        Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions.TryAddSingleton(services, new ElectronicRegisterAPI.Domain.Models.AcademicTransferOptions());
+        Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions.TryAddSingleton(services, TimeProvider.System);
+        services.AddScoped<IInstitutionStudentTransferManager, InstitutionStudentTransferManager>();
         services.AddScoped<IInstitutionTeacherManager, InstitutionTeacherManager>();
         services.AddScoped<IInstitutionSubjectManager, InstitutionSubjectManager>();
         services.AddScoped<IInstitutionClassManager, InstitutionClassManager>();

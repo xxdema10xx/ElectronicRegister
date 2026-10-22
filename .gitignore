@@ -132,3 +132,7 @@ __pycache__/
 !/migrations/institution-administration/001_expand.sql
 !/migrations/institution-administration/002_validate.sql
 /tests/**/TestResults/institution-administration-*.trx
+
+# Additive student transfer schema and validators.
+!/migrations/student-class-transfer/001_expand.sql
+!/migrations/student-class-transfer/002_validate.sql

@@ -1,6 +1,6 @@
 # Portable local test database through institutional academic management
 
-Current consolidated inventory: **42 tables, 94 triggers, 122 FKs, 170 indexes**.
+Current consolidated inventory: **43 tables, 98 triggers, 131 FKs, 180 indexes**.
 Historical inventories below describe their respective earlier delivery phases.
 Never adopt or overwrite an existing instance on 3306 or 13306. Create a new
 datadir and verify a free port; if 13306 is occupied, preserve it and provision a
@@ -147,3 +147,17 @@ validates it. Any partial DDL failure stops execution without replay or restore.
 Backups, credentials and datadir remain outside Git candidates. See
 `migrations/institution-administration/README.md` and
 `docs/api/INSTITUTION_ACADEMIC_MANAGEMENT.md`. Operational rollout flags stay false.
+
+## Student class transfer (20261022.4)
+
+The consolidated bootstrap includes `student.transfer_revision` and the immutable
+`student_class_transfer_event` ledger (43 tables, 98 triggers, 131 FK, 180 indexes).
+Never replay its additive migration after bootstrap. For an isolated pre-upgrade
+test instance only, use `tools/Invoke-StudentClassTransferMigration.ps1` with an
+exact newly provisioned datadir and new evidence directory; it performs preflight,
+backup and stop-on-partial-failure handling. Existing databases on 3306/13306 are
+not migration targets. No history or actors are backfilled.
+
+Configuration defaults: `AcademicTransfers:MaxMonthsFromCourseStart=3`,
+`AcademicTransfers:TimeZoneId=Europe/Rome`. Invalid configuration blocks startup.
+These are application-wide administrative policy, not a claim of a statutory limit.

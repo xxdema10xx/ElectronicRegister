@@ -100,7 +100,7 @@ internal sealed class InstitutionClassRepository(ElectronicRegisterContext db, I
             await using var command = db.Database.GetDbConnection().CreateCommand();
             command.Transaction = db.Database.CurrentTransaction!.GetDbTransaction();
             command.CommandText = "SELECT DISTINCT TABLE_NAME,CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_SCHEMA=DATABASE() AND REFERENCED_TABLE_NAME='class'";
-            var known = new HashSet<string> { "student:fk_student_class", "student:fk_mt3a_student_class", "class_subject:fk_cs_class", "class_subject:fk_mt3a_cs_class", "course_administration_event:fk_mt4c_class" };
+            var known = new HashSet<string> { "student:fk_student_class", "student:fk_mt3a_student_class", "class_subject:fk_cs_class", "class_subject:fk_mt3a_cs_class", "course_administration_event:fk_mt4c_class", "student_class_transfer_event:fk_transfer_from_class", "student_class_transfer_event:fk_transfer_to_class" };
             await using (var reader = await command.ExecuteReaderAsync(ct))
                 while (await reader.ReadAsync(ct))
                     if (!known.Remove(reader.GetString(0) + ":" + reader.GetString(1))) throw new BusinessRuleException("Inventario dipendenze classe da aggiornare.");

@@ -16,7 +16,7 @@ push, reset, restore or destructive checkout was performed.
 | Class | Existing complete safe CRUD | PUT Name only; edition assignment stays separate |
 | Subject | Existing CRUD | Subject rename preserves derived Exam.Name |
 | Teacher | Existing CRUD | Tenant/profile/assignment protections retained |
-| Student | Existing CRUD | Class validation retained; no transfer workflow added |
+| Student | Existing CRUD | Dedicated audited within-institution class transfer; see STUDENT_CLASS_TRANSFER.md |
 | ClassSubject | Complete safe CRUD | Teacher-only PUT without Exam/Grade/history; teacher list retained |
 | Campus | Complete CRUD | Active toggle; linked/historical delete blocked |
 | CourseEdition | Intentional partial CRUD | Create/read/descriptive update; no generic DELETE |
@@ -33,7 +33,8 @@ push, reset, restore or destructive checkout was performed.
 | Administrative and exam ledgers | Append-only / scoped reads | No event UPDATE/DELETE APIs |
 | New shared catalog/resource ledger | Persistence only | Audited SQL history; dedicated history HTTP API not requested/added |
 | Class/Campus archival, historical teacher reassignment | Not implemented | Separate policy/workflow needed |
-| Student/class/course transfers; repeated enrollment episodes | Not implemented | Intentionally excluded |
+| Student class transfer within an institution | Dedicated workflow | Audited, calendar-limited; optional atomic course withdrawal/new enrollment |
+| Class/course structural transfers; repeated enrollment episodes | Not implemented | Intentionally excluded |
 | CourseEdition lifecycle or generic historical deletion | Not added | Requires explicit workflow/policy |
 
 ## Delivery phases and verification
@@ -147,7 +148,7 @@ CourseApi rollout defaults remain false. No deployment or rollout flag changed.
 
 ## Limitations and verification tooling
 
-Historical associations, transfers, archival and lifecycle changes remain the
+Historical association rewrites, structural class/course transfers, archival and lifecycle changes remain the
 explicitly excluded workflows above. Catalog association details expose IDs;
 descriptive data is available from scoped catalog details instead of large graphs.
 Campus names are not artificially made unique. Existing rows receive no fictitious

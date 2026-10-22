@@ -155,7 +155,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             .OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null).ToList();
         var schoolEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute>() is not null).ToList();
-        Assert.Equal(52, schoolEndpoints.Count);
+        Assert.Equal(54, schoolEndpoints.Count);
         var examEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is not null).ToList();
         Assert.Equal(37, examEndpoints.Count);
         var courseEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null).ToList();

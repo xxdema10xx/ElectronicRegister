@@ -1,7 +1,7 @@
 # Empty consolidated schema - MT-5D
 
 DDL-only source, extracted from verified SHOW CREATE metadata. No dump or row data.
-The contract preserves 42 tables, 94 triggers, 122 FK, 170 indexes and every trigger
+The contract preserves 43 tables, 98 triggers, 131 FK, 180 indexes and every trigger
 SQL_MODE/charset/collation/DEFINER/ACTION_ORDER context. No historical migration hash
 is rewritten. AUTO_INCREMENT watermarks are omitted; column attributes remain.
 

@@ -27,6 +27,12 @@ builder.WebHost.ConfigureKestrel(o => { o.AddServerHeader = false; o.Limits.MaxR
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddBusinessServices();
 builder.Services.AddApplicationManagers();
+builder.Services.AddOptions<ElectronicRegisterAPI.Domain.Models.AcademicTransferOptions>()
+    .Bind(builder.Configuration.GetSection(ElectronicRegisterAPI.Domain.Models.AcademicTransferOptions.Section))
+    .Validate(ElectronicRegisterAPI.Domain.Models.AcademicTransferOptions.Valid,"Invalid academic transfer configuration")
+    .ValidateOnStart();
+builder.Services.AddSingleton(sp=>sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<ElectronicRegisterAPI.Domain.Models.AcademicTransferOptions>>().Value);
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddApiServices();
 
 builder.Services.AddControllers()

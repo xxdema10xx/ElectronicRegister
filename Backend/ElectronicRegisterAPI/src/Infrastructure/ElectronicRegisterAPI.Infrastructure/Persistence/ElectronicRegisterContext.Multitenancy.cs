@@ -173,6 +173,7 @@ public partial class ElectronicRegisterContext
         ConfigureMt4(modelBuilder);
         ConfigureMt4c(modelBuilder);
         ConfigureInstitutionClasses(modelBuilder);
+        ConfigureStudentTransfers(modelBuilder);
         ConfigureInstitutionAdministration(modelBuilder);
         ConfigureMt5bSecurity(modelBuilder);
         ConfigureMt5d(modelBuilder);

@@ -25,15 +25,24 @@ internal sealed class InstitutionExamDataScope
     internal IQueryable<T> Owned<T>() where T : class => db.Set<T>().Where(e => EF.Property<Guid>(e, "InstitutionId") == InstitutionId);
     internal IQueryable<E.ClassSubject> Assignments => actor.IsAdmin ? Owned<E.ClassSubject>() : actor.IsTeacher
         ? Owned<E.ClassSubject>().Where(cs => cs.TeacherId == actor.TeacherId || actor.CombinedRead && Owned<E.Student>().Any(s => s.Id == actor.StudentId && s.ClassId == cs.ClassId))
-        : Owned<E.ClassSubject>().Where(cs => Owned<E.Student>().Any(s => s.Id == actor.StudentId && s.ClassId == cs.ClassId));
+        : Owned<E.ClassSubject>().Where(cs => Owned<E.Student>().Any(s => s.Id == actor.StudentId && s.ClassId == cs.ClassId) ||
+            Owned<E.Grade>().Any(g=>g.StudentId==actor.StudentId && g.ClassSubjectId==cs.Id) ||
+            Owned<E.ExamSubmission>().Any(sub=>sub.StudentId==actor.StudentId && Owned<E.Exam>().Any(e=>e.Id==sub.ExamId && e.ClassSubjectId==cs.Id)));
     internal IQueryable<E.Exam> Exams => work is not null ? Owned<E.Exam>().Where(e => e.Id == work.ExamId && e.ClassSubjectId == work.ClassSubjectId &&
         Owned<E.ClassSubject>().Any(cs => cs.Id == e.ClassSubjectId) && Owned<E.ExamStudent>().Any(es => es.ExamId == e.Id && es.StudentId == work.StudentId)) : actor.IsStudent
-        ? Owned<E.Exam>().Where(e => e.Status != "draft" && Owned<E.ExamStudent>().Any(es => es.ExamId == e.Id && es.StudentId == actor.StudentId))
+        ? Owned<E.Exam>().Where(e => e.Status != "draft" && Owned<E.ExamStudent>().Any(es => es.ExamId == e.Id && es.StudentId == actor.StudentId) &&
+            (Owned<E.ClassSubject>().Any(cs=>cs.Id==e.ClassSubjectId && Owned<E.Student>().Any(st=>st.Id==actor.StudentId && st.ClassId==cs.ClassId)) || Owned<E.ExamSubmission>().Any(sub=>sub.ExamId==e.Id && sub.StudentId==actor.StudentId)))
         : Owned<E.Exam>().Where(e => Owned<E.ClassSubject>().Any(cs => cs.Id == e.ClassSubjectId && (actor.IsAdmin || cs.TeacherId == actor.TeacherId)));
     internal IQueryable<E.ExamSubmission> Submissions => work is not null ? Owned<E.ExamSubmission>().Where(s => s.Id == work.SubmissionId && s.ExamId == work.ExamId && s.StudentId == work.StudentId &&
         Exams.Any(e => e.Id == s.ExamId) && Owned<E.Student>().Any(st => st.Id == s.StudentId)) : actor.IsStudent
         ? Owned<E.ExamSubmission>().Where(s => s.StudentId == actor.StudentId && Exams.Any(e => e.Id == s.ExamId))
         : Owned<E.ExamSubmission>().Where(s => Exams.Any(e => e.Id == s.ExamId));
+    internal IQueryable<E.Grade> CurrentCareerGrades(IQueryable<E.Grade> grades) => grades.Where(g=>
+        !Owned<E.StudentClassTransferEvent>().Any(e=>e.StudentId==g.StudentId && e.FromCourseEditionId!=e.ToCourseEditionId) ||
+        Owned<E.Student>().Any(st=>st.Id==g.StudentId &&
+        Owned<E.Class>().Any(current=>current.Id==st.ClassId && Owned<E.ClassSubject>().Any(cs=>cs.Id==g.ClassSubjectId &&
+            Owned<E.Class>().Any(origin=>origin.Id==cs.ClassId && (origin.Id==current.Id ||
+                EF.Property<Guid?>(current,"CourseEditionId")!=null && EF.Property<Guid?>(origin,"CourseEditionId")==EF.Property<Guid?>(current,"CourseEditionId")))))));
     internal IQueryable<T> Query<T>() where T : class
     {
         if (work is not null)
@@ -51,7 +60,9 @@ internal sealed class InstitutionExamDataScope
             typeof(T) == typeof(E.Grade) ? Owned<E.Grade>().Where(g => actor.IsStudent ? g.StudentId == actor.StudentId :
                 actor.CombinedRead && g.StudentId == actor.StudentId || Owned<E.ClassSubject>().Any(cs => cs.Id == g.ClassSubjectId && (actor.IsAdmin || cs.TeacherId == actor.TeacherId))) :
             typeof(T) == typeof(E.Student) ? Owned<E.Student>().Where(s => actor.IsAdmin || (actor.IsStudent ? s.Id == actor.StudentId :
-                actor.CombinedRead && s.Id == actor.StudentId || Owned<E.ClassSubject>().Any(cs => cs.ClassId == s.ClassId && cs.TeacherId == actor.TeacherId))) :
+                actor.CombinedRead && s.Id == actor.StudentId || Owned<E.ClassSubject>().Any(cs => cs.ClassId == s.ClassId && cs.TeacherId == actor.TeacherId) ||
+                Owned<E.Grade>().Any(g=>g.StudentId==s.Id && Owned<E.ClassSubject>().Any(cs=>cs.Id==g.ClassSubjectId && cs.TeacherId==actor.TeacherId)) ||
+                Owned<E.ExamSubmission>().Any(sub=>sub.StudentId==s.Id && Owned<E.Exam>().Any(e=>e.Id==sub.ExamId && Owned<E.ClassSubject>().Any(cs=>cs.Id==e.ClassSubjectId && cs.TeacherId==actor.TeacherId))))) :
             typeof(T) == typeof(E.Question) ? Owned<E.Question>().Where(q => Exams.Any(e => e.Id == q.ExamId)) :
             typeof(T) == typeof(E.QuestionOption) ? Owned<E.QuestionOption>().Where(o => Owned<E.Question>().Any(q => q.Id == o.QuestionId && Exams.Any(e => e.Id == q.ExamId))) :
             typeof(T) == typeof(E.ExamStudent) ? Owned<E.ExamStudent>().Where(es => Exams.Any(e => e.Id == es.ExamId) && (!actor.IsStudent || es.StudentId == actor.StudentId)) :
@@ -62,6 +73,12 @@ internal sealed class InstitutionExamDataScope
     // The first statement is a locking read of exactly one tenant-owned parent.
     // Permission joins are evaluated AFTER acquisition, so a waiting Start/Close or
     // Finalize cannot establish a stale REPEATABLE READ snapshot before the lock.
+    internal async Task LockStudentBeforeStartAsync()
+    {
+        if(work is not null || !actor.IsStudent)return;
+        await db.Database.ExecuteSqlInterpolatedAsync($"SELECT id FROM institution WHERE id={InstitutionId} LOCK IN SHARE MODE");
+        await db.Database.ExecuteSqlInterpolatedAsync($"SELECT id FROM student WHERE institution_id={InstitutionId} AND id={actor.StudentId} FOR UPDATE");
+    }
     internal IQueryable<E.Exam> LockExam(Guid id) => work is not null ? throw new UnauthorizedAccessException("Il worker non blocca Exam.") : db.Exams.FromSqlInterpolated($"SELECT * FROM exam WHERE id={id} AND institution_id={InstitutionId} FOR UPDATE");
     // Current ownership/teacher predicate after waiting for an administrative reassignment.
     internal Task LockExamCreationTenantAsync() => work is not null

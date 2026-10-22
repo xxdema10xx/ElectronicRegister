@@ -53,6 +53,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
                 throw new InvalidOperationException("Exam row lock requires an ambient transaction.");
             if (_scope is not null)
             {
+                await _scope.LockStudentBeforeStartAsync();
                 if (await _scope.LockExam(id).AsTracking().FirstOrDefaultAsync() is null) return null;
                 var scoped = await _scope.Exams.AsTracking().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).Where(e => e.Id == id)
                     .Include(e => e.Questions).ThenInclude(q => q.QuestionOptions).Include(e => e.ExamStudents).FirstOrDefaultAsync();

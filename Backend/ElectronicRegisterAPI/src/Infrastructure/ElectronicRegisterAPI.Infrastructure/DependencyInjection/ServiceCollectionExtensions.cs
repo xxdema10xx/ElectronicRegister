@@ -53,6 +53,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<InstitutionSchoolQueries>();
         services.AddScoped<ICourseStructureRepository, CourseStructureRepository>();
         services.AddScoped<IInstitutionStudentRepository, InstitutionStudentRepository>();
+        services.AddScoped<IInstitutionStudentTransferRepository, InstitutionStudentTransferRepository>();
         services.AddScoped<IInstitutionTeacherRepository, InstitutionTeacherRepository>();
         services.AddScoped<IInstitutionSubjectRepository, InstitutionSubjectRepository>();
         services.AddScoped<IInstitutionClassRepository, InstitutionClassRepository>();
