@@ -6,6 +6,7 @@ using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -111,7 +112,8 @@ public partial class Phase4_ExamLifecycleTests
         {
             var worker = new ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker(
                 provider.GetRequiredService<IServiceScopeFactory>(),
-                Microsoft.Extensions.Logging.Abstractions.NullLogger<ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker>.Instance);
+                Microsoft.Extensions.Logging.Abstractions.NullLogger<ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker>.Instance,
+                new ConfigurationBuilder().AddInMemoryCollection(new System.Collections.Generic.Dictionary<string,string?> { ["Identity:Legacy:Enabled"] = "true" }).Build());
             await worker.ProcessBatchAsync(System.Threading.CancellationToken.None);
             worker.Dispose();
         }

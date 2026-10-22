@@ -103,6 +103,9 @@ public static class InstitutionAuthentication
                     // Reject duplicate JSON properties even if a JWT reader would overwrite them.
                     var raw = context.Request.Headers.Authorization.ToString()["Bearer ".Length..];
                     using var payload = JsonDocument.Parse(Base64UrlEncoder.DecodeBytes(raw.Split('.')[1]));
+                    using var header = JsonDocument.Parse(Base64UrlEncoder.DecodeBytes(raw.Split('.')[0]));
+                    if (header.RootElement.EnumerateObject().GroupBy(p => p.Name).Any(g => g.Count() != 1))
+                        throw new SecurityTokenException();
                     if (payload.RootElement.EnumerateObject().GroupBy(p => p.Name).Any(g => g.Count() != 1))
                         throw new SecurityTokenException();
                     if (!selection && (!payload.RootElement.TryGetProperty(InstitutionTokenContract.SecurityGeneration, out var generation) ||

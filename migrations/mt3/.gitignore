@@ -1,1 +1,11 @@
-!*.sql
+!001_profile_expand.sql
+!002_profile_backfill.sql
+!003_ownership_expand.sql
+!004_ownership_preflight.sql
+!005_ownership_backfill.sql
+!006_ownership_enforce.sql
+!007_ownership_triggers.sql
+!008_owned_profile_backfill.sql
+!009_explicit_platform_audit.sql
+!010_prune_redundant_owner_indexes.sql
+!011_prune_covered_fk_indexes.sql

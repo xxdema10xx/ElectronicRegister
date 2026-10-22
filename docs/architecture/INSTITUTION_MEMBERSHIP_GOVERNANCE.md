@@ -1,3 +1,7 @@
+> Current contract: MT-5C onboarding and MT-5D governance/recovery are implemented in code.
+> See [current governance](INSTITUTION_GOVERNANCE_AND_RECOVERY.md) and the current implementation reports.
+> The planning/status text below is retained as historical MT-5A/early MT-5B evidence.
+
 > Aggiornamento MT5B: **PARZIALE, scritture non implementate e chiuse**. Baseline
 > nuova 711/711 Passed su MAMP MySQL 5.7.24 isolato 13306; nessun DDL o codice
 > applicativo modificato. Restano da definire il contratto attribuito dei writer

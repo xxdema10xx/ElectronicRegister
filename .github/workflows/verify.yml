@@ -1,0 +1,56 @@
+name: Verify portable backend
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - run: python tools/verify-project-artifacts.py
+      - run: python -m unittest discover -s tools -p 'test_*.py'
+      - run: dotnet restore Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --locked-mode
+      - run: dotnet list Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx package --vulnerable --include-transitive --format json > dependency-audit.json
+      - run: python tools/check-dependency-audit.py dependency-audit.json
+      - run: dotnet build Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --no-restore -c Release
+      - run: dotnet test tests/Unit/Unit.Tests.csproj --no-build -c Release
+  mysql:
+    # Owner supplies a disposable Windows runner with the licensed/test binary.
+    # No credentials or operational database are available to PR code.
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: [self-hosted, Windows, er-disposable-mysql57]
+    environment: isolated-database-verification
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Fresh test-only instance and full regression
+        shell: pwsh
+        env:
+          ER_MYSQL_BIN: ${{ vars.ER_MYSQL_BIN }}
+        run: |
+          $ErrorActionPreference='Stop'
+          $plain=[Convert]::ToHexString([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
+          Write-Output "::add-mask::$plain"
+          $secret=ConvertTo-SecureString $plain -AsPlainText -Force
+          ./tools/setup-local-test-db.ps1 -MySqlBin $env:ER_MYSQL_BIN -CreateInstance -ConfirmIsolatedTest -Password $secret
+          if($LASTEXITCODE -ne 0){throw 'Bootstrap failed: preserve state, no retry'}
+          ./tools/test-local.ps1 -MySqlBin $env:ER_MYSQL_BIN -Password $secret
+          if($LASTEXITCODE -ne 0){throw 'Regression failed'}

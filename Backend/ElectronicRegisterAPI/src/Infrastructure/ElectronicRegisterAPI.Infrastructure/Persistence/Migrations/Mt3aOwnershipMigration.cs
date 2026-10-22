@@ -94,6 +94,8 @@ public static class Mt3aOwnershipMigration
         known.UnionWith(await Mt4CourseStructureIntegrity.ValidateIfPresentAsync(c, tx));
         known.UnionWith(await Mt5bSecurityStateIntegrity.ValidateIfPresentAsync(c, tx));
         known.UnionWith(await Mt5dMembershipEventIntegrity.ValidateIfPresentAsync(c, tx));
+        known.UnionWith(await Mt5cOnboardingIntegrity.ValidateIfPresentAsync(c, tx));
+        known.UnionWith(await Mt5GovernanceIntegrity.ValidateIfPresentAsync(c, tx));
         await using (var tables = new MySqlCommand("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()",c,tx))
         {
             await using var reader=await tables.ExecuteReaderAsync();
@@ -204,8 +206,9 @@ public static class Mt3aOwnershipMigration
 
     private static async Task VerifyGuidTypesAsync(MySqlConnection c)
     {
-        // request_id is a legacy correlation string, not a Guid resource key.
-        var wrong = Convert.ToInt64(await new MySqlCommand("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND (COLUMN_NAME='id' OR RIGHT(COLUMN_NAME,3)='_id') AND COLUMN_NAME<>'request_id' AND (COLUMN_TYPE<>'char(36)' OR COLLATION_NAME<>'ascii_general_ci')",c).ExecuteScalarAsync());
+        // Operator/key identifiers are explicit authority names, not Guid resource keys.
+        // Only their exact owner tables, names, types and collation are classified.
+        var wrong = Convert.ToInt64(await new MySqlCommand("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND (COLUMN_NAME='id' OR RIGHT(COLUMN_NAME,3)='_id') AND COLUMN_NAME<>'request_id' AND NOT(((TABLE_NAME IN ('institution_onboarding_event','platform_operation_nonce') AND COLUMN_NAME IN ('operator_id','key_id')) OR (TABLE_NAME='institution_recovery_approval' AND COLUMN_NAME='operator_id')) AND COLUMN_TYPE='varchar(64)' AND COLLATION_NAME='ascii_bin') AND (COLUMN_TYPE<>'char(36)' OR COLLATION_NAME<>'ascii_general_ci')",c).ExecuteScalarAsync());
         if (wrong != 0) throw new InvalidOperationException("Guid types/collations differ; review before migration.");
     }
 

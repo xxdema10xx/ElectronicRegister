@@ -1,0 +1,27 @@
+{
+  "Deployment": { "Mode": "Staging", "RolloutApproved": false },
+  "AllowedHosts": "api.staging.example.test",
+  "Transport": {
+    "AllowedOrigins": [],
+    "KnownProxies": [],
+    "HttpsPort": 443,
+    "SensitivePermitLimit": 60
+  },
+  "Readiness": {
+    "ExpectedVersion": "OWNER-MUST-CERTIFY-SUPPORTED-MYSQL-VERSION",
+    "ExpectedHost": "OWNER-MUST-CONFIGURE",
+    "ExpectedDataDir": "OWNER-MUST-CONFIGURE"
+  },
+  "Multitenancy": {
+    "Onboarding": { "Enabled": false },
+    "Governance": { "Enabled": false },
+    "MembershipAdminApi": { "Enabled": false },
+    "MembershipWriteApi": { "Enabled": false },
+    "SchoolApi": { "Enabled": false },
+    "CourseApi": { "Enabled": false },
+    "ExamApi": { "Enabled": false },
+    "InstitutionWorker": { "Enabled": false }
+  },
+  "Identity": { "Legacy": { "Enabled": false } },
+  "PlatformAuthority": { "Enabled": false, "Keys": [] }
+}

@@ -1,3 +1,8 @@
-!*.sql
+!001_expand.sql
+!002_backfill.sql
+!003_validate.sql
+!004_enrollment_audit_expand.sql
+!005_enrollment_audit_backfill.sql
+!006_enrollment_audit_validate.sql
 private/
 candidate/

@@ -1,11 +1,17 @@
 using ElectronicRegisterAPI.Api.Security;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
+using ElectronicRegisterAPI.Api.Contracts;
+using ElectronicRegisterAPI.Api.ExceptionHandling;
 using Microsoft.AspNetCore.Mvc;
 namespace ElectronicRegisterAPI.Api.Controllers;
 
 [ApiController, Route("api/institution/admin/members"), InstitutionMembershipAdminEndpoint]
 public sealed class InstitutionMembershipAdminController(IInstitutionMembershipAdminManager manager) : ControllerBase
 {
+    [HttpPost("{membershipId:guid}/mutations"), InstitutionMembershipWriteEndpoint, MembershipApiErrors]
+    public async Task<IActionResult> Mutate(Guid membershipId,[FromBody] MembershipMutationRequest request,CancellationToken ct) =>
+        Ok(MembershipMutationResponse.From(await manager.MutateAsync(request.ToMutation(membershipId),ct)));
+
     [HttpGet]
     public async Task<IActionResult> List(CancellationToken ct, int pageNumber = 1, int pageSize = 20,
         string? status = null, string? role = null, string? search = null) =>

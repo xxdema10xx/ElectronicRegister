@@ -103,6 +103,7 @@ namespace ElectronicRegisterAPI.Api.BackgroundServices
 
         private async Task ProcessLegacyBatchAsync(CancellationToken cancellationToken)
         {
+            if (!_configuration.GetValue<bool>("Identity:Legacy:Enabled")) return;
             // First scope: query expired submissions (lightweight, no answers)
             using (var listScope = _scopeFactory.CreateScope())
             {
@@ -132,7 +133,7 @@ namespace ElectronicRegisterAPI.Api.BackgroundServices
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "Failed to process expired submission {SubmissionId}", s.Id);
+                        _logger.LogError("Expired submission failed ({ErrorType}).", ex.GetType().Name);
                         // continue with next submission
                     }
                 }

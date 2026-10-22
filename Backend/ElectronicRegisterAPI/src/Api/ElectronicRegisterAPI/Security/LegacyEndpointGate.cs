@@ -23,6 +23,13 @@ internal sealed class LegacyEndpointGate(ILegacyAccess legacy, IOptions<LegacyId
         var exam = metadata.OfType<InstitutionExamEndpointAttribute>().ToArray();
         var course = metadata.OfType<InstitutionCourseEndpointAttribute>().ToArray();
         var members = metadata.OfType<InstitutionMembershipAdminEndpointAttribute>().ToArray();
+        var writes = metadata.OfType<InstitutionMembershipWriteEndpointAttribute>().ToArray();
+        // A write marker cannot authorize by itself or combine with other surfaces.
+        if(writes.Length>1 || (writes.Length==1 && (members.Length!=1 ||
+            !HttpMethods.IsPost(context.HttpContext.Request.Method) || !InstitutionMembershipWriteEndpointAttribute.Enabled(configuration))))
+        { context.Result=Denied(); return; }
+        if(members.Length==1 && !HttpMethods.IsGet(context.HttpContext.Request.Method) && writes.Length!=1)
+        { context.Result=Denied(); return; }
         var markerCount=identity.Length+school.Length+exam.Length+course.Length+members.Length;
         if(markerCount>1) { context.Result=Denied(); return; }
         if(identity.Length==1) return;

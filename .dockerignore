@@ -1,0 +1,16 @@
+**
+!Directory.Build.props
+!global.json
+!Backend/
+!Backend/ElectronicRegisterAPI/
+!Backend/ElectronicRegisterAPI/src/
+!Backend/ElectronicRegisterAPI/src/**
+**/bin/
+**/obj/
+**/appsettings*.json
+**/*.local.json
+**/*.key
+**/*.pem
+**/*.pfx
+**/*.p12
+**/.env*

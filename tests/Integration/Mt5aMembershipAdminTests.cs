@@ -302,7 +302,10 @@ public sealed class Mt5aMembershipAdminTests : IAsyncLifetime
         Assert.Equal(new[] { InstitutionTokenContract.AccessScheme }, policy.AuthenticationSchemes);
         Assert.Contains(policy.Requirements.OfType<Microsoft.AspNetCore.Authorization.Infrastructure.RolesAuthorizationRequirement>(), r => r.AllowedRoles.SequenceEqual(new[] { "InstitutionAdmin" }));
         var endpoints = host.Host.Services.GetRequiredService<EndpointDataSource>().Endpoints.OfType<RouteEndpoint>().ToArray();
-        var admin = endpoints.Where(e => e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is not null).ToArray();
+        MembershipHttpSurface.AssertRoutes(endpoints);
+        var admin = endpoints.Where(e => e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is not null &&
+            e.RoutePattern.RawText!.StartsWith("api/institution/admin/members",StringComparison.Ordinal) &&
+            e.Metadata.GetMetadata<HttpMethodMetadata>()!.HttpMethods.SequenceEqual(new[]{"GET"})).ToArray();
         Assert.Equal(2, admin.Length);
         Assert.All(admin, e =>
         {
@@ -310,7 +313,7 @@ public sealed class Mt5aMembershipAdminTests : IAsyncLifetime
             Assert.Equal(new[] { InstitutionMembershipAdminEndpointAttribute.PolicyName }, e.Metadata.GetOrderedMetadata<IAuthorizeData>().Select(a => a.Policy));
             Assert.Null(e.Metadata.GetMetadata<IAllowAnonymous>());
         });
-        Assert.Equal(156, endpoints.Count(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null));
+        Assert.Equal(MembershipHttpSurface.MvcCount, endpoints.Count(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null));
         foreach (var value in new string?[] { null, "false", "invalid" })
         {
             host.Host.Services.GetRequiredService<IConfiguration>()[InstitutionMembershipAdminEndpointAttribute.RolloutKey] = value;
@@ -404,6 +407,7 @@ public sealed class Mt5aMembershipAdminTests : IAsyncLifetime
         var http = new Microsoft.AspNetCore.Http.DefaultHttpContext { RequestServices = scope.ServiceProvider,
             User = new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity(new[] { new System.Security.Claims.Claim("sub", _users["admin"].ToString()) }, "test")) };
         var action = new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor { EndpointMetadata = metadata };
+        http.Request.Method = "GET"; // Exercise the original read-policy guards, not the new write-verb guard.
         var context = new Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext(new Microsoft.AspNetCore.Mvc.ActionContext(http, new RouteData(), action), new List<Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata>());
         await gate.OnAuthorizationAsync(context);
         Assert.Equal(403, Assert.IsType<Microsoft.AspNetCore.Mvc.ObjectResult>(context.Result).StatusCode);

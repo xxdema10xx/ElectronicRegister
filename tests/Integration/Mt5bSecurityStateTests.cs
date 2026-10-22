@@ -352,6 +352,8 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
     public async Task TechnicalWritersCannotMutateOperationalInstitutionsEvenForGlobalAdmin(string status)
     {
         await Exec("UPDATE institution SET status=@s WHERE id=@a", ("@s", status), ("@a", _a));
+        var afterLifecycle=await Generation(_a,_ma);
+        Assert.Equal(status=="active"?0L:1L,afterLifecycle);
         await Services(async sp =>
         {
             var r = sp.GetRequiredService<IInstitutionMembershipRepository>();
@@ -359,7 +361,7 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
             await Assert.ThrowsAsync<UnauthorizedAccessException>(() => r.SuspendAsync(_a, _ma, DateTime.UtcNow));
             await Assert.ThrowsAsync<UnauthorizedAccessException>(() => r.AddAsync(new() { Id=Guid.NewGuid(),InstitutionId=_a,UserId=_user,Status=MembershipStatus.Active }));
         });
-        Assert.Equal(0, await Generation(_a, _ma)); Assert.Equal(0, await Generation(_b, _mb));
+        Assert.Equal(afterLifecycle, await Generation(_a, _ma)); Assert.Equal(0, await Generation(_b, _mb));
         await using var c = await Open(); await using var user = Cmd(c, "SELECT role FROM user WHERE id=@u", null, ("@u", _user));
         Assert.Equal("admin", await user.ExecuteScalarAsync());
     }
@@ -368,6 +370,9 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
     public async Task TechnicalProvisioningUsesSqlGenerationWithoutInventingHumanActorOrProfiles()
     {
         await Exec("UPDATE institution SET status='provisioning' WHERE id=@a", ("@a", _a));
+        // Synthetic preparation only: the governance manager never permits this
+        // transition. SQL still revokes previous access rather than resetting it.
+        var afterLifecycle=await Generation(_a,_ma);Assert.Equal(1,afterLifecycle);
         var user = Guid.NewGuid(); var member = Guid.NewGuid(); _extraUsers.Add(user);
         await Exec("INSERT INTO user(id,email,password_hash,role) VALUES(@u,@e,'not-an-authentication-fixture','admin')", ("@u", user), ("@e", user.ToString("N") + "@mt5bp.example.test"));
         await Services(async sp =>
@@ -378,7 +383,7 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
             await r.AddAsync(new() { Id=member, InstitutionId=_a, UserId=user, Status=MembershipStatus.Active,
                 Roles=new(){InstitutionRole.Teacher,InstitutionRole.Student} });
         });
-        Assert.Equal(2, await Generation(_a, _ma)); Assert.Equal(2, await Generation(_a, member)); Assert.Equal(0, await Generation(_b, _mb));
+        Assert.Equal(afterLifecycle+2, await Generation(_a, _ma)); Assert.Equal(2, await Generation(_a, member)); Assert.Equal(0, await Generation(_b, _mb));
         await Services(async sp =>
         {
             var db = sp.GetRequiredService<ElectronicRegisterContext>();
@@ -426,6 +431,11 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
         var methods=typeof(ElectronicRegisterAPI.Api.Controllers.InstitutionMembershipAdminController).GetMethods()
             .SelectMany(m=>m.GetCustomAttributes(typeof(Microsoft.AspNetCore.Mvc.Routing.HttpMethodAttribute),true))
             .Cast<Microsoft.AspNetCore.Mvc.Routing.HttpMethodAttribute>().ToArray();
-        Assert.Equal(2,methods.Length); Assert.All(methods,m=>Assert.Equal(new[]{"GET"},m.HttpMethods));
+        // Persistence adds no route; E explicitly adds exactly one gated mutation action.
+        Assert.Equal(3,methods.Length);
+        Assert.Equal(2,methods.Count(m=>m.HttpMethods.SequenceEqual(new[]{"GET"})));
+        Assert.Single(methods.Where(m=>m.HttpMethods.SequenceEqual(new[]{"POST"})));
+        Assert.True(typeof(ElectronicRegisterAPI.Api.Controllers.InstitutionMembershipAdminController).GetMethod("Mutate")!
+            .IsDefined(typeof(ElectronicRegisterAPI.Api.Security.InstitutionMembershipWriteEndpointAttribute),false));
     }
 }

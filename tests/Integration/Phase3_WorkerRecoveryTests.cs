@@ -14,6 +14,7 @@ using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +26,8 @@ namespace ElectronicRegisterAPI.Tests.Integration;
 [Collection(IntegrationCollection.Name)]
 public class Phase3_WorkerRecoveryTests(IntegrationFixture fixture)
 {
+    private static IConfiguration WorkerConfiguration => new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string,string?> { ["Identity:Legacy:Enabled"] = "true" }).Build();
+
     private static readonly IntegrationScenario[] Scenarios =
     {
         IntegrationScenario.Phase3WorkerFailure, IntegrationScenario.Phase3WorkerClosed, IntegrationScenario.Phase3WorkerOpen
@@ -49,12 +52,14 @@ public class Phase3_WorkerRecoveryTests(IntegrationFixture fixture)
 
     private sealed class WorkerLog : ILogger<ExpiredExamSubmissionWorker>
     {
-        internal ConcurrentQueue<Exception> Errors { get; } = new();
+        internal ConcurrentQueue<string> Errors { get; } = new();
+        internal ConcurrentQueue<Exception> CapturedExceptions { get; } = new();
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
         public bool IsEnabled(LogLevel logLevel) => true;
         public void Log<TState>(LogLevel level, EventId id, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
-            if (level >= LogLevel.Error) Errors.Enqueue(exception ?? new Exception(formatter(state, exception)));
+            if (level >= LogLevel.Error) Errors.Enqueue(formatter(state, exception));
+            if (exception is not null) CapturedExceptions.Enqueue(exception);
         }
     }
 
@@ -145,7 +150,7 @@ public class Phase3_WorkerRecoveryTests(IntegrationFixture fixture)
         var stoppedCalls = new DispatchLog();
         var stoppedLog = new WorkerLog();
         await using (var provider = Provider(stoppedCalls))
-        using (var first = new ExpiredExamSubmissionWorker(provider.GetRequiredService<IServiceScopeFactory>(), stoppedLog))
+        using (var first = new ExpiredExamSubmissionWorker(provider.GetRequiredService<IServiceScopeFactory>(), stoppedLog, WorkerConfiguration))
         {
             await first.StartAsync(CancellationToken.None);
             await first.StopAsync(CancellationToken.None);
@@ -157,7 +162,7 @@ public class Phase3_WorkerRecoveryTests(IntegrationFixture fixture)
         var calls = new DispatchLog();
         var log = new WorkerLog();
         await using var restartedProvider = Provider(calls);
-        using var restarted = new ExpiredExamSubmissionWorker(restartedProvider.GetRequiredService<IServiceScopeFactory>(), log);
+        using var restarted = new ExpiredExamSubmissionWorker(restartedProvider.GetRequiredService<IServiceScopeFactory>(), log, WorkerConfiguration);
         // Drive one real batch on the new instance; no wait for the 15-second production timer.
         await restarted.ProcessBatchAsync(CancellationToken.None).WaitAsync(Phase3.Timeout);
         await AssertDeliveredAsync(ids);
@@ -184,8 +189,8 @@ public class Phase3_WorkerRecoveryTests(IntegrationFixture fixture)
         var secondWrites = new Phase3.SaveProbe();
         await using var p1 = Provider(firstCalls, selections, firstWrites);
         await using var p2 = Provider(secondCalls, selections, secondWrites);
-        using var w1 = new ExpiredExamSubmissionWorker(p1.GetRequiredService<IServiceScopeFactory>(), firstLog);
-        using var w2 = new ExpiredExamSubmissionWorker(p2.GetRequiredService<IServiceScopeFactory>(), secondLog);
+        using var w1 = new ExpiredExamSubmissionWorker(p1.GetRequiredService<IServiceScopeFactory>(), firstLog, WorkerConfiguration);
+        using var w2 = new ExpiredExamSubmissionWorker(p2.GetRequiredService<IServiceScopeFactory>(), secondLog, WorkerConfiguration);
         await Task.WhenAll(w1.ProcessBatchAsync(CancellationToken.None), w2.ProcessBatchAsync(CancellationToken.None)).WaitAsync(Phase3.Timeout);
         Assert.Equal(2, selections.Selections);
         foreach (var id in ids)
@@ -220,20 +225,21 @@ public class Phase3_WorkerRecoveryTests(IntegrationFixture fixture)
         var firstCalls = new DispatchLog();
         var firstLog = new WorkerLog();
         await using (var provider = Provider(firstCalls, probe))
-        using (var worker = new ExpiredExamSubmissionWorker(provider.GetRequiredService<IServiceScopeFactory>(), firstLog))
+        using (var worker = new ExpiredExamSubmissionWorker(provider.GetRequiredService<IServiceScopeFactory>(), firstLog, WorkerConfiguration))
             await worker.ProcessBatchAsync(CancellationToken.None).WaitAsync(Phase3.Timeout);
         Assert.Equal(1, injected);
         Assert.NotNull(writtenBeforeFailure);
         Assert.NotEqual(before, writtenBeforeFailure);
         Assert.Equal(before, await Phase3.SnapshotAsync(fixture.ScopeFactory, failed));
-        Assert.IsType<Phase3.InjectedFailure>(Assert.Single(firstLog.Errors));
+        Assert.Contains(nameof(Phase3.InjectedFailure), Assert.Single(firstLog.Errors));
+        Assert.Empty(firstLog.CapturedExceptions); // Failure type retained; SQL/exception text cannot reach logs.
         Assert.Equal(ids.Length, firstCalls.Calls.Count);
         Assert.Equal(failed.SubmissionId, firstCalls.Calls.First().Id);
         await AssertDeliveredAsync(ids.Skip(1).ToArray());
         var recoveredCalls = new DispatchLog();
         var recoveredLog = new WorkerLog();
         await using (var provider = Provider(recoveredCalls))
-        using (var worker = new ExpiredExamSubmissionWorker(provider.GetRequiredService<IServiceScopeFactory>(), recoveredLog))
+        using (var worker = new ExpiredExamSubmissionWorker(provider.GetRequiredService<IServiceScopeFactory>(), recoveredLog, WorkerConfiguration))
             await worker.ProcessBatchAsync(CancellationToken.None).WaitAsync(Phase3.Timeout);
         Assert.Equal(failed.SubmissionId, Assert.Single(recoveredCalls.Calls).Id);
         Assert.DoesNotContain(recoveredCalls.Calls.Single().ContextId, firstCalls.Calls.Select(c => c.ContextId));

@@ -37,7 +37,7 @@ public sealed class Mt5dMembershipMutationTests : IAsyncLifetime
         var c=new MySqlConnection(_connection);await c.OpenAsync();
         await using var cmd=new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE()",c);
         await using var r=await cmd.ExecuteReaderAsync();Assert.True(await r.ReadAsync());
-        Assert.Equal("5.7.24",r.GetString(0));Assert.Equal("CES01622",r.GetString(1));Assert.Equal(13306,r.GetInt32(2));
+        Assert.Equal("5.7.24",r.GetString(0));Assert.Equal(Environment.MachineName,r.GetString(1),ignoreCase:true);Assert.Equal(13306,r.GetInt32(2));
         Assert.EndsWith("/migrations/mt4/private/mt5a-mamp-13306/data/",r.GetString(3),StringComparison.OrdinalIgnoreCase);
         Assert.Equal("electronic_register_test",r.GetString(4));return c;
     }
@@ -240,7 +240,12 @@ public sealed class Mt5dMembershipMutationTests : IAsyncLifetime
     {
         var actor=await Context();var request=await Request();
         await Exec("UPDATE institution SET status=@s WHERE id=@a",("@a",_a),("@s",status));
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(()=>Direct(request,actor));Assert.Equal(0,await Events());Assert.Equal(1,await Generation());
+        var afterLifecycle=await Generation();Assert.Equal(2,afterLifecycle);
+        // Even a candidate with the current generation cannot authorize IAM in
+        // a non-active institution; denial must not advance it again.
+        actor=new TenantContext(actor.UserId,actor.InstitutionId,actor.MembershipId,actor.Roles,afterLifecycle);
+        request=request with{ExpectedRevision=afterLifecycle};
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(()=>Direct(request,actor));Assert.Equal(0,await Events());Assert.Equal(afterLifecycle,await Generation());
     }
     [Theory]
     [InlineData("generation")][InlineData("user")][InlineData("roles")]

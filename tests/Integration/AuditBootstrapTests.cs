@@ -45,7 +45,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
         using var subscription = DiagnosticListener.AllListeners.Subscribe(observer);
         var args = new[]
         {
-            "--environment=" + environment, "--urls=http://127.0.0.1:0",
+            "--Deployment:Mode=LocalTest", "--environment=" + environment, "--urls=http://127.0.0.1:0",
             // In-process entry point invocation must retain the production assembly identity.
             "--applicationName=" + typeof(ExamController).Assembly.GetName().Name,
             "--ConnectionStrings:DefaultConnection=" + fixture.ConnectionString,
@@ -163,10 +163,12 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
         Assert.All(courseEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
             a => a.Policy == ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute.PolicyName));
         var membershipEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is not null).ToList();
-        Assert.Equal(2, membershipEndpoints.Count);
+        MembershipHttpSurface.AssertRoutes(endpoints);
+        Assert.Equal(MembershipHttpSurface.AdminCount, membershipEndpoints.Count);
         Assert.All(membershipEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
             a => a.Policy == ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute.PolicyName));
-        Assert.Equal(78 + schoolEndpoints.Count + examEndpoints.Count + courseEndpoints.Count + membershipEndpoints.Count, endpoints.Count);
+        Assert.Equal(73 + MembershipHttpSurface.IdentityCount + schoolEndpoints.Count + examEndpoints.Count + courseEndpoints.Count + membershipEndpoints.Count, endpoints.Count);
+        Assert.Equal(MembershipHttpSurface.IdentityCount,endpoints.Count(e=>e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionIdentityEndpointAttribute>() is not null));
         Assert.All(schoolEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
             a => a.Policy == ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute.PolicyName));
         var legacyEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionIdentityEndpointAttribute>() is null &&
@@ -210,7 +212,11 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
         public TaskCompletionSource<IHost> Built { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly List<IDisposable> _subscriptions = new();
         public void OnNext(DiagnosticListener listener) { if (listener.Name == "Microsoft.Extensions.Hosting") _subscriptions.Add(listener.Subscribe(this)); }
-        public void OnNext(KeyValuePair<string, object?> item) { if (item.Key == "HostBuilt" && item.Value is IHost host) Built.TrySetResult(host); }
+        public void OnNext(KeyValuePair<string, object?> item)
+        {
+            if(item.Key=="HostBuilding" && item.Value is IHostBuilder builder)builder.ConfigureServices((_,services)=>TestHostIsolation.Configure(services));
+            if (item.Key == "HostBuilt" && item.Value is IHost host) Built.TrySetResult(host);
+        }
         public void OnCompleted() { }
         public void OnError(Exception error) => Built.TrySetException(error);
         public void Dispose() { foreach (var item in _subscriptions) item.Dispose(); }

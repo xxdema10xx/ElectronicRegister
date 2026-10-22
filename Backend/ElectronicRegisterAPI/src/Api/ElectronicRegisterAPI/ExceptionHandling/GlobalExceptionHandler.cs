@@ -1,10 +1,10 @@
-﻿using ElectronicRegisterAPI.Domain.Exceptions;
+using ElectronicRegisterAPI.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ElectronicRegisterAPI.Api.ExceptionHandling;
 
-internal class GlobalExceptionHandler : IExceptionHandler
+internal class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -34,10 +34,14 @@ internal class GlobalExceptionHandler : IExceptionHandler
             BusinessRuleException =>
                 (StatusCodes.Status409Conflict, "Operazione non consentita"),
 
+            MembershipConflictException =>
+                (StatusCodes.Status409Conflict, "Conflitto sulla membership istituzionale"),
+
             _ =>
                 (StatusCodes.Status500InternalServerError, "Errore interno del server")
         };
 
+        if (statusCode == 500) logger.LogError("Request failed ({ErrorType}).", exception.GetType().Name);
         httpContext.Response.StatusCode = statusCode;
 
         await httpContext.Response.WriteAsJsonAsync(

@@ -3,6 +3,7 @@
 
 # ASP.NET configuration / secrets
 **/appsettings.json
+**/appsettings.*.json
 **/appsettings.Development.json
 **/appsettings.Local.json
 **/appsettings.*.local.json
@@ -12,6 +13,9 @@
 
 # Environment / local files
 *.env
+.env
+.env.*
+!.env.example
 report.json
 config.js
 
@@ -25,6 +29,29 @@ node_modules/
 # Database / backup files
 *.sql
 *.old
+**/private/
+**/mysql/data/
+**/ibdata*
+**/ib_logfile*
+**/aria_log*
+**/credentials-private.json
+*.pfx
+*.p12
+*.key
+*.pem
+*.log
+*.bak
+*.BAK
+*.ibd
+*.frm
+*.MYD
+*.MYI
+*.MAI
+*.MAD
+**/my.ini
+**/client.ini
+*.cnf
+*.ini
 
 # MT-5B-R1 review candidates only; keep dumps and private SQL excluded.
 !/migrations/mt5/candidate-r1/000_preflight.sql
@@ -56,4 +83,33 @@ node_modules/
 !/migrations/mt5/iam-d/002_validate.sql
 !/migrations/mt5/iam-d/003_event_snapshot_shape.sql
 !/migrations/mt5/iam-d/004_validate_snapshot.sql
+
+# Consolidated schema only: never allow arbitrary SQL dumps.
+!/migrations/bootstrap/001_schema.sql
+!/migrations/mt5/onboarding/001_expand.sql
+!/migrations/mt5/onboarding/002_validate.sql
+!/migrations/20261016_add_override_reason.sql
+__pycache__/
+/.repro/
+/.rc/
+/.rd/
 .vs/
+
+# Administrative runtime configuration and signed intents stay private.
+/tools/PlatformAdmin/*.json
+!/tools/PlatformAdmin/admin.example.json
+!/tools/PlatformAdmin/packages.lock.json
+**/platform-authority.local.json
+**/platform-operator.local.json
+
+# MT-5D: only canonical additive governance schema and validator.
+!/migrations/mt5/governance/001_expand.sql
+!/migrations/mt5/governance/002_validate.sql
+
+# MT-6 disposable reproduction and offline recovery evidence, never source inputs.
+/.r6/
+/.r6restore/
+/infra/*.local.json
+/release-private/
+/.r6f/
+/.r6fr/

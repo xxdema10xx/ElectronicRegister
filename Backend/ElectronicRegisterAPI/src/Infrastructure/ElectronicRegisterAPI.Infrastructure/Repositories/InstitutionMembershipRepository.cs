@@ -75,5 +75,9 @@ internal sealed class InstitutionMembershipRepository(ElectronicRegisterContext 
         var state = await context.Institutions.AsNoTracking().Where(i => i.Id == institutionId).Select(i => i.Status).SingleOrDefaultAsync();
         if (state is null) throw new KeyNotFoundException("Institution not found.");
         if (state != "provisioning") throw new UnauthorizedAccessException("Il writer tecnico richiede Institution Provisioning.");
+        // Verified onboarding has a separate attributed writer. Legacy preparation
+        // cannot pre-seed additional administrators before first acceptance.
+        if(await context.Database.SqlQuery<int>($"SELECT COUNT(*) AS Value FROM institution_provisioning WHERE institution_id={institutionId}").SingleAsync()!=0)
+            throw new UnauthorizedAccessException("Onboarding verificato richiede il proprio writer autorizzato.");
     }
 }

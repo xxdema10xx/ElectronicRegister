@@ -146,6 +146,11 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             var database = builder.Database;
 
+            // Local mode is reserved for the explicitly provisioned isolated instance.
+            // Container mode obtains its connection independently and never enters here.
+            if (builder.Server != "127.0.0.1" || builder.Port != 13306)
+                throw new InvalidOperationException("Local integration tests require 127.0.0.1:13306; no fallback is allowed.");
+
             if (string.IsNullOrWhiteSpace(database))
                 throw new InvalidOperationException(
                     $"{ConnectionEnvVar} non specifica un database. È consentito esclusivamente Database={AllowedLocalDatabase}.");

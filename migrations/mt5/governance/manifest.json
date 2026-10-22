@@ -1,0 +1,8 @@
+{
+  "format": 1,
+  "checkpoint": "MT-5D governance and recovery additive",
+  "files": {
+    "001_expand.sql": "A55A819CB2B883FC902EFAFC47CCBBDCFCF986CFBDB98D800C133DDC342064C9",
+    "002_validate.sql": "84006E850C7F3A571E63127E9594A155F3E92957776FD42CFFC3525A0236041C"
+  }
+}

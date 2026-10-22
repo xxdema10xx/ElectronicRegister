@@ -1,2 +1,4 @@
 # The repository ignores *.sql globally. MT-1 reviewed migration sources are versioned.
-!*.sql
+!001_expand.sql
+!002_backfill.sql
+!003_validate.sql

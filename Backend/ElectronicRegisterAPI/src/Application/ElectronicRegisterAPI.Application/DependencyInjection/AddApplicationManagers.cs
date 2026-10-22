@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using ElectronicRegisterAPI.Application.Managers;
@@ -12,6 +12,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ElectronicRegisterAPI.Application.Services.InstitutionSchoolAuthorization>();
         services.AddScoped<IInstitutionCourseManager, InstitutionCourseManager>();
         services.AddScoped<IInstitutionMembershipAdminManager, InstitutionMembershipAdminManager>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionOnboardingManager, InstitutionOnboardingManager>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionGovernanceManager, InstitutionGovernanceManager>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IMembershipAuditManager, MembershipAuditManager>();
         services.AddScoped<IInstitutionStudentManager, InstitutionStudentManager>();
         services.AddScoped<IInstitutionTeacherManager, InstitutionTeacherManager>();
         services.AddScoped<IInstitutionSubjectManager, InstitutionSubjectManager>();

@@ -1,5 +1,28 @@
 # MT-5B — contratto di sicurezza delle mutazioni IAM
 
+## MT-5B-E — superficie HTTP IAM
+
+`POST /api/institution/admin/members/{membershipId:guid}/mutations` delega soltanto
+a `IInstitutionMembershipAdminManager.MutateAsync`. Il target è nella route;
+il body richiede EventId, ExpectedRevision, Action e Reason, con Role per AddRole/
+RemoveRole. Action e Role sono stringhe esatte del catalogo: numeri, alias e campi
+estranei sono rifiutati. Nessun InstitutionId, attore o generation da applicare
+proviene dal client. Risposta 200 con EventId, Revision, Status e Roles effettivi;
+un replay autorizzato restituisce lo stesso risultato storico.
+
+InstitutionAccess e policy amministrativa esistente restano obbligatori. Il POST
+porta un marker supplementare non autorizzante: LegacyEndpointGate richiede sia
+MembershipAdminApi sia MembershipWriteApi, entrambi false per default, un solo marker
+amministrativo, schema/policy originali e contesto verificato. Le due GET restano
+regolate dal solo flag directory. Nessun endpoint di provisioning/onboarding aggiunto.
+
+400 input invalido, 401 autenticazione invalida, 403 autorizzazione/revoca/self,
+404 target invisibile/assente, 409 conflitto di dominio o concorrenza SQL riconosciuta.
+Errori imprevisti restano 500 opachi. Tutte le regole, il mutex, Last Admin, revision,
+idempotenza e audit rimangono nel flusso D, con rivalidazione sotto lock e incremento
+della sola security generation SQL. Le proposte storiche di quattro POST sotto
+non descrivono la superficie effettivamente implementata in E.
+
 ## Implementazione MT-5B-D (backend interno, nessuna nuova route)
 
 Il manager amministrativo espone ora `MutateAsync(MembershipMutation)` per aggiunta/

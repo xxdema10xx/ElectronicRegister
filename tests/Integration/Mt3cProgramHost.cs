@@ -35,13 +35,13 @@ internal static class Mt3cHosting
     {
         internal IHost Host => host;
         internal HttpClient Client => client;
-        internal static async Task<ProgramHost> StartAsync(string connectionString, Guid legacyInstitution, Guid[] users, bool enabled = true, bool unbackfilled = true, bool? school = null, string environment = "Production", bool? exam = null, bool? course = null, bool? membershipAdmin = null)
+        internal static async Task<ProgramHost> StartAsync(string connectionString, Guid legacyInstitution, Guid[] users, bool enabled = true, bool unbackfilled = true, bool? school = null, string environment = "Production", bool? exam = null, bool? course = null, bool? membershipAdmin = null, bool? membershipWrite = null, Action<IServiceCollection>? configureServices = null, bool? onboarding = null, string[]? extraArguments = null)
         {
-            using var observer = new HostObserver();
+            using var observer = new HostObserver(configureServices);
             using var subscription = DiagnosticListener.AllListeners.Subscribe(observer);
             var args = new List<string>
             {
-                "--environment=" + environment, "--urls=http://127.0.0.1:0", "--applicationName=" + typeof(ExamController).Assembly.GetName().Name,
+                "--Deployment:Mode=LocalTest", "--environment=" + environment, "--urls=http://127.0.0.1:0", "--applicationName=" + typeof(ExamController).Assembly.GetName().Name,
                 "--ConnectionStrings:DefaultConnection=" + connectionString,
                 "--Jwt:Key=" + Key, "--Jwt:Issuer=mt2-tests", "--Jwt:Audience=mt2-client", "--Jwt:ExpiresInMinutes=10",
                 "--AzureAd:TenantId=11111111-2222-3333-4444-555555555555", "--AzureAd:Audience=mt2-microsoft",
@@ -53,6 +53,9 @@ internal static class Mt3cHosting
             if (course.HasValue) args.Add("--Multitenancy:CourseApi:Enabled=" + course.Value);
             if (exam.HasValue) args.Add("--Multitenancy:ExamApi:Enabled=" + exam.Value);
             if (membershipAdmin.HasValue) args.Add("--Multitenancy:MembershipAdminApi:Enabled=" + membershipAdmin.Value);
+            if (membershipWrite.HasValue) args.Add("--Multitenancy:MembershipWriteApi:Enabled=" + membershipWrite.Value);
+            if (onboarding.HasValue) args.Add("--Multitenancy:Onboarding:Enabled="+onboarding.Value);
+            if (extraArguments is not null) args.AddRange(extraArguments);
             args.AddRange(users.Select((id, i) => "--Identity:Legacy:UserIds:" + i + "=" + id));
             var run = Task.Run(async () =>
             {
@@ -82,12 +85,17 @@ internal static class Mt3cHosting
         }
     }
 
-    internal sealed class HostObserver : IObserver<DiagnosticListener>, IObserver<KeyValuePair<string, object?>>, IDisposable
+    internal sealed class HostObserver(Action<IServiceCollection>? configureServices = null) : IObserver<DiagnosticListener>, IObserver<KeyValuePair<string, object?>>, IDisposable
     {
         internal TaskCompletionSource<IHost> Built { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly List<IDisposable> _subscriptions = new();
         public void OnNext(DiagnosticListener value) { if (value.Name == "Microsoft.Extensions.Hosting") _subscriptions.Add(value.Subscribe(this)); }
-        public void OnNext(KeyValuePair<string, object?> value) { if (value.Key == "HostBuilt" && value.Value is IHost host) Built.TrySetResult(host); }
+        public void OnNext(KeyValuePair<string, object?> value)
+        {
+            if(value.Key=="HostBuilding" && value.Value is IHostBuilder builder)
+                builder.ConfigureServices((_,services)=>{TestHostIsolation.Configure(services);configureServices?.Invoke(services);});
+            if(value.Key=="HostBuilt" && value.Value is IHost host)Built.TrySetResult(host);
+        }
         public void OnCompleted() { }
         public void OnError(Exception error) => Built.TrySetException(error);
         public void Dispose() { foreach (var subscription in _subscriptions) subscription.Dispose(); }

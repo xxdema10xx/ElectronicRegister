@@ -1,0 +1,13 @@
+{
+  "version": "MT-5C-1",
+  "predecessor": {
+    "tables": 34,
+    "triggers": 68,
+    "fks": 101,
+    "indexes": 144
+  },
+  "files": {
+    "001_expand.sql": "66B202BCEA3CF6723BACC64CF9AD0E499CBA2A6C7F4B96CA901BFA4F2CC09CB5",
+    "002_validate.sql": "E6B964B787163F954757AF28CE30C8E8D2887A06B3B92E2F7E38086AF04F83C2"
+  }
+}

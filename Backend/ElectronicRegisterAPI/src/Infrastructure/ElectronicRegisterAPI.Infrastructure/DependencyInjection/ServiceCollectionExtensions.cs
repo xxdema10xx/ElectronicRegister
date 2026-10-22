@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
@@ -17,6 +18,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.TryAddSingleton<IConfiguration>(configuration);
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
         services.AddDbContext<ElectronicRegisterContext>(options =>
@@ -26,6 +28,15 @@ public static class ServiceCollectionExtensions
         });
 
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+        services.Configure<PlatformAuthorityOptions>(configuration.GetSection("PlatformAuthority"));
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IPlatformAuthority, PlatformAuthority>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IRecipientIdentity, RecipientIdentity>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IOnboardingRepository, InstitutionOnboardingRepository>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionGovernanceRepository, InstitutionOnboardingRepository>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IMembershipAuditRepository, MembershipAuditRepository>();
+        services.AddSingleton<ElectronicRegisterAPI.Domain.Models.IInvitationChannel, ClosedInvitationChannel>();
+        services.AddOwnerInstalledInvitationChannel(configuration);
+        services.AddSingleton<ElectronicRegisterAPI.Domain.Models.IOnboardingFaultObserver, NoOnboardingFault>();
         services.Configure<AzureAdOptions>(configuration.GetSection(AzureAdOptions.SectionName));
         services.Configure<LegacyIdentityOptions>(configuration.GetSection("Identity:Legacy"));
         services.AddOptions<LegacyIdentityOptions>()

@@ -1,0 +1,43 @@
+# Canonical sources are checked out with LF, independently of core.autocrlf.
+.gitignore text eol=lf
+.gitattributes text eol=lf
+/README.md text eol=lf
+/migrations/** text eol=lf
+# MT-4 raw-byte hashes were certified with CRLF; retain those immutable bytes.
+/migrations/mt4/*.sql text eol=crlf
+/migrations/mt4/004_enrollment_audit_expand.sql text eol=lf
+/migrations/mt3/003_ownership_expand.sql text eol=crlf
+/migrations/mt3/004_ownership_preflight.sql text eol=crlf
+/migrations/mt3/005_ownership_backfill.sql text eol=crlf
+/migrations/mt3/006_ownership_enforce.sql text eol=crlf
+/migrations/mt3/007_ownership_triggers.sql text eol=crlf
+/migrations/mt3/009_explicit_platform_audit.sql text eol=crlf
+/migrations/mt4/Invoke-Mt4.ps1 text eol=crlf
+/migrations/mt4/Reconcile-Mt4.py text eol=crlf
+/migrations/mt4/Scaffold-Mt4.ps1 text eol=crlf
+/migrations/mt4/Snapshot-Legacy.py text eol=crlf
+/migrations/mt5/candidate-*/manifest-*.json text eol=crlf
+/migrations/mt5/candidate-*/static-review.json text eol=crlf
+/migrations/mt5/candidate-r2/verify_static.py text eol=crlf
+/migrations/mt5/candidate-r3/verify_static.py text eol=crlf
+/migrations/mt5/*.ps1 text eol=crlf
+/migrations/mt5/README.md text eol=crlf
+/tools/** text eol=lf
+/docs/development/** text eol=lf
+/docs/architecture/MT5C_PROVISIONING_AUTHORITY_BLOCKER.md text eol=lf
+/docs/architecture/PLATFORM_OPERATOR_AND_ONBOARDING.md text eol=lf
+/Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/appsettings.example.json text eol=crlf
+/Frontend/ElectronicRegisterReact/.env.example text eol=lf
+# Immutable historical manifest is referenced by raw-byte SHA256 in R1/R2/R3.
+# Its certified representation used CRLF; preserve that on every platform.
+/tests/Integration/TestResults/mt5b-persistence/final-migration-manifest.json text eol=crlf
+
+/docs/architecture/INSTITUTION_GOVERNANCE_AND_RECOVERY.md text eol=lf
+/docs/architecture/INSTITUTION_MEMBERSHIP_GOVERNANCE.md text eol=lf
+
+/infra/** text eol=lf
+/.github/** text eol=lf
+/global.json text eol=lf
+/Directory.Build.props text eol=lf
+**/packages.lock.json text eol=lf
+/.dockerignore text eol=lf

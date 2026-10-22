@@ -449,9 +449,12 @@ public sealed partial class Mt3dHttpTests
             var exam=endpoint.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is not null;
             var course=endpoint.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null;
             var identity=endpoint.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionIdentityEndpointAttribute>() is not null;
+            var membership=endpoint.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is not null;
+            var membershipWrite=endpoint.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipWriteEndpointAttribute>() is not null;
+            var onboarding=action?.ControllerName is "InstitutionInvitation" or "InvitationAcceptance";
             var names=metadata.Select(m=>m.Policy).Where(s=>!string.IsNullOrEmpty(s)).Distinct().ToArray();
             var schemes=new List<string>();foreach(var name in names)schemes.AddRange((await policies.GetPolicyAsync(name!))!.AuthenticationSchemes);
-            if(school||exam||course){Assert.Equal(new[]{"InstitutionAccess"},schemes.Distinct());Assert.False(identity);}
+            if(school||exam||course||membership){Assert.Equal(new[]{"InstitutionAccess"},schemes.Distinct());Assert.False(identity);}
             var managers=action?.ControllerTypeInfo.DeclaredConstructors.SelectMany(c=>c.GetParameters()).Select(p=>p.ParameterType).ToArray()??Array.Empty<Type>();
             Assert.DoesNotContain(managers,t=>t==typeof(IInstitutionExpiryService)||t==typeof(ISubmissionExpiryStore));
             var repositories=new HashSet<string>();
@@ -468,10 +471,10 @@ public sealed partial class Mt3dHttpTests
                 rows.Add(new{method,route=endpoint.RoutePattern.RawText,controller=action?.ControllerName,action=action?.ActionName,
                     scheme=schemes.Count>0?string.Join(",",schemes.Distinct()):metadata.Count>0?"Bearer (legacy default)":"anonymous/gate",
                     policy=names,roles=metadata.Select(m=>m.Roles).Where(r=>!string.IsNullOrEmpty(r)),managers=managers.Select(t=>t.Name),repositories,
-                    dataAccess=course?"MT4B scoped course projections/writers":exam?"bound Exam/Submission/Grade/Audit; SQL InstitutionId + assignment/owner":school?"MT3B scoped SQL":identity?"global identity; only verified caller memberships":"legacy global graph or development schema; gated",
-                    tenantScope=exam||school||course?"verified TenantContext":identity?"identity selection, not school access":"no institutional school access",
-                    rollout=course?"SchoolApi && CourseApi":exam?"SchoolApi && ExamApi":school?"SchoolApi":identity?"MT2 verified identity":"legacy allowlist or Development diagnostics",
-                    authorizationTest=course?"Mt4b all actions JWT/revocation/cross-tenant":exam?"Mt3d all actions JWT/revocation/cross-tenant":school?"Mt3c all actions JWT/cross-tenant":identity?"Mt2IdentityTests":"Mt2 legacy action matrix; Mt3e global account checks"});
+                    dataAccess=onboarding?"MT5C owner-bound invitations and verified recipient":membershipWrite?"MT5E transactional IAM writer":membership?"MT5A scoped directory":course?"MT4B scoped course projections/writers":exam?"bound Exam/Submission/Grade/Audit; SQL InstitutionId + assignment/owner":school?"MT3B scoped SQL":identity?"global identity; only verified caller memberships":"legacy global graph or development schema; gated",
+                    tenantScope=exam||school||course||membership?"verified TenantContext":identity?"identity selection, not school access":"no institutional school access",
+                    rollout=onboarding?(membership?"MembershipAdminApi && MembershipWriteApi && Onboarding":"Onboarding"):membershipWrite?"MembershipAdminApi && MembershipWriteApi":membership?"MembershipAdminApi":course?"SchoolApi && CourseApi":exam?"SchoolApi && ExamApi":school?"SchoolApi":identity?"MT2 verified identity":"legacy allowlist or Development diagnostics",
+                    authorizationTest=membershipWrite?"Mt5e real HTTP JWT/IAM/rollback/concurrency":membership?"Mt5a directory JWT/cross-tenant":course?"Mt4b all actions JWT/revocation/cross-tenant":exam?"Mt3d all actions JWT/revocation/cross-tenant":school?"Mt3c all actions JWT/cross-tenant":identity?"Mt2IdentityTests":"Mt2 legacy action matrix; Mt3e global account checks"});
         }
         var path=System.IO.Path.GetFullPath(System.IO.Path.Combine(AppContext.BaseDirectory,"../../../../../tests/Integration/TestResults/mt3e"));Directory.CreateDirectory(path);
         await File.WriteAllTextAsync(System.IO.Path.Combine(path,"routes-"+environment+".json"),System.Text.Json.JsonSerializer.Serialize(rows,new System.Text.Json.JsonSerializerOptions{WriteIndented=true}));

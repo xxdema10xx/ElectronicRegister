@@ -297,7 +297,8 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
                 e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is null &&
                 e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is null &&
                 e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is null).ToArray();
-        Assert.Equal(2, sources.Endpoints.Count(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is not null));
+        MembershipHttpSurface.AssertRoutes(sources.Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>());
+        Assert.Equal(MembershipHttpSurface.AdminCount, sources.Endpoints.Count(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is not null));
         Assert.Equal(19, sources.Endpoints.Count(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null));
         // Discover every current legacy action; new explicitly migrated endpoints have their own HTTP suite.
         Assert.Equal(73, endpoints.Length); // Preserved baseline plus dynamic traversal of every discovered action below.
@@ -422,7 +423,7 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
             using var subscription = DiagnosticListener.AllListeners.Subscribe(observer);
             var args = new List<string>
             {
-                "--environment=Production", "--urls=http://127.0.0.1:0", "--applicationName=" + typeof(ExamController).Assembly.GetName().Name,
+                "--Deployment:Mode=LocalTest", "--environment=Production", "--urls=http://127.0.0.1:0", "--applicationName=" + typeof(ExamController).Assembly.GetName().Name,
                 "--ConnectionStrings:DefaultConnection=" + connectionString,
                 "--Jwt:Key=" + Key, "--Jwt:Issuer=mt2-tests", "--Jwt:Audience=mt2-client", "--Jwt:ExpiresInMinutes=10",
                 "--AzureAd:TenantId=11111111-2222-3333-4444-555555555555", "--AzureAd:Audience=mt2-microsoft",
@@ -462,7 +463,11 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
         internal TaskCompletionSource<IHost> Built { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly List<IDisposable> _subscriptions = new();
         public void OnNext(DiagnosticListener value) { if (value.Name == "Microsoft.Extensions.Hosting") _subscriptions.Add(value.Subscribe(this)); }
-        public void OnNext(KeyValuePair<string, object?> value) { if (value.Key == "HostBuilt" && value.Value is IHost host) Built.TrySetResult(host); }
+        public void OnNext(KeyValuePair<string, object?> value)
+        {
+            if(value.Key=="HostBuilding" && value.Value is IHostBuilder builder)builder.ConfigureServices((_,services)=>TestHostIsolation.Configure(services));
+            if (value.Key == "HostBuilt" && value.Value is IHost host) Built.TrySetResult(host);
+        }
         public void OnCompleted() { }
         public void OnError(Exception error) => Built.TrySetException(error);
         public void Dispose() { foreach (var subscription in _subscriptions) subscription.Dispose(); }

@@ -17,7 +17,7 @@ using Xunit;
 namespace ElectronicRegisterAPI.Tests.Integration;
 
 [Collection("Mt5aIdentityOnly")]
-public sealed class Mt5bJwtTests : IAsyncLifetime
+public sealed partial class Mt5bJwtTests : IAsyncLifetime
 {
     private readonly Guid _a=Guid.NewGuid(), _b=Guid.NewGuid(), _user=Guid.NewGuid(), _ma=Guid.NewGuid(), _mb=Guid.NewGuid();
     private string _connection=null!;
