@@ -23,6 +23,7 @@ internal class GradeRepository : IGradeRepository
 
     public async Task<Grade?> GetByIdAsync(Guid id)
     {
+        if (_scope is not null) await _scope.LockStaffGradeAsync(id);
         var grade = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().FirstOrDefaultAsync(g => g.Id == id);
         return grade == null ? null : MapToModel(grade);
     }

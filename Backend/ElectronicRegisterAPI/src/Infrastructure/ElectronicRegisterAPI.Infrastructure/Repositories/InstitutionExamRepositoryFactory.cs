@@ -14,6 +14,7 @@ using E = ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
 internal sealed class InstitutionExamRepositoryFactory(ElectronicRegisterContext db, ITimeProvider time,
+    IInstitutionWriteAuthorization authorization,
     Domain.Interfaces.Security.ICurrentTenant? current = null) : IInstitutionExamRepositoryFactory
 {
     public IInstitutionExamRepositories Create(ExamPrincipal principal)
@@ -21,9 +22,9 @@ internal sealed class InstitutionExamRepositoryFactory(ElectronicRegisterContext
         if (principal.Tenant is null) throw new UnauthorizedAccessException("Contesto istituzionale richiesto.");
         var verified = current?.Value ?? throw new UnauthorizedAccessException("Contesto verificato assente.");
         if (verified.UserId != principal.Tenant.UserId || verified.InstitutionId != principal.Tenant.InstitutionId ||
-            verified.MembershipId != principal.Tenant.MembershipId || !verified.Roles.SetEquals(principal.Tenant.Roles))
+            verified.MembershipId != principal.Tenant.MembershipId || verified.SecurityGeneration != principal.Tenant.SecurityGeneration || !verified.Roles.SetEquals(principal.Tenant.Roles))
             throw new UnauthorizedAccessException("Contesto non corrispondente.");
-        return new BoundRepositories(db, time, principal);
+        return new BoundRepositories(db, time, principal, authorization);
     }
     private sealed class BoundRepositories : IInstitutionExamRepositories
     {
@@ -38,9 +39,9 @@ internal sealed class InstitutionExamRepositoryFactory(ElectronicRegisterContext
         public ISubjectRepository Subjects { get; }
         public IClassSubjectRepository ClassSubjects { get; }
         public IAuditRepository Audit { get; }
-        internal BoundRepositories(ElectronicRegisterContext db, ITimeProvider time, ExamPrincipal actor)
+        internal BoundRepositories(ElectronicRegisterContext db, ITimeProvider time, ExamPrincipal actor, IInstitutionWriteAuthorization authorization)
         {
-            _db = db; _time = time; _actor = actor; _scope = new(db, actor);
+            _db = db; _time = time; _actor = actor; _scope = new(db, actor, authorization);
             Exams = new ExamRepository(db, _scope); Submissions = new ExamSubmissionRepository(db, time, _scope);
             Grades = new GradeRepository(db, _scope); Students = new StudentRepository(db, _scope);
             Subjects = new SubjectRepository(db, _scope); ClassSubjects = new ClassSubjectRepository(db, _scope); Audit = new AuditRepository(db, _scope);
@@ -54,7 +55,7 @@ internal sealed class InstitutionExamRepositoryFactory(ElectronicRegisterContext
         public async Task<List<StudentDto>> StudentsForClassAsync(Guid classId)
         {
             if (_actor.IsStudent) throw new UnauthorizedAccessException();
-            if (!await _scope.Owned<E.Class>().AnyAsync(c => c.Id == classId && (_actor.IsAdmin || _scope.Assignments.Any(cs => cs.ClassId == c.Id))))
+            if (!await _scope.Owned<E.Class>().AnyAsync(c => c.Id == classId && (_actor.HasInstitutionReadScope || _scope.Assignments.Any(cs => cs.ClassId == c.Id))))
                 throw new KeyNotFoundException("La risorsa non esiste.");
             return await _scope.Query<E.Student>().AsNoTracking().Where(s => s.ClassId == classId)
                 .Select(s => new StudentDto { Id = s.Id, FirstName = s.FirstName, LastName = s.LastName }).ToListAsync();

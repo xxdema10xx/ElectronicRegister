@@ -99,12 +99,23 @@ public static class Mt3aOwnershipMigration
         known.UnionWith(await InstitutionClassIntegrity.ValidateIfPresentAsync(c, tx));
         known.UnionWith(await InstitutionAdministrationIntegrity.ValidateIfPresentAsync(c, tx));
         known.UnionWith(await StudentClassTransferIntegrity.ValidateIfPresentAsync(c, tx));
+        known.UnionWith(await InstitutionEmailIntegrity.ValidateIfPresentAsync(c, tx));
+        known.UnionWith(await InstitutionImportIntegrity.ValidateIfPresentAsync(c, tx));
         await using (var tables = new MySqlCommand("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()",c,tx))
         {
             await using var reader=await tables.ExecuteReaderAsync();
             while(await reader.ReadAsync()) if(!known.Contains(reader.GetString(0))) throw new InvalidOperationException("Unclassified table: "+reader.GetString(0));
         }
-        foreach (var sql in (await SqlAsync("004_ownership_preflight.sql")).Split("-- MT3A-BATCH", StringSplitOptions.RemoveEmptyEntries))
+        var preflight = await SqlAsync("004_ownership_preflight.sql");
+        // Preserve the immutable historical SQL artifact. The installed Staff
+        // migration adds one explicit audit classification with the same owner rules.
+        if (Convert.ToInt64(await new MySqlCommand("SELECT COUNT(*) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA=DATABASE() AND TRIGGER_NAME='staff_audit_delete'", c, tx).ExecuteScalarAsync()) == 1)
+            preflight = preflight
+                .Replace("LEFT JOIN exam_submission s ON a.entity_type='exam_submission' AND s.id=a.entity_id", "LEFT JOIN exam_submission s ON a.entity_type='exam_submission' AND s.id=a.entity_id LEFT JOIN grade g ON a.entity_type='grade' AND g.id=a.entity_id")
+                .Replace("a.entity_type NOT IN ('exam','exam_submission')", "a.entity_type NOT IN ('exam','exam_submission','grade')")
+                .Replace("e.id IS NULL AND s.id IS NULL", "e.id IS NULL AND s.id IS NULL AND g.id IS NULL")
+                .Replace("COALESCE(e.institution_id,s.institution_id)", "COALESCE(e.institution_id,s.institution_id,g.institution_id)");
+        foreach (var sql in preflight.Split("-- MT3A-BATCH", StringSplitOptions.RemoveEmptyEntries))
         {
             await using var cmd = new MySqlCommand(sql, c, tx);
             cmd.Parameters.AddWithValue("@legacy_id", legacy);
@@ -211,7 +222,9 @@ public static class Mt3aOwnershipMigration
     {
         // Operator/key identifiers are explicit authority names, not Guid resource keys.
         // Only their exact owner tables, names, types and collation are classified.
-        var wrong = Convert.ToInt64(await new MySqlCommand("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND (COLUMN_NAME='id' OR RIGHT(COLUMN_NAME,3)='_id') AND COLUMN_NAME<>'request_id' AND NOT(((TABLE_NAME IN ('institution_onboarding_event','platform_operation_nonce') AND COLUMN_NAME IN ('operator_id','key_id')) OR (TABLE_NAME='institution_recovery_approval' AND COLUMN_NAME='operator_id')) AND COLUMN_TYPE='varchar(64)' AND COLLATION_NAME='ascii_bin') AND (COLUMN_TYPE<>'char(36)' OR COLLATION_NAME<>'ascii_general_ci')",c).ExecuteScalarAsync());
+        // Email's database coordination singleton is an explicitly typed integer PK,
+        // not a resource identifier. All other resource/tenant/actor keys stay Guid.
+        var wrong = Convert.ToInt64(await new MySqlCommand("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND (COLUMN_NAME='id' OR RIGHT(COLUMN_NAME,3)='_id') AND COLUMN_NAME<>'request_id' AND NOT(TABLE_NAME='institution_email_mutex' AND COLUMN_NAME='id' AND COLUMN_TYPE='int(11)' AND IS_NULLABLE='NO' AND COLUMN_KEY='PRI') AND NOT(((TABLE_NAME IN ('institution_onboarding_event','platform_operation_nonce') AND COLUMN_NAME IN ('operator_id','key_id')) OR (TABLE_NAME='institution_recovery_approval' AND COLUMN_NAME='operator_id')) AND COLUMN_TYPE='varchar(64)' AND COLLATION_NAME='ascii_bin') AND (COLUMN_TYPE<>'char(36)' OR COLLATION_NAME<>'ascii_general_ci')",c).ExecuteScalarAsync());
         if (wrong != 0) throw new InvalidOperationException("Guid types/collations differ; review before migration.");
     }
 

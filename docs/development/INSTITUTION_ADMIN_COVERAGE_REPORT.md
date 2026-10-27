@@ -6,6 +6,13 @@ push, reset, restore or destructive checkout was performed.
 
 ## Administrative coverage matrix
 
+Staff extension (2026-10-27): see [Staff API contract](../api/INSTITUTION_STAFF_PERMISSIONS.md)
+and [verification report](../../tests/Integration/INSTITUTION_STAFF_ROLE_REPORT.md).
+Staff adds local Student/Teacher, Grade and Exam CRU, with explicit operation capabilities.
+It does not add IAM, configuration, transfers, structural catalog writes or DELETE.
+Admin + Staff retains Admin privileges; Staff + Teacher cannot recover exam DELETE/cancel.
+Coverage and outstanding checks are recorded separately from this historical academic CRUD report.
+
 | Resource | Coverage | Boundary |
 | --- | --- | --- |
 | StudyArea | Complete CRUD | Tenant uniqueness; no dependent delete |
@@ -247,3 +254,15 @@ together with the already pending prior implementation. No staging or commit don
 - `tests/Integration/Mt4bHttpTests.cs`
 - `tools/local_test_db.py`
 - `tests/Integration/INSTITUTION_ADMIN_ACADEMIC_VERIFICATION.json`
+# Fase 2 — email istituzionali
+
+Il modulo opzionale aggiunge policy versionate per Fondazione e categoria, preview,
+riserva indirizzi, creazione atomica di anagrafica e riserva, override/ritiro Admin e
+audit append-only. Non modifica User.Email, login, mailbox o ruoli IAM. Staff usa
+soltanto policy Student/Teacher e non modifica configurazioni o storico.
+Contratti: [INSTITUTION_EMAIL_POLICIES](../api/INSTITUTION_EMAIL_POLICIES.md).
+Evidenze e limiti: `tests/Integration/INSTITUTION_EMAIL_POLICY_REPORT.md`.
+
+## Fase 3: importazione massiva CreateOnly
+
+Nove endpoint istituzionali consentono template CSV, preview persistente privata, mapping, conferma AllOrNothing e risultati per Admin/Staff. CSV e XLSX usano parsing limitato; classi e referenze sono tenant-scoped. Nessun account, membership, enrollment, ClassSubject o trasferimento è creato. Riserva email opzionale tramite Fase2, senza cambio silenzioso dei candidati confermati. Actor-scoped history e retention della sola staging; audit append-only. Vedere [contratto bulk import](../api/INSTITUTION_BULK_IMPORT.md) e il report Integration dedicato.

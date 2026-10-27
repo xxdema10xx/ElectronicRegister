@@ -22,12 +22,12 @@ internal static class SubmissionVisibility
         return dto;
     }
 
-    public static SubmissionReviewDto Apply(SubmissionReviewDto dto, ClaimsContext caller)
+    public static SubmissionReviewDto Apply(SubmissionReviewDto dto, ClaimsContext? caller)
     {
         var available = HasOfficialGrade(dto.Status, dto.FinalGrade);
         if (dto.FinalGrade.HasValue) dto.Passed = dto.FinalGrade >= 6m;
 
-        if (caller.Role != UserRole.Student) return dto;
+        if (caller?.Role != UserRole.Student) return dto;
 
         dto.SuggestedGrade = null;
         dto.ReviewedByUserId = null;

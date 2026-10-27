@@ -431,6 +431,8 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
                 "--Identity:Legacy:AllowUnbackfilledAccounts=" + unbackfilled,
                 "--Logging:LogLevel:Default=Warning"
             };
+            if (Environment.GetEnvironmentVariable("ER_TEST_ISOLATED_PORT") is { } isolatedPort)
+                args.Add("--Deployment:LocalTestDatabasePort=" + isolatedPort);
             args.AddRange(users.Select((id, i) => "--Identity:Legacy:UserIds:" + i + "=" + id));
             var run = Task.Run(async () =>
             {

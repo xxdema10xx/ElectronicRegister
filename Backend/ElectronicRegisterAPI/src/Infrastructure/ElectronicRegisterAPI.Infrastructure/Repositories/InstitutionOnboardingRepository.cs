@@ -130,7 +130,7 @@ internal sealed partial class InstitutionOnboardingRepository(ElectronicRegister
     public async Task<InvitationResult> InviteAsync(TenantContext actor,InviteMember request,CancellationToken ct)
     {
         Enabled();Id(request.EventId);Id(request.RecipientUserId);Text(request.Reason,500);
-        if(request.RecipientUserId==actor.UserId || request.Roles is null || request.Roles.Length is <1 or >3 || request.Roles.Any(r=>!Enum.IsDefined(r)) || request.Roles.Distinct().Count()!=request.Roles.Length)throw new ArgumentException();
+        if(request.RecipientUserId==actor.UserId || request.Roles is null || request.Roles.Length is <1 or >4 || request.Roles.Any(r=>!Enum.IsDefined(r)) || request.Roles.Distinct().Count()!=request.Roles.Length)throw new ArgumentException();
         var roles=request.Roles.Select(x=>x.ToString()).Order(StringComparer.Ordinal).ToArray();
         var hash=Intent(new{actor.InstitutionId,actor.UserId,actor.MembershipId,request.EventId,request.RecipientUserId,Roles=roles,request.Reason});
         await using var tx=await db.Database.BeginTransactionAsync(ct);await Mutex(actor.InstitutionId,ct);await RequireAdmin(actor,ct);

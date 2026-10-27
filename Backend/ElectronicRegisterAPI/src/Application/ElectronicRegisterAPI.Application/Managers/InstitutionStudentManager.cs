@@ -24,14 +24,14 @@ internal sealed class InstitutionStudentManager(InstitutionSchoolAuthorization a
     { var (t, id) = await access.OwnAsync(false, ct); var row = await students.GetOwnAsync(t, id, ct); return row is null ? null : Map(row); }
     public async Task<Guid> AddAsync(CreateStudentDto dto, Guid? classId, Guid? membershipId, CancellationToken ct)
     {
-        var t = await access.AdminAsync(ct);
+        var t = await access.PermissionAsync(InstitutionPermission.UserCreate, ct);
         var row = new Student { Id = Guid.NewGuid(), FirstName = InstitutionSchoolAuthorization.Name(dto.FirstName), LastName = InstitutionSchoolAuthorization.Name(dto.LastName), ClassId = classId };
         await transactions.ExecuteAsync(() => students.AddAsync(t, row, membershipId, ct), ct);
         return row.Id;
     }
     public async Task UpdateAsync(Guid id, UpdateStudentDto dto, CancellationToken ct)
     {
-        var t = await access.AdminAsync(ct);
+        var t = await access.PermissionAsync(InstitutionPermission.UserUpdate, ct);
         await students.UpdateAsync(t, new Student { Id = id, FirstName = InstitutionSchoolAuthorization.Name(dto.FirstName), LastName = InstitutionSchoolAuthorization.Name(dto.LastName) }, ct);
     }
     public async Task DeleteAsync(Guid id, CancellationToken ct)

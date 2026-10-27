@@ -35,8 +35,8 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
         cmd.CommandText = "SELECT VERSION(),@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE(),@@GLOBAL.sql_mode";
         await using var reader = await cmd.ExecuteReaderAsync();
         Assert.True(await reader.ReadAsync()); Assert.Equal("5.7.24", reader.GetString(0));
-        Assert.Equal(13306, reader.GetInt32(1));
-        Assert.EndsWith("/migrations/mt4/private/mt5a-mamp-13306/data/", reader.GetString(2), StringComparison.OrdinalIgnoreCase);
+        Assert.Equal((int)TestMySqlTarget.Port, reader.GetInt32(1));
+        Assert.EndsWith(TestMySqlTarget.DataDirectorySuffix, reader.GetString(2), StringComparison.OrdinalIgnoreCase);
         Assert.Equal("electronic_register_test", reader.GetString(3)); Assert.Equal(Mode, reader.GetString(4));
         return c;
     }
@@ -61,7 +61,7 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
     {
         _connection = IntegrationFixture.ValidateLocalConnectionString(Environment.GetEnvironmentVariable("TEST_MYSQL_CONNECTION") ?? throw new InvalidOperationException("Explicit isolated target required"));
         var b = new MySqlConnectionStringBuilder(_connection);
-        Assert.Equal("127.0.0.1", b.Server); Assert.Equal((uint)13306, b.Port);
+        Assert.Equal("127.0.0.1", b.Server); Assert.Equal(TestMySqlTarget.Port, b.Port);
         b.AllowUserVariables = true; _connection = b.ConnectionString;
         await Exec("INSERT INTO institution(id,code,name,status) VALUES(@a,@ca,'Synthetic IAM A','active'),(@b,@cb,'Synthetic IAM B','active')",
             ("@a", _a), ("@b", _b), ("@ca", "MT5BP_" + _a.ToString("N")), ("@cb", "MT5BP_" + _b.ToString("N")));
@@ -97,7 +97,7 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
     }
 
     [Theory]
-    [InlineData("InstitutionAdmin")][InlineData("Teacher")][InlineData("Student")]
+    [InlineData("InstitutionAdmin")][InlineData("Teacher")][InlineData("Student")][InlineData("Staff")]
     public async Task Sql_RoleAddRemoveRestoreNeverRestoresGeneration(string role)
     {
         await Add(role); Assert.Equal(1, await Generation(_a, _ma));

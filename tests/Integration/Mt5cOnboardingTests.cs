@@ -48,7 +48,7 @@ public sealed partial class Mt5cOnboardingTests : IAsyncLifetime
     {
         var c=new MySqlConnection(connection);await c.OpenAsync();
         await using var cmd=new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE()",c);
-        await using var r=await cmd.ExecuteReaderAsync();Assert.True(await r.ReadAsync());Assert.Equal("5.7.24",r.GetString(0));Assert.Equal(Environment.MachineName,r.GetString(1),true);Assert.Equal(13306,r.GetInt32(2));Assert.EndsWith("/migrations/mt4/private/mt5a-mamp-13306/data/",r.GetString(3),StringComparison.OrdinalIgnoreCase);Assert.Equal("electronic_register_test",r.GetString(4));return c;
+        await using var r=await cmd.ExecuteReaderAsync();Assert.True(await r.ReadAsync());Assert.Equal("5.7.24",r.GetString(0));Assert.Equal(Environment.MachineName,r.GetString(1),true);Assert.Equal((int)TestMySqlTarget.Port,r.GetInt32(2));Assert.EndsWith(TestMySqlTarget.DataDirectorySuffix,r.GetString(3),StringComparison.OrdinalIgnoreCase);Assert.Equal("electronic_register_test",r.GetString(4));return c;
     }
     private async Task Exec(string sql,params object[] values)
     {await using var c=await Open();await using var cmd=new MySqlCommand(sql,c);for(int i=0;i<values.Length;i++)cmd.Parameters.AddWithValue("@p"+i,values[i]);await cmd.ExecuteNonQueryAsync();}
@@ -276,7 +276,7 @@ public sealed partial class Mt5cOnboardingTests : IAsyncLifetime
         var configFile=System.IO.Path.Combine(folder,"admin.json");var operationFile=System.IO.Path.Combine(folder,"signed.json");
         var assembly=typeof(PlatformCliTestChannel).Assembly.Location;
         await System.IO.File.WriteAllTextAsync(configFile,System.Text.Json.JsonSerializer.Serialize(new {
-            ConnectionStrings=new{DefaultConnection=connection},Multitenancy=new{Onboarding=new{Enabled=true}},
+            ConnectionStrings=new{DefaultConnection=connection},TestDatabase=new{Port=TestMySqlTarget.Port,ExpectedDataDir=TestMySqlTarget.DataDirectorySuffix},Multitenancy=new{Onboarding=new{Enabled=true}},
             PlatformAuthority=new{Enabled=true,Keys=new[]{key}},TestInbox=folder,
             InvitationChannel=new{AssemblyPath=assembly,SHA256=Convert.ToHexString(SHA256.HashData(await System.IO.File.ReadAllBytesAsync(assembly))),Type=typeof(PlatformCliTestChannel).FullName}},json));
         await System.IO.File.WriteAllTextAsync(operationFile,System.Text.Json.JsonSerializer.Serialize(op,json));

@@ -60,6 +60,8 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             // not writable by the test account and must not mask HTTP errors.
             "--Logging:EventLog:LogLevel:Default=None"
         };
+        if (Environment.GetEnvironmentVariable("ER_TEST_ISOLATED_PORT") is { } isolatedPort)
+            args = args.Append("--Deployment:LocalTestDatabasePort=" + isolatedPort).ToArray();
         // Execute the actual assembly entry point. No replacement host, registration, worker or middleware.
         var run = Task.Run(async () =>
         {
@@ -155,7 +157,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             .OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null).ToList();
         var schoolEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute>() is not null).ToList();
-        Assert.Equal(54, schoolEndpoints.Count);
+        Assert.Equal(76, schoolEndpoints.Count);
         var examEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is not null).ToList();
         Assert.Equal(37, examEndpoints.Count);
         var courseEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null).ToList();

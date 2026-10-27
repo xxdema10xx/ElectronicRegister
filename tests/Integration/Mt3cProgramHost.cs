@@ -49,6 +49,11 @@ internal static class Mt3cHosting
                 "--Identity:Legacy:AllowUnbackfilledAccounts=" + unbackfilled,
                 "--Logging:LogLevel:Default=Critical", "--Logging:EventLog:LogLevel:Default=None"
             };
+            if (Environment.GetEnvironmentVariable("ER_TEST_ISOLATED_PORT") is { } isolatedPort)
+            {
+                args.Add("--Deployment:LocalTestDatabasePort=" + isolatedPort);
+                args.Add("--Readiness:ExpectedDataDir=" + Environment.GetEnvironmentVariable("ER_TEST_ISOLATED_DATADIR"));
+            }
             if (school.HasValue) args.Add("--Multitenancy:SchoolApi:Enabled=" + school.Value);
             if (course.HasValue) args.Add("--Multitenancy:CourseApi:Enabled=" + course.Value);
             if (exam.HasValue) args.Add("--Multitenancy:ExamApi:Enabled=" + exam.Value);

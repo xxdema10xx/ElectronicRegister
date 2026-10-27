@@ -136,3 +136,12 @@ __pycache__/
 # Additive student transfer schema and validators.
 !/migrations/student-class-transfer/001_expand.sql
 !/migrations/student-class-transfer/002_validate.sql
+# Disposable Staff verification instances and private SQL backups.
+.staff-private/
+!/migrations/institution-staff/001_expand.sql
+!/migrations/institution-staff/002_validate.sql
+/tests/**/TestResults/staff/
+!/migrations/institution-email/001_expand.sql
+!/migrations/institution-email/002_validate.sql
+!/migrations/institution-import/001_expand.sql
+!/migrations/institution-import/002_validate.sql

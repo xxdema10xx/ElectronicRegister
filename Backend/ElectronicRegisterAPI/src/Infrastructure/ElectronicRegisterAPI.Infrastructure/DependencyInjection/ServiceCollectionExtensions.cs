@@ -19,6 +19,17 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.TryAddSingleton<IConfiguration>(configuration);
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionImportFileReader, ElectronicRegisterAPI.Infrastructure.Services.InstitutionImportFileReader>();
+        int ImportNumber(string key,int fallback)=>configuration["Multitenancy:InstitutionImport:"+key] is {} raw?int.Parse(raw,System.Globalization.CultureInfo.InvariantCulture):fallback;
+        var importFeature=new ElectronicRegisterAPI.Domain.Models.InstitutionImportFeature(
+            bool.TryParse(configuration["Multitenancy:InstitutionImport:Enabled"],out var importOn)&&importOn,
+            bool.TryParse(configuration["Multitenancy:SchoolApi:Enabled"],out var schoolOn)&&schoolOn,
+            new(ImportNumber("Limits:MaxFileBytes",10*1024*1024),ImportNumber("Limits:MaxDataRows",2000),ImportNumber("Limits:MaxColumns",16),ImportNumber("Limits:MaxCellCharacters",512),ImportNumber("Limits:MaxRecordCharacters",8192),ImportNumber("Limits:MaxZipEntries",128),ImportNumber("Limits:MaxUncompressedBytes",40*1024*1024),ImportNumber("Limits:MaxXmlNodes",200000)),
+            ImportNumber("TtlMinutes",30),ImportNumber("MaxStageBytes",2*1024*1024),ImportNumber("MaxPendingPreviews",20))
+            {CurrentAvailability=()=>bool.TryParse(configuration["Multitenancy:InstitutionImport:Enabled"],out var currentImport)&&currentImport&&bool.TryParse(configuration["Multitenancy:SchoolApi:Enabled"],out var currentSchool)&&currentSchool};
+        importFeature.Validate();services.AddSingleton(importFeature);
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionImportRepository, InstitutionImportRepository>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionImportRetention, ElectronicRegisterAPI.Infrastructure.Services.InstitutionImportRetention>();
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
         services.AddDbContext<ElectronicRegisterContext>(options =>
@@ -51,6 +62,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IInstitutionMembershipSecurityStateRepository, InstitutionMembershipSecurityStateRepository>();
         services.AddScoped<IInstitutionProfileRepository, InstitutionProfileRepository>();
         services.AddScoped<InstitutionSchoolQueries>();
+        services.AddSingleton(new ElectronicRegisterAPI.Domain.Models.InstitutionEmailFeature(
+            bool.TryParse(configuration["Multitenancy:InstitutionEmail:Enabled"], out var emailEnabled) && emailEnabled));
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionEmailRepository, InstitutionEmailRepository>();
+        services.AddScoped<IInstitutionWriteAuthorization, InstitutionWriteAuthorization>();
         services.AddScoped<ICourseStructureRepository, CourseStructureRepository>();
         services.AddScoped<IInstitutionStudentRepository, InstitutionStudentRepository>();
         services.AddScoped<IInstitutionStudentTransferRepository, InstitutionStudentTransferRepository>();

@@ -18,6 +18,7 @@ public static class OperationalPipeline
     public static void AddOperationalServices(this WebApplicationBuilder builder, RuntimePolicy policy)
     {
         builder.Services.AddSingleton(policy);
+        builder.Services.AddHostedService<InstitutionImportRetentionWorker>();
         builder.Logging.AddFilter("Microsoft.AspNetCore.Hosting.Diagnostics", LogLevel.Warning);
         builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.None);
         builder.Logging.AddFilter("Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware", LogLevel.None);
@@ -38,6 +39,9 @@ public static class OperationalPipeline
         builder.Services.AddHsts(o => { o.MaxAge = TimeSpan.FromDays(180); o.IncludeSubDomains = false; });
         builder.Services.AddRateLimiter(o =>
         {
+            var concurrentImports=builder.Configuration.GetValue("Multitenancy:InstitutionImport:ConcurrentUploads",2);
+            if(concurrentImports is <1 or >8)throw new InvalidOperationException("Import concurrent upload limit must be 1..8.");
+            o.AddConcurrencyLimiter("InstitutionImportUpload",options=>{options.PermitLimit=concurrentImports;options.QueueLimit=0;});
             o.RejectionStatusCode = 429;
             o.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
                 HttpMethods.IsPost(context.Request.Method) && context.Request.Path.StartsWithSegments("/api", StringComparison.OrdinalIgnoreCase)

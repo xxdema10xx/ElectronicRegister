@@ -8,10 +8,31 @@ using MySqlConnector;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
-internal sealed class InstitutionSchoolQueries(ElectronicRegisterContext db)
+internal sealed class InstitutionSchoolQueries(ElectronicRegisterContext db,
+    Domain.Interfaces.Repositories.IInstitutionWriteAuthorization authorization)
 {
-    internal IQueryable<T> Owned<T>(TenantContext tenant) where T : class =>
-        db.Set<T>().AsNoTracking().Where(e => EF.Property<Guid>(e, "InstitutionId") == tenant.InstitutionId);
+    internal async Task WriteAuthorizedAsync(TenantContext tenant, InstitutionPermission permission, Func<Task> write, CancellationToken ct)
+    {
+        InstitutionPermissions.Require(tenant, permission);
+        await using var owned = db.Database.CurrentTransaction is null ? await db.Database.BeginTransactionAsync(ct) : null;
+        await authorization.LockAsync(tenant, ct);
+        await write();
+        if (owned is not null) await owned.CommitAsync(ct);
+    }
+    internal IQueryable<T> Owned<T>(TenantContext tenant) where T : class
+    {
+        var rows = db.Set<T>().AsNoTracking().Where(e => EF.Property<Guid>(e, "InstitutionId") == tenant.InstitutionId);
+        if (!tenant.Roles.Contains(InstitutionRole.Staff)) return rows;
+        var roles = tenant.Roles.Select(r => r.ToString()).ToArray();
+        // Staff reads also bind membership/generation at the SQL source. Direct
+        // repository calls cannot turn a stale or fabricated Staff context into a directory.
+        return rows.Where(_ => db.InstitutionMemberships.Any(m => m.Id == tenant.MembershipId &&
+            m.InstitutionId == tenant.InstitutionId && m.UserId == tenant.UserId && m.User.Id == tenant.UserId &&
+            m.Status == "active" && m.Institution.Status == "active" &&
+            m.InstitutionMembershipRoles.Count == roles.Length && m.InstitutionMembershipRoles.All(r => roles.Contains(r.Role)) &&
+            db.InstitutionMembershipSecurityStates.Any(s => s.InstitutionId == tenant.InstitutionId && s.MembershipId == m.Id &&
+                s.SecurityGeneration >= 0 && s.SecurityGeneration == tenant.SecurityGeneration)));
+    }
 
     internal IQueryable<E.InstitutionTeacherProfile> TeacherProfiles(TenantContext t) =>
         db.InstitutionTeacherProfiles.AsNoTracking().Where(p => p.InstitutionId == t.InstitutionId &&
@@ -42,7 +63,7 @@ internal sealed class InstitutionSchoolQueries(ElectronicRegisterContext db)
     internal IQueryable<E.Student> VisibleStudents(TenantContext t)
     {
         var rows = Owned<E.Student>(t);
-        if (t.Roles.Contains(InstitutionRole.InstitutionAdmin)) return rows;
+        if (t.Roles.Contains(InstitutionRole.InstitutionAdmin) || t.Roles.Contains(InstitutionRole.Staff)) return rows;
         if (!t.Roles.Contains(InstitutionRole.Teacher)) throw new UnauthorizedAccessException("Anagrafica non autorizzata.");
         var assignments = VisibleAssignments(t);
         return rows.Where(s => s.ClassId != null && EF.Property<Guid>(s.Class!, "InstitutionId") == t.InstitutionId &&

@@ -355,6 +355,9 @@ namespace ElectronicRegisterAPI.Application.Managers
             if (await _gradeRepository.IsLinkedToExamSubmissionAsync(id))
                 throw new BusinessRuleException("An exam grade must be managed through submission finalization.");
 
+            if (caller.Tenant is { } tenant && tenant.Roles.Contains(InstitutionRole.Staff) &&
+                !tenant.Roles.Contains(InstitutionRole.InstitutionAdmin) && classSubject.Id != grade.ClassSubjectId)
+                throw new BusinessRuleException("ClassSubjectId non modificabile dallo Staff.");
             grade.ClassSubjectId = classSubject.Id;
             grade.Value = dto.Value;
             grade.Date = dto.Date;

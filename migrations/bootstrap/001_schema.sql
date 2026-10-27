@@ -333,7 +333,7 @@ CREATE TABLE `institution_membership_event` (
 
 CREATE TABLE `institution_membership_role` (
   `membership_id` char(36) CHARACTER SET ascii NOT NULL,
-  `role` enum('InstitutionAdmin','Teacher','Student') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('InstitutionAdmin','Teacher','Student','Staff') COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`membership_id`,`role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -830,6 +830,7 @@ CREATE DEFINER=`er_test`@`localhost` TRIGGER mt3a_audit_insert BEFORE INSERT ON 
  ELSE
  IF NEW.entity_type='exam' THEN SET resolved=(SELECT institution_id FROM exam WHERE id=NEW.entity_id);
  ELSEIF NEW.entity_type='exam_submission' THEN SET resolved=(SELECT institution_id FROM exam_submission WHERE id=NEW.entity_id);
+ ELSEIF NEW.entity_type='grade' THEN SET resolved=(SELECT institution_id FROM grade WHERE id=NEW.entity_id);
  ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit classification required'; END IF;
  IF resolved IS NULL THEN
    IF 'INSERT'='INSERT' OR NEW.institution_id IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit entity unresolved'; END IF;
@@ -852,12 +853,14 @@ DELIMITER $$
 
 CREATE DEFINER=`er_test`@`localhost` TRIGGER mt3a_audit_update BEFORE UPDATE ON audit_event FOR EACH ROW BEGIN
  DECLARE resolved CHAR(36) CHARACTER SET ascii COLLATE ascii_general_ci;
+ IF OLD.action LIKE 'staff.%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Staff audit append only'; END IF;
  IF NOT(NEW.institution_id <=> OLD.institution_id) OR NOT(NEW.entity_type <=> OLD.entity_type) OR NOT(NEW.entity_id <=> OLD.entity_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit attribution immutable'; END IF;
  IF NEW.entity_type='platform' THEN
  IF NEW.institution_id IS NOT NULL OR NEW.entity_id IS NOT NULL OR NEW.before_json IS NOT NULL OR NEW.after_json IS NOT NULL OR NEW.action NOT LIKE 'platform.%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A platform shape required'; END IF;
  ELSE
  IF NEW.entity_type='exam' THEN SET resolved=(SELECT institution_id FROM exam WHERE id=NEW.entity_id);
  ELSEIF NEW.entity_type='exam_submission' THEN SET resolved=(SELECT institution_id FROM exam_submission WHERE id=NEW.entity_id);
+ ELSEIF NEW.entity_type='grade' THEN SET resolved=(SELECT institution_id FROM grade WHERE id=NEW.entity_id);
  ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit classification required'; END IF;
  IF resolved IS NULL THEN
    IF 'UPDATE'='INSERT' OR NEW.institution_id IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit entity unresolved'; END IF;
@@ -1409,13 +1412,14 @@ DELIMITER $$
 CREATE DEFINER=`root`@`localhost` TRIGGER mt5c_invitation_insert BEFORE INSERT ON institution_invitation FOR EACH ROW BEGIN
  IF NEW.kind NOT IN ('FirstAdmin','Membership','Recovery') OR NEW.status<>'pending' OR NEW.attempts<>0 OR NEW.consumed_membership_id IS NOT NULL
   OR NEW.token_hash NOT REGEXP BINARY '^[A-F0-9]{64}$' OR NEW.channel_hash NOT REGEXP BINARY '^[A-F0-9]{64}$'
-  OR NEW.expires_at_utc<=NEW.created_at_utc OR JSON_TYPE(NEW.roles)<>'ARRAY' OR JSON_LENGTH(NEW.roles) NOT BETWEEN 1 AND 3
+  OR NEW.expires_at_utc<=NEW.created_at_utc OR JSON_TYPE(NEW.roles)<>'ARRAY' OR JSON_LENGTH(NEW.roles) NOT BETWEEN 1 AND 4
   OR JSON_TYPE(JSON_EXTRACT(NEW.roles,'$[0]'))<>'STRING'
-  OR JSON_UNQUOTE(JSON_EXTRACT(NEW.roles,'$[0]')) NOT IN ('InstitutionAdmin','Teacher','Student')
-  OR (JSON_LENGTH(NEW.roles)>1 AND (JSON_TYPE(JSON_EXTRACT(NEW.roles,'$[1]'))<>'STRING' OR JSON_UNQUOTE(JSON_EXTRACT(NEW.roles,'$[1]')) NOT IN ('InstitutionAdmin','Teacher','Student')))
-  OR (JSON_LENGTH(NEW.roles)>2 AND (JSON_TYPE(JSON_EXTRACT(NEW.roles,'$[2]'))<>'STRING' OR JSON_UNQUOTE(JSON_EXTRACT(NEW.roles,'$[2]')) NOT IN ('InstitutionAdmin','Teacher','Student')))
+  OR JSON_UNQUOTE(JSON_EXTRACT(NEW.roles,'$[0]')) NOT IN ('InstitutionAdmin','Teacher','Student','Staff')
+  OR (JSON_LENGTH(NEW.roles)>1 AND (JSON_TYPE(JSON_EXTRACT(NEW.roles,'$[1]'))<>'STRING' OR JSON_UNQUOTE(JSON_EXTRACT(NEW.roles,'$[1]')) NOT IN ('InstitutionAdmin','Teacher','Student','Staff')))
+  OR (JSON_LENGTH(NEW.roles)>2 AND (JSON_TYPE(JSON_EXTRACT(NEW.roles,'$[2]'))<>'STRING' OR JSON_UNQUOTE(JSON_EXTRACT(NEW.roles,'$[2]')) NOT IN ('InstitutionAdmin','Teacher','Student','Staff')))
   OR (JSON_LENGTH(NEW.roles)>1 AND JSON_EXTRACT(NEW.roles,'$[0]')=JSON_EXTRACT(NEW.roles,'$[1]'))
   OR (JSON_LENGTH(NEW.roles)>2 AND (JSON_EXTRACT(NEW.roles,'$[0]')=JSON_EXTRACT(NEW.roles,'$[2]') OR JSON_EXTRACT(NEW.roles,'$[1]')=JSON_EXTRACT(NEW.roles,'$[2]')))
+  OR (JSON_LENGTH(NEW.roles)>3 AND (JSON_TYPE(JSON_EXTRACT(NEW.roles,'$[3]'))<>'STRING' OR BINARY JSON_UNQUOTE(JSON_EXTRACT(NEW.roles,'$[3]')) NOT IN ('InstitutionAdmin','Teacher','Student','Staff') OR JSON_EXTRACT(NEW.roles,'$[3]')=JSON_EXTRACT(NEW.roles,'$[0]') OR JSON_EXTRACT(NEW.roles,'$[3]')=JSON_EXTRACT(NEW.roles,'$[1]') OR JSON_EXTRACT(NEW.roles,'$[3]')=JSON_EXTRACT(NEW.roles,'$[2]')))
   OR (NEW.kind IN ('FirstAdmin','Recovery') AND CAST(NEW.roles AS CHAR)<>'["InstitutionAdmin"]') THEN
   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT5C invalid invitation';
  END IF;
@@ -1625,9 +1629,9 @@ FOR EACH ROW BEGIN
   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT5D invalid snapshot';
  END IF;
  SET n_before=JSON_CONTAINS(NEW.previous_roles,JSON_QUOTE('InstitutionAdmin'))+
-   JSON_CONTAINS(NEW.previous_roles,JSON_QUOTE('Student'))+JSON_CONTAINS(NEW.previous_roles,JSON_QUOTE('Teacher'));
+   JSON_CONTAINS(NEW.previous_roles,JSON_QUOTE('Student'))+JSON_CONTAINS(NEW.previous_roles,JSON_QUOTE('Teacher'))+JSON_CONTAINS(NEW.previous_roles,JSON_QUOTE('Staff'));
  SET n_after=JSON_CONTAINS(NEW.new_roles,JSON_QUOTE('InstitutionAdmin'))+
-   JSON_CONTAINS(NEW.new_roles,JSON_QUOTE('Student'))+JSON_CONTAINS(NEW.new_roles,JSON_QUOTE('Teacher'));
+   JSON_CONTAINS(NEW.new_roles,JSON_QUOTE('Student'))+JSON_CONTAINS(NEW.new_roles,JSON_QUOTE('Teacher'))+JSON_CONTAINS(NEW.new_roles,JSON_QUOTE('Staff'));
  IF JSON_LENGTH(NEW.previous_roles)<>n_before OR JSON_LENGTH(NEW.new_roles)<>n_after THEN
   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT5D invalid or duplicate role';
  END IF;
@@ -1640,7 +1644,7 @@ FOR EACH ROW BEGIN
   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT5D snapshot does not match persisted mutation';
  END IF;
  IF NEW.action IN ('AddRole','RemoveRole') THEN
-  IF NEW.target_role IS NULL OR NEW.target_role NOT IN ('InstitutionAdmin','Teacher','Student')
+  IF NEW.target_role IS NULL OR NEW.target_role NOT IN ('InstitutionAdmin','Teacher','Student','Staff')
    OR NEW.previous_status<>NEW.new_status THEN
    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT5D invalid role mutation';
   END IF;
@@ -1680,18 +1684,18 @@ DELIMITER $$
 CREATE DEFINER=`root`@`localhost` TRIGGER mt5d_event_snapshot_shape BEFORE INSERT ON institution_membership_event
 FOR EACH ROW BEGIN
  DECLARE position_index INT DEFAULT 0;
- IF JSON_LENGTH(NEW.previous_roles)>3 OR JSON_LENGTH(NEW.new_roles)>3 THEN
+ IF JSON_LENGTH(NEW.previous_roles)>4 OR JSON_LENGTH(NEW.new_roles)>4 THEN
   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT5D role snapshot exceeds catalog';
  END IF;
- WHILE position_index<3 DO
+ WHILE position_index<4 DO
   IF position_index<JSON_LENGTH(NEW.previous_roles) AND NOT(COALESCE((
     JSON_TYPE(JSON_EXTRACT(NEW.previous_roles,CONCAT('$[',position_index,']')))='STRING'
-    AND BINARY JSON_UNQUOTE(JSON_EXTRACT(NEW.previous_roles,CONCAT('$[',position_index,']'))) IN ('InstitutionAdmin','Teacher','Student')),0)) THEN
+    AND BINARY JSON_UNQUOTE(JSON_EXTRACT(NEW.previous_roles,CONCAT('$[',position_index,']'))) IN ('InstitutionAdmin','Teacher','Student','Staff')),0)) THEN
    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT5D previous roles must be flat catalog strings';
   END IF;
   IF position_index<JSON_LENGTH(NEW.new_roles) AND NOT(COALESCE((
     JSON_TYPE(JSON_EXTRACT(NEW.new_roles,CONCAT('$[',position_index,']')))='STRING'
-    AND BINARY JSON_UNQUOTE(JSON_EXTRACT(NEW.new_roles,CONCAT('$[',position_index,']'))) IN ('InstitutionAdmin','Teacher','Student')),0)) THEN
+    AND BINARY JSON_UNQUOTE(JSON_EXTRACT(NEW.new_roles,CONCAT('$[',position_index,']'))) IN ('InstitutionAdmin','Teacher','Student','Staff')),0)) THEN
    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT5D new roles must be flat catalog strings';
   END IF;
   SET position_index=position_index+1;
@@ -2645,4 +2649,368 @@ CREATE DEFINER=`root`@`localhost` TRIGGER student_transfer_revision_update BEFOR
  (NEW.transfer_revision<>OLD.transfer_revision+1 OR NEW.class_id<=>OLD.class_id))
  THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Transfer revision invalid'; END IF;
 END$$
+DELIMITER ;
+
+SET SESSION sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` TRIGGER staff_audit_delete BEFORE DELETE ON audit_event FOR EACH ROW BEGIN
+ IF OLD.action LIKE 'staff.%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Staff audit append only'; END IF;
+END$$
+DELIMITER ;
+
+-- Institutional email additive schema 20261027.2, technical singleton only.
+-- 20261027.2. MySQL 5.7.24. Maintenance window + attested instance + backup REQUIRED.
+-- DDL implicitly commits. Never replay. No login/microsoft/invitation alias is created.
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
+SET SESSION sql_mode='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+
+CREATE TABLE institution_email_mutex (
+ id int NOT NULL, PRIMARY KEY(id)
+) ENGINE=InnoDB;
+INSERT INTO institution_email_mutex(id) VALUES(1);
+
+CREATE TABLE institution_email_policy (
+ institution_id char(36) CHARACTER SET ascii NOT NULL,
+ policy_id char(36) CHARACTER SET ascii NOT NULL,
+ category varchar(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ revision bigint NOT NULL,
+ state varchar(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ configuration json NOT NULL,
+ actor_user_id char(36) CHARACTER SET ascii NOT NULL,
+ actor_membership_id char(36) CHARACTER SET ascii NOT NULL,
+ created_at_utc datetime(6) NOT NULL,
+ PRIMARY KEY(institution_id,category,revision),
+ UNIQUE KEY uq_email_policy_version(institution_id,policy_id,revision),
+ CONSTRAINT fk_email_policy_institution FOREIGN KEY(institution_id) REFERENCES institution(id),
+ CONSTRAINT fk_email_policy_actor FOREIGN KEY(institution_id,actor_membership_id,actor_user_id)
+ REFERENCES institution_membership(institution_id,id,user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE institution_email_assignment (
+ id char(36) CHARACTER SET ascii NOT NULL,
+ institution_id char(36) CHARACTER SET ascii NOT NULL,
+ student_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ teacher_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ membership_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ category varchar(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ policy_revision bigint NOT NULL,
+ email varchar(254) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+ state enum('reserved','provisioned','verified','retired') NOT NULL,
+ revision bigint NOT NULL,
+ first_name_snapshot varchar(256) NOT NULL,
+ last_name_snapshot varchar(256) NOT NULL,
+ actor_user_id char(36) CHARACTER SET ascii NOT NULL,
+ actor_membership_id char(36) CHARACTER SET ascii NOT NULL,
+ created_at_utc datetime(6) NOT NULL,
+ updated_at_utc datetime(6) NOT NULL,
+ PRIMARY KEY(id),
+ UNIQUE KEY uq_email_assignment_owner(institution_id,id),
+ UNIQUE KEY uq_email_assignment_student(institution_id,student_id),
+ UNIQUE KEY uq_email_assignment_teacher(institution_id,teacher_id),
+ UNIQUE KEY uq_email_assignment_member(institution_id,membership_id),
+ KEY idx_email_assignment_page(institution_id,created_at_utc,id),
+ CONSTRAINT fk_email_assignment_institution FOREIGN KEY(institution_id) REFERENCES institution(id),
+ CONSTRAINT fk_email_assignment_student FOREIGN KEY(institution_id,student_id) REFERENCES student(institution_id,id),
+ CONSTRAINT fk_email_assignment_teacher FOREIGN KEY(institution_id,teacher_id) REFERENCES teacher(institution_id,id),
+ CONSTRAINT fk_email_assignment_member FOREIGN KEY(institution_id,membership_id) REFERENCES institution_membership(institution_id,id),
+ CONSTRAINT fk_email_assignment_policy FOREIGN KEY(institution_id,category,policy_revision) REFERENCES institution_email_policy(institution_id,category,revision),
+ CONSTRAINT fk_email_assignment_actor FOREIGN KEY(institution_id,actor_membership_id,actor_user_id) REFERENCES institution_membership(institution_id,id,user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Global coordination namespace, intentionally not a tenant directory. Collation
+-- matches user.email, including case/accent equivalence. All writers register here.
+CREATE TABLE institution_email_reservation (
+ address varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+ user_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ institution_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ assignment_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ PRIMARY KEY(address),
+ KEY idx_email_reservation_user(user_id),
+ CONSTRAINT fk_email_reservation_user FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE,
+ CONSTRAINT fk_email_reservation_assignment FOREIGN KEY(institution_id,assignment_id) REFERENCES institution_email_assignment(institution_id,id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE institution_email_event (
+ institution_id char(36) CHARACTER SET ascii NOT NULL,
+ id char(36) CHARACTER SET ascii NOT NULL,
+ actor_user_id char(36) CHARACTER SET ascii NOT NULL,
+ actor_membership_id char(36) CHARACTER SET ascii NOT NULL,
+ operation varchar(24) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ category varchar(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ policy_revision bigint NOT NULL,
+ assignment_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ request_hash char(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ before_json json DEFAULT NULL,
+ after_json json NOT NULL,
+ reason varchar(500) NOT NULL,
+ occurred_at_utc datetime(6) NOT NULL,
+ PRIMARY KEY(institution_id,id),
+ KEY idx_email_event_assignment(institution_id,assignment_id,occurred_at_utc,id),
+ KEY idx_email_event_policy(institution_id,category,policy_revision),
+ CONSTRAINT fk_email_event_institution FOREIGN KEY(institution_id) REFERENCES institution(id),
+ CONSTRAINT fk_email_event_actor FOREIGN KEY(institution_id,actor_membership_id,actor_user_id) REFERENCES institution_membership(institution_id,id,user_id),
+ CONSTRAINT fk_email_event_policy FOREIGN KEY(institution_id,category,policy_revision) REFERENCES institution_email_policy(institution_id,category,revision),
+ CONSTRAINT fk_email_event_assignment FOREIGN KEY(institution_id,assignment_id) REFERENCES institution_email_assignment(institution_id,id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DELIMITER $$
+CREATE TRIGGER email_reservation_insert BEFORE INSERT ON institution_email_reservation FOR EACH ROW BEGIN
+ IF BINARY NEW.address<>BINARY LOWER(NEW.address) OR
+  NOT((NEW.user_id IS NOT NULL AND NEW.institution_id IS NULL AND NEW.assignment_id IS NULL) OR
+      (NEW.user_id IS NULL AND NEW.institution_id IS NOT NULL AND NEW.assignment_id IS NOT NULL)) THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email reservation shape invalid';
+ END IF;
+ IF NEW.user_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM user WHERE id=NEW.user_id AND email=NEW.address) THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email identity reservation mismatch'; END IF;
+ IF NEW.assignment_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM institution_email_assignment WHERE institution_id=NEW.institution_id AND id=NEW.assignment_id AND email=NEW.address) THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email assignment reservation mismatch'; END IF;
+END$$
+CREATE TRIGGER email_reservation_update BEFORE UPDATE ON institution_email_reservation FOR EACH ROW BEGIN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email reservation immutable';
+END$$
+CREATE TRIGGER email_reservation_delete BEFORE DELETE ON institution_email_reservation FOR EACH ROW BEGIN
+ IF OLD.assignment_id IS NOT NULL OR EXISTS(SELECT 1 FROM user WHERE id=OLD.user_id AND email=OLD.address) THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email reservation retained'; END IF;
+END$$
+CREATE TRIGGER email_user_insert AFTER INSERT ON user FOR EACH ROW BEGIN
+ INSERT INTO institution_email_reservation(address,user_id) VALUES(LOWER(NEW.email),NEW.id);
+END$$
+CREATE TRIGGER email_user_update AFTER UPDATE ON user FOR EACH ROW BEGIN
+ IF NOT(NEW.email <=> OLD.email) THEN
+  DELETE FROM institution_email_reservation WHERE user_id=OLD.id;
+  INSERT INTO institution_email_reservation(address,user_id) VALUES(LOWER(NEW.email),NEW.id);
+ END IF;
+END$$
+CREATE TRIGGER email_policy_insert BEFORE INSERT ON institution_email_policy FOR EACH ROW BEGIN
+ DECLARE latest BIGINT;
+ DECLARE parent CHAR(36) CHARACTER SET ascii;
+ SELECT id INTO parent FROM institution WHERE id=NEW.institution_id FOR UPDATE;
+ SELECT COALESCE(MAX(revision),0) INTO latest FROM institution_email_policy WHERE institution_id=NEW.institution_id AND category=NEW.category;
+ IF NEW.category NOT IN ('Student','Teacher','Staff','InstitutionAdmin') OR NEW.state NOT IN ('Draft','Published','Disabled') OR
+  NEW.revision<>latest+1 OR NEW.created_at_utc IS NULL OR JSON_TYPE(NEW.configuration)<>'OBJECT' OR
+  (latest>0 AND NOT EXISTS(SELECT 1 FROM institution_email_policy WHERE institution_id=NEW.institution_id AND category=NEW.category AND revision=latest AND policy_id=NEW.policy_id)) OR
+  NOT EXISTS(SELECT 1 FROM institution_membership m JOIN institution i ON i.id=m.institution_id JOIN institution_membership_role r ON r.membership_id=m.id
+    WHERE m.institution_id=NEW.institution_id AND m.id=NEW.actor_membership_id AND m.user_id=NEW.actor_user_id AND m.status='active' AND i.status='active' AND r.role='InstitutionAdmin') THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email policy transition or actor invalid'; END IF;
+END$$
+CREATE TRIGGER email_policy_update BEFORE UPDATE ON institution_email_policy FOR EACH ROW BEGIN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email policy versions append only';
+END$$
+CREATE TRIGGER email_policy_delete BEFORE DELETE ON institution_email_policy FOR EACH ROW BEGIN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email policy versions retained';
+END$$
+CREATE TRIGGER email_assignment_insert BEFORE INSERT ON institution_email_assignment FOR EACH ROW BEGIN
+ DECLARE parent CHAR(36) CHARACTER SET ascii;
+ DECLARE mutex INT;
+ SELECT id INTO parent FROM institution WHERE id=NEW.institution_id FOR UPDATE;
+ SELECT id INTO mutex FROM institution_email_mutex WHERE id=1 FOR UPDATE;
+ IF NEW.revision<>1 OR NEW.state<>'reserved' OR NEW.email<>LOWER(TRIM(NEW.email)) OR CHAR_LENGTH(NEW.email)>254 OR
+  (NEW.student_id IS NOT NULL AND NEW.teacher_id IS NOT NULL) OR
+  (NEW.student_id IS NULL AND NEW.teacher_id IS NULL AND NEW.membership_id IS NULL) OR
+  (NEW.category='Student' AND NEW.student_id IS NULL) OR (NEW.category='Teacher' AND NEW.teacher_id IS NULL) OR
+  (NEW.category IN ('Staff','InstitutionAdmin') AND (NEW.membership_id IS NULL OR NEW.student_id IS NOT NULL OR NEW.teacher_id IS NOT NULL)) THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email assignment shape invalid'; END IF;
+ IF NOT EXISTS(SELECT 1 FROM institution_email_policy WHERE institution_id=NEW.institution_id AND category=NEW.category AND revision=NEW.policy_revision AND state='Published') THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email policy not published'; END IF;
+ IF NEW.membership_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM institution_membership WHERE institution_id=NEW.institution_id AND id=NEW.membership_id AND status='active') THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email recipient membership unavailable'; END IF;
+ IF NEW.student_id IS NOT NULL AND NEW.membership_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM institution_student_profile WHERE institution_id=NEW.institution_id AND student_id=NEW.student_id AND membership_id=NEW.membership_id) THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email student membership mismatch'; END IF;
+ IF NEW.teacher_id IS NOT NULL AND NEW.membership_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM institution_teacher_profile WHERE institution_id=NEW.institution_id AND teacher_id=NEW.teacher_id AND membership_id=NEW.membership_id) THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email teacher membership mismatch'; END IF;
+ IF NEW.membership_id IS NULL AND (EXISTS(SELECT 1 FROM institution_student_profile WHERE institution_id=NEW.institution_id AND student_id=NEW.student_id) OR EXISTS(SELECT 1 FROM institution_teacher_profile WHERE institution_id=NEW.institution_id AND teacher_id=NEW.teacher_id)) THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email linked recipient requires canonical membership'; END IF;
+ IF NOT EXISTS(SELECT 1 FROM institution_membership m JOIN institution i ON i.id=m.institution_id JOIN institution_membership_role r ON r.membership_id=m.id
+   WHERE m.institution_id=NEW.institution_id AND m.id=NEW.actor_membership_id AND m.user_id=NEW.actor_user_id AND m.status='active' AND i.status='active'
+   AND (r.role='InstitutionAdmin' OR r.role='Staff' AND NEW.category IN ('Student','Teacher'))) THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email actor not authorized'; END IF;
+ IF EXISTS(SELECT 1 FROM institution_email_assignment a WHERE a.institution_id=NEW.institution_id AND
+  (a.student_id=NEW.student_id OR a.teacher_id=NEW.teacher_id OR a.membership_id=NEW.membership_id OR
+   EXISTS(SELECT 1 FROM institution_student_profile p WHERE p.institution_id=NEW.institution_id AND
+    (p.membership_id=NEW.membership_id AND p.student_id=a.student_id OR p.student_id=NEW.student_id AND p.membership_id=a.membership_id)) OR
+   EXISTS(SELECT 1 FROM institution_teacher_profile p WHERE p.institution_id=NEW.institution_id AND
+    (p.membership_id=NEW.membership_id AND p.teacher_id=a.teacher_id OR p.teacher_id=NEW.teacher_id AND p.membership_id=a.membership_id)))) THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email recipient already assigned'; END IF;
+END$$
+CREATE TRIGGER email_assignment_reserve AFTER INSERT ON institution_email_assignment FOR EACH ROW BEGIN
+ INSERT INTO institution_email_reservation(address,institution_id,assignment_id) VALUES(LOWER(NEW.email),NEW.institution_id,NEW.id);
+END$$
+CREATE TRIGGER email_assignment_update BEFORE UPDATE ON institution_email_assignment FOR EACH ROW BEGIN
+ IF NEW.id<>OLD.id OR NEW.institution_id<>OLD.institution_id OR NOT(NEW.student_id<=>OLD.student_id) OR NOT(NEW.teacher_id<=>OLD.teacher_id) OR
+  NOT(NEW.membership_id<=>OLD.membership_id) OR NEW.category<>OLD.category OR NEW.created_at_utc<>OLD.created_at_utc OR
+  NEW.first_name_snapshot<>OLD.first_name_snapshot OR NEW.last_name_snapshot<>OLD.last_name_snapshot OR NEW.revision<>OLD.revision+1 OR
+  NEW.state NOT IN ('reserved','retired') OR NEW.email<>LOWER(TRIM(NEW.email)) OR
+  (NEW.email=OLD.email AND NOT(OLD.state='reserved' AND NEW.state='retired')) OR
+  NOT EXISTS(SELECT 1 FROM institution_membership m JOIN institution i ON i.id=m.institution_id JOIN institution_membership_role r ON r.membership_id=m.id
+   WHERE m.institution_id=NEW.institution_id AND m.id=NEW.actor_membership_id AND m.user_id=NEW.actor_user_id AND m.status='active' AND i.status='active' AND r.role='InstitutionAdmin') THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email override or retirement invalid'; END IF;
+END$$
+CREATE TRIGGER email_assignment_override_reserve AFTER UPDATE ON institution_email_assignment FOR EACH ROW BEGIN
+ IF NOT(BINARY NEW.email <=> BINARY OLD.email) THEN
+  INSERT INTO institution_email_reservation(address,institution_id,assignment_id) VALUES(LOWER(NEW.email),NEW.institution_id,NEW.id);
+ END IF;
+END$$
+CREATE TRIGGER email_assignment_delete BEFORE DELETE ON institution_email_assignment FOR EACH ROW BEGIN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email assignment history retained';
+END$$
+CREATE TRIGGER email_event_insert BEFORE INSERT ON institution_email_event FOR EACH ROW BEGIN
+ IF NEW.id='00000000-0000-0000-0000-000000000000' OR NEW.operation NOT IN ('PolicyWritten','Assigned','PersonCreatedAndAssigned','Overridden','Retired') OR
+  NOT(BINARY NEW.request_hash REGEXP '^[0-9A-F]{64}$') OR NEW.occurred_at_utc IS NULL OR JSON_TYPE(NEW.after_json)<>'OBJECT' OR
+  CHAR_LENGTH(TRIM(NEW.reason))=0 OR NEW.reason REGEXP '[[:cntrl:]]' OR
+  (NEW.operation='PolicyWritten' AND NEW.assignment_id IS NOT NULL) OR (NEW.operation<>'PolicyWritten' AND NEW.assignment_id IS NULL) THEN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email event invalid'; END IF;
+END$$
+CREATE TRIGGER email_event_update BEFORE UPDATE ON institution_email_event FOR EACH ROW BEGIN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email audit append only';
+END$$
+CREATE TRIGGER email_event_delete BEFORE DELETE ON institution_email_event FOR EACH ROW BEGIN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email audit retained';
+END$$
+DELIMITER ;
+
+-- Current-state namespace registration, not invented historical events. The
+-- maintenance runner must stop all writers before DDL/backfill and verify afterward.
+INSERT INTO institution_email_reservation(address,user_id) SELECT LOWER(email),id FROM user;
+
+DELIMITER $$
+CREATE TRIGGER email_student_profile_link BEFORE INSERT ON institution_student_profile FOR EACH ROW BEGIN
+ DECLARE parent CHAR(36) CHARACTER SET ascii;
+ DECLARE mutex INT;
+ SELECT id INTO parent FROM institution WHERE id=NEW.institution_id FOR UPDATE;
+ SELECT id INTO mutex FROM institution_email_mutex WHERE id=1 FOR UPDATE;
+ IF EXISTS(SELECT 1 FROM institution_email_assignment a WHERE a.institution_id=NEW.institution_id AND a.student_id=NEW.student_id AND a.membership_id IS NOT NULL AND a.membership_id<>NEW.membership_id) OR
+ EXISTS(SELECT 1 FROM institution_email_assignment a JOIN institution_email_assignment b ON b.institution_id=a.institution_id AND b.id<>a.id
+  AND (b.membership_id=NEW.membership_id OR EXISTS(SELECT 1 FROM institution_student_profile p WHERE p.institution_id=NEW.institution_id AND p.membership_id=NEW.membership_id AND p.student_id=b.student_id) OR EXISTS(SELECT 1 FROM institution_teacher_profile p WHERE p.institution_id=NEW.institution_id AND p.membership_id=NEW.membership_id AND p.teacher_id=b.teacher_id))
+  WHERE a.institution_id=NEW.institution_id AND a.student_id=NEW.student_id) THEN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email identity reconciliation required before profile linkage'; END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER email_teacher_profile_link BEFORE INSERT ON institution_teacher_profile FOR EACH ROW BEGIN
+ DECLARE parent CHAR(36) CHARACTER SET ascii;
+ DECLARE mutex INT;
+ SELECT id INTO parent FROM institution WHERE id=NEW.institution_id FOR UPDATE;
+ SELECT id INTO mutex FROM institution_email_mutex WHERE id=1 FOR UPDATE;
+ IF EXISTS(SELECT 1 FROM institution_email_assignment a WHERE a.institution_id=NEW.institution_id AND a.teacher_id=NEW.teacher_id AND a.membership_id IS NOT NULL AND a.membership_id<>NEW.membership_id) OR
+ EXISTS(SELECT 1 FROM institution_email_assignment a JOIN institution_email_assignment b ON b.institution_id=a.institution_id AND b.id<>a.id
+  AND (b.membership_id=NEW.membership_id OR EXISTS(SELECT 1 FROM institution_student_profile p WHERE p.institution_id=NEW.institution_id AND p.membership_id=NEW.membership_id AND p.student_id=b.student_id) OR EXISTS(SELECT 1 FROM institution_teacher_profile p WHERE p.institution_id=NEW.institution_id AND p.membership_id=NEW.membership_id AND p.teacher_id=b.teacher_id))
+  WHERE a.institution_id=NEW.institution_id AND a.teacher_id=NEW.teacher_id) THEN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Email identity reconciliation required before profile linkage'; END IF;
+END$$
+DELIMITER ;
+
+-- Institutional bulk import 20261027.3.
+-- 20261027.3. Additive MySQL5.7.24; attested isolated target, stopped writers and backup required.
+-- DDL implicitly commits. Never automatically replay or promise transactional DDL rollback.
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
+SET SESSION sql_mode='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+CREATE TABLE institution_import_batch (
+ id char(36) CHARACTER SET ascii NOT NULL,
+ institution_id char(36) CHARACTER SET ascii NOT NULL,
+ actor_user_id char(36) CHARACTER SET ascii NOT NULL,
+ actor_membership_id char(36) CHARACTER SET ascii NOT NULL,
+ category varchar(7) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ state enum('Preview','Completed','Expired') NOT NULL,
+ revision bigint NOT NULL,
+ file_sha256 char(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ preview_digest char(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ total_rows int NOT NULL,valid_rows int NOT NULL,invalid_rows int NOT NULL,
+ payload json DEFAULT NULL,
+ result_json json DEFAULT NULL,
+ warnings_json json NOT NULL,
+ policy_revision bigint DEFAULT NULL,
+ created_at_utc datetime(6) NOT NULL,
+ expires_at_utc datetime(6) NOT NULL,
+ PRIMARY KEY(id),
+ UNIQUE KEY uq_import_batch_owner(institution_id,id),
+ UNIQUE KEY uq_import_batch_category(institution_id,id,category),
+ KEY idx_import_batch_actor(institution_id,actor_membership_id,actor_user_id,created_at_utc,id),
+ KEY idx_import_batch_digest(institution_id,category,file_sha256,state),
+ KEY idx_import_batch_expiry(state,expires_at_utc,id),
+ CONSTRAINT fk_import_batch_institution FOREIGN KEY(institution_id) REFERENCES institution(id),
+ CONSTRAINT fk_import_batch_actor FOREIGN KEY(institution_id,actor_membership_id,actor_user_id) REFERENCES institution_membership(institution_id,id,user_id),
+ CONSTRAINT fk_import_batch_policy FOREIGN KEY(institution_id,category,policy_revision) REFERENCES institution_email_policy(institution_id,category,revision)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE institution_import_external_reference (
+ institution_id char(36) CHARACTER SET ascii NOT NULL,
+ category varchar(7) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ reference varchar(100) COLLATE utf8mb4_bin NOT NULL,
+ student_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ teacher_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ PRIMARY KEY(institution_id,category,reference),
+ CONSTRAINT fk_import_external_institution FOREIGN KEY(institution_id) REFERENCES institution(id),
+ CONSTRAINT fk_import_external_student FOREIGN KEY(institution_id,student_id) REFERENCES student(institution_id,id),
+ CONSTRAINT fk_import_external_teacher FOREIGN KEY(institution_id,teacher_id) REFERENCES teacher(institution_id,id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE institution_import_item (
+ institution_id char(36) CHARACTER SET ascii NOT NULL,
+ batch_id char(36) CHARACTER SET ascii NOT NULL,
+ row_number int NOT NULL,
+ category varchar(7) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ student_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ teacher_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ email_assignment_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ external_reference varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+ PRIMARY KEY(institution_id,batch_id,row_number),
+ CONSTRAINT fk_import_item_batch FOREIGN KEY(institution_id,batch_id,category) REFERENCES institution_import_batch(institution_id,id,category),
+ CONSTRAINT fk_import_item_student FOREIGN KEY(institution_id,student_id) REFERENCES student(institution_id,id),
+ CONSTRAINT fk_import_item_teacher FOREIGN KEY(institution_id,teacher_id) REFERENCES teacher(institution_id,id),
+ CONSTRAINT fk_import_item_assignment FOREIGN KEY(institution_id,email_assignment_id) REFERENCES institution_email_assignment(institution_id,id),
+ CONSTRAINT fk_import_item_external FOREIGN KEY(institution_id,category,external_reference) REFERENCES institution_import_external_reference(institution_id,category,reference)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE institution_import_event (
+ institution_id char(36) CHARACTER SET ascii NOT NULL,
+ id char(36) CHARACTER SET ascii NOT NULL,
+ batch_id char(36) CHARACTER SET ascii NOT NULL,
+ revision bigint NOT NULL,
+ action varchar(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ actor_kind enum('User','Retention') NOT NULL,
+ actor_user_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ actor_membership_id char(36) CHARACTER SET ascii DEFAULT NULL,
+ request_hash char(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ result_json json NOT NULL,
+ reason varchar(500) NOT NULL,
+ occurred_at_utc datetime(6) NOT NULL,
+ PRIMARY KEY(institution_id,id),
+ UNIQUE KEY uq_import_event_revision(institution_id,batch_id,revision),
+ CONSTRAINT fk_import_event_batch FOREIGN KEY(institution_id,batch_id) REFERENCES institution_import_batch(institution_id,id),
+ CONSTRAINT fk_import_event_actor FOREIGN KEY(institution_id,actor_membership_id,actor_user_id) REFERENCES institution_membership(institution_id,id,user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+DELIMITER $$
+CREATE TRIGGER import_batch_insert BEFORE INSERT ON institution_import_batch FOR EACH ROW BEGIN
+ DECLARE parent char(36) CHARACTER SET ascii;
+ SELECT id INTO parent FROM institution WHERE id=NEW.institution_id FOR UPDATE;
+ IF NEW.id='00000000-0000-0000-0000-000000000000' OR NEW.category NOT IN ('Student','Teacher') OR NEW.state<>'Preview' OR NEW.revision<>1 OR NEW.payload IS NULL OR JSON_TYPE(NEW.payload)<>'OBJECT' OR NEW.result_json IS NOT NULL OR JSON_TYPE(NEW.warnings_json)<>'ARRAY' OR NEW.total_rows<1 OR NEW.total_rows>10000 OR NEW.valid_rows+NEW.invalid_rows<>NEW.total_rows OR NEW.expires_at_utc<=NEW.created_at_utc OR NOT(BINARY NEW.file_sha256 REGEXP '^[0-9A-F]{64}$') OR NOT(BINARY NEW.preview_digest REGEXP '^[0-9A-F]{64}$') OR
+ NOT EXISTS(SELECT 1 FROM institution_membership m JOIN institution_membership_role r ON r.membership_id=m.id JOIN institution i ON i.id=m.institution_id WHERE m.institution_id=NEW.institution_id AND m.id=NEW.actor_membership_id AND m.user_id=NEW.actor_user_id AND m.status='active' AND i.status='active' AND r.role IN ('InstitutionAdmin','Staff')) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import preview ownership or state invalid'; END IF;
+END$$
+CREATE TRIGGER import_batch_update BEFORE UPDATE ON institution_import_batch FOR EACH ROW BEGIN
+ IF NEW.id<>OLD.id OR NEW.institution_id<>OLD.institution_id OR NEW.actor_user_id<>OLD.actor_user_id OR NEW.actor_membership_id<>OLD.actor_membership_id OR NEW.category<>OLD.category OR NEW.file_sha256<>OLD.file_sha256 OR NEW.created_at_utc<>OLD.created_at_utc OR NEW.expires_at_utc<>OLD.expires_at_utc OR NEW.revision<>OLD.revision+1 OR OLD.state<>'Preview' OR NEW.total_rows<>OLD.total_rows OR NEW.valid_rows+NEW.invalid_rows<>NEW.total_rows OR JSON_TYPE(NEW.warnings_json)<>'ARRAY' OR
+ (NEW.state='Preview' AND (NEW.payload IS NULL OR NEW.result_json IS NOT NULL)) OR
+ (NEW.state='Completed' AND (NEW.payload IS NOT NULL OR NEW.result_json IS NULL OR OLD.expires_at_utc<=UTC_TIMESTAMP(6) OR OLD.invalid_rows<>0 OR (SELECT COUNT(*) FROM institution_import_item WHERE institution_id=NEW.institution_id AND batch_id=NEW.id)<>OLD.total_rows)) OR
+ (NEW.state='Expired' AND (NEW.payload IS NOT NULL OR NEW.result_json IS NOT NULL OR OLD.expires_at_utc>UTC_TIMESTAMP(6))) OR
+ (NEW.state<>'Expired' AND NOT EXISTS(SELECT 1 FROM institution_membership m JOIN institution_membership_role r ON r.membership_id=m.id JOIN institution i ON i.id=m.institution_id WHERE m.institution_id=NEW.institution_id AND m.id=NEW.actor_membership_id AND m.user_id=NEW.actor_user_id AND m.status='active' AND i.status='active' AND r.role IN ('InstitutionAdmin','Staff'))) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import transition or immutable fields invalid'; END IF;
+END$$
+CREATE TRIGGER import_batch_delete BEFORE DELETE ON institution_import_batch FOR EACH ROW BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import history retained'; END$$
+CREATE TRIGGER import_external_insert BEFORE INSERT ON institution_import_external_reference FOR EACH ROW BEGIN
+ IF CHAR_LENGTH(TRIM(NEW.reference))=0 OR NEW.reference<>TRIM(NEW.reference) OR NEW.reference REGEXP '[[:cntrl:]]' OR NOT((NEW.category='Student' AND NEW.student_id IS NOT NULL AND NEW.teacher_id IS NULL) OR (NEW.category='Teacher' AND NEW.student_id IS NULL AND NEW.teacher_id IS NOT NULL)) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import external reference invalid'; END IF;
+END$$
+CREATE TRIGGER import_external_update BEFORE UPDATE ON institution_import_external_reference FOR EACH ROW BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import reference immutable'; END$$
+CREATE TRIGGER import_external_delete BEFORE DELETE ON institution_import_external_reference FOR EACH ROW BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import reference retained'; END$$
+CREATE TRIGGER import_item_insert BEFORE INSERT ON institution_import_item FOR EACH ROW BEGIN
+ IF NEW.row_number<1 OR NOT((NEW.category='Student' AND NEW.student_id IS NOT NULL AND NEW.teacher_id IS NULL) OR (NEW.category='Teacher' AND NEW.student_id IS NULL AND NEW.teacher_id IS NOT NULL)) OR
+ NOT EXISTS(SELECT 1 FROM institution_import_batch b WHERE b.institution_id=NEW.institution_id AND b.id=NEW.batch_id AND b.state='Preview' AND b.expires_at_utc>UTC_TIMESTAMP(6)) OR
+ (NEW.email_assignment_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM institution_email_assignment a WHERE a.institution_id=NEW.institution_id AND a.id=NEW.email_assignment_id AND a.category=NEW.category AND (a.student_id<=>NEW.student_id) AND (a.teacher_id<=>NEW.teacher_id))) OR
+ (NEW.external_reference IS NOT NULL AND NOT EXISTS(SELECT 1 FROM institution_import_external_reference x WHERE x.institution_id=NEW.institution_id AND x.category=NEW.category AND x.reference=NEW.external_reference AND (x.student_id<=>NEW.student_id) AND (x.teacher_id<=>NEW.teacher_id))) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import item ownership or target invalid'; END IF;
+END$$
+CREATE TRIGGER import_item_update BEFORE UPDATE ON institution_import_item FOR EACH ROW BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import item immutable'; END$$
+CREATE TRIGGER import_item_delete BEFORE DELETE ON institution_import_item FOR EACH ROW BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import item retained'; END$$
+CREATE TRIGGER import_event_insert BEFORE INSERT ON institution_import_event FOR EACH ROW BEGIN
+ IF NEW.id='00000000-0000-0000-0000-000000000000' OR NOT(BINARY NEW.request_hash REGEXP '^[0-9A-F]{64}$') OR JSON_TYPE(NEW.result_json)<>'OBJECT' OR NEW.reason REGEXP '[[:cntrl:]]' OR CHAR_LENGTH(TRIM(NEW.reason))=0 OR
+ NOT EXISTS(SELECT 1 FROM institution_import_batch b WHERE b.institution_id=NEW.institution_id AND b.id=NEW.batch_id AND b.revision=NEW.revision AND
+ ((NEW.actor_kind='User' AND NEW.actor_user_id=b.actor_user_id AND NEW.actor_membership_id=b.actor_membership_id AND ((NEW.action='Previewed' AND b.state='Preview' AND b.revision=1) OR (NEW.action='Remapped' AND b.state='Preview' AND b.revision>1) OR (NEW.action='Confirmed' AND b.state='Completed'))) OR (NEW.actor_kind='Retention' AND NEW.actor_user_id IS NULL AND NEW.actor_membership_id IS NULL AND NEW.action='Expired' AND b.state='Expired' AND b.expires_at_utc<=UTC_TIMESTAMP(6)))) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import audit invalid'; END IF;
+END$$
+CREATE TRIGGER import_event_update BEFORE UPDATE ON institution_import_event FOR EACH ROW BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import audit append only'; END$$
+CREATE TRIGGER import_event_delete BEFORE DELETE ON institution_import_event FOR EACH ROW BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Import audit retained'; END$$
 DELIMITER ;

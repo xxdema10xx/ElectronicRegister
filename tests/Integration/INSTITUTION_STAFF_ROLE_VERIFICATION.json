@@ -1,0 +1,528 @@
+{
+    "format":  1,
+    "verifiedAtUtc":  "2026-10-27T19:28:49.9467163Z",
+    "status":  "IMPLEMENTED_AND_VERIFIED",
+    "phaseCompleted":  true,
+    "initialGit":  {
+                       "head":  "d5bf774d57eb143252a3659a29e653e4a0ce19a9",
+                       "branch":  "refactor-database-entities",
+                       "workingTreeClean":  true,
+                       "localChanges":  [
+
+                                        ]
+                   },
+    "git":  {
+                "head":  "d5bf774d57eb143252a3659a29e653e4a0ce19a9",
+                "branch":  "refactor-database-entities",
+                "commitPerformed":  false,
+                "pushPerformed":  false,
+                "destructiveCheckoutPerformed":  false,
+                "productionDataModified":  false,
+                "historicalGeneratedArtifactsRestored":  15
+            },
+    "roles":  {
+                  "before":  [
+                                 "InstitutionAdmin",
+                                 "Teacher",
+                                 "Student"
+                             ],
+                  "after":  [
+                                "InstitutionAdmin",
+                                "Staff",
+                                "Teacher",
+                                "Student"
+                            ],
+                  "dotnetOrdinals":  {
+                                         "InstitutionAdmin":  0,
+                                         "Teacher":  1,
+                                         "Student":  2,
+                                         "Staff":  3
+                                     },
+                  "sqlEnum":  [
+                                  "InstitutionAdmin",
+                                  "Teacher",
+                                  "Student",
+                                  "Staff"
+                              ],
+                  "legacyUserRoleUnchanged":  true
+              },
+    "authorization":  {
+                          "model":  "InstitutionPermissions: explicit per-resource/per-operation capability",
+                          "staffCru":  [
+                                           "Student",
+                                           "Teacher",
+                                           "Grade",
+                                           "Exam"
+                                       ],
+                          "staffDelete":  false,
+                          "staffExamCancel":  false,
+                          "staffIam":  false,
+                          "staffGlobalUserWrites":  false,
+                          "staffRequiresTeacherProfile":  false,
+                          "staffRequiresStudentProfile":  false,
+                          "multiRoleDenyDeleteWithoutAdmin":  true,
+                          "adminPlusStaffRetainsAdmin":  true,
+                          "teacherOnlyOwnershipPreserved":  true,
+                          "studentOnlyOwnershipPreserved":  true,
+                          "legacyMixedRoleBypassClosed":  true,
+                          "tenantOwnershipInSql":  true,
+                          "membershipGenerationRevalidated":  true,
+                          "permissionCacheIntroduced":  false
+                      },
+    "onboarding":  {
+                       "staffAssignedAndRevokedThroughExistingIam":  true,
+                       "invitationRoleCatalogExtended":  true,
+                       "maxDistinctInstitutionRoles":  4,
+                       "lastAdminProtectionPreserved":  true,
+                       "lastStaffConstraintIntroduced":  false,
+                       "anagraphicCreatesAuthenticatableUser":  false,
+                       "staffMembershipProfileLinking":  "Admin-only; Staff can create local unlinked records"
+                   },
+    "audit":  {
+                  "newActions":  "staff.* grade/exam create/update/assignment/lifecycle",
+                  "actorUserIdColumn":  true,
+                  "actorMembershipIdInJson":  true,
+                  "beforeAfterSnapshots":  true,
+                  "staffEventsAppendOnlyUpdateDeleteTriggers":  true,
+                  "legacyGradeAuditBackfilled":  false,
+                  "teacherOnlyAuditExpanded":  false,
+                  "iamLedgerRewritten":  false,
+                  "iamFirstSharedLocksAndTransactionalRevalidation":  true,
+                  "staffWriteVsRevokeHttpTestPassed":  true,
+                  "faultAfterAuditCreateUpdateGradeExamPassed":  true
+              },
+    "database":  {
+                     "version":  "5.7.24",
+                     "before":  {
+                                    "tables":  43,
+                                    "triggers":  98,
+                                    "foreignKeys":  131,
+                                    "indexes":  180
+                                },
+                     "after":  {
+                                   "tables":  43,
+                                   "triggers":  99,
+                                   "foreignKeys":  131,
+                                   "indexes":  180
+                               },
+                     "existing3306Or13306Used":  false,
+                     "newProcessDatadirs":  true,
+                     "ddlEntirelyTransactional":  false,
+                     "migrationVersion":  "20261027.1",
+                     "migration":  {
+                                       "port":  23319,
+                                       "dataDirectory":  ".staff-private/instance-b62861c15dfa4d5b8ec08c278c471b2a/data",
+                                       "preflightPassed":  true,
+                                       "backupPassed":  true,
+                                       "backupSha256":  "2B056780A3203F4A9786B52BD74E329BF3701EE9F35D334214D548F2400E84D6",
+                                       "sqlSha256":  "0D018F8F2E4163440BBF1FE487D78CE776C30C14FCF2A6F70B9E66CC124BE355",
+                                       "postflightPassed":  true,
+                                       "completeSchemaContractPassed":  true,
+                                       "priorAdminTeacherStudentOrdinalsPreserved":  true,
+                                       "priorIamEventRetained":  true,
+                                       "priorPendingInvitationRetained":  true
+                                   },
+                     "bootstrap":  {
+                                       "port":  23318,
+                                       "dataDirectory":  ".staff-private/instance-45c72b47108b49df8acf758bd34271f0/data",
+                                       "emptyBootstrapPassed":  true,
+                                       "completeCanonicalSchemaContractBeforeFixtureBindingPassed":  true,
+                                       "fixtureRetentionGuardsBoundToExactNewInstanceForRegression":  true,
+                                       "productionBootstrapRetentionGuardsUnchanged":  true
+                                   },
+                     "sqlValidator":  {
+                                          "executed":  true,
+                                          "roleColumnMismatch":  0,
+                                          "roleTriggerMismatch":  0,
+                                          "unknownRoles":  0,
+                                          "missingSecurityState":  0,
+                                          "staffAuditGuardMismatch":  0,
+                                          "staffAuditActorMismatch":  0
+                                      }
+                 },
+    "manifest":  {
+                     "entries":  152,
+                     "sha256":  "62CE799E6991C7D342B92745F1FB4F1018216DE3423CF6D23FD25DCABF7F9847",
+                     "allHashesVerifiedWithPowerShell":  true,
+                     "eolAndIgnoreClosureVerified":  true
+                 },
+    "pythonValidator":  {
+                            "path":  "tools/verify-institution-staff.py",
+                            "executed":  true,
+                            "reason":  "Static Staff validator passed on Windows host PowerShell, manually executed and reported by the user; exit code 0. Not executed by the agent sandbox. Native MySQL/schema verification remains separate.",
+                            "userReportedOfflineVerification":  {
+                                                                    "provenance":  "User-reported manual Windows PowerShell verification",
+                                                                    "pythonVersion":  "3.14.2",
+                                                                    "interpreter":  "C:\\Users\\Lorenzo\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+                                                                    "localTestDbHelp":  "OK",
+                                                                    "pythonUnittest":  {
+                                                                                           "command":  "python -m unittest discover -s tools -p \"test_*.py\"",
+                                                                                           "passed":  11,
+                                                                                           "failed":  0
+                                                                                       },
+                                                                    "projectArtifacts":  {
+                                                                                             "command":  "python tools/verify-project-artifacts.py",
+                                                                                             "sha256Verified":  152
+                                                                                         },
+                                                                    "sqlExecuted":  false,
+                                                                    "executedByAgent":  false
+                                                                },
+                            "executedByAgent":  false,
+                            "executedOnWindowsHost":  true,
+                            "staticContractVerified":  true,
+                            "sqlModeExecuted":  false,
+                            "executionProvenance":  "User-reported manual Windows host PowerShell",
+                            "staffHostVerification":  {
+                                                          "recordedAtUtc":  "2026-10-27T19:28:49.9467163Z",
+                                                          "provenance":  "User-reported manual Windows host PowerShell execution",
+                                                          "command":  "python .\\tools\\verify-institution-staff.py",
+                                                          "output":  "152 SHA256 files and static Staff contract verified; no SQL executed",
+                                                          "exitCode":  0,
+                                                          "sqlExecuted":  false,
+                                                          "executedByAgent":  false,
+                                                          "currentValidatorSha256":  "73CA36D5121F23BFA576B893AD402F5352F9E83BE63B3006EE71E36058090243",
+                                                          "currentManifestSha256":  "62CE799E6991C7D342B92745F1FB4F1018216DE3423CF6D23FD25DCABF7F9847"
+                                                      }
+                        },
+    "regression":  {
+                       "unit":  231,
+                       "integration":  1137,
+                       "total":  1368,
+                       "passed":  1368,
+                       "failed":  0,
+                       "skipped":  0,
+                       "baselineUnit":  133,
+                       "baselineIntegration":  1096,
+                       "baselineTotal":  1229,
+                       "baselineIdentitiesPreserved":  1229,
+                       "baselineUnitIdentitySha256":  "26B542B055A705FD08E8D71FFD3E4173482CF869A2B96E4E6ED93A6E980376D6",
+                       "baselineIntegrationIdentitySha256":  "FE56D4774F03A31BCDB39B6ACEA4C4F084B4B52353EA2849FF0B8C92983A6CBC",
+                       "missingIdentities":  [
+
+                                             ],
+                       "newUnit":  98,
+                       "newIntegration":  41,
+                       "newTotal":  139,
+                       "newHttpStaffCases":  40,
+                       "previousTestsRenamedOrIgnored":  false,
+                       "previousAssertionsWeakened":  false
+                   },
+    "artifacts":  [
+                      {
+                          "path":  "tests/Unit/TestResults/staff/staff-unit-final-filter.trx",
+                          "sha256":  "EF122ADA6A7DD485B85E6F83D27C341B20EC5A9FC0B1AFA002B31CB6CD11C496"
+                      },
+                      {
+                          "path":  "tests/Integration/TestResults/staff/staff-integration-final-filter.trx",
+                          "sha256":  "17A48153362841C526F881B3DC6744E6628F54C5B6F441FF64A133FB60416CBE"
+                      }
+                  ],
+    "newTestIdentities":  [
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_AdminPlusStaffKeepsGradeAndDraftExamDelete",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_AllowlistedLegacyTeacherCannotBypassStaffDeleteRestriction",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_AnagraphicCruIsTenantScopedWithoutCreatingGlobalAccounts(extra: \"\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_AnagraphicCruIsTenantScopedWithoutCreatingGlobalAccounts(extra: \"InstitutionAdmin\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_AnagraphicCruIsTenantScopedWithoutCreatingGlobalAccounts(extra: \"Student\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_AnagraphicCruIsTenantScopedWithoutCreatingGlobalAccounts(extra: \"Teacher\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_AnagraphicCruIsTenantScopedWithoutCreatingGlobalAccounts(extra: \"Teacher,Student\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_CannotReachGovernanceLegacyOrStructuralWrites(route: \"/api/institution/admin/members\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_CannotReachGovernanceLegacyOrStructuralWrites(route: \"/api/institution/classes\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_CannotReachGovernanceLegacyOrStructuralWrites(route: \"/api/institution/subjects\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_CannotReachGovernanceLegacyOrStructuralWrites(route: \"/api/User\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_DoesNotGrantTeachingOrStudentSubmissionMutations(operation: \"answers\", method: \"PUT\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_DoesNotGrantTeachingOrStudentSubmissionMutations(operation: \"finalize\", method: \"POST\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_DoesNotGrantTeachingOrStudentSubmissionMutations(operation: \"review\", method: \"PUT\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_DoesNotGrantTeachingOrStudentSubmissionMutations(operation: \"submit\", method: \"POST\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_ExamForgedFieldsCannotCreateOrAttributeData(field: \"institutionId\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_ExamForgedFieldsCannotCreateOrAttributeData(field: \"status\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_ExamForgedFieldsCannotCreateOrAttributeData(field: \"teacherId\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_ExamLifecycleUsesRealActorWithoutTeacherProfile",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_FaultAfterPersistingAuditRollsBackWholeResource(resource: \"exams\", update: False)",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_FaultAfterPersistingAuditRollsBackWholeResource(resource: \"exams\", update: True)",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_FaultAfterPersistingAuditRollsBackWholeResource(resource: \"grades\", update: False)",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_FaultAfterPersistingAuditRollsBackWholeResource(resource: \"grades\", update: True)",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_ForbiddenStudentFieldsProduceNoWrite(field: \"classId\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_ForbiddenStudentFieldsProduceNoWrite(field: \"institutionId\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_ForbiddenStudentFieldsProduceNoWrite(field: \"role\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_ForbiddenStudentFieldsProduceNoWrite(field: \"userId\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_GradesCruKeepIdentityAndTenantAndRejectDelete",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_IamAssignsAndRevokesStaffWithAuditAndGeneration",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_MixedRolesCannotDeleteOrCancelExams(extra: \"\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_MixedRolesCannotDeleteOrCancelExams(extra: \"Student\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_MixedRolesCannotDeleteOrCancelExams(extra: \"Teacher\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_MixedRolesCannotDeleteOrCancelExams(extra: \"Teacher,Student\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_PreviousJwtFailsAfterMembershipChange(change: \"remove-role\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_PreviousJwtFailsAfterMembershipChange(change: \"suspend\")",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_RevocationWaitsForAuthorizedWriteAndThenBlocksOldToken",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_RolloutAndSelectionTicketCannotAuthorizeStaffWrites",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_SameUserTeacherInOtherFoundationKeepsIndependentScope",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_SignedStaffClaimCannotGrantRoleMissingFromMembership",
+                              "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_StudentRoleUsesRealProfileAndExamGradeStillRequiresFinalizationWorkflow",
+                              "ElectronicRegisterAPI.Tests.Integration.Mt5bSecurityStateTests.Sql_RoleAddRemoveRestoreNeverRestoresGeneration(role: \"Staff\")",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.AdminPlusStaffKeepsExplicitAdministrativePowers",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.PersistedOrdinalsAndLegacyCatalogArePreserved",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: CatalogManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: ExamAssign)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: ExamCancel)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: ExamClose)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: ExamCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: ExamDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: ExamPublish)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: ExamRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: ExamUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: GradeCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: GradeDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: GradeRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: GradeUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: InstitutionManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: MembershipManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: StudentTransfer)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: SubmissionFinalize)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: SubmissionRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: SubmissionReview)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: UserCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: UserDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: UserRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Student], permission: UserUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: CatalogManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: ExamAssign)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: ExamCancel)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: ExamClose)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: ExamCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: ExamDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: ExamPublish)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: ExamRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: ExamUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: GradeCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: GradeDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: GradeRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: GradeUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: InstitutionManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: MembershipManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: StudentTransfer)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: SubmissionFinalize)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: SubmissionRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: SubmissionReview)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: UserCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: UserDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: UserRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher, Student], permission: UserUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: CatalogManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: ExamAssign)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: ExamCancel)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: ExamClose)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: ExamCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: ExamDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: ExamPublish)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: ExamRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: ExamUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: GradeCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: GradeDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: GradeRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: GradeUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: InstitutionManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: MembershipManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: StudentTransfer)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: SubmissionFinalize)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: SubmissionRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: SubmissionReview)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: UserCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: UserDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: UserRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff, Teacher], permission: UserUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: CatalogManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: ExamAssign)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: ExamCancel)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: ExamClose)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: ExamCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: ExamDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: ExamPublish)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: ExamRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: ExamUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: GradeCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: GradeDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: GradeRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: GradeUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: InstitutionManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: MembershipManage)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: StudentTransfer)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: SubmissionFinalize)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: SubmissionRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: SubmissionReview)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: UserCreate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: UserDelete)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: UserRead)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffCannotRecoverDestructiveOrGovernancePowersFromOtherRoles(roles: [Staff], permission: UserUpdate)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.StaffPrincipalNeedsNeitherProfileNorLegacyIdentity",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.TeacherDestructionIsBlockedOnlyWhenStaffIsAlsoPresent(staff: False)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.TeacherDestructionIsBlockedOnlyWhenStaffIsAlsoPresent(staff: True)",
+                              "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.UnknownCatalogValuesFailClosedEvenAlongsideAdmin"
+                          ],
+    "outstanding":  [
+
+                    ],
+    "deferredPerScope":  [
+                             "Excel/CSV import",
+                             "Institutional email provisioning",
+                             "UF/modules",
+                             "Hour budget redesign",
+                             "Lesson calendar",
+                             "Frontend"
+                         ],
+    "processesShutdown":  {
+                              "verified":  true,
+                              "ports":  [
+                                            23316,
+                                            23317,
+                                            23318,
+                                            23319
+                                        ]
+                          },
+    "followupVerification":  {
+                                 "atUtc":  "2026-10-27T19:14:02.3165826Z",
+                                 "absoluteInterpreterTried":  true,
+                                 "executableInspectionException":  "System.UnauthorizedAccessException",
+                                 "message":  "Accesso negato",
+                                 "category":  "PermissionDenied",
+                                 "fullyQualifiedErrorId":  "ItemExistsUnauthorizedAccessError,Microsoft.PowerShell.Commands.GetItemCommand",
+                                 "restrictionsBypassed":  false,
+                                 "pythonInstalledByAgent":  false,
+                                 "scriptsModified":  false,
+                                 "priorTrxHashesRechecked":  true,
+                                 "priorUnitPassed":  231,
+                                 "priorIntegrationPassed":  1137,
+                                 "manifestHashesRechecked":  152,
+                                 "priorBootstrapAndMigrationEvidenceRechecked":  true,
+                                 "freshSqlExecuted":  false
+                             },
+    "finalAcceptanceReview":  {
+                                  "recordedAtUtc":  "2026-10-27T19:28:49.9467163Z",
+                                  "scope":  "Final acceptance review of Phase 1 against existing source, recorded sandbox execution artifacts and user-reported host Python evidence",
+                                  "criteria":  [
+                                                   {
+                                                       "id":  "role_domain_database",
+                                                       "criterion":  "Staff nel dominio/database; ordinali preservati",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "InstitutionRole; EF mapping; migration/schema contract",
+                                                       "provenance":  "Sandbox: code, .NET tests and native MySQL"
+                                                   },
+                                                   {
+                                                       "id":  "institution_jwt",
+                                                       "criterion":  "Staff in InstitutionAccess; claim falsificati rifiutati",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "StaffRole_SignedStaffClaimCannotGrantRoleMissingFromMembership; InstitutionAccess HTTP flows",
+                                                       "provenance":  "Sandbox: automated HTTP integration"
+                                                   },
+                                                   {
+                                                       "id":  "iam_assignment_revocation",
+                                                       "criterion":  "Assegnazione/revoca tramite IAM autorizzato",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "StaffRole_IamAssignsAndRevokesStaffWithAuditAndGeneration",
+                                                       "provenance":  "Sandbox: automated HTTP integration"
+                                                   },
+                                                   {
+                                                       "id":  "resource_cru",
+                                                       "criterion":  "CRU delle risorse consentite",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "StaffRole_AnagraphicCruIsTenantScopedWithoutCreatingGlobalAccounts; GradesCru; ExamLifecycle; class-filter cases",
+                                                       "provenance":  "Sandbox: automated HTTP integration"
+                                                   },
+                                                   {
+                                                       "id":  "staff_no_delete",
+                                                       "criterion":  "Nessun DELETE/cancel con privilegi Staff",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "StaffRole_MixedRolesCannotDeleteOrCancelExams; grade/user delete denials; capability matrix",
+                                                       "provenance":  "Sandbox: unit/HTTP tests and code review"
+                                                   },
+                                                   {
+                                                       "id":  "multi_role",
+                                                       "criterion":  "Combinazioni multi-ruolo senza bypass; Admin preservato",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "InstitutionStaffPermissionsTests; StaffRole_AdminPlusStaffKeepsGradeAndDraftExamDelete",
+                                                       "provenance":  "Sandbox: unit and HTTP integration"
+                                                   },
+                                                   {
+                                                       "id":  "no_escalation",
+                                                       "criterion":  "Nessuna escalation IAM/globale/legacy",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "StaffRole_AllowlistedLegacyTeacherCannotBypassStaffDeleteRestriction; governance denials",
+                                                       "provenance":  "Sandbox: automated HTTP integration"
+                                                   },
+                                                   {
+                                                       "id":  "tenant_isolation",
+                                                       "criterion":  "Separazione delle Fondazioni",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "StaffRole_SameUserTeacherInOtherFoundationKeepsIndependentScope; multi-role anagraphic cross-tenant cases; SQL scopes",
+                                                       "provenance":  "Sandbox: HTTP integration and code review"
+                                                   },
+                                                   {
+                                                       "id":  "no_fake_teacher",
+                                                       "criterion":  "Nessun Teacher fittizio per Staff",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "StaffPrincipalNeedsNeitherProfileNorLegacyIdentity; real-profile Staff+Student scenario",
+                                                       "provenance":  "Sandbox: unit and HTTP integration"
+                                                   },
+                                                   {
+                                                       "id":  "grade_exam_rules",
+                                                       "criterion":  "Business rule, submission, risposte e storico preservati",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "StaffRole_StudentRoleUsesRealProfileAndExamGradeStillRequiresFinalizationWorkflow; rollback/audit tests; previous regression",
+                                                       "provenance":  "Sandbox: full unit/integration regression"
+                                                   },
+                                                   {
+                                                       "id":  "exam_engine",
+                                                       "criterion":  "Motore esami preservato",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "Existing worker/randomization/autosave/review/finalize/retake regression identities retained and passed",
+                                                       "provenance":  "Sandbox: full integration regression"
+                                                   },
+                                                   {
+                                                       "id":  "student_transfers",
+                                                       "criterion":  "Storico trasferimenti preservato",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "Existing transfer regression identities retained and passed; Admin-only workflow unchanged",
+                                                       "provenance":  "Sandbox: full regression and code review"
+                                                   },
+                                                   {
+                                                       "id":  "isolated_migration",
+                                                       "criterion":  "Migrazione MySQL 5.7.24 verificata su istanza isolata",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "Port 23319: preflight, backup digest, role ordinals, IAM event and pending invite preservation, full contract, six zero SQL checks",
+                                                       "provenance":  "Sandbox: native MySQL/PowerShell"
+                                                   },
+                                                   {
+                                                       "id":  "bootstrap_manifest",
+                                                       "criterion":  "Bootstrap, contract, manifest e validatori verificati",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "Port 23318 canonical bootstrap; 43 tables/99 triggers/131 FK/180 indexes; 152 SHA256 entries; Python static Staff validator exit 0",
+                                                       "provenance":  "Sandbox: native MySQL/PowerShell; host: user-reported Python offline"
+                                                   },
+                                                   {
+                                                       "id":  "complete_regression",
+                                                       "criterion":  "Test precedenti e nuovi superati",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "231 unit + 1137 integration = 1368 passed; zero failed/skipped; all 1229 baseline identities retained",
+                                                       "provenance":  "Sandbox: TRX execution and digest/identity verification"
+                                                   },
+                                                   {
+                                                       "id":  "accurate_documentation",
+                                                       "criterion":  "Documentazione aderente al codice e alle evidenze",
+                                                       "status":  "PASSED",
+                                                       "evidence":  "INSTITUTION_STAFF_PERMISSIONS.md; Staff report and verification JSON; local anagraphic/account distinction; provenance separation",
+                                                       "provenance":  "Sandbox: final documentation/evidence review"
+                                                   }
+                                               ],
+                                  "allApplicableCriteriaSatisfied":  true,
+                                  "residualBlockers":  [
+
+                                                       ],
+                                  "freshDotnetTestsExecutedInThisReview":  false,
+                                  "freshSqlExecutedInThisReview":  false,
+                                  "hostPythonResultIndependentlyReexecutedByAgent":  false,
+                                  "nonBlockingLimitations":  [
+                                                                 "Python interpreter remains inaccessible from the agent sandbox; static validator execution is user-reported host evidence.",
+                                                                 "Python full-schema mode was not executed; complete MySQL schema/bootstrap/migration checks were executed separately with native PowerShell/MySQL."
+                                                             ],
+                                  "futurePhaseDependenciesRemainOutOfScope":  true
+                              }
+}

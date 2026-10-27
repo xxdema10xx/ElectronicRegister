@@ -38,8 +38,8 @@ public sealed class Mt5eIamHttpTests : IAsyncLifetime
         var c=new MySqlConnection(_connection);await c.OpenAsync();
         await using var cmd=new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE(),SUBSTRING_INDEX(USER(),'@',1)",c);
         await using var r=await cmd.ExecuteReaderAsync();Assert.True(await r.ReadAsync());
-        Assert.Equal("5.7.24",r.GetString(0));Assert.Equal(Environment.MachineName,r.GetString(1),ignoreCase:true);Assert.Equal(13306,r.GetInt32(2));
-        Assert.EndsWith("/migrations/mt4/private/mt5a-mamp-13306/data/",r.GetString(3),StringComparison.OrdinalIgnoreCase);
+        Assert.Equal("5.7.24",r.GetString(0));Assert.Equal(Environment.MachineName,r.GetString(1),ignoreCase:true);Assert.Equal((int)TestMySqlTarget.Port,r.GetInt32(2));
+        Assert.EndsWith(TestMySqlTarget.DataDirectorySuffix,r.GetString(3),StringComparison.OrdinalIgnoreCase);
         Assert.Equal("electronic_register_test",r.GetString(4));Assert.Equal("root",r.GetString(5));return c;
     }
     private async Task Exec(string sql,params(string,object)[] args)
@@ -53,7 +53,7 @@ public sealed class Mt5eIamHttpTests : IAsyncLifetime
     public async Task InitializeAsync()
     {
         _connection=IntegrationFixture.ValidateLocalConnectionString(Environment.GetEnvironmentVariable("TEST_MYSQL_CONNECTION")??throw new InvalidOperationException("Explicit isolated database required"));
-        var builder=new MySqlConnectionStringBuilder(_connection);Assert.Equal("127.0.0.1",builder.Server);Assert.Equal(13306u,builder.Port);builder.AllowUserVariables=true;_connection=builder.ConnectionString;
+        var builder=new MySqlConnectionStringBuilder(_connection);Assert.Equal("127.0.0.1",builder.Server);Assert.Equal(TestMySqlTarget.Port,builder.Port);builder.AllowUserVariables=true;_connection=builder.ConnectionString;
         await Exec("INSERT INTO institution(id,code,name,status) VALUES(@a,@ca,'Synthetic HTTP IAM A','active'),(@b,@cb,'Synthetic HTTP IAM B','active')",("@a",_a),("@b",_b),("@ca","MT5BP_"+_a.ToString("N")),("@cb","MT5BP_"+_b.ToString("N")));
         var hash=BCrypt.Net.BCrypt.HashPassword(Password);
         for(var i=0;i<_users.Length;i++)await Exec("INSERT INTO user(id,email,password_hash,role) VALUES(@u,@email,@hash,'admin')",("@u",_users[i]),("@email",Email(i)),("@hash",hash));

@@ -685,7 +685,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         Assert.Equal(new[] { InstitutionTokenContract.AccessScheme }, policy!.AuthenticationSchemes);
         var endpoints = host.Host.Services.GetRequiredService<Microsoft.AspNetCore.Routing.EndpointDataSource>().Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null).ToArray();
-        Assert.Equal(169, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null && e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null && e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()!.ControllerName!="InvitationAcceptance"));
+        Assert.Equal(191, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null && e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null && e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()!.ControllerName!="InvitationAcceptance"));
         MembershipHttpSurface.AssertRoutes(endpoints); Assert.Equal(MembershipHttpSurface.AdminCount, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is not null));
         Assert.Equal(23, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is not null));
         Assert.Equal(MembershipHttpSurface.MvcCount, endpoints.Length);

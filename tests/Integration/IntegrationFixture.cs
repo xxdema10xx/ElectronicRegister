@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using DotNet.Testcontainers.Builders;
 using Microsoft.Extensions.Configuration;
@@ -52,6 +53,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             {
                 // Validated before any connection is opened; a wrong target throws and fails every test.
                 connectionString = ValidateLocalConnectionString(providedConnection);
+                await VerifyIsolatedIdentityAsync(connectionString);
             }
             else
             {
@@ -148,7 +150,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             // Local mode is reserved for the explicitly provisioned isolated instance.
             // Container mode obtains its connection independently and never enters here.
-            if (builder.Server != "127.0.0.1" || builder.Port != 13306)
+            var isolated = uint.TryParse(Environment.GetEnvironmentVariable("ER_TEST_ISOLATED_PORT"), out var port) &&
+                port is >= 1024 and <= 65535 and not 3306 and not 13306 && builder.Port == port &&
+                !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ER_TEST_ISOLATED_DATADIR"));
+            if (builder.Server != "127.0.0.1" || builder.Port != 13306 && !isolated)
                 throw new InvalidOperationException("Local integration tests require 127.0.0.1:13306; no fallback is allowed.");
 
             if (string.IsNullOrWhiteSpace(database))
@@ -161,6 +166,24 @@ namespace ElectronicRegisterAPI.Tests.Integration
                     $"È consentito esclusivamente Database={AllowedLocalDatabase}.");
 
             return builder.ConnectionString;
+        }
+
+        private static async Task VerifyIsolatedIdentityAsync(string connectionString)
+        {
+            var builder = new MySqlConnectionStringBuilder(connectionString);
+            if (builder.Port == 13306) return;
+            var root = new DirectoryInfo(AppContext.BaseDirectory);
+            while (root is not null && !File.Exists(Path.Combine(root.FullName, "migrations", "bootstrap", "001_schema.sql"))) root = root.Parent;
+            var expected = Path.GetFullPath(Environment.GetEnvironmentVariable("ER_TEST_ISOLATED_DATADIR")!).TrimEnd('\\', '/');
+            if (root is null || !expected.StartsWith(Path.Combine(root.FullName, ".staff-private") + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Isolated datadir must be inside workspace .staff-private.");
+            await using var connection = new MySqlConnection(connectionString);
+            await connection.OpenAsync();
+            await using var command = new MySqlCommand("SELECT VERSION(),@@port,@@datadir", connection);
+            await using var reader = await command.ExecuteReaderAsync();
+            if (!await reader.ReadAsync() || reader.GetString(0) != "5.7.24" || reader.GetUInt32(1) != builder.Port ||
+                !string.Equals(Path.GetFullPath(reader.GetString(2)).TrimEnd('\\', '/'), expected, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Isolated MySQL identity rejected before schema/seed.");
         }
 
         private async Task<string?> TryStartContainerAsync()

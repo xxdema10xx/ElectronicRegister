@@ -2,6 +2,17 @@
 
 ## MT-5B-E — superficie HTTP IAM
 
+Estensione Staff (2026-10-27): il catalogo istituzionale comprende Staff senza modificare
+i tre valori numerici precedenti e senza estendere UserRole legacy. Assegnazione e revoca
+restano nel medesimo workflow Admin-only, con generation, EventId, revision e last Admin.
+Inviti e snapshot supportano quattro ruoli distinti. Nessuna protezione Last Staff viene introdotta.
+Le scritture CRU Staff rivalidano membership e generation dopo lock IAM-first e prima delle
+risorse. Il catalogo capability nega DELETE/cancel anche per Staff + Teacher, salvo InstitutionAdmin.
+Gli eventi nuovi `staff.*` per voti/esami includono attore e membership e hanno protezione
+UPDATE/DELETE mirata; il ledger IAM esistente resta distinto. Nessun backfill di eventi storici.
+Contratto: [INSTITUTION_STAFF_PERMISSIONS.md](../api/INSTITUTION_STAFF_PERMISSIONS.md).
+Esiti e limiti: [report](../../tests/Integration/INSTITUTION_STAFF_ROLE_REPORT.md).
+
 `POST /api/institution/admin/members/{membershipId:guid}/mutations` delega soltanto
 a `IInstitutionMembershipAdminManager.MutateAsync`. Il target è nella route;
 il body richiede EventId, ExpectedRevision, Action e Reason, con Role per AddRole/
@@ -280,3 +291,16 @@ Poi test SQL/HTTP A/B reali per tutti i comportamenti richiesti, snapshot con nu
 DbContext, revoche monotone, Last Admin concorrente, audit failure, replay e gate.
 Preservare le 711 identita; freeze prima di due suite complete consecutive. Nessuna
 certificazione MariaDB senza una nuova esecuzione su MariaDB. Nessun MT5C.
+# Estensione Fase 2 — email istituzionali
+
+Il modulo email riutilizza rivalidazione della membership e security generation,
+lock IAM-first, EventId e revisioni ottimistiche. Non attribuisce ruoli né identità.
+Le categorie email sono distinte dai ruoli IAM; un indirizzo riservato non è prova
+di possesso o credenziale. Policy, override e ritiro sono Admin-only; Staff può
+riservare per anagrafiche Student/Teacher del tenant. Audit email e vecchie riserve
+istituzionali non possono essere eliminati. Vedere
+[contratto email](../api/INSTITUTION_EMAIL_POLICIES.md) per confini e API.
+
+## Fase 3: import batch e retention
+
+L'importatore usa InstitutionAccess corrente, capability UserCreate, rivalidazione membership/generation e lock IAM-first mantenuti per tutto il commit AllOrNothing. Batch privati per tenant/User/Membership; nessuna condivisione automatica tra Admin. EventId e digest legano attore, intenzione e preview versionata. Person, external reference, email assignment, audit e completamento condividono la stessa transazione. Il worker retention non impersona l'autore: ActorKind=Retention, UserId/MembershipId null e transizione consentita soltanto dopo scadenza. Non cancella audit, target o storia. Il rollout viene ricontrollato anche prima del commit. [API](../api/INSTITUTION_BULK_IMPORT.md).

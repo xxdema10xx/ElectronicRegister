@@ -15,7 +15,7 @@ internal sealed class InstitutionStudentRepository(ElectronicRegisterContext db,
     public async Task<List<Student>> GetForClassAsync(TenantContext t, Guid classId, CancellationToken ct)
     {
         if (!await q.Owned<E.Class>(t).AnyAsync(c => c.Id == classId &&
-            (t.Roles.Contains(Domain.Enums.InstitutionRole.InstitutionAdmin) || q.VisibleAssignments(t).Any(cs => cs.ClassId == c.Id)), ct))
+            (t.Roles.Contains(Domain.Enums.InstitutionRole.InstitutionAdmin) || t.Roles.Contains(Domain.Enums.InstitutionRole.Staff) || q.VisibleAssignments(t).Any(cs => cs.ClassId == c.Id)), ct))
             throw InstitutionSchoolQueries.Missing();
         return await Project(q.VisibleStudents(t).Where(s => s.ClassId == classId)).ToListAsync(ct);
     }
@@ -28,8 +28,11 @@ internal sealed class InstitutionStudentRepository(ElectronicRegisterContext db,
 
     public async Task AddAsync(TenantContext t, Student student, Guid? membershipId, CancellationToken ct)
     {
-        InstitutionSchoolQueries.Admin(t);
+        await q.WriteAuthorizedAsync(t, InstitutionPermission.UserCreate, async () =>
+        {
         if (student.ClassId.HasValue && !await q.Owned<E.Class>(t).AnyAsync(c => c.Id == student.ClassId, ct)) throw InstitutionSchoolQueries.Missing();
+        if (membershipId.HasValue && !t.Roles.Contains(Domain.Enums.InstitutionRole.InstitutionAdmin))
+            throw new UnauthorizedAccessException("Associazione membership riservata all'amministratore.");
         await q.MembershipAsync(t, membershipId, "Student", ct);
         q.AddOwned(t, new E.Student { Id = student.Id, FirstName = student.FirstName, LastName = student.LastName, ClassId = student.ClassId });
         await InstitutionSchoolQueries.WriteAsync(async () =>
@@ -41,10 +44,12 @@ internal sealed class InstitutionStudentRepository(ElectronicRegisterContext db,
                 await db.SaveChangesAsync(ct);
             }
         });
+        }, ct);
     }
     public async Task UpdateAsync(TenantContext t, Student student, CancellationToken ct)
     {
-        InstitutionSchoolQueries.Admin(t);
+        await q.WriteAuthorizedAsync(t, InstitutionPermission.UserUpdate, async () =>
+        {
         await InstitutionSchoolQueries.WriteAsync(async () =>
         {
             // Class and Institution are intentionally not updateable through this name-edit contract.
@@ -52,6 +57,7 @@ internal sealed class InstitutionStudentRepository(ElectronicRegisterContext db,
                 set.SetProperty(s => s.FirstName, student.FirstName).SetProperty(s => s.LastName, student.LastName), ct) == 0)
                 throw InstitutionSchoolQueries.Missing();
         });
+        }, ct);
     }
     public async Task DeleteAsync(TenantContext t, Guid id, CancellationToken ct)
     {

@@ -277,6 +277,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         }
         public async Task UpdateAsync(Exam exam)
         {
+            if (exam.Status == Domain.Enums.ExamStatus.Cancelled) _scope?.RequireExamCancel();
             await DeriveNameForWriteAsync(exam);
             var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().FirstOrDefaultAsync(e => e.Id == exam.Id);
 
@@ -300,6 +301,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         }
         public async Task ReplaceStructureAsync(Exam exam)
         {
+            if (_scope is not null) await _scope.RequireDraftReplacementAsync(exam.Id);
             var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>()
                 .Include(e => e.Questions)
                     .ThenInclude(q => q.QuestionOptions)
@@ -352,6 +354,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         }
         public async Task ReplaceAssignedStudentsAsync(Guid examId, IReadOnlyCollection<ExamStudent> students)
         {
+            if (_scope is not null) await _scope.RequireDraftReplacementAsync(examId);
             var currentStudents = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamStudent>()
                 .Where(es => es.ExamId == examId)
                 .ToListAsync();
@@ -375,6 +378,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories
         }
         public async Task DeleteDraftAsync(Guid examId)
         {
+            _scope?.RequireExamDelete();
             var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>()
                 .FirstOrDefaultAsync(e => e.Id == examId);
 

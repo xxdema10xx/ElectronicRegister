@@ -23,14 +23,14 @@ public sealed class InstitutionSubmissionController(IInstitutionExamManager mana
     }
     [HttpPost("{id:guid}/violations"), Authorize(Roles = "Student"), RequestSizeLimit(4096)]
     public async Task<ActionResult<ViolationReceiptDto>> ReportViolation(Guid id, InstitutionViolationDto dto) => Ok(await manager.ReportViolationAsync(id, dto));
-    [HttpGet("{id:guid}/violations"), Authorize(Roles = "InstitutionAdmin,Teacher")]
+    [HttpGet("{id:guid}/violations"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     public async Task<ActionResult<List<ViolationEventDto>>> Violations(Guid id) => Ok(await manager.ViolationsAsync(id));
-    [HttpGet("{id:guid}/review"), Authorize(Roles = "InstitutionAdmin,Teacher")]
+    [HttpGet("{id:guid}/review"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     public async Task<ActionResult<SubmissionReviewDto>> Review(Guid id) => Ok(await manager.ReviewAsync(id));
     [HttpPut("{id:guid}/review"), Authorize(Roles = "InstitutionAdmin,Teacher")]
     public async Task<IActionResult> Review(Guid id, ReviewOpenAnswersDto dto) { await manager.ReviewAsync(id, dto); return NoContent(); }
     [HttpPost("{id:guid}/finalize"), Authorize(Roles = "InstitutionAdmin,Teacher")]
     public async Task<IActionResult> FinalizeSubmission(Guid id, FinalizeSubmissionDto dto) { await manager.FinalizeAsync(id, dto); return NoContent(); }
-    [HttpGet("{id:guid}/result"), Authorize(Roles = "InstitutionAdmin,Teacher,Student")]
+    [HttpGet("{id:guid}/result"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher,Student")]
     public async Task<ActionResult<SubmissionResultDto>> Result(Guid id) => Ok(await manager.ResultAsync(id));
 }

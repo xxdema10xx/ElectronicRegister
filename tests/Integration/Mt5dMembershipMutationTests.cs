@@ -37,8 +37,8 @@ public sealed class Mt5dMembershipMutationTests : IAsyncLifetime
         var c=new MySqlConnection(_connection);await c.OpenAsync();
         await using var cmd=new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE()",c);
         await using var r=await cmd.ExecuteReaderAsync();Assert.True(await r.ReadAsync());
-        Assert.Equal("5.7.24",r.GetString(0));Assert.Equal(Environment.MachineName,r.GetString(1),ignoreCase:true);Assert.Equal(13306,r.GetInt32(2));
-        Assert.EndsWith("/migrations/mt4/private/mt5a-mamp-13306/data/",r.GetString(3),StringComparison.OrdinalIgnoreCase);
+        Assert.Equal("5.7.24",r.GetString(0));Assert.Equal(Environment.MachineName,r.GetString(1),ignoreCase:true);Assert.Equal((int)TestMySqlTarget.Port,r.GetInt32(2));
+        Assert.EndsWith(TestMySqlTarget.DataDirectorySuffix,r.GetString(3),StringComparison.OrdinalIgnoreCase);
         Assert.Equal("electronic_register_test",r.GetString(4));return c;
     }
     private async Task Exec(string sql,params (string,object)[] args)
@@ -56,7 +56,7 @@ public sealed class Mt5dMembershipMutationTests : IAsyncLifetime
     public async Task InitializeAsync()
     {
         _connection=IntegrationFixture.ValidateLocalConnectionString(Environment.GetEnvironmentVariable("TEST_MYSQL_CONNECTION")??throw new InvalidOperationException("Explicit isolated target required"));
-        var target=new MySqlConnectionStringBuilder(_connection);Assert.Equal("127.0.0.1",target.Server);Assert.Equal(13306u,target.Port);
+        var target=new MySqlConnectionStringBuilder(_connection);Assert.Equal("127.0.0.1",target.Server);Assert.Equal(TestMySqlTarget.Port,target.Port);
         target.AllowUserVariables=true;_connection=target.ConnectionString;
         await Exec("INSERT INTO institution(id,code,name,status) VALUES(@a,@ca,'Synthetic IAM A','active'),(@b,@cb,'Synthetic IAM B','active')",("@a",_a),("@b",_b),("@ca","MT5BP_"+_a.ToString("N")),("@cb","MT5BP_"+_b.ToString("N")));
         foreach(var u in _users)await Exec("INSERT INTO user(id,email,password_hash,role) VALUES(@u,@e,'not-a-login-fixture','admin')",("@u",u),("@e",u.ToString("N")+"@mt5d.example.test"));

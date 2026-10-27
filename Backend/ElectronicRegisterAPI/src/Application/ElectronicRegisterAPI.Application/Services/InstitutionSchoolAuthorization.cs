@@ -22,10 +22,16 @@ internal sealed class InstitutionSchoolAuthorization(IInstitutionAuthManager aut
         if (!t.Roles.Contains(InstitutionRole.InstitutionAdmin)) throw new UnauthorizedAccessException("Permesso amministrativo richiesto.");
         return t;
     }
+    internal async Task<TenantContext> PermissionAsync(InstitutionPermission permission, CancellationToken ct)
+    {
+        var tenant = await RequireAsync(ct);
+        InstitutionPermissions.Require(tenant, permission);
+        return tenant;
+    }
     internal async Task<TenantContext> ReadAsync(bool students, CancellationToken ct)
     {
         var t = await RequireAsync(ct);
-        if (t.Roles.Contains(InstitutionRole.InstitutionAdmin)) return t;
+        if (t.Roles.Contains(InstitutionRole.InstitutionAdmin) || t.Roles.Contains(InstitutionRole.Staff)) return t;
         if (t.Roles.Contains(InstitutionRole.Teacher)) await profiles.RequireTeacherAsync(t, ct);
         else if (!students && t.Roles.Contains(InstitutionRole.Student)) await profiles.RequireStudentAsync(t, ct);
         else throw new UnauthorizedAccessException("Anagrafica non autorizzata.");

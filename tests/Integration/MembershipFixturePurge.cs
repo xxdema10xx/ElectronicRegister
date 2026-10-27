@@ -24,14 +24,14 @@ internal sealed class MembershipFixturePurge(DbConnection connection, bool close
         var ids = owners.Distinct().ToArray();
         if (ids.Any(id => id == Guid.Empty)) throw new ArgumentException("Explicit fixture owners required");
         var target = new MySqlConnectionStringBuilder(c.ConnectionString);
-        if (target.Database != "electronic_register_test" || target.Port != 13306 || target.Server != "127.0.0.1")
+        if (target.Database != "electronic_register_test" || target.Port != TestMySqlTarget.Port || target.Server != "127.0.0.1")
             throw new InvalidOperationException("Fixture purge requires isolated 13306");
         await using var identity = c.CreateCommand();
         identity.CommandText = "SELECT VERSION(),@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE()";
         await using(var r = await identity.ExecuteReaderAsync())
         {
-            if (!await r.ReadAsync() || r.GetString(0) != "5.7.24" || r.GetInt32(1) != 13306 ||
-                !r.GetString(2).EndsWith("/migrations/mt4/private/mt5a-mamp-13306/data/", StringComparison.OrdinalIgnoreCase) ||
+            if (!await r.ReadAsync() || r.GetString(0) != "5.7.24" || r.GetInt32(1) != TestMySqlTarget.Port ||
+                !r.GetString(2).EndsWith(TestMySqlTarget.DataDirectorySuffix, StringComparison.OrdinalIgnoreCase) ||
                 r.GetString(3) != "electronic_register_test") throw new InvalidOperationException("Wrong fixture target");
         }
         await using var read = c.CreateCommand(); read.CommandText = "SELECT @er_mt5b_fixture_owners";

@@ -24,6 +24,9 @@ internal sealed class LegacyAccess(IOptions<LegacyIdentityOptions> options, IUse
         // Before backfill: only explicit server-side identities. Never a fallback membership.
         // After backfill: legacy role is usable only inside this single migration holding.
         if (rows.Any(m => m.InstitutionId != config.InstitutionId)) return false;
+        // A mixed Staff/Teacher membership must not recover legacy Teacher DELETE
+        // through an otherwise allowlisted legacy identity. Use InstitutionAccess.
+        if (rows.Any(m => m.Roles.Contains(InstitutionRole.Staff) && !m.Roles.Contains(InstitutionRole.InstitutionAdmin))) return false;
         if (rows.Count == 0)
         {
             if (!config.AllowUnbackfilledAccounts) return false;

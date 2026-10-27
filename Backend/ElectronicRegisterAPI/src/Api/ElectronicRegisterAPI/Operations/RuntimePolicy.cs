@@ -26,9 +26,11 @@ public sealed record RuntimePolicy(bool Local, string[] Origins, IPAddress[] Pro
         if (proxies.Any(p => p.Equals(IPAddress.Any) || p.Equals(IPAddress.IPv6Any))) Fail();
         if (local)
         {
+            var localPort = configuration.GetValue<uint?>("Deployment:LocalTestDatabasePort") ?? 13306;
+            if (localPort is < 1024 or > 65535 or 3306) Fail();
             var urls = configuration["urls"] ?? "http://127.0.0.1:5000";
             if (urls.Split(';').Any(x => !Uri.TryCreate(x, UriKind.Absolute, out var u) || !u.IsLoopback) ||
-                proxies.Length != 0 || connection.Server != "127.0.0.1" || connection.Port != 13306 ||
+                proxies.Length != 0 || connection.Server != "127.0.0.1" || connection.Port != localPort ||
                 connection.Database != "electronic_register_test") Fail();
         }
         else

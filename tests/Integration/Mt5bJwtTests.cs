@@ -31,8 +31,8 @@ public sealed partial class Mt5bJwtTests : IAsyncLifetime
         var c=new MySqlConnection(_connection);await c.OpenAsync();
         await using var cmd=new MySqlCommand("SELECT VERSION(),@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE()",c);
         await using var r=await cmd.ExecuteReaderAsync();Assert.True(await r.ReadAsync());
-        Assert.Equal("5.7.24",r.GetString(0));Assert.Equal(13306,r.GetInt32(1));
-        Assert.EndsWith("/migrations/mt4/private/mt5a-mamp-13306/data/",r.GetString(2),StringComparison.OrdinalIgnoreCase);
+        Assert.Equal("5.7.24",r.GetString(0));Assert.Equal((int)TestMySqlTarget.Port,r.GetInt32(1));
+        Assert.EndsWith(TestMySqlTarget.DataDirectorySuffix,r.GetString(2),StringComparison.OrdinalIgnoreCase);
         Assert.Equal("electronic_register_test",r.GetString(3));return c;
     }
     private async Task Exec(string sql,params (string,object)[] args)
@@ -49,7 +49,7 @@ public sealed partial class Mt5bJwtTests : IAsyncLifetime
     public async Task InitializeAsync()
     {
         _connection=IntegrationFixture.ValidateLocalConnectionString(Environment.GetEnvironmentVariable("TEST_MYSQL_CONNECTION")??throw new InvalidOperationException("Explicit isolated target required"));
-        var target=new MySqlConnectionStringBuilder(_connection);Assert.Equal("127.0.0.1",target.Server);Assert.Equal((uint)13306,target.Port);
+        var target=new MySqlConnectionStringBuilder(_connection);Assert.Equal("127.0.0.1",target.Server);Assert.Equal(TestMySqlTarget.Port,target.Port);
         target.AllowUserVariables=true;_connection=target.ConnectionString;
         await Exec("INSERT INTO institution(id,code,name,status) VALUES(@a,@ca,'Synthetic JWT A','active'),(@b,@cb,'Synthetic JWT B','active'); INSERT INTO user(id,email,password_hash,role) VALUES(@u,@email,@hash,'admin'); INSERT INTO institution_membership(id,institution_id,user_id,status) VALUES(@ma,@a,@u,'active'),(@mb,@b,@u,'active'); INSERT INTO institution_membership_role(membership_id,role) VALUES(@ma,'Teacher'),(@mb,'Student')",
             ("@a",_a),("@b",_b),("@ca","MT5BP_"+_a.ToString("N")),("@cb","MT5BP_"+_b.ToString("N")),("@u",_user),("@email",Email),("@hash",BCrypt.Net.BCrypt.HashPassword(Password)),("@ma",_ma),("@mb",_mb));

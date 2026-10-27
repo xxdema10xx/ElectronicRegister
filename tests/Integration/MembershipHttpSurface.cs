@@ -9,7 +9,7 @@ namespace ElectronicRegisterAPI.Tests.Integration;
 internal static class MembershipHttpSurface
 {
     internal const int AdminCount=8;
-    internal const int MvcCount=201;
+    internal const int MvcCount=223;
     internal const int IdentityCount=6;
     internal static void AssertRoutes(IEnumerable<RouteEndpoint> endpoints)
     {

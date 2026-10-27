@@ -16,11 +16,14 @@ internal sealed class InstitutionTeacherRepository(ElectronicRegisterContext db,
     public Task<List<Teacher>> GetByIdsAsync(TenantContext t, IReadOnlyCollection<Guid> ids, CancellationToken ct) => Project(q.Owned<E.Teacher>(t).Where(r => ids.Contains(r.Id))).ToListAsync(ct);
     public Task<List<Teacher>> GetByLastNameAsync(TenantContext t, string name, CancellationToken ct) => Project(q.Owned<E.Teacher>(t).Where(r => r.LastName == name)).ToListAsync(ct);
     public Task<List<Teacher>> GetForClassAsync(TenantContext t, Guid classId, CancellationToken ct)
-    { var assignments = q.VisibleAssignments(t); return Project(q.Owned<E.Teacher>(t)
+    { var assignments = t.Roles.Contains(Domain.Enums.InstitutionRole.Staff) ? q.Assignments(t) : q.VisibleAssignments(t); return Project(q.Owned<E.Teacher>(t)
         .Where(r => assignments.Any(cs => cs.ClassId == classId && cs.TeacherId == r.Id))).ToListAsync(ct); }
     public async Task AddAsync(TenantContext t, Teacher teacher, Guid? membershipId, CancellationToken ct)
     {
-        InstitutionSchoolQueries.Admin(t);
+        await q.WriteAuthorizedAsync(t, InstitutionPermission.UserCreate, async () =>
+        {
+        if (membershipId.HasValue && !t.Roles.Contains(Domain.Enums.InstitutionRole.InstitutionAdmin))
+            throw new UnauthorizedAccessException("Associazione membership riservata all'amministratore.");
         await q.MembershipAsync(t, membershipId, "Teacher", ct);
         q.AddOwned(t, new E.Teacher { Id = teacher.Id, FirstName = teacher.FirstName, LastName = teacher.LastName });
         await InstitutionSchoolQueries.WriteAsync(async () =>
@@ -32,16 +35,19 @@ internal sealed class InstitutionTeacherRepository(ElectronicRegisterContext db,
                 await db.SaveChangesAsync(ct);
             }
         });
+        }, ct);
     }
     public async Task UpdateAsync(TenantContext t, Teacher teacher, CancellationToken ct)
     {
-        InstitutionSchoolQueries.Admin(t);
+        await q.WriteAuthorizedAsync(t, InstitutionPermission.UserUpdate, async () =>
+        {
         await InstitutionSchoolQueries.WriteAsync(async () =>
         {
             if (await q.Owned<E.Teacher>(t).Where(r => r.Id == teacher.Id).ExecuteUpdateAsync(set =>
                 set.SetProperty(r => r.FirstName, teacher.FirstName).SetProperty(r => r.LastName, teacher.LastName), ct) == 0)
                 throw InstitutionSchoolQueries.Missing();
         });
+        }, ct);
     }
     public async Task DeleteAsync(TenantContext t, Guid id, CancellationToken ct)
     {

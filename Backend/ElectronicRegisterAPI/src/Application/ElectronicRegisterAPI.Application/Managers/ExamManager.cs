@@ -57,7 +57,7 @@ namespace ElectronicRegisterAPI.Application.Managers
         public async Task<List<ExamSummaryDto>> GetAllAsync(ExamPrincipal caller)
         {
             ArgumentNullException.ThrowIfNull(caller);
-            if (!caller.IsAdmin && !caller.IsTeacher)
+            if (!caller.Can(InstitutionPermission.ExamRead))
                 throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare gli esami.");
 
             Guid? teacherId = null;
@@ -76,7 +76,7 @@ namespace ElectronicRegisterAPI.Application.Managers
         public async Task<ExamDetailDto?> GetByIdAsync(Guid id, ExamPrincipal caller)
         {
             ArgumentNullException.ThrowIfNull(caller);
-            if (!caller.IsAdmin && !caller.IsTeacher)
+            if (!caller.Can(InstitutionPermission.ExamRead))
                 throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare gli esami.");
 
             if (caller.IsTeacher && !caller.TeacherId.HasValue)
@@ -144,7 +144,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (!caller.IsAdmin && !caller.IsTeacher)
+                if (!caller.Can(InstitutionPermission.ExamCreate))
                     throw new UnauthorizedAccessException("Non sei autorizzato a creare esami.");
 
                 ArgumentNullException.ThrowIfNull(dto);
@@ -199,6 +199,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                 var exam = ExamCreationMapper.MapToExam(dto, examId, questions, assignedStudents, classSubject.SubjectName);
 
                 await _examRepository.AddAsync(exam);
+                await WriteStaffAuditAsync(exam, caller, "staff.exam.create", null);
 
                 createdId = exam.Id;
             });
@@ -212,7 +213,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (!caller.IsAdmin && !caller.IsTeacher)
+                if (!caller.Can(InstitutionPermission.ExamUpdate))
                     throw new UnauthorizedAccessException("Non sei autorizzato a modificare esami.");
 
                 ArgumentNullException.ThrowIfNull(dto);
@@ -229,6 +230,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                 }
 
                 _examService.EnsureEditable(exam);
+                var staffBefore = JsonSerializer.Serialize(exam);
                 if (dto.ClassSubjectId != exam.ClassSubjectId)
                     throw new ArgumentException("ClassSubjectId cannot be changed for an existing exam.");
                 await ValidateRetakeAsync(exam.Id, dto.RetakeOfExamId, exam.ClassSubjectId);
@@ -272,6 +274,7 @@ namespace ElectronicRegisterAPI.Application.Managers
 
                 // Update main exam properties
                 await _examRepository.UpdateAsync(exam);
+                await WriteStaffAuditAsync(exam, caller, "staff.exam.update", staffBefore);
             });
         }
 
@@ -281,7 +284,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (!caller.IsAdmin && !caller.IsTeacher)
+                if (!caller.Can(InstitutionPermission.ExamAssign))
                     throw new UnauthorizedAccessException("Non sei autorizzato a modificare gli studenti assegnati.");
 
                 ArgumentNullException.ThrowIfNull(dto);
@@ -323,6 +326,9 @@ namespace ElectronicRegisterAPI.Application.Managers
                 _examService.EnsureValidAssignedStudents(assignedStudents, students, assignedClassSubject.ClassId);
 
                 await _examRepository.ReplaceAssignedStudentsAsync(id, assignedStudents);
+                var staffBefore = JsonSerializer.Serialize(exam);
+                exam.AssignedStudents = assignedStudents;
+                await WriteStaffAuditAsync(exam, caller, "staff.exam.assign", staffBefore);
             });
         }
 
@@ -332,7 +338,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (!caller.IsAdmin && !caller.IsTeacher)
+                if (!caller.Can(InstitutionPermission.ExamPublish))
                     throw new UnauthorizedAccessException("Non sei autorizzato a pubblicare esami.");
 
                 var exam = await _examRepository.GetByIdForUpdateAsync(id)
@@ -370,7 +376,7 @@ namespace ElectronicRegisterAPI.Application.Managers
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (!caller.IsAdmin && !caller.IsTeacher)
+                if (!caller.Can(InstitutionPermission.ExamClose))
                     throw new UnauthorizedAccessException("Non sei autorizzato a chiudere esami.");
 
                 var exam = await _examRepository.GetByIdForUpdateAsync(id)
@@ -399,11 +405,13 @@ namespace ElectronicRegisterAPI.Application.Managers
 
         public async Task CancelAsync(Guid id, ExamPrincipal caller)
         {
+            ArgumentNullException.ThrowIfNull(caller);
+            if (!caller.CanCancelExam) throw new UnauthorizedAccessException("Cancellazione esame non autorizzata.");
             await _transactionManager.ExecuteAsync(async () =>
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (!caller.IsAdmin && !caller.IsTeacher)
+                if (!caller.Can(InstitutionPermission.ExamCancel))
                     throw new UnauthorizedAccessException("Non sei autorizzato ad annullare esami.");
 
                 var exam = await _examRepository.GetByIdForUpdateAsync(id)
@@ -432,11 +440,13 @@ namespace ElectronicRegisterAPI.Application.Managers
 
         public async Task DeleteAsync(Guid id, ExamPrincipal caller)
         {
+            ArgumentNullException.ThrowIfNull(caller);
+            if (!caller.CanDeleteExam) throw new UnauthorizedAccessException("Eliminazione esame non autorizzata.");
             await _transactionManager.ExecuteAsync(async () =>
             {
                 ArgumentNullException.ThrowIfNull(caller);
 
-                if (!caller.IsAdmin && !caller.IsTeacher)
+                if (!caller.Can(InstitutionPermission.ExamDelete))
                     throw new UnauthorizedAccessException("Non sei autorizzato a eliminare esami.");
 
                 var exam = await _examRepository.GetByIdForUpdateAsync(id)
@@ -592,7 +602,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                     throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
             }
 
-            else if (!caller.IsAdmin)
+            else if (!caller.HasInstitutionReadScope)
                 throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
 
             // When returning result, resolve official grade value if present via grade repository
@@ -607,7 +617,7 @@ namespace ElectronicRegisterAPI.Application.Managers
                 officialGrade = grade.Value;
             }
 
-            return ExamSubmissionMapper.ToSubmissionResultDto(submission, officialGrade, caller.VisibilityCaller);
+            return ExamSubmissionMapper.ToSubmissionResultDto(submission, officialGrade, caller.IsStaff ? null : caller.VisibilityCaller);
         }
         private async Task ValidateRetakeAsync(Guid examId, Guid? originalId, Guid classSubjectId)
         {
@@ -627,12 +637,24 @@ namespace ElectronicRegisterAPI.Application.Managers
             exam.Status, exam.PublishedAt, exam.ClosedAt, exam.CancelledAt, exam.RetakeOfExamId
         });
 
-        private Task WriteLifecycleAuditAsync(Exam exam, ExamPrincipal caller, string action, string beforeJson) =>
-            _auditRepository.AddAsync(new AuditEvent
+        private Task WriteStaffAuditAsync(Exam exam, ExamPrincipal caller, string action, string? before) =>
+            caller.Tenant is { } tenant && tenant.Roles.Contains(InstitutionRole.Staff)
+                ? _auditRepository.AddAsync(new AuditEvent
+                {
+                    Id = Guid.NewGuid(), ActorUserId = caller.UserId, EntityType = "exam", EntityId = exam.Id,
+                    Action = action, BeforeJson = before,
+                    AfterJson = JsonSerializer.Serialize(new { ActorMembershipId = tenant.MembershipId, Exam = exam }), CreatedAt = DateTime.UtcNow
+                }) : Task.CompletedTask;
+
+        private async Task WriteLifecycleAuditAsync(Exam exam, ExamPrincipal caller, string action, string beforeJson)
+        {
+            await _auditRepository.AddAsync(new AuditEvent
             {
                 Id = Guid.NewGuid(), ActorUserId = caller.UserId, EntityType = "exam", EntityId = exam.Id,
                 Action = action, BeforeJson = beforeJson, AfterJson = LifecycleJson(exam), CreatedAt = DateTime.UtcNow
             });
+            await WriteStaffAuditAsync(exam, caller, "staff." + action, beforeJson);
+        }
 
         Task<List<ExamSummaryDto>> IExamManager.GetAllAsync(ClaimsContext caller) => GetAllAsync(ExamPrincipal.Legacy(caller));
         Task<ExamDetailDto?> IExamManager.GetByIdAsync(Guid id, ClaimsContext caller) => GetByIdAsync(id, ExamPrincipal.Legacy(caller));

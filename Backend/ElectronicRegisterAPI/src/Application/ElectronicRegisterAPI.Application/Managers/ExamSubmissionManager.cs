@@ -50,7 +50,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
         if (status.HasValue && !Enum.IsDefined(status.Value))
             throw new ArgumentException("Stato submission non valido.", nameof(status));
         // Only Admin or the Teacher owning the ClassSubject for the exam are allowed
-        if (caller.IsAdmin)
+        if (caller.HasInstitutionReadScope)
         {
             _ = await _examRepository.GetByIdAsync(examId)
                 ?? throw new KeyNotFoundException("Esame non trovato.");
@@ -103,7 +103,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
         var submission = await _submissionRepository.GetByIdAsync(id, withAnswers: true)
             ?? throw new KeyNotFoundException("La submission non esiste.");
 
-        if (!caller.IsStudent && !caller.IsTeacher && !caller.IsAdmin)
+        if (!caller.IsStudent && !caller.IsTeacher && !caller.HasInstitutionReadScope)
             throw new UnauthorizedAccessException("Non sei autorizzato a visualizzare questa submission.");
 
         // authorization: teacher/admin or the student who owns it
@@ -223,7 +223,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             Answers = answers
         };
 
-        return SubmissionVisibility.Apply(dto, caller.VisibilityCaller);
+        return SubmissionVisibility.Apply(dto, caller.IsStaff ? null : caller.VisibilityCaller);
     }
 
     public async Task ReviewAsync(Guid id, ReviewOpenAnswersDto dto, ExamPrincipal caller)

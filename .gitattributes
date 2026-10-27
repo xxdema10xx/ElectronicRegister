@@ -44,3 +44,10 @@
 
 /docs/api/INSTITUTION_CLASSES.md text eol=lf
 /docs/api/INSTITUTION_ACADEMIC_MANAGEMENT.md text eol=lf
+/docs/api/INSTITUTION_STAFF_PERMISSIONS.md text eol=lf
+/docs/architecture/INSTITUTION_MEMBERSHIP_MUTATIONS_AND_AUDIT.md text eol=lf
+/tests/Integration/INSTITUTION_STAFF_ROLE_* text eol=lf
+/docs/api/INSTITUTION_EMAIL_POLICIES.md text eol=lf
+/tests/Integration/INSTITUTION_EMAIL_POLICY_* text eol=lf
+/docs/api/INSTITUTION_BULK_IMPORT.md text eol=lf
+/tests/Integration/INSTITUTION_BULK_IMPORT_* text eol=lf

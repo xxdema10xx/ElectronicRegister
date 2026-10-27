@@ -1,4 +1,5 @@
 using ElectronicRegisterAPI.Domain.Exceptions;
+using ElectronicRegisterAPI.Domain.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,15 @@ internal class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : 
 
             KeyNotFoundException => 
                 (StatusCodes.Status404NotFound, "La risorsa non esiste"),
+
+            ImportConflictException => (StatusCodes.Status409Conflict,"Conflitto sulla preview di importazione"),
+            ImportInputException e => (e.Code switch
+            {
+                "UnsupportedFormat" or "UnsupportedEncoding"=>415,
+                "FileTooLarge" or "TooManyRows" or "TooManyColumns" or "CellTooLong" or "RecordTooLong" or "StageTooLarge" or "ZipLimitExceeded" or "XmlLimitExceeded" or "TooManySharedStrings"=>413,
+                "RowsInvalid"=>422,
+                _=>400
+            },"Importazione non valida"),
 
             ArgumentException =>
                 (StatusCodes.Status400BadRequest, "Richiesta non valida"),
@@ -51,7 +61,9 @@ internal class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : 
                 Title = title,
                 Detail = statusCode == StatusCodes.Status500InternalServerError
                     ? "Si è verificato un errore interno."
-                    : title
+                    : title,
+                Extensions = exception is ImportConflictException conflict?new Dictionary<string,object?>{{"code",conflict.Code}}:
+                    exception is ImportInputException input?new Dictionary<string,object?>{{"code",input.Code}}:new Dictionary<string,object?>()
             },
             cancellationToken);
 

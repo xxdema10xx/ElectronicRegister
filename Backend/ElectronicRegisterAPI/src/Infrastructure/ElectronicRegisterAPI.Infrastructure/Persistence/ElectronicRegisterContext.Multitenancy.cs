@@ -162,7 +162,7 @@ public partial class ElectronicRegisterContext
                 .UseCollation("ascii_general_ci")
                 .HasCharSet("ascii");
             entity.Property(e => e.Role)
-                .HasColumnType("enum('InstitutionAdmin','Teacher','Student')")
+                .HasColumnType("enum('InstitutionAdmin','Teacher','Student','Staff')")
                 .HasColumnName("role");
 
             entity.HasOne(d => d.Membership).WithMany(p => p.InstitutionMembershipRoles)
@@ -177,6 +177,8 @@ public partial class ElectronicRegisterContext
         ConfigureInstitutionAdministration(modelBuilder);
         ConfigureMt5bSecurity(modelBuilder);
         ConfigureMt5d(modelBuilder);
+        ConfigureInstitutionEmails(modelBuilder);
+        ConfigureInstitutionImports(modelBuilder);
 
     }
 }
