@@ -175,13 +175,13 @@ export default function ExamsScreen() {
         {!needsClassFirst && (isDesktop ? (
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginTop: 8, marginBottom: 12 }}>
             <TextInput style={[s.input, { flex: 1 }]} placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
-            {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={s.smBtn} textStyle={s.smBtnText} />}
+            {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={s.retakeBtn} textStyle={s.smBtnText} />}
             {newBtn}
           </View>
         ) : (<>
           <SectionHeader title="Esami" action={newBtn} />
           <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
-          {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={[s.smBtn, { marginBottom: 12, alignSelf: "flex-start" }]} textStyle={s.smBtnText} />}
+          {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={[s.retakeBtn, { marginBottom: 12, alignSelf: "flex-start" }]} textStyle={s.smBtnText} />}
         </>))}
 
         {!needsClassFirst && (

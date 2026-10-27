@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export const C = {
   primary: "#154f78",
   primaryDk: "#4338CA",
-  secondary: "#7C3AED",
+  secondary: "#154f78",
   success: "#10B981",
   danger: "#EF4444",
   warning: "#F59E0B",
@@ -51,7 +51,8 @@ export const s = StyleSheet.create({
   // Buttons
   btn: { borderRadius: 10, padding: 14, alignItems: "center", justifyContent: "center", flexDirection: "row" },
   btnText: { fontSize: 15, fontWeight: "700" },
-  smBtn: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 8 },
+  smBtn: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 8, },
+  retakeBtn: {height: 48, paddingHorizontal: 24},
   smBtnText: { fontSize: 13 },
   // Badge
   badge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 },
