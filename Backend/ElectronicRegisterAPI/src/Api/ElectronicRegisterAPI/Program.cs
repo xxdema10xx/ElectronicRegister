@@ -36,6 +36,7 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddApiServices();
 
 builder.Services.AddControllers()
+    .ConfigureApplicationPartManager(parts => parts.FeatureProviders.Add(new ElectronicRegisterAPI.Api.Security.FormativePlanControllerFeatureProvider(builder.Configuration)))
     .AddJsonOptions(options =>
         options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
 

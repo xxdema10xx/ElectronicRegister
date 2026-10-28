@@ -18,7 +18,7 @@ def verify_files():
     schema = (ROOT / 'migrations/bootstrap/001_schema.sql').read_text(encoding='utf-8')
     contract = json.loads((ROOT / 'migrations/bootstrap/schema-contract.json').read_text(encoding='utf-8'))
     assert "enum('InstitutionAdmin','Teacher','Student','Staff')" in contract['tables']['institution_membership_role']
-    assert contract['inventory']['triggers'] == len(contract['triggers']) == len(contract['trigger_metadata']) == 129
+    assert contract['inventory']['triggers'] == len(contract['triggers']) == len(contract['trigger_metadata']) == 153
     assert 'Staff audit append only' in schema
     for name in ('mt5c_invitation_insert', 'mt5d_event_insert', 'mt5d_event_snapshot_shape'):
         assert 'Staff' in contract['triggers'][name]['statement']

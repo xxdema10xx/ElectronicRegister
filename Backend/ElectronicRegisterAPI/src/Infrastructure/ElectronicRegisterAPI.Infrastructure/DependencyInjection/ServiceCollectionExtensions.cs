@@ -19,6 +19,12 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.TryAddSingleton<IConfiguration>(configuration);
+        services.AddSingleton(new ElectronicRegisterAPI.Domain.Models.FormativePlanFeature(() =>
+            bool.TryParse(configuration["Multitenancy:FormativePlans:Enabled"],out var enabled) && enabled &&
+            bool.TryParse(configuration["Multitenancy:SchoolApi:Enabled"],out var school) && school &&
+            bool.TryParse(configuration["Multitenancy:CourseApi:Enabled"],out var course) && course));
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionFormativePlanRepository, InstitutionFormativePlanRepository>();
+        services.TryAddSingleton<ElectronicRegisterAPI.Domain.Models.IFormativePlanFaultObserver, ElectronicRegisterAPI.Domain.Models.NoFormativePlanFault>();
         services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionImportFileReader, ElectronicRegisterAPI.Infrastructure.Services.InstitutionImportFileReader>();
         int ImportNumber(string key,int fallback)=>configuration["Multitenancy:InstitutionImport:"+key] is {} raw?int.Parse(raw,System.Globalization.CultureInfo.InvariantCulture):fallback;
         var importFeature=new ElectronicRegisterAPI.Domain.Models.InstitutionImportFeature(

@@ -101,6 +101,7 @@ public static class Mt3aOwnershipMigration
         known.UnionWith(await StudentClassTransferIntegrity.ValidateIfPresentAsync(c, tx));
         known.UnionWith(await InstitutionEmailIntegrity.ValidateIfPresentAsync(c, tx));
         known.UnionWith(await InstitutionImportIntegrity.ValidateIfPresentAsync(c, tx));
+        known.UnionWith(await FormativePlanIntegrity.ValidateIfPresentAsync(c, tx));
         await using (var tables = new MySqlCommand("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()",c,tx))
         {
             await using var reader=await tables.ExecuteReaderAsync();

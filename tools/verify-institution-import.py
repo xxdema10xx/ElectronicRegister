@@ -16,8 +16,8 @@ def verify():
         assert hashlib.sha256(path.read_bytes()).hexdigest().upper() == digest, name
         assert subprocess.run(['git', 'check-ignore', '--no-index', '-q', name], cwd=ROOT).returncode == 1, name
     contract = json.loads((ROOT / 'migrations/bootstrap/schema-contract.json').read_text(encoding='utf-8'))
-    assert contract['inventory'] == manifest['inventory'] == dict(tables=52, triggers=129, fks=158, indexes=218)
-    assert len(contract['tables']) == 52 and len(contract['triggers']) == len(contract['trigger_metadata']) == 129
+    assert contract['inventory'] == manifest['inventory'] == dict(tables=60, triggers=153, fks=171, indexes=257)
+    assert len(contract['tables']) == 60 and len(contract['triggers']) == len(contract['trigger_metadata']) == 153
     previous = json.loads((ROOT / 'migrations/institution-import/predecessor-contract.json').read_text(encoding='utf-8'))
     assert previous['inventory'] == dict(tables=48, triggers=117, fks=145, indexes=199)
     for name, ddl in previous['tables'].items():
@@ -28,7 +28,7 @@ def verify():
     migration = (ROOT / 'migrations/institution-import/001_expand.sql').read_text(encoding='utf-8')
     assert set(re.findall(r'CREATE TABLE (institution_import_\w+)', migration)) == expected
     assert len(re.findall(r'CREATE TRIGGER import_\w+', migration)) == 12
-    assert (ROOT / 'migrations/bootstrap/001_schema.sql').read_text(encoding='utf-8').endswith(migration)
+    assert migration in (ROOT / 'migrations/bootstrap/001_schema.sql').read_text(encoding='utf-8')
     for name in expected:
         assert 'institution_id' in contract['tables'][name]
     for suffix in ('batch', 'item', 'event', 'external'):

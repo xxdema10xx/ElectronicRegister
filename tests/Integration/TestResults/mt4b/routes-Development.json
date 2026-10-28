@@ -14,6 +14,32 @@
   },
   {
     "method": "GET",
+    "route": "/health/live",
+    "course": false,
+    "policy": [],
+    "roles": [],
+    "manager": null,
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "/health/ready",
+    "course": false,
+    "policy": [],
+    "roles": [],
+    "manager": null,
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
     "route": "/scalar/scalar.js",
     "course": false,
     "policy": [],
@@ -1738,6 +1764,91 @@
     "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
   },
   {
+    "method": "POST",
+    "route": "api/institution/admin/invitations",
+    "course": false,
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "manager": [
+      "IInstitutionOnboardingManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/invitations/{id:guid}/revoke",
+    "course": false,
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "manager": [
+      "IInstitutionOnboardingManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/invitations/{id:guid}/reissue",
+    "course": false,
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "manager": [
+      "IInstitutionOnboardingManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/invitations/{id:guid}/accept",
+    "course": false,
+    "policy": [
+      "InstitutionSelection"
+    ],
+    "roles": [],
+    "manager": [
+      "IInstitutionOnboardingManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/members/{membershipId:guid}/mutations",
+    "course": false,
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "manager": [
+      "IInstitutionMembershipAdminManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "MissingSelectedStudentProfileNeverFallsBackToOtherInstitution"
+  },
+  {
     "method": "GET",
     "route": "api/institution/admin/members",
     "course": false,
@@ -1770,6 +1881,40 @@
     "rollout": "identity/legacy gate or Development diagnostics",
     "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
     "negativeTest": "MissingSelectedStudentProfileNeverFallsBackToOtherInstitution"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/audit",
+    "course": false,
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "manager": [
+      "IMembershipAuditManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "Mt4cLifecycle_AllMt4bMutationsAreAuditedAtomicallyWithoutDuplicateClassEvents",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/audit/{eventId:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "manager": [
+      "IMembershipAuditManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "Mt4cLifecycle_AllMt4bMutationsAreAuditedAtomicallyWithoutDuplicateClassEvents",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
   },
   {
     "method": "GET",

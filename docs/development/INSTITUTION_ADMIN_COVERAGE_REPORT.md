@@ -6,6 +6,15 @@ push, reset, restore or destructive checkout was performed.
 
 ## Administrative coverage matrix
 
+Formative plans extension (2026-10-28): [API](../api/INSTITUTION_FORMATIVE_PLANS.md),
+[architecture](../architecture/ITS_FORMATIVE_PLAN_VERSIONING.md),
+[execution report](../../tests/Integration/INSTITUTION_FORMATIVE_PLAN_REPORT.md).
+Admin manages versioned plans through atomic Draft structure replacement, publish,
+deep clone and initial immutable CourseEdition binding. Staff reads the tenant catalog;
+Teacher and Student read authorized edition views. Published snapshots and the ledger
+are protected in SQL. No calendar, grading changes or operational internship management.
+This extension preserves the historical coverage and its evidence below.
+
 Staff extension (2026-10-27): see [Staff API contract](../api/INSTITUTION_STAFF_PERMISSIONS.md)
 and [verification report](../../tests/Integration/INSTITUTION_STAFF_ROLE_REPORT.md).
 Staff adds local Student/Teacher, Grade and Exam CRU, with explicit operation capabilities.

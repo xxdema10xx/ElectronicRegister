@@ -16,6 +16,36 @@
   },
   {
     "method": "GET",
+    "route": "/health/live",
+    "controller": null,
+    "action": null,
+    "scheme": "anonymous/gate",
+    "policy": [],
+    "roles": [],
+    "managers": [],
+    "repositories": [],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
+    "route": "/health/ready",
+    "controller": null,
+    "action": null,
+    "scheme": "anonymous/gate",
+    "policy": [],
+    "roles": [],
+    "managers": [],
+    "repositories": [],
+    "dataAccess": "legacy global graph or development schema; gated",
+    "tenantScope": "no institutional school access",
+    "rollout": "legacy allowlist or Development diagnostics",
+    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+  },
+  {
+    "method": "GET",
     "route": "/scalar/scalar.js",
     "controller": null,
     "action": null,
@@ -2441,6 +2471,127 @@
     "authorizationTest": "Mt2IdentityTests"
   },
   {
+    "method": "POST",
+    "route": "api/institution/admin/invitations",
+    "controller": "InstitutionInvitation",
+    "action": "Invite",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ],
+    "repositories": [
+      "IOnboardingRepository",
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository"
+    ],
+    "dataAccess": "MT5C owner-bound invitations and verified recipient",
+    "tenantScope": "verified TenantContext",
+    "rollout": "MembershipAdminApi \u0026\u0026 MembershipWriteApi \u0026\u0026 Onboarding",
+    "authorizationTest": "Mt5e real HTTP JWT/IAM/rollback/concurrency"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/invitations/{id:guid}/revoke",
+    "controller": "InstitutionInvitation",
+    "action": "Revoke",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ],
+    "repositories": [
+      "IOnboardingRepository",
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository"
+    ],
+    "dataAccess": "MT5C owner-bound invitations and verified recipient",
+    "tenantScope": "verified TenantContext",
+    "rollout": "MembershipAdminApi \u0026\u0026 MembershipWriteApi \u0026\u0026 Onboarding",
+    "authorizationTest": "Mt5e real HTTP JWT/IAM/rollback/concurrency"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/invitations/{id:guid}/reissue",
+    "controller": "InstitutionInvitation",
+    "action": "Reissue",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ],
+    "repositories": [
+      "IOnboardingRepository",
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository"
+    ],
+    "dataAccess": "MT5C owner-bound invitations and verified recipient",
+    "tenantScope": "verified TenantContext",
+    "rollout": "MembershipAdminApi \u0026\u0026 MembershipWriteApi \u0026\u0026 Onboarding",
+    "authorizationTest": "Mt5e real HTTP JWT/IAM/rollback/concurrency"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/invitations/{id:guid}/accept",
+    "controller": "InvitationAcceptance",
+    "action": "Accept",
+    "scheme": "InstitutionSelection",
+    "policy": [
+      "InstitutionSelection"
+    ],
+    "roles": [],
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ],
+    "repositories": [
+      "IOnboardingRepository",
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository"
+    ],
+    "dataAccess": "MT5C owner-bound invitations and verified recipient",
+    "tenantScope": "identity selection, not school access",
+    "rollout": "Onboarding",
+    "authorizationTest": "Mt2IdentityTests"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/members/{membershipId:guid}/mutations",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "Mutate",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IInstitutionMembershipDirectoryRepository",
+      "IInstitutionMembershipMutationRepository"
+    ],
+    "dataAccess": "MT5E transactional IAM writer",
+    "tenantScope": "verified TenantContext",
+    "rollout": "MembershipAdminApi \u0026\u0026 MembershipWriteApi",
+    "authorizationTest": "Mt5e real HTTP JWT/IAM/rollback/concurrency"
+  },
+  {
     "method": "GET",
     "route": "api/institution/admin/members",
     "controller": "InstitutionMembershipAdmin",
@@ -2460,10 +2611,10 @@
       "IInstitutionMembershipDirectoryRepository",
       "IInstitutionMembershipMutationRepository"
     ],
-    "dataAccess": "legacy global graph or development schema; gated",
-    "tenantScope": "no institutional school access",
-    "rollout": "legacy allowlist or Development diagnostics",
-    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+    "dataAccess": "MT5A scoped directory",
+    "tenantScope": "verified TenantContext",
+    "rollout": "MembershipAdminApi",
+    "authorizationTest": "Mt5a directory JWT/cross-tenant"
   },
   {
     "method": "GET",
@@ -2485,10 +2636,58 @@
       "IInstitutionMembershipDirectoryRepository",
       "IInstitutionMembershipMutationRepository"
     ],
-    "dataAccess": "legacy global graph or development schema; gated",
-    "tenantScope": "no institutional school access",
-    "rollout": "legacy allowlist or Development diagnostics",
-    "authorizationTest": "Mt2 legacy action matrix; Mt3e global account checks"
+    "dataAccess": "MT5A scoped directory",
+    "tenantScope": "verified TenantContext",
+    "rollout": "MembershipAdminApi",
+    "authorizationTest": "Mt5a directory JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/audit",
+    "controller": "InstitutionMembershipAudit",
+    "action": "List",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "managers": [
+      "IMembershipAuditManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IMembershipAuditRepository"
+    ],
+    "dataAccess": "MT5A scoped directory",
+    "tenantScope": "verified TenantContext",
+    "rollout": "MembershipAdminApi",
+    "authorizationTest": "Mt5a directory JWT/cross-tenant"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/audit/{eventId:guid}",
+    "controller": "InstitutionMembershipAudit",
+    "action": "Get",
+    "scheme": "InstitutionAccess",
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "roles": [],
+    "managers": [
+      "IMembershipAuditManager"
+    ],
+    "repositories": [
+      "IUserRepository",
+      "IMembershipAuthorizationRepository",
+      "IInstitutionProfileRepository",
+      "IMembershipAuditRepository"
+    ],
+    "dataAccess": "MT5A scoped directory",
+    "tenantScope": "verified TenantContext",
+    "rollout": "MembershipAdminApi",
+    "authorizationTest": "Mt5a directory JWT/cross-tenant"
   },
   {
     "method": "GET",

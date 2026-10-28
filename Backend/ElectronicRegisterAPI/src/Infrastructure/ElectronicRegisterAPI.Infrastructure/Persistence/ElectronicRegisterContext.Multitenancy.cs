@@ -179,6 +179,7 @@ public partial class ElectronicRegisterContext
         ConfigureMt5d(modelBuilder);
         ConfigureInstitutionEmails(modelBuilder);
         ConfigureInstitutionImports(modelBuilder);
+        ConfigureFormativePlans(modelBuilder);
 
     }
 }

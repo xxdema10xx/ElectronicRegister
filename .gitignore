@@ -145,3 +145,8 @@ __pycache__/
 !/migrations/institution-email/002_validate.sql
 !/migrations/institution-import/001_expand.sql
 !/migrations/institution-import/002_validate.sql
+
+# Local formative-plan verification logs and initial working-tree snapshot.
+/.formative-private/
+!/migrations/institution-formative-plan/001_expand.sql
+!/migrations/institution-formative-plan/002_validate.sql

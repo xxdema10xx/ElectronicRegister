@@ -51,3 +51,7 @@
 /tests/Integration/INSTITUTION_EMAIL_POLICY_* text eol=lf
 /docs/api/INSTITUTION_BULK_IMPORT.md text eol=lf
 /tests/Integration/INSTITUTION_BULK_IMPORT_* text eol=lf
+**/*Formative*.cs text eol=lf
+/docs/api/INSTITUTION_FORMATIVE_PLANS.md text eol=lf
+/docs/architecture/ITS_FORMATIVE_PLAN_VERSIONING.md text eol=lf
+/tests/Integration/INSTITUTION_FORMATIVE_PLAN_* text eol=lf

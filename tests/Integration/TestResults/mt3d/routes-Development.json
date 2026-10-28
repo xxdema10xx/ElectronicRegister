@@ -2286,6 +2286,152 @@
     "school": false
   },
   {
+    "method": "POST",
+    "route": "api/institution/admin/invitations",
+    "controller": "InstitutionInvitation",
+    "action": "Invite",
+    "roles": [],
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ],
+    "input": [
+      {
+        "Name": "request",
+        "type": "InviteMemberRequest"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/invitations/{id:guid}/revoke",
+    "controller": "InstitutionInvitation",
+    "action": "Revoke",
+    "roles": [],
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "request",
+        "type": "InvitationChangeRequest"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/invitations/{id:guid}/reissue",
+    "controller": "InstitutionInvitation",
+    "action": "Reissue",
+    "roles": [],
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "request",
+        "type": "InvitationChangeRequest"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/invitations/{id:guid}/accept",
+    "controller": "InvitationAcceptance",
+    "action": "Accept",
+    "roles": [],
+    "policy": [
+      "InstitutionSelection"
+    ],
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ],
+    "input": [
+      {
+        "Name": "id",
+        "type": "Guid"
+      },
+      {
+        "Name": "request",
+        "type": "InvitationAcceptanceRequest"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/members/{membershipId:guid}/mutations",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "Mutate",
+    "roles": [],
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ],
+    "input": [
+      {
+        "Name": "membershipId",
+        "type": "Guid"
+      },
+      {
+        "Name": "request",
+        "type": "MembershipMutationRequest"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
     "method": "GET",
     "route": "api/institution/admin/members",
     "controller": "InstitutionMembershipAdmin",
@@ -2342,6 +2488,70 @@
     "input": [
       {
         "Name": "membershipId",
+        "type": "Guid"
+      },
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/audit",
+    "controller": "InstitutionMembershipAudit",
+    "action": "List",
+    "roles": [],
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "managers": [
+      "IMembershipAuditManager"
+    ],
+    "input": [
+      {
+        "Name": "ct",
+        "type": "CancellationToken"
+      },
+      {
+        "Name": "page",
+        "type": "Int32"
+      },
+      {
+        "Name": "size",
+        "type": "Int32"
+      },
+      {
+        "Name": "target",
+        "type": "Nullable\u00601"
+      },
+      {
+        "Name": "action",
+        "type": "String"
+      }
+    ],
+    "output": "System.Threading.Tasks.Task\u00601[Microsoft.AspNetCore.Mvc.IActionResult]",
+    "institutionExam": false,
+    "school": false
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/audit/{eventId:guid}",
+    "controller": "InstitutionMembershipAudit",
+    "action": "Get",
+    "roles": [],
+    "policy": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "managers": [
+      "IMembershipAuditManager"
+    ],
+    "input": [
+      {
+        "Name": "eventId",
         "type": "Guid"
       },
       {

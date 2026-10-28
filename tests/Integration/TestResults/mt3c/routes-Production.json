@@ -1397,6 +1397,76 @@
     ]
   },
   {
+    "method": "POST",
+    "route": "api/institution/admin/invitations",
+    "controller": "InstitutionInvitation",
+    "action": "Invite",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/invitations/{id:guid}/revoke",
+    "controller": "InstitutionInvitation",
+    "action": "Revoke",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/invitations/{id:guid}/reissue",
+    "controller": "InstitutionInvitation",
+    "action": "Reissue",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/invitations/{id:guid}/accept",
+    "controller": "InvitationAcceptance",
+    "action": "Accept",
+    "roles": [],
+    "policies": [
+      "InstitutionSelection"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/members/{membershipId:guid}/mutations",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "Mutate",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ]
+  },
+  {
     "method": "GET",
     "route": "api/institution/admin/members",
     "controller": "InstitutionMembershipAdmin",
@@ -1422,6 +1492,34 @@
     "migrated": false,
     "managers": [
       "IInstitutionMembershipAdminManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/audit",
+    "controller": "InstitutionMembershipAudit",
+    "action": "List",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IMembershipAuditManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/audit/{eventId:guid}",
+    "controller": "InstitutionMembershipAudit",
+    "action": "Get",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IMembershipAuditManager"
     ]
   },
   {
