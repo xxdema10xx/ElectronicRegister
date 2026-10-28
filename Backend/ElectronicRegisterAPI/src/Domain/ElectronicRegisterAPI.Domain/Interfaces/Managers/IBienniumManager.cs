@@ -1,18 +1,17 @@
-﻿using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.DTOs;
 
-namespace ElectronicRegisterAPI.Domain.Interfaces.Managers
+namespace ElectronicRegisterAPI.Domain.Interfaces.Managers;
+
+public interface IBienniumManager
 {
-    public interface IBienniumManager
-    {
-        Task<int> CountAsync();
-        Task<List<BienniumDto>> GetAllAsync();
-        Task<List<BienniumDto>> GetActiveBienniaAsync();
-        Task<List<BienniumDto>> GetInactiveBienniaAsync();
-        Task<BienniumDto?> GetByIdAsync(Guid id);
-        Task<BienniumDto?> GetBienniumByStartYearAsync(int startYear);
-        Task<BienniumDto?> GetBienniumByEndYearAsync(int endYear);
-        Task<Guid> AddAsync(CreateBienniumDto dto);
-        Task<bool> UpdateAsync(Guid id, UpdateBienniumDto dto);
-        Task<bool> DeleteAsync(Guid id);
-    }
+    Task<int> CountAsync();
+    Task<List<BienniumDto>> GetAllAsync();
+    Task<List<BienniumDto>> GetActiveBienniaAsync();
+    Task<List<BienniumDto>> GetInactiveBienniaAsync();
+    Task<BienniumDto?> GetByIdAsync(Guid id);
+    Task<BienniumDto?> GetBienniumByStartYearAsync(int startYear);
+    Task<BienniumDto?> GetBienniumByEndYearAsync(int endYear);
+    Task<Guid> AddAsync(CreateBienniumDto dto);
+    Task<bool> UpdateAsync(Guid id, UpdateBienniumDto dto);
+    Task<bool> DeleteAsync(Guid id);
 }

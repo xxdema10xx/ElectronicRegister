@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Api.Http;
 using ElectronicRegisterAPI.Api.Security;
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ElectronicRegisterAPI.Api.Controllers;
+
 [ApiController, Route("api/institution/biennium-study-paths"), InstitutionSchoolEndpoint, Authorize(Roles = "InstitutionAdmin")]
 public sealed class InstitutionBienniumStudyPathController(IInstitutionAcademicCatalogManager manager) : ControllerBase
 {

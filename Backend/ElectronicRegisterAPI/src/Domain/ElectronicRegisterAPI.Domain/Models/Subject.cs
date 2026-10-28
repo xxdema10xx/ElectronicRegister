@@ -1,4 +1,3 @@
-// Domain/Models/Subject.cs
 namespace ElectronicRegisterAPI.Domain.Models;
 
 public class Subject

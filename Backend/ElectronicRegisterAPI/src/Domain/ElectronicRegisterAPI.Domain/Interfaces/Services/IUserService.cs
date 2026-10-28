@@ -1,4 +1,4 @@
-﻿using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Models;
 

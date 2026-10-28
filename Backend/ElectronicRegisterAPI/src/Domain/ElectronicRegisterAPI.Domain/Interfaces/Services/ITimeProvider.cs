@@ -1,9 +1,8 @@
 using System;
 
-namespace ElectronicRegisterAPI.Domain.Interfaces.Services
+namespace ElectronicRegisterAPI.Domain.Interfaces.Services;
+
+public interface ITimeProvider
 {
-    public interface ITimeProvider
-    {
-        DateTime UtcNow { get; }
-    }
+    DateTime UtcNow { get; }
 }

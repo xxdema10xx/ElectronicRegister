@@ -9,13 +9,9 @@ public class GradeService : IGradeService
 {
     private readonly IGradeRepository _gradeRepository;
     private readonly IClassSubjectRepository _classSubjectRepository;
-
     private readonly decimal minGradeValue = 1;
     private readonly decimal maxGradeValue = 10;
-
-    public GradeService(
-        IGradeRepository gradeRepository,
-        IClassSubjectRepository classSubjectRepository)
+    public GradeService(IGradeRepository gradeRepository, IClassSubjectRepository classSubjectRepository)
     {
         _gradeRepository = gradeRepository;
         _classSubjectRepository = classSubjectRepository;
@@ -36,23 +32,19 @@ public class GradeService : IGradeService
 
     public async Task EnsureTeacherTeachesClassSubjectAsync(Guid teacherId, Guid classSubjectId)
     {
-        var classSubject =await _classSubjectRepository.GetByIdAsync(classSubjectId);
-
+        var classSubject = await _classSubjectRepository.GetByIdAsync(classSubjectId);
         if (classSubject is null || classSubject.TeacherId != teacherId)
         {
-            throw new UnauthorizedAccessException(
-                "Il docente non insegna questa materia nella classe specificata.");
+            throw new UnauthorizedAccessException("Il docente non insegna questa materia nella classe specificata.");
         }
     }
 
     public async Task EnsureTeacherOwnsGradeAsync(Guid teacherId, Grade grade)
     {
         var classSubject = await _classSubjectRepository.GetByIdAsync(grade.ClassSubjectId);
-
         if (classSubject is null || classSubject.TeacherId != teacherId)
         {
-            throw new UnauthorizedAccessException(
-                "Il docente non è autorizzato a modificare questo voto.");
+            throw new UnauthorizedAccessException("Il docente non è autorizzato a modificare questo voto.");
         }
     }
 
@@ -60,8 +52,7 @@ public class GradeService : IGradeService
     {
         if (!student.ClassId.HasValue || student.ClassId.Value != classSubject.ClassId)
         {
-            throw new BusinessRuleException(
-                "Lo studente non appartiene alla classe della materia specificata.");
+            throw new BusinessRuleException("Lo studente non appartiene alla classe della materia specificata.");
         }
     }
 }

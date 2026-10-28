@@ -1,6 +1,7 @@
-﻿using ElectronicRegisterAPI.Domain.Models;
+using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+
 public interface IStudyAreaRepository
 {
     Task<int> CountAsync();

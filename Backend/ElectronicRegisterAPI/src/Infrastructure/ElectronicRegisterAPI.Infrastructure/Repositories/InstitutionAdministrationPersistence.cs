@@ -8,12 +8,18 @@ using Microsoft.EntityFrameworkCore.Storage;
 using MySqlConnector;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
+
 // Shared transaction mechanics for the explicitly supported administrative resources.
 internal sealed class InstitutionAdministrationPersistence(ElectronicRegisterContext db, IMembershipAuthorizationRepository authorization)
 {
     private static readonly HashSet<string> Tables = ["study_area", "study_path", "biennium", "biennium_study_area", "biennium_study_path", "class_subject", "campus"];
     private static string Table(string table) => Tables.Contains(table) ? table : throw new ArgumentException("Risorsa non supportata.");
-    public async Task LockAsync(TenantContext tenant, string table, Guid id, CancellationToken ct)
+    public async Task LockAsync(
+        TenantContext tenant,
+        string table,
+        Guid id,
+        CancellationToken ct
+    )
     {
         InstitutionSchoolQueries.Admin(tenant);
         await using var command = Command($"SELECT id FROM `{Table(table)}` WHERE institution_id=@tenant AND id=@id FOR UPDATE", tenant.InstitutionId, id);
@@ -49,7 +55,12 @@ internal sealed class InstitutionAdministrationPersistence(ElectronicRegisterCon
 
     // Discover every actual incoming FK, including future CASCADE and SET NULL constraints.
     // The parent is already locked; locking child reads use the current committed state.
-    public async Task NoDependentsAsync(TenantContext tenant, string table, Guid id, CancellationToken ct)
+    public async Task NoDependentsAsync(
+        TenantContext tenant,
+        string table,
+        Guid id,
+        CancellationToken ct
+    )
     {
         InstitutionSchoolQueries.Admin(tenant);
         Table(table);
@@ -72,7 +83,16 @@ internal sealed class InstitutionAdministrationPersistence(ElectronicRegisterCon
         }
     }
 
-    public Task EventAsync(TenantContext t, string type, Guid id, long revision, string action, string? before, string? after, CancellationToken ct)
+    public Task EventAsync(
+        TenantContext t,
+        string type,
+        Guid id,
+        long revision,
+        string action,
+        string? before,
+        string? after,
+        CancellationToken ct
+    )
     {
         Table(type);
         return db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO institution_administration_event(institution_id,id,actor_user_id,actor_membership_id,entity_type,entity_id,revision,action,before_json,after_json,occurred_at_utc) VALUES ({t.InstitutionId},{Guid.NewGuid()},{t.UserId},{t.MembershipId},{type},{id},{revision},{action},{before},{after},UTC_TIMESTAMP(6))", ct);

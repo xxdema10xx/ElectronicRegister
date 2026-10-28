@@ -1,4 +1,5 @@
-﻿using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.Results;
+using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,14 @@ public interface IGradeRepository
     Task<List<Grade>> GetBySubjectNameAsync(string subjectName, Guid? studentId = null, Guid? teacherId = null);
     Task<List<Grade>> GetByStudentIdAsync(Guid studentId);
     Task<(List<Grade> Items, int TotalCount)> GetPagedAsync(
-        int pageNumber, int pageSize,
-        Guid? subjectId, Guid? studentId, DateOnly? date,
-        Guid? restrictToStudentId, Guid? restrictToTeacherId);
+        int pageNumber,
+        int pageSize,
+        Guid? subjectId,
+        Guid? studentId,
+        DateOnly? date,
+        Guid? restrictToStudentId,
+        Guid? restrictToTeacherId
+    );
     Task<GradeStatistics> GetStatisticsAsync(Guid? teacherId, Guid? studentId);
     Task AddAsync(Grade grade);
     Task UpdateAsync(Grade grade);

@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Enums;
 using System;
 using System.IO;
 using System.Security.AccessControl;

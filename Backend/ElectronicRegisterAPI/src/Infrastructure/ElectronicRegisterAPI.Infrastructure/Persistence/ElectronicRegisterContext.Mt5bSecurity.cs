@@ -19,9 +19,7 @@ public partial class ElectronicRegisterContext
             e.Property(s => s.InstitutionId).HasColumnName("institution_id").HasCharSet("ascii").UseCollation("ascii_general_ci");
             e.Property(s => s.MembershipId).HasColumnName("membership_id").HasCharSet("ascii").UseCollation("ascii_general_ci");
             e.Property(s => s.SecurityGeneration).HasColumnName("security_generation").HasDefaultValue(0L).ValueGeneratedOnAddOrUpdate();
-            e.HasOne<InstitutionMembership>().WithMany().HasForeignKey(s => new { s.InstitutionId, s.MembershipId })
-                .HasPrincipalKey(m => new { m.InstitutionId, m.Id }).OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_membership_security_owner");
+            e.HasOne<InstitutionMembership>().WithMany().HasForeignKey(s => new { s.InstitutionId, s.MembershipId }).HasPrincipalKey(m => new { m.InstitutionId, m.Id }).OnDelete(DeleteBehavior.Restrict).HasConstraintName("fk_membership_security_owner");
         });
     }
 }

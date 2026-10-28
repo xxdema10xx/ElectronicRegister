@@ -1,3 +1,7 @@
+using ElectronicRegisterAPI.Domain.DTOs.FormativePlans;
+using ElectronicRegisterAPI.Domain.Interfaces.Managers;
+using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using System;
 using System.Linq;
 using System.Net;

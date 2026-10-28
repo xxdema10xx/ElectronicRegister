@@ -1,4 +1,4 @@
-﻿using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +12,6 @@ namespace ElectronicRegisterAPI.Api.Controllers;
 public class AuthController : ApiControllerBase
 {
     private readonly IAuthManager _authManager;
-
     public AuthController(IAuthManager authManager)
     {
         _authManager = authManager;
@@ -30,11 +29,8 @@ public class AuthController : ApiControllerBase
     {
         if (dto is null || string.IsNullOrEmpty(dto.AccessToken))
             return BadRequest("Access token is required.");
-
         var token = await _authManager.MicrosoftLoginAsync(dto);
-        return token is null
-            ? Unauthorized("Utente non registrato nel sistema o token Microsoft non valido.")
-            : Ok(new { token });
+        return token is null ? Unauthorized("Utente non registrato nel sistema o token Microsoft non valido.") : Ok(new { token });
     }
 
     [HttpPost("register")]

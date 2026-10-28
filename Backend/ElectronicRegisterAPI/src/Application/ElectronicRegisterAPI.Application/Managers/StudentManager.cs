@@ -1,91 +1,93 @@
-﻿using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Models;
 using ElectronicRegisterAPI.Domain.DTOs;
 
-namespace ElectronicRegisterAPI.Application.Managers
+namespace ElectronicRegisterAPI.Application.Managers;
+
+internal class StudentManager : IStudentManager
 {
-    internal class StudentManager : IStudentManager
+    private readonly IStudentRepository _studentRepository;
+    private readonly IStudentService _studentService;
+    public StudentManager(IStudentRepository studentRepository, IStudentService studentService)
     {
-        private readonly IStudentRepository _studentRepository;
-        private readonly IStudentService _studentService;
-        public StudentManager(IStudentRepository studentRepository, IStudentService studentService)
-        {
-            _studentRepository = studentRepository;
-            _studentService = studentService;
-        }
+        _studentRepository = studentRepository;
+        _studentService = studentService;
+    }
 
-        public async Task<int> CountAsync(ClaimsContext caller)
-        {
-            return await _studentRepository.CountAsync(TeacherRestriction(caller));
-        }
+    public async Task<int> CountAsync(ClaimsContext caller)
+    {
+        return await _studentRepository.CountAsync(TeacherRestriction(caller));
+    }
 
-        public async Task<List<StudentDto>> GetAllAsync(ClaimsContext caller)
-        { 
-            var students = await _studentRepository.GetAllAsync(TeacherRestriction(caller));
-            return students.Select(MapToDto).ToList();
-        }
+    public async Task<List<StudentDto>> GetAllAsync(ClaimsContext caller)
+    {
+        var students = await _studentRepository.GetAllAsync(TeacherRestriction(caller));
+        return students.Select(MapToDto).ToList();
+    }
 
-        public async Task<StudentDto?> GetByIdAsync(Guid id, ClaimsContext caller)
-        {
-            var student = await _studentRepository.GetByIdAsync(id, TeacherRestriction(caller));
-            if (student is null) return null;
+    public async Task<StudentDto?> GetByIdAsync(Guid id, ClaimsContext caller)
+    {
+        var student = await _studentRepository.GetByIdAsync(id, TeacherRestriction(caller));
+        if (student is null)
+            return null;
+        return MapToDto(student);
+    }
 
-            return MapToDto(student);
-        }
-        public async Task<List<StudentDto>> GetStudentsByLastNameAsync(string lastName, ClaimsContext caller)
-        {
-            var students = await _studentRepository.GetByLastNameAsync(lastName, TeacherRestriction(caller));
-            return students.Select(MapToDto).ToList();
-        }
-        public async Task<bool> UpdateAsync(Guid id, UpdateStudentDto dto)
-        {
-            var student = await _studentRepository.GetByIdAsync(id);
-            if (student is null) return false;
+    public async Task<List<StudentDto>> GetStudentsByLastNameAsync(string lastName, ClaimsContext caller)
+    {
+        var students = await _studentRepository.GetByLastNameAsync(lastName, TeacherRestriction(caller));
+        return students.Select(MapToDto).ToList();
+    }
 
-            student.FirstName = dto.FirstName;
-            student.LastName = dto.LastName;
+    public async Task<bool> UpdateAsync(Guid id, UpdateStudentDto dto)
+    {
+        var student = await _studentRepository.GetByIdAsync(id);
+        if (student is null)
+            return false;
+        student.FirstName = dto.FirstName;
+        student.LastName = dto.LastName;
+        await _studentRepository.UpdateAsync(student);
+        return true;
+    }
 
-            await _studentRepository.UpdateAsync(student);
-            return true;
-        }
-        public async Task<Guid> AddAsync(CreateStudentDto dto)
+    public async Task<Guid> AddAsync(CreateStudentDto dto)
+    {
+        var student = new Student
         {
-            var student = new Student
-            {
-                Id = Guid.NewGuid(),
-                FirstName = dto.FirstName,
-                LastName = dto.LastName
-            };
+            Id = Guid.NewGuid(),
+            FirstName = dto.FirstName,
+            LastName = dto.LastName
+        };
+        await _studentRepository.AddAsync(student);
+        return student.Id;
+    }
 
-            await _studentRepository.AddAsync(student);
-            return student.Id;
-        }
-        public async Task<bool> DeleteAsync(Guid id)
-        {
-            var student = await _studentService.EnsureStudentCanBeDeletedAsync(id);
-            await _studentRepository.DeleteAsync(student);
-            return true;
-        }
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var student = await _studentService.EnsureStudentCanBeDeletedAsync(id);
+        await _studentRepository.DeleteAsync(student);
+        return true;
+    }
 
-        private static Guid? TeacherRestriction(ClaimsContext caller)
-        {
-            ArgumentNullException.ThrowIfNull(caller);
-            if (caller.Role == ElectronicRegisterAPI.Domain.Enums.UserRole.Admin) return null;
-            if (caller.Role == ElectronicRegisterAPI.Domain.Enums.UserRole.Teacher && caller.TeacherId.HasValue)
-                return caller.TeacherId.Value;
-            throw new UnauthorizedAccessException();
-        }
+    private static Guid? TeacherRestriction(ClaimsContext caller)
+    {
+        ArgumentNullException.ThrowIfNull(caller);
+        if (caller.Role == ElectronicRegisterAPI.Domain.Enums.UserRole.Admin)
+            return null;
+        if (caller.Role == ElectronicRegisterAPI.Domain.Enums.UserRole.Teacher && caller.TeacherId.HasValue)
+            return caller.TeacherId.Value;
+        throw new UnauthorizedAccessException();
+    }
 
-        private StudentDto MapToDto(Student student)
+    private StudentDto MapToDto(Student student)
+    {
+        return new StudentDto
         {
-            return new StudentDto
-            {
-                Id = student.Id,
-                FirstName = student.FirstName,
-                LastName = student.LastName
-            };
-        }
+            Id = student.Id,
+            FirstName = student.FirstName,
+            LastName = student.LastName
+        };
     }
 }

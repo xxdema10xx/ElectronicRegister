@@ -1,3 +1,5 @@
+using ElectronicRegisterAPI.Domain.DTOs.Onboarding;
+using ElectronicRegisterAPI.Domain.Interfaces.Security;
 using System.IO;
 using System.Text.Json;
 using System.Threading;

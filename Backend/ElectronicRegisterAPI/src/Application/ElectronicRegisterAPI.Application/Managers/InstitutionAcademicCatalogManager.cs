@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Policies;
 using ElectronicRegisterAPI.Application.Services;
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Models;
@@ -5,6 +6,7 @@ using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 
 namespace ElectronicRegisterAPI.Application.Managers;
+
 internal sealed class InstitutionAcademicCatalogManager(InstitutionSchoolAuthorization authorization, IInstitutionAcademicCatalogRepository repository, ITransactionManager transactions) : IInstitutionAcademicCatalogManager
 {
     public async Task<InstitutionAcademicPage<InstitutionStudyAreaDto>> ListStudyAreaAsync(int page, int size, CancellationToken ct)
@@ -28,7 +30,12 @@ internal sealed class InstitutionAcademicCatalogManager(InstitutionSchoolAuthori
         return id;
     }
 
-    public async Task UpdateStudyAreaAsync(Guid id, UpdateInstitutionStudyAreaDto dto, long revision, CancellationToken ct)
+    public async Task UpdateStudyAreaAsync(
+        Guid id,
+        UpdateInstitutionStudyAreaDto dto,
+        long revision,
+        CancellationToken ct
+    )
     {
         var t = await authorization.AdminAsync(ct);
         dto = dto with
@@ -66,7 +73,12 @@ internal sealed class InstitutionAcademicCatalogManager(InstitutionSchoolAuthori
         return id;
     }
 
-    public async Task UpdateStudyPathAsync(Guid id, UpdateInstitutionStudyPathDto dto, long revision, CancellationToken ct)
+    public async Task UpdateStudyPathAsync(
+        Guid id,
+        UpdateInstitutionStudyPathDto dto,
+        long revision,
+        CancellationToken ct
+    )
     {
         var t = await authorization.AdminAsync(ct);
         dto = dto with
@@ -105,7 +117,12 @@ internal sealed class InstitutionAcademicCatalogManager(InstitutionSchoolAuthori
         return id;
     }
 
-    public async Task UpdateBienniumAsync(Guid id, UpdateInstitutionBienniumDto dto, long revision, CancellationToken ct)
+    public async Task UpdateBienniumAsync(
+        Guid id,
+        UpdateInstitutionBienniumDto dto,
+        long revision,
+        CancellationToken ct
+    )
     {
         var t = await authorization.AdminAsync(ct);
         dto = dto with

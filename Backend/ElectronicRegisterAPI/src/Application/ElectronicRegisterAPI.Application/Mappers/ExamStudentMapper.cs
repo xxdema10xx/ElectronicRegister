@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Services;
 using System;
 using System.Linq;
 using ElectronicRegisterAPI.Domain.DTOs;

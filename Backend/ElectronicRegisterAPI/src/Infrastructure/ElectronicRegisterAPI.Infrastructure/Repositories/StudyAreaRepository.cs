@@ -1,4 +1,4 @@
-﻿using ElectronicRegisterAPI.Infrastructure.Persistence;
+using ElectronicRegisterAPI.Infrastructure.Persistence;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using StudyAreaModel = ElectronicRegisterAPI.Domain.Models.StudyArea;
 using StudyAreaEntity = ElectronicRegisterAPI.Infrastructure.Persistence.Entities.StudyArea;
@@ -9,7 +9,6 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 internal class StudyAreaRepository : IStudyAreaRepository
 {
     private readonly ElectronicRegisterContext _context;
-
     public StudyAreaRepository(ElectronicRegisterContext context)
     {
         _context = context;
@@ -58,8 +57,8 @@ internal class StudyAreaRepository : IStudyAreaRepository
     public async Task UpdateAsync(StudyAreaModel studyArea)
     {
         var studyAreaEntity = await MapToEntity(studyArea);
-        if (studyAreaEntity is null) return;
-
+        if (studyAreaEntity is null)
+            return;
         _context.StudyAreas.Update(studyAreaEntity);
         await _context.SaveChangesAsync();
     }
@@ -67,7 +66,8 @@ internal class StudyAreaRepository : IStudyAreaRepository
     public async Task DeleteAsync(StudyAreaModel studyArea)
     {
         var studyAreaEntity = await MapToEntity(studyArea);
-        if (studyAreaEntity is null) return;
+        if (studyAreaEntity is null)
+            return;
         _context.StudyAreas.Remove(studyAreaEntity);
         await _context.SaveChangesAsync();
     }
@@ -85,12 +85,11 @@ internal class StudyAreaRepository : IStudyAreaRepository
     private async Task<StudyAreaEntity?> MapToEntity(StudyAreaModel studyArea)
     {
         var entity = await _context.StudyAreas.FirstOrDefaultAsync(b => b.Id == studyArea.Id);
-        if (entity is null) return null;
-
+        if (entity is null)
+            return null;
         entity.Id = studyArea.Id;
         entity.Name = studyArea.Name;
         entity.Description = studyArea.Description;
-
         return entity;
     }
 }

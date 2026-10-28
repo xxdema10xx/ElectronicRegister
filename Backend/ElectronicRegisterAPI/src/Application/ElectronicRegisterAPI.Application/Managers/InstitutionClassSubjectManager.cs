@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Policies;
 using ElectronicRegisterAPI.Application.Services;
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
@@ -7,9 +8,22 @@ using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Application.Managers;
-internal sealed class InstitutionClassSubjectManager(InstitutionSchoolAuthorization authorization, IInstitutionProfileResolver profiles, IInstitutionClassSubjectRepository repository, ITransactionManager transactions) : IInstitutionClassSubjectManager
+
+internal sealed class InstitutionClassSubjectManager(
+    InstitutionSchoolAuthorization authorization,
+    IInstitutionProfileResolver profiles,
+    IInstitutionClassSubjectRepository repository,
+    ITransactionManager transactions
+) : IInstitutionClassSubjectManager
 {
-    public async Task<InstitutionAcademicPage<InstitutionClassSubjectDto>> ListAsync(int page, int size, Guid? classId, Guid? subjectId, Guid? teacherId, CancellationToken ct)
+    public async Task<InstitutionAcademicPage<InstitutionClassSubjectDto>> ListAsync(
+        int page,
+        int size,
+        Guid? classId,
+        Guid? subjectId,
+        Guid? teacherId,
+        CancellationToken ct
+    )
     {
         var t = await authorization.RequireAsync(ct);
         if (!t.Roles.Contains(InstitutionRole.InstitutionAdmin))
@@ -32,7 +46,12 @@ internal sealed class InstitutionClassSubjectManager(InstitutionSchoolAuthorizat
         return id;
     }
 
-    public async Task UpdateAsync(Guid id, UpdateInstitutionClassSubjectDto dto, long revision, CancellationToken ct)
+    public async Task UpdateAsync(
+        Guid id,
+        UpdateInstitutionClassSubjectDto dto,
+        long revision,
+        CancellationToken ct
+    )
     {
         var t = await authorization.AdminAsync(ct);
         InstitutionAcademicRules.Id(dto.TeacherId);

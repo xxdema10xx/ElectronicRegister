@@ -1,3 +1,5 @@
+using ElectronicRegisterAPI.Domain.DTOs.Membership;
+using ElectronicRegisterAPI.Domain.Results;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;

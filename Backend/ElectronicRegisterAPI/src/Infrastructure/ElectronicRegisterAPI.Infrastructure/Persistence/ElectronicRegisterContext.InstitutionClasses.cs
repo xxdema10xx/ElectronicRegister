@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
+
 namespace ElectronicRegisterAPI.Infrastructure.Persistence;
 
 public partial class ElectronicRegisterContext
@@ -22,7 +23,6 @@ public partial class ElectronicRegisterContext
         e.HasIndex(x => new { x.InstitutionId, x.ClassId, x.Revision }).IsUnique().HasDatabaseName("uq_class_event_revision");
         e.HasIndex(x => new { x.InstitutionId, x.ActorMembershipId, x.ActorUserId }).HasDatabaseName("idx_class_event_actor");
         e.HasOne<Institution>().WithMany().HasForeignKey(x => x.InstitutionId).OnDelete(DeleteBehavior.Restrict).HasConstraintName("fk_class_event_owner");
-        e.HasOne<InstitutionMembership>().WithMany().HasForeignKey(x => new { x.InstitutionId, x.ActorMembershipId, x.ActorUserId })
-            .HasPrincipalKey(x => new { x.InstitutionId, x.Id, x.UserId }).OnDelete(DeleteBehavior.Restrict).HasConstraintName("fk_class_event_actor");
+        e.HasOne<InstitutionMembership>().WithMany().HasForeignKey(x => new { x.InstitutionId, x.ActorMembershipId, x.ActorUserId }).HasPrincipalKey(x => new { x.InstitutionId, x.Id, x.UserId }).OnDelete(DeleteBehavior.Restrict).HasConstraintName("fk_class_event_actor");
     }
 }

@@ -1,4 +1,5 @@
 namespace ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
+
 public sealed class StudentClassTransferEvent
 {
     public Guid Id { get; set; }

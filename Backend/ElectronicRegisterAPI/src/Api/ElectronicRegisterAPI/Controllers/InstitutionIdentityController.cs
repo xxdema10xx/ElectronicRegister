@@ -26,14 +26,9 @@ public sealed class InstitutionIdentityController(IInstitutionAuthManager manage
     }
 
     [HttpGet("institutions"), Authorize(Policy = InstitutionTokenContract.SelectionScheme)]
-    public async Task<ActionResult<IReadOnlyList<InstitutionChoiceDto>>> Institutions(CancellationToken cancellationToken) =>
-        Ok(await manager.InstitutionsAsync(InstitutionAuthentication.GuidClaim(User, "sub"), cancellationToken));
-
+    public async Task<ActionResult<IReadOnlyList<InstitutionChoiceDto>>> Institutions(CancellationToken cancellationToken) => Ok(await manager.InstitutionsAsync(InstitutionAuthentication.GuidClaim(User, "sub"), cancellationToken));
     [HttpPost("select-institution"), Authorize(Policy = InstitutionTokenContract.SelectionScheme)]
-    public async Task<ActionResult<InstitutionAccessDto>> Select(SelectInstitutionDto input, CancellationToken cancellationToken) =>
-        Ok(await manager.SelectAsync(InstitutionAuthentication.GuidClaim(User, "sub"), input, cancellationToken));
-
+    public async Task<ActionResult<InstitutionAccessDto>> Select(SelectInstitutionDto input, CancellationToken cancellationToken) => Ok(await manager.SelectAsync(InstitutionAuthentication.GuidClaim(User, "sub"), input, cancellationToken));
     [HttpGet("context"), Authorize(Policy = InstitutionTokenContract.AccessScheme)]
-    public ActionResult<TenantContextDto> Context() => Ok(new TenantContextDto(tenant.Value.UserId, tenant.Value.InstitutionId,
-        tenant.Value.MembershipId, tenant.Value.Roles.Select(r => r.ToString()).Order().ToArray()));
+    public ActionResult<TenantContextDto> Context() => Ok(new TenantContextDto(tenant.Value.UserId, tenant.Value.InstitutionId, tenant.Value.MembershipId, tenant.Value.Roles.Select(r => r.ToString()).Order().ToArray()));
 }

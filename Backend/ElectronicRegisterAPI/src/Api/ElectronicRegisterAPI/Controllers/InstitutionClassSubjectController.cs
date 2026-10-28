@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Api.Http;
 using ElectronicRegisterAPI.Api.Security;
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
@@ -5,11 +6,19 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ElectronicRegisterAPI.Api.Controllers;
+
 [ApiController, InstitutionExamEndpoint, Route("api/institution/class-subjects")]
 public sealed class InstitutionClassSubjectController(IInstitutionClassSubjectManager manager) : ControllerBase
 {
     [HttpGet, Authorize(Roles = "InstitutionAdmin,Teacher")]
-    public async Task<IActionResult> GetAll(CancellationToken ct, int pageNumber = 1, int pageSize = 20, Guid? classId = null, Guid? subjectId = null, Guid? teacherId = null)
+    public async Task<IActionResult> GetAll(
+        CancellationToken ct,
+        int pageNumber = 1,
+        int pageSize = 20,
+        Guid? classId = null,
+        Guid? subjectId = null,
+        Guid? teacherId = null
+    )
     {
         var allowed = new HashSet<string>(new[] { "pageNumber", "pageSize", "classId", "subjectId", "teacherId" }, StringComparer.OrdinalIgnoreCase);
         if (Request.Query.Keys.Any(k => !allowed.Contains(k)))

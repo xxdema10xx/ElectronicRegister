@@ -1,4 +1,4 @@
-﻿using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,6 @@ namespace ElectronicRegisterAPI.Api.Controllers;
 public class SubjectController : ApiControllerBase
 {
     private readonly ISubjectManager _subjectManager;
-
     public SubjectController(ISubjectManager subjectManager)
     {
         _subjectManager = subjectManager;

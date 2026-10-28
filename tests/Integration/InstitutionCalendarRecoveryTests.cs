@@ -1,3 +1,5 @@
+using ElectronicRegisterAPI.Domain.DTOs.Calendar;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using System;
 using System.Net;
 using System.Threading;

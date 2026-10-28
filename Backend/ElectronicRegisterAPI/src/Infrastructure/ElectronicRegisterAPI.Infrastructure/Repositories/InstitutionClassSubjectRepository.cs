@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using E = ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
+
 internal sealed class InstitutionClassSubjectRepository(ElectronicRegisterContext db, InstitutionSchoolQueries q, InstitutionAdministrationPersistence audit) : IInstitutionClassSubjectRepository
 {
     private IQueryable<InstitutionClassSubjectDto> Project(TenantContext t, IQueryable<E.ClassSubject> rows)
@@ -16,7 +17,15 @@ internal sealed class InstitutionClassSubjectRepository(ElectronicRegisterContex
         return rows.Select(r => new InstitutionClassSubjectDto(r.Id, r.ClassId, r.Class.Name, r.SubjectId, r.Subject.Name, r.TeacherId, r.Teacher.FirstName, r.Teacher.LastName, events.Where(e => e.EntityType == "class_subject" && e.EntityId == r.Id).Select(e => (long? )e.Revision).Max() ?? 0L));
     }
 
-    public async Task<InstitutionAcademicPage<InstitutionClassSubjectDto>> ListAsync(TenantContext t, int page, int size, Guid? classId, Guid? subjectId, Guid? teacherId, CancellationToken ct)
+    public async Task<InstitutionAcademicPage<InstitutionClassSubjectDto>> ListAsync(
+        TenantContext t,
+        int page,
+        int size,
+        Guid? classId,
+        Guid? subjectId,
+        Guid? teacherId,
+        CancellationToken ct
+    )
     {
         var rows = q.VisibleAssignments(t);
         if (classId.HasValue)
@@ -48,7 +57,13 @@ internal sealed class InstitutionClassSubjectRepository(ElectronicRegisterContex
         return id;
     }
 
-    public async Task UpdateAsync(TenantContext t, Guid id, UpdateInstitutionClassSubjectDto dto, long revision, CancellationToken ct)
+    public async Task UpdateAsync(
+        TenantContext t,
+        Guid id,
+        UpdateInstitutionClassSubjectDto dto,
+        long revision,
+        CancellationToken ct
+    )
     {
         await audit.WriteAsync(t, async () =>
         {

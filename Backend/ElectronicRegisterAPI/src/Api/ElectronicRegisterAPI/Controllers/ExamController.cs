@@ -13,7 +13,6 @@ public class ExamController : ApiControllerBase
 {
     private readonly IExamManager _examManager;
     private readonly IExamSubmissionManager _submissionManager;
-
     public ExamController(IExamManager examManager, IExamSubmissionManager submissionManager)
     {
         _examManager = examManager;

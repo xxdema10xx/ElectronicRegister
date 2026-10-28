@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Api.Filters;
 #nullable enable
 using System;
 using System.Data.Common;
@@ -48,7 +49,7 @@ public sealed partial class InstitutionClassCrudTests
     public async Task TransferRoutesCarrySchoolPolicyAdminRoleAndCourseWriteGuard()
     {
         var type=typeof(ElectronicRegisterAPI.Api.Controllers.InstitutionStudentTransferController);Assert.Single(type.GetCustomAttributes(typeof(ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute),false));var auth=type.GetCustomAttributes(typeof(Microsoft.AspNetCore.Authorization.AuthorizeAttribute),false).Cast<Microsoft.AspNetCore.Authorization.AuthorizeAttribute>().ToArray();Assert.Equal("InstitutionAdmin",Assert.Single(auth.Where(a=>a.Roles is not null)).Roles);Assert.Equal(ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute.PolicyName,Assert.Single(auth.Where(a=>a.Policy is not null)).Policy);
-        Assert.Single(type.GetMethod("Transfer")!.GetCustomAttributes(typeof(ElectronicRegisterAPI.Api.Controllers.RequireTransferCourseApiAttribute),false));Assert.Empty(type.GetCustomAttributes(typeof(Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute),false));
+        Assert.Single(type.GetMethod("Transfer")!.GetCustomAttributes(typeof(ElectronicRegisterAPI.Api.Filters.RequireTransferCourseApiAttribute),false));Assert.Empty(type.GetCustomAttributes(typeof(Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute),false));
     }
     [Theory][InlineData(0,20)][InlineData(1,0)][InlineData(1,101)][InlineData(2147483647,100)]
     public async Task TransferHistoryRejectsInvalidPagination(int page,int size)=>await Expect(await Request(TransferHistory()+$"?pageNumber={page}&pageSize={size}",await Access()),HttpStatusCode.BadRequest);

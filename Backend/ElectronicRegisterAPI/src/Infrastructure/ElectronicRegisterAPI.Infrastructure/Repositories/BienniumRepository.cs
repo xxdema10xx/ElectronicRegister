@@ -1,14 +1,14 @@
-﻿using ElectronicRegisterAPI.Infrastructure.Persistence;
+using ElectronicRegisterAPI.Infrastructure.Persistence;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using BienniumModel = ElectronicRegisterAPI.Domain.Models.Biennium;
 using BienniumEntity = ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Biennium;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
+
 internal class BienniumRepository : IBienniumRepository
 {
     private readonly ElectronicRegisterContext _context;
-
     public BienniumRepository(ElectronicRegisterContext context)
     {
         _context = context;
@@ -28,22 +28,14 @@ internal class BienniumRepository : IBienniumRepository
     public async Task<IEnumerable<BienniumModel>> GetActiveBienniaAsync()
     {
         var today = DateOnly.FromDateTime(DateTime.Today);
-
-        var biennia = await _context.Biennia
-            .AsNoTracking()
-            .Where(b => b.StartYear <= today && b.EndYear >= today)
-            .ToListAsync();
-
+        var biennia = await _context.Biennia.AsNoTracking().Where(b => b.StartYear <= today && b.EndYear >= today).ToListAsync();
         return biennia.Select(MapToModel);
     }
 
     public async Task<IEnumerable<BienniumModel>> GetInactiveBienniaAsync()
     {
         var today = DateOnly.FromDateTime(DateTime.Today);
-        var biennia = await _context.Biennia
-            .AsNoTracking()
-            .Where(b => b.StartYear > today || b.EndYear < today)
-            .ToListAsync();
+        var biennia = await _context.Biennia.AsNoTracking().Where(b => b.StartYear > today || b.EndYear < today).ToListAsync();
         return biennia.Select(MapToModel);
     }
 
@@ -85,8 +77,8 @@ internal class BienniumRepository : IBienniumRepository
     public async Task UpdateAsync(BienniumModel biennium)
     {
         var bienniumEntity = await MapToEntity(biennium);
-        if (bienniumEntity is null) return;
-
+        if (bienniumEntity is null)
+            return;
         _context.Biennia.Update(bienniumEntity);
         await _context.SaveChangesAsync();
     }
@@ -94,7 +86,8 @@ internal class BienniumRepository : IBienniumRepository
     public async Task DeleteAsync(BienniumModel biennium)
     {
         var bienniumEntity = await MapToEntity(biennium);
-        if (bienniumEntity is null) return;
+        if (bienniumEntity is null)
+            return;
         _context.Biennia.Remove(bienniumEntity);
         await _context.SaveChangesAsync();
     }
@@ -112,12 +105,11 @@ internal class BienniumRepository : IBienniumRepository
     private async Task<BienniumEntity?> MapToEntity(BienniumModel biennium)
     {
         var entity = await _context.Biennia.FirstOrDefaultAsync(b => b.Id == biennium.Id);
-        if (entity is null) return null;
-
+        if (entity is null)
+            return null;
         entity.Id = biennium.Id;
         entity.StartYear = biennium.StartYear;
         entity.EndYear = biennium.EndYear;
-
         return entity;
     }
 }

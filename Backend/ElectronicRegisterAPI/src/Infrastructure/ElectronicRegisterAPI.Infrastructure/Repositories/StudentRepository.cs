@@ -11,9 +11,9 @@ internal class StudentRepository : IStudentRepository
 {
     private readonly ElectronicRegisterContext _context;
     private readonly InstitutionExamDataScope? _scope;
-    private IQueryable<T> Rows<T>() where T : class => _scope?.Query<T>() ?? _context.Set<T>();
+    private IQueryable<T> Rows<T>()
+        where T : class => _scope?.Query<T>() ?? _context.Set<T>();
     private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync() : _scope.SaveAsync();
-
     public StudentRepository(ElectronicRegisterContext context, InstitutionExamDataScope? scope = null)
     {
         _context = context;
@@ -65,7 +65,8 @@ internal class StudentRepository : IStudentRepository
     public async Task UpdateAsync(Student student)
     {
         var entity = await MapToEntityAsync(student);
-        if (entity == null) return;
+        if (entity == null)
+            return;
         _context.Students.Update(entity);
         await SaveAsync();
     }
@@ -73,15 +74,13 @@ internal class StudentRepository : IStudentRepository
     public async Task DeleteAsync(Student student)
     {
         var entity = await MapToEntityAsync(student);
-        if (entity == null) return;
+        if (entity == null)
+            return;
         _context.Students.Remove(entity);
         await SaveAsync();
     }
 
-    private IQueryable<StudentEntity> VisibleToTeacher(Guid? teacherId) =>
-        Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Student>().AsNoTracking().Where(s => !teacherId.HasValue ||
-            (s.Class != null && s.Class.ClassSubjects.Any(cs => cs.TeacherId == teacherId.Value)));
-
+    private IQueryable<StudentEntity> VisibleToTeacher(Guid? teacherId) => Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Student>().AsNoTracking().Where(s => !teacherId.HasValue || (s.Class != null && s.Class.ClassSubjects.Any(cs => cs.TeacherId == teacherId.Value)));
     private static Student MapToModel(StudentEntity student)
     {
         return new Student
@@ -96,13 +95,12 @@ internal class StudentRepository : IStudentRepository
     private async Task<StudentEntity?> MapToEntityAsync(Student student)
     {
         var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Student>().FirstOrDefaultAsync(s => s.Id == student.Id);
-        if (entity is null) return null;
-
+        if (entity is null)
+            return null;
         entity.Id = student.Id;
         entity.FirstName = student.FirstName;
         entity.LastName = student.LastName;
         entity.ClassId = student.ClassId;
-
         return entity;
     }
 }

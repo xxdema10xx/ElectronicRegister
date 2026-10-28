@@ -1,4 +1,4 @@
-# Fase 4 — piani formativi ITS versionati
+cd # Fase 4 — piani formativi ITS versionati
 
 Implementazione persistente completata e verificata con esecuzioni dirette .NET,
 HTTP/Kestrel, MySQL 5.7.24 e Python. Nessuna evidenza manuale host è attribuita alla

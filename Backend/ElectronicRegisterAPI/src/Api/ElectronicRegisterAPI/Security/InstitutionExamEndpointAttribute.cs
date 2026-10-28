@@ -8,6 +8,5 @@ public sealed class InstitutionExamEndpointAttribute : AuthorizeAttribute
     public const string PolicyName = "InstitutionExamAccess";
     public const string RolloutKey = "Multitenancy:ExamApi:Enabled";
     public InstitutionExamEndpointAttribute() => Policy = PolicyName;
-    internal static bool Enabled(IConfiguration? configuration) => InstitutionSchoolEndpointAttribute.Enabled(configuration) &&
-        bool.TryParse(configuration?[RolloutKey], out var enabled) && enabled;
+    internal static bool Enabled(IConfiguration? configuration) => InstitutionSchoolEndpointAttribute.Enabled(configuration) && bool.TryParse(configuration?[RolloutKey], out var enabled) && enabled;
 }

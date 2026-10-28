@@ -4,6 +4,7 @@ public class UpdateExamDto
 {
     public Guid ClassSubjectId { get; set; }
     public Guid? RetakeOfExamId { get; set; }
+
     [System.Text.Json.Serialization.JsonIgnore]
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }

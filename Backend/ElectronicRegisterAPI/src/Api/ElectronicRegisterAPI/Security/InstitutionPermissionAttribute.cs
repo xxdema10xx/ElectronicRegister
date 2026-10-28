@@ -1,3 +1,5 @@
+using ElectronicRegisterAPI.Domain.Authorization;
+using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Models;
 using ElectronicRegisterAPI.Domain.Interfaces.Security;
 using Microsoft.AspNetCore.Mvc.Filters;

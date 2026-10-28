@@ -1,4 +1,4 @@
-﻿using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +12,6 @@ namespace ElectronicRegisterAPI.Api.Controllers;
 public class GradeController : ApiControllerBase
 {
     private readonly IGradeManager _gradeManager;
-
     public GradeController(IGradeManager gradeManager)
     {
         _gradeManager = gradeManager;
@@ -31,7 +30,8 @@ public class GradeController : ApiControllerBase
     public async Task<ActionResult<GradeStatisticsDto>> GetStatistics()
     {
         var statistics = await _gradeManager.GetStatisticsAsync(CurrentCaller());
-        return statistics is null ? NotFound() : Ok(statistics); ;
+        return statistics is null ? NotFound() : Ok(statistics);
+        ;
     }
 
     [HttpGet("filters")]
@@ -52,14 +52,7 @@ public class GradeController : ApiControllerBase
         [FromQuery] DateOnly? date = null
     )
     {
-        var grades = await _gradeManager.GetPagedAsync(
-            pageNumber,
-            pageSize,
-            subjectId,
-            studentId,
-            date,
-            CurrentCaller()
-        );
+        var grades = await _gradeManager.GetPagedAsync(pageNumber, pageSize, subjectId, studentId, date, CurrentCaller());
         return Ok(grades);
     }
 

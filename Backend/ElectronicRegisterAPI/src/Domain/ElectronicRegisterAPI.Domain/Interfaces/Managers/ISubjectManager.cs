@@ -1,4 +1,4 @@
-﻿using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.DTOs;
 
 namespace ElectronicRegisterAPI.Domain.Interfaces.Managers;
 

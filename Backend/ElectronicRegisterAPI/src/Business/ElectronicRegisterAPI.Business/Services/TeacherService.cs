@@ -7,7 +7,6 @@ namespace ElectronicRegisterAPI.Business.Services;
 internal class TeacherService : ITeacherService
 {
     private readonly IClassSubjectRepository _classSubjectRepository;
-
     public TeacherService(IClassSubjectRepository classSubjectRepository)
     {
         _classSubjectRepository = classSubjectRepository;

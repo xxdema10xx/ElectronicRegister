@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Authorization;
 using System;
 using System.Collections.Generic;
 using ElectronicRegisterAPI.Business.Services;

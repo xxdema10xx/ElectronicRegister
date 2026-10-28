@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Policies;
 using ElectronicRegisterAPI.Application.Services;
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
@@ -5,9 +6,15 @@ using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Application.Managers;
+
 internal sealed class InstitutionCampusManager(InstitutionSchoolAuthorization authorization, IInstitutionCampusRepository repository, ITransactionManager transactions) : IInstitutionCampusManager
 {
-    public async Task<InstitutionAcademicPage<InstitutionCampusDto>> ListAsync(int page, int size, bool? isActive, CancellationToken ct)
+    public async Task<InstitutionAcademicPage<InstitutionCampusDto>> ListAsync(
+        int page,
+        int size,
+        bool? isActive,
+        CancellationToken ct
+    )
     {
         var t = await authorization.AdminAsync(ct);
         InstitutionClassRules.Page(page, size);
@@ -30,7 +37,12 @@ internal sealed class InstitutionCampusManager(InstitutionSchoolAuthorization au
         return id;
     }
 
-    public async Task UpdateAsync(Guid id, UpdateInstitutionCampusDto dto, long revision, CancellationToken ct)
+    public async Task UpdateAsync(
+        Guid id,
+        UpdateInstitutionCampusDto dto,
+        long revision,
+        CancellationToken ct
+    )
     {
         var t = await authorization.AdminAsync(ct);
         dto = dto with

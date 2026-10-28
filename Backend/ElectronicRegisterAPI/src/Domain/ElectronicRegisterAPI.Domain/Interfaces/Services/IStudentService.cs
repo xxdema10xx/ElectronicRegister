@@ -1,10 +1,8 @@
-﻿using ElectronicRegisterAPI.Domain.Models;
+using ElectronicRegisterAPI.Domain.Models;
 
-namespace ElectronicRegisterAPI.Domain.Interfaces.Services
+namespace ElectronicRegisterAPI.Domain.Interfaces.Services;
 
+public interface IStudentService
 {
-    public interface IStudentService
-    {
-        Task<Student> EnsureStudentCanBeDeletedAsync(Guid studentId);
-    }
+    Task<Student> EnsureStudentCanBeDeletedAsync(Guid studentId);
 }

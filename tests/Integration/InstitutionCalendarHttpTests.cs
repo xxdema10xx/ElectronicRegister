@@ -1,3 +1,6 @@
+using ElectronicRegisterAPI.Domain.DTOs.Calendar;
+using ElectronicRegisterAPI.Domain.DTOs.FormativePlans;
+using ElectronicRegisterAPI.Domain.Enums;
 using System;
 using System.Linq;
 using System.Net;

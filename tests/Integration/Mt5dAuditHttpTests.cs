@@ -1,3 +1,6 @@
+using ElectronicRegisterAPI.Domain.DTOs.Governance;
+using ElectronicRegisterAPI.Domain.DTOs.Onboarding;
+using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using System;
 using System.Linq;
 using System.Net;

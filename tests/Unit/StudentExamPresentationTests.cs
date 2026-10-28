@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,7 +88,7 @@ public class StudentExamPresentationTests
     public void CorruptOrder_FailsClosed()
     {
         var exam = Template();
-        var json = JsonSerializer.Serialize(new StudentExamPresentation.Order(new[] { Guid.NewGuid() }, new()));
+        var json = JsonSerializer.Serialize(new ElectronicRegisterAPI.Domain.Persistence.Order(new[] { Guid.NewGuid() }, new()));
         Assert.Throws<InvalidOperationException>(() => StudentExamPresentation.Build(exam, json));
     }
 }

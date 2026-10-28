@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using E = ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
+
 internal sealed class InstitutionAcademicCatalogRepository(ElectronicRegisterContext db, InstitutionSchoolQueries q, InstitutionAdministrationPersistence audit) : IInstitutionAcademicCatalogRepository
 {
     private IQueryable<InstitutionStudyAreaDto> StudyAreaRows(TenantContext t, IQueryable<E.StudyArea> source)
@@ -16,7 +17,12 @@ internal sealed class InstitutionAcademicCatalogRepository(ElectronicRegisterCon
         return source.Select(r => new InstitutionStudyAreaDto(r.Id, r.Name, r.Description, events.Where(e => e.EntityType == "study_area" && e.EntityId == r.Id).Select(e => (long? )e.Revision).Max() ?? 0L));
     }
 
-    public async Task<InstitutionAcademicPage<InstitutionStudyAreaDto>> ListStudyAreaAsync(TenantContext t, int page, int size, CancellationToken ct)
+    public async Task<InstitutionAcademicPage<InstitutionStudyAreaDto>> ListStudyAreaAsync(
+        TenantContext t,
+        int page,
+        int size,
+        CancellationToken ct
+    )
     {
         InstitutionSchoolQueries.Admin(t);
         var rows = q.Owned<E.StudyArea>(t);
@@ -48,7 +54,13 @@ internal sealed class InstitutionAcademicCatalogRepository(ElectronicRegisterCon
         return id;
     }
 
-    public async Task UpdateStudyAreaAsync(TenantContext t, Guid id, UpdateInstitutionStudyAreaDto dto, long revision, CancellationToken ct)
+    public async Task UpdateStudyAreaAsync(
+        TenantContext t,
+        Guid id,
+        UpdateInstitutionStudyAreaDto dto,
+        long revision,
+        CancellationToken ct
+    )
     {
         await audit.WriteAsync(t, async () =>
         {
@@ -79,7 +91,12 @@ internal sealed class InstitutionAcademicCatalogRepository(ElectronicRegisterCon
         return source.Select(r => new InstitutionStudyPathDto(r.Id, r.Name, r.Description, events.Where(e => e.EntityType == "study_path" && e.EntityId == r.Id).Select(e => (long? )e.Revision).Max() ?? 0L));
     }
 
-    public async Task<InstitutionAcademicPage<InstitutionStudyPathDto>> ListStudyPathAsync(TenantContext t, int page, int size, CancellationToken ct)
+    public async Task<InstitutionAcademicPage<InstitutionStudyPathDto>> ListStudyPathAsync(
+        TenantContext t,
+        int page,
+        int size,
+        CancellationToken ct
+    )
     {
         InstitutionSchoolQueries.Admin(t);
         var rows = q.Owned<E.StudyPath>(t);
@@ -111,7 +128,13 @@ internal sealed class InstitutionAcademicCatalogRepository(ElectronicRegisterCon
         return id;
     }
 
-    public async Task UpdateStudyPathAsync(TenantContext t, Guid id, UpdateInstitutionStudyPathDto dto, long revision, CancellationToken ct)
+    public async Task UpdateStudyPathAsync(
+        TenantContext t,
+        Guid id,
+        UpdateInstitutionStudyPathDto dto,
+        long revision,
+        CancellationToken ct
+    )
     {
         await audit.WriteAsync(t, async () =>
         {
@@ -142,7 +165,12 @@ internal sealed class InstitutionAcademicCatalogRepository(ElectronicRegisterCon
         return source.Select(r => new InstitutionBienniumDto(r.Id, r.StartYear, r.EndYear, events.Where(e => e.EntityType == "biennium" && e.EntityId == r.Id).Select(e => (long? )e.Revision).Max() ?? 0L));
     }
 
-    public async Task<InstitutionAcademicPage<InstitutionBienniumDto>> ListBienniumAsync(TenantContext t, int page, int size, CancellationToken ct)
+    public async Task<InstitutionAcademicPage<InstitutionBienniumDto>> ListBienniumAsync(
+        TenantContext t,
+        int page,
+        int size,
+        CancellationToken ct
+    )
     {
         InstitutionSchoolQueries.Admin(t);
         var rows = q.Owned<E.Biennium>(t);
@@ -174,7 +202,13 @@ internal sealed class InstitutionAcademicCatalogRepository(ElectronicRegisterCon
         return id;
     }
 
-    public async Task UpdateBienniumAsync(TenantContext t, Guid id, UpdateInstitutionBienniumDto dto, long revision, CancellationToken ct)
+    public async Task UpdateBienniumAsync(
+        TenantContext t,
+        Guid id,
+        UpdateInstitutionBienniumDto dto,
+        long revision,
+        CancellationToken ct
+    )
     {
         await audit.WriteAsync(t, async () =>
         {
@@ -205,7 +239,12 @@ internal sealed class InstitutionAcademicCatalogRepository(ElectronicRegisterCon
         return source.Select(r => new InstitutionBienniumStudyAreaDto(r.Id, r.BienniumId, r.StudyAreaId, events.Where(e => e.EntityType == "biennium_study_area" && e.EntityId == r.Id).Select(e => (long? )e.Revision).Max() ?? 0L));
     }
 
-    public async Task<InstitutionAcademicPage<InstitutionBienniumStudyAreaDto>> ListBienniumStudyAreaAsync(TenantContext t, int page, int size, CancellationToken ct)
+    public async Task<InstitutionAcademicPage<InstitutionBienniumStudyAreaDto>> ListBienniumStudyAreaAsync(
+        TenantContext t,
+        int page,
+        int size,
+        CancellationToken ct
+    )
     {
         InstitutionSchoolQueries.Admin(t);
         var rows = q.Owned<E.BienniumStudyArea>(t);
@@ -259,7 +298,12 @@ internal sealed class InstitutionAcademicCatalogRepository(ElectronicRegisterCon
         return source.Select(r => new InstitutionBienniumStudyPathDto(r.Id, r.BienniumStudyAreaId, r.StudyPathId, events.Where(e => e.EntityType == "biennium_study_path" && e.EntityId == r.Id).Select(e => (long? )e.Revision).Max() ?? 0L));
     }
 
-    public async Task<InstitutionAcademicPage<InstitutionBienniumStudyPathDto>> ListBienniumStudyPathAsync(TenantContext t, int page, int size, CancellationToken ct)
+    public async Task<InstitutionAcademicPage<InstitutionBienniumStudyPathDto>> ListBienniumStudyPathAsync(
+        TenantContext t,
+        int page,
+        int size,
+        CancellationToken ct
+    )
     {
         InstitutionSchoolQueries.Admin(t);
         var rows = q.Owned<E.BienniumStudyPath>(t);

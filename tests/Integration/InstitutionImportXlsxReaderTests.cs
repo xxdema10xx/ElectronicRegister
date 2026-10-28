@@ -1,3 +1,6 @@
+using ElectronicRegisterAPI.Domain.Configuration;
+using ElectronicRegisterAPI.Domain.DTOs.Import;
+using ElectronicRegisterAPI.Domain.Exceptions;
 using System;
 using System.IO;
 using System.IO.Compression;

@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories
+namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+
+public interface ITransactionManager
 {
-    public interface ITransactionManager
-    {
-        Task ExecuteAsync(Func<Task> action, CancellationToken cancellationToken = default);
-    }
+    Task ExecuteAsync(Func<Task> action, CancellationToken cancellationToken = default);
 }

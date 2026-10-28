@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using E = ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
+
 internal sealed class InstitutionCampusRepository(ElectronicRegisterContext db, InstitutionSchoolQueries q, InstitutionAdministrationPersistence audit) : IInstitutionCampusRepository
 {
     private IQueryable<InstitutionCampusDto> Project(TenantContext t, IQueryable<E.Campus> rows)
@@ -16,7 +17,13 @@ internal sealed class InstitutionCampusRepository(ElectronicRegisterContext db, 
         return rows.Select(r => new InstitutionCampusDto(r.Id, r.Name, r.Address, r.City, r.Province, r.IsActive ?? true, events.Where(e => e.EntityType == "campus" && e.EntityId == r.Id).Select(e => (long? )e.Revision).Max() ?? 0L));
     }
 
-    public async Task<InstitutionAcademicPage<InstitutionCampusDto>> ListAsync(TenantContext t, int page, int size, bool? isActive, CancellationToken ct)
+    public async Task<InstitutionAcademicPage<InstitutionCampusDto>> ListAsync(
+        TenantContext t,
+        int page,
+        int size,
+        bool? isActive,
+        CancellationToken ct
+    )
     {
         InstitutionSchoolQueries.Admin(t);
         var rows = q.Owned<E.Campus>(t);
@@ -43,7 +50,13 @@ internal sealed class InstitutionCampusRepository(ElectronicRegisterContext db, 
         return id;
     }
 
-    public async Task UpdateAsync(TenantContext t, Guid id, UpdateInstitutionCampusDto dto, long revision, CancellationToken ct)
+    public async Task UpdateAsync(
+        TenantContext t,
+        Guid id,
+        UpdateInstitutionCampusDto dto,
+        long revision,
+        CancellationToken ct
+    )
     {
         await audit.WriteAsync(t, async () =>
         {

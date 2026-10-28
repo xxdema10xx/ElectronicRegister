@@ -11,3 +11,5 @@ operazioni firmate via CLI e non ottiene privilegi didattici. Rollout chiuso per
 default; chiavi reali e provider di challenge sono configurazione del proprietario.
 
 Governance, audit in lettura e recupero con doppia approvazione: [contratto MT-5D](docs/architecture/INSTITUTION_GOVERNANCE_AND_RECOVERY.md).
+
+Organizzazione del backend e controlli Roslyn: [guida](tools/CodeOrganization/README.md), [report del refactoring](docs/refactoring/CODE_ORGANIZATION_REPORT.md).

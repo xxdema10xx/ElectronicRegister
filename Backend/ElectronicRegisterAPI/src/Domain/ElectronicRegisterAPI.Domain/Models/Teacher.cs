@@ -1,4 +1,3 @@
-// Domain/Models/Teacher.cs
 namespace ElectronicRegisterAPI.Domain.Models;
 
 public class Teacher

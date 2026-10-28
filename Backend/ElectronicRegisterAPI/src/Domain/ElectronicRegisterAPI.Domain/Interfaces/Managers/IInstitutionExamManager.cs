@@ -32,7 +32,13 @@ public interface IInstitutionExamManager
     Task<List<GradeDto>> GradesAsync();
     Task<GradeDto?> GradeAsync(Guid id);
     Task<int> GradeCountAsync();
-    Task<GradePageDto> GradePageAsync(int pageNumber, int pageSize, Guid? subjectId, Guid? studentId, DateOnly? date);
+    Task<GradePageDto> GradePageAsync(
+        int pageNumber,
+        int pageSize,
+        Guid? subjectId,
+        Guid? studentId,
+        DateOnly? date
+    );
     Task<GradeFiltersDto> GradeFiltersAsync();
     Task<GradeStatisticsDto?> GradeStatisticsAsync();
     Task<Guid?> AddGradeAsync(CreateGradeDto dto);

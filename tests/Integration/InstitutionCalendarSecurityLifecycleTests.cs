@@ -1,3 +1,7 @@
+using ElectronicRegisterAPI.Domain.DTOs.Calendar;
+using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Exceptions;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using System;
 using System.Linq;
 using System.Net;

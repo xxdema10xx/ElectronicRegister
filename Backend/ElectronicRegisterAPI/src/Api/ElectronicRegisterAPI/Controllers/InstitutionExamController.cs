@@ -14,7 +14,7 @@ public sealed class InstitutionExamController(IInstitutionExamManager manager) :
     [HttpGet, Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     public async Task<ActionResult<List<ExamSummaryDto>>> GetAll() => Ok(await manager.ExamsAsync());
     [HttpGet("{id:guid}"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
-    public async Task<ActionResult<ExamDetailDto>> GetById(Guid id) => await manager.ExamAsync(id) is { } row ? Ok(row) : NotFound();
+    public async Task<ActionResult<ExamDetailDto>> GetById(Guid id) => await manager.ExamAsync(id)is { } row ? Ok(row) : NotFound();
     [HttpGet("assigned"), Authorize(Roles = "Student")]
     public async Task<ActionResult<List<AssignedExamDto>>> Assigned() => Ok(await manager.AssignedAsync());
     [HttpGet("{id:guid}/eligible-students"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
@@ -22,25 +22,59 @@ public sealed class InstitutionExamController(IInstitutionExamManager manager) :
     [HttpPost, Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     [InstitutionPermission(InstitutionPermission.ExamCreate)]
     public async Task<ActionResult<Guid>> Add(CreateExamDto dto)
-    { var id = await manager.CreateAsync(dto); return CreatedAtAction(nameof(GetById), new { id }, id); }
+    {
+        var id = await manager.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id }, id);
+    }
+
     [HttpPut("{id:guid}"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     [InstitutionPermission(InstitutionPermission.ExamUpdate)]
-    public async Task<IActionResult> Update(Guid id, UpdateExamDto dto) { await manager.UpdateAsync(id, dto); return NoContent(); }
+    public async Task<IActionResult> Update(Guid id, UpdateExamDto dto)
+    {
+        await manager.UpdateAsync(id, dto);
+        return NoContent();
+    }
+
     [HttpPut("{id:guid}/students"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     [InstitutionPermission(InstitutionPermission.ExamAssign)]
-    public async Task<IActionResult> Assign(Guid id, UpdateExamStudentsDto dto) { await manager.AssignAsync(id, dto); return NoContent(); }
+    public async Task<IActionResult> Assign(Guid id, UpdateExamStudentsDto dto)
+    {
+        await manager.AssignAsync(id, dto);
+        return NoContent();
+    }
+
     [HttpPost("{id:guid}/publish"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     [InstitutionPermission(InstitutionPermission.ExamPublish)]
-    public async Task<IActionResult> Publish(Guid id) { await manager.PublishAsync(id); return NoContent(); }
+    public async Task<IActionResult> Publish(Guid id)
+    {
+        await manager.PublishAsync(id);
+        return NoContent();
+    }
+
     [HttpPost("{id:guid}/close"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     [InstitutionPermission(InstitutionPermission.ExamClose)]
-    public async Task<IActionResult> Close(Guid id) { await manager.CloseAsync(id); return NoContent(); }
+    public async Task<IActionResult> Close(Guid id)
+    {
+        await manager.CloseAsync(id);
+        return NoContent();
+    }
+
     [HttpPost("{id:guid}/cancel"), Authorize(Roles = "InstitutionAdmin,Teacher")]
     [InstitutionPermission(InstitutionPermission.ExamCancel)]
-    public async Task<IActionResult> Cancel(Guid id) { await manager.CancelAsync(id); return NoContent(); }
+    public async Task<IActionResult> Cancel(Guid id)
+    {
+        await manager.CancelAsync(id);
+        return NoContent();
+    }
+
     [HttpDelete("{id:guid}"), Authorize(Roles = "InstitutionAdmin,Teacher")]
     [InstitutionPermission(InstitutionPermission.ExamDelete)]
-    public async Task<IActionResult> Delete(Guid id) { await manager.DeleteAsync(id); return NoContent(); }
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await manager.DeleteAsync(id);
+        return NoContent();
+    }
+
     [HttpPost("{id:guid}/start"), Authorize(Roles = "Student")]
     public async Task<ActionResult<StartExamDto>> Start(Guid id) => Ok(await manager.StartAsync(id));
     [HttpGet("{id:guid}/submissions"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]

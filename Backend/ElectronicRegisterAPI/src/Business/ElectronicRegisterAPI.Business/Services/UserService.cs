@@ -12,10 +12,8 @@ internal class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
-
     private readonly int _minFirstNameLength = 3;
     private readonly int _minLastNameLength = 2;
-
     public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher)
     {
         _userRepository = userRepository;
@@ -29,8 +27,7 @@ internal class UserService : IUserService
 
     private bool IsValidName(string firstName, string lastName)
     {
-        return !string.IsNullOrWhiteSpace(firstName) && firstName.Length >= _minFirstNameLength &&
-               !string.IsNullOrWhiteSpace(lastName) && lastName.Length >= _minLastNameLength;
+        return !string.IsNullOrWhiteSpace(firstName) && firstName.Length >= _minFirstNameLength && !string.IsNullOrWhiteSpace(lastName) && lastName.Length >= _minLastNameLength;
     }
 
     public void EnsureEmailIsValid(string? email)
@@ -88,7 +85,6 @@ internal class UserService : IUserService
     {
         if (user.StudentId != null)
             throw new BusinessRuleException("Questo utente ha un profilo studente collegato");
-
         if (user.TeacherId != null)
             throw new BusinessRuleException("Questo utente ha un profilo insegnante collegato");
     }
@@ -98,7 +94,5 @@ internal class UserService : IUserService
         "admin" => UserRole.Admin,
         "teacher" => UserRole.Teacher,
         "student" => UserRole.Student,
-        _ => throw new ArgumentException($"Ruolo non valido: {role}")
-    };
+        _ => throw new ArgumentException($"Ruolo non valido: {role}")};
 }
-

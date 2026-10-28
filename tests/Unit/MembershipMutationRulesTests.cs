@@ -1,3 +1,5 @@
+using ElectronicRegisterAPI.Domain.DTOs.Membership;
+using ElectronicRegisterAPI.Domain.Policies;
 using System;
 using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Exceptions;

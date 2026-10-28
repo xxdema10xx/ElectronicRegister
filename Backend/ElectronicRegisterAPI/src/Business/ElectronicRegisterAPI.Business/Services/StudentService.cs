@@ -6,10 +6,9 @@ using ElectronicRegisterAPI.Domain.Interfaces.Services;
 namespace ElectronicRegisterAPI.Business.Services;
 
 internal class StudentService : IStudentService
-{ 
+{
     private readonly IStudentRepository _studentRepository;
     private readonly IGradeRepository _gradeRepository;
-
     public StudentService(IStudentRepository studentRepository, IGradeRepository gradeRepository)
     {
         _studentRepository = studentRepository;

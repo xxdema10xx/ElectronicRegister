@@ -1,4 +1,4 @@
-﻿using ElectronicRegisterAPI.Infrastructure.Persistence;
+using ElectronicRegisterAPI.Infrastructure.Persistence;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using StudyPathModel = ElectronicRegisterAPI.Domain.Models.StudyPath;
 using StudyPathEntity = ElectronicRegisterAPI.Infrastructure.Persistence.Entities.StudyPath;
@@ -9,7 +9,6 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 internal class StudyPathRepository : IStudyPathRepository
 {
     private readonly ElectronicRegisterContext _context;
-
     public StudyPathRepository(ElectronicRegisterContext context)
     {
         _context = context;
@@ -60,8 +59,8 @@ internal class StudyPathRepository : IStudyPathRepository
     public async Task UpdateAsync(StudyPathModel studyPath)
     {
         var studyPathEntity = await MapToEntity(studyPath);
-        if (studyPathEntity is null) return;
-
+        if (studyPathEntity is null)
+            return;
         _context.StudyPaths.Update(studyPathEntity);
         await _context.SaveChangesAsync();
     }
@@ -69,7 +68,8 @@ internal class StudyPathRepository : IStudyPathRepository
     public async Task DeleteAsync(StudyPathModel studyPath)
     {
         var studyPathEntity = await MapToEntity(studyPath);
-        if (studyPathEntity is null) return;
+        if (studyPathEntity is null)
+            return;
         _context.StudyPaths.Remove(studyPathEntity);
         await _context.SaveChangesAsync();
     }
@@ -87,12 +87,11 @@ internal class StudyPathRepository : IStudyPathRepository
     private async Task<StudyPathEntity?> MapToEntity(StudyPathModel studyPath)
     {
         var entity = await _context.StudyPaths.FirstOrDefaultAsync(b => b.Id == studyPath.Id);
-        if (entity is null) return null;
-
+        if (entity is null)
+            return null;
         entity.Id = studyPath.Id;
         entity.Name = studyPath.Name;
         entity.Description = studyPath.Description;
-
         return entity;
     }
 }

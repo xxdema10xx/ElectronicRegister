@@ -130,7 +130,7 @@ public sealed partial class Mt3dHttpTests
             // Equal random permutations are legitimate: validate membership rather than inequality.
             foreach (var row in rows)
             {
-                var order = JsonSerializer.Deserialize<ElectronicRegisterAPI.Domain.Models.StudentExamPresentation.Order>(row.DisplayOrderJson!)!;
+                var order = JsonSerializer.Deserialize<ElectronicRegisterAPI.Domain.Persistence.Order>(row.DisplayOrderJson!)!;
                 Assert.Equal((row.ExamId == id ? exam : retake).Questions.Select(q => q.Id).OrderBy(x => x), order.Questions.OrderBy(x => x));
             }
         });

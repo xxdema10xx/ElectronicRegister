@@ -9,7 +9,6 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 internal class TeacherRepository : ITeacherRepository
 {
     private readonly ElectronicRegisterContext _context;
-
     public TeacherRepository(ElectronicRegisterContext context)
     {
         _context = context;
@@ -59,8 +58,8 @@ internal class TeacherRepository : ITeacherRepository
     public async Task UpdateAsync(Teacher teacher)
     {
         var teacherEntity = await MapToEntity(teacher);
-        if (teacherEntity is null) return;
-
+        if (teacherEntity is null)
+            return;
         _context.Teachers.Update(teacherEntity);
         await _context.SaveChangesAsync();
     }
@@ -68,7 +67,8 @@ internal class TeacherRepository : ITeacherRepository
     public async Task DeleteAsync(Teacher teacher)
     {
         var teacherEntity = await MapToEntity(teacher);
-        if(teacherEntity is null) return;
+        if (teacherEntity is null)
+            return;
         _context.Teachers.Remove(teacherEntity);
         await _context.SaveChangesAsync();
     }
@@ -86,12 +86,11 @@ internal class TeacherRepository : ITeacherRepository
     private async Task<TeacherEntity?> MapToEntity(Teacher teacher)
     {
         var entity = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == teacher.Id);
-        if (entity is null) return null;
-
+        if (entity is null)
+            return null;
         entity.Id = teacher.Id;
         entity.FirstName = teacher.FirstName;
         entity.LastName = teacher.LastName;
-
         return entity;
     }
 }

@@ -1,4 +1,5 @@
 namespace ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
+
 public sealed class InstitutionAdministrationEvent
 {
     public Guid InstitutionId { get; set; }

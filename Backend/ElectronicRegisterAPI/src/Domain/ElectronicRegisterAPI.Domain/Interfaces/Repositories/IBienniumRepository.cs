@@ -1,6 +1,7 @@
-﻿using ElectronicRegisterAPI.Domain.Models;
+using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+
 public interface IBienniumRepository
 {
     Task<int> CountAsync();
@@ -15,4 +16,3 @@ public interface IBienniumRepository
     Task UpdateAsync(Biennium biennium);
     Task DeleteAsync(Biennium biennium);
 }
-

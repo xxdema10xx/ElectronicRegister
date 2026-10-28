@@ -1,4 +1,5 @@
-﻿namespace ElectronicRegisterAPI.Domain.DTOs;
+namespace ElectronicRegisterAPI.Domain.DTOs;
+
 public class UpdateBienniumDto
 {
     public DateOnly StartYear { get; set; }

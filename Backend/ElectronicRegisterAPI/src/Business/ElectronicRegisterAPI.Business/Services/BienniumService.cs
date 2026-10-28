@@ -1,41 +1,42 @@
-﻿using ElectronicRegisterAPI.Domain.Interfaces.Services;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 
-namespace ElectronicRegisterAPI.Business.Services
+namespace ElectronicRegisterAPI.Business.Services;
+
+internal class BienniumService : IBienniumService
 {
-    internal class BienniumService : IBienniumService
+    private readonly IBienniumRepository _bienniumRepository;
+    private readonly int minYear = 2010;
+    public BienniumService(IBienniumRepository bienniumRepository)
     {
-        private readonly IBienniumRepository _bienniumRepository;
-        private readonly int minYear = 2010;
+        _bienniumRepository = bienniumRepository;
+    }
 
-        public BienniumService(IBienniumRepository bienniumRepository)
+    public void EnsureValidBienniumValue(DateOnly startYear, DateOnly endYear)
+    {
+        if (startYear.Year < minYear || endYear.Year < minYear || startYear >= endYear)
         {
-            _bienniumRepository = bienniumRepository;
+            throw new ArgumentException($"L'anno di inizio e di fine devono essere maggiori o uguali a {minYear}.");
         }
 
-        public void EnsureValidBienniumValue(DateOnly startYear, DateOnly endYear)
+        if (endYear.Year - startYear.Year != 2)
         {
-            if (startYear.Year < minYear || endYear.Year < minYear || startYear >= endYear)
-            {
-                throw new ArgumentException($"L'anno di inizio e di fine devono essere maggiori o uguali a {minYear}.");
-            }
-            if (endYear.Year - startYear.Year != 2)
-            {
-                throw new ArgumentException($"L'anno di fine deve essere esattamente due anni dopo {startYear}.");
-            }
+            throw new ArgumentException($"L'anno di fine deve essere esattamente due anni dopo {startYear}.");
         }
-        public async Task EnsureBienniumExistsAsync(Guid id)
-        {
-            var biennium = await _bienniumRepository.GetByIdAsync(id);
-            if (biennium == null) throw new KeyNotFoundException("Il biennio specificato non esiste.");
-        }
+    }
 
-        public async Task EnsureBienniumCanBeDeletedAsync(Guid bienniumId)
+    public async Task EnsureBienniumExistsAsync(Guid id)
+    {
+        var biennium = await _bienniumRepository.GetByIdAsync(id);
+        if (biennium == null)
+            throw new KeyNotFoundException("Il biennio specificato non esiste.");
+    }
+
+    public async Task EnsureBienniumCanBeDeletedAsync(Guid bienniumId)
+    {
+        if (await _bienniumRepository.HasStudyAreasAsync(bienniumId))
         {
-            if (await _bienniumRepository.HasStudyAreasAsync(bienniumId))
-            {
-                throw new InvalidOperationException("Impossibile eliminare il biennio: ha aree di studio associate.");
-            }
+            throw new InvalidOperationException("Impossibile eliminare il biennio: ha aree di studio associate.");
         }
     }
 }

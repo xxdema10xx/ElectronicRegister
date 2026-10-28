@@ -1,0 +1,158 @@
+{
+  "initialHead": "3cecefc205b1645d6235a43406182c8c96de96c2",
+  "branch": "refactor-database-entities",
+  "sdk": "10.0.401",
+  "restore": {
+    "command": "dotnet restore Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --locked-mode --ignore-failed-sources -p:NuGetAudit=false",
+    "exitCode": 0,
+    "note": "Cached package restore; vulnerability network audit omitted only for this command because NuGet endpoint unavailable."
+  },
+  "build": {
+    "build": 0,
+    "restore": 0
+  },
+  "tests": {
+    "test": 1
+  },
+  "organization": {
+    "files": 718,
+    "types": 714,
+    "violations": 0
+  },
+  "preservation": {
+    "checkedTypes": 714,
+    "generatedFilesUnchanged": 40,
+    "errors": []
+  },
+  "baselineComparison": {
+    "unit": {
+      "baseline": {
+        "total": "552",
+        "executed": "552",
+        "passed": "552",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "final": {
+        "total": "559",
+        "executed": "559",
+        "passed": "559",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "baselineResultCount": 552,
+      "finalResultCount": 559,
+      "changedOutcomes": [],
+      "addedTests": [
+        "ElectronicRegisterAPI.Tests.Unit.InstitutionImportFeatureAvailabilityTests.CallbackOverridesSnapshotAndIsEvaluatedForEveryRead(snapshot: True, initialAvailability: False)",
+        "ElectronicRegisterAPI.Tests.Unit.InstitutionImportFeatureAvailabilityTests.CallbackOverridesSnapshotAndIsEvaluatedForEveryRead(snapshot: False, initialAvailability: True)",
+        "ElectronicRegisterAPI.Tests.Unit.InstitutionImportFeatureAvailabilityTests.WithoutCallbackRequiresBothFlags(enabled: True, school: True, expected: True)",
+        "ElectronicRegisterAPI.Tests.Unit.InstitutionImportFeatureAvailabilityTests.WithoutCallbackRequiresBothFlags(enabled: False, school: True, expected: False)",
+        "ElectronicRegisterAPI.Tests.Unit.InstitutionImportFeatureAvailabilityTests.WithoutCallbackRequiresBothFlags(enabled: True, school: False, expected: False)",
+        "ElectronicRegisterAPI.Tests.Unit.InstitutionImportFeatureAvailabilityTests.CallbackIsExcludedFromJsonWhileComputedAvailabilityIsRetained",
+        "ElectronicRegisterAPI.Tests.Unit.InstitutionImportFeatureAvailabilityTests.WithoutCallbackRequiresBothFlags(enabled: False, school: False, expected: False)"
+      ],
+      "baselineTrx": "docs/refactoring/validation/baseline/baseline_net10.0_20261028170347.trx",
+      "finalTrx": "docs/refactoring/validation/final-current/final_net10.0_20261028172232.trx",
+      "baselineSha256": "552f4cc3ed54af6e0bb0228cd4f4ad2f476faa85b98f224ceb96348f8b94157f",
+      "finalSha256": "2fe0e392ee0e2b07ea90356fd2994867bf2c29219d4200786f46373b8ea4be0a",
+      "removedResultMultiset": []
+    },
+    "integration": {
+      "baseline": {
+        "total": "1418",
+        "executed": "1361",
+        "passed": "82",
+        "failed": "1279",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "final": {
+        "total": "1418",
+        "executed": "1361",
+        "passed": "82",
+        "failed": "1279",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "baselineResultCount": 1418,
+      "finalResultCount": 1418,
+      "changedOutcomes": [],
+      "addedTests": [],
+      "baselineTrx": "docs/refactoring/validation/baseline/baseline_net10.0_20261028170406.trx",
+      "finalTrx": "docs/refactoring/validation/final-current/final_net10.0_20261028172243.trx",
+      "baselineSha256": "d8acfc938d37b39d6c46cf2436c323619135981681ff9b399a18b4417f45b2cb",
+      "finalSha256": "d77130c09ef89c01921e8fb5f22d312ae3f7d8563df116170e59ced0c66cec85",
+      "removedResultMultiset": []
+    }
+  },
+  "negativeGuardCheck": {
+    "exitCode": 1,
+    "violationsDetected": 24,
+    "categoriesDetected": [
+      "compressed-parameters",
+      "compressed-statements",
+      "dependency",
+      "dependency-cycle",
+      "enum-location",
+      "exception-location",
+      "filename",
+      "interface-location",
+      "manager-contract-location",
+      "multiple-types",
+      "namespace",
+      "nested-type-review",
+      "repository-contract-location",
+      "source-dependency",
+      "syntax"
+    ]
+  },
+  "workingTree": {
+    "initial": "clean",
+    "final": "modified",
+    "stagedPaths": [],
+    "statusEntries": 751
+  }
+}

@@ -1,3 +1,6 @@
+using ElectronicRegisterAPI.Domain.DTOs.Import;
+using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using System;
 using System.Linq;
 using System.Net;

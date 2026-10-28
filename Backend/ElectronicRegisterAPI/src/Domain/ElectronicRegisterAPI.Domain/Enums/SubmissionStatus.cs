@@ -1,15 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ElectronicRegisterAPI.Domain.Enums
+namespace ElectronicRegisterAPI.Domain.Enums;
+
+public enum SubmissionStatus
 {
-    public enum SubmissionStatus
-    {
-        InProgress,
-        Graded,
-        PendingReview,
-        FailedAuto,
-        Finalized
-    }
+    InProgress,
+    Graded,
+    PendingReview,
+    FailedAuto,
+    Finalized
 }

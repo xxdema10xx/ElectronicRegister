@@ -13,17 +13,21 @@ namespace ElectronicRegisterAPI.Infrastructure.Security;
 internal class JwtTokenGenerator : IJwtTokenGenerator
 {
     private readonly JwtOptions _options;
-
     public JwtTokenGenerator(IOptions<JwtOptions> options)
     {
         _options = options.Value;
     }
 
-    public string Generate(Guid userId, string email, UserRole role, Guid? studentId, Guid? teacherId)
+    public string Generate(
+        Guid userId,
+        string email,
+        UserRole role,
+        Guid? studentId,
+        Guid? teacherId
+    )
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, userId.ToString()),
@@ -31,17 +35,11 @@ internal class JwtTokenGenerator : IJwtTokenGenerator
             new(ClaimTypes.Role, role.ToString().ToLowerInvariant()),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
-
-        if (studentId.HasValue) claims.Add(new Claim(CustomClaimTypes.StudentId, studentId.Value.ToString()));
-        if (teacherId.HasValue) claims.Add(new Claim(CustomClaimTypes.TeacherId, teacherId.Value.ToString()));
-
-        var token = new JwtSecurityToken(
-            issuer: _options.Issuer,
-            audience: _options.Audience,
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_options.ExpiresInMinutes),
-            signingCredentials: creds);
-
+        if (studentId.HasValue)
+            claims.Add(new Claim(CustomClaimTypes.StudentId, studentId.Value.ToString()));
+        if (teacherId.HasValue)
+            claims.Add(new Claim(CustomClaimTypes.TeacherId, teacherId.Value.ToString()));
+        var token = new JwtSecurityToken(issuer: _options.Issuer, audience: _options.Audience, claims: claims, expires: DateTime.UtcNow.AddMinutes(_options.ExpiresInMinutes), signingCredentials: creds);
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

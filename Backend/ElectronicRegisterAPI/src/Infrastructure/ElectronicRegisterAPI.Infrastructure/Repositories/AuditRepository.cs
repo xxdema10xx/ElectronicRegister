@@ -9,9 +9,9 @@ internal class AuditRepository : IAuditRepository
 {
     private readonly ElectronicRegisterContext _context;
     private readonly InstitutionExamDataScope? _scope;
-    private IQueryable<T> Rows<T>() where T : class => _scope?.Query<T>() ?? _context.Set<T>();
+    private IQueryable<T> Rows<T>()
+        where T : class => _scope?.Query<T>() ?? _context.Set<T>();
     private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync() : _scope.SaveAsync();
-
     public AuditRepository(ElectronicRegisterContext context, InstitutionExamDataScope? scope = null)
     {
         _context = context;
@@ -32,7 +32,6 @@ internal class AuditRepository : IAuditRepository
             RequestId = auditEvent.RequestId,
             CreatedAt = auditEvent.CreatedAt == default ? DateTime.UtcNow : auditEvent.CreatedAt
         };
-
         _context.AuditEvents.Add(entity);
         await SaveAsync();
     }

@@ -1,6 +1,7 @@
 using MySqlConnector;
 
 namespace ElectronicRegisterAPI.Infrastructure.Persistence.Migrations;
+
 // Read-only classification for explicit offline backfill preflight. Not an authorization path.
 internal static class InstitutionAdministrationIntegrity
 {

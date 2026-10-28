@@ -6,7 +6,16 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Services;
 
 public interface IExamSubmissionProcessor
 {
-    Task<SubmissionResultDto> ProcessSubmitAsync(Guid submissionId, SubmitExamDto? dto, SubmitReason reason, ClaimsContext? caller);
-    Task<SubmissionResultDto> ProcessInstitutionAsync(Guid submissionId, SubmitExamDto? dto, SubmitReason reason, ExamPrincipal principal) =>
-        throw new UnauthorizedAccessException("Processor istituzionale non configurato.");
+    Task<SubmissionResultDto> ProcessSubmitAsync(
+        Guid submissionId,
+        SubmitExamDto? dto,
+        SubmitReason reason,
+        ClaimsContext? caller
+    );
+    Task<SubmissionResultDto> ProcessInstitutionAsync(
+        Guid submissionId,
+        SubmitExamDto? dto,
+        SubmitReason reason,
+        ExamPrincipal principal
+    ) => throw new UnauthorizedAccessException("Processor istituzionale non configurato.");
 }

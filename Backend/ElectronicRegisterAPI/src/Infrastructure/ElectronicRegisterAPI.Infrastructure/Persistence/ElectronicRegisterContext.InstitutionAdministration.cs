@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
 namespace ElectronicRegisterAPI.Infrastructure.Persistence;
+
 public partial class ElectronicRegisterContext
 {
     private static void ConfigureInstitutionAdministration(ModelBuilder b)

@@ -1,3 +1,6 @@
+using ElectronicRegisterAPI.Domain.Results;
+using ElectronicRegisterAPI.Domain.DTOs.FormativePlans;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

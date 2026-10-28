@@ -1,13 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ElectronicRegisterAPI.Domain.Enums
+namespace ElectronicRegisterAPI.Domain.Enums;
+
+public enum SubmitReason
 {
-    public enum SubmitReason
-    {
-        Manual,
-        TimeExpired,
-        Violations
-    }
+    Manual,
+    TimeExpired,
+    Violations
 }

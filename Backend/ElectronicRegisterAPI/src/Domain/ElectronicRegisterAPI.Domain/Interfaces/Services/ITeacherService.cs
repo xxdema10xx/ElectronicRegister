@@ -1,7 +1,6 @@
-﻿namespace ElectronicRegisterAPI.Domain.Interfaces.Services
+namespace ElectronicRegisterAPI.Domain.Interfaces.Services;
+
+public interface ITeacherService
 {
-    public interface ITeacherService
-    {
-        Task EnsureTeacherCanBeDeletedAsync(Guid teacherId);
-    }
+    Task EnsureTeacherCanBeDeletedAsync(Guid teacherId);
 }

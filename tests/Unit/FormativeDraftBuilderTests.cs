@@ -1,3 +1,6 @@
+using ElectronicRegisterAPI.Domain.DTOs.FormativePlans;
+using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Policies;
 #nullable enable
 using System;
 using System.Linq;

@@ -1,14 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ElectronicRegisterAPI.Domain.Enums
+namespace ElectronicRegisterAPI.Domain.Enums;
+
+public enum ExamStatus
 {
-    public enum ExamStatus
-    {
-        Draft,
-        Published,
-        Closed,
-        Cancelled
-    }
+    Draft,
+    Published,
+    Closed,
+    Cancelled
 }

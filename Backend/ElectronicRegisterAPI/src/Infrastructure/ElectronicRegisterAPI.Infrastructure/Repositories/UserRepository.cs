@@ -11,7 +11,6 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 internal class UserRepository : IUserRepository
 {
     private readonly ElectronicRegisterContext _context;
-
     public UserRepository(ElectronicRegisterContext context)
     {
         _context = context;
@@ -50,14 +49,13 @@ internal class UserRepository : IUserRepository
     public async Task UpdateAsync(User user)
     {
         var entity = await _context.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
-        if (entity is null) return;
-
+        if (entity is null)
+            return;
         entity.Email = user.Email;
         entity.PasswordHash = user.PasswordHash;
         entity.Role = RoleMapper.ToDbString(user.Role);
         entity.StudentId = user.StudentId;
         entity.TeacherId = user.TeacherId;
-
         await _context.SaveChangesAsync();
     }
 
@@ -79,7 +77,6 @@ internal class UserRepository : IUserRepository
     private static User MapToModel(UserEntity entity)
     {
         var role = RoleMapper.FromDbString(entity.Role);
-
         return new User
         {
             Id = entity.Id,

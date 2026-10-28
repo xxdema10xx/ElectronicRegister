@@ -1,3 +1,9 @@
 namespace ElectronicRegisterAPI.Domain.Enums;
 
-public enum MembershipMutationAction { AddRole, RemoveRole, Suspend, Reactivate }
+public enum MembershipMutationAction
+{
+    AddRole,
+    RemoveRole,
+    Suspend,
+    Reactivate
+}

@@ -1,4 +1,4 @@
-﻿namespace ElectronicRegisterAPI.Domain.Constants;
+namespace ElectronicRegisterAPI.Domain.Constants;
 
 public static class CustomClaimTypes
 {

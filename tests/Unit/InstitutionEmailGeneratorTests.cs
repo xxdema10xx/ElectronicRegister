@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Enums;
 using System;
 using System.Linq;
 using ElectronicRegisterAPI.Business.Services;

@@ -1,3 +1,9 @@
+using ElectronicRegisterAPI.Infrastructure.Options;
+using ElectronicRegisterAPI.Domain.DTOs.Onboarding;
+using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
+using ElectronicRegisterAPI.Domain.Interfaces.Security;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;

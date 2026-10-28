@@ -1,3 +1,5 @@
+using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Policies;
 #nullable enable
 using System;
 using System.Collections.Generic;
