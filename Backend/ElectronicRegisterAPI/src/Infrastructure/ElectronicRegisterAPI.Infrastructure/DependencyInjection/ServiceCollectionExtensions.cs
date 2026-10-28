@@ -19,6 +19,12 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.TryAddSingleton<IConfiguration>(configuration);
+        services.AddSingleton(new ElectronicRegisterAPI.Domain.Models.CalendarFeature(() =>
+            bool.TryParse(configuration["Multitenancy:InstitutionCalendar:Enabled"],out var calendar) && calendar &&
+            bool.TryParse(configuration["Multitenancy:SchoolApi:Enabled"],out var calendarSchool) && calendarSchool));
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.IInstitutionCalendarRepository, InstitutionCalendarRepository>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Models.ICalendarImportFileReader, ElectronicRegisterAPI.Infrastructure.Services.InstitutionImportFileReader>();
+        services.TryAddSingleton<ElectronicRegisterAPI.Domain.Models.ICalendarFaultObserver, ElectronicRegisterAPI.Domain.Models.NoCalendarFault>();
         services.AddSingleton(new ElectronicRegisterAPI.Domain.Models.FormativePlanFeature(() =>
             bool.TryParse(configuration["Multitenancy:FormativePlans:Enabled"],out var enabled) && enabled &&
             bool.TryParse(configuration["Multitenancy:SchoolApi:Enabled"],out var school) && school &&

@@ -1,3 +1,4 @@
+from calendar_schema_contract import phase4_contract
 """Read-only Staff artifact/schema verifier. No Python database packages required."""
 import argparse
 import hashlib
@@ -17,6 +18,8 @@ def verify_files():
         assert hashlib.sha256(path.read_bytes()).hexdigest().upper() == expected, name
     schema = (ROOT / 'migrations/bootstrap/001_schema.sql').read_text(encoding='utf-8')
     contract = json.loads((ROOT / 'migrations/bootstrap/schema-contract.json').read_text(encoding='utf-8'))
+    assert contract['inventory'] == manifest['inventory']
+    contract = phase4_contract(ROOT, contract)
     assert "enum('InstitutionAdmin','Teacher','Student','Staff')" in contract['tables']['institution_membership_role']
     assert contract['inventory']['triggers'] == len(contract['triggers']) == len(contract['trigger_metadata']) == 153
     assert 'Staff audit append only' in schema

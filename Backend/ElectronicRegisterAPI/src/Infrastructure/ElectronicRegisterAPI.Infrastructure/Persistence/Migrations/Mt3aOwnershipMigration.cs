@@ -102,6 +102,7 @@ public static class Mt3aOwnershipMigration
         known.UnionWith(await InstitutionEmailIntegrity.ValidateIfPresentAsync(c, tx));
         known.UnionWith(await InstitutionImportIntegrity.ValidateIfPresentAsync(c, tx));
         known.UnionWith(await FormativePlanIntegrity.ValidateIfPresentAsync(c, tx));
+        known.UnionWith(await CalendarIntegrity.ValidateIfPresentAsync(c, tx));
         await using (var tables = new MySqlCommand("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()",c,tx))
         {
             await using var reader=await tables.ExecuteReaderAsync();
@@ -225,7 +226,7 @@ public static class Mt3aOwnershipMigration
         // Only their exact owner tables, names, types and collation are classified.
         // Email's database coordination singleton is an explicitly typed integer PK,
         // not a resource identifier. All other resource/tenant/actor keys stay Guid.
-        var wrong = Convert.ToInt64(await new MySqlCommand("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND (COLUMN_NAME='id' OR RIGHT(COLUMN_NAME,3)='_id') AND COLUMN_NAME<>'request_id' AND NOT(TABLE_NAME='institution_email_mutex' AND COLUMN_NAME='id' AND COLUMN_TYPE='int(11)' AND IS_NULLABLE='NO' AND COLUMN_KEY='PRI') AND NOT(((TABLE_NAME IN ('institution_onboarding_event','platform_operation_nonce') AND COLUMN_NAME IN ('operator_id','key_id')) OR (TABLE_NAME='institution_recovery_approval' AND COLUMN_NAME='operator_id')) AND COLUMN_TYPE='varchar(64)' AND COLLATION_NAME='ascii_bin') AND (COLUMN_TYPE<>'char(36)' OR COLLATION_NAME<>'ascii_general_ci')",c).ExecuteScalarAsync());
+        var wrong = Convert.ToInt64(await new MySqlCommand("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND (COLUMN_NAME='id' OR RIGHT(COLUMN_NAME,3)='_id') AND COLUMN_NAME<>'request_id' AND NOT(TABLE_NAME IN ('institution_calendar_settings','institution_lesson') AND COLUMN_NAME='time_zone_id' AND COLUMN_TYPE='varchar(128)' AND IS_NULLABLE='NO' AND COLLATION_NAME='utf8mb4_unicode_ci') AND NOT(TABLE_NAME='institution_email_mutex' AND COLUMN_NAME='id' AND COLUMN_TYPE='int(11)' AND IS_NULLABLE='NO' AND COLUMN_KEY='PRI') AND NOT(((TABLE_NAME IN ('institution_onboarding_event','platform_operation_nonce') AND COLUMN_NAME IN ('operator_id','key_id')) OR (TABLE_NAME='institution_recovery_approval' AND COLUMN_NAME='operator_id')) AND COLUMN_TYPE='varchar(64)' AND COLLATION_NAME='ascii_bin') AND (COLUMN_TYPE<>'char(36)' OR COLLATION_NAME<>'ascii_general_ci')",c).ExecuteScalarAsync());
         if (wrong != 0) throw new InvalidOperationException("Guid types/collations differ; review before migration.");
     }
 

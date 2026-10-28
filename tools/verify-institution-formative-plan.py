@@ -1,3 +1,4 @@
+from calendar_schema_contract import phase4_contract
 """Offline Phase 4 artifact/schema/evidence verifier. Never executes SQL or HTTP.
 
 Hash/contract checks do not constitute execution evidence; TRX files, if available,
@@ -29,9 +30,11 @@ def verify():
         require(ROOT in path.parents and digest(path)==sha,'Digest mismatch: '+name)
         require(subprocess.run(['git','check-ignore','--no-index','-q',name],cwd=ROOT).returncode==1,'Ignored artifact: '+name)
     contract=json.loads((ROOT/'migrations/bootstrap/schema-contract.json').read_text(encoding='utf-8-sig'))
+    require(contract['inventory']==manifest['inventory'],'Manifest inventory mismatch')
+    contract=phase4_contract(ROOT,contract)
     previous=json.loads((ROOT/'migrations/institution-formative-plan/predecessor-contract.json').read_text(encoding='utf-8-sig'))
     expected=dict(tables=60,triggers=153,fks=171,indexes=257)
-    require(contract['inventory']==manifest['inventory']==expected,'Wrong schema inventory')
+    require(contract['inventory']==expected,'Wrong schema inventory')
     require(previous['inventory']==dict(tables=52,triggers=129,fks=158,indexes=218),'Wrong predecessor')
     require(len(contract['tables'])==60 and len(contract['triggers'])==len(contract['trigger_metadata'])==153,'Incomplete schema contract')
     for key in ('tables','trigger_metadata','triggers'):
@@ -45,7 +48,7 @@ def verify():
     require(len(re.findall(r'FOREIGN KEY\(',migration))==13,'Migration FK mismatch')
     require('CHECK (' not in migration and 'DROP ' not in migration,'Unsupported or destructive SQL')
     bootstrap=(ROOT/'migrations/bootstrap/001_schema.sql').read_text(encoding='utf-8')
-    require(bootstrap.endswith(migration),'Bootstrap is missing exact additive SQL suffix')
+    require(migration in bootstrap,'Bootstrap is missing exact additive SQL suffix')
     for name in tables: require('`institution_id`' in contract['tables'][name],'Missing owner: '+name)
     for prefix in ('fu','fm','fmc','fmt'):
         for action in ('insert','update','delete'):

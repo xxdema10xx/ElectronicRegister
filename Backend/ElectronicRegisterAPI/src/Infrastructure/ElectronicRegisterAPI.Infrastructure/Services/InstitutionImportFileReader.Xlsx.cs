@@ -10,7 +10,8 @@ namespace ElectronicRegisterAPI.Infrastructure.Services;
 
 public sealed partial class InstitutionImportFileReader
 {
-    private static ImportTable ReadWorkbook(byte[] bytes,string hash,ImportParsingOptions options,ImportParserLimits limits,CancellationToken ct)
+    private static ImportTable ReadWorkbook(byte[] bytes,string hash,ImportParsingOptions options,ImportParserLimits limits,CancellationToken ct,
+        Func<Cell,WorkbookPart,IReadOnlyList<string>,int,string>? calendarNumericCell=null)
     {
         if(options.Delimiter is not null)throw new ImportInputException("InvalidParsingOptions","Il separatore è un'opzione CSV.");
         try
@@ -86,7 +87,11 @@ public sealed partial class InstitutionImportFileReader
                         value=strings[id];
                     }
                     else if(value.Length>0&&cell.DataType?.Value!=CellValues.InlineString&&cell.DataType?.Value!=CellValues.String)
-                        throw BadWorkbook("UnsupportedCellType","Usare celle testo per nomi e riferimenti; numeri, date, booleani ed errori non vengono convertiti.");
+                    {
+                        if(calendarNumericCell is not null && records.Count>0 && (cell.DataType is null || cell.DataType.Value==CellValues.Number))
+                            value=calendarNumericCell(cell,workbook,records[0].Cells,column-1);
+                        else throw BadWorkbook("UnsupportedCellType","Usare celle testo per nomi e riferimenti; numeri, date, booleani ed errori non vengono convertiti.");
+                    }
                     if(value.Length>limits.MaxCellCharacters)throw BadWorkbook("CellTooLong","Lunghezza massima cella superata.");
                     cells.Add(value);lastColumn=column;
                 }
@@ -99,6 +104,7 @@ public sealed partial class InstitutionImportFileReader
             return new(hash,"xlsx",headers,rows);
         }
         catch(ImportInputException){throw;}
+        catch(CalendarValidationException e) {throw BadWorkbook(e.Code,"Valore calendario Excel non valido.");}
         catch(Exception e)when(e is InvalidDataException or IOException or OpenXmlPackageException or XmlException or FormatException or ArgumentException or OverflowException or InvalidOperationException or NotSupportedException or KeyNotFoundException)
         {throw BadWorkbook("MalformedWorkbook","Struttura XLSX non valida o non supportata.");}
     }

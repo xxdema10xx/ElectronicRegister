@@ -150,3 +150,5 @@ __pycache__/
 /.formative-private/
 !/migrations/institution-formative-plan/001_expand.sql
 !/migrations/institution-formative-plan/002_validate.sql
+!/migrations/institution-calendar/001_expand.sql
+!/migrations/institution-calendar/002_validate.sql

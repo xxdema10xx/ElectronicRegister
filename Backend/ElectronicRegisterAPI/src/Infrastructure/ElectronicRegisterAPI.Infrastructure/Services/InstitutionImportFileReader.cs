@@ -5,9 +5,14 @@ using ElectronicRegisterAPI.Domain.Models;
 namespace ElectronicRegisterAPI.Infrastructure.Services;
 
 /// <summary>Bounded UTF-8 CSV reader and supported Open XML SDK adapter with ZIP/XML preflight.</summary>
-public sealed partial class InstitutionImportFileReader : IInstitutionImportFileReader
+public sealed partial class InstitutionImportFileReader : IInstitutionImportFileReader, ICalendarImportFileReader
 {
-    public async Task<ImportTable> ReadAsync(Stream input,string fileName,ImportParsingOptions options,ImportParserLimits limits,CancellationToken ct=default)
+    public Task<ImportTable> ReadAsync(Stream input,string fileName,ImportParsingOptions options,ImportParserLimits limits,CancellationToken ct=default)
+        => ReadCoreAsync(input,fileName,options,limits,null,ct);
+
+    private async Task<ImportTable> ReadCoreAsync(Stream input,string fileName,ImportParsingOptions options,ImportParserLimits limits,
+        Func<DocumentFormat.OpenXml.Spreadsheet.Cell,DocumentFormat.OpenXml.Packaging.WorkbookPart,IReadOnlyList<string>,int,string>? calendarNumericCell,
+        CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(input);ArgumentNullException.ThrowIfNull(options);ArgumentNullException.ThrowIfNull(limits);
         limits.Validate();
@@ -26,7 +31,7 @@ public sealed partial class InstitutionImportFileReader : IInstitutionImportFile
             await bytes.WriteAsync(buffer.AsMemory(0,read),ct);
         }
         var raw=bytes.ToArray();var hash=Convert.ToHexString(SHA256.HashData(raw));
-        if(extension==".xlsx")return ReadWorkbook(raw,hash,options,limits,ct);
+        if(extension==".xlsx")return ReadWorkbook(raw,hash,options,limits,ct,calendarNumericCell);
         if(options.WorksheetName is not null)throw new ImportInputException("InvalidParsingOptions","La selezione del foglio richiede XLSX.");
         string text;
         try{text=new UTF8Encoding(false,true).GetString(raw);}

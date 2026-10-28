@@ -1,3 +1,4 @@
+from calendar_schema_contract import phase4_contract
 """Offline institutional bulk-import schema/artifact verifier. Never connects to SQL."""
 import hashlib
 import json
@@ -16,7 +17,9 @@ def verify():
         assert hashlib.sha256(path.read_bytes()).hexdigest().upper() == digest, name
         assert subprocess.run(['git', 'check-ignore', '--no-index', '-q', name], cwd=ROOT).returncode == 1, name
     contract = json.loads((ROOT / 'migrations/bootstrap/schema-contract.json').read_text(encoding='utf-8'))
-    assert contract['inventory'] == manifest['inventory'] == dict(tables=60, triggers=153, fks=171, indexes=257)
+    assert contract['inventory'] == manifest['inventory']
+    contract = phase4_contract(ROOT, contract)
+    assert contract['inventory'] == dict(tables=60, triggers=153, fks=171, indexes=257)
     assert len(contract['tables']) == 60 and len(contract['triggers']) == len(contract['trigger_metadata']) == 153
     previous = json.loads((ROOT / 'migrations/institution-import/predecessor-contract.json').read_text(encoding='utf-8'))
     assert previous['inventory'] == dict(tables=48, triggers=117, fks=145, indexes=199)

@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddBusinessServices(this IServiceCollection services)
     {
+        services.AddSingleton<ElectronicRegisterAPI.Domain.Models.ICalendarImportRules, CalendarImportRules>();
         services.AddSingleton<ElectronicRegisterAPI.Domain.Models.IInstitutionEmailGenerator, InstitutionEmailGenerator>();
         services.AddSingleton<ElectronicRegisterAPI.Domain.Models.IFormativeDraftBuilder, FormativeDraftBuilder>();
         services.AddSingleton<ElectronicRegisterAPI.Domain.Models.IInstitutionImportRules, InstitutionImportRules>();

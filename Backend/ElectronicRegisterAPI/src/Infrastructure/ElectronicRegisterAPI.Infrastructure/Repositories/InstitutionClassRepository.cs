@@ -101,6 +101,16 @@ internal sealed class InstitutionClassRepository(ElectronicRegisterContext db, I
             command.Transaction = db.Database.CurrentTransaction!.GetDbTransaction();
             command.CommandText = "SELECT DISTINCT TABLE_NAME,CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_SCHEMA=DATABASE() AND REFERENCED_TABLE_NAME='class'";
             var known = new HashSet<string> { "student:fk_student_class", "student:fk_mt3a_student_class", "class_subject:fk_cs_class", "class_subject:fk_mt3a_cs_class", "course_administration_event:fk_mt4c_class", "student_class_transfer_event:fk_transfer_from_class", "student_class_transfer_event:fk_transfer_to_class" };
+            // Recognize the additive calendar only after validating its complete SQL inventory.
+            // Keep the fail-closed check for every other new FK and preserve empty legacy deletion.
+            var calendar=await ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.CalendarIntegrity.ValidateIfPresentAsync(
+                (MySqlConnection)db.Database.GetDbConnection(),(MySqlTransaction)db.Database.CurrentTransaction!.GetDbTransaction());
+            if(calendar.Length>0)
+            {
+                known.Add("institution_calendar_period:fk_cal_period_class");
+                if(await db.Set<E.InstitutionCalendarPeriodRecord>().AnyAsync(p=>p.InstitutionId==t.InstitutionId&&p.ClassId==id,ct))
+                    throw new BusinessRuleException("La classe contiene uno storico calendario.");
+            }
             await using (var reader = await command.ExecuteReaderAsync(ct))
                 while (await reader.ReadAsync(ct))
                     if (!known.Remove(reader.GetString(0) + ":" + reader.GetString(1))) throw new BusinessRuleException("Inventario dipendenze classe da aggiornare.");

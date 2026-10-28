@@ -180,6 +180,7 @@ public partial class ElectronicRegisterContext
         ConfigureInstitutionEmails(modelBuilder);
         ConfigureInstitutionImports(modelBuilder);
         ConfigureFormativePlans(modelBuilder);
+        ConfigureInstitutionCalendar(modelBuilder);
 
     }
 }
