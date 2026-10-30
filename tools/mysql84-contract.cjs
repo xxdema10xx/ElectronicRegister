@@ -8,14 +8,17 @@ function legacyScopeCollation(source){
 function tableDdl(name,source){
  return ddl(name==='mt3a_legacy_scope'?legacyScopeCollation(source).replace(/^  `scope` enum\('legacy'\) NOT NULL,$/m,"  `scope` enum('legacy') COLLATE utf8mb4_general_ci NOT NULL,"):source);
 }
-// Expected header only: preserve quoted identifiers, whitespace, DEFINER and body.
+// Expected header only: quote identifiers and derive the 8.4 ROW/BEGIN separator.
+// Preserve all body bytes, DEFINER and every other whitespace boundary.
 // Never apply this derivation to observed server DDL.
 function triggerDdl(source){
  const identifier='(?:`(?:``|[^`])+`|[A-Za-z0-9_$]+)';
  const header=new RegExp('^(CREATE (?:DEFINER=`[^`]+`@`[^`]+` )?TRIGGER\\s+)('+identifier+')(\\s+(?:BEFORE|AFTER)\\s+(?:INSERT|UPDATE|DELETE)\\s+ON\\s+)('+identifier+')(?=\\s+FOR\\s+EACH\\s+ROW\\b)');
  if(!header.test(source))throw Error('Unsupported historical trigger header');
  const quote=name=>name.startsWith('`')?name:'`'+name+'`';
- return source.replace(header,(_,prefix,name,middle,table)=>prefix+quote(name)+middle+quote(table));
+ const match=header.exec(source);
+ const prefix=match[1]+quote(match[2])+match[3]+quote(match[4]);
+ return prefix+source.slice(match[0].length).replace(/^(\s+FOR EACH ROW)\r?\n(?=BEGIN\b)/,'$1 ');
 }
 function sql(source){
  // ROW_NUMBER is reserved in 8.x. Qualified NEW.row_number stays legal/unchanged.

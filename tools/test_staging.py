@@ -321,6 +321,26 @@ class StagingTests(unittest.TestCase):
                 migration=next((folder/'bundle').glob('01-*.sql'))
                 migration.write_text(migration.read_text()+'\n-- tampered\n')
                 with self.assertRaisesRegex(RuntimeError,'hash mismatch'):ops.compatibility()
+    def test_schema_audit_blocks_and_publishes_only_hash_records(self):
+        record=dict(category='trigger',id='base-trigger-ddl',object='calendar_assignment_binding_bu',difference='ddl',expectedHash='A'*64,actualHash='B'*64)
+        with mock.patch.object(ops.subprocess,'run',return_value=mock.Mock(returncode=1,stdout=json.dumps(record)+'\n',stderr='SQL secret')),mock.patch.object(ops,'saved') as saved,mock.patch('sys.stdout',new_callable=io.StringIO) as stdout:
+            with self.assertRaisesRegex(RuntimeError,'staging blocked'):ops.audit()
+            self.assertEqual(json.loads(stdout.getvalue()),record)
+            self.assertEqual(saved.call_args.args[1],[record])
+        with mock.patch.object(ops.subprocess,'run',return_value=mock.Mock(returncode=0,stdout='',stderr='')),mock.patch.object(ops,'saved'):
+            ops.audit()
+
+    def test_provision_audits_only_after_all_journal_steps(self):
+        text=(ROOT/'infra/staging/ops.py').read_text()
+        provision=text.split('def provision(config):',1)[1].split('def audit():',1)[0]
+        self.assertLess(provision.index('journal.apply(file.name'),provision.index('    audit()'))
+        self.assertLess(provision.index('    audit()'),provision.index('    preflight()'))
+        # A started record is rejected by Journal before control can reach audit.
+        with tempfile.TemporaryDirectory() as folder,mock.patch.object(ops,'STATE',Path(folder)),mock.patch.object(ops,'mysql') as sql:
+            (Path(folder)/'journal.json').write_text(json.dumps({'migration':dict(state='started',hash=ops.sha(b'SQL'))}))
+            with self.assertRaises(RuntimeError):ops.Journal().apply('migration','SQL')
+            sql.assert_not_called()
+
     def test_seed_has_explicit_roles_owners_and_no_bypass(self):
         import uuid
         names=('tenant_a','tenant_b','biennium_a','biennium_b','area_a','area_b','path_a','path_b','bsa_a','bsa_b','bsp_a','bsp_b','class_a','class_b','teacher','student','subject','assignment')

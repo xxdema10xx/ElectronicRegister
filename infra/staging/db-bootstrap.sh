@@ -19,7 +19,7 @@ GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER,INDEX,REFERENCES,TRIGGER,CRE
 GRANT CREATE USER,SET_ANY_DEFINER ON *.* TO 'er_migrator'@'$ER_STAGE_SQL_HOST';
 GRANT SELECT(User,Host,plugin,ssl_type,account_locked) ON mysql.user TO 'er_migrator'@'$ER_STAGE_SQL_HOST' WITH GRANT OPTION;
 GRANT SHOW_ROUTINE ON *.* TO 'er_migrator'@'$ER_STAGE_SQL_HOST' WITH GRANT OPTION;
-GRANT SELECT ON er_stage_control.identity TO 'er_migrator'@'$ER_STAGE_SQL_HOST';
+GRANT SELECT ON er_stage_control.identity TO 'er_migrator'@'$ER_STAGE_SQL_HOST' WITH GRANT OPTION;
 SQL
 unset password
 printf '8.4.13:%s' "$ER_STAGE_ID" > /var/lib/mysql/.er-engine

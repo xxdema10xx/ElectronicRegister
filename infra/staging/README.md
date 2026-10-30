@@ -309,3 +309,36 @@ Un passo parziale resta bloccato anche dopo il riavvio: conservare le prove priv
 per la diagnosi manuale, senza cancellare journal o bundle e senza ripetere DDL.
 
 La preparazione locale non è un PASS Docker/TLS/EC2. Prima di dichiarare lo staging collaudato servono run Actions della SHA pubblicata, build e startup reali, driver TLS positivo/negativi, preflight/UID/binding corretti e smoke HTTPS completi attraverso l'Nginx host. Questo runbook non assegna READY Production né riapre gli audit conclusi.
+
+### Audit completo MySQL 8.4.13
+
+`provision` esegue `release-preflight.cjs --audit` dopo tutti i passi SQL del
+journal e prima del preflight finale. Stessi contratti e confronti del preflight,
+con raccolta delle differenze indipendenti; qualsiasi differenza blocca il gate.
+Un journal parziale continua a impedire la riesecuzione delle migrazioni.
+
+Copertura: inventario esatto di 71 tabelle, 180 trigger e una procedura (nessuna
+funzione); SHOW CREATE delle 71 tabelle e dei 174 trigger storici; corpi dei sei
+trigger additivi; evento, timing, tabella target, SQL mode, charset/collation e
+DEFINER; corpo, sicurezza, accesso SQL e metadati di creazione della routine;
+esistenza del proprietario; 26 colonne, 18 parti di indice, sette FK e 13 colonne
+FK additive; clausole strutturali storiche tramite DDL e prerequisiti readiness.
+I contatori e timestamp volatili non fanno parte del contratto.
+
+L'audit richiede lo staging Docker temporaneo, il suo identificatore nel database,
+MySQL 8.4.13, er_review non-root e TLS VERIFY_IDENTITY. Esegue solo SELECT/SHOW:
+valuta il SELECT readiness versionato senza chiamare una routine potenzialmente
+alterata. Il report `ops/schema-audit.json` e le righe pubblicate contengono solo
+category, id, object, difference, expectedHash e actualHash. Nessun valore SQL o
+messaggio del provider viene incluso. Un guasto di identita/configurazione blocca
+subito; gli errori di lettura successivi sono raccolti senza interrompere gli
+altri controlli indipendenti.
+
+La run 41134588468 (7973f844) ha mostrato l'hash
+5039D672316C43F43964EDA8185A6D74785CFB8E7B922FE84DAB617F0928AF4D per
+calendar_assignment_binding_bu. Il test offline riproduce esattamente questo
+SHA256 e verifica i 21 header storici FOR EACH ROW seguiti da newline e BEGIN:
+solo l'atteso 8.4 usa uno spazio. Corpo e artefatti 5.7 restano immutati.
+Il test simulato comprende differenze simultanee e i negativi per corpo, evento,
+timing, target, SQL mode, collation e DEFINER. La prova reale e il gate Docker
+GitHub Actions: i test offline non attestano un PASS del server provisionato.

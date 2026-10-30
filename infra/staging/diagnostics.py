@@ -8,13 +8,13 @@ SQL_STEPS={'00-login-users','00-principals.sql','01-001_schema.sql',
            '02-001_identity_account.sql','03-002_profile_acquisition.sql',
            '04-003_password_attempt.sql','05-004_release_schema.sql',
            '06-005_release_gate.sql','99-routine-grants.sql','synthetic-seed'}
-PHASES={'precheck','bundle-generation','account-creation','migrations','preflight'}
+PHASES={'precheck','bundle-generation','account-creation','migrations','preflight','schema-audit'}
 
 CHECKS={'configuration':'configuration','database-identity':'identity','contract-load':'contract',
-        'base-table-ddl':'table','additive-table-ddl':'table','base-trigger-mode':'trigger',
+        'base-table-collation':'table','base-column-collation':'column','table-inventory':'table','routine-inventory':'routine','additive-columns':'metadata','additive-indexes':'metadata','additive-foreignKeys':'metadata','additive-keyColumns':'metadata','base-table-ddl':'table','additive-table-ddl':'table','base-trigger-mode':'trigger',
         'base-trigger-charset':'trigger','base-trigger-ddl':'trigger','trigger-inventory':'trigger',
-        'additive-trigger-metadata':'trigger','additive-trigger-ddl':'trigger',
-        'routine-metadata':'routine','routine-body':'routine','routine-definer':'definer',
+        'additive-trigger-charset':'trigger','additive-trigger-metadata':'trigger','additive-trigger-ddl':'trigger',
+        'routine-parameters':'routine','routine-metadata':'routine','routine-body':'routine','routine-definer':'definer',
         'trigger-definer':'definer','definer-account':'definer','readiness-probe':'metadata'}
 
 def preflight_check(value):
@@ -25,12 +25,12 @@ def preflight_check(value):
     additive=json.loads((root/'migrations/release/additive-contract.json').read_text())
     triggers=set(base['triggers'])|{t['TRIGGER_NAME'] for t in additive['triggers']}
     objects={'configuration':{'release'},'identity':{'database'},'contract':{'release'},
-             'table':set(base['tables'])|set(additive['tables']), 'trigger':triggers|{'inventory'},
-             'routine':{'er_schema_ready'},'definer':triggers|{'er_schema_ready','schema-owner'},
-             'metadata':{'er_schema_ready'}}
+             'column':{'mt3a_legacy_scope.scope'},'table':set(base['tables'])|set(additive['tables'])|{'inventory'}, 'trigger':triggers|{'inventory'},
+             'routine':{'er_schema_ready','inventory'},'definer':triggers|{'er_schema_ready','schema-owner'},
+             'metadata':{'er_schema_ready','inventory'}|set(additive['tables'])}
     if not isinstance(value.get('object'),str) or value['object'] not in objects[value['category']]:return None
     result={k:value[k] for k in ('id','category','object')}
-    if value.get('difference') in ('ddl','body') and all(re.fullmatch(r'[A-F0-9]{64}',str(value.get(k))) for k in ('expectedHash','actualHash')):
+    if value.get('difference') in ('ddl','body','parameters','deterministic','comment','charset','collation','database_collation','mode','TABLE_COLLATION','COLLATION_NAME','DEFINER','SQL_MODE','CHARACTER_SET_CLIENT','COLLATION_CONNECTION','DATABASE_COLLATION','EVENT_OBJECT_TABLE','EVENT_MANIPULATION','ACTION_TIMING','SECURITY_TYPE','SQL_DATA_ACCESS','account','ready','inventory','columns','indexes','foreignKeys','keyColumns') and all(re.fullmatch(r'[A-F0-9]{64}',str(value.get(k))) for k in ('expectedHash','actualHash')):
         result.update({k:value[k] for k in ('difference','expectedHash','actualHash')})
     return result
 

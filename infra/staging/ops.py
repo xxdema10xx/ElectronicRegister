@@ -135,6 +135,7 @@ def provision(config):
         password=Path('/run/secrets/'+file).read_text()
         require(len(password)==64 and all(c in '0123456789abcdef' for c in password),'Unexpected generated credential format')
         user_sql.append(f"CREATE USER '{user}'@'{binding['apiHost']}' IDENTIFIED WITH caching_sha2_password BY '{password}' REQUIRE SSL;")
+    user_sql.append(f"GRANT SELECT ON er_stage_control.identity TO 'er_review'@'{binding['apiHost']}';")
     journal.apply('00-login-users','\n'.join(user_sql))
     phase('migrations')
     derived=json.loads((bundle/'binding.json').read_text())
@@ -146,7 +147,19 @@ def provision(config):
     for file in sorted(bundle.glob('*.sql')):
         phase('account-creation' if file.name=='00-principals.sql' else 'migrations',file.name)
         journal.apply(file.name,file.read_text())
+    audit()
     preflight()
+
+def audit():
+    # Migrations are journaled and complete before this read-only integration gate.
+    phase('schema-audit')
+    result=subprocess.run(['node',str(ROOT/'tools/release-preflight.cjs'),str(PUBLIC/'preflight.json'),'--audit'],text=True,capture_output=True)
+    records=[json.loads(line) for line in result.stdout.splitlines() if line]
+    allowed={'category','id','object','difference','expectedHash','actualHash'}
+    require(all(set(row)==allowed for row in records),'Invalid audit report')
+    saved(STATE/'schema-audit.json',records)
+    for row in records:print(json.dumps(row),flush=True)
+    require(result.returncode==0 and not records,'Schema audit failed; staging blocked')
 
 def preflight():
     phase('preflight')
