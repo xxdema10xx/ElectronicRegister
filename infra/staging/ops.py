@@ -40,10 +40,11 @@ def mysql(statement,review=False):
     return process(['mysql','--defaults-extra-file='+cnf,'--batch','--raw','--skip-column-names','--default-character-set=utf8mb4'],statement)
 
 def identity(config):
-    require(config.get('format')==2 and config.get('mysql_version')==MYSQL['version'] and config.get('mysql_image')==MYSQL['image'], 'Wrong staging engine/state: use a fresh namespace')
-    row=json.loads(mysql("SELECT JSON_OBJECT('version',VERSION(),'host',@@hostname,'port',@@port,'dir',@@datadir,'secure',@@global.require_secure_transport,'ssl',@@global.have_ssl,'openssl',@@global.have_openssl,'tls',@@global.tls_version,'id',(SELECT id FROM er_stage_control.identity))"))
-    require(row==dict(version=MYSQL['version'],host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,
-                      ssl='YES',openssl='YES',tls='TLSv1.2',id=config['id']), 'Database identity/ownership/OpenSSL/secure transport mismatch')
+    require(config.get('format')==3 and config.get('mysql_version')==MYSQL['version'] and config.get('mysql_image')==MYSQL['image'], 'Wrong staging engine/state: use a fresh namespace')
+    row=json.loads(mysql("SELECT JSON_OBJECT('version',VERSION(),'host',@@hostname,'port',@@port,'dir',@@datadir,'secure',@@global.require_secure_transport,'binlog',@@global.log_bin,'standard_fk',@@global.restrict_fk_on_non_standard_key,'openssl',@@global.version_ssl_library,'tls',@@global.tls_version,'id',(SELECT id FROM er_stage_control.identity))"))
+    require(row==dict(version=MYSQL['version'],host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,binlog=0,standard_fk=1,
+                      openssl=row.get('openssl'),tls='TLSv1.2',id=config['id']), 'Database identity/ownership/OpenSSL/secure transport mismatch')
+    require(row['openssl'].startswith('OpenSSL '), 'OpenSSL runtime required')
     protocol=mysql("SHOW SESSION STATUS LIKE 'Ssl_version'").split('\t')[-1]
     cipher=mysql("SHOW SESSION STATUS LIKE 'Ssl_cipher'").split('\t')[-1]
     require(protocol=='TLSv1.2' and cipher, 'A successful TLS 1.2 session is required before DDL')
@@ -87,7 +88,7 @@ def provision(config):
     for user,file in [('er_api','api-password'),('er_review','review-password')]:
         password=Path('/run/secrets/'+file).read_text()
         require(len(password)==64 and all(c in '0123456789abcdef' for c in password),'Unexpected generated credential format')
-        user_sql.append(f"CREATE USER '{user}'@'{binding['apiHost']}' IDENTIFIED BY '{password}' REQUIRE SSL;")
+        user_sql.append(f"CREATE USER '{user}'@'{binding['apiHost']}' IDENTIFIED WITH caching_sha2_password BY '{password}' REQUIRE SSL;")
     journal.apply('00-login-users','\n'.join(user_sql))
     derived=json.loads((bundle/'binding.json').read_text())
     for item in derived['records']:
@@ -108,6 +109,7 @@ def compatibility():
     base=json.loads((ROOT/'migrations/bootstrap/schema-contract.json').read_text())
     additive=json.loads((ROOT/'migrations/release/additive-contract.json').read_text())
     binding=json.loads((STATE/'bundle/binding.json').read_text())
+    require(binding.get('mysqlSeries')=='8.4', 'Wrong SQL compatibility variant')
     manifest=json.loads((ROOT/'migrations/release/manifest.json').read_text())
     require([r['source'] for r in binding['records']]==manifest['requiredMigrations'],'Incomplete migration closure')
     journal=Journal().records
@@ -124,9 +126,17 @@ def compatibility():
     tables=len(set(base['tables'])|set(additive['tables']))
     triggers=len(set(base['triggers'])|{t['TRIGGER_NAME'] for t in additive['triggers']})
     require(counts==dict(tables=tables,triggers=triggers),'Unexpected/missing staging schema objects')
+    accounts=json.loads(mysql("SELECT JSON_ARRAYAGG(JSON_OBJECT('user',User,'host',Host,'plugin',plugin,'ssl',ssl_type,'locked',account_locked)) FROM mysql.user WHERE User IN ('er_migrator','er_review','er_api','er_stage_definer')"))
+    require(len(accounts)==4 and len({a['user'] for a in accounts})==4, 'Unexpected staging account topology')
+    for account in accounts:
+        require(account['plugin']=='caching_sha2_password', 'Legacy authentication plugin rejected')
+        if account['user']=='er_stage_definer':
+            require(account['host']=='%' and account['locked']=='Y', 'Definer must be locked')
+        else:
+            require(account['host']==binding['api'].split('@')[1] and account['ssl']=='ANY' and account['locked']=='N', 'Login TLS/host policy mismatch')
     saved(STATE/'compatibility-result.json',dict(version=MYSQL['version'],**counts,procedures=1,storedFunctions=0,
           definer=binding['definer'],migrations=[r['source'] for r in binding['records']],
-          provisioningSteps=steps,preflightVerified=True,runtimeVerified=True))
+          provisioningSteps=steps,accounts=accounts,preflightVerified=True,runtimeVerified=True))
 
 def tls():
     preflight()

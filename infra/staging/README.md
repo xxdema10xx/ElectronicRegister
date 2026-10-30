@@ -1,51 +1,52 @@
 # Staging EC2: API Docker, MySQL privato, Nginx sull'host
 
-## Target temporaneo: MySQL 5.7.44 / OpenSSL
+## Target: MySQL 8.4 LTS, nuova istanza
 
-Lo staging usa esclusivamente `mysql:5.7.44@sha256:dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da`,
-Docker Official Image `library/mysql`, linux/amd64, UID/GID 999:999. Il manifest,
-il config e i layer ispezionati sono stati verificati tramite SHA256 dal registry:
-[evidenze](../../docs/quality/staging-evidence/mysql-5.7.44-registry.json).
-Il binario estratto riporta 5.7.44, dipendenze OpenSSL e capacità TLS 1.2.
-Queste sono prove statiche: build controlla nuovamente versione/UID/GID/piattaforma
-ed esegue il binario; attestation e driver devono poi dimostrare TLS 1.2 reale.
-Il candidato yaSSL 5.7.24 del run 41109867548 è stato sostituito solo qui;
-ambienti locali, contratti SQL storici e suite 5.7.24 rimangono invariati.
+Staging usa esclusivamente `mysql:8.4.13@sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b`,
+Docker Official Image `library/mysql`, linux/amd64. Registry, config e layer passwd/group
+sono verificati tramite SHA256: [evidenze](../../docs/quality/staging-evidence/mysql-8.4-registry.json).
+UID/GID mysql: 999:999; build e verifica PID 1 ripetono i controlli runtime.
+Origine: Oracle Linux 9 slim; release MySQL 8.4.13 del 20 ottobre 2026.
 
-La policy revisionata è `mysql-image.json`. Non sono ammessi override del digest
-nel workflow. Gli stati hanno formato 2 e versione motore esplicita: gli stati
-precedenti vengono rifiutati, senza avviare, aggiornare o riutilizzare i loro volumi.
-Preparare sempre un nuovo stato/namespace per il passaggio a 5.7.44. Per fermare
-un vecchio stato usare il suo checkout originale e la relativa procedura.
-Non migrare automaticamente dati o reimpiegare directory MySQL esistenti.
+Stato formato **3**, namespace/rete/credenziali/volume nuovi. Gli stati 5.7 e i volumi
+non vuoti privi del marker esatto motore/UUID vengono rifiutati. Il marker viene scritto
+solo alla fine del bootstrap della nuova istanza. Nessun upgrade in-place o import dati.
+Un bootstrap parziale blocca il riavvio automatico del provisioning.
 
-In caso di errore Actions esegue `host.py --state "$STATE" diagnostics` prima dello
-stop: stato/exit/OOM/restart, ultime sonde, log db/volume-init, UID e permessi dei
-mount, replay health e variabili SQL non sensibili. I segreti generati, credenziali
-fixture, PEM, token e password vengono sanitizzati in memoria prima della stampa
-JSON. I marker del bootstrap distinguono inizio/completamento/errore SQL.
+Il binding SQL esplicito `mysqlSeries: 8.4` applica regole versionate in
+`tools/mysql84-contract.cjs`: rimozione del solo SQL mode obsoleto
+`NO_AUTO_CREATE_USER`, metadata interi senza display width e rigenerazione della
+routine 005 dal contratto revisionato. I sorgenti SQL storici e la baseline 5.7.24
+restano invariati. Collation utf8mb4_unicode_ci, FK, indici, corpi trigger e vincoli
+restano verificati; differenze sconosciute bloccano il preflight.
 
-Il comando `compatibility`, eseguito dopo `provision`, richiede journal completo,
-hash sorgente/bundle/journal coerenti, preflight esatto, 71 tabelle, 180 trigger,
-la procedura `er_schema_ready` con DEFINER esplicito e nessuna stored function
-(il bundle canonico non ne contiene). Non attenua le verifiche su definizioni o
-SQL_MODE per accomodare differenze di versione: ogni divergenza blocca il gate.
-`start` verifica inoltre un HTTP 200 reale da loopback senza seguire redirect.
+Migratore separato con CREATE USER e SET_ANY_DEFINER, senza SUPER; reviewer con
+SHOW_ROUTINE e visibilit? metadata; API con soli CRUD/EXECUTE. Account login
+caching_sha2_password REQUIRE SSL e definer ACCOUNT LOCK. Il binary log viene
+disattivato soltanto su questa istanza effimera, priva di replica/PITR, per evitare
+SUPER nella creazione dei trigger; nessuna disabilitazione dei controlli FK.
+Il protocollo X non ? necessario ed ? disattivato. Le sessioni SQL TCP richiedono
+TLS 1.2 e CA/hostname verificati (driver VerifyFull).
 
-**Release gate bloccato:** nessun Docker locale disponibile. Senza pubblicare la
-revisione non è possibile far eseguire le modifiche a GitHub Actions: checkout,
-SHA e manifest devono coincidere e il checkout deve essere pulito. Nessun commit,
-push, dispatch del vecchio codice o PASS Docker è stato eseguito qui.
-Per EC2 servono prima run verdi della nuova SHA, compatibilità/TLS/UID/binding
-positivi e una successiva autorizzazione alla fase EC2; HTTPS/Nginx rimane un gate
-separato. MySQL 5.7.44/Oracle Linux 7 è un target legacy temporaneo, non una
-certificazione di sicurezza o supporto per un deployment Production.
+Il workflow esegue build, provisioning ordinato, journal, 71 tabelle/180 trigger,
+routine/DEFINER/account, preflight, TLS positivo e negativi CA/hostname, rollback,
+deadlock, lock timeout, verifica privilegi API, seed, readiness/UID/porte e HTTP
+loopback reale con JWT, tenant, Exam/Submission/Grade, calendario e replay.
+`host.py http` simula il proxy fidato solo sulla porta loopback: non certifica
+HTTPS pubblico. `host.py smoke` mantiene la verifica HTTPS pubblica separata.
 
-**Stato: preparato localmente, collaudo Docker/EC2/TLS ancora da eseguire.** Nessun collegamento EC2, modifica Nginx/certificati, commit, push o deployment è stato effettuato per preparare questi file. Il backend e le remediation concluse non sono rifattorizzati. Le istruzioni server sotto richiedono una successiva autorizzazione esplicita; non sono una sua sostituzione.
+La diagnostica sanitizzata include la fase del probe .NET e tipi/codici eccezione,
+senza messaggi o connection string. Non considera errori di rete prova del rifiuto
+del certificato: i negativi richiedono il preciso errore certificate policy.
+
+**Docker/TLS runtime non certificati localmente:** Docker non ? disponibile.
+GitHub Actions deve eseguire queste modifiche sulla stessa SHA pubblicata del manifest
+e delle immagini. Nessun commit/push/dispatch, accesso EC2 o modifica Nginx effettuati.
+Vedere [report](../../docs/quality/MYSQL_84_MIGRATION_REPORT.md) per esiti e gate residui.
 
 ## Architettura e file
 
-Internet → Nginx **esistente sull'host**, nuova vhost `staging.consoliprojects.dev` → `127.0.0.1:18080` → API non-root 1654 → TLS 1.2/VerifyFull/CA esplicita → MySQL 5.7.44 non-root 999 su bridge dedicato, **senza ports**. Il progetto/volume/rete hanno nomi casuali e label di ownership. Nessun Nginx container e nessun Docker socket nei container.
+Internet → Nginx **esistente sull'host**, nuova vhost `staging.consoliprojects.dev` → `127.0.0.1:18080` → API non-root 1654 → TLS 1.2/VerifyFull/CA esplicita → MySQL 8.4.13 non-root 999 su bridge dedicato, **senza ports**. Il progetto/volume/rete hanno nomi casuali e label di ownership. Nessun Nginx container e nessun Docker socket nei container.
 
 - `compose.yaml`: API, SQL, inizializzatore di permessi del solo volume nuovo, operator job separati.
 - `host.py`: prepara stato/certificati/secret, controlla esclusivamente il daemon locale e i propri oggetti; nessuna funzione SSH, Nginx, delete/down/prune.
@@ -100,7 +101,7 @@ command -v docker && sudo docker version
 command -v docker && sudo docker compose version
 ```
 
-Richiesti **Ubuntu supportata, x86_64, Docker Engine ≥28, Compose ≥2.24**, Git, Python 3 e OpenSSL. Il manifest pubblico verificato per MySQL 5.7.44 è solo linux/amd64: niente emulazione Graviton o upgrade MySQL automatici. [Digest controllato](../../docs/quality/staging-evidence/mysql-5.7.44-registry.json) fissato nel preparatore; l'esistenza del manifest **non dimostra TLS**.
+Richiesti **Ubuntu supportata, x86_64, Docker Engine ≥28, Compose ≥2.24**, Git, Python 3 e OpenSSL. Il manifest pubblico verificato per MySQL 8.4.13 è solo linux/amd64: niente emulazione Graviton o upgrade MySQL automatici. [Digest controllato](../../docs/quality/staging-evidence/mysql-8.4-registry.json) fissato nel preparatore; l'esistenza del manifest **non dimostra TLS**.
 
 Docker ≥28 è richiesto anche per la corretta segregazione della pubblicazione loopback. Il controllo è coerente con le [limitazioni delle porte pubblicate](https://docs.docker.com/engine/network/port-publishing/). Mantenere le regole AWS esistenti e non aprire 18080/3306: non sono porte Internet. Verificare che il daemon non abbia configurazioni di routing diretto inattese. Il tool non modifica security group, firewall o routing operativo.
 
@@ -181,9 +182,9 @@ sudo python3 infra/staging/host.py --state "$STATE" verify
 
 Build verifica UID e versione del binario MySQL, etichetta SHA dell'API e coerenza fra source manifest e bundle copiato dall'immagine. Le immagini effettive vengono congelate per ID in images.json. Tag/digest o checkout differenti vengono rifiutati. Il volume-init può cambiare il proprietario della sola directory vuota appena creata; su dati presenti controlla soltanto l'owner. Non fa chown ricorsivi o wipe.
 
-La prima inizializzazione **del database** crea solo namespace vuoto, record di ownership e login migratore. L'API non applica DDL. `provision` è un comando one-shot esplicito: TLS 1.2 effettivo, VerifyIdentity, CA, UUID, VERSION=5.7.44, hostname, datadir e require_secure_transport devono corrispondere prima del bootstrap. Poi crea i login API/reviewer REQUIRE SSL, deriva i definer espliciti ACCOUNT LOCK e applica bootstrap+001–005+grant finali.
+La prima inizializzazione **del database** crea solo namespace vuoto, record di ownership e login migratore. L'API non applica DDL. `provision` è un comando one-shot esplicito: TLS 1.2 effettivo, VerifyIdentity, CA, UUID, VERSION=8.4.13, hostname, datadir e require_secure_transport devono corrispondere prima del bootstrap. Poi crea i login API/reviewer REQUIRE SSL, deriva i definer espliciti ACCOUNT LOCK e applica bootstrap+001–005+grant finali.
 
-Journal e lock su file condiviso impediscono due provisioning contemporanei. Un passo completato con lo stesso hash non viene rieseguito; un passo `started` o con hash diverso **blocca**, perché le DDL 5.7 non sono transazionali. Non cancellare il journal per forzare il verde. Ripetere `provision` completo equivale a verifica/preflight, non a replay delle SQL. 005 elimina i grant della routine e il passo 99 li riapplica.
+Journal e lock su file condiviso impediscono due provisioning contemporanei. Un passo completato con lo stesso hash non viene rieseguito; un passo `started` o con hash diverso **blocca**, perché il bundle DDL non ? una singola transazione. Non cancellare il journal per forzare il verde. Ripetere `provision` completo equivale a verifica/preflight, non a replay delle SQL. 005 elimina i grant della routine e il passo 99 li riapplica.
 
 L'API ha CRUD sul solo schema ed EXECUTE sulla routine, senza DDL/SUPER/GRANT. Il migratore è privilegiato ma disponibile solo al job operatore sul nuovo DB. Il reviewer ha la visibilità metadata necessaria a MySQL 5.7; nessuna di queste credenziali viene montata nell'API. Lo stato SQL normale non contiene marker di bypass o session variable di fixture.
 

@@ -29,16 +29,18 @@ def jwt(token,key,purpose,user,tenant=None):
     if tenant:require(body.get('institution_id')==tenant,'JWT tenant mismatch')
     return body
 
-def run(config,state):
+def run(config,state,loopback=False,key_file=None):
     require((state/'seed-result.json').exists(),'Run the explicit synthetic seed job first')
-    seed=json.loads((state/'seed.json').read_text());ids=seed['ids'];key=Path('/run/secrets/jwt-key').read_text()
+    seed=json.loads((state/'seed.json').read_text());ids=seed['ids'];key=Path(key_file or '/run/secrets/jwt-key').read_text()
     require(seed['stage_id']==config['id'],'Seed belongs to another staging')
-    base='https://'+config['domain']
+    base=('http://127.0.0.1:'+str(config['port'])) if loopback else 'https://'+config['domain']
     context=ssl.create_default_context() # Public Nginx certificate, CA/hostname validation enabled.
     opener=urllib.request.build_opener(NoRedirect(),urllib.request.HTTPSHandler(context=context))
     checks=[]
     def request(name,path,expected,method='GET',body=None,token=None,headers=None):
         hdr=dict(headers or {})
+        if loopback:
+            hdr.update({'Host':config['domain'],'X-Forwarded-Proto':'https'})
         if token:hdr['Authorization']='Bearer '+token
         if body is not None:hdr['Content-Type']='application/json'
         req=urllib.request.Request(base+path,data=None if body is None else json.dumps(body).encode(),headers=hdr,method=method)
@@ -69,6 +71,13 @@ def run(config,state):
     request('tampered-signature','/api/institution/classes',401,token='.'.join(parts))
     request('foreign-membership-selection','/api/Auth/select-institution',403,'POST',{'institutionId':ids['tenant_b'],'membershipId':seed['accounts']['admin_b']['membership']},tickets['admin_a'])
     request('foreign-class-hidden','/api/institution/classes/'+ids['class_a'],404,token=tokens['admin_b'])
+    for name in ('admin_a','admin_b'):
+        command={'eventId':str(uuid.uuid4()),'expectedRevision':-1,'timeZoneId':'Europe/Rome','approvalLeadDays':7,'reason':'Synthetic MySQL 8.4 compatibility probe'}
+        receipt,_=request('calendar-configure-'+name,'/api/institution/calendar/settings',200,'PUT',command,tokens[name])
+        replay,_=request('calendar-configure-replay-'+name,'/api/institution/calendar/settings',200,'PUT',command,tokens[name])
+        require(receipt==replay,'Calendar configuration replay changed receipt')
+    request('calendar-settings','/api/institution/calendar/settings',200,token=tokens['admin_a'])
+    request('foreign-calendar-class-hidden','/api/institution/calendar/months/2100/9/classes/'+ids['class_a'],404,token=tokens['admin_b'])
     for name in ('admin_a','admin_b'):
         page,_=request('classes-'+name,'/api/institution/classes',200,token=tokens[name])
         own=ids['class_'+seed['accounts'][name]['tenant']]
@@ -111,5 +120,5 @@ def run(config,state):
     require(allowed.get('Access-Control-Allow-Origin')=='https://consoliprojects.dev','Allowed CORS origin missing')
     _,denied=request('cors-denied','/api/institution/classes',204,'OPTIONS',headers={'Origin':'https://not-allowed.invalid','Access-Control-Request-Method':'GET'})
     require(denied.get('Access-Control-Allow-Origin') is None,'Unexpected CORS origin accepted')
-    result={'stage':config['id'],'base':base,'httpsCertificateVerified':True,'jwtSignaturesVerified':True,'checks':checks}
+    result={'stage':config['id'],'base':base,'httpsCertificateVerified':not loopback,'loopbackProxySimulation':loopback,'jwtSignaturesVerified':True,'checks':checks}
     dest=state/('http-smoke-'+str(time.time_ns())+'.json');dest.write_text(json.dumps(result,indent=2)+'\n');dest.chmod(0o600)

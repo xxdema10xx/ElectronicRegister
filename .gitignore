@@ -160,3 +160,5 @@ __pycache__/
 !/migrations/identity-account/004_release_schema.sql
 !/migrations/identity-account/005_release_gate.sql
 /infra/staging/__pycache__/
+
+/.migration-tools/

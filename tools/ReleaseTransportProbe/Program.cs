@@ -12,8 +12,12 @@ original["TlsVersion"]="TLS 1.2";
 var wrongHost=config.GetProperty("wrongHost").GetString()!;var wrongCa=config.GetProperty("wrongCaFile").GetString()!;
 if(wrongHost==original.Server||!File.Exists(wrongCa)||File.ReadAllBytes(wrongCa).SequenceEqual(File.ReadAllBytes(original.SslCa)))throw new InvalidOperationException("Independent wrong-host alias and wrong CA required.");
 var results=new List<object>();bool valid=false;
+var phase="driver-handshake";
+try
+{
 foreach(var scenario in new[]{"valid","wrong-host","wrong-ca"})
 {
+    phase=scenario+"-handshake";
     if(scenario!="valid"&&!valid)throw new InvalidOperationException("Positive TLS handshake failed; negative certificate results would be inconclusive.");
     var settings=new MySqlConnectionStringBuilder(original.ConnectionString);
     if(scenario=="wrong-host")settings.Server=wrongHost;if(scenario=="wrong-ca")settings.SslCa=wrongCa;
@@ -21,6 +25,7 @@ foreach(var scenario in new[]{"valid","wrong-host","wrong-ca"})
     {
         await using var connection=new MySqlConnection(settings.ConnectionString);await connection.OpenAsync();
         if(scenario!="valid")throw new InvalidOperationException("Invalid certificate was accepted.");
+        phase="positive-protocol-and-schema";
         await using var protocol=new MySqlCommand("SHOW SESSION STATUS LIKE 'Ssl_version'",connection);await using var reader=await protocol.ExecuteReaderAsync();
         if(!await reader.ReadAsync()||reader.GetString(1)!="TLSv1.2")throw new InvalidOperationException("Required protocol was not negotiated.");
         await reader.DisposeAsync();await using var ready=new MySqlCommand("CALL er_schema_ready()",connection);
@@ -30,10 +35,28 @@ foreach(var scenario in new[]{"valid","wrong-host","wrong-ca"})
     catch(MySqlException error)when(scenario!="valid")
     {
         bool certificate=false;
-        for(Exception? inner=error;inner is not null;inner=inner.InnerException)if(inner is AuthenticationException)certificate=true;
+        var expectedError=scenario=="wrong-host"?"RemoteCertificateNameMismatch":"RemoteCertificateChainErrors";
+        for(Exception? inner=error;inner is not null;inner=inner.InnerException)
+            if(inner is AuthenticationException && inner.Message.Contains(expectedError,StringComparison.Ordinal))certificate=true;
         // DNS/connection refusal/timeout alone never proves certificate validation.
         if(!certificate)throw new InvalidOperationException("Negative scenario did not establish a TLS authentication failure.");
-        results.Add(new{scenario,connected=false,certificateAuthenticationFailed=true});
+        results.Add(new{scenario,connected=false,certificateAuthenticationFailed=true,policyError=expectedError});
     }
 }
-Console.WriteLine(JsonSerializer.Serialize(results,new JsonSerializerOptions{WriteIndented=true}));
+phase="sql-regression";
+var regression=await SqlRegression.Run(original);
+Console.WriteLine(JsonSerializer.Serialize(new{tls=results,regression},new JsonSerializerOptions{WriteIndented=true}));
+}
+catch(Exception failure)
+{
+    // Bounded diagnostic fields; never serialize connection strings or exception messages.
+    var chain=new List<object>();
+    for(Exception? error=failure;error is not null;error=error.InnerException)
+        chain.Add(new{type=error.GetType().Name,hresult=error.HResult,mysqlCode=error is MySqlException mysql?(int?)mysql.Number:null,
+            nameMismatch=error.Message.Contains("RemoteCertificateNameMismatch",StringComparison.Ordinal),
+            chainError=error.Message.Contains("RemoteCertificateChainErrors",StringComparison.Ordinal)});
+    var diagnostic=JsonSerializer.Serialize(new{success=false,phase,chain,completed=results});
+    File.WriteAllText(Path.Combine(Path.GetDirectoryName(Path.GetFullPath(args[0]))!,"transport-failure.json"),diagnostic);
+    Console.Error.WriteLine(diagnostic);
+    Environment.ExitCode=1;
+}

@@ -9,27 +9,31 @@ const hash=s=>crypto.createHash('sha256').update(s.replaceAll('\r\n','\n')).dige
 const canonical=['migrations/bootstrap/001_schema.sql','001_identity_account.sql','002_profile_acquisition.sql','003_password_attempt.sql','004_release_schema.sql','005_release_gate.sql'].map((f,n)=>n?'migrations/identity-account/'+f:f);
 if(manifest.format!==2||manifest.release!=='er-quality-1'||JSON.stringify(manifest.requiredMigrations)!==JSON.stringify(canonical))throw Error('Invalid input release closure');
 const account=prefix=>"'"+config[prefix+'User']+"'@'"+config[prefix+'Host']+"'",db='`'+config.database+'`',owner=account('definer');
+if(config.mysqlSeries && config.mysqlSeries!=='8.4')throw Error('Unsupported SQL engine variant');
+const mysql84=config.mysqlSeries==='8.4',adapter=require('./mysql84-contract.cjs');
 const records=[];fs.mkdirSync(out,{recursive:true});
 const additive=JSON.parse(fs.readFileSync(path.join(sourceRoot,'migrations/release/additive-contract.json'),'utf8'));
 if(hash(fs.readFileSync(path.join(sourceRoot,'migrations/release/additive-contract.json'),'utf8'))!==manifest.files['migrations/release/additive-contract.json'])throw Error('Additive contract hash mismatch');
 let index=0;
 for(const file of canonical){let source=fs.readFileSync(path.join(sourceRoot,file),'utf8');if(hash(source)!==manifest.files[file])throw Error('Input SQL hash mismatch: '+file);
- const settings=file.includes('/identity-account/')?`SET SESSION sql_mode='${additive.triggers[0].SQL_MODE}';\nSET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;\n`:'';
+ const sourceHash=hash(source);
+ if(mysql84)source=file.endsWith('005_release_gate.sql')?require('./release-additive-contract.cjs').forMySql84().sql:adapter.sql(source);
+ const settings=file.includes('/identity-account/')?`SET SESSION sql_mode='${mysql84?adapter.mode(additive.triggers[0].SQL_MODE):additive.triggers[0].SQL_MODE}';\nSET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;\n`:'';
  const sql='USE '+db+';\n'+settings+source.replace(/CREATE DEFINER=`[^`]+`@`[^`]+` TRIGGER /g,'CREATE DEFINER='+owner+' TRIGGER ').replace(/CREATE TRIGGER /g,'CREATE DEFINER='+owner+' TRIGGER ').replace(/CREATE PROCEDURE /g,'CREATE DEFINER='+owner+' PROCEDURE ');
- const name=String(++index).padStart(2,'0')+'-'+path.basename(file);fs.writeFileSync(path.join(out,name),sql);records.push({source:file,sourceHash:hash(source),artifact:name,artifactHash:hash(sql)});
+ const name=String(++index).padStart(2,'0')+'-'+path.basename(file);fs.writeFileSync(path.join(out,name),sql);records.push({source:file,sourceHash,artifact:name,artifactHash:hash(sql)});
 }
 // API/reviewer login accounts must be pre-created with secrets by the operator.
 // The SQL definer cannot log in. Migration identity alone executes these files.
-fs.writeFileSync(path.join(out,'00-principals.sql'),`CREATE USER ${owner} ACCOUNT LOCK;
+fs.writeFileSync(path.join(out,'00-principals.sql'),`CREATE USER ${owner} ${mysql84?'IDENTIFIED WITH caching_sha2_password ':''}ACCOUNT LOCK;
 GRANT SELECT,INSERT,UPDATE,DELETE,TRIGGER ON ${db}.* TO ${owner};
 GRANT SELECT,INSERT,UPDATE,DELETE ON ${db}.* TO ${account('api')};
 GRANT SELECT,TRIGGER ON ${db}.* TO ${account('review')};
 GRANT SELECT(User,Host) ON mysql.user TO ${account('review')};
-GRANT SELECT ON mysql.proc TO ${account('review')};
+${mysql84?'GRANT SHOW_ROUTINE ON *.* TO '+account('review')+';':'GRANT SELECT ON mysql.proc TO '+account('review')+';'}
 `);
 fs.writeFileSync(path.join(out,'99-routine-grants.sql'),`GRANT EXECUTE ON PROCEDURE ${db}.er_schema_ready TO ${owner};
 GRANT EXECUTE ON PROCEDURE ${db}.er_schema_ready TO ${account('api')};
 GRANT EXECUTE ON PROCEDURE ${db}.er_schema_ready TO ${account('review')};
 `);
-fs.writeFileSync(path.join(out,'binding.json'),JSON.stringify({format:1,release:manifest.release,database:config.database,definer:config.definerUser+'@'+config.definerHost,api:config.apiUser+'@'+config.apiHost,review:config.reviewUser+'@'+config.reviewHost,records},null,2)+'\n');
+fs.writeFileSync(path.join(out,'binding.json'),JSON.stringify({format:1,mysqlSeries:config.mysqlSeries||'5.7',release:manifest.release,database:config.database,definer:config.definerUser+'@'+config.definerHost,api:config.apiUser+'@'+config.apiHost,review:config.reviewUser+'@'+config.reviewHost,records},null,2)+'\n');
 console.log('Bound SQL bundle generated for review. No SQL executed; historical source unchanged.');

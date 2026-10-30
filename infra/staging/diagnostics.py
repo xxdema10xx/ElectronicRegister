@@ -34,7 +34,7 @@ def sanitizer(folder):
         text = re.sub(r'\b(?:gh[pousr]_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+)\b', '[REDACTED TOKEN]', text)
         text = re.sub(r'(?i)(\b(?:password|passwd|token|secret|jwt__key)\s*[=:]\s*)([^\s;]+)',
                       r'\1[REDACTED]', text)
-        text = re.sub(r"(?i)(IDENTIFIED BY\s*)'[^']*'", r"\1'[REDACTED]'", text)
+        text = re.sub(r"(?i)(IDENTIFIED(?: WITH [a-z0-9_]+)? BY\s*)'[^']*'", r"\1'[REDACTED]'", text)
         return text
     return redact
 
@@ -66,6 +66,13 @@ def collect(folder, state):
 
     command('docker-version', ['docker', 'version', '--format', '{{json .Server.Version}}'])
     command('compose-version', ['docker', 'compose', 'version', '--short'])
+    failure = folder / 'ops/transport-failure.json'
+    if failure.exists():
+        try:
+            if failure.stat().st_size <= 16384:
+                emit('driver-transport-failure', json.loads(failure.read_text()))
+        except (OSError, ValueError):
+            emit('driver-transport-failure', {'unavailable': True})
     ids = command('project-containers', ['docker', 'ps', '-aq', '--filter',
                                         'label=com.docker.compose.project=' + state['project']]).splitlines()
     for cid in ids:
@@ -90,7 +97,7 @@ def collect(folder, state):
         except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, IndexError):
             emit('container-state', {'container': cid, 'unavailable': True})
             continue
-        if service in ('db', 'volume-init'):
+        if service in ('db', 'volume-init', 'api'):
             command(service + '-logs', ['docker', 'logs', '--timestamps', '--tail', '200', cid])
         if service == 'db' and status.get('Running'):
             command('db-filesystem', ['docker', 'exec', cid, 'sh', '-c',
@@ -105,6 +112,6 @@ def collect(folder, state):
                     '--connect-timeout=3', '--batch', '-e',
                     "SELECT VERSION(),@@hostname,@@datadir; "
                     "SHOW GLOBAL VARIABLES WHERE Variable_name IN "
-                    "('have_ssl','have_openssl','tls_version','require_secure_transport','skip_networking',"
+                    "('version_ssl_library','tls_version','require_secure_transport','skip_networking',"
                     "'ssl_ca','ssl_cert','ssl_key','log_error'); "
                     "SELECT id FROM er_stage_control.identity;"])

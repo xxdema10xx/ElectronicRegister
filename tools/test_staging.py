@@ -21,32 +21,33 @@ class StagingTests(unittest.TestCase):
         host.check_mysql_tls('other option\ntls-version TLSv1,TLSv1.1,TLSv1.2\n')
 
     def test_staging_version_is_exact_and_historical_default_is_preserved(self):
-        host.check_mysql_version('mysqld  Ver 5.7.44 for Linux on x86_64 (MySQL Community Server (GPL))')
-        for version in ('5.7.24','5.7.440','5.7.44-custom','8.0.44'):
+        host.check_mysql_version('mysqld  Ver 8.4.13 for Linux on x86_64 (MySQL Community Server (GPL))')
+        for version in ('5.7.24','8.4.130','8.4.13-custom','8.0.44'):
             with self.assertRaises(RuntimeError):host.check_mysql_version('mysqld  Ver '+version+' for Linux')
-        self.assertIn("VERSION()='5.7.44'",(ROOT/'infra/staging/db-health.sh').read_text())
+        self.assertIn("VERSION()='8.4.13'",(ROOT/'infra/staging/db-health.sh').read_text())
         self.assertEqual(host.MYSQL,ops.MYSQL)
         self.assertIn('policy.Local ? "5.7.24"', (ROOT/'Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Operations/OperationalPipeline.cs').read_text())
         self.assertEqual(json.loads((ROOT/'infra/release.runtime.example.json').read_text())['Readiness']['ExpectedVersion'],'5.7.24')
 
     def test_pinned_image_matches_registry_evidence_without_claiming_runtime(self):
-        evidence=json.loads((ROOT/'docs/quality/staging-evidence/mysql-5.7.44-registry.json').read_text())
+        evidence=json.loads((ROOT/'docs/quality/staging-evidence/mysql-8.4-registry.json').read_text())
         self.assertEqual(host.MYSQL['image'],evidence['image'])
-        self.assertEqual(evidence['image'],'mysql:5.7.44@'+evidence['amd64Digest'])
+        self.assertEqual(evidence['image'],'mysql:8.4.13@'+evidence['amd64Digest'])
         self.assertEqual((evidence['os'],evidence['architecture']),('linux','amd64'))
-        self.assertIn('libssl.so.10',evidence['staticInspection']['elfNeededLibraries'])
-        self.assertIn('TLSv1.2',evidence['staticInspection']['compiledTlsString'].split(','))
+        self.assertTrue(any('--uid 999 --gid 999' in h['created_by'] for h in evidence['history']))
+        self.assertIn(':999:999:',evidence['staticFilesystem']['etc/passwd'])
+        self.assertEqual(evidence['staticFilesystem']['etc/group'],'mysql:x:999:')
         self.assertFalse(evidence['containersExecuted'])
         self.assertFalse(evidence['runtimeTlsVerified'])
 
     def test_old_staging_states_are_never_upgraded(self):
         with tempfile.TemporaryDirectory() as tmp:
             folder=Path(tmp)
-            state=dict(format=2,mysql_version=host.MYSQL['version'],mysql_image=host.MYSQL['image'],id='a'*32,
+            state=dict(format=3,mysql_version=host.MYSQL['version'],mysql_image=host.MYSQL['image'],id='a'*32,
                        project='er-stage-'+'a'*12,repository=str(host.ROOT))
             (folder/'state.json').write_text(json.dumps(state))
             self.assertEqual(host.load(folder)[1],state)
-            for fields in ({'format':1},{'mysql_version':'5.7.24'},{'mysql_image':'mysql:5.7.24@sha256:'+'a'*64}):
+            for fields in ({'format':1},{'format':2},{'mysql_version':'5.7.24'},{'mysql_image':'mysql:5.7.24@sha256:'+'a'*64}):
                 (folder/'state.json').write_text(json.dumps({**state,**fields}))
                 with self.assertRaisesRegex(RuntimeError,'NEW isolated state'):host.load(folder)
 
@@ -60,9 +61,9 @@ class StagingTests(unittest.TestCase):
             run.side_effect=openssl
             args=argparse.Namespace(state=str(folder),domain='staging.example.invalid',subnet='172.30.252.0/24',port=18080,mysql_image=host.MYSQL['image'])
             host.prepare(args)
-            self.assertEqual(json.loads((folder/'public/runtime.json').read_text())['Readiness']['ExpectedVersion'],'5.7.44')
-            self.assertEqual(json.loads((folder/'public/preflight.json').read_text())['expectedVersion'],'5.7.44')
-            self.assertEqual(json.loads((folder/'state.json').read_text())['format'],2)
+            self.assertEqual(json.loads((folder/'public/runtime.json').read_text())['Readiness']['ExpectedVersion'],'8.4.13')
+            self.assertEqual(json.loads((folder/'public/preflight.json').read_text())['expectedVersion'],'8.4.13')
+            self.assertEqual(json.loads((folder/'state.json').read_text())['format'],3)
             with self.assertRaises(RuntimeError):host.prepare(args)
 
     def test_diagnostics_redacts_generated_and_unexpected_credentials(self):
@@ -163,18 +164,18 @@ class StagingTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):ops.Journal().apply('002','CREATE TABLE b(id int);')
             self.assertEqual(sql.call_count,2)
     def test_mysql_identity_is_exact_before_ddl(self):
-        cfg={'id':'a'*32,'format':2,'mysql_version':ops.MYSQL['version'],'mysql_image':ops.MYSQL['image']}
-        row=dict(version='5.7.44',host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,ssl='YES',openssl='YES',tls='TLSv1.2',id=cfg['id'])
+        cfg={'id':'a'*32,'format':3,'mysql_version':ops.MYSQL['version'],'mysql_image':ops.MYSQL['image']}
+        row=dict(version='8.4.13',host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,binlog=0,standard_fk=1,openssl='OpenSSL 3.5.1',tls='TLSv1.2',id=cfg['id'])
         with mock.patch.object(ops,'mysql',side_effect=[json.dumps(row),'Ssl_version\tTLSv1.2','Ssl_cipher\tECDHE-RSA-AES256-GCM-SHA384']),mock.patch.object(ops,'saved'):
             ops.identity(cfg)
-        for field,value in [('id','foreign'),('secure',0),('version','5.7.24'),('version','8.0.0'),('dir','/real-data/'),('ssl','NO'),('openssl','NO'),('tls','TLSv1.1')]:
+        for field,value in [('id','foreign'),('secure',0),('binlog',1),('standard_fk',0),('version','5.7.24'),('version','8.0.0'),('dir','/real-data/'),('openssl','NO'),('tls','TLSv1.1')]:
             wrong={**row,field:value}
             with mock.patch.object(ops,'mysql',return_value=json.dumps(wrong)),self.assertRaises(RuntimeError):ops.identity(cfg)
 
     def test_compatibility_requires_complete_journal_and_exact_routines(self):
         with tempfile.TemporaryDirectory() as tmp:
             folder=Path(tmp)
-            binding=dict(artifactRoot=str(ROOT),database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%',apiUser='er_api',apiHost='172.30.252.%',reviewUser='er_review',reviewHost='172.30.252.%')
+            binding=dict(mysqlSeries='8.4',artifactRoot=str(ROOT),database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%',apiUser='er_api',apiHost='172.30.252.%',reviewUser='er_review',reviewHost='172.30.252.%')
             config=folder/'binding-input.json';config.write_text(json.dumps(binding))
             subprocess.run(['node',str(ROOT/'tools/prepare-release-sql.cjs'),str(config),str(folder/'bundle')],check=True,capture_output=True)
             journal={'00-login-users':dict(state='done',hash='synthetic-login-hash')}
@@ -182,7 +183,7 @@ class StagingTests(unittest.TestCase):
             (folder/'journal.json').write_text(json.dumps(journal))
             routines=[dict(name='er_schema_ready',type='PROCEDURE',definer='er_stage_definer@%',security='DEFINER',access='READS SQL DATA')]
             with mock.patch.object(ops,'ROOT',ROOT), mock.patch.object(ops,'STATE',folder), mock.patch.object(ops,'preflight'), mock.patch.object(ops,'mysql') as sql, mock.patch.object(ops,'saved') as saved:
-                sql.side_effect=[json.dumps(routines),json.dumps(dict(tables=71,triggers=180))]
+                sql.side_effect=[json.dumps(routines),json.dumps(dict(tables=71,triggers=180)),json.dumps([dict(user=u,host='%' if u=='er_stage_definer' else '172.30.252.%',plugin='caching_sha2_password',ssl='ANY',locked='Y' if u=='er_stage_definer' else 'N') for u in ('er_api','er_review','er_migrator','er_stage_definer')])]
                 ops.compatibility()
                 self.assertEqual(saved.call_args.args[1]['storedFunctions'],0)
                 sql.side_effect=[json.dumps(routines+[dict(name='unexpected',type='FUNCTION')])]

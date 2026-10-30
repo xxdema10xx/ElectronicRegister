@@ -6,7 +6,7 @@ x-logging: &logging
   options: { max-size: "10m", max-file: "5" }
 services:
   volume-init:
-    image: ${MYSQL_IMAGE:?select the verified 5.7.44 OpenSSL image}
+    image: ${MYSQL_IMAGE:?select the verified 8.4 LTS OpenSSL image}
     platform: linux/amd64
     user: "0:0"
     entrypoint: ["sh", "-ec"]
@@ -15,7 +15,8 @@ services:
         if [ -z "$$(ls -A /data)" ]; then
           chown 999:999 /data; chmod 750 /data
         else
-          test "$$(stat -c %u /data)" = 999
+          test "$(stat -c %u /data)" = 999
+          test "$(cat /data/.er-engine)" = "8.4.13:${STAGING_ID}"
         fi
     volumes: ["db-data:/data"]
     network_mode: none
@@ -50,9 +51,11 @@ services:
       - --require-secure-transport=ON
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-      - --explicit-defaults-for-timestamp=1
       - --default-time-zone=+00:00
       - --skip-name-resolve
+      # Disposable staging has no replication/PITR contract. Avoid SUPER for triggers.
+      - --skip-log-bin
+      - --mysqlx=OFF
     volumes:
       - db-data:/var/lib/mysql
       - ./db-bootstrap.sh:/docker-entrypoint-initdb.d/010-er-stage.sh:ro

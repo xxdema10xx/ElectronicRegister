@@ -1,6 +1,6 @@
 {
-  "version": "5.7.44",
-  "image": "mysql:5.7.44@sha256:dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da",
+  "version": "8.4.13",
+  "image": "mysql:8.4.13@sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
   "platform": "linux/amd64",
   "uid": "999",
   "gid": "999",

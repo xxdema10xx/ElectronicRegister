@@ -24,6 +24,7 @@ jobs:
       - run: node --version
       - run: node tools/release-artifacts.cjs
       - run: node tools/test-release-manifest.cjs
+      - run: node tools/test-mysql84.cjs
       - run: python -m unittest discover -s tools -p 'test_*.py'
       - run: dotnet restore Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --locked-mode
       - run: dotnet list Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx package --vulnerable --include-transitive --format json > dependency-audit.json

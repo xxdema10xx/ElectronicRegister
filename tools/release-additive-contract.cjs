@@ -1,7 +1,9 @@
 // Reviewed 5.7 metadata contract. Verification never learns expected values from a live database.
 const fs=require('fs'),path=require('path'),crypto=require('crypto');
 const root=path.resolve(__dirname,'..');
-const contract=JSON.parse(fs.readFileSync(path.join(root,'migrations/release/additive-contract.json'),'utf8'));
+function render(mysql84=false){
+let contract=JSON.parse(fs.readFileSync(path.join(root,'migrations/release/additive-contract.json'),'utf8'));
+if(mysql84)contract=require('./mysql84-contract.cjs').contract(contract);
 const base=JSON.parse(fs.readFileSync(path.join(root,'migrations/bootstrap/schema-contract.json'),'utf8'));
 const sha=s=>crypto.createHash('sha256').update(s.replaceAll('\r\n','\n')).digest('hex').toUpperCase();
 for(const [file,hash] of Object.entries(contract.sources))if(sha(fs.readFileSync(path.join(root,file),'utf8'))!==hash)throw Error('Reviewed additive source drift: '+file);
@@ -38,5 +40,8 @@ ${body}$$
 DELIMITER ;
 INSERT INTO er_schema_release(version) VALUES('${contract.marker}');
 `;
-module.exports={contract,body,sql};
+return {contract,body,sql};
+}
+const {contract,body,sql}=render();
+module.exports={contract,body,sql,forMySql84:()=>render(true)};
 if(require.main===module){const file=path.join(root,'migrations/identity-account/005_release_gate.sql');if(process.argv.includes('--write'))fs.writeFileSync(file,sql);else if(fs.readFileSync(file,'utf8').replaceAll('\r\n','\n')!==sql)throw Error('Additive gate definition drift');console.log(`Additive gate: ${contract.columns.length} columns, ${contract.indexes.length} index parts, ${contract.foreignKeys.length} FK, ${contract.triggers.length} trigger bodies`);}

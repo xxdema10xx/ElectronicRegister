@@ -11,20 +11,23 @@ function read(sql){if(!/^(SELECT|SHOW|CALL er_schema_ready\(\))/i.test(sql))thro
 const [version,port,datadir,database]=read("SELECT VERSION(),@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE();").split('\t');
 if(version!==config.expectedVersion||+port!==config.port||database!==config.database||datadir.toLowerCase().replace(/\/$/,'')!==config.expectedDataDir.replaceAll('\\','/').toLowerCase().replace(/\/$/,''))throw Error('Release database identity mismatch');
 const contract=JSON.parse(fs.readFileSync(path.join(root,'migrations/bootstrap/schema-contract.json'),'utf8'));
-const additive=require('./release-additive-contract.cjs');
+const mysql84=/^8\.4\./.test(version),adapter=require('./mysql84-contract.cjs');
+const additive=mysql84?require('./release-additive-contract.cjs').forMySql84():require('./release-additive-contract.cjs');
 const normalize=s=>s.replaceAll('\r\n','\n');
 for(const [table,ddl]of Object.entries(contract.tables)){
  const actual=read('SHOW CREATE TABLE `'+table+'`;').split('\t').slice(1).join('\t').replace(/ AUTO_INCREMENT=\d+/g,'').replaceAll('\r\n','\n');
- if(actual!==ddl)throw Error('Base schema definition mismatch: '+table);
+ if((mysql84?adapter.ddl(actual):actual)!==(mysql84?adapter.ddl(ddl):ddl))throw Error('Base schema definition mismatch: '+table);
 }
 for(const [table,ddl]of Object.entries(additive.contract.tables)){
  const actual=read('SHOW CREATE TABLE `'+table+'`;').split('\t').slice(1).join('\t');
- if(normalize(actual)!==normalize(ddl))throw Error('Additive schema definition mismatch: '+table);
+ if(normalize(mysql84?adapter.ddl(actual):actual)!==normalize(mysql84?adapter.ddl(ddl):ddl))throw Error('Additive schema definition mismatch: '+table);
 }
 for(const [name,t]of Object.entries(contract.triggers)){
  let expected=t.statement;
  if(isolated)expected=expected.replaceAll('@@port=13306','@@port='+config.port).replaceAll("RIGHT(LOWER(REPLACE(@@datadir,CHAR(92),'/')),45)='/migrations/mt4/private/mt5a-mamp-13306/data/'",`LOWER(REPLACE(@@datadir,CHAR(92),'/'))='${datadir.toLowerCase()}'`);
  const row=read('SHOW CREATE TRIGGER `'+name+'`;').split('\t');
+ if(row[1]!== (mysql84?adapter.mode(t.mode):t.mode))throw Error('Base trigger SQL mode mismatch: '+name);
+ if(row.at(-4)!==t.charset||row.at(-3)!==t.collation||row.at(-2)!==t.database_collation)throw Error('Base trigger charset/collation mismatch: '+name);
  const statement=row.slice(2,-4).join('\t');
  const normalize=s=>s.replace(/^CREATE DEFINER=`[^`]+`@`[^`]+` TRIGGER /,'CREATE TRIGGER ').replaceAll('\r\n','\n');
  if(normalize(statement)!==normalize(expected))throw Error('Base trigger definition mismatch: '+name);

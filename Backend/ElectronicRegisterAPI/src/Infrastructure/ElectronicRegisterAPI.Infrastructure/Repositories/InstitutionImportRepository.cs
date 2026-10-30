@@ -210,7 +210,7 @@ internal sealed class InstitutionImportRepository(
         {
             if (externalReference is not null)
                 await Execute("INSERT INTO institution_import_external_reference(institution_id,category,reference,student_id,teacher_id) VALUES(@t,@c,@r,@s,@d)", ("@t", actor.InstitutionId), ("@c", category.ToString()), ("@r", externalReference), ("@s", row.StudentId), ("@d", row.TeacherId));
-            await Execute("INSERT INTO institution_import_item(institution_id,batch_id,row_number,category,student_id,teacher_id,email_assignment_id,external_reference) VALUES(@t,@b,@n,@c,@s,@d,@a,@r)", ("@t", actor.InstitutionId), ("@b", batch), ("@n", row.RowNumber), ("@c", category.ToString()), ("@s", row.StudentId), ("@d", row.TeacherId), ("@a", row.EmailAssignmentId), ("@r", externalReference));
+            await Execute("INSERT INTO institution_import_item(institution_id,batch_id,`row_number`,category,student_id,teacher_id,email_assignment_id,external_reference) VALUES(@t,@b,@n,@c,@s,@d,@a,@r)", ("@t", actor.InstitutionId), ("@b", batch), ("@n", row.RowNumber), ("@c", category.ToString()), ("@s", row.StudentId), ("@d", row.TeacherId), ("@a", row.EmailAssignmentId), ("@r", externalReference));
         }
 
         public async Task CompleteAsync(

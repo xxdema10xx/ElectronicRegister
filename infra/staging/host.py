@@ -97,7 +97,7 @@ def prepare(args):
     revision = output(['git', '-c', 'safe.directory='+str(ROOT), '-C', ROOT, 'rev-parse', 'HEAD'])
     dirty = bool(output(['git', '-c', 'safe.directory='+str(ROOT), '-C', ROOT, 'status', '--porcelain', '--untracked-files=normal']))
     identity = uuid.uuid4().hex
-    state = dict(format=2, mysql_version=MYSQL['version'], id=identity, project='er-stage-'+identity[:12], domain=args.domain,
+    state = dict(format=3, mysql_version=MYSQL['version'], id=identity, project='er-stage-'+identity[:12], domain=args.domain,
                  subnet=str(net), gateway=str(net.network_address+1), sql_host=str(net.network_address).rsplit('.', 1)[0]+'.%',
                  port=args.port, mysql_image=args.mysql_image, revision=revision, source_dirty=dirty,
                  manifest=digest(ROOT/'migrations/release/manifest.json'), repository=str(ROOT))
@@ -114,11 +114,11 @@ def prepare(args):
     def openssl(*items):
         with (pki/'generation.log').open('a') as log:
             run(['openssl', *items], stdout=log, stderr=log)
-    openssl('req', '-x509', '-newkey', 'rsa:3072', '-sha256', '-nodes', '-keyout', pki/'ca-key.pem', '-out', pki/'ca.pem', '-days', '365', '-subj', '/CN=ER staging '+identity)
+    openssl('req', '-x509', '-newkey', 'rsa:3072', '-sha256', '-nodes', '-keyout', pki/'ca-key.pem', '-out', pki/'ca.pem', '-days', '365', '-addext', 'basicConstraints=critical,CA:TRUE', '-addext', 'keyUsage=critical,keyCertSign,cRLSign', '-subj', '/CN=ER staging '+identity)
     openssl('req', '-new', '-newkey', 'rsa:3072', '-sha256', '-nodes', '-keyout', pki/'server-key.pem', '-out', pki/'server.csr', '-subj', '/CN=er-stage-db')
     write(pki/'server.ext', 'basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\nsubjectAltName=DNS:er-stage-db\n')
     openssl('x509', '-req', '-in', pki/'server.csr', '-CA', pki/'ca.pem', '-CAkey', pki/'ca-key.pem', '-CAcreateserial', '-out', pki/'server.pem', '-days', '90', '-sha256', '-extfile', pki/'server.ext')
-    openssl('req', '-x509', '-newkey', 'rsa:3072', '-sha256', '-nodes', '-keyout', pki/'wrong-ca-key.pem', '-out', pki/'wrong-ca.pem', '-days', '30', '-subj', '/CN=Unrelated staging negative CA')
+    openssl('req', '-x509', '-newkey', 'rsa:3072', '-sha256', '-nodes', '-keyout', pki/'wrong-ca-key.pem', '-out', pki/'wrong-ca.pem', '-days', '30', '-addext', 'basicConstraints=critical,CA:TRUE', '-addext', 'keyUsage=critical,keyCertSign,cRLSign', '-subj', '/CN=Unrelated staging negative CA')
     for name, source, uid, gid, mode in [
         ('db/ca.pem', 'ca.pem', 999, 999, 0o400), ('db/server.pem', 'server.pem', 999, 999, 0o400),
         ('db/server-key.pem', 'server-key.pem', 999, 999, 0o400), ('api/ca.pem', 'ca.pem', 1654, 1654, 0o400),
@@ -144,7 +144,7 @@ def prepare(args):
     public = dict(state)
     write(folder/'public/staging.json', json.dumps(public, indent=2), mode=0o444)
     write(folder/'public/runtime.json', json.dumps(runtime, indent=2), mode=0o444)
-    write(folder/'public/binding.json', json.dumps(dict(artifactRoot='/opt/release',database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%',apiUser='er_api',apiHost=state['sql_host'],reviewUser='er_review',reviewHost=state['sql_host']),indent=2), mode=0o444)
+    write(folder/'public/binding.json', json.dumps(dict(mysqlSeries='8.4',artifactRoot='/opt/release',database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%',apiUser='er_api',apiHost=state['sql_host'],reviewUser='er_review',reviewHost=state['sql_host']),indent=2), mode=0o444)
     write(folder/'public/preflight.json', json.dumps(dict(host='er-stage-db',port=3306,database='electronic_register_staging',user='er_review',passwordFile='/run/secrets/review-password',caFile='/run/secrets/mysql-ca.pem',expectedVersion=MYSQL['version'],expectedDataDir='/var/lib/mysql',schemaDefiner='er_stage_definer@%',mysqlClient='mysql'),indent=2), mode=0o444)
     seed = {'stage_id':identity,'ids':{k:str(uuid.uuid4()) for k in ('tenant_a','tenant_b','biennium_a','biennium_b','area_a','area_b','path_a','path_b','bsa_a','bsa_b','bsp_a','bsp_b','class_a','class_b','teacher','student','subject','assignment')},'accounts':{}}
     for name, role, tenant in [('admin_a','InstitutionAdmin','a'),('admin_b','InstitutionAdmin','b'),('teacher','Teacher','a'),('student','Student','a')]:
@@ -158,7 +158,7 @@ def prepare(args):
 def load(folder):
     folder = Path(folder).resolve()
     state = json.loads((folder/'state.json').read_text())
-    require(state.get('format') == 2 and state.get('mysql_version') == MYSQL['version'] and state.get('mysql_image') == MYSQL['image'],
+    require(state.get('format') == 3 and state.get('mysql_version') == MYSQL['version'] and state.get('mysql_image') == MYSQL['image'],
             'Incompatible staging state/image: prepare a NEW isolated state and volume; never upgrade/reuse older MySQL volumes')
     require(re.fullmatch(r'[a-f0-9]{32}',state['id']) and state['project']=='er-stage-'+state['id'][:12], 'Invalid staging ownership record')
     require(state['repository']==str(ROOT), 'Use the recorded checkout; create new staging for another checkout')
@@ -192,7 +192,7 @@ def check_mysql_tls(help_text):
     match = re.search(r'^tls-version\s+(\S+)\s*$', help_text, re.M)
     require(match and 'TLSv1.2' in match[1].split(','),
             'MySQL binary lacks compiled TLSv1.2 support. '
-            'Staging requires the reviewed MySQL 5.7.44 OpenSSL image in a NEW state; '
+            'Staging requires the reviewed MySQL 8.4 LTS OpenSSL image in a NEW state; '
             'do not lower TLS policy. Runtime TLS/identity probes remain mandatory.')
     return match[1]
 
@@ -203,11 +203,11 @@ def check_mysql_version(version_text):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--state',required=True)
-    p.add_argument('command',choices=['prepare','config','build','db','provision','compatibility','seed','preflight','tls','start','verify','smoke','logs','diagnostics','stop','restart'])
+    p.add_argument('command',choices=['prepare','config','build','db','provision','compatibility','seed','preflight','tls','start','verify','http','smoke','logs','diagnostics','stop','restart'])
     p.add_argument('--domain',default='staging.consoliprojects.dev')
     p.add_argument('--subnet',default='172.30.252.0/24')
     p.add_argument('--port',type=int,default=18080)
-    # Registry provenance in staging-evidence/mysql-5.7.44-registry.json.
+    # Registry provenance in staging-evidence/mysql-8.4-registry.json.
     # Only this reviewed digest is allowed; runtime checks remain mandatory.
     p.add_argument('--mysql-image',default=MYSQL['image'])
     a=p.parse_args()
@@ -283,6 +283,11 @@ def main():
         compose(folder,'up','-d','--wait','--wait-timeout','90','api')
         return verify(folder,s)
     if a.command=='verify':return verify(folder,s)
+    if a.command=='http':
+        verify(folder,s)
+        compose(folder,'run','--rm','--no-deps','ops','preflight')
+        import smoke
+        return smoke.run(s,folder/'ops',loopback=True,key_file=folder/'secrets/ops/jwt-key')
 
 def verify(folder,s):
     for service,uid in [('api','1654'),('db','999')]:
