@@ -1,3 +1,35 @@
+{
+// Execute the production preflight against deterministic MySQL responses.
+const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert');
+const root=path.resolve(__dirname,'..'),file=path.join(__dirname,'release-preflight.cjs');
+const base=require('../migrations/bootstrap/schema-contract.json'),add=require('./release-additive-contract.cjs').forMySql84(),adapter=require('./mysql84-contract.cjs');
+const config={caFile:'ca',passwordFile:'password',user:'review',schemaDefiner:'owner@%',host:'host',port:3306,database:'db',expectedVersion:'8.4.13',expectedDataDir:'/data/'};
+function simulate(mutant){
+ const output=[];
+ function read(sql){
+  if(sql.startsWith('SELECT VERSION'))return '8.4.13\t3306\t/data/\tdb';
+  if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];return name+'\t'+((base.tables[name]||add.contract.tables[name]).replace(/ COLLATE utf8mb4_unicode_ci/g,' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')+(mutant==='table'?' SQL secret-password':''));}
+  if(sql.startsWith('SHOW CREATE TRIGGER')){const name=/`([^`]+)`/.exec(sql)[1],t=base.triggers[name];return [name,adapter.mode(t.mode),t.statement+(mutant==='trigger'?' SQL secret-password':''),t.charset,t.collation,t.database_collation,'timestamp'].join('\t');}
+  if(sql.includes('information_schema.TRIGGERS'))return JSON.stringify([
+   ...Object.keys(base.triggers).map(name=>({name,definer:mutant==='trigger-definer'?'secret-password':config.schemaDefiner})),
+   ...add.contract.triggers.map(t=>({name:t.TRIGGER_NAME,table:t.EVENT_OBJECT_TABLE,event:t.EVENT_MANIPULATION,timing:t.ACTION_TIMING,body:t.ACTION_STATEMENT,mode:t.SQL_MODE,definer:config.schemaDefiner}))]);
+  if(sql.includes('information_schema.ROUTINES'))return JSON.stringify({body:add.body+(mutant==='routine'?' SQL secret-password':''),security:'DEFINER',access:'READS SQL DATA',definer:mutant==='definer'?'secret-password':config.schemaDefiner});
+  return '1';
+ }
+ const context={__dirname,require:id=>id==='fs'?{readFileSync:(f,...args)=>f==='config'?JSON.stringify(config):f==='password'?'secret-password':fs.readFileSync(f,...args)}:id==='child_process'?{spawnSync:(_cmd,_args,options)=>({status:0,stdout:read(options.input)})}:require(id),console:{error:s=>output.push(s),log:()=>{}},process:{argv:['node',file,'config'],env:{}}};
+ vm.runInNewContext(fs.readFileSync(file,'utf8'),context);
+ if(!mutant){assert.equal(context.process.exitCode,undefined);assert.equal(output.length,0);return;}
+ assert.equal(context.process.exitCode,1);assert.equal(output.length,1);assert(!output[0].includes('secret-password'));assert(!output[0].includes('CREATE '));
+ return JSON.parse(output[0].replace('ER_PREFLIGHT_FAILURE ',''));
+}
+simulate();
+const failures=['table','trigger','routine','definer','trigger-definer'].map(simulate);
+assert.deepEqual(failures.map(f=>f.id),['base-table-ddl','base-trigger-ddl','routine-body','routine-definer','trigger-definer']);
+assert.equal(failures[0].object,Object.keys(base.tables)[0]);assert.equal(failures[1].object,Object.keys(base.triggers)[0]);
+for(const f of failures.slice(0,3)){assert.match(f.actualHash,/^[A-F0-9]{64}$/);assert.notEqual(f.actualHash,f.expectedHash);}
+if(process.argv.includes('--diagnostics-json')){console.log(JSON.stringify(failures));process.exit(0);}
+
+}
 // Offline compatibility checks, including negative controls. No server contacted.
 const fs=require('fs'),os=require('os'),path=require('path'),assert=require('assert'),cp=require('child_process'),crypto=require('crypto');
 const adapter=require('./mysql84-contract.cjs'),root=path.resolve(__dirname,'..');
@@ -11,6 +43,11 @@ assert.equal(adapter.column('tinyint(1)'), 'tinyint(1)');
 assert.equal(adapter.sql('row_number int, PRIMARY KEY(row_number); IF NEW.row_number<1'), '`row_number` int, PRIMARY KEY(`row_number`); IF NEW.row_number<1');
 for(const column of modern.contract.columns.filter(c=>c.COLUMN_DEFAULT==='CURRENT_TIMESTAMP(6)'))assert.equal(column.EXTRA,'DEFAULT_GENERATED');
 const expected='`owner` char(36) CHARACTER SET ascii NOT NULL, UNIQUE KEY `tenant` (`institution_id`,`id`)';
+const explicit='  `action` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL';
+assert.equal(adapter.ddl(explicit.replace(' COLLATE',' CHARACTER SET utf8mb4 COLLATE')),explicit);
+for(const changed of [explicit.replace('unicode_ci','0900_ai_ci'),explicit.replace('varchar(100)','varchar(101)'),explicit.replace('NOT NULL','DEFAULT NULL')])assert.notEqual(adapter.ddl(changed),adapter.ddl(explicit));
+const literal="  `action` varchar(100) DEFAULT ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'";
+assert.equal(adapter.ddl(literal),literal);
 assert.equal(adapter.ddl(expected.replace('CHARACTER SET ascii','CHARACTER SET ascii COLLATE ascii_general_ci')),expected);
 for(const changed of [expected.replace('ascii','utf8mb4'),expected.replace('NOT NULL','NULL'),expected.replace('UNIQUE KEY','KEY'),expected.replace('`institution_id`,`id`','`id`,`institution_id`')])assert.notEqual(adapter.ddl(changed),adapter.ddl(expected));
 assert.notEqual(adapter.ddl('COLLATE=utf8mb4_unicode_ci'),adapter.ddl('COLLATE=utf8mb4_0900_ai_ci'));
@@ -29,7 +66,7 @@ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'er-mysql84-'));
   const output=[],stop=new Error('test exit');
   const config={caFile:'fake-ca',passwordFile:'fake-password-file',user:'review',schemaDefiner:'owner@%',host:'host',port:3306,database:'db'};
   const context={require:id=>id==='fs'?{readFileSync:f=>f==='config'?JSON.stringify(config):'fake-password'}:id==='child_process'?{spawnSync:()=>({status:1,stderr})}:require(id),__dirname:path.dirname(file),console:{error:s=>output.push(s)},process:{argv:['node',file,'config'],env:{},exit:()=>{throw stop;}}};
-  assert.throws(()=>vm.runInNewContext(fs.readFileSync(file,'utf8'),context),e=>e===stop);
+  vm.runInNewContext(fs.readFileSync(file,'utf8'),context);assert.equal(context.process.exitCode,1);
   assert.equal(output.length,1);assert(!output[0].includes('fake-password'));assert(!output[0].includes('CREATE USER'));
   const data=JSON.parse(output[0].replace('ER_SQL_FAILURE ',''));assert.equal(data.step,'preflight-query-1');assert.equal(data.exitCode,1);
   assert.equal(data.mysqlErrno,stderr.startsWith('ERROR')?1142:null);assert.equal(data.sqlstate,stderr.startsWith('ERROR')?'42000':null);assert.equal(data.line,stderr.startsWith('ERROR')?7:null);

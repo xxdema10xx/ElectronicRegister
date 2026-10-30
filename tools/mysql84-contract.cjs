@@ -8,7 +8,9 @@ function sql(source){
 function ddl(source){
  // MySQL 8 removes integer display widths and prints explicit default collations.
  // Preserve every column, index, FK, nullability, default and nondefault collation.
- return column(source).replace(/ CHARACTER SET ascii COLLATE ascii_general_ci/g,' CHARACTER SET ascii');
+ // sql/sql_show.cc (mysql-8.4.13) prints the charset for explicit collations.
+ // Match only a column type prefix, never text inside defaults or comments.
+ return column(source).replace(/(^  `[^`]+` (?:(?:char|varchar)\(\d+\)|enum\('[^']*'(?:,'[^']*')*\)|tinytext|text|mediumtext|longtext)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci/gm,'$1 COLLATE utf8mb4_unicode_ci').replace(/ CHARACTER SET ascii COLLATE ascii_general_ci/g,' CHARACTER SET ascii');
 }
 function contract(value){
  const copy=JSON.parse(JSON.stringify(value));

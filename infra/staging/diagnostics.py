@@ -10,6 +10,30 @@ SQL_STEPS={'00-login-users','00-principals.sql','01-001_schema.sql',
            '06-005_release_gate.sql','99-routine-grants.sql','synthetic-seed'}
 PHASES={'precheck','bundle-generation','account-creation','migrations','preflight'}
 
+CHECKS={'configuration':'configuration','database-identity':'identity','contract-load':'contract',
+        'base-table-ddl':'table','additive-table-ddl':'table','base-trigger-mode':'trigger',
+        'base-trigger-charset':'trigger','base-trigger-ddl':'trigger','trigger-inventory':'trigger',
+        'additive-trigger-metadata':'trigger','additive-trigger-ddl':'trigger',
+        'routine-metadata':'routine','routine-body':'routine','routine-definer':'definer',
+        'trigger-definer':'definer','definer-account':'definer','readiness-probe':'metadata'}
+
+def preflight_check(value):
+    from pathlib import Path
+    if not isinstance(value,dict) or not isinstance(value.get('id'),str) or CHECKS.get(value['id'])!=value.get('category'):return None
+    root=Path(__file__).resolve().parents[2]
+    base=json.loads((root/'migrations/bootstrap/schema-contract.json').read_text())
+    additive=json.loads((root/'migrations/release/additive-contract.json').read_text())
+    triggers=set(base['triggers'])|{t['TRIGGER_NAME'] for t in additive['triggers']}
+    objects={'configuration':{'release'},'identity':{'database'},'contract':{'release'},
+             'table':set(base['tables'])|set(additive['tables']), 'trigger':triggers|{'inventory'},
+             'routine':{'er_schema_ready'},'definer':triggers|{'er_schema_ready','schema-owner'},
+             'metadata':{'er_schema_ready'}}
+    if not isinstance(value.get('object'),str) or value['object'] not in objects[value['category']]:return None
+    result={k:value[k] for k in ('id','category','object')}
+    if value.get('difference') in ('ddl','body') and all(re.fullmatch(r'[A-F0-9]{64}',str(value.get(k))) for k in ('expectedHash','actualHash')):
+        result.update({k:value[k] for k in ('difference','expectedHash','actualHash')})
+    return result
+
 def provisioning_evidence(folder):
     """Allowlist projection, including when private state is malformed or hostile."""
     result={}
@@ -28,6 +52,8 @@ def provisioning_evidence(folder):
                 'step':value.get('step') if value.get('step') in SQL_STEPS or re.fullmatch(r'preflight-query-[0-9]{1,5}',str(value.get('step'))) else None,
                 **{k:value.get(k) if type(value.get(k)) is int and -2147483648<=value[k]<=2147483647 else None for k in ('exitCode','mysqlErrno','line')},
                 'sqlstate':value.get('sqlstate') if re.fullmatch(r'[A-Z0-9]{5}',str(value.get('sqlstate'))) else None}
+            check=preflight_check(value.get('check'))
+            if check:result['failure']['check']=check
         except (OSError,ValueError,TypeError):result[name]={'unavailable':True}
     return result
 

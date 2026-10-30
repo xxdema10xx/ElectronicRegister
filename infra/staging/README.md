@@ -282,6 +282,26 @@ passo SQL, exit code del comando fallito, errno MySQL, SQLSTATE e riga quando di
 Un campo `null` indica che il provider non lo ha restituito. Per il preflight,
 `preflight-query-N` identifica la chiamata SQL in ordine nel verificatore.
 `startedSteps` elenca solo i nomi canonici dei passi ancora `started` nel journal.
+Le eccezioni JavaScript del preflight emettono `ER_PREFLIGHT_FAILURE` e il collector
+pubblica `failure.check` con `id`, `category` e `object`. Gli oggetti sono filtrati
+contro i contratti versionati; messaggi, stack, SQL e valori DEFINER non sono pubblicati.
+I mismatch DDL/body includono solo `difference` (`ddl` o `body`) e gli SHA256
+`expectedHash`/`actualHash` dopo le normalizzazioni previste dal contratto.
+Gli identificatori distinguono configurazione, identità DB, caricamento contratti,
+DDL delle tabelle base/additive, SQL mode e charset/collation dei trigger base,
+DDL dei trigger base/additivi, metadata dei trigger additivi, inventario trigger,
+metadata/body della routine, DEFINER di ciascuna routine/trigger, esistenza
+dell'account proprietario e risultato del probe metadata `er_schema_ready`.
+Un probe metadata negativo resta fail-closed; il suo risultato booleano non
+permette di attribuire il fallimento a una singola riga information_schema.
+La normalizzazione MySQL 8.4 del charset esplicito di colonna è motivata da
+[`store_create_info`, sorgente mysql-8.4.13](https://github.com/mysql/mysql-server/blob/mysql-8.4.13/sql/sql_show.cc):
+`column_has_explicit_collation` forza la stampa di `CHARACTER SET`. La regola
+copre esclusivamente il prefisso di tipo delle colonne con la collation
+versionata `utf8mb4_unicode_ci`, senza modificare default/commenti o accettare
+altre collation. Questa verifica statica e i test simulati non certificano
+il superamento del preflight Docker, né identificano con certezza il primo
+mismatch della run 41129473750: la diagnostica precedente non lo conservava.
 Il collector proietta questi campi da `operation-failure.json` e `journal.json`;
 non legge `errors.log`, SQL, messaggi del provider o traceback. Lo stato diagnostico
 del comando precedente viene rimosso dopo aver acquisito il lock operatore.

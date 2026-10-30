@@ -7,6 +7,7 @@ import subprocess
 from pathlib import Path
 import tempfile
 import unittest
+import sys
 from unittest import mock
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -14,8 +15,27 @@ def load(name):
     spec=importlib.util.spec_from_file_location('stage_'+name,ROOT/'infra/staging'/f'{name}.py')
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 host=load('host');ops=load('ops');diagnostics=load('diagnostics')
+sys.modules['diagnostics']=diagnostics
 
 class StagingTests(unittest.TestCase):
+    def test_actual_preflight_failures_reach_github_projection(self):
+        failures=json.loads(subprocess.check_output(['node',str(ROOT/'tools/test-mysql84.cjs'),'--diagnostics-json'],text=True))
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp);(folder/'ops').mkdir()
+            ops.phase('preflight')
+            for check in failures:
+                with mock.patch.object(ops,'STATE',folder/'ops'),mock.patch.object(ops.subprocess,'run') as run:
+                    run.return_value=mock.Mock(returncode=1,stdout='',stderr='ER_PREFLIGHT_FAILURE '+json.dumps(dict(check,sql='secret-password')))
+                    with self.assertRaises(RuntimeError):ops.preflight()
+                safe=diagnostics.provisioning_evidence(folder)['failure']
+                self.assertEqual(safe['check'],check)
+                self.assertIsNone(safe['mysqlErrno'])
+                self.assertNotIn('secret-password',json.dumps(safe))
+            for check in ({'id':'unknown','category':'table','object':'secret-password'},
+                          {'id':'base-table-ddl','category':'table','object':'secret-password'},
+                          {'id':[],'category':'table','object':'audit_event'}):
+                self.assertIsNone(diagnostics.preflight_check(check))
+
     def setUp(self):
         ops.phase('precheck')
 

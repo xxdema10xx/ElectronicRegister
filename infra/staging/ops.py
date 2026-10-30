@@ -34,6 +34,12 @@ def failure_data(exit_code=1,stderr='',is_mysql=False):
     else:
         # The preflight child emits a metadata-only record, without a traceback.
         for line in stderr.splitlines():
+            if line.startswith('ER_PREFLIGHT_FAILURE '):
+                try:
+                    from diagnostics import preflight_check
+                    check=preflight_check(json.loads(line.removeprefix('ER_PREFLIGHT_FAILURE ')))
+                    if check:result['check']=check
+                except (ValueError,TypeError,AttributeError):pass
             if line.startswith('ER_SQL_FAILURE '):
                 try:
                     value=json.loads(line.removeprefix('ER_SQL_FAILURE '))
