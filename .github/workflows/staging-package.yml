@@ -1,5 +1,11 @@
 name: Staging package and real SQL TLS
 on:
+  push:
+    branches:
+      - refactor-database-entities
+    paths:
+      - '.github/workflows/staging-package.yml'
+
   workflow_dispatch:
     inputs:
       source_sha:
@@ -13,7 +19,7 @@ jobs:
     timeout-minutes: 30
     env:
       STAGE_STATE: /tmp/er-stage-${{ github.run_id }}-${{ github.run_attempt }}
-      EXPECTED_SHA: ${{ inputs.source_sha }}
+      EXPECTED_SHA: ${{ inputs.source_sha || github.sha }}
     steps:
       - name: Bind workflow and source to the same published SHA
         run: |
@@ -21,7 +27,7 @@ jobs:
           test "$EXPECTED_SHA" = "$GITHUB_SHA"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: ${{ inputs.source_sha }}
+          ref: ${{ inputs.source_sha || github.sha }}
           persist-credentials: false
       - name: Prepare a new isolated namespace (no EC2 or AWS credentials)
         run: |
