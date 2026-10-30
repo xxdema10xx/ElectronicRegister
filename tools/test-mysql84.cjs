@@ -27,7 +27,7 @@ function observedTrigger(statement){
  const end=statement.search(/\s+FOR\s+EACH\s+ROW\b/);assert(end>0);
  const tokens=statement.slice(0,end).split(/(\s+)/);
  for(const i of [tokens.indexOf('TRIGGER')+2,tokens.indexOf('ON')+2])if(!tokens[i].startsWith('\x60'))tokens[i]='\x60'+tokens[i]+'\x60';
- return tokens.join('')+statement.slice(end).replace(/(FOR EACH ROW)\r?\n(?=BEGIN\b)/,'$1 ');
+ return tokens.join('')+' '+statement.slice(end).trimStart().replace(/(FOR EACH ROW)\r?\n(?=BEGIN\b)/,'$1 ');
 }
 const triggerMutations={
  'trigger-name':s=>s.replace(/(TRIGGER \x60)[^\x60]+/,'$1changed'),
@@ -42,11 +42,12 @@ function simulate(mutant,audit=false){
  const currentConfig=audit?{...config,host:'er-stage-db',database:'electronic_register_staging',user:'er_review',expectedDataDir:'/var/lib/mysql'}:config;
  if(mutant?.config)Object.assign(currentConfig,mutant.config);
  function read(sql){
-  if(sql===add.body.slice('BEGIN\n'.length,-'\nEND'.length).trim())return '1';
+  if(sql==='CALL er_schema_ready();')return mutant==='readiness'?'0':'1';
+  if(sql===add.body.slice('BEGIN\n'.length,-'\nEND'.length).trim())return mutant==='readiness'?'0':'1';
   if(sql.startsWith('SELECT VERSION'))return audit?'8.4.13\t3306\t/var/lib/mysql/\telectronic_register_staging':'8.4.13\t3306\t/data/\tdb';
   if(sql==='SELECT id FROM er_stage_control.identity')return 'a'.repeat(32);
   if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];let ddl=name==='mt3a_legacy_scope'?observedLegacy:base.tables[name]||observedAdditive[name];if(name==='mt3a_legacy_scope'&&legacyMutations[mutant])ddl=legacyMutations[mutant](ddl);if(mutant?.table===name)ddl=additiveMutations[mutant.kind](ddl);return name+'\t'+(ddl.replace(/ COLLATE utf8mb4_unicode_ci/g,' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')+(mutant==='table'?' SQL secret-password':'')).replace('COLLATE=utf8mb4_general_ci',mutant==='ddl-collation'?'COLLATE=utf8mb4_0900_ai_ci':'COLLATE=utf8mb4_general_ci');}
-  if(sql.startsWith('SHOW CREATE TRIGGER')){const name=/`([^`]+)`/.exec(sql)[1],t=base.triggers[name];return [name,mutant==='trigger-mode'?'changed':adapter.mode(t.mode),(triggerMutations[mutant==='multi'?'trigger-body':mutant]?triggerMutations[mutant==='multi'?'trigger-body':mutant](observedTrigger(t.statement)):observedTrigger(t.statement))+(mutant==='trigger'?' SQL secret-password':''),t.charset,mutant==='trigger-collation'?'changed':t.collation,t.database_collation,'timestamp'].join('\t');}
+  if(sql.startsWith('SHOW CREATE TRIGGER')){const name=/`([^`]+)`/.exec(sql)[1],t=base.triggers[name];if(mutant?.trigger===name)return [name,adapter.mode(t.mode),mutant.change(observedTrigger(t.statement)),t.charset,t.collation,t.database_collation,'timestamp'].join('\t');return [name,mutant==='trigger-mode'?'changed':adapter.mode(t.mode),(triggerMutations[mutant==='multi'?'trigger-body':mutant]?triggerMutations[mutant==='multi'?'trigger-body':mutant](observedTrigger(t.statement)):observedTrigger(t.statement))+(mutant==='trigger'?' SQL secret-password':''),t.charset,mutant==='trigger-collation'?'changed':t.collation,t.database_collation,'timestamp'].join('\t');}
   if(sql.startsWith('SELECT TABLE_COLLATION'))return mutant==='table-collation'?'utf8mb4_0900_ai_ci':'utf8mb4_general_ci';
   if(sql.startsWith('SELECT COLLATION_NAME'))return mutant==='column-collation'?'utf8mb4_0900_ai_ci':'utf8mb4_general_ci';
   if(mutant==='missing-triggers'&&sql.includes('information_schema.TRIGGERS'))return 'NULL';
@@ -57,7 +58,7 @@ function simulate(mutant,audit=false){
   if(sql.startsWith('SELECT TABLE_NAME')&&mutant==='inventory')return 'unexpected';
   if(sql.startsWith('SELECT TABLE_NAME'))return [...Object.keys(base.tables),...Object.keys(add.contract.tables)].sort().join('\n');
   if(sql.startsWith('SELECT CONCAT(ROUTINE_NAME'))return 'er_schema_ready:PROCEDURE';
-  for(const [section,table] of Object.entries({columns:'COLUMNS',indexes:'STATISTICS',foreignKeys:'REFERENTIAL_CONSTRAINTS',keyColumns:'KEY_COLUMN_USAGE'}))if(sql.includes('FROM information_schema.'+table+' '))return JSON.stringify(mutant==='metadata'?add.contract[section].slice(1):add.contract[section]);
+  for(const [section,table] of Object.entries({columns:'COLUMNS',indexes:'STATISTICS',foreignKeys:'REFERENTIAL_CONSTRAINTS',keyColumns:'KEY_COLUMN_USAGE'}))if(sql.includes('FROM information_schema.'+table+' ')){let rows=section==='foreignKeys'?require('./release-additive-contract.cjs').contract.foreignKeys.map(r=>({...r,UPDATE_RULE:'NO ACTION'})):add.contract[section];if(mutant?.fk&&section===mutant.section)rows=rows.map(r=>r.CONSTRAINT_NAME===mutant.fk?{...r,[mutant.field]:mutant.value}:r);return JSON.stringify(mutant==='metadata'?rows.slice(1):rows);}
   if(sql.includes('information_schema.PARAMETERS'))return '0';
   if(sql.includes('information_schema.ROUTINES'))return JSON.stringify({deterministic:'NO',comment:'',mode:add.contract.triggers[0].SQL_MODE,charset:'utf8mb4',collation:'utf8mb4_unicode_ci',database_collation:'utf8mb4_unicode_ci',body:add.body+(['routine','multi'].includes(mutant)?' SQL secret-password':''),security:'DEFINER',access:'READS SQL DATA',definer:mutant==='definer'?'secret-password':config.schemaDefiner});
   return '1';
@@ -71,6 +72,30 @@ function simulate(mutant,audit=false){
 }
 simulate();
 simulate(null,true);
+assert.equal(simulate('readiness').id,'readiness-probe');
+assert.deepEqual(simulate('readiness',true).map(r=>r.id),['readiness-probe']);
+const incidentTriggers=Object.entries(base.triggers).filter(([,t])=>/\nFOR EACH ROW/.test(t.statement));
+assert.equal(incidentTriggers.length,15);
+const incident=require('../docs/quality/staging-evidence/mysql84-run-41137133838-reconstructed.json').records;
+assert.equal(incident.length,20);
+for(const row of incident){
+ if(row.id==='additive-foreignKeys')continue; // Table-level hashes checked below.
+ const records=row.id==='base-trigger-ddl'?simulate({trigger:row.object,change:s=>s.replace(' FOR EACH ROW','\nFOR EACH ROW')},true):
+  simulate('readiness',true);
+ const actual=records.find(r=>r.id===row.id&&r.object===row.object);assert(actual);
+ assert.equal(actual.expectedHash,row.id==='readiness-probe'?row.expectedHash:row.actualHash);
+ assert.equal(actual.actualHash,row.id==='readiness-probe'?row.actualHash:row.expectedHash);
+}
+for(const [trigger] of incidentTriggers)for(const change of [s=>s.replace(' FOR EACH ROW','\nFOR EACH ROW'),s=>s.replace('BEGIN','BEGIN '),...Object.values(triggerMutations)]){
+ const records=simulate({trigger,change},true);assert(records.some(r=>r.id==='base-trigger-ddl'&&r.object===trigger));
+}
+for(const row of add.contract.foreignKeys)for(const [section,field,value] of [
+ ['foreignKeys','UPDATE_RULE','RESTRICT'],['foreignKeys','UPDATE_RULE','CASCADE'],['foreignKeys','UPDATE_RULE','SET NULL'],
+ ['foreignKeys','DELETE_RULE','NO ACTION'],['foreignKeys','DELETE_RULE','CASCADE'],['foreignKeys','DELETE_RULE','SET NULL'],
+ ['foreignKeys','CONSTRAINT_NAME','changed'],['foreignKeys','REFERENCED_TABLE_NAME','changed'],
+ ['keyColumns','COLUMN_NAME','changed'],['keyColumns','REFERENCED_COLUMN_NAME','changed'],['keyColumns','ORDINAL_POSITION',99]
+])assert(simulate({fk:row.CONSTRAINT_NAME,section,field,value},true).some(r=>r.id==='additive-'+section&&r.object===row.TABLE_NAME));
+
 const missingTriggers=simulate('missing-triggers',true);assert(missingTriggers.some(r=>r.id==='trigger-inventory'));assert.equal(missingTriggers.filter(r=>r.id==='trigger-definer').length,180);
 const missingRoutine=simulate('missing-routine',true);assert(missingRoutine.some(r=>r.id==='routine-body'));assert(missingRoutine.some(r=>r.id==='routine-definer'));
 assert(simulate('inventory',true).some(r=>r.id==='table-inventory'));
@@ -108,16 +133,39 @@ const old=require('./release-additive-contract.cjs'),modern=old.forMySql84();
 assert(old.contract.triggers.every(t=>t.SQL_MODE.includes('NO_AUTO_CREATE_USER')));
 assert(modern.contract.triggers.every(t=>!t.SQL_MODE.includes('NO_AUTO_CREATE_USER')));
 assert.deepStrictEqual(modern.contract.triggers.map(t=>t.ACTION_STATEMENT),old.contract.triggers.map(t=>t.ACTION_STATEMENT));
-for(const key of ['indexes','foreignKeys','keyColumns'])assert.deepStrictEqual(modern.contract[key],old.contract[key]);
+for(const key of ['indexes','keyColumns'])assert.deepStrictEqual(modern.contract[key],old.contract[key]);
 const restrictCounts={identity_account_state:1,identity_account_event:1,institution_profile_acquisition:4,identity_password_attempt:1,er_schema_release:0};
 const sources=Object.keys(old.contract.sources).map(file=>fs.readFileSync(path.join(root,file),'utf8'));
+assert.equal(modern.contract.foreignKeys.length,7);
+assert.deepStrictEqual(modern.contract.foreignKeys,old.contract.foreignKeys.map(row=>({...row,UPDATE_RULE:'NO ACTION'})));
+// Decode the actual generated readiness FK predicate, not a mock ready=1.
+// This checks generation offline; executing SQL remains a Docker integration check.
+const predicate=modern.body.split('\n').find(line=>line.includes('FROM information_schema.REFERENTIAL_CONSTRAINTS'));
+assert(predicate.endsWith('=7'));
+// Parentheses in CONVERT make a generic SQL parenthesis matcher unsuitable.
+const fkKeys=['TABLE_NAME','CONSTRAINT_NAME','REFERENCED_TABLE_NAME','UPDATE_RULE','DELETE_RULE'];
+const values=[...predicate.matchAll(/`(\w+)` <=> CONVERT\(0x([0-9a-f]+) USING utf8mb4\)/g)].map(m=>[m[1],Buffer.from(m[2],'hex').toString('utf8')]);
+assert.equal(values.length,35);
+const expectedFks=Array.from({length:7},(_,i)=>Object.fromEntries(values.slice(i*5,i*5+5)));
+const ready=rows=>rows.filter(row=>expectedFks.some(expected=>fkKeys.every(k=>row[k]===expected[k]))).length===7;
+const observedFks=old.contract.foreignKeys.map(row=>({...row,UPDATE_RULE:'NO ACTION'}));
+for(const row of require('../docs/quality/staging-evidence/mysql84-run-41137133838-reconstructed.json').records.filter(r=>r.id==='additive-foreignKeys')){
+ const hashRows=rows=>crypto.createHash('sha256').update(JSON.stringify(rows.filter(r=>r.TABLE_NAME===row.object).map(r=>JSON.stringify(fkKeys.map(k=>r[k]))).sort())).digest('hex').toUpperCase();
+ assert.equal(hashRows(old.contract.foreignKeys),row.expectedHash);assert.equal(hashRows(observedFks),row.actualHash);
+}
+assert(ready(observedFks));assert(!ready(old.contract.foreignKeys));assert(!ready(observedFks.slice(1)));
+for(let i=0;i<7;i++)for(const key of fkKeys)for(const value of ['changed','RESTRICT','CASCADE','SET NULL']){
+ if(observedFks[i][key]===value)continue;
+ const rows=structuredClone(observedFks);rows[i][key]=value;assert(!ready(rows),i+':'+key+':'+value);
+}
+assert.equal(old.body.includes('CONVERT(0x4e4f20414354494f4e USING utf8mb4)'),false);
 for(const [name,count] of Object.entries(restrictCounts)){
  assert.equal((modern.contract.tables[name].match(/ON DELETE RESTRICT/g)||[]).length,count,name);
  assert.equal(modern.contract.tables[name].replaceAll(' ON DELETE RESTRICT',''),old.contract.tables[name]);
  console.log(`Offline additive DDL verified: ${name}; ${count} explicit DELETE RESTRICT`);
 }
 assert.equal(crypto.createHash('sha256').update(adapter.ddl(modern.contract.tables.identity_account_state).replaceAll('\r\n','\n')).digest('hex').toUpperCase(),'65964642BF1665C58D0DCB96508D9555F53FB356E2A742CEAFDECD628D8F1DAC');
-for(const change of [s=>s.replace('ON DELETE RESTRICT',''),s=>s.replace('ON DELETE RESTRICT','ON DELETE CASCADE'),s=>s.replace('fk_identity_state_user','fk_changed'),s=>s.replace('FOREIGN KEY(user_id)','FOREIGN KEY(display_name)'),s=>s.replace('REFERENCES `user`(id)','REFERENCES `user`(other_id)')])assert.throws(()=>adapter.contract(old.contract,sources.map(change)));
+for(const change of [s=>s.replace('ON DELETE RESTRICT',''),s=>s.replace('ON DELETE RESTRICT','ON DELETE CASCADE'),s=>s.replace('ON DELETE RESTRICT','ON DELETE SET NULL'),s=>s.replace('ON DELETE RESTRICT','ON DELETE RESTRICT ON UPDATE RESTRICT'),s=>s.replace('ON DELETE RESTRICT','ON DELETE RESTRICT ON UPDATE NO ACTION'),s=>s.replace('fk_identity_state_user','fk_changed'),s=>s.replace('FOREIGN KEY(user_id)','FOREIGN KEY(display_name)'),s=>s.replace('REFERENCES `user`(id)','REFERENCES `user`(other_id)')])assert.throws(()=>adapter.contract(old.contract,sources.map(change)));
 assert.throws(()=>adapter.contract(old.contract,sources.slice(1)));
 assert.equal(adapter.column('int(11) unsigned'), 'int unsigned');
 assert.equal(adapter.column('tinyint(1)'), 'tinyint(1)');
@@ -139,9 +187,9 @@ for(const [name,t] of Object.entries(base.triggers)){
  const header=/^(CREATE (?:DEFINER=\x60[^\x60]+\x60@\x60[^\x60]+\x60 )?TRIGGER\s+)(\x60[^\x60]+\x60|\w+)(\s+(?:BEFORE|AFTER)\s+(?:INSERT|UPDATE|DELETE)\s+ON\s+)(\x60[^\x60]+\x60|\w+)(\s+FOR\s+EACH\s+ROW\b)/.exec(t.statement);
  assert(header,name);bareTriggers+=!header[2].startsWith('\x60');bareTables+=!header[4].startsWith('\x60');quotedTables+=header[4].startsWith('\x60');newlines+=header[5].includes('\n');
  const derived=adapter.triggerDdl(t.statement),quote=v=>v.startsWith('\x60')?v:'\x60'+v+'\x60';
- assert.equal(derived,(header[1]+quote(header[2])+header[3]+quote(header[4])+t.statement.slice(header[0].length-header[5].length)).replace(/(FOR EACH ROW)\r?\n(?=BEGIN\b)/,'$1 '),name);
+ assert.equal(derived,(header[1]+quote(header[2])+header[3]+quote(header[4])+' '+t.statement.slice(header[0].length-header[5].length).trimStart()).replace(/(FOR EACH ROW)\r?\n(?=BEGIN\b)/,'$1 '),name);
  assert.equal(adapter.triggerDdl(derived),derived,name);
- for(const space of [' ','\n','\r\n','\t'])assert.equal(adapter.triggerDdl(t.statement.replace(/\s+FOR\s+EACH\s+ROW\b/,space+'FOR EACH ROW')),derived.replace(/\s+FOR\s+EACH\s+ROW\b/,space+'FOR EACH ROW'),name);
+ for(const space of [' ','\n','\r\n','\t'])assert.equal(adapter.triggerDdl(t.statement.replace(/\s+FOR\s+EACH\s+ROW\b/,space+'FOR EACH ROW')),derived,name);
 }
 assert.equal(Object.keys(base.triggers).length,174);assert.deepEqual([bareTriggers,bareTables,quotedTables],[174,136,38]);assert(newlines>0);
 assert.equal(JSON.stringify(base),snapshot);
@@ -200,6 +248,7 @@ try{
  for(const record of derived.records){
   assert.equal(record.sourceHash,manifest.files[record.source]);
   const sql=fs.readFileSync(path.join(bundle,record.artifact),'utf8');
+  if(record.source.endsWith('005_release_gate.sql')){assert(sql.includes(modern.body));assert(!sql.includes(old.body));}
   assert.equal(record.artifactHash,crypto.createHash('sha256').update(sql).digest('hex').toUpperCase());
   if(record.source==='migrations/bootstrap/001_schema.sql'){const historical=fs.readFileSync(path.join(root,record.source),'utf8').match(/CREATE TABLE `mt3a_legacy_scope` \([\s\S]*?;/)[0];assert(sql.includes(historical.replace(/;$/,' COLLATE=utf8mb4_general_ci;')));assert(!sql.includes(historical));}
   assert(!sql.includes('NO_AUTO_CREATE_USER'));assert(!sql.includes('mysql.proc'));
