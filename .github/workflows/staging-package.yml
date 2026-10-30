@@ -27,6 +27,16 @@ jobs:
         with:
           ref: ${{ inputs.source_sha || github.sha }}
           persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: '10.0.x'
+      - name: Offline MVC routes, feature providers and real DTO contracts
+        run: |
+          dotnet restore Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --locked-mode
+          dotnet test tests/Integration/Integration.Tests.csproj --no-restore -c Release --filter FullyQualifiedName~StagingCalendarFeatureTests
       - name: Prepare a new isolated namespace (no EC2 or AWS credentials)
         run: |
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
@@ -34,6 +44,7 @@ jobs:
           node tools/test-release-manifest.cjs
           node tools/test-mysql84.cjs
           python3 tools/test_staging.py
+          python3 tools/test_staging_http.py
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" prepare
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" config
       - name: Docker build, fresh SQL, complete schema audit, preflight, driver TLS and non-root readiness
@@ -50,9 +61,28 @@ jobs:
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" tls
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" seed
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" start
-          sudo python3 infra/staging/host.py --state "$STAGE_STATE" http
           sudo cat "$STAGE_STATE/images.json" "$STAGE_STATE/mysql-capabilities.json" "$STAGE_STATE/ops/database-identity.json" "$STAGE_STATE/ops/compatibility-result.json" "$STAGE_STATE/ops/preflight-result.json" "$STAGE_STATE/ops/transport-result.json"
-          sudo cat "$STAGE_STATE"/ops/http-smoke-*.json
+      - name: Real Docker HTTP audit (collect independent failures; FAIL or BLOCKED fails gate)
+        run: sudo python3 infra/staging/host.py --state "$STAGE_STATE" http
+      - name: Collect sanitized HTTP evidence even when the audit fails
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/staging-http-evidence"
+          if sudo test -d "$STAGE_STATE/ops"; then
+            while IFS= read -r file; do
+              sudo cat "$file"
+              sudo cp "$file" "$RUNNER_TEMP/staging-http-evidence/"
+            done < <(sudo find "$STAGE_STATE/ops" -maxdepth 1 -type f -name 'http-smoke-*.json')
+            sudo chown -R "$(id -u):$(id -g)" "$RUNNER_TEMP/staging-http-evidence"
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: staging-http-audit-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/staging-http-evidence/*.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Sanitized Docker and MySQL failure diagnostics (before stop)
         if: failure()
         run: |

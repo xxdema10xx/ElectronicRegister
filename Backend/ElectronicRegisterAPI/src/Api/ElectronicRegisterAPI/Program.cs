@@ -34,7 +34,7 @@ builder.Services.AddOptions<ElectronicRegisterAPI.Domain.Configuration.AcademicT
 builder.Services.AddSingleton(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<ElectronicRegisterAPI.Domain.Configuration.AcademicTransferOptions>>().Value);
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddApiServices();
-builder.Services.AddControllers().ConfigureApplicationPartManager(parts => parts.FeatureProviders.Add(new ElectronicRegisterAPI.Api.Security.CalendarControllerFeatureProvider(builder.Configuration))).ConfigureApplicationPartManager(parts => parts.FeatureProviders.Add(new ElectronicRegisterAPI.Api.Security.FormativePlanControllerFeatureProvider(builder.Configuration))).AddJsonOptions(options => options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
+builder.Services.AddApiControllers(builder.Configuration);
 builder.Services.AddAuthentication(ElectronicRegisterAPI.Infrastructure.Security.InstitutionTokenContract.AccessScheme);
 builder.Services.AddAuthorization();
 ElectronicRegisterAPI.Api.Security.InstitutionAuthentication.AddInstitutionAuthentication(builder.Services, builder.Configuration);

@@ -4,6 +4,14 @@ namespace ElectronicRegisterAPI.Api.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
+    // Shared by Program and the offline EndpointDataSource contract audit.
+    public static IMvcBuilder AddApiControllers(this IServiceCollection services, IConfiguration configuration) =>
+        services.AddControllers()
+            .AddApplicationPart(typeof(ElectronicRegisterAPI.Api.Controllers.InstitutionCalendarController).Assembly)
+            .ConfigureApplicationPartManager(parts => parts.FeatureProviders.Add(new ElectronicRegisterAPI.Api.Security.CalendarControllerFeatureProvider(configuration)))
+            .ConfigureApplicationPartManager(parts => parts.FeatureProviders.Add(new ElectronicRegisterAPI.Api.Security.FormativePlanControllerFeatureProvider(configuration)))
+            .AddJsonOptions(options => options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
+
     public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
         services.AddExceptionHandler<GlobalExceptionHandler>();

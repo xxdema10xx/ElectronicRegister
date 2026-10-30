@@ -33,6 +33,7 @@ jobs:
       - run: dotnet restore tools/CodeOrganization/CodeOrganization.csproj --locked-mode
       - run: dotnet run --project tools/CodeOrganization --no-restore -- check .
       - run: dotnet test tests/Unit/Unit.Tests.csproj --no-build -c Release
+      - run: dotnet test tests/Integration/Integration.Tests.csproj --no-build -c Release --filter FullyQualifiedName~StagingCalendarFeatureTests
       - run: dotnet restore tools/ReleaseTransportProbe/ReleaseTransportProbe.csproj --locked-mode
       - run: dotnet build tools/ReleaseTransportProbe/ReleaseTransportProbe.csproj --no-restore -c Release
       - run: dotnet list tools/ReleaseTransportProbe/ReleaseTransportProbe.csproj package --vulnerable --include-transitive --format json > transport-audit.json

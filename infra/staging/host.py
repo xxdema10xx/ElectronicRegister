@@ -85,6 +85,15 @@ server {{
 }}
 '''
 
+def runtime_configuration(domain, gateway):
+    """Runtime for the isolated Docker staging only."""
+    return {'Deployment': {'Mode':'Staging','RolloutApproved':True}, 'urls':'http://0.0.0.0:8080', 'AllowedHosts':domain,
+               'Jwt':{'Issuer':'er-staging','Audience':'er-staging-client'},
+               'Readiness':{'ExpectedVersion':MYSQL['version'],'ExpectedHost':'er-stage-db','ExpectedDataDir':'/var/lib/mysql'},
+               'Transport':{'KnownProxies':[gateway,'127.0.0.1'], 'AllowedOrigins':['https://consoliprojects.dev'], 'HttpsPort':443},
+               'Identity':{'Legacy':{'Enabled':False}},
+               'Multitenancy':{k:{'Enabled':k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar')} for k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar','Onboarding','Governance','InstitutionWorker')}}
+
 def prepare(args):
     require(sys.platform.startswith('linux') and os.geteuid() == 0, 'Prepare on Linux as root to set real bind-secret ownership; no permission bypass')
     require(shutil.which('openssl'), 'openssl is required')
@@ -135,12 +144,7 @@ def prepare(args):
         write(folder/f'secrets/{name}/jwt-key', jwt, uid, uid)
     connection = 'Server=er-stage-db;Port=3306;Database=electronic_register_staging;User ID=er_api;Password='+passwords['api']+';SslMode=VerifyFull;SslCa=/run/secrets/mysql-ca.pem;TlsVersion=TLS 1.2'
     write(folder/'secrets/api/connection', connection, 1654, 1654)
-    runtime = {'Deployment': {'Mode':'Staging','RolloutApproved':True}, 'urls':'http://0.0.0.0:8080', 'AllowedHosts':args.domain,
-               'Jwt':{'Issuer':'er-staging','Audience':'er-staging-client'},
-               'Readiness':{'ExpectedVersion':MYSQL['version'],'ExpectedHost':'er-stage-db','ExpectedDataDir':'/var/lib/mysql'},
-               'Transport':{'KnownProxies':[state['gateway'],'127.0.0.1'], 'AllowedOrigins':['https://consoliprojects.dev'], 'HttpsPort':443},
-               'Identity':{'Legacy':{'Enabled':False}},
-               'Multitenancy':{k:{'Enabled':k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi')} for k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','Onboarding','Governance','InstitutionWorker')}}
+    runtime = runtime_configuration(args.domain, state['gateway'])
     public = dict(state)
     write(folder/'public/staging.json', json.dumps(public, indent=2), mode=0o444)
     write(folder/'public/runtime.json', json.dumps(runtime, indent=2), mode=0o444)
@@ -298,22 +302,34 @@ def main():
         return verify(folder,s)
     if a.command=='verify':return verify(folder,s)
     if a.command=='http':
-        verify(folder,s)
-        compose(folder,'run','--rm','--no-deps','ops','preflight')
+        # Retain container/port/UID safety checks; HTTP readiness belongs in the
+        # accumulating audit, otherwise its first failure would hide every case.
         import smoke
+        try:
+            verify(folder,s,readiness=False)
+            compose(folder,'run','--rm','--no-deps','ops','preflight')
+        except (RuntimeError, subprocess.CalledProcessError, OSError):
+            # Fail closed without contacting HTTP; preserve the blocked inventory.
+            return smoke.blocked_setup(folder/'ops')
         return smoke.run(s,folder/'ops',loopback=True,key_file=folder/'secrets/ops/jwt-key')
 
-def verify(folder,s):
+def verify(folder,s,readiness=True):
     for service,uid in [('api','1654'),('db','999')]:
         cid=compose(folder,'ps','-q',service,capture=True)
         require(cid,'Missing '+service)
         obj=json.loads(output(['docker','inspect',cid]))[0]
-        require(obj['State'].get('Health',{}).get('Status')=='healthy','Unhealthy '+service)
+        if readiness or service=='db':
+            require(obj['State'].get('Health',{}).get('Status')=='healthy','Unhealthy '+service)
+        else:
+            require(obj['State'].get('Running') is True,'API container is not running')
         ports=obj['HostConfig'].get('PortBindings') or {}
         if service=='db':require(not ports,'MySQL unexpectedly published')
         else:require(ports=={'8080/tcp':[{'HostIp':'127.0.0.1','HostPort':str(s['port'])}]},'API bind is not loopback-only')
         status=compose(folder,'exec','-T',service,'cat','/proc/1/status',capture=True)
         require(re.search(r'^Uid:\s+'+uid+r'\s',status,re.M),'PID 1 is not the configured non-root user')
+    if not readiness:
+        print('Owned containers, API loopback-only, SQL unpublished, PID 1 non-root verified; HTTP readiness delegated to audit.')
+        return
     connection=http.client.HTTPConnection('127.0.0.1',s['port'],timeout=6)
     try:
         connection.request('GET','/health/ready',headers={'Host':s['domain'],'X-Forwarded-Proto':'https'})

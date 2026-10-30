@@ -18,6 +18,22 @@ host=load('host');ops=load('ops');diagnostics=load('diagnostics')
 sys.modules['diagnostics']=diagnostics
 
 class StagingTests(unittest.TestCase):
+    def test_http_audit_retains_container_safety_but_records_unhealthy_readiness_itself(self):
+        state=dict(port=18080,project='synthetic',domain='staging.example.invalid')
+        def compose(folder,*args,**kwargs):
+            if args[0]=='ps':return args[-1]
+            return 'Uid: 1654 1654 1654 1654' if args[2]=='api' else 'Uid: 999 999 999 999'
+        def inspect(args):
+            service=args[-1]
+            return json.dumps([dict(State=dict(Running=True,Health=dict(Status='unhealthy' if service=='api' else 'healthy')),
+                HostConfig=dict(PortBindings={'8080/tcp':[dict(HostIp='127.0.0.1',HostPort='18080')]} if service=='api' else {}))])
+        with mock.patch.object(host,'compose',side_effect=compose),mock.patch.object(host,'output',side_effect=inspect),mock.patch.object(host.http.client,'HTTPConnection') as http,mock.patch('sys.stdout',new_callable=io.StringIO):
+            host.verify(Path('synthetic'),state,readiness=False)
+            http.assert_not_called()
+            with self.assertRaisesRegex(RuntimeError,'Unhealthy api'):host.verify(Path('synthetic'),state)
+            state['port']=18081
+            with self.assertRaisesRegex(RuntimeError,'loopback-only'):host.verify(Path('synthetic'),state,readiness=False)
+
     def test_actual_preflight_failures_reach_github_projection(self):
         failures=json.loads(subprocess.check_output(['node',str(ROOT/'tools/test-mysql84.cjs'),'--diagnostics-json'],text=True))
         with tempfile.TemporaryDirectory() as tmp:
@@ -148,7 +164,16 @@ class StagingTests(unittest.TestCase):
             run.side_effect=openssl
             args=argparse.Namespace(state=str(folder),domain='staging.example.invalid',subnet='172.30.252.0/24',port=18080,mysql_image=host.MYSQL['image'])
             host.prepare(args)
-            self.assertEqual(json.loads((folder/'public/runtime.json').read_text())['Readiness']['ExpectedVersion'],'8.4.13')
+            runtime=json.loads((folder/'public/runtime.json').read_text())
+            self.assertEqual(runtime['Readiness']['ExpectedVersion'],'8.4.13')
+            self.assertEqual(runtime['Deployment'],dict(Mode='Staging',RolloutApproved=True))
+            self.assertEqual({k for k,v in runtime['Multitenancy'].items() if v['Enabled']},
+                             {'SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar'})
+            for feature in ('Onboarding','Governance','InstitutionWorker'):
+                self.assertIs(runtime['Multitenancy'][feature]['Enabled'],False)
+            for feature in ('FormativePlans','InstitutionImport'):
+                self.assertFalse(runtime['Multitenancy'].get(feature,{}).get('Enabled',False))
+            self.assertIs(runtime['Identity']['Legacy']['Enabled'],False)
             self.assertEqual(json.loads((folder/'public/preflight.json').read_text())['expectedVersion'],'8.4.13')
             self.assertEqual(json.loads((folder/'state.json').read_text())['format'],3)
             with self.assertRaises(RuntimeError):host.prepare(args)
