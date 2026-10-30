@@ -53,7 +53,7 @@ for(const [table,ddl]of Object.entries(additive.contract.tables)){
 }
 for(const [name,t]of Object.entries(contract.triggers)){
  identify('trigger',name,'base-trigger-mode');
- let expected=t.statement;
+ let expected=mysql84?adapter.triggerDdl(t.statement):t.statement;
  if(isolated)expected=expected.replaceAll('@@port=13306','@@port='+config.port).replaceAll("RIGHT(LOWER(REPLACE(@@datadir,CHAR(92),'/')),45)='/migrations/mt4/private/mt5a-mamp-13306/data/'",`LOWER(REPLACE(@@datadir,CHAR(92),'/'))='${datadir.toLowerCase()}'`);
  const row=read('SHOW CREATE TRIGGER `'+name+'`;').split('\t');
  if(row[1]!== (mysql84?adapter.mode(t.mode):t.mode))throw Error('Base trigger SQL mode mismatch: '+name);

@@ -8,6 +8,15 @@ function legacyScopeCollation(source){
 function tableDdl(name,source){
  return ddl(name==='mt3a_legacy_scope'?legacyScopeCollation(source).replace(/^  `scope` enum\('legacy'\) NOT NULL,$/m,"  `scope` enum('legacy') COLLATE utf8mb4_general_ci NOT NULL,"):source);
 }
+// Expected header only: preserve quoted identifiers, whitespace, DEFINER and body.
+// Never apply this derivation to observed server DDL.
+function triggerDdl(source){
+ const identifier='(?:`(?:``|[^`])+`|[A-Za-z0-9_$]+)';
+ const header=new RegExp('^(CREATE (?:DEFINER=`[^`]+`@`[^`]+` )?TRIGGER\\s+)('+identifier+')(\\s+(?:BEFORE|AFTER)\\s+(?:INSERT|UPDATE|DELETE)\\s+ON\\s+)('+identifier+')(?=\\s+FOR\\s+EACH\\s+ROW\\b)');
+ if(!header.test(source))throw Error('Unsupported historical trigger header');
+ const quote=name=>name.startsWith('`')?name:'`'+name+'`';
+ return source.replace(header,(_,prefix,name,middle,table)=>prefix+quote(name)+middle+quote(table));
+}
 function sql(source){
  // ROW_NUMBER is reserved in 8.x. Qualified NEW.row_number stays legal/unchanged.
  return legacyScopeCollation(source).replaceAll(',NO_AUTO_CREATE_USER','').replace(/(?<![.\w`])row_number(?![\w`])/g,'`row_number`');
@@ -53,4 +62,4 @@ function contract(value,sources){
  }
  return copy;
 }
-module.exports={mode,column,sql,ddl,tableDdl,contract};
+module.exports={mode,column,sql,ddl,tableDdl,triggerDdl,contract};

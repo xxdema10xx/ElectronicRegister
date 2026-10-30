@@ -22,12 +22,26 @@ const additiveMutations={
 // Independent observed fixture: historical SHOW CREATE plus the seven explicit
 // clauses from the migrations. Never use the derived expected tables as input.
 const observedAdditive=Object.fromEntries(Object.entries(require('./release-additive-contract.cjs').contract.tables).map(([name,ddl])=>[name,ddl.replace(/(CONSTRAINT .* REFERENCES .*\))(?=,?\r?$)/gm,'$1 ON DELETE RESTRICT')]));
+// Independent observed fixture, built by tokenizing only the header.
+function observedTrigger(statement){
+ const end=statement.search(/\s+FOR\s+EACH\s+ROW\b/);assert(end>0);
+ const tokens=statement.slice(0,end).split(/(\s+)/);
+ for(const i of [tokens.indexOf('TRIGGER')+2,tokens.indexOf('ON')+2])if(!tokens[i].startsWith('\x60'))tokens[i]='\x60'+tokens[i]+'\x60';
+ return tokens.join('')+statement.slice(end);
+}
+const triggerMutations={
+ 'trigger-name':s=>s.replace(/(TRIGGER \x60)[^\x60]+/,'$1changed'),
+ 'trigger-table':s=>s.replace(/( ON \x60)[^\x60]+/,'$1changed'),
+ 'trigger-event':s=>s.replace(/ (INSERT|UPDATE|DELETE) ON /,(_,v)=>' '+(v==='DELETE'?'INSERT':'DELETE')+' ON '),
+ 'trigger-timing':s=>s.replace(/ (BEFORE|AFTER) /,(_,v)=>' '+(v==='BEFORE'?'AFTER':'BEFORE')+' '),
+ 'trigger-body':s=>s+' SQL secret-password'
+};
 function simulate(mutant){
  const output=[];
  function read(sql){
   if(sql.startsWith('SELECT VERSION'))return '8.4.13\t3306\t/data/\tdb';
   if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];let ddl=name==='mt3a_legacy_scope'?observedLegacy:base.tables[name]||observedAdditive[name];if(name==='mt3a_legacy_scope'&&legacyMutations[mutant])ddl=legacyMutations[mutant](ddl);if(mutant?.table===name)ddl=additiveMutations[mutant.kind](ddl);return name+'\t'+(ddl.replace(/ COLLATE utf8mb4_unicode_ci/g,' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')+(mutant==='table'?' SQL secret-password':'')).replace('COLLATE=utf8mb4_general_ci',mutant==='ddl-collation'?'COLLATE=utf8mb4_0900_ai_ci':'COLLATE=utf8mb4_general_ci');}
-  if(sql.startsWith('SHOW CREATE TRIGGER')){const name=/`([^`]+)`/.exec(sql)[1],t=base.triggers[name];return [name,adapter.mode(t.mode),t.statement+(mutant==='trigger'?' SQL secret-password':''),t.charset,t.collation,t.database_collation,'timestamp'].join('\t');}
+  if(sql.startsWith('SHOW CREATE TRIGGER')){const name=/`([^`]+)`/.exec(sql)[1],t=base.triggers[name];return [name,adapter.mode(t.mode),(triggerMutations[mutant]?triggerMutations[mutant](observedTrigger(t.statement)):observedTrigger(t.statement))+(mutant==='trigger'?' SQL secret-password':''),t.charset,t.collation,t.database_collation,'timestamp'].join('\t');}
   if(sql.startsWith('SELECT TABLE_COLLATION'))return mutant==='table-collation'?'utf8mb4_0900_ai_ci':'utf8mb4_general_ci';
   if(sql.startsWith('SELECT COLLATION_NAME'))return mutant==='column-collation'?'utf8mb4_0900_ai_ci':'utf8mb4_general_ci';
   if(sql.includes('information_schema.TRIGGERS'))return JSON.stringify([
@@ -43,6 +57,7 @@ function simulate(mutant){
  return JSON.parse(output[0].replace('ER_PREFLIGHT_FAILURE ',''));
 }
 simulate();
+for(const mutant of Object.keys(triggerMutations))assert.equal(simulate(mutant).id,'base-trigger-ddl');
 for(const table of additiveNames){
  assert.equal(adapter.ddl(add.contract.tables[table]),adapter.ddl(observedAdditive[table]),table);
  if(table==='er_schema_release')continue;
@@ -95,6 +110,23 @@ assert.equal(adapter.ddl(expected.replace('CHARACTER SET ascii','CHARACTER SET a
 for(const changed of [expected.replace('ascii','utf8mb4'),expected.replace('NOT NULL','NULL'),expected.replace('UNIQUE KEY','KEY'),expected.replace('`institution_id`,`id`','`id`,`institution_id`')])assert.notEqual(adapter.ddl(changed),adapter.ddl(expected));
 assert.notEqual(adapter.ddl('COLLATE=utf8mb4_unicode_ci'),adapter.ddl('COLLATE=utf8mb4_0900_ai_ci'));
 const base=JSON.parse(fs.readFileSync(path.join(root,'migrations/bootstrap/schema-contract.json')));
+const snapshot=JSON.stringify(base);
+let bareTriggers=0,bareTables=0,quotedTables=0,newlines=0;
+for(const [name,t] of Object.entries(base.triggers)){
+ const header=/^(CREATE (?:DEFINER=\x60[^\x60]+\x60@\x60[^\x60]+\x60 )?TRIGGER\s+)(\x60[^\x60]+\x60|\w+)(\s+(?:BEFORE|AFTER)\s+(?:INSERT|UPDATE|DELETE)\s+ON\s+)(\x60[^\x60]+\x60|\w+)(\s+FOR\s+EACH\s+ROW\b)/.exec(t.statement);
+ assert(header,name);bareTriggers+=!header[2].startsWith('\x60');bareTables+=!header[4].startsWith('\x60');quotedTables+=header[4].startsWith('\x60');newlines+=header[5].includes('\n');
+ const derived=adapter.triggerDdl(t.statement),quote=v=>v.startsWith('\x60')?v:'\x60'+v+'\x60';
+ assert.equal(derived,header[1]+quote(header[2])+header[3]+quote(header[4])+t.statement.slice(header[0].length-header[5].length),name);
+ assert.equal(adapter.triggerDdl(derived),derived,name);
+ for(const space of [' ','\n','\r\n','\t'])assert.equal(adapter.triggerDdl(t.statement.replace(/\s+FOR\s+EACH\s+ROW\b/,space+'FOR EACH ROW')),derived.replace(/\s+FOR\s+EACH\s+ROW\b/,space+'FOR EACH ROW'),name);
+}
+assert.equal(Object.keys(base.triggers).length,174);assert.deepEqual([bareTriggers,bareTables,quotedTables],[174,136,38]);assert(newlines>0);
+assert.equal(JSON.stringify(base),snapshot);
+const canonical=s=>s.replace(/^CREATE DEFINER=\x60[^\x60]+\x60@\x60[^\x60]+\x60 TRIGGER /,'CREATE TRIGGER ').replaceAll('\r\n','\n');
+const sha=s=>crypto.createHash('sha256').update(canonical(s)).digest('hex').toUpperCase();
+assert.equal(sha(base.triggers.administration_event_delete.statement),'FF99581A508BAA2951538D997BE5F529718CAF427EC9232886DF33BE41E31FFE');
+assert.equal(sha(adapter.triggerDdl(base.triggers.administration_event_delete.statement)),'5AD2E0FF381EF67E25CDDFCBBFD1E0BB837FBBEB4FE9B986FAD094A53E23DEDF');
+console.log('Offline: 174 historical headers verified, including '+newlines+' with newline before FOR; incident SHA256 reproduced');
 const legacy=base.tables.mt3a_legacy_scope;
 const derivedLegacy=legacy+' COLLATE=utf8mb4_general_ci';
 const expectedLegacy=derivedLegacy.replace("enum('legacy') NOT NULL","enum('legacy') COLLATE utf8mb4_general_ci NOT NULL");
