@@ -11,11 +11,22 @@ const legacyMutations={
  'ddl-fk':s=>s.replace('REFERENCES `institution` (`id`)','REFERENCES `institution` (`other_id`)'),
  'ddl-index':s=>s.replace('UNIQUE KEY `institution_id`','KEY `institution_id`')
 };
+const additiveNames=Object.keys(add.contract.tables);
+const additiveMutations={
+ 'missing-restrict':s=>s.replace(' ON DELETE RESTRICT',''),
+ 'delete-rule':s=>s.replace('ON DELETE RESTRICT','ON DELETE CASCADE'),
+ 'fk-name':s=>s.replace(/CONSTRAINT `([^`]+)`/, 'CONSTRAINT `$1_changed`'),
+ 'fk-local-columns':s=>s.replace(/FOREIGN KEY \(`[^`]+`/, 'FOREIGN KEY (`changed`'),
+ 'fk-referenced-columns':s=>s.replace(/REFERENCES (`[^`]+`) \(`[^`]+`/, 'REFERENCES $1 (`changed`')
+};
+// Independent observed fixture: historical SHOW CREATE plus the seven explicit
+// clauses from the migrations. Never use the derived expected tables as input.
+const observedAdditive=Object.fromEntries(Object.entries(require('./release-additive-contract.cjs').contract.tables).map(([name,ddl])=>[name,ddl.replace(/(CONSTRAINT .* REFERENCES .*\))(?=,?\r?$)/gm,'$1 ON DELETE RESTRICT')]));
 function simulate(mutant){
  const output=[];
  function read(sql){
   if(sql.startsWith('SELECT VERSION'))return '8.4.13\t3306\t/data/\tdb';
-  if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];let ddl=name==='mt3a_legacy_scope'?observedLegacy:base.tables[name]||add.contract.tables[name];if(name==='mt3a_legacy_scope'&&legacyMutations[mutant])ddl=legacyMutations[mutant](ddl);return name+'\t'+(ddl.replace(/ COLLATE utf8mb4_unicode_ci/g,' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')+(mutant==='table'?' SQL secret-password':'')).replace('COLLATE=utf8mb4_general_ci',mutant==='ddl-collation'?'COLLATE=utf8mb4_0900_ai_ci':'COLLATE=utf8mb4_general_ci');}
+  if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];let ddl=name==='mt3a_legacy_scope'?observedLegacy:base.tables[name]||observedAdditive[name];if(name==='mt3a_legacy_scope'&&legacyMutations[mutant])ddl=legacyMutations[mutant](ddl);if(mutant?.table===name)ddl=additiveMutations[mutant.kind](ddl);return name+'\t'+(ddl.replace(/ COLLATE utf8mb4_unicode_ci/g,' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')+(mutant==='table'?' SQL secret-password':'')).replace('COLLATE=utf8mb4_general_ci',mutant==='ddl-collation'?'COLLATE=utf8mb4_0900_ai_ci':'COLLATE=utf8mb4_general_ci');}
   if(sql.startsWith('SHOW CREATE TRIGGER')){const name=/`([^`]+)`/.exec(sql)[1],t=base.triggers[name];return [name,adapter.mode(t.mode),t.statement+(mutant==='trigger'?' SQL secret-password':''),t.charset,t.collation,t.database_collation,'timestamp'].join('\t');}
   if(sql.startsWith('SELECT TABLE_COLLATION'))return mutant==='table-collation'?'utf8mb4_0900_ai_ci':'utf8mb4_general_ci';
   if(sql.startsWith('SELECT COLLATION_NAME'))return mutant==='column-collation'?'utf8mb4_0900_ai_ci':'utf8mb4_general_ci';
@@ -32,6 +43,13 @@ function simulate(mutant){
  return JSON.parse(output[0].replace('ER_PREFLIGHT_FAILURE ',''));
 }
 simulate();
+for(const table of additiveNames){
+ assert.equal(adapter.ddl(add.contract.tables[table]),adapter.ddl(observedAdditive[table]),table);
+ if(table==='er_schema_release')continue;
+ for(const kind of Object.keys(additiveMutations)){
+  const failure=simulate({table,kind});assert.equal(failure.id,'additive-table-ddl');assert.equal(failure.object,table);assert.notEqual(failure.actualHash,failure.expectedHash);
+ }
+}
 for(const mutant of Object.keys(legacyMutations)){
  const failure=simulate(mutant);assert.equal(failure.id,'base-table-ddl');assert.equal(failure.object,'mt3a_legacy_scope');assert.notEqual(failure.actualHash,failure.expectedHash);
 }
@@ -52,7 +70,17 @@ const old=require('./release-additive-contract.cjs'),modern=old.forMySql84();
 assert(old.contract.triggers.every(t=>t.SQL_MODE.includes('NO_AUTO_CREATE_USER')));
 assert(modern.contract.triggers.every(t=>!t.SQL_MODE.includes('NO_AUTO_CREATE_USER')));
 assert.deepStrictEqual(modern.contract.triggers.map(t=>t.ACTION_STATEMENT),old.contract.triggers.map(t=>t.ACTION_STATEMENT));
-for(const key of ['indexes','foreignKeys','keyColumns','tables'])assert.deepStrictEqual(modern.contract[key],old.contract[key]);
+for(const key of ['indexes','foreignKeys','keyColumns'])assert.deepStrictEqual(modern.contract[key],old.contract[key]);
+const restrictCounts={identity_account_state:1,identity_account_event:1,institution_profile_acquisition:4,identity_password_attempt:1,er_schema_release:0};
+const sources=Object.keys(old.contract.sources).map(file=>fs.readFileSync(path.join(root,file),'utf8'));
+for(const [name,count] of Object.entries(restrictCounts)){
+ assert.equal((modern.contract.tables[name].match(/ON DELETE RESTRICT/g)||[]).length,count,name);
+ assert.equal(modern.contract.tables[name].replaceAll(' ON DELETE RESTRICT',''),old.contract.tables[name]);
+ console.log(`Offline additive DDL verified: ${name}; ${count} explicit DELETE RESTRICT`);
+}
+assert.equal(crypto.createHash('sha256').update(adapter.ddl(modern.contract.tables.identity_account_state).replaceAll('\r\n','\n')).digest('hex').toUpperCase(),'65964642BF1665C58D0DCB96508D9555F53FB356E2A742CEAFDECD628D8F1DAC');
+for(const change of [s=>s.replace('ON DELETE RESTRICT',''),s=>s.replace('ON DELETE RESTRICT','ON DELETE CASCADE'),s=>s.replace('fk_identity_state_user','fk_changed'),s=>s.replace('FOREIGN KEY(user_id)','FOREIGN KEY(display_name)'),s=>s.replace('REFERENCES `user`(id)','REFERENCES `user`(other_id)')])assert.throws(()=>adapter.contract(old.contract,sources.map(change)));
+assert.throws(()=>adapter.contract(old.contract,sources.slice(1)));
 assert.equal(adapter.column('int(11) unsigned'), 'int unsigned');
 assert.equal(adapter.column('tinyint(1)'), 'tinyint(1)');
 assert.equal(adapter.sql('row_number int, PRIMARY KEY(row_number); IF NEW.row_number<1'), '`row_number` int, PRIMARY KEY(`row_number`); IF NEW.row_number<1');

@@ -3,10 +3,10 @@ const fs=require('fs'),path=require('path'),crypto=require('crypto');
 const root=path.resolve(__dirname,'..');
 function render(mysql84=false){
 let contract=JSON.parse(fs.readFileSync(path.join(root,'migrations/release/additive-contract.json'),'utf8'));
-if(mysql84)contract=require('./mysql84-contract.cjs').contract(contract);
 const base=JSON.parse(fs.readFileSync(path.join(root,'migrations/bootstrap/schema-contract.json'),'utf8'));
 const sha=s=>crypto.createHash('sha256').update(s.replaceAll('\r\n','\n')).digest('hex').toUpperCase();
 for(const [file,hash] of Object.entries(contract.sources))if(sha(fs.readFileSync(path.join(root,file),'utf8'))!==hash)throw Error('Reviewed additive source drift: '+file);
+if(mysql84)contract=require('./mysql84-contract.cjs').contract(contract,Object.keys(contract.sources).map(file=>fs.readFileSync(path.join(root,file),'utf8')));
 if(contract.format!==1||contract.release!=='er-quality-1'||contract.marker!=='er-quality-1-closure-1')throw Error('Unknown additive contract');
 const q=v=>v===null?'NULL':typeof v==='number'?String(v):v===''?"''":"CONVERT(0x"+Buffer.from(String(v),'utf8').toString('hex')+" USING utf8mb4)";
 const match=(rows,keys)=>rows.map(row=>'('+keys.map(key=>'`'+key+'` <=> '+q(row[key])).join(' AND ')+')').join(' OR ');

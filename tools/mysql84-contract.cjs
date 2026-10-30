@@ -19,8 +19,33 @@ function ddl(source){
  // Match only a column type prefix, never text inside defaults or comments.
  return column(source).replace(/(^  `[^`]+` (?:(?:char|varchar)\(\d+\)|enum\('[^']*'(?:,'[^']*')*\)|tinytext|text|mediumtext|longtext)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci/gm,'$1 COLLATE utf8mb4_unicode_ci').replace(/ CHARACTER SET ascii COLLATE ascii_general_ci/g,' CHARACTER SET ascii');
 }
-function contract(value){
+// Expected additive DDL only. Source hashes are checked by the caller first.
+// Match complete FK identities against versioned CREATE TABLEs, never live DDL.
+function additiveTables(tables,sources){
+ const declarations=new Map();
+ const canonical=s=>s.replaceAll('`','').replace(/\s+/g,'');
+ for(const source of sources)for(const table of source.matchAll(/CREATE TABLE `?(\w+)`? \(([\s\S]*?)\) ENGINE=[^;]+;/g)){
+  if(declarations.has(table[1]))throw Error('Duplicate additive table: '+table[1]);
+  declarations.set(table[1],[...table[2].matchAll(/CONSTRAINT\s+`?(\w+)`?\s+FOREIGN KEY\s*\(([^)]+)\)\s+REFERENCES\s+(`?\w+`?)\s*\(([^)]+)\)\s+ON DELETE (RESTRICT)(?=\s*(?:,|$))/gm)]);
+  const count=[...table[2].matchAll(/\bFOREIGN KEY\b/g)].length;
+  if(declarations.get(table[1]).length!==count)throw Error('Unsupported additive FK declaration: '+table[1]);
+ }
+ if(JSON.stringify([...declarations.keys()].sort())!==JSON.stringify(Object.keys(tables).sort()))throw Error('Additive source table inventory mismatch');
+ return Object.fromEntries(Object.entries(tables).map(([name,sql])=>{
+  const remaining=new Map(declarations.get(name).map(m=>[m[1],m]));
+  const derived=sql.replace(/CONSTRAINT `([^`]+)` FOREIGN KEY \(([^)]+)\) REFERENCES (`[^`]+`) \(([^)]+)\)(?=,?\r?$)/gm,(text,key,local,target,remote)=>{
+   const source=remaining.get(key);
+   if(!source||canonical(local)!==canonical(source[2])||canonical(target)!==canonical(source[3])||canonical(remote)!==canonical(source[4]))throw Error('Additive FK source mismatch: '+name+'.'+key);
+   remaining.delete(key);
+   return text+' ON DELETE '+source[5];
+  });
+  if(remaining.size||[...derived.matchAll(/\bFOREIGN KEY\b/g)].length!==declarations.get(name).length)throw Error('Additive FK inventory mismatch: '+name);
+  return [name,derived];
+ }));
+}
+function contract(value,sources){
  const copy=JSON.parse(JSON.stringify(value));
+ copy.tables=additiveTables(copy.tables,sources);
  for(const t of copy.triggers)t.SQL_MODE=mode(t.SQL_MODE);
  for(const c of copy.columns){
   c.COLUMN_TYPE=column(c.COLUMN_TYPE);
