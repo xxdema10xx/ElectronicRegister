@@ -3,9 +3,6 @@ on:
   push:
     branches:
       - refactor-database-entities
-    paths:
-      - '.github/workflows/staging-package.yml'
-      - 'migrations/release/manifest.json'
 
   workflow_dispatch:
     inputs:
