@@ -55,7 +55,7 @@ try
         var ns = unit.DescendantNodes().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? "";
         var project = projects.Select(Path.GetDirectoryName).Where(d => file.StartsWith(d! + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)).OrderByDescending(d => d!.Length).FirstOrDefault();
         var layer = relative.Split('/')[3];
-        var expected = project is null ? "" : (layer == "Api" ? "ElectronicRegisterAPI.Api" : Path.GetFileName(project)) + "." + Path.GetRelativePath(project, Path.GetDirectoryName(file)!).Replace('\\', '.');
+        var expected = project is null ? "" : NamespacePath.ExpectedNamespace(layer == "Api" ? "ElectronicRegisterAPI.Api" : Path.GetFileName(project), Path.GetRelativePath(project, Path.GetDirectoryName(file)!));
         var reason = generated ? "Database First scaffold allowlist or explicit auto-generated header; regeneration is authoritative" : "";
         foreach (var error in unit.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error))
         {

@@ -10,6 +10,7 @@
 	<PackageReference Include="Moq" Version="4.20.2" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="../../tools/CodeOrganization/NamespacePath.cs" Link="CodeOrganization/NamespacePath.cs" />
 	<ProjectReference Include="..\..\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\ElectronicRegisterAPI.Application.csproj" />
   </ItemGroup>
 </Project>
