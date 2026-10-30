@@ -112,6 +112,6 @@ def collect(folder, state):
                     '--connect-timeout=3', '--batch', '-e',
                     "SELECT VERSION(),@@hostname,@@datadir; "
                     "SHOW GLOBAL VARIABLES WHERE Variable_name IN "
-                    "('version_ssl_library','tls_version','require_secure_transport','skip_networking',"
+                    "('tls_version','require_secure_transport','skip_networking',"
                     "'ssl_ca','ssl_cert','ssl_key','log_error'); "
                     "SELECT id FROM er_stage_control.identity;"])

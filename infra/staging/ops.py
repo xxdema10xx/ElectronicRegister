@@ -37,16 +37,20 @@ def process(args,input=None):
 
 def mysql(statement,review=False):
     cnf='/run/secrets/reviewer.cnf' if review else '/run/secrets/migrator.cnf'
-    return process(['mysql','--defaults-extra-file='+cnf,'--batch','--raw','--skip-column-names','--default-character-set=utf8mb4'],statement)
+    return process(['mysql','--defaults-extra-file='+cnf,'--protocol=TCP','--ssl-mode=VERIFY_IDENTITY','--tls-version=TLSv1.2','--batch','--raw','--skip-column-names','--default-character-set=utf8mb4'],statement)
 
 def identity(config):
     require(config.get('format')==3 and config.get('mysql_version')==MYSQL['version'] and config.get('mysql_image')==MYSQL['image'], 'Wrong staging engine/state: use a fresh namespace')
-    row=json.loads(mysql("SELECT JSON_OBJECT('version',VERSION(),'host',@@hostname,'port',@@port,'dir',@@datadir,'secure',@@global.require_secure_transport,'binlog',@@global.log_bin,'standard_fk',@@global.restrict_fk_on_non_standard_key,'openssl',@@global.version_ssl_library,'tls',@@global.tls_version,'id',(SELECT id FROM er_stage_control.identity))"))
+    row=json.loads(mysql("SELECT JSON_OBJECT('version',VERSION(),'host',@@hostname,'port',@@port,'dir',@@datadir,'secure',@@global.require_secure_transport,'binlog',@@global.log_bin,'standard_fk',@@global.restrict_fk_on_non_standard_key,'networking',@@global.skip_networking,'ca',@@global.ssl_ca,'cert',@@global.ssl_cert,'key',@@global.ssl_key,'tls',@@global.tls_version,'id',(SELECT id FROM er_stage_control.identity))"))
     require(row==dict(version=MYSQL['version'],host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,binlog=0,standard_fk=1,
-                      openssl=row.get('openssl'),tls='TLSv1.2',id=config['id']), 'Database identity/ownership/OpenSSL/secure transport mismatch')
-    require(row['openssl'].startswith('OpenSSL '), 'OpenSSL runtime required')
-    protocol=mysql("SHOW SESSION STATUS LIKE 'Ssl_version'").split('\t')[-1]
-    cipher=mysql("SHOW SESSION STATUS LIKE 'Ssl_cipher'").split('\t')[-1]
+                      networking=0,ca='/run/secrets/mysql-ca.pem',cert='/run/secrets/mysql-server.pem',key='/run/secrets/mysql-server-key.pem',
+                      tls='TLSv1.2',id=config['id']), 'Database identity/ownership/TLS configuration/secure transport mismatch')
+    protocol_row=mysql("SHOW SESSION STATUS LIKE 'Ssl_version'").split('\t')
+    cipher_row=mysql("SHOW SESSION STATUS LIKE 'Ssl_cipher'").split('\t')
+    require(len(protocol_row)==2 and protocol_row[0]=='Ssl_version' and
+            len(cipher_row)==2 and cipher_row[0]=='Ssl_cipher', 'Missing negotiated TLS session status')
+    protocol=protocol_row[1]
+    cipher=cipher_row[1]
     require(protocol=='TLSv1.2' and cipher, 'A successful TLS 1.2 session is required before DDL')
     saved(STATE/'database-identity.json',dict(row,protocol=protocol,cipher=cipher))
 
@@ -191,7 +195,7 @@ def seed(config):
 
 def main():
     require(fcntl is not None,'Operator jobs require Linux file locks')
-    require(len(sys.argv)==2 and sys.argv[1] in ('source','provision','compatibility','seed','preflight','tls','smoke'),'Explicit operator command required')
+    require(len(sys.argv)==2 and sys.argv[1] in ('source','identity','provision','compatibility','seed','preflight','tls','smoke'),'Explicit operator command required')
     STATE.mkdir(exist_ok=True,mode=0o700)
     with (STATE/'operation.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
@@ -202,6 +206,9 @@ def main():
             print('Published source and packaged SQL closure verified; no database contacted.')
             return
         identity(config)
+        if sys.argv[1]=='identity':
+            print('Database identity queries and negotiated TCP TLS verified; no DDL executed.')
+            return
         if sys.argv[1]=='provision':provision(config)
         elif sys.argv[1]=='compatibility':compatibility()
         elif sys.argv[1]=='seed':seed(config)

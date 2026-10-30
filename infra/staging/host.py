@@ -200,10 +200,16 @@ def check_mysql_tls(help_text):
 def check_mysql_version(version_text):
     require(re.search(r'\bVer\s+' + re.escape(MYSQL['version']) + r'\s', version_text), 'Wrong MySQL binary: exact staging version required')
 
+def check_mysql_openssl(linkage):
+    require('libssl.so' in linkage and 'libcrypto.so' in linkage and 'not found' not in linkage,
+            'MySQL server OpenSSL linkage unavailable')
+    # ldd addresses vary with ASLR; capability evidence must survive a repeated build.
+    return re.sub(r'0x[0-9a-fA-F]+','<address>',linkage)
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--state',required=True)
-    p.add_argument('command',choices=['prepare','config','build','db','provision','compatibility','seed','preflight','tls','start','verify','http','smoke','logs','diagnostics','stop','restart'])
+    p.add_argument('command',choices=['prepare','config','build','db','sql-check','provision','compatibility','seed','preflight','tls','start','verify','http','smoke','logs','diagnostics','stop','restart'])
     p.add_argument('--domain',default='staging.consoliprojects.dev')
     p.add_argument('--subnet',default='172.30.252.0/24')
     p.add_argument('--port',type=int,default=18080)
@@ -237,6 +243,11 @@ def main():
             require(output(['docker','run','--rm','--network','none','--entrypoint','id',s['mysql_image'],flag,'mysql'])==expected,'Unexpected MySQL UID/GID')
         version=output(['docker','run','--rm','--network','none','--entrypoint','mysqld',s['mysql_image'],'--version'])
         check_mysql_version(version)
+        # Inspect the actual pinned server binary, not a SQL variable or the client library.
+        linkage=output(['docker','run','--rm','--network','none','--read-only',
+                        '--user','999:999','--cap-drop','ALL','--security-opt','no-new-privileges:true',
+                        '--entrypoint','sh',s['mysql_image'],'-ec','ldd "$(command -v mysqld)"'])
+        linkage=check_mysql_openssl(linkage)
         compiled_tls=check_mysql_tls(output(['docker','run','--rm','--network','none','--read-only',
                                '--user','999:999','--cap-drop','ALL',
                                '--security-opt','no-new-privileges:true',
@@ -244,7 +255,7 @@ def main():
                                '--no-defaults','--verbose','--help']))
         capabilities=dict(image=s['mysql_image'],imageId=db_image['Id'],platform=MYSQL['platform'],
                           versionOutput=version,uid=MYSQL['uid'],gid=MYSQL['gid'],compiledTls=compiled_tls,
-                          runtimeTlsVerified=False)
+                          opensslLinkage=linkage,runtimeTlsVerified=False)
         cap_file=folder/'mysql-capabilities.json'
         if cap_file.exists():require(json.loads(cap_file.read_text())==capabilities,'MySQL capabilities changed: prepare a new state')
         else:write(cap_file,json.dumps(capabilities,indent=2))
@@ -271,6 +282,9 @@ def main():
             for route in json.loads(output(['ip','-json','route'])):
                 if route.get('dst','default')!='default' and ':' not in route['dst']:require(not candidate.overlaps(ipaddress.ip_network(route['dst'],strict=False)), 'Host/VPC route collision')
         return compose(folder,'up','-d','--wait','--wait-timeout','180','db')
+    if a.command=='sql-check':
+        compose(folder,'exec','-T','db','sh','/opt/er/db-health.sh')
+        return compose(folder,'run','--rm','--no-deps','ops','identity')
     if a.command in ('provision','compatibility','seed','preflight','tls','smoke'):
         return compose(folder,'run','--rm','--no-deps','ops',a.command)
     if a.command in ('start','restart'):

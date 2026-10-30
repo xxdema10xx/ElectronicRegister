@@ -33,12 +33,15 @@ jobs:
           node tools/release-artifacts.cjs
           node tools/test-release-manifest.cjs
           node tools/test-mysql84.cjs
+          python3 tools/test_staging.py
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" prepare
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" config
       - name: Docker build, fresh SQL, preflight, driver TLS and non-root readiness
         run: |
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" build
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" db
+          # Execute the production healthcheck and identity SQL on the pinned server before DDL.
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" sql-check
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" provision
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" compatibility
           # A completed journal verifies and skips every DDL step; it must not replay SQL.

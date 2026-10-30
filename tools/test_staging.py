@@ -2,6 +2,7 @@
 import importlib.util
 import io
 import json
+import re
 import subprocess
 from pathlib import Path
 import tempfile
@@ -15,6 +16,12 @@ def load(name):
 host=load('host');ops=load('ops');diagnostics=load('diagnostics')
 
 class StagingTests(unittest.TestCase):
+    def test_server_openssl_linkage_fails_closed_and_normalizes_aslr(self):
+        for linkage in ('', 'libssl.so.3 => not found\nlibcrypto.so.3 => /lib/libcrypto.so.3', 'libcrypto.so.3 => /lib/libcrypto.so.3'):
+            with self.assertRaises(RuntimeError):host.check_mysql_openssl(linkage)
+        linkage='libssl.so.3 => /lib/libssl.so.3 (0x1234)\nlibcrypto.so.3 => /lib/libcrypto.so.3 (0xabcd)'
+        self.assertEqual(host.check_mysql_openssl(linkage),host.check_mysql_openssl(linkage.replace('0x1234','0x5678')))
+
     def test_compiled_tls_capability_fails_closed(self):
         for help_text in ('tls-version TLSv1,TLSv1.1\n', '', 'tls-version TLSv1.20\n'):
             with self.assertRaises(RuntimeError):host.check_mysql_tls(help_text)
@@ -165,12 +172,48 @@ class StagingTests(unittest.TestCase):
             self.assertEqual(sql.call_count,2)
     def test_mysql_identity_is_exact_before_ddl(self):
         cfg={'id':'a'*32,'format':3,'mysql_version':ops.MYSQL['version'],'mysql_image':ops.MYSQL['image']}
-        row=dict(version='8.4.13',host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,binlog=0,standard_fk=1,openssl='OpenSSL 3.5.1',tls='TLSv1.2',id=cfg['id'])
+        row=dict(version='8.4.13',host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,binlog=0,standard_fk=1,networking=0,
+                 ca='/run/secrets/mysql-ca.pem',cert='/run/secrets/mysql-server.pem',key='/run/secrets/mysql-server-key.pem',tls='TLSv1.2',id=cfg['id'])
         with mock.patch.object(ops,'mysql',side_effect=[json.dumps(row),'Ssl_version\tTLSv1.2','Ssl_cipher\tECDHE-RSA-AES256-GCM-SHA384']),mock.patch.object(ops,'saved'):
             ops.identity(cfg)
-        for field,value in [('id','foreign'),('secure',0),('binlog',1),('standard_fk',0),('version','5.7.24'),('version','8.0.0'),('dir','/real-data/'),('openssl','NO'),('tls','TLSv1.1')]:
+        for field,value in [('id','foreign'),('secure',0),('binlog',1),('standard_fk',0),('version','5.7.24'),('version','8.0.0'),('dir','/real-data/'),('networking',1),('ca',''),('cert',''),('key',''),('tls','TLSv1.1')]:
             wrong={**row,field:value}
             with mock.patch.object(ops,'mysql',return_value=json.dumps(wrong)),self.assertRaises(RuntimeError):ops.identity(cfg)
+
+    def test_identity_requires_negotiated_tls(self):
+        cfg={'id':'a'*32,'format':3,'mysql_version':ops.MYSQL['version'],'mysql_image':ops.MYSQL['image']}
+        row=dict(version='8.4.13',host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,binlog=0,standard_fk=1,networking=0,
+                 ca='/run/secrets/mysql-ca.pem',cert='/run/secrets/mysql-server.pem',key='/run/secrets/mysql-server-key.pem',tls='TLSv1.2',id=cfg['id'])
+        for protocol,cipher in [('Ssl_version\tTLSv1.1','Ssl_cipher\tcipher'),('Ssl_version\tTLSv1.2','Ssl_cipher\t'),('Ssl_version\tTLSv1.2','Ssl_cipher'),('Ssl_version\tTLSv1.2','')]:
+            with mock.patch.object(ops,'mysql',side_effect=[json.dumps(row),protocol,cipher]),self.assertRaises(RuntimeError):
+                ops.identity(cfg)
+
+    def test_mysql_transport_is_explicit_tcp_with_certificate_verification(self):
+        with mock.patch.object(ops,'process',return_value='1') as run:
+            ops.mysql('SELECT 1')
+        for flag in ('--protocol=TCP','--ssl-mode=VERIFY_IDENTITY','--tls-version=TLSv1.2'):
+            self.assertIn(flag,run.call_args.args[0])
+
+    def test_staging_sql_variables_are_mysql84_compatible(self):
+        # New variables require review against the 8.4 manual and real sql-check gate.
+        supported={'hostname','port','datadir','ssl_ca','ssl_cert','ssl_key','tls_version',
+                   'require_secure_transport','skip_networking','log_bin','restrict_fk_on_non_standard_key'}
+        removed={'version_ssl_library','have_ssl','have_openssl','default_authentication_plugin',
+                 'query_cache_size','query_cache_type','expire_logs_days','tx_isolation','tx_read_only'}
+        def validate(text):
+            variables=set(re.findall(r'@@(?:(?:global|session)\.)?([a-z_0-9]+)',text,re.I))
+            self.assertLessEqual(variables,supported)
+            # Catch SHOW VARIABLES filters too: unknown names silently return no row.
+            for variable in removed:
+                self.assertIsNone(re.search(r'\b'+variable+r'\b',text,re.I))
+        for file in (ROOT/'infra/staging').iterdir():
+            if file.suffix in ('.py','.sh','.yaml'):validate(file.read_text())
+        for variable in removed:
+            with self.assertRaises(AssertionError):validate('SELECT @@global.'+variable)
+            with self.assertRaises(AssertionError):validate("SHOW VARIABLES LIKE '"+variable+"'")
+        workflow=(ROOT/'.github/workflows/staging-package.yml').read_text()
+        self.assertIn('python3 tools/test_staging.py',workflow)
+        self.assertIn('--state "$STAGE_STATE" sql-check',workflow)
 
     def test_compatibility_requires_complete_journal_and_exact_routines(self):
         with tempfile.TemporaryDirectory() as tmp:
