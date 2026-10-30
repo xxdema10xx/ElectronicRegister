@@ -6,7 +6,7 @@ function legacyScopeCollation(source){
  return source.replace(/(CREATE TABLE `mt3a_legacy_scope` \([^;]*?\) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4)(?=;|\r?\n|$)/g,'$1 COLLATE=utf8mb4_general_ci');
 }
 function tableDdl(name,source){
- return ddl(name==='mt3a_legacy_scope'?legacyScopeCollation(source):source);
+ return ddl(name==='mt3a_legacy_scope'?legacyScopeCollation(source).replace(/^  `scope` enum\('legacy'\) NOT NULL,$/m,"  `scope` enum('legacy') COLLATE utf8mb4_general_ci NOT NULL,"):source);
 }
 function sql(source){
  // ROW_NUMBER is reserved in 8.x. Qualified NEW.row_number stays legal/unchanged.

@@ -4,11 +4,18 @@ const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('ass
 const root=path.resolve(__dirname,'..'),file=path.join(__dirname,'release-preflight.cjs');
 const base=require('../migrations/bootstrap/schema-contract.json'),add=require('./release-additive-contract.cjs').forMySql84(),adapter=require('./mysql84-contract.cjs');
 const config={caFile:'ca',passwordFile:'password',user:'review',schemaDefiner:'owner@%',host:'host',port:3306,database:'db',expectedVersion:'8.4.13',expectedDataDir:'/data/'};
+const observedLegacy=base.tables.mt3a_legacy_scope.replace("enum('legacy') NOT NULL","enum('legacy') COLLATE utf8mb4_general_ci NOT NULL")+' COLLATE=utf8mb4_general_ci';
+const legacyMutations={
+ 'ddl-column-collation':s=>s.replace('COLLATE utf8mb4_general_ci','COLLATE utf8mb4_0900_ai_ci'),
+ 'ddl-enum':s=>s.replace("enum('legacy')","enum('legacy','other')"),
+ 'ddl-fk':s=>s.replace('REFERENCES `institution` (`id`)','REFERENCES `institution` (`other_id`)'),
+ 'ddl-index':s=>s.replace('UNIQUE KEY `institution_id`','KEY `institution_id`')
+};
 function simulate(mutant){
  const output=[];
  function read(sql){
   if(sql.startsWith('SELECT VERSION'))return '8.4.13\t3306\t/data/\tdb';
-  if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];return name+'\t'+((name==='mt3a_legacy_scope'?adapter.tableDdl(name,base.tables[name]):base.tables[name]||add.contract.tables[name]).replace(/ COLLATE utf8mb4_unicode_ci/g,' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')+(mutant==='table'?' SQL secret-password':'')).replace('COLLATE=utf8mb4_general_ci',mutant==='ddl-collation'?'COLLATE=utf8mb4_0900_ai_ci':'COLLATE=utf8mb4_general_ci');}
+  if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];let ddl=name==='mt3a_legacy_scope'?observedLegacy:base.tables[name]||add.contract.tables[name];if(name==='mt3a_legacy_scope'&&legacyMutations[mutant])ddl=legacyMutations[mutant](ddl);return name+'\t'+(ddl.replace(/ COLLATE utf8mb4_unicode_ci/g,' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')+(mutant==='table'?' SQL secret-password':'')).replace('COLLATE=utf8mb4_general_ci',mutant==='ddl-collation'?'COLLATE=utf8mb4_0900_ai_ci':'COLLATE=utf8mb4_general_ci');}
   if(sql.startsWith('SHOW CREATE TRIGGER')){const name=/`([^`]+)`/.exec(sql)[1],t=base.triggers[name];return [name,adapter.mode(t.mode),t.statement+(mutant==='trigger'?' SQL secret-password':''),t.charset,t.collation,t.database_collation,'timestamp'].join('\t');}
   if(sql.startsWith('SELECT TABLE_COLLATION'))return mutant==='table-collation'?'utf8mb4_0900_ai_ci':'utf8mb4_general_ci';
   if(sql.startsWith('SELECT COLLATION_NAME'))return mutant==='column-collation'?'utf8mb4_0900_ai_ci':'utf8mb4_general_ci';
@@ -25,6 +32,9 @@ function simulate(mutant){
  return JSON.parse(output[0].replace('ER_PREFLIGHT_FAILURE ',''));
 }
 simulate();
+for(const mutant of Object.keys(legacyMutations)){
+ const failure=simulate(mutant);assert.equal(failure.id,'base-table-ddl');assert.equal(failure.object,'mt3a_legacy_scope');assert.notEqual(failure.actualHash,failure.expectedHash);
+}
 for(const [mutant,id,object] of [['ddl-collation','base-table-ddl','mt3a_legacy_scope'],['table-collation','base-table-collation','mt3a_legacy_scope'],['column-collation','base-column-collation','mt3a_legacy_scope.scope']]){
  const failure=simulate(mutant);assert.equal(failure.id,id);assert.equal(failure.object,object);assert.notEqual(failure.actualHash,failure.expectedHash);
 }
@@ -59,7 +69,9 @@ assert.notEqual(adapter.ddl('COLLATE=utf8mb4_unicode_ci'),adapter.ddl('COLLATE=u
 const base=JSON.parse(fs.readFileSync(path.join(root,'migrations/bootstrap/schema-contract.json')));
 const legacy=base.tables.mt3a_legacy_scope;
 const derivedLegacy=legacy+' COLLATE=utf8mb4_general_ci';
-assert.equal(adapter.tableDdl('mt3a_legacy_scope',legacy),derivedLegacy);
+const expectedLegacy=derivedLegacy.replace("enum('legacy') NOT NULL","enum('legacy') COLLATE utf8mb4_general_ci NOT NULL");
+assert.equal(adapter.tableDdl('mt3a_legacy_scope',legacy),expectedLegacy);
+assert.equal(crypto.createHash('sha256').update(adapter.tableDdl('mt3a_legacy_scope',legacy).replaceAll('\r\n','\n')).digest('hex').toUpperCase(),'4861D496E8CAE58C19EDA216A1DDF05D5BAA2F623D98945376CB3083C28B1B2D');
 assert.equal(adapter.sql(legacy+';'),derivedLegacy+';');
 assert.equal(adapter.sql(derivedLegacy+';'),derivedLegacy+';');
 assert.equal(adapter.sql(legacy+' COLLATE=utf8mb4_0900_ai_ci;'),legacy+' COLLATE=utf8mb4_0900_ai_ci;');
