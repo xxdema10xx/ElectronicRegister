@@ -15,6 +15,7 @@ import uuid
 ROOT=Path('/workspace')
 STATE=Path('/state/ops')
 PUBLIC=Path('/state/public')
+MYSQL=json.loads((Path(__file__).with_name('mysql-image.json')).read_text())
 
 def require(value,message):
     if not value:raise RuntimeError(message)
@@ -39,8 +40,10 @@ def mysql(statement,review=False):
     return process(['mysql','--defaults-extra-file='+cnf,'--batch','--raw','--skip-column-names','--default-character-set=utf8mb4'],statement)
 
 def identity(config):
-    row=json.loads(mysql("SELECT JSON_OBJECT('version',VERSION(),'host',@@hostname,'port',@@port,'dir',@@datadir,'secure',@@global.require_secure_transport,'id',(SELECT id FROM er_stage_control.identity))"))
-    require(row==dict(version='5.7.24',host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,id=config['id']), 'Database identity/ownership/secure transport mismatch')
+    require(config.get('format')==2 and config.get('mysql_version')==MYSQL['version'] and config.get('mysql_image')==MYSQL['image'], 'Wrong staging engine/state: use a fresh namespace')
+    row=json.loads(mysql("SELECT JSON_OBJECT('version',VERSION(),'host',@@hostname,'port',@@port,'dir',@@datadir,'secure',@@global.require_secure_transport,'ssl',@@global.have_ssl,'openssl',@@global.have_openssl,'tls',@@global.tls_version,'id',(SELECT id FROM er_stage_control.identity))"))
+    require(row==dict(version=MYSQL['version'],host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,
+                      ssl='YES',openssl='YES',tls='TLSv1.2',id=config['id']), 'Database identity/ownership/OpenSSL/secure transport mismatch')
     protocol=mysql("SHOW SESSION STATUS LIKE 'Ssl_version'").split('\t')[-1]
     cipher=mysql("SHOW SESSION STATUS LIKE 'Ssl_cipher'").split('\t')[-1]
     require(protocol=='TLSv1.2' and cipher, 'A successful TLS 1.2 session is required before DDL')
@@ -98,6 +101,33 @@ def preflight():
     result=process(['node',ROOT/'tools/release-preflight.cjs',PUBLIC/'preflight.json'])
     saved(STATE/'preflight-result.json',json.loads(result))
 
+
+def compatibility():
+    # Actual execution/metadata checks on the new staging DB, not a parser claim.
+    preflight()
+    base=json.loads((ROOT/'migrations/bootstrap/schema-contract.json').read_text())
+    additive=json.loads((ROOT/'migrations/release/additive-contract.json').read_text())
+    binding=json.loads((STATE/'bundle/binding.json').read_text())
+    manifest=json.loads((ROOT/'migrations/release/manifest.json').read_text())
+    require([r['source'] for r in binding['records']]==manifest['requiredMigrations'],'Incomplete migration closure')
+    journal=Journal().records
+    steps=['00-login-users','00-principals.sql',*(r['artifact'] for r in binding['records']),'99-routine-grants.sql']
+    require(all(journal.get(step,{}).get('state')=='done' for step in steps),'Incomplete staging migrations/provisioning')
+    for record in binding['records']:
+        statement=(STATE/'bundle'/record['artifact']).read_text()
+        require(record['sourceHash']==manifest['files'][record['source']] and
+                sha(statement.encode())==record['artifactHash']==journal[record['artifact']]['hash'],
+                'Migration source/bundle/journal hash mismatch')
+    routines=json.loads(mysql("SELECT JSON_ARRAYAGG(JSON_OBJECT('name',ROUTINE_NAME,'type',ROUTINE_TYPE,'definer',DEFINER,'security',SECURITY_TYPE,'access',SQL_DATA_ACCESS)) FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA='electronic_register_staging'"))
+    require(routines==[dict(name='er_schema_ready',type='PROCEDURE',definer=binding['definer'],security='DEFINER',access='READS SQL DATA')], 'Unexpected/missing procedure or stored function')
+    counts=json.loads(mysql("SELECT JSON_OBJECT('tables',(SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='electronic_register_staging' AND TABLE_TYPE='BASE TABLE'),'triggers',(SELECT COUNT(*) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA='electronic_register_staging'))"))
+    tables=len(set(base['tables'])|set(additive['tables']))
+    triggers=len(set(base['triggers'])|{t['TRIGGER_NAME'] for t in additive['triggers']})
+    require(counts==dict(tables=tables,triggers=triggers),'Unexpected/missing staging schema objects')
+    saved(STATE/'compatibility-result.json',dict(version=MYSQL['version'],**counts,procedures=1,storedFunctions=0,
+          definer=binding['definer'],migrations=[r['source'] for r in binding['records']],
+          provisioningSteps=steps,preflightVerified=True,runtimeVerified=True))
+
 def tls():
     preflight()
     password=Path('/run/secrets/api-password').read_text()
@@ -151,7 +181,7 @@ def seed(config):
 
 def main():
     require(fcntl is not None,'Operator jobs require Linux file locks')
-    require(len(sys.argv)==2 and sys.argv[1] in ('source','provision','seed','preflight','tls','smoke'),'Explicit operator command required')
+    require(len(sys.argv)==2 and sys.argv[1] in ('source','provision','compatibility','seed','preflight','tls','smoke'),'Explicit operator command required')
     STATE.mkdir(exist_ok=True,mode=0o700)
     with (STATE/'operation.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
@@ -163,6 +193,7 @@ def main():
             return
         identity(config)
         if sys.argv[1]=='provision':provision(config)
+        elif sys.argv[1]=='compatibility':compatibility()
         elif sys.argv[1]=='seed':seed(config)
         elif sys.argv[1]=='preflight':preflight()
         elif sys.argv[1]=='tls':tls()

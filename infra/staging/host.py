@@ -1,6 +1,7 @@
 """Host-side staging preparation/control. No SSH, Nginx edits, deletion or DDL."""
 import argparse
 import hashlib
+import http.client
 import ipaddress
 import json
 import os
@@ -15,6 +16,7 @@ import uuid
 
 ROOT = Path(__file__).resolve().parents[2]
 COMPOSE = ROOT / 'infra/staging/compose.yaml'
+MYSQL = json.loads((ROOT / 'infra/staging/mysql-image.json').read_text())
 
 def require(value, message):
     if not value:
@@ -90,11 +92,12 @@ def prepare(args):
     require(folder!=ROOT and ROOT not in folder.parents,'Keep secrets/state OUTSIDE the checkout and build context')
     require(not folder.exists() and not any(c in str(folder) for c in '\n\r $\"\''), 'Use a NEW absolute state directory without shell metacharacters/spaces')
     net = validate(args.domain, args.subnet, args.port)
-    require(re.fullmatch(r'[a-zA-Z0-9_./:@-]+',args.mysql_image),'Use an explicit image reference without whitespace/metacharacters')
+    require(re.fullmatch(r'[a-zA-Z0-9_./:-]+@sha256:[a-f0-9]{64}',args.mysql_image),'Use an explicit image reference pinned by sha256 digest without whitespace/metacharacters')
+    require(args.mysql_image == MYSQL['image'], 'Only the reviewed staging image is allowed; update mysql-image.json and its registry evidence before selecting another image')
     revision = output(['git', '-c', 'safe.directory='+str(ROOT), '-C', ROOT, 'rev-parse', 'HEAD'])
     dirty = bool(output(['git', '-c', 'safe.directory='+str(ROOT), '-C', ROOT, 'status', '--porcelain', '--untracked-files=normal']))
     identity = uuid.uuid4().hex
-    state = dict(format=1, id=identity, project='er-stage-'+identity[:12], domain=args.domain,
+    state = dict(format=2, mysql_version=MYSQL['version'], id=identity, project='er-stage-'+identity[:12], domain=args.domain,
                  subnet=str(net), gateway=str(net.network_address+1), sql_host=str(net.network_address).rsplit('.', 1)[0]+'.%',
                  port=args.port, mysql_image=args.mysql_image, revision=revision, source_dirty=dirty,
                  manifest=digest(ROOT/'migrations/release/manifest.json'), repository=str(ROOT))
@@ -134,7 +137,7 @@ def prepare(args):
     write(folder/'secrets/api/connection', connection, 1654, 1654)
     runtime = {'Deployment': {'Mode':'Staging','RolloutApproved':True}, 'urls':'http://0.0.0.0:8080', 'AllowedHosts':args.domain,
                'Jwt':{'Issuer':'er-staging','Audience':'er-staging-client'},
-               'Readiness':{'ExpectedVersion':'5.7.24','ExpectedHost':'er-stage-db','ExpectedDataDir':'/var/lib/mysql'},
+               'Readiness':{'ExpectedVersion':MYSQL['version'],'ExpectedHost':'er-stage-db','ExpectedDataDir':'/var/lib/mysql'},
                'Transport':{'KnownProxies':[state['gateway'],'127.0.0.1'], 'AllowedOrigins':['https://consoliprojects.dev'], 'HttpsPort':443},
                'Identity':{'Legacy':{'Enabled':False}},
                'Multitenancy':{k:{'Enabled':k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi')} for k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','Onboarding','Governance','InstitutionWorker')}}
@@ -142,7 +145,7 @@ def prepare(args):
     write(folder/'public/staging.json', json.dumps(public, indent=2), mode=0o444)
     write(folder/'public/runtime.json', json.dumps(runtime, indent=2), mode=0o444)
     write(folder/'public/binding.json', json.dumps(dict(artifactRoot='/opt/release',database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%',apiUser='er_api',apiHost=state['sql_host'],reviewUser='er_review',reviewHost=state['sql_host']),indent=2), mode=0o444)
-    write(folder/'public/preflight.json', json.dumps(dict(host='er-stage-db',port=3306,database='electronic_register_staging',user='er_review',passwordFile='/run/secrets/review-password',caFile='/run/secrets/mysql-ca.pem',expectedVersion='5.7.24',expectedDataDir='/var/lib/mysql',schemaDefiner='er_stage_definer@%',mysqlClient='mysql'),indent=2), mode=0o444)
+    write(folder/'public/preflight.json', json.dumps(dict(host='er-stage-db',port=3306,database='electronic_register_staging',user='er_review',passwordFile='/run/secrets/review-password',caFile='/run/secrets/mysql-ca.pem',expectedVersion=MYSQL['version'],expectedDataDir='/var/lib/mysql',schemaDefiner='er_stage_definer@%',mysqlClient='mysql'),indent=2), mode=0o444)
     seed = {'stage_id':identity,'ids':{k:str(uuid.uuid4()) for k in ('tenant_a','tenant_b','biennium_a','biennium_b','area_a','area_b','path_a','path_b','bsa_a','bsa_b','bsp_a','bsp_b','class_a','class_b','teacher','student','subject','assignment')},'accounts':{}}
     for name, role, tenant in [('admin_a','InstitutionAdmin','a'),('admin_b','InstitutionAdmin','b'),('teacher','Teacher','a'),('student','Student','a')]:
         seed['accounts'][name]=dict(id=str(uuid.uuid4()),membership=str(uuid.uuid4()),role=role,tenant=tenant,email=f'{identity}.{name}@example.invalid',password=secrets.token_hex(24)+'aA!9')
@@ -155,7 +158,9 @@ def prepare(args):
 def load(folder):
     folder = Path(folder).resolve()
     state = json.loads((folder/'state.json').read_text())
-    require(state.get('format') == 1 and re.fullmatch(r'[a-f0-9]{32}',state['id']) and state['project']=='er-stage-'+state['id'][:12], 'Invalid staging ownership record')
+    require(state.get('format') == 2 and state.get('mysql_version') == MYSQL['version'] and state.get('mysql_image') == MYSQL['image'],
+            'Incompatible staging state/image: prepare a NEW isolated state and volume; never upgrade/reuse older MySQL volumes')
+    require(re.fullmatch(r'[a-f0-9]{32}',state['id']) and state['project']=='er-stage-'+state['id'][:12], 'Invalid staging ownership record')
     require(state['repository']==str(ROOT), 'Use the recorded checkout; create new staging for another checkout')
     return folder,state
 
@@ -181,16 +186,30 @@ def clean(state):
     require(not state['source_dirty'] and not output(['git','-c','safe.directory='+str(ROOT),'-C',ROOT,'status','--porcelain','--untracked-files=normal']), 'Build/start requires clean PUBLISHED code; no automatic commit/push')
     require(output(['git','-c','safe.directory='+str(ROOT),'-C',ROOT,'rev-parse','HEAD'])==state['revision'] and digest(ROOT/'migrations/release/manifest.json')==state['manifest'], 'Checkout differs from prepared release')
 
+
+def check_mysql_tls(help_text):
+    # Inspect the binary's compiled defaults, not an option we pass ourselves.
+    match = re.search(r'^tls-version\s+(\S+)\s*$', help_text, re.M)
+    require(match and 'TLSv1.2' in match[1].split(','),
+            'MySQL binary lacks compiled TLSv1.2 support. '
+            'Staging requires the reviewed MySQL 5.7.44 OpenSSL image in a NEW state; '
+            'do not lower TLS policy. Runtime TLS/identity probes remain mandatory.')
+    return match[1]
+
+
+def check_mysql_version(version_text):
+    require(re.search(r'\bVer\s+' + re.escape(MYSQL['version']) + r'\s', version_text), 'Wrong MySQL binary: exact staging version required')
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--state',required=True)
-    p.add_argument('command',choices=['prepare','config','build','db','provision','seed','preflight','tls','start','verify','smoke','logs','stop','restart'])
+    p.add_argument('command',choices=['prepare','config','build','db','provision','compatibility','seed','preflight','tls','start','verify','smoke','logs','diagnostics','stop','restart'])
     p.add_argument('--domain',default='staging.consoliprojects.dev')
     p.add_argument('--subnet',default='172.30.252.0/24')
     p.add_argument('--port',type=int,default=18080)
-    # Public linux/amd64 manifest checked in staging-evidence/registry-metadata.json.
-    # Availability is not proof of runtime TLS; db health + driver probe still gate it.
-    p.add_argument('--mysql-image',default='mysql:5.7.24@sha256:1f627f590dac0b2c4659282258ce205033adf94ebe8775a3e3a8424a87cdd746')
+    # Registry provenance in staging-evidence/mysql-5.7.44-registry.json.
+    # Only this reviewed digest is allowed; runtime checks remain mandatory.
+    p.add_argument('--mysql-image',default=MYSQL['image'])
     a=p.parse_args()
     if a.command=='prepare':return prepare(a)
     folder,s=load(a.state)
@@ -199,6 +218,10 @@ def main():
     context=json.loads(output(['docker','context','inspect','default']))[0]
     require(context['Endpoints']['docker']['Host']=='unix:///var/run/docker.sock','Unexpected Docker endpoint')
     owned(s)
+    if a.command=='diagnostics':
+        # No clean-source/build requirement: diagnostics must work on failed builds.
+        from diagnostics import collect
+        return collect(folder, s)
     if a.command=='config':return compose(folder,'config','--quiet')
     if a.command=='logs':return compose(folder,'logs','--tail','100','api','db')
     if a.command=='stop':return compose(folder,'stop','api','db')
@@ -206,10 +229,25 @@ def main():
     require(tuple(map(int,output(['docker','version','--format','{{.Server.Version}}']).split('-')[0].split('.')[:2]))>=(28,0),'Docker Engine >=28 required for loopback publication isolation')
     require(tuple(map(int,output(['docker','compose','version','--short']).lstrip('v').split('-')[0].split('.')[:2]))>=(2,24),'Docker Compose >=2.24 required')
     if a.command=='build':
-        require(output(['uname','-m'])=='x86_64','MySQL 5.7.24 candidate is amd64; do not silently emulate/upgrade on Graviton')
-        run(['docker','pull',s['mysql_image']])
-        require(output(['docker','run','--rm','--network','none','--entrypoint','id',s['mysql_image'],'-u','mysql'])=='999','Unexpected MySQL UID')
-        require('5.7.24' in output(['docker','run','--rm','--network','none','--entrypoint','mysqld',s['mysql_image'],'--version']),'Wrong MySQL binary')
+        require(output(['uname','-m'])=='x86_64','MySQL staging image is amd64; do not silently emulate/upgrade on Graviton')
+        run(['docker','pull','--platform',MYSQL['platform'],s['mysql_image']])
+        db_image=json.loads(output(['docker','image','inspect',s['mysql_image']]))[0]
+        require(db_image['Os']=='linux' and db_image['Architecture']=='amd64','Unexpected MySQL image platform')
+        for flag, expected in [('-u',MYSQL['uid']),('-g',MYSQL['gid'])]:
+            require(output(['docker','run','--rm','--network','none','--entrypoint','id',s['mysql_image'],flag,'mysql'])==expected,'Unexpected MySQL UID/GID')
+        version=output(['docker','run','--rm','--network','none','--entrypoint','mysqld',s['mysql_image'],'--version'])
+        check_mysql_version(version)
+        compiled_tls=check_mysql_tls(output(['docker','run','--rm','--network','none','--read-only',
+                               '--user','999:999','--cap-drop','ALL',
+                               '--security-opt','no-new-privileges:true',
+                               '--entrypoint','mysqld',s['mysql_image'],
+                               '--no-defaults','--verbose','--help']))
+        capabilities=dict(image=s['mysql_image'],imageId=db_image['Id'],platform=MYSQL['platform'],
+                          versionOutput=version,uid=MYSQL['uid'],gid=MYSQL['gid'],compiledTls=compiled_tls,
+                          runtimeTlsVerified=False)
+        cap_file=folder/'mysql-capabilities.json'
+        if cap_file.exists():require(json.loads(cap_file.read_text())==capabilities,'MySQL capabilities changed: prepare a new state')
+        else:write(cap_file,json.dumps(capabilities,indent=2))
         compose(folder,'build','api','ops')
         api=json.loads(output(['docker','image','inspect',s['project']+'-api:'+s['revision']]))[0]
         require(api['Config']['Labels'].get('org.opencontainers.image.revision')==s['revision'],'API image revision label mismatch')
@@ -233,7 +271,7 @@ def main():
             for route in json.loads(output(['ip','-json','route'])):
                 if route.get('dst','default')!='default' and ':' not in route['dst']:require(not candidate.overlaps(ipaddress.ip_network(route['dst'],strict=False)), 'Host/VPC route collision')
         return compose(folder,'up','-d','--wait','--wait-timeout','180','db')
-    if a.command in ('provision','seed','preflight','tls','smoke'):
+    if a.command in ('provision','compatibility','seed','preflight','tls','smoke'):
         return compose(folder,'run','--rm','--no-deps','ops',a.command)
     if a.command in ('start','restart'):
         if a.command=='restart':compose(folder,'up','-d','--wait','--wait-timeout','180','db')
@@ -257,7 +295,12 @@ def verify(folder,s):
         else:require(ports=={'8080/tcp':[{'HostIp':'127.0.0.1','HostPort':str(s['port'])}]},'API bind is not loopback-only')
         status=compose(folder,'exec','-T',service,'cat','/proc/1/status',capture=True)
         require(re.search(r'^Uid:\s+'+uid+r'\s',status,re.M),'PID 1 is not the configured non-root user')
-    print('Owned containers healthy, API loopback-only, SQL unpublished, PID 1 non-root. Nginx/HTTPS still requires smoke.')
+    connection=http.client.HTTPConnection('127.0.0.1',s['port'],timeout=6)
+    try:
+        connection.request('GET','/health/ready',headers={'Host':s['domain'],'X-Forwarded-Proto':'https'})
+        require(connection.getresponse().status==200,'Host loopback readiness did not return HTTP 200')
+    finally:connection.close()
+    print('Owned containers healthy, host loopback readiness HTTP 200, API loopback-only, SQL unpublished, PID 1 non-root. Nginx/HTTPS still requires smoke.')
 
 if __name__=='__main__':
     try:main()

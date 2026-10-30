@@ -40,10 +40,17 @@ jobs:
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" build
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" db
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" provision
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" compatibility
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" tls
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" seed
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" start
-          sudo cat "$STAGE_STATE/images.json" "$STAGE_STATE/ops/database-identity.json" "$STAGE_STATE/ops/preflight-result.json" "$STAGE_STATE/ops/transport-result.json"
+          sudo cat "$STAGE_STATE/images.json" "$STAGE_STATE/mysql-capabilities.json" "$STAGE_STATE/ops/database-identity.json" "$STAGE_STATE/ops/compatibility-result.json" "$STAGE_STATE/ops/preflight-result.json" "$STAGE_STATE/ops/transport-result.json"
+      - name: Sanitized Docker and MySQL failure diagnostics (before stop)
+        if: failure()
+        run: |
+          if sudo test -f "$STAGE_STATE/state.json"; then
+            sudo python3 infra/staging/host.py --state "$STAGE_STATE" diagnostics
+          fi
       - name: Stop only this job's staging (keep volume/data; never touch host Nginx)
         if: always()
         run: |

@@ -6,7 +6,7 @@ x-logging: &logging
   options: { max-size: "10m", max-file: "5" }
 services:
   volume-init:
-    image: ${MYSQL_IMAGE:?select the verified 5.7.24 image}
+    image: ${MYSQL_IMAGE:?select the verified 5.7.44 OpenSSL image}
     platform: linux/amd64
     user: "0:0"
     entrypoint: ["sh", "-ec"]
@@ -35,6 +35,8 @@ services:
       volume-init: { condition: service_completed_successfully }
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/root-password
+      # This historical entrypoint otherwise creates root@'%'. Admin uses socket.
+      MYSQL_ROOT_HOST: localhost
       ER_STAGE_ID: ${STAGING_ID:?required}
       ER_STAGE_SQL_HOST: ${SQL_HOST_PATTERN:?required}
     command:

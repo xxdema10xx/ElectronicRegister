@@ -3,6 +3,8 @@
 # Application schema DDL is a separate operator command, never API startup.
 (
 set -euo pipefail
+echo 'ER staging bootstrap: started'
+trap 'echo "ER staging bootstrap: failed at line $LINENO" >&2' ERR
 [[ "$ER_STAGE_ID" =~ ^[a-f0-9]{32}$ ]]
 [[ "$ER_STAGE_SQL_HOST" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.%$ ]]
 password=$(cat /run/secrets/migrator-password)
@@ -20,4 +22,5 @@ GRANT SELECT ON mysql.proc TO 'er_migrator'@'$ER_STAGE_SQL_HOST' WITH GRANT OPTI
 GRANT SELECT ON er_stage_control.identity TO 'er_migrator'@'$ER_STAGE_SQL_HOST';
 SQL
 unset password
+echo 'ER staging bootstrap: completed'
 )

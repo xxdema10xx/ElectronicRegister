@@ -1,0 +1,136 @@
+{
+  "checkedAt": "2026-10-30T19:15:05.568Z",
+  "registry": "registry-1.docker.io",
+  "repository": "library/mysql",
+  "tag": "5.7.44",
+  "tagDigest": "sha256:4bc6bc963e6d8443453676cae56536f4b8156d78bae03c0145cbe47c2aad73bb",
+  "platforms": [
+    {
+      "digest": "sha256:dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da",
+      "platform": {
+        "architecture": "amd64",
+        "os": "linux"
+      }
+    },
+    {
+      "digest": "sha256:b46f7aa9c680644d4233655e3ef5ab3aa1e96ca118000501ab2f178f03589616",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      }
+    }
+  ],
+  "amd64Digest": "sha256:dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da",
+  "configDigest": "sha256:5107333e08a87b836d48ff7528b1e84b9c86781cc9f1748bbc1b8c42a870d933",
+  "architecture": "amd64",
+  "os": "linux",
+  "env": [
+    "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "GOSU_VERSION=1.16",
+    "MYSQL_MAJOR=5.7",
+    "MYSQL_VERSION=5.7.44-1.el7",
+    "MYSQL_SHELL_VERSION=8.0.35-1.el7"
+  ],
+  "entrypoint": [
+    "docker-entrypoint.sh"
+  ],
+  "layers": [
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:20e4dcae4c693910efbf28a556e2fa88ef717e15364f63da7e0a4a130b9b714e",
+      "size": 50499235
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:1c56c3d4ce74a53225aa9fa60ee8be21d81aad4fede8431225dff84c25e1c79e",
+      "size": 869
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:e9f03a1c24cebdce0bffa69aec1a9f2d7cf5b21db611576f6263d10ec86e02b7",
+      "size": 983548
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:68c3898c2015e66367dcdb126db7f1ad3d4284d84e2095671964e90a8d288fd7",
+      "size": 4578487
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:6b95a940e7b64b6a3312090f58127b6d725198b9be263e1878e1059abe692eeb",
+      "size": 3080
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:90986bb8de6ed46958837e14261553640aad289c15d741739b71b418fc8ebf0f",
+      "size": 331
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:ae71319cb7793e84b1f0ba04d4cc4a0d8a9a0387b1cd8895ebff9218d81388a3",
+      "size": 25534522
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:ffc89e9dfd889f56aaad15dea72609ab8936b5ca017deadbc8e7ba0d5840037f",
+      "size": 317
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:43d05e938198ff7303eee62b5a3c2598c927954ea4cbeceac121101b281db972",
+      "size": 56293054
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:064b2d298fba6c6f19d44eb4a3f32bdcc0f229ea1964d3bb70bbde2d76b5cc0c",
+      "size": 5384
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:df9a4d85569bd266293512fc5a7a9c35b878ea7a06185dbd02abf88c04e9bccf",
+      "size": 122
+    }
+  ],
+  "containersExecuted": false,
+  "image": "mysql:5.7.44@sha256:dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da",
+  "source": "Docker Official Image library/mysql; https://hub.docker.com/_/mysql",
+  "manifestAndConfigDigestsVerified": true,
+  "staticInspection": {
+    "mysqlUid": "999",
+    "mysqlGid": "999",
+    "passwdLayer": "sha256:1c56c3d4ce74a53225aa9fa60ee8be21d81aad4fede8431225dff84c25e1c79e",
+    "serverLayer": "sha256:ae71319cb7793e84b1f0ba04d4cc4a0d8a9a0387b1cd8895ebff9218d81388a3",
+    "entrypointLayer": "sha256:064b2d298fba6c6f19d44eb4a3f32bdcc0f229ea1964d3bb70bbde2d76b5cc0c",
+    "downloadedLayersSha256Verified": true,
+    "serverBinarySha256": "491165213f15b6bcfe103f8faafbdfbb6a7417c6cda327ea37d2dad2d6fc00c8",
+    "serverVersionString": "5.7.44",
+    "linkedLibraries": [
+      "libssl.so.10",
+      "libcrypto.so.10"
+    ],
+    "compiledTlsString": "TLSv1,TLSv1.1,TLSv1.2",
+    "packageRepository": "https://repo.mysql.com/yum/mysql-5.7-community/docker/el/7/$basearch/",
+    "entrypointSupportsNonRootAndPasswordFile": true,
+    "elfMachine": 62,
+    "elfNeededLibraries": [
+      "libpthread.so.0",
+      "libaio.so.1",
+      "libnuma.so.1",
+      "libcrypt.so.1",
+      "libssl.so.10",
+      "libcrypto.so.10",
+      "libdl.so.2",
+      "librt.so.1",
+      "libstdc++.so.6",
+      "libm.so.6",
+      "libgcc_s.so.1",
+      "libc.so.6"
+    ],
+    "inspectionMethod": "ELF64 program headers / PT_DYNAMIC / DT_NEEDED; package passwd; literal binary version/TLS strings; no execution"
+  },
+  "runtimeVersionVerified": false,
+  "runtimeUidVerified": false,
+  "runtimeOpenSslVerified": false,
+  "runtimeTlsVerified": false,
+  "sqlCompatibilityRuntimeVerified": false
+}

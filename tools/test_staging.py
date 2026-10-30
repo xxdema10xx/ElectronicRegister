@@ -1,6 +1,8 @@
 """Local, non-Docker tests for staging guardrails. Real container/TLS tests are separate."""
 import importlib.util
+import io
 import json
+import subprocess
 from pathlib import Path
 import tempfile
 import unittest
@@ -10,9 +12,109 @@ ROOT=Path(__file__).resolve().parents[1]
 def load(name):
     spec=importlib.util.spec_from_file_location('stage_'+name,ROOT/'infra/staging'/f'{name}.py')
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
-host=load('host');ops=load('ops')
+host=load('host');ops=load('ops');diagnostics=load('diagnostics')
 
 class StagingTests(unittest.TestCase):
+    def test_compiled_tls_capability_fails_closed(self):
+        for help_text in ('tls-version TLSv1,TLSv1.1\n', '', 'tls-version TLSv1.20\n'):
+            with self.assertRaises(RuntimeError):host.check_mysql_tls(help_text)
+        host.check_mysql_tls('other option\ntls-version TLSv1,TLSv1.1,TLSv1.2\n')
+
+    def test_staging_version_is_exact_and_historical_default_is_preserved(self):
+        host.check_mysql_version('mysqld  Ver 5.7.44 for Linux on x86_64 (MySQL Community Server (GPL))')
+        for version in ('5.7.24','5.7.440','5.7.44-custom','8.0.44'):
+            with self.assertRaises(RuntimeError):host.check_mysql_version('mysqld  Ver '+version+' for Linux')
+        self.assertIn("VERSION()='5.7.44'",(ROOT/'infra/staging/db-health.sh').read_text())
+        self.assertEqual(host.MYSQL,ops.MYSQL)
+        self.assertIn('policy.Local ? "5.7.24"', (ROOT/'Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Operations/OperationalPipeline.cs').read_text())
+        self.assertEqual(json.loads((ROOT/'infra/release.runtime.example.json').read_text())['Readiness']['ExpectedVersion'],'5.7.24')
+
+    def test_pinned_image_matches_registry_evidence_without_claiming_runtime(self):
+        evidence=json.loads((ROOT/'docs/quality/staging-evidence/mysql-5.7.44-registry.json').read_text())
+        self.assertEqual(host.MYSQL['image'],evidence['image'])
+        self.assertEqual(evidence['image'],'mysql:5.7.44@'+evidence['amd64Digest'])
+        self.assertEqual((evidence['os'],evidence['architecture']),('linux','amd64'))
+        self.assertIn('libssl.so.10',evidence['staticInspection']['elfNeededLibraries'])
+        self.assertIn('TLSv1.2',evidence['staticInspection']['compiledTlsString'].split(','))
+        self.assertFalse(evidence['containersExecuted'])
+        self.assertFalse(evidence['runtimeTlsVerified'])
+
+    def test_old_staging_states_are_never_upgraded(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp)
+            state=dict(format=2,mysql_version=host.MYSQL['version'],mysql_image=host.MYSQL['image'],id='a'*32,
+                       project='er-stage-'+'a'*12,repository=str(host.ROOT))
+            (folder/'state.json').write_text(json.dumps(state))
+            self.assertEqual(host.load(folder)[1],state)
+            for fields in ({'format':1},{'mysql_version':'5.7.24'},{'mysql_image':'mysql:5.7.24@sha256:'+'a'*64}):
+                (folder/'state.json').write_text(json.dumps({**state,**fields}))
+                with self.assertRaisesRegex(RuntimeError,'NEW isolated state'):host.load(folder)
+
+    def test_prepare_binds_runtime_and_preflight_to_staging_only(self):
+        import argparse
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(host.sys,'platform','linux'), mock.patch.object(host.os,'geteuid',return_value=0,create=True), mock.patch.object(host.os,'chown',create=True), mock.patch.object(host.shutil,'which',return_value='openssl'), mock.patch.object(host,'output',side_effect=['a'*40,'']), mock.patch.object(host,'run') as run, mock.patch('sys.stdout',new_callable=io.StringIO):
+            folder=Path(tmp)/'new-state'
+            def openssl(args,**kwargs):
+                for option in ('-out','-keyout'):
+                    if option in args:Path(args[args.index(option)+1]).write_text('synthetic-test-pem')
+            run.side_effect=openssl
+            args=argparse.Namespace(state=str(folder),domain='staging.example.invalid',subnet='172.30.252.0/24',port=18080,mysql_image=host.MYSQL['image'])
+            host.prepare(args)
+            self.assertEqual(json.loads((folder/'public/runtime.json').read_text())['Readiness']['ExpectedVersion'],'5.7.44')
+            self.assertEqual(json.loads((folder/'public/preflight.json').read_text())['expectedVersion'],'5.7.44')
+            self.assertEqual(json.loads((folder/'state.json').read_text())['format'],2)
+            with self.assertRaises(RuntimeError):host.prepare(args)
+
+    def test_diagnostics_redacts_generated_and_unexpected_credentials(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp);(folder/'secrets/db').mkdir(parents=True)
+            (folder/'ops').mkdir()
+            (folder/'secrets/db/root.cnf').write_text('[client]\npassword=generated-root-password\n')
+            (folder/'ops/seed.json').write_text(json.dumps({'accounts':{'a':{'password':'seed-aA!9'}}}))
+            redact=diagnostics.sanitizer(folder)
+            raw="generated-root-password seed-aA!9 password=unexpected Bearer abc.def.ghi IDENTIFIED BY 'sql-secret' ghp_unknownToken "
+            raw+='-----BEGIN PRIVATE KEY-----\nprivate-body\n-----END PRIVATE KEY-----'
+            safe=redact(raw)
+            for secret in ('generated-root-password','seed-aA!9','unexpected','abc.def.ghi','sql-secret','ghp_unknownToken','private-body'):
+                self.assertNotIn(secret,safe)
+
+    def test_diagnostics_preserves_crash_health_evidence_without_env(self):
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(diagnostics.subprocess,'run') as run, mock.patch('sys.stdout',new_callable=io.StringIO) as stdout:
+            obj={'Config':{'Labels':{'io.er.staging.id':'owned','com.docker.compose.service':'db'},'Env':['PASSWORD=must-not-escape']},
+                 'State':{'Running':False,'ExitCode':1,'OOMKilled':True,'Health':{'Log':[{'ExitCode':1,'Output':'password=hidden\n::warning::untrusted'}]}},'RestartCount':3}
+            def result(args,**kwargs):
+                value='abc123def456\n' if args[1:3]==['ps','-aq'] else json.dumps([obj]) if args[1]=='inspect' else 'bounded log'
+                return mock.Mock(returncode=0,stdout=value,stderr='')
+            run.side_effect=result
+            diagnostics.collect(Path(tmp),{'id':'owned','project':'er-stage-test'})
+            lines=stdout.getvalue().splitlines()
+            records=[json.loads(line) for line in lines]
+            state=next(r['data'] for r in records if r['section']=='container-state')
+            self.assertEqual(state['restartCount'],3);self.assertTrue(state['state']['OOMKilled'])
+            self.assertNotIn('hidden',stdout.getvalue());self.assertNotIn('must-not-escape',stdout.getvalue())
+            self.assertFalse(any(line.startswith('::') for line in lines))
+
+    def test_diagnostics_refuses_foreign_containers_and_timeout_payloads(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(diagnostics.subprocess,'run') as run, mock.patch('sys.stdout',new_callable=io.StringIO) as stdout:
+            foreign={'Config':{'Labels':{'io.er.staging.id':'foreign'}}}
+            def result(args,**kwargs):
+                if args[1]=='version':
+                    raise subprocess.TimeoutExpired(args,15,output='password=timeout-secret')
+                value='abc123def456' if args[1:3]==['ps','-aq'] else json.dumps([foreign]) if args[1]=='inspect' else ''
+                return mock.Mock(returncode=0,stdout=value,stderr='')
+            run.side_effect=result
+            diagnostics.collect(Path(tmp),{'id':'owned','project':'er-stage-test'})
+            self.assertNotIn('timeout-secret',stdout.getvalue())
+            self.assertIn('"rejected": true',stdout.getvalue())
+            self.assertFalse(any(call.args[0][1] in ('logs','exec') for call in run.call_args_list))
+
+    def test_diagnostics_aborts_before_docker_if_credentials_cannot_be_read(self):
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(diagnostics.subprocess,'run') as run, mock.patch.object(diagnostics,'sanitizer',side_effect=PermissionError('unreadable credentials')):
+            with self.assertRaises(PermissionError):
+                diagnostics.collect(Path(tmp),{'id':'owned','project':'er-stage-test'})
+            run.assert_not_called()
+
     def test_publication_and_no_remote_daemon(self):
         text=(ROOT/'infra/staging/compose.yaml').read_text()
         self.assertIn('127.0.0.1:${API_PORT:?required}:8080',text)
@@ -20,6 +122,24 @@ class StagingTests(unittest.TestCase):
         self.assertNotIn('ports:',db)
         self.assertNotIn('docker.sock',text.replace('# Deliberately no ports, host networking or Docker socket.',''))
         self.assertIn("Only the local rootful Docker daemon",(ROOT/'infra/staging/host.py').read_text())
+
+    def test_host_loopback_gate_requires_200_and_closes_connection(self):
+        state={'port':18080,'domain':'staging.example.invalid'}
+        def compose(folder,*args,**kwargs):
+            if args[0]=='ps':return args[-1]
+            return 'Uid:\t'+('1654' if args[2]=='api' else '999')+'\t999\t999\t999'
+        def inspect(args):
+            ports={'8080/tcp':[{'HostIp':'127.0.0.1','HostPort':'18080'}]} if args[-1]=='api' else {}
+            return json.dumps([{'State':{'Health':{'Status':'healthy'}},'HostConfig':{'PortBindings':ports}}])
+        with mock.patch.object(host,'compose',side_effect=compose),mock.patch.object(host,'output',side_effect=inspect),mock.patch.object(host.http.client,'HTTPConnection') as http,mock.patch('sys.stdout',new_callable=io.StringIO):
+            http.return_value.getresponse.return_value.status=200
+            host.verify(Path('unused'),state)
+            http.return_value.request.assert_called_once_with('GET','/health/ready',headers={'Host':state['domain'],'X-Forwarded-Proto':'https'})
+            http.return_value.close.assert_called_once()
+            http.return_value.reset_mock()
+            http.return_value.getresponse.return_value.status=302
+            with self.assertRaisesRegex(RuntimeError,'HTTP 200'):host.verify(Path('unused'),state)
+            http.return_value.close.assert_called_once()
     def test_inputs_are_restricted(self):
         self.assertEqual(str(host.validate('staging.consoliprojects.dev','172.30.252.0/24',18080)),'172.30.252.0/24')
         for domain,subnet,port in [('consoliprojects.dev','172.30.252.0/24',18080),('bad;nginx','172.30.252.0/24',18080),('a..dev','172.30.252.0/24',18080),('a.dev','0.0.0.0/0',18080),('a.dev','127.0.0.0/24',18080),('a.dev','172.30.252.0/24',3306)]:
@@ -43,13 +163,40 @@ class StagingTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):ops.Journal().apply('002','CREATE TABLE b(id int);')
             self.assertEqual(sql.call_count,2)
     def test_mysql_identity_is_exact_before_ddl(self):
-        cfg={'id':'a'*32}
-        row=dict(version='5.7.24',host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,id=cfg['id'])
+        cfg={'id':'a'*32,'format':2,'mysql_version':ops.MYSQL['version'],'mysql_image':ops.MYSQL['image']}
+        row=dict(version='5.7.44',host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,ssl='YES',openssl='YES',tls='TLSv1.2',id=cfg['id'])
         with mock.patch.object(ops,'mysql',side_effect=[json.dumps(row),'Ssl_version\tTLSv1.2','Ssl_cipher\tECDHE-RSA-AES256-GCM-SHA384']),mock.patch.object(ops,'saved'):
             ops.identity(cfg)
-        for field,value in [('id','foreign'),('secure',0),('version','8.0.0'),('dir','/real-data/')]:
+        for field,value in [('id','foreign'),('secure',0),('version','5.7.24'),('version','8.0.0'),('dir','/real-data/'),('ssl','NO'),('openssl','NO'),('tls','TLSv1.1')]:
             wrong={**row,field:value}
             with mock.patch.object(ops,'mysql',return_value=json.dumps(wrong)),self.assertRaises(RuntimeError):ops.identity(cfg)
+
+    def test_compatibility_requires_complete_journal_and_exact_routines(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp)
+            binding=dict(artifactRoot=str(ROOT),database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%',apiUser='er_api',apiHost='172.30.252.%',reviewUser='er_review',reviewHost='172.30.252.%')
+            config=folder/'binding-input.json';config.write_text(json.dumps(binding))
+            subprocess.run(['node',str(ROOT/'tools/prepare-release-sql.cjs'),str(config),str(folder/'bundle')],check=True,capture_output=True)
+            journal={'00-login-users':dict(state='done',hash='synthetic-login-hash')}
+            journal.update({p.name:dict(state='done',hash=ops.sha(p.read_text().encode())) for p in (folder/'bundle').glob('*.sql')})
+            (folder/'journal.json').write_text(json.dumps(journal))
+            routines=[dict(name='er_schema_ready',type='PROCEDURE',definer='er_stage_definer@%',security='DEFINER',access='READS SQL DATA')]
+            with mock.patch.object(ops,'ROOT',ROOT), mock.patch.object(ops,'STATE',folder), mock.patch.object(ops,'preflight'), mock.patch.object(ops,'mysql') as sql, mock.patch.object(ops,'saved') as saved:
+                sql.side_effect=[json.dumps(routines),json.dumps(dict(tables=71,triggers=180))]
+                ops.compatibility()
+                self.assertEqual(saved.call_args.args[1]['storedFunctions'],0)
+                sql.side_effect=[json.dumps(routines+[dict(name='unexpected',type='FUNCTION')])]
+                with self.assertRaisesRegex(RuntimeError,'stored function'):ops.compatibility()
+                journal['99-routine-grants.sql']['state']='started'
+                (folder/'journal.json').write_text(json.dumps(journal))
+                sql.reset_mock()
+                with self.assertRaisesRegex(RuntimeError,'Incomplete staging migrations'):ops.compatibility()
+                sql.assert_not_called()
+                journal['99-routine-grants.sql']['state']='done'
+                (folder/'journal.json').write_text(json.dumps(journal))
+                migration=next((folder/'bundle').glob('01-*.sql'))
+                migration.write_text(migration.read_text()+'\n-- tampered\n')
+                with self.assertRaisesRegex(RuntimeError,'hash mismatch'):ops.compatibility()
     def test_seed_has_explicit_roles_owners_and_no_bypass(self):
         import uuid
         names=('tenant_a','tenant_b','biennium_a','biennium_b','area_a','area_b','path_a','path_b','bsa_a','bsa_b','bsp_a','bsp_b','class_a','class_b','teacher','student','subject','assignment')
