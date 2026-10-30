@@ -1,6 +1,6 @@
 {
-  "filesAnalyzed": 660,
-  "typesClassified": 657,
+  "filesAnalyzed": 661,
+  "typesClassified": 658,
   "entries": [
     {
       "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs",
@@ -9533,6 +9533,22 @@
       "types": [
         {
           "name": "CampusRepository",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/ClassDeletionIntegrity.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Repositories",
+      "classification": "Repositories",
+      "types": [
+        {
+          "name": "ClassDeletionIntegrity",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }

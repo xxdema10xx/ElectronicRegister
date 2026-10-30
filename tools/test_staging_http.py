@@ -20,6 +20,24 @@ spec=importlib.util.spec_from_file_location('staging_smoke',ROOT/'infra/staging/
 smoke=importlib.util.module_from_spec(spec);spec.loader.exec_module(smoke)
 
 class HttpAuditTests(unittest.TestCase):
+    def test_separate_class_deletion_gate_keeps_original_plan_and_rejects_unprotected_delete(self):
+        self.assertEqual(54,len(self.cases))
+        cases=smoke.class_deletion_plan(self.seed,self.key)
+        for case in cases:
+            case['headers']={'X-Test-Case':case['name']}
+        original=self.sender()
+        statuses={'protected-class-delete':409,'foreign-class-delete':404,'deleted-class-missing':404}
+        def send(method,path,body,token,headers):
+            name=headers['X-Test-Case']
+            if name in statuses:return statuses[name],{},b''
+            return original(method,path,body,token,headers)
+        result=smoke.report(smoke.execute(cases,send))
+        self.assertEqual(dict(PASS=8,FAIL=0,BLOCKED=0),result['summary'])
+        statuses['protected-class-delete']=204
+        result=smoke.report(smoke.execute(cases,send))
+        self.assertFalse(result['success'])
+        self.assertEqual('FAIL',next(c for c in result['checks'] if c['name']=='protected-class-delete')['outcome'])
+
     def setUp(self):
         self.seed=smoke.synthetic_seed(); self.key='synthetic-signing-key'
         self.cases=smoke.plan(self.seed,self.key)

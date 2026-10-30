@@ -27,6 +27,14 @@ internal static class SqlRegression
             grants.Count(g => g.StartsWith("GRANT SELECT, INSERT, UPDATE, DELETE ON `electronic_register_staging`.* TO ", StringComparison.Ordinal)) == 1 &&
             grants.Count(g => g.StartsWith("GRANT EXECUTE ON PROCEDURE `electronic_register_staging`.`er_schema_ready` TO ", StringComparison.Ordinal)) == 1,
             "Unexpected API grant, role or administrative capability.");
+        // Real least-privilege session: metadata absence has a different meaning
+        // for TRIGGERS than for tables/FKs. Check this before starting HTTP.
+        const string calendar = "'institution_calendar_settings','institution_calendar_period','institution_lesson','institution_calendar_event','institution_calendar_import','institution_calendar_occupancy'";
+        Require(Convert.ToInt32(await Query(first, null, $"SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME IN({calendar})")) == 6, "API calendar table visibility mismatch.");
+        Require(Convert.ToInt32(await Query(first, null, $"SELECT COUNT(*) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA=DATABASE() AND EVENT_OBJECT_TABLE IN({calendar})")) == 0, "API must not have trigger metadata visibility.");
+        Require(Convert.ToInt32(await Query(first, null, $"SELECT COUNT(*) FROM information_schema.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND TABLE_NAME IN({calendar})")) == 22, "API calendar FK visibility mismatch.");
+        Require(Convert.ToInt32(await Query(first, null, "SELECT COUNT(*) FROM (SELECT DISTINCT TABLE_NAME,CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_SCHEMA=DATABASE() AND REFERENCED_TABLE_NAME='class') AS dependencies")) == 8, "API class dependency visibility mismatch.");
+        Require(Convert.ToInt32(await Query(first, null, "CALL er_schema_ready()")) == 1, "Privileged schema attestation failed.");
         Require(Convert.ToString(await Query(first, null, "SELECT @@transaction_isolation")) == "REPEATABLE-READ", "Unexpected default isolation.");
         var marker = "probe-" + Guid.NewGuid().ToString("N");
         await using (var transaction = await first.BeginTransactionAsync(IsolationLevel.RepeatableRead))
@@ -68,6 +76,6 @@ internal static class SqlRegression
         catch (MySqlException error) when (error.Number == 1142) { denied = true; }
         Require(denied, "API account unexpectedly permits DDL.");
         Require(Convert.ToInt32(await Query(first, null, "CALL er_schema_ready()")) == 1, "Schema changed after rollback probes.");
-        return new { isolation = "REPEATABLE-READ", dirtyReadRejected = true, rollback = true, deadlockVictims = 1, lockTimeout = true, apiDdlDenied = true, apiGrantsVerified = true };
+        return new { isolation = "REPEATABLE-READ", dirtyReadRejected = true, rollback = true, deadlockVictims = 1, lockTimeout = true, apiDdlDenied = true, apiGrantsVerified = true, apiCalendarTables = 6, apiCalendarTriggers = 0, apiCalendarForeignKeys = 22, apiClassForeignKeys = 8, privilegedSchemaAttested = true };
     }
 }

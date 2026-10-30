@@ -311,7 +311,10 @@ def main():
         except (RuntimeError, subprocess.CalledProcessError, OSError):
             # Fail closed without contacting HTTP; preserve the blocked inventory.
             return smoke.blocked_setup(folder/'ops')
-        return smoke.run(s,folder/'ops',loopback=True,key_file=folder/'secrets/ops/jwt-key')
+        result=smoke.run(s,folder/'ops',loopback=True,key_file=folder/'secrets/ops/jwt-key')
+        smoke.run(s,folder/'ops',loopback=True,key_file=folder/'secrets/ops/jwt-key',class_deletion=True)
+        compose(folder,'run','--rm','--no-deps','ops','class-delete-audit')
+        return result
 
 def verify(folder,s,readiness=True):
     for service,uid in [('api','1654'),('db','999')]:

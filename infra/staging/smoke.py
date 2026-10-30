@@ -236,19 +236,31 @@ def synthetic_seed():
         for n in ('admin_a','admin_b','teacher','student')})
 
 
-def run(config,state,loopback=False,key_file=None):
+def class_deletion_plan(seed,key):
+    # Separate regression gate; the original 54-case HTTP plan stays unchanged.
+    names={'login-admin_a','choices-admin_a','selection-admin_a','class-write','class-delete'}
+    cases=[c for c in plan(seed,key) if c['name'] in names]
+    template=next(c for c in cases if c['name']=='class-delete')
+    for name,expected,target in [('protected-class-delete',409,seed['ids']['class_a']),('foreign-class-delete',404,seed['ids']['class_b'])]:
+        cases.append(dict(template,name=name,expected=expected,deps=['selection-admin_a'],path=lambda c,id=target:'/api/institution/classes/'+id))
+    cases.append(dict(template,name='deleted-class-missing',method='GET',expected=404,deps=['class-delete']))
+    return cases
+
+
+def run(config,state,loopback=False,key_file=None,class_deletion=False):
     state=Path(state); checks=[]; ready=False
     # Plan exists even if setup fails, so all dependent cases are reported BLOCKED.
-    cases=plan(synthetic_seed(),'')
+    factory=class_deletion_plan if class_deletion else plan
+    cases=factory(synthetic_seed(),'')
     try:
         require((state/'seed-result.json').exists(),'Seed missing')
         seed=json.loads((state/'seed.json').read_text())
         require(seed['stage_id']==config['id'],'Foreign seed')
         key=Path(key_file or '/run/secrets/jwt-key').read_text()
-        cases=plan(seed,key)
+        cases=factory(seed,key)
         # One audit per fresh synthetic namespace. A timeout may have committed a
         # mutation; rerunning with a new event ID and revision -1 is unsafe.
-        with (state/'http-audit-started').open('x') as marker: marker.write('started\n')
+        with (state/('class-deletion-audit-started' if class_deletion else 'http-audit-started')).open('x') as marker: marker.write('started\n')
         ready=True
     except Exception:
         checks.append(dict(scenario='setup',name='setup',method=None,route=None,expected=None,received=None,outcome='FAIL',category='assertion',missing=[]))

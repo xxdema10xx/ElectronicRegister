@@ -155,10 +155,10 @@ internal sealed class InstitutionClassRepository(ElectronicRegisterContext db, I
                 "student_class_transfer_event:fk_transfer_from_class",
                 "student_class_transfer_event:fk_transfer_to_class"
             };
-            // Recognize the additive calendar only after validating its complete SQL inventory.
-            // Keep the fail-closed check for every other new FK and preserve empty legacy deletion.
-            var calendar = await ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.CalendarIntegrity.ValidateIfPresentAsync((MySqlConnection)db.Database.GetDbConnection(), (MySqlTransaction)db.Database.CurrentTransaction!.GetDbTransaction());
-            if (calendar.Length > 0)
+            // Privileged trigger attestation belongs to release preflight, not HTTP CRUD.
+            // Runtime still fails closed on metadata visibility, tables, FKs and ownership.
+            var calendar = await ClassDeletionIntegrity.ValidateCalendarAsync((MySqlConnection)db.Database.GetDbConnection(), (MySqlTransaction)db.Database.CurrentTransaction!.GetDbTransaction(), ct);
+            if (calendar)
             {
                 known.Add("institution_calendar_period:fk_cal_period_class");
                 if (await db.Set<E.InstitutionCalendarPeriodRecord>().AnyAsync(p => p.InstitutionId == t.InstitutionId && p.ClassId == id, ct))

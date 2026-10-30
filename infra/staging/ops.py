@@ -253,9 +253,20 @@ def seed(config):
     journal.apply('synthetic-seed',seed_sql(data,json.loads(hash_file.read_text())))
     saved(STATE/'seed-result.json',dict(stage=config['id'],syntheticAccounts=4,tenants=2))
 
+def class_deletion_audit():
+    # Read with the review identity after real HTTP through er_api. Events must
+    # survive both empty deletions, with no remaining class row.
+    tenant=json.loads((STATE/'seed.json').read_text())['ids']['tenant_a']
+    uuid.UUID(tenant)
+    retained=json.loads(mysql("USE electronic_register_staging; SELECT JSON_OBJECT('deleted',COUNT(*),'orphanedAudit',SUM(c.id IS NULL),'snapshots',SUM(e.before_json IS NOT NULL AND e.after_json IS NULL)) FROM institution_class_event e LEFT JOIN class c ON c.id=e.class_id WHERE e.institution_id="+literal(tenant)+" AND e.action='class.deleted'",review=True))
+    require(retained==dict(deleted=2,orphanedAudit=2,snapshots=2),'Empty class deletion audit was not preserved')
+    saved(STATE/'class-deletion-result.json',dict(emptyDeleted=2,auditPreserved=True))
+    print(json.dumps(dict(classDeletionAudit=retained)))
+
+
 def main():
     require(fcntl is not None,'Operator jobs require Linux file locks')
-    require(len(sys.argv)==2 and sys.argv[1] in ('source','identity','provision','compatibility','seed','preflight','tls','smoke'),'Explicit operator command required')
+    require(len(sys.argv)==2 and sys.argv[1] in ('source','identity','provision','compatibility','seed','preflight','tls','smoke','class-delete-audit'),'Explicit operator command required')
     STATE.mkdir(exist_ok=True,mode=0o700)
     with (STATE/'operation.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
@@ -275,6 +286,7 @@ def main():
         elif sys.argv[1]=='seed':seed(config)
         elif sys.argv[1]=='preflight':preflight()
         elif sys.argv[1]=='tls':tls()
+        elif sys.argv[1]=='class-delete-audit':class_deletion_audit()
         else:
             phase(sys.argv[1])
             preflight()

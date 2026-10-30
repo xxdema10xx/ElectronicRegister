@@ -18,6 +18,20 @@ host=load('host');ops=load('ops');diagnostics=load('diagnostics')
 sys.modules['diagnostics']=diagnostics
 
 class StagingTests(unittest.TestCase):
+    def test_class_delete_audit_requires_retained_event_snapshot_and_deleted_row(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp)
+            (folder/'seed.json').write_text(json.dumps(dict(ids=dict(tenant_a='11111111-2222-3333-4444-555555555555'))))
+            expected=dict(deleted=2,orphanedAudit=2,snapshots=2)
+            with mock.patch.object(ops,'STATE',folder),mock.patch.object(ops,'mysql',return_value=json.dumps(expected)) as sql,mock.patch.object(ops,'saved') as saved,mock.patch('sys.stdout',new_callable=io.StringIO):
+                ops.class_deletion_audit()
+                self.assertTrue(sql.call_args.kwargs['review'])
+                self.assertTrue(sql.call_args.args[0].startswith('USE electronic_register_staging; SELECT '))
+                self.assertTrue(saved.call_args.args[1]['auditPreserved'])
+                for key in expected:
+                    sql.return_value=json.dumps(dict(expected,**{key:1}))
+                    with self.assertRaisesRegex(RuntimeError,'audit was not preserved'):ops.class_deletion_audit()
+
     def test_http_audit_retains_container_safety_but_records_unhealthy_readiness_itself(self):
         state=dict(port=18080,project='synthetic',domain='staging.example.invalid')
         def compose(folder,*args,**kwargs):
