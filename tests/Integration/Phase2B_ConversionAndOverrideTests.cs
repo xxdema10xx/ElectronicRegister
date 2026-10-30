@@ -23,9 +23,9 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             using var scope = _fixture.ScopeFactory.CreateScope();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
-            var examMgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamManager>();
-            var teacher = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
-            var student = new ClaimsContext(ids.StudentId, UserRole.Student, ids.StudentId, null);
+            var examMgr = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
+            var teacher = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
+            var student = new FixtureActor(ids.StudentId, ids.StudentId, null);
 
             // Submit as student
             var current = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
@@ -59,9 +59,9 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await _fixture.PreparePendingReviewScenarioAsync(IntegrationScenario.ExamRegression);
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
-            var teacher = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
+            var teacher = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
 
             var before = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
             var review = new ReviewOpenAnswersDto();

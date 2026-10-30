@@ -1,0 +1,2357 @@
+[
+    {
+        "controller":  "IdentityAccountController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/IdentityAccountController.cs",
+        "sourceSha256":  "7195b84b7bedfc7a66c866d42a26357d6e7afc4f6e9e63ea93ea31201c5c2004",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, InstitutionIdentityEndpoint, Route(\"api/identity/account\")]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "[Authorize(Policy = InstitutionTokenContract.SelectionScheme)]"
+                              },
+                              {
+                                  "line":  12,
+                                  "text":  "public sealed class IdentityAccountController(IIdentityAccountManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  16,
+                                  "text":  "[HttpGet]"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "public async Task\u003cActionResult\u003cIdentityAccountDto\u003e\u003e Get(CancellationToken ct) =\u003e Ok(await manager.GetAsync(UserId, ct));"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "[HttpPut]"
+                              },
+                              {
+                                  "line":  19,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(UpdateIdentityAccountDto input, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  25,
+                                  "text":  "[HttpPut(\"password\")]"
+                              },
+                              {
+                                  "line":  26,
+                                  "text":  "public async Task\u003cIActionResult\u003e ChangePassword(ChangeIdentityPasswordDto input, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class IdentityAccountController(IIdentityAccountManager manager) : ControllerBase",
+                           "public async Task\u003cActionResult\u003cIdentityAccountDto\u003e\u003e Get(CancellationToken ct) =\u003e Ok(await manager.GetAsync(UserId, ct));",
+                           "public async Task\u003cIActionResult\u003e Update(UpdateIdentityAccountDto input, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e ChangePassword(ChangeIdentityPasswordDto input, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "IdentityRegistrationController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/IdentityRegistrationController.cs",
+        "sourceSha256":  "ab3b430f42853826f08679d92d013dfd205d11b2622cc29e0d2de83a56a3e111",
+        "contractLines":  [
+                              {
+                                  "line":  8,
+                                  "text":  "[ApiController, InstitutionIdentityEndpoint, Route(\"api/identity/accounts\")]"
+                              },
+                              {
+                                  "line":  9,
+                                  "text":  "public sealed class IdentityRegistrationController(IIdentityAccountManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "[HttpPost]"
+                              },
+                              {
+                                  "line":  12,
+                                  "text":  "public async Task\u003cActionResult\u003cGuid\u003e\u003e Register(RegisterIdentityAccountDto input, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class IdentityRegistrationController(IIdentityAccountManager manager) : ControllerBase",
+                           "public async Task\u003cActionResult\u003cGuid\u003e\u003e Register(RegisterIdentityAccountDto input, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionBienniumController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionBienniumController.cs",
+        "sourceSha256":  "5ea5633c5d20229af934507ceb22a47738ba1c5d3b843839b517a389876c08b7",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, Route(\"api/institution/biennia\"), InstitutionSchoolEndpoint, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionBienniumController(IInstitutionAcademicCatalogManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int pageNumber = 1, int pageSize = 20)"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "[HttpPost]"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create(CreateInstitutionBienniumDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  37,
+                                  "text":  "[HttpPut(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  38,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionBienniumDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  47,
+                                  "text":  "[HttpDelete(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  48,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionBienniumController(IInstitutionAcademicCatalogManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int pageNumber = 1, int pageSize = 20)",
+                           "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Create(CreateInstitutionBienniumDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionBienniumDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionBienniumStudyAreaController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionBienniumStudyAreaController.cs",
+        "sourceSha256":  "1ceb01a112254b27a37ad978838eecdad66d3c61c722689e2920e30207042c23",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, Route(\"api/institution/biennium-study-areas\"), InstitutionSchoolEndpoint, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionBienniumStudyAreaController(IInstitutionAcademicCatalogManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int pageNumber = 1, int pageSize = 20)"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "[HttpPost]"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create(CreateInstitutionBienniumStudyAreaDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  37,
+                                  "text":  "[HttpDelete(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  38,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionBienniumStudyAreaController(IInstitutionAcademicCatalogManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int pageNumber = 1, int pageSize = 20)",
+                           "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Create(CreateInstitutionBienniumStudyAreaDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionBienniumStudyPathController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionBienniumStudyPathController.cs",
+        "sourceSha256":  "d3eaca7bebcfcd3fa855fd62dc458c290a5491bdd21bcce3c0bf51afff5f3a02",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, Route(\"api/institution/biennium-study-paths\"), InstitutionSchoolEndpoint, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionBienniumStudyPathController(IInstitutionAcademicCatalogManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int pageNumber = 1, int pageSize = 20)"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "[HttpPost]"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create(CreateInstitutionBienniumStudyPathDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  37,
+                                  "text":  "[HttpDelete(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  38,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionBienniumStudyPathController(IInstitutionAcademicCatalogManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int pageNumber = 1, int pageSize = 20)",
+                           "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Create(CreateInstitutionBienniumStudyPathDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionCalendarController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionCalendarController.cs",
+        "sourceSha256":  "9da7ffd58525bfc4a7c44553563e4f21dc3be5220c4d6ea45fac55b63b9ef244",
+        "contractLines":  [
+                              {
+                                  "line":  12,
+                                  "text":  "[ApiController, InstitutionSchoolEndpoint, ElectronicRegisterAPI.Api.ExceptionHandling.CalendarErrors, Route(\"api/institution/calendar\"), RequestSizeLimit(12 * 1024 * 1024)]"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "public sealed class InstitutionCalendarController(IInstitutionCalendarManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "[HttpGet(\"settings\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "public async Task\u003cIActionResult\u003e Settings(CancellationToken ct) =\u003e Ok(await manager.SettingsAsync(ct));"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "[HttpPut(\"settings\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "public async Task\u003cIActionResult\u003e Configure(CalendarSettingsCommand request, CancellationToken ct) =\u003e Ok(await manager.ConfigureAsync(request, ct));"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "[HttpGet, Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  23,
+                                  "text":  "public async Task\u003cIActionResult\u003e List([FromQuery] CalendarQuery query, CancellationToken ct) =\u003e Ok(await manager.ListAsync(query, \"admin\", ct));"
+                              },
+                              {
+                                  "line":  24,
+                                  "text":  "[HttpGet(\"classes/{classId:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  26,
+                                  "text":  "public async Task\u003cIActionResult\u003e Class(Guid classId, [FromQuery] CalendarQuery query, CancellationToken ct) =\u003e Ok(await manager.ListAsync(query with { ClassId = classId }, \"admin\", ct));"
+                              },
+                              {
+                                  "line":  27,
+                                  "text":  "[HttpGet(\"teachers/me\"), Authorize(Roles = \"Teacher\")]"
+                              },
+                              {
+                                  "line":  29,
+                                  "text":  "public async Task\u003cIActionResult\u003e Teacher([FromQuery] CalendarQuery query, CancellationToken ct) =\u003e Ok(await manager.ListAsync(query, \"teacher\", ct));"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "[HttpGet(\"students/me\"), Authorize(Roles = \"Student\")]"
+                              },
+                              {
+                                  "line":  32,
+                                  "text":  "public async Task\u003cIActionResult\u003e Student([FromQuery] CalendarQuery query, CancellationToken ct) =\u003e Ok(await manager.ListAsync(query, \"student\", ct));"
+                              },
+                              {
+                                  "line":  33,
+                                  "text":  "[HttpGet(\"months/{year:int}/{month:int}/classes/{classId:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  35,
+                                  "text":  "public async Task\u003cIActionResult\u003e Period("
+                              },
+                              {
+                                  "line":  41,
+                                  "text":  "[HttpPost(\"months/{year:int}/{month:int}/classes/{classId:guid}/publish\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  43,
+                                  "text":  "public async Task\u003cIActionResult\u003e Publish("
+                              },
+                              {
+                                  "line":  50,
+                                  "text":  "[HttpGet(\"lessons/{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  52,
+                                  "text":  "public async Task\u003cIActionResult\u003e Lesson(Guid id, CancellationToken ct) =\u003e Ok(await manager.GetAsync(id, ct));"
+                              },
+                              {
+                                  "line":  53,
+                                  "text":  "[HttpGet(\"lessons/{id:guid}/module\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  55,
+                                  "text":  "public async Task\u003cIActionResult\u003e Module(Guid id, CancellationToken ct) =\u003e Ok(await manager.ModuleAsync(id, ct));"
+                              },
+                              {
+                                  "line":  56,
+                                  "text":  "[HttpPost(\"lessons\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  58,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create(CalendarSaveLesson request, CancellationToken ct) =\u003e Ok(await manager.SaveAsync(null, request, ct));"
+                              },
+                              {
+                                  "line":  59,
+                                  "text":  "[HttpPut(\"lessons/{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  61,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, CalendarSaveLesson request, CancellationToken ct) =\u003e Ok(await manager.SaveAsync(id, request, ct));"
+                              },
+                              {
+                                  "line":  62,
+                                  "text":  "[HttpPost(\"lessons/{id:guid}/cancel\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  64,
+                                  "text":  "public async Task\u003cIActionResult\u003e Cancel(Guid id, CalendarCommand request, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, \"LessonCancelled\", request, null, null, null, ct));"
+                              },
+                              {
+                                  "line":  65,
+                                  "text":  "[HttpPost(\"lessons/{id:guid}/reschedule\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  67,
+                                  "text":  "public async Task\u003cIActionResult\u003e Reschedule(Guid id, CalendarRescheduleCommand request, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, \"LessonRescheduled\", new(request.EventId, request.ExpectedRevision, request.Reason), null, request, null, ct));"
+                              },
+                              {
+                                  "line":  68,
+                                  "text":  "[HttpPost(\"lessons/{id:guid}/substitute\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  70,
+                                  "text":  "public async Task\u003cIActionResult\u003e Substitute(Guid id, CalendarSubstituteCommand request, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, \"TeacherSubstituted\", new(request.EventId, request.ExpectedRevision, request.Reason), null, null, request, ct));"
+                              },
+                              {
+                                  "line":  71,
+                                  "text":  "[HttpPost(\"lessons/{id:guid}/complete\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  73,
+                                  "text":  "public async Task\u003cIActionResult\u003e Complete(Guid id, CalendarDeliveredCommand request, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, \"LessonCompleted\", new(request.EventId, request.ExpectedRevision, request.Reason), request, null, null, ct));"
+                              },
+                              {
+                                  "line":  74,
+                                  "text":  "[HttpPost(\"lessons/{id:guid}/correct-delivered-time\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  76,
+                                  "text":  "public async Task\u003cIActionResult\u003e Correct(Guid id, CalendarDeliveredCommand request, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, \"DeliveredMinutesCorrected\", new(request.EventId, request.ExpectedRevision, request.Reason), request, null, null, ct));"
+                              },
+                              {
+                                  "line":  77,
+                                  "text":  "[HttpGet(\"lessons/{id:guid}/history\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  79,
+                                  "text":  "public async Task\u003cIActionResult\u003e History("
+                              },
+                              {
+                                  "line":  85,
+                                  "text":  "[HttpGet(\"hours\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  87,
+                                  "text":  "public async Task\u003cIActionResult\u003e Hours(Guid classId, CancellationToken ct) =\u003e Ok(await manager.HoursAsync(classId, ct));"
+                              },
+                              {
+                                  "line":  88,
+                                  "text":  "[HttpPost(\"imports/preview\"), Authorize(Roles = \"InstitutionAdmin,Staff\"), RequestFormLimits(MultipartBodyLengthLimit = 12 * 1024 * 1024)]"
+                              },
+                              {
+                                  "line":  90,
+                                  "text":  "public async Task\u003cIActionResult\u003e Preview("
+                              },
+                              {
+                                  "line":  116,
+                                  "text":  "[HttpGet(\"imports/{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  118,
+                                  "text":  "public async Task\u003cIActionResult\u003e Import(Guid id, CancellationToken ct) =\u003e Ok(await manager.ImportAsync(id, ct));"
+                              },
+                              {
+                                  "line":  119,
+                                  "text":  "[HttpPost(\"imports/{id:guid}/confirm\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  121,
+                                  "text":  "public async Task\u003cIActionResult\u003e Confirm(Guid id, CalendarConfirmImport request, CancellationToken ct) =\u003e Ok(await manager.ConfirmAsync(id, request, ct));"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionCalendarController(IInstitutionCalendarManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e Settings(CancellationToken ct) =\u003e Ok(await manager.SettingsAsync(ct));",
+                           "public async Task\u003cIActionResult\u003e Configure(CalendarSettingsCommand request, CancellationToken ct) =\u003e Ok(await manager.ConfigureAsync(request, ct));",
+                           "public async Task\u003cIActionResult\u003e List([FromQuery] CalendarQuery query, CancellationToken ct) =\u003e Ok(await manager.ListAsync(query, \"admin\", ct));",
+                           "public async Task\u003cIActionResult\u003e Class(Guid classId, [FromQuery] CalendarQuery query, CancellationToken ct) =\u003e Ok(await manager.ListAsync(query with { ClassId = classId }, \"admin\", ct));",
+                           "public async Task\u003cIActionResult\u003e Teacher([FromQuery] CalendarQuery query, CancellationToken ct) =\u003e Ok(await manager.ListAsync(query, \"teacher\", ct));",
+                           "public async Task\u003cIActionResult\u003e Student([FromQuery] CalendarQuery query, CancellationToken ct) =\u003e Ok(await manager.ListAsync(query, \"student\", ct));",
+                           "public async Task\u003cIActionResult\u003e Period(",
+                           "public async Task\u003cIActionResult\u003e Publish(",
+                           "public async Task\u003cIActionResult\u003e Lesson(Guid id, CancellationToken ct) =\u003e Ok(await manager.GetAsync(id, ct));",
+                           "public async Task\u003cIActionResult\u003e Module(Guid id, CancellationToken ct) =\u003e Ok(await manager.ModuleAsync(id, ct));",
+                           "public async Task\u003cIActionResult\u003e Create(CalendarSaveLesson request, CancellationToken ct) =\u003e Ok(await manager.SaveAsync(null, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, CalendarSaveLesson request, CancellationToken ct) =\u003e Ok(await manager.SaveAsync(id, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Cancel(Guid id, CalendarCommand request, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, \"LessonCancelled\", request, null, null, null, ct));",
+                           "public async Task\u003cIActionResult\u003e Reschedule(Guid id, CalendarRescheduleCommand request, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, \"LessonRescheduled\", new(request.EventId, request.ExpectedRevision, request.Reason), null, request, null, ct));",
+                           "public async Task\u003cIActionResult\u003e Substitute(Guid id, CalendarSubstituteCommand request, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, \"TeacherSubstituted\", new(request.EventId, request.ExpectedRevision, request.Reason), null, null, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Complete(Guid id, CalendarDeliveredCommand request, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, \"LessonCompleted\", new(request.EventId, request.ExpectedRevision, request.Reason), request, null, null, ct));",
+                           "public async Task\u003cIActionResult\u003e Correct(Guid id, CalendarDeliveredCommand request, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, \"DeliveredMinutesCorrected\", new(request.EventId, request.ExpectedRevision, request.Reason), request, null, null, ct));",
+                           "public async Task\u003cIActionResult\u003e History(",
+                           "public async Task\u003cIActionResult\u003e Hours(Guid classId, CancellationToken ct) =\u003e Ok(await manager.HoursAsync(classId, ct));",
+                           "public async Task\u003cIActionResult\u003e Preview(",
+                           "public async Task\u003cIActionResult\u003e Import(Guid id, CancellationToken ct) =\u003e Ok(await manager.ImportAsync(id, ct));",
+                           "public async Task\u003cIActionResult\u003e Confirm(Guid id, CalendarConfirmImport request, CancellationToken ct) =\u003e Ok(await manager.ConfirmAsync(id, request, ct));"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionCampusController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionCampusController.cs",
+        "sourceSha256":  "73207bec3ab6a73de35fd248973d00b55b5a85342ee6f9fca7065e1eb6abfd1e",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, Route(\"api/institution/campuses\"), InstitutionCourseEndpoint, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionCampusController(IInstitutionCampusManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cIActionResult\u003e List("
+                              },
+                              {
+                                  "line":  29,
+                                  "text":  "[HttpGet(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  39,
+                                  "text":  "[HttpPost]"
+                              },
+                              {
+                                  "line":  40,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create(CreateInstitutionCampusDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  46,
+                                  "text":  "[HttpPut(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  47,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionCampusDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  56,
+                                  "text":  "[HttpDelete(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  57,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionCampusController(IInstitutionCampusManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e List(",
+                           "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Create(CreateInstitutionCampusDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionCampusDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionClassController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionClassController.cs",
+        "sourceSha256":  "29340b1bd3ef8679eb045e0433dd695ec28b276744e53475772e830afeea1883",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, Route(\"api/institution/classes\"), InstitutionSchoolEndpoint, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionClassController(IInstitutionClassManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cActionResult\u003cInstitutionClassPageDto\u003e\u003e GetAll("
+                              },
+                              {
+                                  "line":  28,
+                                  "text":  "[HttpGet(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  29,
+                                  "text":  "public async Task\u003cActionResult\u003cInstitutionClassDto\u003e\u003e GetById(Guid id, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  38,
+                                  "text":  "[HttpPost]"
+                              },
+                              {
+                                  "line":  39,
+                                  "text":  "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateInstitutionClassDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  45,
+                                  "text":  "[HttpPut(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  46,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionClassDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  57,
+                                  "text":  "[HttpDelete(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  58,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionClassController(IInstitutionClassManager manager) : ControllerBase",
+                           "public async Task\u003cActionResult\u003cInstitutionClassPageDto\u003e\u003e GetAll(",
+                           "public async Task\u003cActionResult\u003cInstitutionClassDto\u003e\u003e GetById(Guid id, CancellationToken ct)",
+                           "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateInstitutionClassDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionClassDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionClassSubjectController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionClassSubjectController.cs",
+        "sourceSha256":  "08143fd9548883e6d2c29c2a827f4dd597480f575c86ed9fd1d553a4b8808d48",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, InstitutionExamEndpoint, Route(\"api/institution/class-subjects\")]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionClassSubjectController(IInstitutionClassSubjectManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet, Authorize(Roles = \"InstitutionAdmin,Teacher\")]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cIActionResult\u003e GetAll("
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "[HttpGet(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  32,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  41,
+                                  "text":  "[HttpPost, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  42,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create(CreateInstitutionClassSubjectDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  48,
+                                  "text":  "[HttpPut(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  49,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionClassSubjectDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  58,
+                                  "text":  "[HttpDelete(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  59,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionClassSubjectController(IInstitutionClassSubjectManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e GetAll(",
+                           "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Create(CreateInstitutionClassSubjectDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionClassSubjectDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionCourseEditionController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionCourseEditionController.cs",
+        "sourceSha256":  "2a03064ce91e0e344a3b29370181e2d32eb2ed4ec0135dbb77460b8a94f4e832",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, Route(\"api/institution/course-editions\"), InstitutionCourseEndpoint, CourseApiErrors]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionCourseEditionController(IInstitutionCourseManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cIActionResult\u003e List("
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct) =\u003e Ok(await manager.EditionAsync(id, null, ct));"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "[HttpGet(\"by-code/{code}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  23,
+                                  "text":  "public async Task\u003cIActionResult\u003e ByCode(string code, CancellationToken ct) =\u003e Ok(await manager.EditionAsync(null, code, ct));"
+                              },
+                              {
+                                  "line":  24,
+                                  "text":  "[HttpPost, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  25,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create(CreateCourseEditionDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "[HttpPut(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  32,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateCourseEditionDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  38,
+                                  "text":  "[HttpGet(\"{id:guid}/campuses\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  39,
+                                  "text":  "public async Task\u003cIActionResult\u003e Campuses("
+                              },
+                              {
+                                  "line":  45,
+                                  "text":  "[HttpPost(\"{id:guid}/campuses\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  46,
+                                  "text":  "public async Task\u003cIActionResult\u003e LinkCampus(Guid id, LinkEditionCampusDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  52,
+                                  "text":  "[HttpGet(\"{id:guid}/classes\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  53,
+                                  "text":  "public async Task\u003cIActionResult\u003e Classes("
+                              },
+                              {
+                                  "line":  59,
+                                  "text":  "[HttpPost(\"{editionId:guid}/classes/{classId:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  60,
+                                  "text":  "public async Task\u003cIActionResult\u003e AssignClass(Guid editionId, Guid classId, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  66,
+                                  "text":  "[HttpGet(\"{id:guid}/enrollments\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  67,
+                                  "text":  "public async Task\u003cIActionResult\u003e Enrollments("
+                              },
+                              {
+                                  "line":  73,
+                                  "text":  "[HttpGet(\"{id:guid}/audit\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  74,
+                                  "text":  "public async Task\u003cIActionResult\u003e Audit("
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionCourseEditionController(IInstitutionCourseManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e List(",
+                           "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct) =\u003e Ok(await manager.EditionAsync(id, null, ct));",
+                           "public async Task\u003cIActionResult\u003e ByCode(string code, CancellationToken ct) =\u003e Ok(await manager.EditionAsync(null, code, ct));",
+                           "public async Task\u003cIActionResult\u003e Create(CreateCourseEditionDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateCourseEditionDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Campuses(",
+                           "public async Task\u003cIActionResult\u003e LinkCampus(Guid id, LinkEditionCampusDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Classes(",
+                           "public async Task\u003cIActionResult\u003e AssignClass(Guid editionId, Guid classId, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Enrollments(",
+                           "public async Task\u003cIActionResult\u003e Audit("
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionEmailController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionEmailController.cs",
+        "sourceSha256":  "81f1b0c3a4ebf486a2f8126b042ca97064c56cf0faf432cae347d9ddce53e582",
+        "contractLines":  [
+                              {
+                                  "line":  11,
+                                  "text":  "[ApiController, InstitutionSchoolEndpoint, Route(\"api/institution\"), RequestSizeLimit(16384)]"
+                              },
+                              {
+                                  "line":  12,
+                                  "text":  "public sealed class InstitutionEmailController(IInstitutionEmailManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "[HttpGet(\"email-policies\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "public async Task\u003cIActionResult\u003e Policies(CancellationToken ct) =\u003e Ok(await manager.PoliciesAsync(ct));"
+                              },
+                              {
+                                  "line":  16,
+                                  "text":  "[HttpGet(\"email-policies/{category}\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "public async Task\u003cIActionResult\u003e Policy(EmailCategory category, long? revision, CancellationToken ct) =\u003e Ok(await manager.PolicyAsync(category, revision, ct));"
+                              },
+                              {
+                                  "line":  19,
+                                  "text":  "[HttpPost(\"email-policies/{category}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "public async Task\u003cIActionResult\u003e CreatePolicy(EmailCategory category, EmailPolicyWrite request, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  27,
+                                  "text":  "[HttpPut(\"email-policies/{category}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  28,
+                                  "text":  "public async Task\u003cIActionResult\u003e UpdatePolicy(EmailCategory category, EmailPolicyWrite request, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  35,
+                                  "text":  "[HttpGet(\"email-policies/{category}/history\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  36,
+                                  "text":  "public async Task\u003cIActionResult\u003e PolicyHistory("
+                              },
+                              {
+                                  "line":  42,
+                                  "text":  "[HttpPost(\"email-policies/preview\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  43,
+                                  "text":  "public async Task\u003cIActionResult\u003e Preview(EmailPreviewRequest request, CancellationToken ct) =\u003e Ok(await manager.PreviewAsync(request, ct));"
+                              },
+                              {
+                                  "line":  44,
+                                  "text":  "[HttpGet(\"email-assignments\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  45,
+                                  "text":  "public async Task\u003cIActionResult\u003e Assignments(CancellationToken ct, int page = 1, int size = 20) =\u003e Ok(await manager.AssignmentsAsync(page, size, ct));"
+                              },
+                              {
+                                  "line":  46,
+                                  "text":  "[HttpGet(\"email-assignments/{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  47,
+                                  "text":  "public async Task\u003cIActionResult\u003e Assignment(Guid id, CancellationToken ct) =\u003e Ok(await manager.AssignmentAsync(id, ct));"
+                              },
+                              {
+                                  "line":  48,
+                                  "text":  "[HttpPost(\"email-assignments\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  49,
+                                  "text":  "public async Task\u003cIActionResult\u003e Reserve(EmailReserve request, CancellationToken ct) =\u003e Ok(await manager.ReserveAsync(request, ct));"
+                              },
+                              {
+                                  "line":  50,
+                                  "text":  "[HttpPost(\"email-assignments/create-person\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  51,
+                                  "text":  "public async Task\u003cIActionResult\u003e CreatePerson(EmailCreatePerson request, CancellationToken ct) =\u003e Ok(await manager.CreatePersonAsync(request, ct));"
+                              },
+                              {
+                                  "line":  52,
+                                  "text":  "[HttpPost(\"email-assignments/{id:guid}/override\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  53,
+                                  "text":  "public async Task\u003cIActionResult\u003e Override(Guid id, EmailOverride request, CancellationToken ct) =\u003e Ok(await manager.OverrideAsync(id, request, ct));"
+                              },
+                              {
+                                  "line":  54,
+                                  "text":  "[HttpPost(\"email-assignments/{id:guid}/retire\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  55,
+                                  "text":  "public async Task\u003cIActionResult\u003e Retire(Guid id, EmailRetire request, CancellationToken ct) =\u003e Ok(await manager.RetireAsync(id, request, ct));"
+                              },
+                              {
+                                  "line":  56,
+                                  "text":  "[HttpGet(\"email-assignments/{id:guid}/history\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  57,
+                                  "text":  "public async Task\u003cIActionResult\u003e AssignmentHistory("
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionEmailController(IInstitutionEmailManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e Policies(CancellationToken ct) =\u003e Ok(await manager.PoliciesAsync(ct));",
+                           "public async Task\u003cIActionResult\u003e Policy(EmailCategory category, long? revision, CancellationToken ct) =\u003e Ok(await manager.PolicyAsync(category, revision, ct));",
+                           "public async Task\u003cIActionResult\u003e CreatePolicy(EmailCategory category, EmailPolicyWrite request, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e UpdatePolicy(EmailCategory category, EmailPolicyWrite request, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e PolicyHistory(",
+                           "public async Task\u003cIActionResult\u003e Preview(EmailPreviewRequest request, CancellationToken ct) =\u003e Ok(await manager.PreviewAsync(request, ct));",
+                           "public async Task\u003cIActionResult\u003e Assignments(CancellationToken ct, int page = 1, int size = 20) =\u003e Ok(await manager.AssignmentsAsync(page, size, ct));",
+                           "public async Task\u003cIActionResult\u003e Assignment(Guid id, CancellationToken ct) =\u003e Ok(await manager.AssignmentAsync(id, ct));",
+                           "public async Task\u003cIActionResult\u003e Reserve(EmailReserve request, CancellationToken ct) =\u003e Ok(await manager.ReserveAsync(request, ct));",
+                           "public async Task\u003cIActionResult\u003e CreatePerson(EmailCreatePerson request, CancellationToken ct) =\u003e Ok(await manager.CreatePersonAsync(request, ct));",
+                           "public async Task\u003cIActionResult\u003e Override(Guid id, EmailOverride request, CancellationToken ct) =\u003e Ok(await manager.OverrideAsync(id, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Retire(Guid id, EmailRetire request, CancellationToken ct) =\u003e Ok(await manager.RetireAsync(id, request, ct));",
+                           "public async Task\u003cIActionResult\u003e AssignmentHistory("
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionEnrollmentController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionEnrollmentController.cs",
+        "sourceSha256":  "63cbe065ddfc1df5f1897200e1f588e539b0a4670060d46471878d1008d2a327",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, Route(\"api/institution/enrollments\"), InstitutionCourseEndpoint, CourseApiErrors]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionEnrollmentController(IInstitutionCourseManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct) =\u003e Ok(await manager.EnrollmentAsync(id, ct));"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "[HttpGet, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  16,
+                                  "text":  "public async Task\u003cIActionResult\u003e List("
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "[HttpPost, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  23,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create(CreateStudentEnrollmentDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  29,
+                                  "text":  "[HttpGet(\"me\"), Authorize(Roles = \"Student\")]"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "public async Task\u003cIActionResult\u003e Me(CancellationToken ct, int pageNumber = 1, int pageSize = 20) =\u003e Ok(await manager.OwnEnrollmentsAsync(pageNumber, pageSize, ct));"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "[HttpPost(\"{id:guid}/transition\"), Authorize(Roles = \"InstitutionAdmin\"), RequestSizeLimit(16384)]"
+                              },
+                              {
+                                  "line":  32,
+                                  "text":  "public async Task\u003cIActionResult\u003e Transition(Guid id, TransitionEnrollmentDto dto, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, dto, ct));"
+                              },
+                              {
+                                  "line":  33,
+                                  "text":  "[HttpPut(\"{id:guid}/completion-date\"), Authorize(Roles = \"InstitutionAdmin\"), RequestSizeLimit(16384)]"
+                              },
+                              {
+                                  "line":  34,
+                                  "text":  "public async Task\u003cIActionResult\u003e CorrectCompletion(Guid id, CorrectEnrollmentCompletionDto dto, CancellationToken ct) =\u003e Ok(await manager.CorrectCompletionAsync(id, dto, ct));"
+                              },
+                              {
+                                  "line":  35,
+                                  "text":  "[HttpGet(\"{id:guid}/history\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  36,
+                                  "text":  "public async Task\u003cIActionResult\u003e History("
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionEnrollmentController(IInstitutionCourseManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct) =\u003e Ok(await manager.EnrollmentAsync(id, ct));",
+                           "public async Task\u003cIActionResult\u003e List(",
+                           "public async Task\u003cIActionResult\u003e Create(CreateStudentEnrollmentDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Me(CancellationToken ct, int pageNumber = 1, int pageSize = 20) =\u003e Ok(await manager.OwnEnrollmentsAsync(pageNumber, pageSize, ct));",
+                           "public async Task\u003cIActionResult\u003e Transition(Guid id, TransitionEnrollmentDto dto, CancellationToken ct) =\u003e Ok(await manager.TransitionAsync(id, dto, ct));",
+                           "public async Task\u003cIActionResult\u003e CorrectCompletion(Guid id, CorrectEnrollmentCompletionDto dto, CancellationToken ct) =\u003e Ok(await manager.CorrectCompletionAsync(id, dto, ct));",
+                           "public async Task\u003cIActionResult\u003e History("
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionExamController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionExamController.cs",
+        "sourceSha256":  "c314cc0fdef10f64a773713f69614be1a04cd889dcaf7424a548f286c0e77fc1",
+        "contractLines":  [
+                              {
+                                  "line":  11,
+                                  "text":  "[ApiController, StaffBodyContract, InstitutionExamEndpoint, Route(\"api/institution/exams\")]"
+                              },
+                              {
+                                  "line":  12,
+                                  "text":  "public sealed class InstitutionExamController(IInstitutionExamManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "[HttpGet, Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cExamSummaryDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.ExamsAsync());"
+                              },
+                              {
+                                  "line":  16,
+                                  "text":  "[HttpGet(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "public async Task\u003cActionResult\u003cExamDetailDto\u003e\u003e GetById(Guid id) =\u003e await manager.ExamAsync(id)is { } row ? Ok(row) : NotFound();"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "[HttpGet(\"assigned\"), Authorize(Roles = \"Student\")]"
+                              },
+                              {
+                                  "line":  19,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cAssignedExamDto\u003e\u003e\u003e Assigned() =\u003e Ok(await manager.AssignedAsync());"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"{id:guid}/eligible-students\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cStudentDto\u003e\u003e\u003e EligibleStudents(Guid id) =\u003e Ok(await manager.EligibleStudentsAsync(id));"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "[HttpPost, Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  23,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.ExamCreate)]"
+                              },
+                              {
+                                  "line":  24,
+                                  "text":  "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateExamDto dto)"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "[HttpPut(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.ExamUpdate)]"
+                              },
+                              {
+                                  "line":  32,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateExamDto dto)"
+                              },
+                              {
+                                  "line":  38,
+                                  "text":  "[HttpPut(\"{id:guid}/students\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  39,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.ExamAssign)]"
+                              },
+                              {
+                                  "line":  40,
+                                  "text":  "public async Task\u003cIActionResult\u003e Assign(Guid id, UpdateExamStudentsDto dto)"
+                              },
+                              {
+                                  "line":  46,
+                                  "text":  "[HttpPost(\"{id:guid}/publish\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  47,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.ExamPublish)]"
+                              },
+                              {
+                                  "line":  48,
+                                  "text":  "public async Task\u003cIActionResult\u003e Publish(Guid id)"
+                              },
+                              {
+                                  "line":  54,
+                                  "text":  "[HttpPost(\"{id:guid}/close\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  55,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.ExamClose)]"
+                              },
+                              {
+                                  "line":  56,
+                                  "text":  "public async Task\u003cIActionResult\u003e Close(Guid id)"
+                              },
+                              {
+                                  "line":  62,
+                                  "text":  "[HttpPost(\"{id:guid}/cancel\"), Authorize(Roles = \"InstitutionAdmin,Teacher\")]"
+                              },
+                              {
+                                  "line":  63,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.ExamCancel)]"
+                              },
+                              {
+                                  "line":  64,
+                                  "text":  "public async Task\u003cIActionResult\u003e Cancel(Guid id)"
+                              },
+                              {
+                                  "line":  70,
+                                  "text":  "[HttpDelete(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Teacher\")]"
+                              },
+                              {
+                                  "line":  71,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.ExamDelete)]"
+                              },
+                              {
+                                  "line":  72,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id)"
+                              },
+                              {
+                                  "line":  78,
+                                  "text":  "[HttpPost(\"{id:guid}/start\"), Authorize(Roles = \"Student\")]"
+                              },
+                              {
+                                  "line":  79,
+                                  "text":  "public async Task\u003cActionResult\u003cStartExamDto\u003e\u003e Start(Guid id) =\u003e Ok(await manager.StartAsync(id));"
+                              },
+                              {
+                                  "line":  80,
+                                  "text":  "[HttpGet(\"{id:guid}/submissions\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  81,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cSubmissionSummaryDto\u003e\u003e\u003e Submissions(Guid id, [FromQuery] SubmissionStatus? status) =\u003e Ok(await manager.SubmissionsAsync(id, status));"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionExamController(IInstitutionExamManager manager) : ControllerBase",
+                           "public async Task\u003cActionResult\u003cList\u003cExamSummaryDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.ExamsAsync());",
+                           "public async Task\u003cActionResult\u003cExamDetailDto\u003e\u003e GetById(Guid id) =\u003e await manager.ExamAsync(id)is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cList\u003cAssignedExamDto\u003e\u003e\u003e Assigned() =\u003e Ok(await manager.AssignedAsync());",
+                           "public async Task\u003cActionResult\u003cList\u003cStudentDto\u003e\u003e\u003e EligibleStudents(Guid id) =\u003e Ok(await manager.EligibleStudentsAsync(id));",
+                           "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateExamDto dto)",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateExamDto dto)",
+                           "public async Task\u003cIActionResult\u003e Assign(Guid id, UpdateExamStudentsDto dto)",
+                           "public async Task\u003cIActionResult\u003e Publish(Guid id)",
+                           "public async Task\u003cIActionResult\u003e Close(Guid id)",
+                           "public async Task\u003cIActionResult\u003e Cancel(Guid id)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id)",
+                           "public async Task\u003cActionResult\u003cStartExamDto\u003e\u003e Start(Guid id) =\u003e Ok(await manager.StartAsync(id));",
+                           "public async Task\u003cActionResult\u003cList\u003cSubmissionSummaryDto\u003e\u003e\u003e Submissions(Guid id, [FromQuery] SubmissionStatus? status) =\u003e Ok(await manager.SubmissionsAsync(id, status));"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionFormativePlanController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionFormativePlanController.cs",
+        "sourceSha256":  "42507f17f22b740c30f70fc7eca537d19518aef8bacb979acb9540effac367fa",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, InstitutionSchoolEndpoint, ElectronicRegisterAPI.Api.ExceptionHandling.FormativePlanErrors, Route(\"api/institution\"), RequestSizeLimit(2 * 1024 * 1024)]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionFormativePlanController(IInstitutionFormativePlanManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet(\"formative-plans\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int page = 1, int size = 20) =\u003e Ok(await manager.ListAsync(page, size, ct));"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "[HttpGet(\"formative-plans/{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  16,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct) =\u003e Ok(await manager.GetAsync(id, ct));"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "[HttpPost(\"formative-plans\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create(CreateFormativePlan request, CancellationToken ct) =\u003e Ok(await manager.CreateAsync(request, ct));"
+                              },
+                              {
+                                  "line":  19,
+                                  "text":  "[HttpPut(\"formative-plans/{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "public async Task\u003cIActionResult\u003e Rename(Guid id, RenameFormativePlan request, CancellationToken ct) =\u003e Ok(await manager.RenameAsync(id, request, ct));"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "[HttpGet(\"formative-plans/{id:guid}/versions\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "public async Task\u003cIActionResult\u003e Versions("
+                              },
+                              {
+                                  "line":  28,
+                                  "text":  "[HttpPost(\"formative-plans/{id:guid}/versions\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  29,
+                                  "text":  "public async Task\u003cIActionResult\u003e CreateVersion(Guid id, CreateFormativeVersion request, CancellationToken ct) =\u003e Ok(await manager.CreateVersionAsync(id, request, ct));"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "[HttpGet(\"formative-plan-versions/{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "public async Task\u003cIActionResult\u003e Version(Guid id, CancellationToken ct) =\u003e Ok(await manager.VersionAsync(id, ct));"
+                              },
+                              {
+                                  "line":  32,
+                                  "text":  "[HttpPut(\"formative-plan-versions/{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  33,
+                                  "text":  "public async Task\u003cIActionResult\u003e Replace(Guid id, ReplaceFormativeDraft request, CancellationToken ct) =\u003e Ok(await manager.ReplaceAsync(id, request, ct));"
+                              },
+                              {
+                                  "line":  34,
+                                  "text":  "[HttpPost(\"formative-plan-versions/{id:guid}/clone\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  35,
+                                  "text":  "public async Task\u003cIActionResult\u003e Clone(Guid id, FormativeCommand request, CancellationToken ct) =\u003e Ok(await manager.CloneAsync(id, request, ct));"
+                              },
+                              {
+                                  "line":  36,
+                                  "text":  "[HttpPost(\"formative-plan-versions/{id:guid}/publish\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  37,
+                                  "text":  "public async Task\u003cIActionResult\u003e Publish(Guid id, FormativeCommand request, CancellationToken ct) =\u003e Ok(await manager.PublishAsync(id, request, ct));"
+                              },
+                              {
+                                  "line":  38,
+                                  "text":  "[HttpPost(\"formative-plan-versions/{id:guid}/validate\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  39,
+                                  "text":  "public async Task\u003cIActionResult\u003e Validate(Guid id, CancellationToken ct) =\u003e Ok(await manager.ValidateAsync(id, ct));"
+                              },
+                              {
+                                  "line":  40,
+                                  "text":  "[HttpGet(\"formative-plan-versions/{id:guid}/hour-summary\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  41,
+                                  "text":  "public async Task\u003cIActionResult\u003e Summary(Guid id, CancellationToken ct) =\u003e Ok(await manager.ValidateAsync(id, ct));"
+                              },
+                              {
+                                  "line":  42,
+                                  "text":  "[HttpPost(\"course-editions/{id:guid}/formative-plan\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  43,
+                                  "text":  "public async Task\u003cIActionResult\u003e Bind(Guid id, BindFormativeVersion request, CancellationToken ct) =\u003e Ok(await manager.BindAsync(id, request, ct));"
+                              },
+                              {
+                                  "line":  44,
+                                  "text":  "[HttpGet(\"course-editions/{id:guid}/formative-plan\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  45,
+                                  "text":  "public async Task\u003cIActionResult\u003e EditionPlan(Guid id, CancellationToken ct) =\u003e Ok(await manager.EditionPlanAsync(id, ct));"
+                              },
+                              {
+                                  "line":  46,
+                                  "text":  "[HttpGet(\"course-editions/{id:guid}/formative-plan/modules/{moduleId:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  47,
+                                  "text":  "public async Task\u003cIActionResult\u003e EditionModule(Guid id, Guid moduleId, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  53,
+                                  "text":  "[HttpGet(\"formative-plans/{id:guid}/history\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  54,
+                                  "text":  "public async Task\u003cIActionResult\u003e History("
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionFormativePlanController(IInstitutionFormativePlanManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int page = 1, int size = 20) =\u003e Ok(await manager.ListAsync(page, size, ct));",
+                           "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct) =\u003e Ok(await manager.GetAsync(id, ct));",
+                           "public async Task\u003cIActionResult\u003e Create(CreateFormativePlan request, CancellationToken ct) =\u003e Ok(await manager.CreateAsync(request, ct));",
+                           "public async Task\u003cIActionResult\u003e Rename(Guid id, RenameFormativePlan request, CancellationToken ct) =\u003e Ok(await manager.RenameAsync(id, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Versions(",
+                           "public async Task\u003cIActionResult\u003e CreateVersion(Guid id, CreateFormativeVersion request, CancellationToken ct) =\u003e Ok(await manager.CreateVersionAsync(id, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Version(Guid id, CancellationToken ct) =\u003e Ok(await manager.VersionAsync(id, ct));",
+                           "public async Task\u003cIActionResult\u003e Replace(Guid id, ReplaceFormativeDraft request, CancellationToken ct) =\u003e Ok(await manager.ReplaceAsync(id, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Clone(Guid id, FormativeCommand request, CancellationToken ct) =\u003e Ok(await manager.CloneAsync(id, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Publish(Guid id, FormativeCommand request, CancellationToken ct) =\u003e Ok(await manager.PublishAsync(id, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Validate(Guid id, CancellationToken ct) =\u003e Ok(await manager.ValidateAsync(id, ct));",
+                           "public async Task\u003cIActionResult\u003e Summary(Guid id, CancellationToken ct) =\u003e Ok(await manager.ValidateAsync(id, ct));",
+                           "public async Task\u003cIActionResult\u003e Bind(Guid id, BindFormativeVersion request, CancellationToken ct) =\u003e Ok(await manager.BindAsync(id, request, ct));",
+                           "public async Task\u003cIActionResult\u003e EditionPlan(Guid id, CancellationToken ct) =\u003e Ok(await manager.EditionPlanAsync(id, ct));",
+                           "public async Task\u003cIActionResult\u003e EditionModule(Guid id, Guid moduleId, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e History("
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionGradeController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionGradeController.cs",
+        "sourceSha256":  "008a7de9bbe2bb2474e1a4a155bfebcceccdf71268b971c80eb970a994757313",
+        "contractLines":  [
+                              {
+                                  "line":  11,
+                                  "text":  "[ApiController, StaffBodyContract, InstitutionExamEndpoint, Route(\"api/institution/grades\")]"
+                              },
+                              {
+                                  "line":  12,
+                                  "text":  "public sealed class InstitutionGradeController(IInstitutionExamManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "[HttpGet, Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cGradeDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.GradesAsync());"
+                              },
+                              {
+                                  "line":  16,
+                                  "text":  "[HttpGet(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "public async Task\u003cActionResult\u003cGradeDto\u003e\u003e GetById(Guid id) =\u003e await manager.GradeAsync(id)is { } row ? Ok(row) : NotFound();"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "[HttpGet(\"count\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  19,
+                                  "text":  "public async Task\u003cActionResult\u003cint\u003e\u003e Count() =\u003e Ok(await manager.GradeCountAsync());"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"paged\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cActionResult\u003cGradePageDto\u003e\u003e Paged("
+                              },
+                              {
+                                  "line":  28,
+                                  "text":  "[HttpGet(\"filters\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  29,
+                                  "text":  "public async Task\u003cActionResult\u003cGradeFiltersDto\u003e\u003e Filters() =\u003e Ok(await manager.GradeFiltersAsync());"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "[HttpGet(\"statistics\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "public async Task\u003cActionResult\u003cGradeStatisticsDto\u003e\u003e Statistics() =\u003e await manager.GradeStatisticsAsync()is { } row ? Ok(row) : NotFound();"
+                              },
+                              {
+                                  "line":  32,
+                                  "text":  "[HttpPost, Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  33,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.GradeCreate)]"
+                              },
+                              {
+                                  "line":  34,
+                                  "text":  "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateGradeDto dto) =\u003e await manager.AddGradeAsync(dto)is { } id ? CreatedAtAction(nameof(GetById), new { id }, id) : NotFound();"
+                              },
+                              {
+                                  "line":  35,
+                                  "text":  "[HttpPut(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  36,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.GradeUpdate)]"
+                              },
+                              {
+                                  "line":  37,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateGradeDto dto) =\u003e await manager.UpdateGradeAsync(id, dto) ? NoContent() : NotFound();"
+                              },
+                              {
+                                  "line":  38,
+                                  "text":  "[HttpDelete(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  39,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.GradeDelete)]"
+                              },
+                              {
+                                  "line":  40,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id) =\u003e await manager.DeleteGradeAsync(id) ? NoContent() : NotFound();"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionGradeController(IInstitutionExamManager manager) : ControllerBase",
+                           "public async Task\u003cActionResult\u003cList\u003cGradeDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.GradesAsync());",
+                           "public async Task\u003cActionResult\u003cGradeDto\u003e\u003e GetById(Guid id) =\u003e await manager.GradeAsync(id)is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cint\u003e\u003e Count() =\u003e Ok(await manager.GradeCountAsync());",
+                           "public async Task\u003cActionResult\u003cGradePageDto\u003e\u003e Paged(",
+                           "public async Task\u003cActionResult\u003cGradeFiltersDto\u003e\u003e Filters() =\u003e Ok(await manager.GradeFiltersAsync());",
+                           "public async Task\u003cActionResult\u003cGradeStatisticsDto\u003e\u003e Statistics() =\u003e await manager.GradeStatisticsAsync()is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateGradeDto dto) =\u003e await manager.AddGradeAsync(dto)is { } id ? CreatedAtAction(nameof(GetById), new { id }, id) : NotFound();",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateGradeDto dto) =\u003e await manager.UpdateGradeAsync(id, dto) ? NoContent() : NotFound();",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id) =\u003e await manager.DeleteGradeAsync(id) ? NoContent() : NotFound();"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionIdentityController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionIdentityController.cs",
+        "sourceSha256":  "03d0aab2e5787bd70b91e78f6889a697d563ab1ba8f1cf8e98120f3e78751686",
+        "contractLines":  [
+                              {
+                                  "line":  11,
+                                  "text":  "[ApiController, InstitutionIdentityEndpoint, Route(\"api/Auth\")]"
+                              },
+                              {
+                                  "line":  12,
+                                  "text":  "public sealed class InstitutionIdentityController(IInstitutionAuthManager manager, ICurrentTenant tenant) : ControllerBase"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "[HttpPost(\"identity/login\")]"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "public async Task\u003cActionResult\u003cIdentityTicketDto\u003e\u003e Login(LoginDto input)"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "[HttpPost(\"identity/microsoft-login\")]"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "public async Task\u003cActionResult\u003cIdentityTicketDto\u003e\u003e MicrosoftLogin(MicrosoftLoginDto input)"
+                              },
+                              {
+                                  "line":  28,
+                                  "text":  "[HttpGet(\"institutions\"), Authorize(Policy = InstitutionTokenContract.SelectionScheme)]"
+                              },
+                              {
+                                  "line":  29,
+                                  "text":  "public async Task\u003cActionResult\u003cIReadOnlyList\u003cInstitutionChoiceDto\u003e\u003e\u003e Institutions(CancellationToken cancellationToken) =\u003e Ok(await manager.InstitutionsAsync(InstitutionAuthentication.GuidClaim(User, \"sub\"), cancellationToken));"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "[HttpPost(\"select-institution\"), Authorize(Policy = InstitutionTokenContract.SelectionScheme)]"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "public async Task\u003cActionResult\u003cInstitutionAccessDto\u003e\u003e Select(SelectInstitutionDto input, CancellationToken cancellationToken) =\u003e Ok(await manager.SelectAsync(InstitutionAuthentication.GuidClaim(User, \"sub\"), input, cancellationToken, InstitutionAuthentication.IdentityGeneration(User)));"
+                              },
+                              {
+                                  "line":  32,
+                                  "text":  "[HttpGet(\"context\"), Authorize(Policy = InstitutionTokenContract.AccessScheme)]"
+                              },
+                              {
+                                  "line":  33,
+                                  "text":  "public ActionResult\u003cTenantContextDto\u003e Context() =\u003e Ok(new TenantContextDto(tenant.Value.UserId, tenant.Value.InstitutionId, tenant.Value.MembershipId, tenant.Value.Roles.Select(r =\u003e r.ToString()).Order().ToArray()));"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionIdentityController(IInstitutionAuthManager manager, ICurrentTenant tenant) : ControllerBase",
+                           "public async Task\u003cActionResult\u003cIdentityTicketDto\u003e\u003e Login(LoginDto input)",
+                           "public async Task\u003cActionResult\u003cIdentityTicketDto\u003e\u003e MicrosoftLogin(MicrosoftLoginDto input)",
+                           "public async Task\u003cActionResult\u003cIReadOnlyList\u003cInstitutionChoiceDto\u003e\u003e\u003e Institutions(CancellationToken cancellationToken) =\u003e Ok(await manager.InstitutionsAsync(InstitutionAuthentication.GuidClaim(User, \"sub\"), cancellationToken));",
+                           "public async Task\u003cActionResult\u003cInstitutionAccessDto\u003e\u003e Select(SelectInstitutionDto input, CancellationToken cancellationToken) =\u003e Ok(await manager.SelectAsync(InstitutionAuthentication.GuidClaim(User, \"sub\"), input, cancellationToken, InstitutionAuthentication.IdentityGeneration(User)));",
+                           "public ActionResult\u003cTenantContextDto\u003e Context() =\u003e Ok(new TenantContextDto(tenant.Value.UserId, tenant.Value.InstitutionId, tenant.Value.MembershipId, tenant.Value.Roles.Select(r =\u003e r.ToString()).Order().ToArray()));"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionImportController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionImportController.cs",
+        "sourceSha256":  "971633fc0ff11754287113031c43b99f6645975a35c8654194e05ba1f1407e56",
+        "contractLines":  [
+                              {
+                                  "line":  13,
+                                  "text":  "[ApiController, InstitutionSchoolEndpoint, Authorize(Roles = \"InstitutionAdmin,Staff\"), Route(\"api/institution/imports\"), RequestSizeLimit(256 * 1024)]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public sealed class InstitutionImportController(IInstitutionImportManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"templates/students.csv\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cIActionResult\u003e StudentTemplate(CancellationToken ct) =\u003e File(await manager.TemplateAsync(ImportCategory.Student, ct), \"text/csv; charset=utf-8\", \"students.csv\");"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "[HttpGet(\"templates/teachers.csv\")]"
+                              },
+                              {
+                                  "line":  23,
+                                  "text":  "public async Task\u003cIActionResult\u003e TeacherTemplate(CancellationToken ct) =\u003e File(await manager.TemplateAsync(ImportCategory.Teacher, ct), \"text/csv; charset=utf-8\", \"teachers.csv\");"
+                              },
+                              {
+                                  "line":  24,
+                                  "text":  "[HttpPost(\"preview\"), Consumes(\"multipart/form-data\"), RequestSizeLimit(64 * 1024 * 1024 + 262144), RequestFormLimits(MultipartBodyLengthLimit = 64 * 1024 * 1024 + 262144), EnableRateLimiting(\"InstitutionImportUpload\")]"
+                              },
+                              {
+                                  "line":  25,
+                                  "text":  "public async Task\u003cIActionResult\u003e Preview("
+                              },
+                              {
+                                  "line":  51,
+                                  "text":  "[HttpGet]"
+                              },
+                              {
+                                  "line":  52,
+                                  "text":  "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int page = 1, int size = 20) =\u003e Ok(await manager.ListAsync(page, size, ct));"
+                              },
+                              {
+                                  "line":  53,
+                                  "text":  "[HttpGet(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  54,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct) =\u003e Ok(await manager.GetAsync(id, ct));"
+                              },
+                              {
+                                  "line":  55,
+                                  "text":  "[HttpGet(\"{id:guid}/rows\")]"
+                              },
+                              {
+                                  "line":  56,
+                                  "text":  "public async Task\u003cIActionResult\u003e Rows("
+                              },
+                              {
+                                  "line":  62,
+                                  "text":  "[HttpPut(\"{id:guid}/mapping\")]"
+                              },
+                              {
+                                  "line":  63,
+                                  "text":  "public async Task\u003cIActionResult\u003e Remap(Guid id, ImportRemap request, CancellationToken ct) =\u003e Ok(await manager.RemapAsync(id, request, ct));"
+                              },
+                              {
+                                  "line":  64,
+                                  "text":  "[HttpPost(\"{id:guid}/confirm\")]"
+                              },
+                              {
+                                  "line":  65,
+                                  "text":  "public async Task\u003cIActionResult\u003e Confirm(Guid id, ImportConfirmation request, CancellationToken ct) =\u003e Ok(await manager.ConfirmAsync(id, request, ct));"
+                              },
+                              {
+                                  "line":  66,
+                                  "text":  "[HttpGet(\"{id:guid}/result\")]"
+                              },
+                              {
+                                  "line":  67,
+                                  "text":  "public async Task\u003cIActionResult\u003e Result(Guid id, CancellationToken ct) =\u003e Ok(await manager.ResultAsync(id, ct));"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionImportController(IInstitutionImportManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e StudentTemplate(CancellationToken ct) =\u003e File(await manager.TemplateAsync(ImportCategory.Student, ct), \"text/csv; charset=utf-8\", \"students.csv\");",
+                           "public async Task\u003cIActionResult\u003e TeacherTemplate(CancellationToken ct) =\u003e File(await manager.TemplateAsync(ImportCategory.Teacher, ct), \"text/csv; charset=utf-8\", \"teachers.csv\");",
+                           "public async Task\u003cIActionResult\u003e Preview(",
+                           "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int page = 1, int size = 20) =\u003e Ok(await manager.ListAsync(page, size, ct));",
+                           "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct) =\u003e Ok(await manager.GetAsync(id, ct));",
+                           "public async Task\u003cIActionResult\u003e Rows(",
+                           "public async Task\u003cIActionResult\u003e Remap(Guid id, ImportRemap request, CancellationToken ct) =\u003e Ok(await manager.RemapAsync(id, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Confirm(Guid id, ImportConfirmation request, CancellationToken ct) =\u003e Ok(await manager.ConfirmAsync(id, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Result(Guid id, CancellationToken ct) =\u003e Ok(await manager.ResultAsync(id, ct));"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionInvitationController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionInvitationController.cs",
+        "sourceSha256":  "b416d87be361ae49776ae10f6bdac09d8061a886f816fb3fa6877a79d53a041a",
+        "contractLines":  [
+                              {
+                                  "line":  14,
+                                  "text":  "[ApiController, Route(\"api/institution/admin/invitations\"), InstitutionMembershipAdminEndpoint, RequestSizeLimit(16384), MembershipApiErrors]"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "public sealed class InstitutionInvitationController(IInstitutionOnboardingManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "[HttpPost, InstitutionMembershipWriteEndpoint]"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "public async Task\u003cIActionResult\u003e Invite(InviteMemberRequest request, CancellationToken ct) =\u003e Ok(await manager.InviteAsync(request.ToDomain(), ct));"
+                              },
+                              {
+                                  "line":  19,
+                                  "text":  "[HttpPost(\"{id:guid}/revoke\"), InstitutionMembershipWriteEndpoint]"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "public async Task\u003cIActionResult\u003e Revoke(Guid id, InvitationChangeRequest request, CancellationToken ct) =\u003e Ok(await manager.RevokeAsync(new(request.EventId, id, request.Reason), ct));"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "[HttpPost(\"{id:guid}/reissue\"), InstitutionMembershipWriteEndpoint]"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "public async Task\u003cIActionResult\u003e Reissue(Guid id, InvitationChangeRequest request, CancellationToken ct) =\u003e Ok(await manager.ReissueAsync(new(request.EventId, id, request.Reason), ct));"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionInvitationController(IInstitutionOnboardingManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e Invite(InviteMemberRequest request, CancellationToken ct) =\u003e Ok(await manager.InviteAsync(request.ToDomain(), ct));",
+                           "public async Task\u003cIActionResult\u003e Revoke(Guid id, InvitationChangeRequest request, CancellationToken ct) =\u003e Ok(await manager.RevokeAsync(new(request.EventId, id, request.Reason), ct));",
+                           "public async Task\u003cIActionResult\u003e Reissue(Guid id, InvitationChangeRequest request, CancellationToken ct) =\u003e Ok(await manager.ReissueAsync(new(request.EventId, id, request.Reason), ct));"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionMembershipAdminController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionMembershipAdminController.cs",
+        "sourceSha256":  "3f79481e6b68ccfdbb4d3ef45d3f9669de7292c2d42acc8307b506a317b23cc4",
+        "contractLines":  [
+                              {
+                                  "line":  9,
+                                  "text":  "[ApiController, Route(\"api/institution/admin/members\"), InstitutionMembershipAdminEndpoint]"
+                              },
+                              {
+                                  "line":  10,
+                                  "text":  "public sealed class InstitutionMembershipAdminController(IInstitutionMembershipAdminManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  12,
+                                  "text":  "[HttpGet(\"{membershipId:guid}/profile-acquisitions\")]"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "public async Task\u003cIActionResult\u003e Acquisitions("
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpPost(\"{membershipId:guid}/profile-acquisitions\"), InstitutionMembershipWriteEndpoint, MembershipApiErrors]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cIActionResult\u003e AcquireProfile(Guid membershipId, ElectronicRegisterAPI.Domain.DTOs.Membership.AcquireHistoricalProfile request, CancellationToken ct) =\u003e Ok(await manager.AcquireProfileAsync(membershipId, request, ct));"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "[HttpPost(\"{membershipId:guid}/mutations\"), InstitutionMembershipWriteEndpoint, MembershipApiErrors]"
+                              },
+                              {
+                                  "line":  23,
+                                  "text":  "public async Task\u003cIActionResult\u003e Mutate(Guid membershipId, [FromBody] MembershipMutationRequest request, CancellationToken ct) =\u003e Ok(MembershipMutationResponse.From(await manager.MutateAsync(request.ToMutation(membershipId), ct)));"
+                              },
+                              {
+                                  "line":  24,
+                                  "text":  "[HttpGet]"
+                              },
+                              {
+                                  "line":  25,
+                                  "text":  "public async Task\u003cIActionResult\u003e List("
+                              },
+                              {
+                                  "line":  36,
+                                  "text":  "[HttpGet(\"{membershipId:guid}\")]"
+                              },
+                              {
+                                  "line":  37,
+                                  "text":  "public async Task\u003cIActionResult\u003e Detail(Guid membershipId, CancellationToken ct) =\u003e Ok(await manager.GetAsync(membershipId, ct));"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionMembershipAdminController(IInstitutionMembershipAdminManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e Acquisitions(",
+                           "public async Task\u003cIActionResult\u003e AcquireProfile(Guid membershipId, ElectronicRegisterAPI.Domain.DTOs.Membership.AcquireHistoricalProfile request, CancellationToken ct) =\u003e Ok(await manager.AcquireProfileAsync(membershipId, request, ct));",
+                           "public async Task\u003cIActionResult\u003e Mutate(Guid membershipId, [FromBody] MembershipMutationRequest request, CancellationToken ct) =\u003e Ok(MembershipMutationResponse.From(await manager.MutateAsync(request.ToMutation(membershipId), ct)));",
+                           "public async Task\u003cIActionResult\u003e List(",
+                           "public async Task\u003cIActionResult\u003e Detail(Guid membershipId, CancellationToken ct) =\u003e Ok(await manager.GetAsync(membershipId, ct));"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionMembershipAuditController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionMembershipAuditController.cs",
+        "sourceSha256":  "3625a26bff29e2186b67b507c742ab5777489076239c80bdd6da48aa08f2f85e",
+        "contractLines":  [
+                              {
+                                  "line":  9,
+                                  "text":  "[ApiController, Route(\"api/institution/admin/audit\"), InstitutionMembershipAdminEndpoint, MembershipApiErrors]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionMembershipAuditController(IMembershipAuditManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cIActionResult\u003e List("
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "[HttpGet(\"{eventId:guid}\")]"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid eventId, CancellationToken ct) =\u003e Ok(await manager.GetAsync(eventId, ct));"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionMembershipAuditController(IMembershipAuditManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e List(",
+                           "public async Task\u003cIActionResult\u003e Get(Guid eventId, CancellationToken ct) =\u003e Ok(await manager.GetAsync(eventId, ct));"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionStudentController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionStudentController.cs",
+        "sourceSha256":  "95c6d8e26b892da8247075a7b32834d94a5704f29694db7daff531ec43834a87",
+        "contractLines":  [
+                              {
+                                  "line":  11,
+                                  "text":  "[ApiController, StaffBodyContract, Route(\"api/institution/students\"), InstitutionSchoolEndpoint]"
+                              },
+                              {
+                                  "line":  12,
+                                  "text":  "public sealed class InstitutionStudentController(IInstitutionStudentManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "[HttpGet, Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cStudentDto\u003e\u003e\u003e GetAll([FromQuery] Guid? classId, CancellationToken ct) =\u003e Ok(classId.HasValue ? await manager.GetForClassAsync(classId.Value, ct) : await manager.GetAllAsync(ct));"
+                              },
+                              {
+                                  "line":  16,
+                                  "text":  "[HttpGet(\"count\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "public async Task\u003cActionResult\u003cint\u003e\u003e Count(CancellationToken ct) =\u003e Ok(await manager.CountAsync(ct));"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "[HttpGet(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  19,
+                                  "text":  "public async Task\u003cActionResult\u003cStudentDto\u003e\u003e GetById(Guid id, CancellationToken ct) =\u003e await manager.GetByIdAsync(id, ct)is { } row ? Ok(row) : NotFound();"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"bylastname/{lastName}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cStudentDto\u003e\u003e\u003e ByLastName(string lastName, CancellationToken ct) =\u003e Ok(await manager.GetByLastNameAsync(lastName, ct));"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "[HttpGet(\"me\"), Authorize(Roles = \"Student\")]"
+                              },
+                              {
+                                  "line":  23,
+                                  "text":  "public async Task\u003cActionResult\u003cStudentDto\u003e\u003e Me(CancellationToken ct) =\u003e await manager.GetOwnProfileAsync(ct)is { } row ? Ok(row) : NotFound();"
+                              },
+                              {
+                                  "line":  24,
+                                  "text":  "[HttpPost, Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  25,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.UserCreate)]"
+                              },
+                              {
+                                  "line":  26,
+                                  "text":  "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add("
+                              },
+                              {
+                                  "line":  37,
+                                  "text":  "[HttpPut(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  38,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.UserUpdate)]"
+                              },
+                              {
+                                  "line":  39,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateStudentDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  45,
+                                  "text":  "[HttpDelete(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  46,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.UserDelete)]"
+                              },
+                              {
+                                  "line":  47,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionStudentController(IInstitutionStudentManager manager) : ControllerBase",
+                           "public async Task\u003cActionResult\u003cList\u003cStudentDto\u003e\u003e\u003e GetAll([FromQuery] Guid? classId, CancellationToken ct) =\u003e Ok(classId.HasValue ? await manager.GetForClassAsync(classId.Value, ct) : await manager.GetAllAsync(ct));",
+                           "public async Task\u003cActionResult\u003cint\u003e\u003e Count(CancellationToken ct) =\u003e Ok(await manager.CountAsync(ct));",
+                           "public async Task\u003cActionResult\u003cStudentDto\u003e\u003e GetById(Guid id, CancellationToken ct) =\u003e await manager.GetByIdAsync(id, ct)is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cList\u003cStudentDto\u003e\u003e\u003e ByLastName(string lastName, CancellationToken ct) =\u003e Ok(await manager.GetByLastNameAsync(lastName, ct));",
+                           "public async Task\u003cActionResult\u003cStudentDto\u003e\u003e Me(CancellationToken ct) =\u003e await manager.GetOwnProfileAsync(ct)is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateStudentDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionStudentTransferController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionStudentTransferController.cs",
+        "sourceSha256":  "35fd331bb797216a7253d913183d23073d2eabdabbeb2728e081bd43f627a9c7",
+        "contractLines":  [
+                              {
+                                  "line":  15,
+                                  "text":  "[ApiController, Route(\"api/institution/students\"), InstitutionSchoolEndpoint, CourseApiErrors, StudentTransferErrors, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  16,
+                                  "text":  "public sealed class InstitutionStudentTransferController(IInstitutionStudentTransferManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "[HttpPost(\"{id:guid}/transfer-class\"), RequestSizeLimit(16384), RequireTransferCourseApi]"
+                              },
+                              {
+                                  "line":  19,
+                                  "text":  "public async Task\u003cIActionResult\u003e Transfer(Guid id, TransferStudentClassDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  26,
+                                  "text":  "[HttpGet(\"{id:guid}/class-history\")]"
+                              },
+                              {
+                                  "line":  27,
+                                  "text":  "public async Task\u003cIActionResult\u003e History("
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionStudentTransferController(IInstitutionStudentTransferManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e Transfer(Guid id, TransferStudentClassDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e History("
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionStudyAreaController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionStudyAreaController.cs",
+        "sourceSha256":  "5a09ba4e80b3b4682fec131cbeb410bd5c174132e810d582ddc387102a31c0f4",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, Route(\"api/institution/study-areas\"), InstitutionSchoolEndpoint, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionStudyAreaController(IInstitutionAcademicCatalogManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int pageNumber = 1, int pageSize = 20)"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "[HttpPost]"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create(CreateInstitutionStudyAreaDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  37,
+                                  "text":  "[HttpPut(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  38,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionStudyAreaDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  47,
+                                  "text":  "[HttpDelete(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  48,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionStudyAreaController(IInstitutionAcademicCatalogManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int pageNumber = 1, int pageSize = 20)",
+                           "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Create(CreateInstitutionStudyAreaDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionStudyAreaDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionStudyPathController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionStudyPathController.cs",
+        "sourceSha256":  "d91858d8e397415a1e5a58eba70519338d096946075db9ea9d652a168be5537c",
+        "contractLines":  [
+                              {
+                                  "line":  10,
+                                  "text":  "[ApiController, Route(\"api/institution/study-paths\"), InstitutionSchoolEndpoint, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  11,
+                                  "text":  "public sealed class InstitutionStudyPathController(IInstitutionAcademicCatalogManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "[HttpGet]"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int pageNumber = 1, int pageSize = 20)"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "[HttpPost]"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create(CreateInstitutionStudyPathDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  37,
+                                  "text":  "[HttpPut(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  38,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionStudyPathDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  47,
+                                  "text":  "[HttpDelete(\"{id:guid}\")]"
+                              },
+                              {
+                                  "line":  48,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionStudyPathController(IInstitutionAcademicCatalogManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int pageNumber = 1, int pageSize = 20)",
+                           "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Create(CreateInstitutionStudyPathDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateInstitutionStudyPathDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionSubjectController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionSubjectController.cs",
+        "sourceSha256":  "9fbf68a88753b74eb9e23a39abdd366c0dd5d2c2f2334cd3899aba6c45acc572",
+        "contractLines":  [
+                              {
+                                  "line":  9,
+                                  "text":  "[ApiController, Route(\"api/institution/subjects\"), InstitutionSchoolEndpoint]"
+                              },
+                              {
+                                  "line":  10,
+                                  "text":  "public sealed class InstitutionSubjectController(IInstitutionSubjectManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  12,
+                                  "text":  "[HttpGet, Authorize(Roles = \"InstitutionAdmin,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cSubjectDto\u003e\u003e\u003e GetAll(CancellationToken ct) =\u003e Ok(await manager.GetAllAsync(ct));"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "[HttpGet(\"count\"), Authorize(Roles = \"InstitutionAdmin,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "public async Task\u003cActionResult\u003cint\u003e\u003e Count(CancellationToken ct) =\u003e Ok(await manager.CountAsync(ct));"
+                              },
+                              {
+                                  "line":  16,
+                                  "text":  "[HttpGet(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "public async Task\u003cActionResult\u003cSubjectDto\u003e\u003e GetById(Guid id, CancellationToken ct) =\u003e await manager.GetByIdAsync(id, ct)is { } row ? Ok(row) : NotFound();"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "[HttpGet(\"byname/{name}\"), Authorize(Roles = \"InstitutionAdmin,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  19,
+                                  "text":  "public async Task\u003cActionResult\u003cSubjectDto\u003e\u003e ByName(string name, CancellationToken ct) =\u003e await manager.GetByNameAsync(name, ct)is { } row ? Ok(row) : NotFound();"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"byteacher/{teacherId:guid}\"), Authorize(Roles = \"InstitutionAdmin,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cSubjectDto\u003e\u003e\u003e ByTeacher(Guid teacherId, CancellationToken ct) =\u003e Ok(await manager.GetByTeacherAsync(teacherId, ct));"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "[HttpPost, Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  23,
+                                  "text":  "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateSubjectDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  29,
+                                  "text":  "[HttpPut(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateSubjectDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  36,
+                                  "text":  "[HttpDelete(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  37,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionSubjectController(IInstitutionSubjectManager manager) : ControllerBase",
+                           "public async Task\u003cActionResult\u003cList\u003cSubjectDto\u003e\u003e\u003e GetAll(CancellationToken ct) =\u003e Ok(await manager.GetAllAsync(ct));",
+                           "public async Task\u003cActionResult\u003cint\u003e\u003e Count(CancellationToken ct) =\u003e Ok(await manager.CountAsync(ct));",
+                           "public async Task\u003cActionResult\u003cSubjectDto\u003e\u003e GetById(Guid id, CancellationToken ct) =\u003e await manager.GetByIdAsync(id, ct)is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cSubjectDto\u003e\u003e ByName(string name, CancellationToken ct) =\u003e await manager.GetByNameAsync(name, ct)is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cList\u003cSubjectDto\u003e\u003e\u003e ByTeacher(Guid teacherId, CancellationToken ct) =\u003e Ok(await manager.GetByTeacherAsync(teacherId, ct));",
+                           "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateSubjectDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateSubjectDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionSubmissionController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionSubmissionController.cs",
+        "sourceSha256":  "9a37ce285c30b69ea3b03f87cb99215f3e899a5f10696d5435c8e35b56354cf3",
+        "contractLines":  [
+                              {
+                                  "line":  9,
+                                  "text":  "[ApiController, InstitutionExamEndpoint, Route(\"api/institution/submissions\")]"
+                              },
+                              {
+                                  "line":  10,
+                                  "text":  "public sealed class InstitutionSubmissionController(IInstitutionExamManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  12,
+                                  "text":  "[HttpGet(\"{id:guid}/session\"), Authorize(Roles = \"Student\")]"
+                              },
+                              {
+                                  "line":  13,
+                                  "text":  "public async Task\u003cActionResult\u003cSubmissionSessionDto\u003e\u003e Session(Guid id) =\u003e Ok(await manager.SessionAsync(id));"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "[HttpPut(\"{id:guid}/answers\"), Authorize(Roles = \"Student\")]"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "public async Task\u003cActionResult\u003cSaveAnswersResponseDto\u003e\u003e Save(Guid id, SaveExamAnswersDto dto) =\u003e Ok(await manager.SaveAsync(id, dto));"
+                              },
+                              {
+                                  "line":  16,
+                                  "text":  "[HttpPost(\"{id:guid}/submit\"), Authorize(Roles = \"Student\")]"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Submit(Guid id, SubmitExamDto dto) =\u003e Ok(await manager.SubmitAsync(id, dto));"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "[HttpPost(\"{id:guid}/submit-expired\"), Authorize(Roles = \"Student\")]"
+                              },
+                              {
+                                  "line":  19,
+                                  "text":  "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e SubmitExpired(Guid id)"
+                              },
+                              {
+                                  "line":  26,
+                                  "text":  "[HttpPost(\"{id:guid}/violations\"), Authorize(Roles = \"Student\"), RequestSizeLimit(4096)]"
+                              },
+                              {
+                                  "line":  27,
+                                  "text":  "public async Task\u003cActionResult\u003cViolationReceiptDto\u003e\u003e ReportViolation(Guid id, InstitutionViolationDto dto) =\u003e Ok(await manager.ReportViolationAsync(id, dto));"
+                              },
+                              {
+                                  "line":  28,
+                                  "text":  "[HttpGet(\"{id:guid}/violations\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  29,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cViolationEventDto\u003e\u003e\u003e Violations(Guid id) =\u003e Ok(await manager.ViolationsAsync(id));"
+                              },
+                              {
+                                  "line":  30,
+                                  "text":  "[HttpGet(\"{id:guid}/work\"), Authorize(Roles = \"Student\")]"
+                              },
+                              {
+                                  "line":  31,
+                                  "text":  "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e OwnWork(Guid id) =\u003e Ok(await manager.OwnWorkAsync(id));"
+                              },
+                              {
+                                  "line":  32,
+                                  "text":  "[HttpGet(\"{id:guid}/review\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  33,
+                                  "text":  "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e Review(Guid id) =\u003e Ok(await manager.ReviewAsync(id));"
+                              },
+                              {
+                                  "line":  34,
+                                  "text":  "[HttpPut(\"{id:guid}/review\"), Authorize(Roles = \"InstitutionAdmin,Teacher\")]"
+                              },
+                              {
+                                  "line":  35,
+                                  "text":  "public async Task\u003cIActionResult\u003e Review(Guid id, ReviewOpenAnswersDto dto)"
+                              },
+                              {
+                                  "line":  41,
+                                  "text":  "[HttpPost(\"{id:guid}/finalize\"), Authorize(Roles = \"InstitutionAdmin,Teacher\")]"
+                              },
+                              {
+                                  "line":  42,
+                                  "text":  "public async Task\u003cIActionResult\u003e FinalizeSubmission(Guid id, FinalizeSubmissionDto dto)"
+                              },
+                              {
+                                  "line":  48,
+                                  "text":  "[HttpGet(\"{id:guid}/result\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  49,
+                                  "text":  "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Result(Guid id) =\u003e Ok(await manager.ResultAsync(id));"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionSubmissionController(IInstitutionExamManager manager) : ControllerBase",
+                           "public async Task\u003cActionResult\u003cSubmissionSessionDto\u003e\u003e Session(Guid id) =\u003e Ok(await manager.SessionAsync(id));",
+                           "public async Task\u003cActionResult\u003cSaveAnswersResponseDto\u003e\u003e Save(Guid id, SaveExamAnswersDto dto) =\u003e Ok(await manager.SaveAsync(id, dto));",
+                           "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Submit(Guid id, SubmitExamDto dto) =\u003e Ok(await manager.SubmitAsync(id, dto));",
+                           "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e SubmitExpired(Guid id)",
+                           "public async Task\u003cActionResult\u003cViolationReceiptDto\u003e\u003e ReportViolation(Guid id, InstitutionViolationDto dto) =\u003e Ok(await manager.ReportViolationAsync(id, dto));",
+                           "public async Task\u003cActionResult\u003cList\u003cViolationEventDto\u003e\u003e\u003e Violations(Guid id) =\u003e Ok(await manager.ViolationsAsync(id));",
+                           "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e OwnWork(Guid id) =\u003e Ok(await manager.OwnWorkAsync(id));",
+                           "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e Review(Guid id) =\u003e Ok(await manager.ReviewAsync(id));",
+                           "public async Task\u003cIActionResult\u003e Review(Guid id, ReviewOpenAnswersDto dto)",
+                           "public async Task\u003cIActionResult\u003e FinalizeSubmission(Guid id, FinalizeSubmissionDto dto)",
+                           "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Result(Guid id) =\u003e Ok(await manager.ResultAsync(id));"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InstitutionTeacherController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionTeacherController.cs",
+        "sourceSha256":  "0f040148005cdab579cf034ca217f12de288b3758e8806f0ac59961bc2dc22c7",
+        "contractLines":  [
+                              {
+                                  "line":  11,
+                                  "text":  "[ApiController, StaffBodyContract, Route(\"api/institution/teachers\"), InstitutionSchoolEndpoint]"
+                              },
+                              {
+                                  "line":  12,
+                                  "text":  "public sealed class InstitutionTeacherController(IInstitutionTeacherManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  14,
+                                  "text":  "[HttpGet, Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cTeacherDto\u003e\u003e\u003e GetAll(CancellationToken ct) =\u003e Ok(await manager.GetAllAsync(ct));"
+                              },
+                              {
+                                  "line":  16,
+                                  "text":  "[HttpGet(\"count\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "public async Task\u003cActionResult\u003cint\u003e\u003e Count(CancellationToken ct) =\u003e Ok(await manager.CountAsync(ct));"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "[HttpGet(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  19,
+                                  "text":  "public async Task\u003cActionResult\u003cTeacherDto\u003e\u003e GetById(Guid id, CancellationToken ct) =\u003e await manager.GetByIdAsync(id, ct)is { } row ? Ok(row) : NotFound();"
+                              },
+                              {
+                                  "line":  20,
+                                  "text":  "[HttpGet(\"bylastname/{lastName}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher,Student\")]"
+                              },
+                              {
+                                  "line":  21,
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cTeacherDto\u003e\u003e\u003e ByLastName(string lastName, CancellationToken ct) =\u003e Ok(await manager.GetByLastNameAsync(lastName, ct));"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "[HttpGet(\"me\"), Authorize(Roles = \"Teacher\")]"
+                              },
+                              {
+                                  "line":  23,
+                                  "text":  "public async Task\u003cActionResult\u003cTeacherDto\u003e\u003e Me(CancellationToken ct) =\u003e await manager.GetOwnProfileAsync(ct)is { } row ? Ok(row) : NotFound();"
+                              },
+                              {
+                                  "line":  24,
+                                  "text":  "[HttpPost, Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  25,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.UserCreate)]"
+                              },
+                              {
+                                  "line":  26,
+                                  "text":  "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateTeacherDto dto, [FromQuery] Guid? membershipId, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  32,
+                                  "text":  "[HttpPut(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
+                              },
+                              {
+                                  "line":  33,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.UserUpdate)]"
+                              },
+                              {
+                                  "line":  34,
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateTeacherDto dto, CancellationToken ct)"
+                              },
+                              {
+                                  "line":  40,
+                                  "text":  "[HttpDelete(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  41,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.UserDelete)]"
+                              },
+                              {
+                                  "line":  42,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InstitutionTeacherController(IInstitutionTeacherManager manager) : ControllerBase",
+                           "public async Task\u003cActionResult\u003cList\u003cTeacherDto\u003e\u003e\u003e GetAll(CancellationToken ct) =\u003e Ok(await manager.GetAllAsync(ct));",
+                           "public async Task\u003cActionResult\u003cint\u003e\u003e Count(CancellationToken ct) =\u003e Ok(await manager.CountAsync(ct));",
+                           "public async Task\u003cActionResult\u003cTeacherDto\u003e\u003e GetById(Guid id, CancellationToken ct) =\u003e await manager.GetByIdAsync(id, ct)is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cList\u003cTeacherDto\u003e\u003e\u003e ByLastName(string lastName, CancellationToken ct) =\u003e Ok(await manager.GetByLastNameAsync(lastName, ct));",
+                           "public async Task\u003cActionResult\u003cTeacherDto\u003e\u003e Me(CancellationToken ct) =\u003e await manager.GetOwnProfileAsync(ct)is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateTeacherDto dto, [FromQuery] Guid? membershipId, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateTeacherDto dto, CancellationToken ct)",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    },
+    {
+        "controller":  "InvitationAcceptanceController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InvitationAcceptanceController.cs",
+        "sourceSha256":  "e06eca9affc48e342cbcf2301c0c3989957124057ada3b0489155546c1bd0724",
+        "contractLines":  [
+                              {
+                                  "line":  14,
+                                  "text":  "[ApiController, Route(\"api/Auth/invitations\"), InstitutionIdentityEndpoint, RequestSizeLimit(16384), MembershipApiErrors]"
+                              },
+                              {
+                                  "line":  15,
+                                  "text":  "public sealed class InvitationAcceptanceController(IInstitutionOnboardingManager manager) : ControllerBase"
+                              },
+                              {
+                                  "line":  17,
+                                  "text":  "[HttpPost(\"{id:guid}/accept\"), Authorize(Policy = ElectronicRegisterAPI.Infrastructure.Security.InstitutionTokenContract.SelectionScheme)]"
+                              },
+                              {
+                                  "line":  18,
+                                  "text":  "public async Task\u003cIActionResult\u003e Accept(Guid id, InvitationAcceptanceRequest request, CancellationToken ct)"
+                              }
+                          ],
+        "signatures":  [
+                           "public sealed class InvitationAcceptanceController(IInstitutionOnboardingManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e Accept(Guid id, InvitationAcceptanceRequest request, CancellationToken ct)"
+                       ],
+        "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
+    }
+]

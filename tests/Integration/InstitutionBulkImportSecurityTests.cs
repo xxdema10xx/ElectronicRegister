@@ -95,8 +95,23 @@ public sealed partial class InstitutionClassCrudTests
         await Execute("INSERT INTO institution_import_batch(id,institution_id,actor_user_id,actor_membership_id,category,state,revision,file_sha256,preview_digest,total_rows,valid_rows,invalid_rows,payload,warnings_json,policy_revision,created_at_utc,expires_at_utc) SELECT @id,institution_id,actor_user_id,actor_membership_id,category,state,revision,file_sha256,preview_digest,total_rows,valid_rows,invalid_rows,payload,warnings_json,policy_revision,UTC_TIMESTAMP(6)-INTERVAL 2 HOUR,UTC_TIMESTAMP(6)-INTERVAL 1 HOUR FROM institution_import_batch WHERE id=@source",("@id",id),("@source",original.Id));
         await Execute("INSERT INTO institution_import_event(institution_id,id,batch_id,revision,action,actor_kind,actor_user_id,actor_membership_id,request_hash,result_json,reason,occurred_at_utc) VALUES(@t,@id,@batch,1,'Previewed','User',@u,@m,@hash,JSON_OBJECT('preview',true),'Expired fixture',UTC_TIMESTAMP(6))",("@t",_a),("@id",Guid.NewGuid()),("@batch",id),("@u",_adminUser),("@m",Id("admin-membership")),("@hash",new string('A',64)));
         await Expect(await Request(Imports+"/"+id+"/rows",token,host:host),HttpStatusCode.Conflict);
-        using(var scope=host.Host.Services.CreateScope())Assert.True(await scope.ServiceProvider.GetRequiredService<IInstitutionImportRetention>().PurgeExpiredAsync(default)>0);
+        // Retention is deliberately bounded. Earlier rehearsal runs can leave more
+        // than one batch of expired staging; one cycle need not select this tenant.
+        var pending=0;
+        await Db(async db=>pending=await db.Set<InstitutionImportBatch>().CountAsync(b=>b.State=="Preview"&&b.ExpiresAtUtc<=DateTime.UtcNow));
+        using(var scope=host.Host.Services.CreateScope())
+        {
+            var retention=scope.ServiceProvider.GetRequiredService<IInstitutionImportRetention>();
+            for(var cycle=0;cycle<=pending;cycle++)
+            {
+                var expired=false;
+                await Db(async db=>expired=await db.Set<InstitutionImportBatch>().AsNoTracking().AnyAsync(b=>b.Id==id&&b.State=="Expired"&&b.Payload==null));
+                if(expired)break;
+                Assert.InRange(await retention.PurgeExpiredAsync(default),1,20);
+            }
+        }
         await Db(async db=>{var b=await db.Set<InstitutionImportBatch>().SingleAsync(i=>i.Id==id);Assert.Null(b.Payload);Assert.Equal("Expired",b.State);var e=await db.Set<InstitutionImportEvent>().SingleAsync(e=>e.BatchId==id&&e.Action=="Expired");Assert.Equal("Retention",e.ActorKind);Assert.Null(e.ActorUserId);Assert.Null(e.ActorMembershipId);});
+        await Db(async db=>Assert.NotNull((await db.Set<InstitutionImportBatch>().AsNoTracking().SingleAsync(b=>b.Id==original.Id)).Payload));
         Assert.Equal(1644,(await Assert.ThrowsAsync<MySqlException>(()=>Execute("DELETE FROM institution_import_event WHERE batch_id=@id",("@id",id)))).Number);
     }
 }

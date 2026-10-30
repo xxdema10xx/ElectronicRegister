@@ -15,7 +15,7 @@ internal sealed class InstitutionCalendarManager(
     InstitutionSchoolAuthorization authorization,
     IInstitutionCalendarRepository repository,
     ICalendarImportFileReader reader,
-    CalendarFeature feature
+    ICalendarFeature feature
 ) : IInstitutionCalendarManager
 {
     private async Task<TenantContext> Actor(CancellationToken ct, bool operational = true)

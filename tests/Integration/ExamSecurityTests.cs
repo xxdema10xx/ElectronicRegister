@@ -18,9 +18,9 @@ namespace ElectronicRegisterAPI.Tests.Integration
             _fixture = fixture;
         }
 
-        private ClaimsContext TeacherCaller(Guid teacherId) => new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, teacherId);
-        private ClaimsContext AdminCaller() => new ClaimsContext(SeedData.AdminUserId, UserRole.Admin, null, null);
-        private ClaimsContext StudentCaller(Guid studentId) => new ClaimsContext(studentId, UserRole.Student, studentId, null);
+        private FixtureActor TeacherCaller(Guid teacherId) => new FixtureActor(teacherId == SeedData.TeacherId ? SeedData.TeacherUserId : SeedData.Id(0, 13), null, teacherId);
+        private FixtureActor AdminCaller() => new FixtureActor(SeedData.AdminUserId, null, null);
+        private FixtureActor StudentCaller(Guid studentId) => new FixtureActor(studentId, studentId, null);
 
         private Task<ScenarioIds> ResetAsync() => _fixture.ResetScenarioAsync(IntegrationScenario.ExamRegression);
 
@@ -31,11 +31,11 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await ResetAsync();
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
 
             var caller = TeacherCaller(Guid.NewGuid()); // different teacher
 
-            await Assert.ThrowsAsync<UnauthorizedAccessException>(async () => await mgr.GetByExamAsync(ids.ExamId, null, caller));
+            await Assert.ThrowsAsync<System.Collections.Generic.KeyNotFoundException>(async () => await mgr.GetByExamAsync(ids.ExamId, null, caller));
         }
 
         [SkippableFact]
@@ -45,7 +45,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await ResetAsync();
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
 
             var studentCaller = StudentCaller(ids.StudentId);
             var dto = await mgr.GetByIdAsync(ids.SubmissionId, studentCaller);

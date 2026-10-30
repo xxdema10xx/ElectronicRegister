@@ -1,0 +1,30 @@
+{
+    "Trx":  [
+                {
+                    "Suite":  "Unit",
+                    "HashMatches":  true,
+                    "Counters":  [
+
+                                 ],
+                    "Error":  null
+                },
+                {
+                    "Suite":  "Integration",
+                    "HashMatches":  true,
+                    "Counters":  [
+
+                                 ],
+                    "Error":  null
+                }
+            ],
+    "RetiredCount":  83,
+    "RetiredDistinct":  83,
+    "StillPresent":  [
+
+                     ],
+    "Sources":  659,
+    "Controllers":  28,
+    "LegacySymbolMatches":  [
+
+                            ]
+}

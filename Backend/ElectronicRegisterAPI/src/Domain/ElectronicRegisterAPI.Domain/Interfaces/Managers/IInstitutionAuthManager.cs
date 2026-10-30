@@ -9,6 +9,11 @@ public interface IInstitutionAuthManager
     Task<IdentityTicketDto?> MicrosoftLoginAsync(MicrosoftLoginDto input);
     Task<bool> IdentityExistsAsync(Guid userId);
     Task<IReadOnlyList<InstitutionChoiceDto>> InstitutionsAsync(Guid userId, CancellationToken cancellationToken);
-    Task<InstitutionAccessDto> SelectAsync(Guid userId, SelectInstitutionDto input, CancellationToken cancellationToken);
+    Task<InstitutionAccessDto> SelectAsync(
+        Guid userId,
+        SelectInstitutionDto input,
+        CancellationToken cancellationToken,
+        long identityGeneration = 0
+    );
     Task<TenantContext?> AuthorizeAsync(TenantContext token, CancellationToken cancellationToken);
 }

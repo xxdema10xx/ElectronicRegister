@@ -7,7 +7,10 @@ permissions:
   contents: read
 jobs:
   source:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -18,13 +21,25 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
-      - run: python tools/verify-project-artifacts.py
+      - run: node --version
+      - run: node tools/release-artifacts.cjs
+      - run: node tools/test-release-manifest.cjs
       - run: python -m unittest discover -s tools -p 'test_*.py'
       - run: dotnet restore Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --locked-mode
       - run: dotnet list Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx package --vulnerable --include-transitive --format json > dependency-audit.json
       - run: python tools/check-dependency-audit.py dependency-audit.json
       - run: dotnet build Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --no-restore -c Release
+      - run: dotnet restore tools/CodeOrganization/CodeOrganization.csproj --locked-mode
+      - run: dotnet run --project tools/CodeOrganization --no-restore -- check .
       - run: dotnet test tests/Unit/Unit.Tests.csproj --no-build -c Release
+      - run: dotnet restore tools/ReleaseTransportProbe/ReleaseTransportProbe.csproj --locked-mode
+      - run: dotnet build tools/ReleaseTransportProbe/ReleaseTransportProbe.csproj --no-restore -c Release
+      - run: dotnet list tools/ReleaseTransportProbe/ReleaseTransportProbe.csproj package --vulnerable --include-transitive --format json > transport-audit.json
+      - run: python tools/check-dependency-audit.py transport-audit.json
+      - run: dotnet restore tools/StagingSupport/StagingSupport.csproj --locked-mode
+      - run: dotnet build tools/StagingSupport/StagingSupport.csproj --no-restore -c Release
+      - run: dotnet list tools/StagingSupport/StagingSupport.csproj package --vulnerable --include-transitive --format json > support-audit.json
+      - run: python tools/check-dependency-audit.py support-audit.json
   mysql:
     # Owner supplies a disposable Windows runner with the licensed/test binary.
     # No credentials or operational database are available to PR code.
@@ -47,10 +62,24 @@ jobs:
           ER_MYSQL_BIN: ${{ vars.ER_MYSQL_BIN }}
         run: |
           $ErrorActionPreference='Stop'
-          $plain=[Convert]::ToHexString([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
-          Write-Output "::add-mask::$plain"
-          $secret=ConvertTo-SecureString $plain -AsPlainText -Force
-          ./tools/setup-local-test-db.ps1 -MySqlBin $env:ER_MYSQL_BIN -CreateInstance -ConfirmIsolatedTest -Password $secret
-          if($LASTEXITCODE -ne 0){throw 'Bootstrap failed: preserve state, no retry'}
-          ./tools/test-local.ps1 -MySqlBin $env:ER_MYSQL_BIN -Password $secret
-          if($LASTEXITCODE -ne 0){throw 'Regression failed'}
+          node tools/release-artifacts.cjs
+          if($LASTEXITCODE -ne 0){throw 'Release manifest failed'}
+          node tools/test-release-manifest.cjs
+          if($LASTEXITCODE -ne 0){throw 'Manifest negative controls failed'}
+          dotnet restore Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --locked-mode
+          if($LASTEXITCODE -ne 0){throw 'Restore failed'}
+          dotnet build Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --no-restore
+          if($LASTEXITCODE -ne 0){throw 'Build failed'}
+          $probe=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0)
+          $probe.Start();$port=$probe.LocalEndpoint.Port;$probe.Stop()
+          ./tools/New-InstitutionStaffTestInstance.ps1 -MySqlBin $env:ER_MYSQL_BIN -Port $port
+          $run=[IO.File]::ReadAllText('.staff-private/latest-instance.txt')
+          try {
+            $env:MYSQL_PWD=[IO.File]::ReadAllText("$run/password.txt")
+            ./tools/Bind-StaffDisposableFixtureRetention.ps1 -MySqlBin $env:ER_MYSQL_BIN -Port $port -ExpectedDataDirectory "$run/data"
+            ./tools/Invoke-QualityIntegration.ps1 -InstanceDirectory $run -Port $port -MySqlBin $env:ER_MYSQL_BIN -Name ci-complete
+          } finally {
+            # The server was created by this job; the binder/runner attest its exact identity.
+            & "$env:ER_MYSQL_BIN/mysqladmin.exe" --no-defaults --host=127.0.0.1 --port=$port --user=root shutdown
+            Remove-Item Env:MYSQL_PWD -ErrorAction SilentlyContinue
+          }

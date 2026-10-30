@@ -33,8 +33,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             using var scope1 = _fixture.ScopeFactory.CreateScope();
             using var scope2 = _fixture.ScopeFactory.CreateScope();
 
-            var manager1 = scope1.ServiceProvider.GetRequiredService<IExamManager>();
-            var manager2 = scope2.ServiceProvider.GetRequiredService<IExamManager>();
+            var manager1 = scope1.ServiceProvider.GetRequiredService<FixtureExamClient>();
+            var manager2 = scope2.ServiceProvider.GetRequiredService<FixtureExamClient>();
 
             var studentCaller = StudentCaller(ids);
 
@@ -73,8 +73,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             using var s1 = _fixture.ScopeFactory.CreateScope();
             using var s2 = _fixture.ScopeFactory.CreateScope();
 
-            var m1 = s1.ServiceProvider.GetRequiredService<IExamManager>();
-            var m2 = s2.ServiceProvider.GetRequiredService<IExamManager>();
+            var m1 = s1.ServiceProvider.GetRequiredService<FixtureExamClient>();
+            var m2 = s2.ServiceProvider.GetRequiredService<FixtureExamClient>();
 
             var studentCaller = StudentCaller(ids);
 
@@ -127,7 +127,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await _fixture.ResetScenarioAsync(IntegrationScenario.AutosaveAfterDeadline);
 
             using var s = _fixture.ScopeFactory.CreateScope();
-            var manager = s.ServiceProvider.GetRequiredService<IExamManager>();
+            var manager = s.ServiceProvider.GetRequiredService<FixtureExamClient>();
 
             var dto = new SaveExamAnswersDto { ClientRevision = 99 };
             dto.Answers.Add(new AnswerInputDto { QuestionId = ids.OpenQuestionId, OpenText = "late" });
@@ -154,8 +154,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             using var scope1 = _fixture.ScopeFactory.CreateScope();
             using var scope2 = _fixture.ScopeFactory.CreateScope();
 
-            var managerSave = scope1.ServiceProvider.GetRequiredService<IExamManager>();
-            var managerSubmit = scope2.ServiceProvider.GetRequiredService<IExamManager>();
+            var managerSave = scope1.ServiceProvider.GetRequiredService<FixtureExamClient>();
+            var managerSubmit = scope2.ServiceProvider.GetRequiredService<FixtureExamClient>();
 
             var studentCaller = StudentCaller(ids);
 
@@ -197,10 +197,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
             Assert.Equal("final", ans.OpenText);
         }
 
-        private static ClaimsContext StudentCaller(ScenarioIds ids) =>
-            new ClaimsContext(ids.StudentId, UserRole.Student, ids.StudentId, null);
+        private static FixtureActor StudentCaller(ScenarioIds ids) =>
+            new FixtureActor(ids.StudentId, ids.StudentId, null);
 
-        private static async Task<SubmissionResultDto?> SubmitOrRejectedAsync(IExamManager manager, Guid submissionId, SubmitExamDto dto, ClaimsContext caller)
+        private static async Task<SubmissionResultDto?> SubmitOrRejectedAsync(FixtureExamClient manager, Guid submissionId, SubmitExamDto dto, FixtureActor caller)
         {
             try
             {

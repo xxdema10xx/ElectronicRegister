@@ -9,7 +9,7 @@ using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Application.Managers;
 
-internal class GradeManager : IGradeManager
+internal class GradeManager
 {
     private readonly IGradeRepository _gradeRepository;
     private readonly ISubjectRepository _subjectRepository;
@@ -130,31 +130,6 @@ internal class GradeManager : IGradeManager
         };
     }
 
-    public async Task<List<GradeDto>> GetGradesByStudentIdAsync(Guid studentId)
-    {
-        var student = await _studentRepository.GetByIdAsync(studentId);
-        if (student is null)
-            return new List<GradeDto>();
-        var grades = await _gradeRepository.GetByStudentIdAsync(studentId);
-        return await MapToDtosAsync(grades);
-    }
-
-    public async Task<List<GradeDto>?> GetGradesBySubjectNameAsync(string subjectName, ExamPrincipal caller)
-    {
-        Guid? studentId = caller.IsStudent ? caller.StudentId : null;
-        Guid? teacherId = (caller.IsTeacher && !caller.CombinedRead) ? caller.TeacherId : null;
-        var grades = await _gradeRepository.GetBySubjectNameAsync(subjectName, studentId, teacherId);
-        return await MapToDtosAsync(grades);
-    }
-
-    public async Task<List<GradeDto>> GetGradesByDateAsync(DateOnly date, ExamPrincipal caller)
-    {
-        Guid? studentId = caller.IsStudent ? caller.StudentId : null;
-        Guid? teacherId = (caller.IsTeacher && !caller.CombinedRead) ? caller.TeacherId : null;
-        var grades = await _gradeRepository.GetByDateAsync(date, studentId, teacherId);
-        return await MapToDtosAsync(grades);
-    }
-
     public async Task<Guid?> AddAsync(CreateGradeDto dto, ExamPrincipal caller)
     {
         _gradeService.EnsureValidGradeValue(dto.Value);
@@ -248,21 +223,4 @@ internal class GradeManager : IGradeManager
         return GradeMapper.ToDtos(grades, classSubjects, subjects, students);
     }
 
-    Task<int> IGradeManager.CountAsync(ClaimsContext caller) => CountAsync(ExamPrincipal.Legacy(caller));
-    Task<List<GradeDto>> IGradeManager.GetAllAsync(ClaimsContext caller) => GetAllAsync(ExamPrincipal.Legacy(caller));
-    Task<GradeDto?> IGradeManager.GetByIdAsync(Guid id, ClaimsContext caller) => GetByIdAsync(id, ExamPrincipal.Legacy(caller));
-    Task<GradePageDto> IGradeManager.GetPagedAsync(
-        int pageNumber,
-        int pageSize,
-        Guid? subjectId,
-        Guid? studentId,
-        DateOnly? date,
-        ClaimsContext caller
-    ) => GetPagedAsync(pageNumber, pageSize, subjectId, studentId, date, ExamPrincipal.Legacy(caller));
-    Task<GradeStatisticsDto?> IGradeManager.GetStatisticsAsync(ClaimsContext caller) => GetStatisticsAsync(ExamPrincipal.Legacy(caller));
-    Task<GradeFiltersDto> IGradeManager.GetFiltersAsync(ClaimsContext caller) => GetFiltersAsync(ExamPrincipal.Legacy(caller));
-    Task<List<GradeDto>?> IGradeManager.GetGradesBySubjectNameAsync(string subjectName, ClaimsContext caller) => GetGradesBySubjectNameAsync(subjectName, ExamPrincipal.Legacy(caller));
-    Task<List<GradeDto>> IGradeManager.GetGradesByDateAsync(DateOnly date, ClaimsContext caller) => GetGradesByDateAsync(date, ExamPrincipal.Legacy(caller));
-    Task<Guid?> IGradeManager.AddAsync(CreateGradeDto dto, ClaimsContext caller) => AddAsync(dto, ExamPrincipal.Legacy(caller));
-    Task<bool> IGradeManager.UpdateAsync(Guid id, UpdateGradeDto dto, ClaimsContext caller) => UpdateAsync(id, dto, ExamPrincipal.Legacy(caller));
 }

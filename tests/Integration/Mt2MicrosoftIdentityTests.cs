@@ -91,8 +91,8 @@ public sealed class Mt2MicrosoftIdentityTests(IntegrationFixture fixture)
                 Assert.Equal("er-selection+jwt", ticket.Header.Typ);
                 Assert.DoesNotContain(ticket.Claims, c => c.Type is "institution_id" or "membership_id" or "role" or "institution_role");
             }
-            // No automatic membership/provisioning, no email-based escalation in old login either.
-            Assert.Null(await scope.ServiceProvider.GetRequiredService<IAuthManager>().MicrosoftLoginAsync(new MicrosoftLoginDto { AccessToken = new JwtSecurityTokenHandler().WriteToken(jwt) }));
+            // Validated provider/object binding never provisions a membership.
+            Assert.False(await scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().InstitutionMemberships.AnyAsync(m=>m.UserId==id));
             // Controlled metadata replaces only the external discovery dependency; real MVC/JWT/manager/MySQL.
             await using var http = await Phase2C_HttpHost.StartAsync(fixture.ConnectionString, registrations =>
             {

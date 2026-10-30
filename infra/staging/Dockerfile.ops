@@ -1,0 +1,17 @@
+FROM node:22-bookworm-slim AS node
+FROM api_artifact AS artifact
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS tools
+RUN apt-get update && apt-get install -y --no-install-recommends mysql-client python3 git ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+WORKDIR /src
+COPY Directory.Build.props global.json ./
+COPY tools/ReleaseTransportProbe/ tools/ReleaseTransportProbe/
+RUN dotnet restore tools/ReleaseTransportProbe/ReleaseTransportProbe.csproj --locked-mode \
+    && dotnet publish tools/ReleaseTransportProbe/ReleaseTransportProbe.csproj --no-restore -c Release -o /opt/transport /p:UseAppHost=false
+COPY --from=artifact /health/ /opt/support/
+COPY --from=artifact /release/ /opt/release/
+RUN useradd --uid 10001 --create-home erops
+WORKDIR /workspace
+USER 10001:10001
+ENV DOTNET_CLI_HOME=/tmp/dotnet NUGET_PACKAGES=/tmp/nuget

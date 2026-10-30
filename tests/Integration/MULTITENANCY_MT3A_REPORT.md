@@ -1,3 +1,5 @@
+Evidenza storica della fase nominata in questo documento. Per codice, contratti ritirati e test correnti vedere il [report conclusivo](../../docs/refactoring/RESPONSIBILITY_REFACTORING_REPORT.md) e la [regressione finale](../../docs/refactoring/validation/current-cutover/final/README.md). I conteggi e i componenti sotto non certificano il working tree finale.
+
 # ElectronicRegister — MT-3A: ownership e integrita dello schema
 
 **Checkpoint A completato sul database di test. MT-3 nel suo insieme resta PARZIALE: B/C/D/E non completati, gate scolastico chiuso, nessun secondo tenant operativo e nessun cutover.**

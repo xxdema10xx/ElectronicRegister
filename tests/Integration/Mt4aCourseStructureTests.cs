@@ -28,6 +28,7 @@ public sealed class Mt4aCourseStructureTests(IntegrationFixture fixture)
     }
     private async Task Sql(string sql, params (string,object?)[] values)
     {
+        Assert.True(fixture.IsAvailable,fixture.UnavailableReason);
         await using var c=new MySqlConnection(fixture.ConnectionString); await c.OpenAsync(); await TestDatabaseSession.ConfigureAsync(c);
         await using var cmd=new MySqlCommand(sql,c); foreach(var (name,value) in values)cmd.Parameters.AddWithValue(name,value??DBNull.Value);
         await cmd.ExecuteNonQueryAsync();
@@ -140,6 +141,7 @@ public sealed class Mt4aCourseStructureTests(IntegrationFixture fixture)
     });
     [Fact] public async Task InformationSchemaHasCompositeRestrictConstraints()
     {
+        Assert.True(fixture.IsAvailable,fixture.UnavailableReason);
         await using var c=new MySqlConnection(fixture.ConnectionString);await c.OpenAsync();
         await using var cmd=new MySqlCommand("SELECT constraint_name,COUNT(*) FROM information_schema.key_column_usage WHERE constraint_schema=DATABASE() AND LEFT(constraint_name,7)='fk_mt4_' AND referenced_table_name IS NOT NULL GROUP BY constraint_name",c);
         var counts=new Dictionary<string,int>();await using(var reader=await cmd.ExecuteReaderAsync()){while(await reader.ReadAsync())counts[reader.GetString(0)]=reader.GetInt32(1);}
@@ -203,6 +205,7 @@ public sealed class Mt4aCourseStructureTests(IntegrationFixture fixture)
 
     [Fact] public async Task LegacyEfWritersStillReceiveTriggerDerivedOwners()
     {
+        Assert.True(fixture.IsAvailable,fixture.UnavailableReason);
         var pathId=Guid.NewGuid();var studentId=Guid.NewGuid();var holding=Guid.Parse("4d543341-0000-4000-8000-000000000001");
         try
         {

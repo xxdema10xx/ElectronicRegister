@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
-internal sealed class InstitutionMembershipMutationRepository(ElectronicRegisterContext db, IMembershipAuthorizationRepository authorization) : IInstitutionMembershipMutationRepository
+internal sealed partial class InstitutionMembershipMutationRepository(ElectronicRegisterContext db, IMembershipAuthorizationRepository authorization, IIdentityAccountRepository accounts) : IInstitutionMembershipMutationRepository
 {
     public async Task<MembershipMutationResult> MutateAsync(TenantContext actor, MembershipMutation request, CancellationToken ct = default)
     {
@@ -23,18 +23,8 @@ internal sealed class InstitutionMembershipMutationRepository(ElectronicRegister
         var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new { actor.InstitutionId, actor.UserId, ActorMembershipId = actor.MembershipId, request.MembershipId, request.EventId, request.ExpectedRevision, Action = request.Action.ToString(), Role = request.Role?.ToString(), request.Reason }))));
         await using var tx = await db.Database.BeginTransactionAsync(ct);
         // First database statement in the transaction is the tenant mutex. Never reuse a prior read snapshot.
-        await db.Database.ExecuteSqlInterpolatedAsync($"SELECT id FROM institution WHERE id={actor.InstitutionId} FOR UPDATE", ct);
-        foreach (var id in new[]
-        {
-            actor.MembershipId,
-            request.MembershipId
-        }.Distinct().OrderBy(x => x.ToString("D"), StringComparer.Ordinal))
-        {
-            await db.Database.ExecuteSqlInterpolatedAsync($"SELECT id FROM institution_membership WHERE institution_id={actor.InstitutionId} AND id={id} FOR UPDATE", ct);
-            await db.Database.ExecuteSqlInterpolatedAsync($"SELECT r.role FROM institution_membership_role r JOIN institution_membership m ON m.id=r.membership_id WHERE m.institution_id={actor.InstitutionId} AND m.id={id} ORDER BY r.role FOR UPDATE", ct);
-            await db.Database.ExecuteSqlInterpolatedAsync($"SELECT membership_id FROM institution_membership_security_state WHERE institution_id={actor.InstitutionId} AND membership_id={id} FOR UPDATE", ct);
-        }
-
+        await LockMembershipsAsync(actor, request.MembershipId, ct);
+        await RequireIdentityAsync(actor, ct);
         // No tracked entities or pre-lock authorization are trusted, even for a persisted replay.
         var current = await authorization.GetAsync(actor.UserId, actor.InstitutionId, actor.MembershipId, ct);
         if (!IsCurrentAdmin(actor, current))
@@ -105,11 +95,30 @@ internal sealed class InstitutionMembershipMutationRepository(ElectronicRegister
         return Result(request.EventId, after, newStatus, JsonSerializer.Deserialize<string[]>(afterJson)!);
     }
 
+    private async Task LockMembershipsAsync(TenantContext actor, Guid target, CancellationToken ct)
+    {
+        await db.Database.ExecuteSqlInterpolatedAsync($"SELECT id FROM institution WHERE id={actor.InstitutionId} FOR UPDATE", ct);
+        foreach (var id in new[]
+        {
+            actor.MembershipId,
+            target
+        }.Distinct().OrderBy(x => x.ToString("D"), StringComparer.Ordinal))
+        {
+            await db.Database.ExecuteSqlInterpolatedAsync($"SELECT id FROM institution_membership WHERE institution_id={actor.InstitutionId} AND id={id} FOR UPDATE", ct);
+            await db.Database.ExecuteSqlInterpolatedAsync($"SELECT r.role FROM institution_membership_role r JOIN institution_membership m ON m.id=r.membership_id WHERE m.institution_id={actor.InstitutionId} AND m.id={id} ORDER BY r.role FOR UPDATE", ct);
+            await db.Database.ExecuteSqlInterpolatedAsync($"SELECT membership_id FROM institution_membership_security_state WHERE institution_id={actor.InstitutionId} AND membership_id={id} FOR UPDATE", ct);
+        }
+    }
+
+    private Task RequireIdentityAsync(TenantContext actor, CancellationToken ct) => actor.IdentityGeneration is { } generation
+        ? accounts.RequireGenerationAsync(actor.UserId, generation, ct)
+        : throw new UnauthorizedAccessException("Generation identità richiesta per la mutazione IAM.");
+
     private static MembershipMutationResult Result(
         Guid id,
         long revision,
         string status,
         IEnumerable<string> roles
     ) => new(id, revision, Enum.Parse<MembershipStatus>(status, true), roles.Select(Enum.Parse<InstitutionRole>).OrderBy(x => x.ToString(), StringComparer.Ordinal).ToArray());
-    private static bool IsCurrentAdmin(TenantContext actor, MembershipAuthorization? current) => current is not null && current.UserId == actor.UserId && current.InstitutionId == actor.InstitutionId && current.MembershipId == actor.MembershipId && current.Status == MembershipStatus.Active && current.InstitutionStatus == InstitutionStatus.Active && current.SecurityGeneration is >= 0 && actor.SecurityGeneration == current.SecurityGeneration && actor.Roles.SetEquals(current.Roles) && current.Roles.All(Enum.IsDefined) && current.Roles.Contains(InstitutionRole.InstitutionAdmin);
+    private static bool IsCurrentAdmin(TenantContext actor, MembershipAuthorization? current) => MembershipAuthorizationRules.Matches(actor, current) && current.Roles.Contains(InstitutionRole.InstitutionAdmin);
 }

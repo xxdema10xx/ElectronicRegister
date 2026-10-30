@@ -26,6 +26,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using MySqlConnector;
+using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Models;
+using ElectronicRegisterAPI.Domain.Interfaces.Security;
+using ElectronicRegisterAPI.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicRegisterAPI.Tests.Integration;
 
@@ -49,21 +55,16 @@ internal sealed class Phase2C_HttpHost : IAsyncDisposable
         {
             ["ConnectionStrings:DefaultConnection"] = connectionString,
             ["Jwt:Key"] = Key, ["Jwt:Issuer"] = Issuer, ["Jwt:Audience"] = Issuer,
-            ["Identity:Legacy:Enabled"] = "true",
-            ["Identity:Legacy:AllowUnbackfilledAccounts"] = "true",
-            ["Identity:Legacy:InstitutionId"] = "71000000-0000-0000-0000-000000000001"
+            ["Identity:Legacy:Enabled"] = "false",
+            ["Multitenancy:SchoolApi:Enabled"] = "true",
+            ["Multitenancy:ExamApi:Enabled"] = "true"
         });
-        // Explicit test-only migration manifest, including scenarios created after host startup.
-        var legacyIds = Enum.GetValues<IntegrationScenario>().Select(s => ScenarioIds.For(s).StudentId)
-            .Concat(new[] { SeedData.AdminUserId, SeedData.TeacherUserId, SeedData.Id(0, 13) }).Distinct().ToArray();
-        builder.Configuration.AddInMemoryCollection(legacyIds.Select((id, index) =>
-            new KeyValuePair<string, string?>($"Identity:Legacy:UserIds:{index}", id.ToString())));
         builder.Services.AddInfrastructure(builder.Configuration);
         builder.Services.AddBusinessServices();
         builder.Services.AddApplicationManagers();
         builder.Services.AddApiServices();
         builder.Services.RemoveAll<IHostedService>();
-        builder.Services.AddControllers().AddApplicationPart(typeof(ExamController).Assembly)
+        builder.Services.AddControllers().AddApplicationPart(typeof(InstitutionExamController).Assembly)
             .AddJsonOptions(o => o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
         {
@@ -91,24 +92,24 @@ internal sealed class Phase2C_HttpHost : IAsyncDisposable
         return new Phase2C_HttpHost(app, new HttpClient { BaseAddress = new Uri(address) });
     }
 
-    public HttpClient As(ClaimsContext? caller)
+    public HttpClient As(FixtureActor? caller)
     {
         Client.DefaultRequestHeaders.Authorization = caller is null ? null : new AuthenticationHeaderValue("Bearer", Token(caller));
         return Client;
     }
 
-    private static string Token(ClaimsContext caller)
+    private string Token(FixtureActor caller)
     {
-        var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Sub, caller.UserId.ToString()),
-            new(ClaimTypes.Role, caller.Role.ToString().ToLowerInvariant())
-        };
-        if (caller.StudentId.HasValue) claims.Add(new(CustomClaimTypes.StudentId, caller.StudentId.Value.ToString()));
-        if (caller.TeacherId.HasValue) claims.Add(new(CustomClaimTypes.TeacherId, caller.TeacherId.Value.ToString()));
-        var token = new JwtSecurityToken(Issuer, Issuer, claims, expires: DateTime.UtcNow.AddMinutes(10),
-            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Key)), SecurityAlgorithms.HmacSha256));
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        // Fixture issuance uses the persisted explicit membership, never caller.Role
+        // or global/profile claims. The real canonical JWT and live IAM handlers run.
+        using var scope=_app.Services.CreateScope();
+        using var connection=new MySqlConnection(scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().Database.GetConnectionString());
+        connection.Open();
+        using var command=new MySqlCommand("SELECT m.id,s.security_generation,r.role FROM institution_membership m JOIN institution_membership_security_state s ON s.institution_id=m.institution_id AND s.membership_id=m.id JOIN institution_membership_role r ON r.membership_id=m.id WHERE m.institution_id=@tenant AND m.user_id=@user ORDER BY r.role",connection);
+        command.Parameters.AddWithValue("@tenant",SeedData.CoreInstitutionId);command.Parameters.AddWithValue("@user",caller.UserId);
+        Guid membership=Guid.NewGuid();long generation=0;var roles=new List<InstitutionRole>();
+        using(var reader=command.ExecuteReader())while(reader.Read()){membership=reader.GetGuid(0);generation=reader.GetInt64(1);roles.Add(Enum.Parse<InstitutionRole>(reader.GetString(2)));}
+        return scope.ServiceProvider.GetRequiredService<IInstitutionTokens>().Access(new(caller.UserId,SeedData.CoreInstitutionId,membership,roles,generation));
     }
 
     public async ValueTask DisposeAsync()

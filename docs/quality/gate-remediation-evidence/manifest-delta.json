@@ -1,0 +1,29 @@
+{
+  "added": [
+    "infra/nginx.release.conf",
+    "infra/release.runtime.example.json",
+    "migrations/identity-account/005_release_gate.sql",
+    "migrations/release/additive-contract.json",
+    "tools/ReleaseTransportProbe/Program.cs",
+    "tools/ReleaseTransportProbe/ReleaseTransportProbe.csproj",
+    "tools/ReleaseTransportProbe/packages.lock.json",
+    "tools/prepare-release-sql.cjs",
+    "tools/release-additive-contract.cjs",
+    "tools/test-release-manifest.cjs"
+  ],
+  "changed": [
+    ".dockerignore",
+    ".github/workflows/verify.yml",
+    ".gitignore",
+    "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Operations/OperationalPipeline.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionExamDataScope.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionMembershipMutationRepository.Acquisition.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionMembershipMutationRepository.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionWriteAuthorization.cs",
+    "infra/Dockerfile",
+    "tools/quality-schema-contract.cjs",
+    "tools/release-artifacts.cjs",
+    "tools/release-preflight.cjs"
+  ],
+  "removed": []
+}

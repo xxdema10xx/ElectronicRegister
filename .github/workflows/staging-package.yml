@@ -1,0 +1,46 @@
+name: Staging package and real SQL TLS
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact published 40-character commit; must match workflow ref
+        required: true
+        type: string
+permissions: { contents: read }
+jobs:
+  isolated:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      STAGE_STATE: /tmp/er-stage-${{ github.run_id }}-${{ github.run_attempt }}
+      EXPECTED_SHA: ${{ inputs.source_sha }}
+    steps:
+      - name: Bind workflow and source to the same published SHA
+        run: |
+          [[ "$EXPECTED_SHA" =~ ^[a-f0-9]{40}$ ]]
+          test "$EXPECTED_SHA" = "$GITHUB_SHA"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.source_sha }}
+          persist-credentials: false
+      - name: Prepare a new isolated namespace (no EC2 or AWS credentials)
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" prepare
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" config
+      - name: Docker build, fresh SQL, preflight, driver TLS and non-root readiness
+        run: |
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" build
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" db
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" provision
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" tls
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" seed
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" start
+          sudo cat "$STAGE_STATE/images.json" "$STAGE_STATE/ops/database-identity.json" "$STAGE_STATE/ops/preflight-result.json" "$STAGE_STATE/ops/transport-result.json"
+      - name: Stop only this job's staging (keep volume/data; never touch host Nginx)
+        if: always()
+        run: |
+          if sudo test -f "$STAGE_STATE/state.json"; then
+            sudo python3 infra/staging/host.py --state "$STAGE_STATE" stop
+          fi
+      # Public HTTPS/Nginx/JWT E2E smoke is deliberately a separate EC2 gate.

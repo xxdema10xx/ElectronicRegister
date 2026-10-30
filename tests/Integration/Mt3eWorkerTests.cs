@@ -387,7 +387,7 @@ public sealed partial class Mt3dHttpTests
         foreach(var (method,path) in calls)
         {
             var response=await Request(path,token,method is "POST" or "PUT"?new{email="attack@example.test",password="NotApplied123!",role="admin"}:null,method);
-            Assert.Contains(response.StatusCode,new[]{HttpStatusCode.Unauthorized,HttpStatusCode.Forbidden});
+            Assert.Equal(HttpStatusCode.NotFound,response.StatusCode);
         }
         foreach(var path in new[]{"/api/institution/users","/api/institution/memberships","/api/institution/audit"})await Expect(await Request(path,await Access("admin")),HttpStatusCode.NotFound);
         Assert.Equal(beforeA,await Digest(false));Assert.Equal(beforeB,await Digest(true));

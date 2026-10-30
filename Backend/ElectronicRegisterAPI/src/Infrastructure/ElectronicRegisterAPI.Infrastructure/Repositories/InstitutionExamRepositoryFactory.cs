@@ -21,14 +21,17 @@ internal sealed class InstitutionExamRepositoryFactory(
     Domain.Interfaces.Security.ICurrentTenant? current = null
 ) : IInstitutionExamRepositoryFactory
 {
-    public IInstitutionExamRepositories Create(ExamPrincipal principal)
+    public IInstitutionExamRepositories Create(ExamPrincipal principal) => Create(principal, CancellationToken.None);
+
+    public IInstitutionExamRepositories Create(ExamPrincipal principal, CancellationToken ct)
     {
         if (principal.Tenant is null)
             throw new UnauthorizedAccessException("Contesto istituzionale richiesto.");
         var verified = current?.Value ?? throw new UnauthorizedAccessException("Contesto verificato assente.");
         if (verified.UserId != principal.Tenant.UserId || verified.InstitutionId != principal.Tenant.InstitutionId || verified.MembershipId != principal.Tenant.MembershipId || verified.SecurityGeneration != principal.Tenant.SecurityGeneration || !verified.Roles.SetEquals(principal.Tenant.Roles))
             throw new UnauthorizedAccessException("Contesto non corrispondente.");
-        return new BoundRepositories(db, time, principal, authorization);
+        ct.ThrowIfCancellationRequested();
+        return new BoundRepositories(db, time, principal, authorization, ct);
     }
 
     private sealed class BoundRepositories : IInstitutionExamRepositories
@@ -49,13 +52,14 @@ internal sealed class InstitutionExamRepositoryFactory(
             ElectronicRegisterContext db,
             ITimeProvider time,
             ExamPrincipal actor,
-            IInstitutionWriteAuthorization authorization
+            IInstitutionWriteAuthorization authorization,
+            CancellationToken ct
         )
         {
             _db = db;
             _time = time;
             _actor = actor;
-            _scope = new(db, actor, authorization);
+            _scope = new(db, actor, authorization, ct);
             Exams = new ExamRepository(db, _scope);
             Submissions = new ExamSubmissionRepository(db, time, _scope);
             Grades = new GradeRepository(db, _scope);
@@ -69,16 +73,16 @@ internal sealed class InstitutionExamRepositoryFactory(
         {
             if (_actor.IsStudent)
                 throw new UnauthorizedAccessException();
-            return _scope.Assignments.AsNoTracking().Select(cs => new ClassSubjectChoiceDto(cs.Id, cs.ClassId, cs.Class.Name, cs.SubjectId, cs.Subject.Name, cs.TeacherId, cs.Teacher.FirstName, cs.Teacher.LastName)).ToListAsync();
+            return _scope.Assignments.AsNoTracking().Select(cs => new ClassSubjectChoiceDto(cs.Id, cs.ClassId, cs.Class.Name, cs.SubjectId, cs.Subject.Name, cs.TeacherId, cs.Teacher.FirstName, cs.Teacher.LastName)).ToListAsync(_scope.CancellationToken);
         }
 
         public async Task<List<StudentDto>> StudentsForClassAsync(Guid classId)
         {
             if (_actor.IsStudent)
                 throw new UnauthorizedAccessException();
-            if (!await _scope.Owned<E.Class>().AnyAsync(c => c.Id == classId && (_actor.HasInstitutionReadScope || _scope.Assignments.Any(cs => cs.ClassId == c.Id))))
+            if (!await _scope.Owned<E.Class>().AnyAsync(c => c.Id == classId && (_actor.HasInstitutionReadScope || _scope.Assignments.Any(cs => cs.ClassId == c.Id)), _scope.CancellationToken))
                 throw new KeyNotFoundException("La risorsa non esiste.");
-            return await _scope.Query<E.Student>().AsNoTracking().Where(s => s.ClassId == classId).Select(s => new StudentDto { Id = s.Id, FirstName = s.FirstName, LastName = s.LastName }).ToListAsync();
+            return await _scope.Query<E.Student>().AsNoTracking().Where(s => s.ClassId == classId).Select(s => new StudentDto { Id = s.Id, FirstName = s.FirstName, LastName = s.LastName }).ToListAsync(_scope.CancellationToken);
         }
 
         public async Task<SubmissionSessionDto> SessionAsync(Guid submissionId)
@@ -125,9 +129,9 @@ internal sealed class InstitutionExamRepositoryFactory(
 
             if (_db.Database.CurrentTransaction is null)
                 throw new InvalidOperationException("Violation requires an ambient transaction.");
-            var submission = await _scope.LockSubmission(submissionId).AsTracking().SingleOrDefaultAsync() ?? throw new KeyNotFoundException("La risorsa non esiste.");
+            var submission = await _scope.LockSubmission(submissionId).AsTracking().SingleOrDefaultAsync(_scope.CancellationToken) ?? throw new KeyNotFoundException("La risorsa non esiste.");
             var events = _scope.Owned<E.ExamViolation>();
-            var existing = await events.AsNoTracking().SingleOrDefaultAsync(v => v.Id == dto.EventId);
+            var existing = await events.AsNoTracking().SingleOrDefaultAsync(v => v.Id == dto.EventId, _scope.CancellationToken);
             if (existing is not null)
             {
                 if (existing.SubmissionId != submissionId || existing.Type != dto.Type || existing.MetadataJson != dto.Metadata)
@@ -138,7 +142,7 @@ internal sealed class InstitutionExamRepositoryFactory(
             var now = _time.UtcNow;
             if (submission.Status != "in_progress" || submission.SubmittedAt is not null || submission.DeadlineAt <= now)
                 throw new BusinessRuleException("La submission non accetta nuovi eventi.");
-            if (submission.ViolationCount >= 128 || await events.CountAsync(v => v.SubmissionId == submissionId && v.OccurredAt >= now.AddSeconds(-10)) >= 5)
+            if (submission.ViolationCount >= 128 || await events.CountAsync(v => v.SubmissionId == submissionId && v.OccurredAt >= now.AddSeconds(-10), _scope.CancellationToken) >= 5)
                 throw new BusinessRuleException("Limite eventi raggiunto.");
             _db.ExamViolations.Add(new() { Id = dto.EventId, SubmissionId = submissionId, Type = dto.Type, MetadataJson = dto.Metadata, OccurredAt = now });
             submission.ViolationCount++;
@@ -158,9 +162,9 @@ internal sealed class InstitutionExamRepositoryFactory(
         {
             if (_actor.IsStudent)
                 throw new UnauthorizedAccessException();
-            if (!await _scope.Submissions.AnyAsync(s => s.Id == submissionId))
+            if (!await _scope.Submissions.AnyAsync(s => s.Id == submissionId, _scope.CancellationToken))
                 throw new KeyNotFoundException("La risorsa non esiste.");
-            return await _scope.Owned<E.ExamViolation>().AsNoTracking().Where(v => v.SubmissionId == submissionId).OrderBy(v => v.OccurredAt).Select(v => new ViolationEventDto(v.Id, v.Type, DbUtc.Read(v.OccurredAt), v.MetadataJson)).Take(128).ToListAsync();
+            return await _scope.Owned<E.ExamViolation>().AsNoTracking().Where(v => v.SubmissionId == submissionId).OrderBy(v => v.OccurredAt).Select(v => new ViolationEventDto(v.Id, v.Type, DbUtc.Read(v.OccurredAt), v.MetadataJson)).Take(128).ToListAsync(_scope.CancellationToken);
         }
     }
 }

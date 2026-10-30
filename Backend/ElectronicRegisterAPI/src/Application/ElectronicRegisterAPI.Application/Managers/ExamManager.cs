@@ -11,7 +11,7 @@ using ElectronicRegisterAPI.Application.Mappers;
 
 namespace ElectronicRegisterAPI.Application.Managers;
 
-internal class ExamManager : IExamManager
+internal class ExamManager
 {
     private readonly IExamRepository _examRepository;
     private readonly IClassSubjectRepository _classSubjectRepository;
@@ -20,7 +20,6 @@ internal class ExamManager : IExamManager
     private readonly ITransactionManager _transactionManager;
     private readonly IAuditRepository _auditRepository;
     private readonly IExamSubmissionRepository _examSubmissionRepository;
-    private readonly IExamSubmissionProcessor _examSubmissionProcessor;
     private readonly IExamService _examService;
     private readonly ISubjectService _subjectService;
     private readonly ITimeProvider _timeProvider;
@@ -31,7 +30,6 @@ internal class ExamManager : IExamManager
         IStudentRepository studentRepository,
         IGradeRepository gradeRepository,
         IExamSubmissionRepository examSubmissionRepository,
-        IExamSubmissionProcessor examSubmissionProcessor,
         ISubjectService subjectService,
         ITransactionManager transactionManager,
         IAuditRepository auditRepository,
@@ -44,7 +42,6 @@ internal class ExamManager : IExamManager
         _studentRepository = studentRepository;
         _gradeRepository = gradeRepository;
         _examSubmissionRepository = examSubmissionRepository;
-        _examSubmissionProcessor = examSubmissionProcessor;
         _subjectService = subjectService;
         _transactionManager = transactionManager;
         _auditRepository = auditRepository;
@@ -128,7 +125,6 @@ internal class ExamManager : IExamManager
             var classSubject = await _subjectService.EnsureValidClassSubjectId(dto.ClassSubjectId);
             _examService.EnsureValidSchedule(dto.AvailableFrom, dto.AvailableUntil, dto.DurationMinutes);
             _examService.EnsureValidPassingPercent(dto.PassingPercent);
-            _subjectService.EnsureClassSubjectExists(classSubject);
             // Autorizzazione docente: rimane nel Manager
             if (caller.IsTeacher)
             {
@@ -406,23 +402,6 @@ internal class ExamManager : IExamManager
         return ExamSubmissionMapper.ToSaveResponseDto(result);
     }
 
-    public async Task<SubmissionResultDto> SubmitAsync(Guid id, SubmitExamDto dto, ExamPrincipal caller)
-    {
-        ArgumentNullException.ThrowIfNull(caller);
-        if (!caller.IsStudent)
-            throw new UnauthorizedAccessException("Non sei autorizzato a inviare esami.");
-        ArgumentNullException.ThrowIfNull(dto);
-        var studentId = caller.StudentId ?? throw new UnauthorizedAccessException("Identificativo studente non presente.");
-        var submission = await _examSubmissionRepository.GetByIdAsync(id, withAnswers: true) ?? throw new KeyNotFoundException("La submission non esiste.");
-        if (submission.StudentId != studentId)
-            throw new UnauthorizedAccessException("Non sei autorizzato a inviare questa submission.");
-        _examService.EnsureSubmissionInProgress(submission);
-        // Delegate processing to shared processor. Processor will persist DTO answers and mark the submission as begun
-        // only after acquiring the necessary lock and verifying timing constraints.
-        var processorResult = await (caller.Tenant is null ? _examSubmissionProcessor.ProcessSubmitAsync(id, dto, SubmitReason.Manual, caller.VisibilityCaller) : _examSubmissionProcessor.ProcessInstitutionAsync(id, dto, SubmitReason.Manual, caller));
-        return processorResult;
-    }
-
     public async Task<SubmissionResultDto> GetResultAsync(Guid id, ExamPrincipal caller)
     {
         ArgumentNullException.ThrowIfNull(caller);
@@ -456,7 +435,7 @@ internal class ExamManager : IExamManager
             officialGrade = grade.Value;
         }
 
-        return ExamSubmissionMapper.ToSubmissionResultDto(submission, officialGrade, caller.IsStaff ? null : caller.VisibilityCaller);
+        return ExamSubmissionMapper.ToSubmissionResultDto(submission, officialGrade, caller.IsStudent);
     }
 
     private async Task ValidateRetakeAsync(Guid examId, Guid? originalId, Guid classSubjectId)
@@ -493,18 +472,4 @@ internal class ExamManager : IExamManager
         await WriteStaffAuditAsync(exam, caller, "staff." + action, beforeJson);
     }
 
-    Task<List<ExamSummaryDto>> IExamManager.GetAllAsync(ClaimsContext caller) => GetAllAsync(ExamPrincipal.Legacy(caller));
-    Task<ExamDetailDto?> IExamManager.GetByIdAsync(Guid id, ClaimsContext caller) => GetByIdAsync(id, ExamPrincipal.Legacy(caller));
-    Task<List<AssignedExamDto>> IExamManager.GetAssignedAsync(ClaimsContext caller) => GetAssignedAsync(ExamPrincipal.Legacy(caller));
-    Task<Guid> IExamManager.AddAsync(CreateExamDto dto, ClaimsContext caller) => AddAsync(dto, ExamPrincipal.Legacy(caller));
-    Task IExamManager.UpdateAsync(Guid id, UpdateExamDto dto, ClaimsContext caller) => UpdateAsync(id, dto, ExamPrincipal.Legacy(caller));
-    Task IExamManager.UpdateStudentsAsync(Guid id, UpdateExamStudentsDto dto, ClaimsContext caller) => UpdateStudentsAsync(id, dto, ExamPrincipal.Legacy(caller));
-    Task IExamManager.PublishAsync(Guid id, ClaimsContext caller) => PublishAsync(id, ExamPrincipal.Legacy(caller));
-    Task IExamManager.CloseAsync(Guid id, ClaimsContext caller) => CloseAsync(id, ExamPrincipal.Legacy(caller));
-    Task IExamManager.CancelAsync(Guid id, ClaimsContext caller) => CancelAsync(id, ExamPrincipal.Legacy(caller));
-    Task IExamManager.DeleteAsync(Guid id, ClaimsContext caller) => DeleteAsync(id, ExamPrincipal.Legacy(caller));
-    Task<StartExamDto> IExamManager.StartAsync(Guid id, ClaimsContext caller) => StartAsync(id, ExamPrincipal.Legacy(caller));
-    Task<SaveAnswersResponseDto> IExamManager.SaveAnswersAsync(Guid id, SaveExamAnswersDto dto, ClaimsContext caller) => SaveAnswersAsync(id, dto, ExamPrincipal.Legacy(caller));
-    Task<SubmissionResultDto> IExamManager.SubmitAsync(Guid id, SubmitExamDto dto, ClaimsContext caller) => SubmitAsync(id, dto, ExamPrincipal.Legacy(caller));
-    Task<SubmissionResultDto> IExamManager.GetResultAsync(Guid id, ClaimsContext caller) => GetResultAsync(id, ExamPrincipal.Legacy(caller));
 }

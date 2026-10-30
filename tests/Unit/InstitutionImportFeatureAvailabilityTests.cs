@@ -18,43 +18,16 @@ public sealed class InstitutionImportFeatureAvailabilityTests
         Assert.Equal(expected, feature.IsEnabled);
     }
 
-    [Theory]
-    [InlineData(true, false)]
-    [InlineData(false, true)]
-    public void CallbackOverridesSnapshotAndIsEvaluatedForEveryRead(bool snapshot, bool initialAvailability)
-    {
-        var available = initialAvailability;
-        var calls = 0;
-        var feature = new InstitutionImportFeature(snapshot, snapshot, new ImportParserLimits())
-        {
-            CurrentAvailability = () =>
-            {
-                calls++;
-                return available;
-            }
-        };
-
-        Assert.Equal(initialAvailability, feature.IsEnabled);
-        available = !available;
-        Assert.Equal(!initialAvailability, feature.IsEnabled);
-        Assert.Equal(2, calls);
-        feature.Validate();
-        Assert.Equal(2, calls);
-    }
-
     [Fact]
-    public void CallbackIsExcludedFromJsonWhileComputedAvailabilityIsRetained()
+    public void PureSnapshotSerializationContainsNoRuntimeCallback()
     {
-        var feature = new InstitutionImportFeature(false, false, new ImportParserLimits())
-        {
-            CurrentAvailability = () => true
-        };
+        var feature = new InstitutionImportFeature(true, true, new ImportParserLimits());
 
         using var json = JsonDocument.Parse(JsonSerializer.Serialize(feature));
 
         Assert.False(json.RootElement.TryGetProperty("CurrentAvailability", out _));
         Assert.True(json.RootElement.GetProperty("IsEnabled").GetBoolean());
-        Assert.False(json.RootElement.GetProperty("Enabled").GetBoolean());
-        Assert.False(json.RootElement.GetProperty("SchoolEnabled").GetBoolean());
+        Assert.True(json.RootElement.GetProperty("Enabled").GetBoolean());
+        Assert.True(json.RootElement.GetProperty("SchoolEnabled").GetBoolean());
     }
 }

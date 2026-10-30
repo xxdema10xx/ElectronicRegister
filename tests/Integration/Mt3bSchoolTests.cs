@@ -124,13 +124,24 @@ public sealed class Mt3bSchoolTests(IntegrationFixture fixture) : IAsyncLifetime
         Assert.Null(await Call<IInstitutionStudentManager,StudentDto?>(Context("teacher"),m=>m.GetByIdAsync(Id("student-other"))));
     }
 
-    [Fact]
-    public async Task TeacherWithNoAssignmentsSeesNoStudentOrSubjectAndNeverFallsBackToGlobalRole()
+    [Theory]
+    [InlineData("count")]
+    [InlineData("list")]
+    [InlineData("id")]
+    [InlineData("name")]
+    public async Task TeacherWithNoAssignmentsSeesNoStudentOrSubjectAndNeverFallsBackToGlobalRole(string operation)
     {
         await Execute("DELETE FROM class_subject WHERE teacher_id=@id",("@id",Id("teacher")));
         Assert.Empty(await Call<IInstitutionStudentManager,List<StudentDto>>(Context("teacher"),m=>m.GetAllAsync()));
         Assert.Equal(0,await Call<IInstitutionStudentManager,int>(Context("teacher"),m=>m.CountAsync()));
         Assert.Empty(await Call<IInstitutionSubjectManager,List<SubjectDto>>(Context("teacher"),m=>m.GetAllAsync()));
+        if(operation=="id") Assert.Null(await Call<IInstitutionStudentManager,StudentDto?>(Context("teacher"),m=>m.GetByIdAsync(Id("student"))));
+        if(operation=="name")
+        {
+            using var scope=_provider.CreateScope();
+            var lastName=await scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().Students.Where(s=>s.Id==Id("student")).Select(s=>s.LastName).SingleAsync();
+            Assert.Empty(await Call<IInstitutionStudentManager,List<StudentDto>>(Context("teacher"),m=>m.GetByLastNameAsync(lastName)));
+        }
     }
 
     [Fact]
@@ -339,7 +350,7 @@ public sealed class Mt3bSchoolTests(IntegrationFixture fixture) : IAsyncLifetime
         await File.WriteAllTextAsync(Path.Combine(directory,"generated-subject-query.sql.txt"),_sql.Commands.Last().Sql);
         using var scope=_provider.CreateScope();scope.ServiceProvider.GetRequiredService<TestCurrent>().Set(await PersistedTestTenant.ReadAsync(scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>(),Context()));
         await scope.ServiceProvider.GetRequiredService<IInstitutionTeacherManager>().GetAllAsync();Assert.Empty(scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().ChangeTracker.Entries());
-        Assert.Equal("StudentManager",scope.ServiceProvider.GetRequiredService<IStudentManager>().GetType().Name);
+        Assert.Equal("InstitutionStudentManager",scope.ServiceProvider.GetRequiredService<IInstitutionStudentManager>().GetType().Name);
     }
 
     private Task<Guid> Add(string family,TenantContext? t) => family switch {

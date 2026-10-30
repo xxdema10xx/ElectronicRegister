@@ -16,6 +16,7 @@ public sealed class Mt3cPreflightTests(IntegrationFixture fixture)
     [Fact]
     public async Task DefaultRolloutNeverOpensSchoolRoutesWithoutAuthorization()
     {
+        Assert.True(fixture.IsAvailable, fixture.UnavailableReason);
         await using var host = await Mt3cHosting.ProgramHost.StartAsync(fixture.ConnectionString, Guid.NewGuid(), Array.Empty<Guid>(), enabled: false);
         foreach (var family in new[] { "students", "teachers", "subjects" })
         {

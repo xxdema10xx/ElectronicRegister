@@ -11,6 +11,26 @@ namespace ElectronicRegisterAPI.Application.Managers;
 
 internal sealed class InstitutionMembershipAdminManager(InstitutionSchoolAuthorization authorization, IInstitutionMembershipDirectoryRepository repository, IInstitutionMembershipMutationRepository mutations) : IInstitutionMembershipAdminManager
 {
+    public async Task<IReadOnlyList<ProfileAcquisitionResult>> AcquisitionsAsync(
+        Guid membershipId,
+        int page = 1,
+        int size = 20,
+        string? status = null,
+        CancellationToken ct = default
+    )
+    {
+        var actor = await authorization.AdminAsync(ct);
+        if (page < 1 || size is < 1 or > 100 || (long)(page - 1) * size > int.MaxValue || status is not (null or "linked" or "requires-review"))
+            throw new ArgumentException("Filtri acquisizione non validi.");
+        _ = await repository.GetAsync(actor.InstitutionId, membershipId, ct) ?? throw new KeyNotFoundException();
+        return await repository.AcquisitionsAsync(actor.InstitutionId, membershipId, page, size, status, ct);
+    }
+
+    public async Task<ProfileAcquisitionResult> AcquireProfileAsync(Guid membershipId, AcquireHistoricalProfile request, CancellationToken ct = default)
+    {
+        return await mutations.AcquireProfileAsync(await authorization.AdminAsync(ct), membershipId, request, ct);
+    }
+
     public async Task<ElectronicRegisterAPI.Domain.Results.MembershipMutationResult> MutateAsync(ElectronicRegisterAPI.Domain.DTOs.Membership.MembershipMutation request, CancellationToken ct = default)
     {
         var actor = await authorization.AdminAsync(ct);

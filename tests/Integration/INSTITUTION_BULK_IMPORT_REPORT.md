@@ -1,3 +1,5 @@
+Evidenza storica della fase nominata in questo documento. Per codice, contratti ritirati e test correnti vedere il [report conclusivo](../../docs/refactoring/RESPONSIBILITY_REFACTORING_REPORT.md) e la [regressione finale](../../docs/refactoring/validation/current-cutover/final/README.md). I conteggi e i componenti sotto non certificano il working tree finale.
+
 # ElectronicRegister — Fase 3: importazione massiva istituzionale
 
 **IMPLEMENTED AND VERIFIED**, con provenienza delle evidenze distinta: codice/build/test HTTP-SQL eseguiti dalla sandbox; restore NuGet e validatori Python eseguiti manualmente dall'utente sulla PowerShell Windows host. Nessun commit o push. Nessun dato produttivo modificato.

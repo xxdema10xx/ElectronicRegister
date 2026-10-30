@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "parameters": "--vulnerable --include-transitive",
+  "sources": [
+    "http://127.0.0.1:18763/v3/index.json"
+  ],
+  "projects": [
+    {
+      "path": "C:/Users/Lorenzo/ElectronicRegister/tests/Integration/Integration.Tests.csproj",
+      "frameworks": [
+        {
+          "framework": "net10.0",
+          "topLevelPackages": []
+        }
+      ]
+    },
+    {
+      "path": "C:/Users/Lorenzo/ElectronicRegister/tests/Unit/Unit.Tests.csproj",
+      "frameworks": [
+        {
+          "framework": "net10.0",
+          "topLevelPackages": []
+        }
+      ]
+    },
+    {
+      "path": "C:/Users/Lorenzo/ElectronicRegister/tools/PlatformAdmin/PlatformAdmin.csproj",
+      "frameworks": [
+        {
+          "framework": "net10.0",
+          "topLevelPackages": []
+        }
+      ]
+    },
+    {
+      "path": "C:/Users/Lorenzo/ElectronicRegister/Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/ElectronicRegisterAPI.csproj",
+      "frameworks": [
+        {
+          "framework": "net10.0",
+          "topLevelPackages": []
+        }
+      ]
+    },
+    {
+      "path": "C:/Users/Lorenzo/ElectronicRegister/Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/ElectronicRegisterAPI.Application.csproj",
+      "frameworks": [
+        {
+          "framework": "net10.0",
+          "topLevelPackages": []
+        }
+      ]
+    },
+    {
+      "path": "C:/Users/Lorenzo/ElectronicRegister/Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/ElectronicRegisterAPI.Business.csproj",
+      "frameworks": [
+        {
+          "framework": "net10.0",
+          "topLevelPackages": []
+        }
+      ]
+    },
+    {
+      "path": "C:/Users/Lorenzo/ElectronicRegister/Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj",
+      "frameworks": [
+        {
+          "framework": "net10.0",
+          "topLevelPackages": []
+        }
+      ]
+    },
+    {
+      "path": "C:/Users/Lorenzo/ElectronicRegister/Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj",
+      "frameworks": [
+        {
+          "framework": "net10.0",
+          "topLevelPackages": []
+        }
+      ]
+    }
+  ]
+}

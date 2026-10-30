@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Authorization;
 using ElectronicRegisterAPI.Domain.Results;
 using ElectronicRegisterAPI.Domain.Configuration;
 using ElectronicRegisterAPI.Domain.DTOs.FormativePlans;
@@ -23,7 +24,7 @@ internal sealed class InstitutionFormativePlanRepository(
     ElectronicRegisterContext db,
     IMembershipAuthorizationRepository memberships,
     IInstitutionWriteAuthorization writes,
-    FormativePlanFeature feature,
+    IFormativePlanFeature feature,
     IFormativeDraftBuilder builder,
     IFormativePlanFaultObserver faults
 ) : IInstitutionFormativePlanRepository
@@ -53,7 +54,7 @@ internal sealed class InstitutionFormativePlanRepository(
         if (!feature.Enabled)
             throw new UnauthorizedAccessException();
         var m = await memberships.GetAsync(t.UserId, t.InstitutionId, t.MembershipId, ct);
-        if (m is null || m.Status != MembershipStatus.Active || m.InstitutionStatus != InstitutionStatus.Active || m.SecurityGeneration is null or < 0 || m.SecurityGeneration != t.SecurityGeneration || !t.Roles.SetEquals(m.Roles))
+        if (!MembershipAuthorizationRules.Matches(t, m))
             throw new UnauthorizedAccessException();
     }
 

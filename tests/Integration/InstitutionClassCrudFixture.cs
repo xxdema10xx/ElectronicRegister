@@ -52,7 +52,7 @@ public sealed partial class InstitutionClassCrudTests(IntegrationFixture fixture
     private async Task Db(Func<ElectronicRegisterContext,Task> action)
     { using var scope=fixture.ScopeFactory.CreateScope();await action(scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>()); }
     private async Task Execute(string sql,params (string,object)[] values)
-    { await using var c=await Mt3aOwnershipMigration.OpenAsync(fixture.ConnectionString);await using var cmd=new MySqlCommand(sql,c);foreach(var (key,value) in values)cmd.Parameters.AddWithValue(key,value);await cmd.ExecuteNonQueryAsync(); }
+    { await using var c=await Mt3aOwnershipMigration.OpenAsync(fixture.ConnectionString);SqlLockEvidence.Capture(c);await using var cmd=new MySqlCommand(sql,c);foreach(var (key,value) in values)cmd.Parameters.AddWithValue(key,value);await cmd.ExecuteNonQueryAsync(); }
     public async Task InitializeAsync()
     {
         Assert.True(fixture.IsAvailable,fixture.UnavailableReason);

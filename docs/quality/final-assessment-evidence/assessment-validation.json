@@ -1,0 +1,18 @@
+{
+    "PriorTrxHashes":  [
+                           {
+                               "Suite":  "Unit",
+                               "Matches":  true
+                           },
+                           {
+                               "Suite":  "Integration",
+                               "Matches":  true
+                           }
+                       ],
+    "OwnedListenerCount":  0,
+    "ExistingTestChangesInThisAssessment":  false,
+    "Report":  "NOT READY",
+    "ApplicationChangesInThisAssessment":  false,
+    "BrokenLinks":  0,
+    "Score":  22
+}

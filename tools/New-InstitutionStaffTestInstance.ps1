@@ -7,7 +7,9 @@ param(
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 if($Port -lt 1024 -or $Port -gt 65535 -or $Port -in @(3306,13306)){throw 'A new isolated test port is required'}
-if(Get-NetTCPConnection -State Listen -LocalPort $Port -ErrorAction SilentlyContinue){throw 'Port occupied; never stop or reuse that instance'}
+if(@([Net.NetworkInformation.IPGlobalProperties]::GetIPGlobalProperties().GetActiveTcpListeners() | Where-Object Port -eq $Port).Count){throw 'Port occupied; never stop or reuse that instance'}
+$probe=New-Object Net.Sockets.TcpListener([Net.IPAddress]::Loopback,$Port)
+try {$probe.Start()} finally {$probe.Stop()}
 $server=Join-Path $MySqlBin 'mysqld.exe'
 if((& $server --no-defaults --version) -notmatch '\b5\.7\.24\b'){throw 'MySQL 5.7.24 required'}
 $run=Join-Path $root ('.staff-private/instance-'+[guid]::NewGuid().ToString('N'))
@@ -22,9 +24,9 @@ foreach($id in @($sid.Value,'S-1-5-18','S-1-5-32-544')){
 }
 Set-Acl -LiteralPath $run -AclObject $acl
 $data=Join-Path $run 'data'
-$init=Start-Process $server -ArgumentList @('--no-defaults','--initialize-insecure',"--datadir=$data", "--basedir=$((Split-Path $MySqlBin -Parent))") -WindowStyle Hidden -RedirectStandardOutput "$run/init-out.log" -RedirectStandardError "$run/init-error.log" -PassThru -Wait
+$init=Start-Process $server -ArgumentList @('--no-defaults','--initialize-insecure','--log-syslog=0',"--datadir=$data", "--basedir=$((Split-Path $MySqlBin -Parent))") -WindowStyle Hidden -RedirectStandardOutput "$run/init-out.log" -RedirectStandardError "$run/init-error.log" -PassThru -Wait
 if($init.ExitCode -ne 0){throw 'Initialization failed; preserve datadir and logs'}
-$process=Start-Process $server -ArgumentList @('--no-defaults',"--datadir=$data", "--basedir=$((Split-Path $MySqlBin -Parent))", "--port=$Port",'--bind-address=127.0.0.1','--max-connections=200','--explicit-defaults-for-timestamp=1',"--log-error=$run/mysql-error.log") -WindowStyle Hidden -RedirectStandardOutput "$run/server-out.log" -RedirectStandardError "$run/server-error.log" -PassThru
+$process=Start-Process $server -ArgumentList @('--no-defaults','--log-syslog=0',"--datadir=$data", "--basedir=$((Split-Path $MySqlBin -Parent))", "--port=$Port",'--bind-address=127.0.0.1','--max-connections=200','--explicit-defaults-for-timestamp=1',"--log-error=$run/mysql-error.log") -WindowStyle Hidden -RedirectStandardOutput "$run/server-out.log" -RedirectStandardError "$run/server-error.log" -PassThru
 [IO.File]::WriteAllText("$run/pid.txt",[string]$process.Id)
 $client=Join-Path $MySqlBin 'mysql.exe'
 $arguments=@('--no-defaults','--protocol=TCP','--host=127.0.0.1',"--port=$Port",'--user=root','--batch','--raw','--skip-column-names','--default-character-set=utf8mb4')
@@ -34,11 +36,18 @@ try {
     $ready=$false
     for($i=0;$i -lt 80;$i++){
         if($process.HasExited){throw 'Server exited; preserve logs'}
-        'SELECT 1;' | & $client @arguments 2>$null | Out-Null
-        if($LASTEXITCODE -eq 0){$ready=$true;break}
+        $readinessPreference=$ErrorActionPreference
+        try {
+            $ErrorActionPreference='Continue'
+            'SELECT 1;' | & $client @arguments 2>$null | Out-Null
+            $readinessExit=$LASTEXITCODE
+        } finally {$ErrorActionPreference=$readinessPreference}
+        if($readinessExit -eq 0){$ready=$true;break}
         Start-Sleep -Milliseconds 200
     }
     if(!$ready){throw 'Readiness failed; no restart/replay'}
+    $identity=('SELECT VERSION(),@@port,@@datadir;' | & $client @arguments) -split "`t"
+    if($LASTEXITCODE -ne 0 -or $identity[0] -ne '5.7.24' -or [int]$identity[1] -ne $Port -or [IO.Path]::GetFullPath($identity[2]).TrimEnd('\','/') -ine $data){throw 'New instance identity mismatch; no writes authorized'}
     $password=[guid]::NewGuid().ToString('N')+[guid]::NewGuid().ToString('N')
     "ALTER USER 'root'@'localhost' IDENTIFIED BY '$password'; CREATE DATABASE electronic_register_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER 'er_test'@'localhost'; GRANT ALL PRIVILEGES ON electronic_register_test.* TO 'er_test'@'localhost';" | & $client @arguments
     if($LASTEXITCODE -ne 0){throw 'Private instance provisioning failed'}
@@ -48,6 +57,12 @@ try {
     else {$sql=[IO.File]::ReadAllText((Join-Path $root 'migrations/bootstrap/001_schema.sql'))}
     $sql | & $client @arguments --database=electronic_register_test
     if($LASTEXITCODE -ne 0){throw 'Bootstrap failed; never reinitialize/replay'}
+    if(!$Baseline){
+        foreach($migration in Get-ChildItem (Join-Path $root 'migrations/identity-account') -Filter '*.sql' | Sort-Object Name){
+            [IO.File]::ReadAllText($migration.FullName) | & $client @arguments --database=electronic_register_test
+            if($LASTEXITCODE -ne 0){throw 'Identity additive schema failed; no replay'}
+        }
+    }
     "INSERT INTO institution(id,name,code,status) VALUES ('4d543341-0000-4000-8000-000000000001','Technical legacy test holding','MT3A_LEGACY_TEST','provisioning'); INSERT INTO mt3a_legacy_scope(scope,institution_id) VALUES ('legacy','4d543341-0000-4000-8000-000000000001');" | & $client @arguments --database=electronic_register_test
     if($LASTEXITCODE -ne 0){throw 'Technical test holding setup failed'}
     "SELECT VERSION(),@@port,@@datadir;" | & $client @arguments | Set-Content "$run/identity.tsv"

@@ -35,9 +35,11 @@ public static class Mt3ProfileBackfill
         {
             // Identifiers are a closed internal allowlist, not client input.
             var role = kind == "student" ? "Student" : "Teacher";
-            if (await Count($"SELECT COUNT(*) FROM user u WHERE u.{kind}_id IS NOT NULL AND (u.role<>'{kind}' OR NOT EXISTS " + $"(SELECT 1 FROM institution_membership m JOIN institution_membership_role r ON r.membership_id=m.id WHERE m.institution_id=@legacy_id AND m.user_id=u.id AND r.role='{role}'))") != 0)
+            // MT1 now accepts only an explicit user/role manifest. No global account scan
+            // and no role inference from user.role are permitted in the profile step.
+            if (await Count($"SELECT COUNT(*) FROM user u JOIN institution_membership m ON m.user_id=u.id AND m.institution_id=@legacy_id WHERE u.{kind}_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM institution_membership_role r WHERE r.membership_id=m.id AND r.role='{role}')") != 0)
                 throw new InvalidOperationException("Ambiguous/incompatible legacy profile. No silent assignment.");
-            if (await Count($"SELECT COUNT(*) FROM user u JOIN institution_{kind}_profile p ON p.{kind}_id=u.{kind}_id WHERE p.institution_id<>@legacy_id") != 0)
+            if (await Count($"SELECT COUNT(*) FROM user u JOIN institution_membership m ON m.user_id=u.id AND m.institution_id=@legacy_id JOIN institution_{kind}_profile p ON p.{kind}_id=u.{kind}_id WHERE p.institution_id<>@legacy_id") != 0)
                 throw new InvalidOperationException("Existing institutional profile conflicts with explicit legacy manifest.");
         }
 

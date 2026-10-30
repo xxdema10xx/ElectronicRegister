@@ -47,7 +47,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
         {
             "--Deployment:Mode=LocalTest", "--environment=" + environment, "--urls=http://127.0.0.1:0",
             // In-process entry point invocation must retain the production assembly identity.
-            "--applicationName=" + typeof(ExamController).Assembly.GetName().Name,
+            "--applicationName=" + typeof(InstitutionExamController).Assembly.GetName().Name,
             "--ConnectionStrings:DefaultConnection=" + fixture.ConnectionString,
             "--Jwt:Key=audit-bootstrap-test-key-only-0123456789abcdef",
             "--Jwt:Issuer=audit-bootstrap", "--Jwt:Audience=audit-client", "--Jwt:ExpiresInMinutes=10",
@@ -65,7 +65,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
         // Execute the actual assembly entry point. No replacement host, registration, worker or middleware.
         var run = Task.Run(async () =>
         {
-            var result = typeof(ExamController).Assembly.EntryPoint!.Invoke(null, new object[] { args });
+            var result = typeof(InstitutionExamController).Assembly.EntryPoint!.Invoke(null, new object[] { args });
             if (result is Task task) await task;
         });
         IHost? host = null;
@@ -81,21 +81,22 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             using var registration = lifetime.ApplicationStarted.Register(() => started.TrySetResult(true));
             await started.Task.WaitAsync(TimeSpan.FromSeconds(30));
             Assert.Contains(host.Services.GetServices<IHostedService>(), s => s.GetType().Name == "ExpiredExamSubmissionWorker");
-            Assert.Throws<InvalidOperationException>(() => host.Services.GetRequiredService<IExamManager>());
+            Assert.Throws<InvalidOperationException>(() => host.Services.GetRequiredService<FixtureExamClient>());
             var addresses = host.Services.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>()!.Addresses;
             var address = Assert.Single(addresses);
             Assert.StartsWith("http://127.0.0.1:", address);
             Assert.DoesNotContain(":5000", address);
             using var client = new HttpClient { BaseAddress = new Uri(address), Timeout = TimeSpan.FromSeconds(15) };
-            Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/Auth/me")).StatusCode);
-            var login = await client.PostAsJsonAsync("/api/Auth/login", new LoginDto { Email = email, Password = password });
+            Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/identity/account")).StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync("/api/Auth/me")).StatusCode);
+            var login = await client.PostAsJsonAsync("/api/Auth/identity/login", new LoginDto { Email = email, Password = password });
             Assert.Equal(HttpStatusCode.OK, login.StatusCode);
-            var token = (await login.Content.ReadFromJsonAsync<Dictionary<string, string>>())!["token"];
+            var token = (await login.Content.ReadFromJsonAsync<IdentityTicketDto>())!.Ticket;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var me = await client.GetFromJsonAsync<UserDto>("/api/Auth/me");
-            Assert.Equal(id, me!.Id);
-            Assert.Equal("admin", me.Role);
-            Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/Exam")).StatusCode);
+            var me = await client.GetFromJsonAsync<IdentityAccountDto>("/api/identity/account");
+            Assert.Equal(id, me!.UserId);
+            Assert.Equal(email, me.Email);
+            Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync("/api/Exam")).StatusCode);
             foreach (var fault in new[] { "issuer", "audience", "expired", "key", "claims" })
             {
                 var invalid = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
@@ -113,18 +114,17 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
                         Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                     new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(invalid));
-                Assert.Equal(fault == "claims" ? HttpStatusCode.Forbidden : HttpStatusCode.Unauthorized,
-                    (await client.GetAsync("/api/Auth/me")).StatusCode);
+                Assert.Equal(HttpStatusCode.Unauthorized,
+                    (await client.GetAsync("/api/identity/account")).StatusCode);
             }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             await CheckEndpointRoleGatesAsync(host, client, id);
-            var error = await client.PostAsync($"/api/Exam/{Guid.NewGuid()}/close", null);
-            Assert.True(error.StatusCode == HttpStatusCode.NotFound,
-                "Expected NotFound; actual " + error.StatusCode + "; " + string.Join("\n", logs.Errors));
+            var error = await client.PostAsJsonAsync("/api/Auth/select-institution", new SelectInstitutionDto { InstitutionId=Guid.NewGuid(), MembershipId=Guid.NewGuid() });
+            Assert.Equal(HttpStatusCode.Forbidden,error.StatusCode);
             var problem = await error.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-            Assert.Equal(404, problem.GetProperty("status").GetInt32());
+            Assert.Equal(403, problem.GetProperty("status").GetInt32());
             Assert.False(problem.TryGetProperty("stackTrace", out _));
-            Assert.Equal(HttpStatusCode.BadRequest, (await client.GetAsync("/api/Exam/not-a-guid")).StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync("/api/Auth/select-institution", new { institutionId="not-a-guid", membershipId=Guid.NewGuid() })).StatusCode);
             var openApi = await client.GetAsync("/openapi/v1.json");
             Assert.Equal(environment == "Development" ? HttpStatusCode.OK : HttpStatusCode.NotFound, openApi.StatusCode);
             Assert.Equal(environment == "Development" ? HttpStatusCode.OK : HttpStatusCode.NotFound,
@@ -132,11 +132,12 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             if (environment == "Development")
             {
                 var document = await openApi.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-                Assert.True(document.GetProperty("paths").TryGetProperty("/api/Exam/{id}/close", out _));
-                Assert.True(document.GetProperty("components").GetProperty("schemas").TryGetProperty("BienniumDto", out _));
+                Assert.False(document.GetProperty("paths").TryGetProperty("/api/Exam/{id}/close", out _));
+                Assert.True(document.GetProperty("components").GetProperty("schemas").TryGetProperty("IdentityAccountDto", out _));
+                Assert.False(document.GetProperty("paths").TryGetProperty("/api/Auth/login", out _));
             }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token[..^8] + "tampered");
-            Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/Auth/me")).StatusCode);
+            Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/identity/account")).StatusCode);
             await host.StopAsync().WaitAsync(TimeSpan.FromSeconds(30));
             await run.WaitAsync(TimeSpan.FromSeconds(30));
             Assert.True(lifetime.ApplicationStopped.IsCancellationRequested);
@@ -159,7 +160,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
         var schoolEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute>() is not null).ToList();
         Assert.Equal(76, schoolEndpoints.Count);
         var examEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is not null).ToList();
-        Assert.Equal(37, examEndpoints.Count);
+        Assert.Equal(38, examEndpoints.Count);
         var courseEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null).ToList();
         Assert.Equal(23, courseEndpoints.Count);
         Assert.All(courseEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
@@ -169,7 +170,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
         Assert.Equal(MembershipHttpSurface.AdminCount, membershipEndpoints.Count);
         Assert.All(membershipEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
             a => a.Policy == ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute.PolicyName));
-        Assert.Equal(73 + MembershipHttpSurface.IdentityCount + schoolEndpoints.Count + examEndpoints.Count + courseEndpoints.Count + membershipEndpoints.Count, endpoints.Count);
+        Assert.Equal(MembershipHttpSurface.LegacyCount + MembershipHttpSurface.IdentityCount + schoolEndpoints.Count + examEndpoints.Count + courseEndpoints.Count + membershipEndpoints.Count, endpoints.Count);
         Assert.Equal(MembershipHttpSurface.IdentityCount,endpoints.Count(e=>e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionIdentityEndpointAttribute>() is not null));
         Assert.All(schoolEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
             a => a.Policy == ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute.PolicyName));
@@ -178,7 +179,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is null &&
             e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is null &&
             e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is null).ToList();
-        Assert.Equal(73, legacyEndpoints.Count); // Preserve the complete original role-gate guarantee.
+        Assert.Empty(legacyEndpoints);
         foreach (var endpoint in legacyEndpoints)
         {
             var authorization = endpoint.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>();

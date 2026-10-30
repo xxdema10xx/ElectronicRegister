@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.DTOs.Calendar;
 using ElectronicRegisterAPI.Domain.DTOs.Import;
 using ElectronicRegisterAPI.Domain.Enums;

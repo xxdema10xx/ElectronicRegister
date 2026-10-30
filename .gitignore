@@ -152,3 +152,11 @@ __pycache__/
 !/migrations/institution-formative-plan/002_validate.sql
 !/migrations/institution-calendar/001_expand.sql
 !/migrations/institution-calendar/002_validate.sql
+
+# Reviewed additive account/release schema; arbitrary SQL dumps remain ignored.
+!/migrations/identity-account/001_identity_account.sql
+!/migrations/identity-account/002_profile_acquisition.sql
+!/migrations/identity-account/003_password_attempt.sql
+!/migrations/identity-account/004_release_schema.sql
+!/migrations/identity-account/005_release_gate.sql
+/infra/staging/__pycache__/

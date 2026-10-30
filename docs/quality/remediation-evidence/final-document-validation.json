@@ -1,0 +1,8 @@
+{
+    "Findings":  12,
+    "Fixed":  10,
+    "Mitigated":  2,
+    "BrokenDocumentLinks":  0,
+    "NugetTlsVerificationExplicitlyDisabled":  false,
+    "RelayPortClosed":  true
+}

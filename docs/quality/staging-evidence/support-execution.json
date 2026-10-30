@@ -1,0 +1,21 @@
+{
+  "health": [
+    {
+      "httpStatus": 200,
+      "exit": 0
+    },
+    {
+      "httpStatus": 503,
+      "exit": 1
+    },
+    {
+      "httpStatus": 307,
+      "exit": 1
+    }
+  ],
+  "loopbackMockRequests": 3,
+  "redirectNotFollowed": true,
+  "bcryptCost": 11,
+  "randomSaltConfirmed": true,
+  "realApiOrDockerTest": false
+}

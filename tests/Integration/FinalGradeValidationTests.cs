@@ -28,10 +28,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await ResetToPendingReviewAsync();
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
-            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
 
             var before = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
             var beforeGrades = await gradeRepo.GetByStudentIdAsync(ids.StudentId);
@@ -65,10 +65,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await ResetToPendingReviewAsync();
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
-            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
 
             var before = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
             var beforeGrades = await gradeRepo.GetByStudentIdAsync(ids.StudentId);
@@ -100,10 +100,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await ResetToPendingReviewAsync();
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
-            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
 
             var before = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
             var beforeGrades = await gradeRepo.GetByStudentIdAsync(ids.StudentId);
@@ -135,10 +135,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await ResetToPendingReviewAsync();
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
-            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
 
             // Ensure open answers reviewed
             var before = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
@@ -167,10 +167,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await ResetToPendingReviewAsync();
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
-            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
 
             var before = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
             var reviewDto = new ReviewOpenAnswersDto();

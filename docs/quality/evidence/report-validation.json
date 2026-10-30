@@ -1,0 +1,110 @@
+[
+    {
+        "Finding":  "### F01 — High — Manifest verificato dalla CI incompatibile con il cutover corrente",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    },
+    {
+        "Finding":  "### F02 — High — Rivalidazione IAM transazionale degli esami limitata agli attori con ruolo Staff",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    },
+    {
+        "Finding":  "### F03 — Medium — Driver SQL con advisory noto; VerifyFull da solo non dimostra mitigazione",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    },
+    {
+        "Finding":  "### F04 — Medium — Readiness verde anche con migrazioni richieste mancanti",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    },
+    {
+        "Finding":  "### F05 — Medium — Paginazione voti senza ordine totale e con overflow dell\u0027offset",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    },
+    {
+        "Finding":  "### F06 — Medium — CancellationToken perso sull\u0027intera superficie esami/voti interattiva",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    },
+    {
+        "Finding":  "### F07 — Medium — Caricamento esame con collezioni sorelle moltiplica le righe SQL",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    },
+    {
+        "Finding":  "### F08 — Medium — Cambio password escluso dal limite delle operazioni sensibili",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    },
+    {
+        "Finding":  "### F09 — Medium — Responsabilità di dominio e policy di scrittura concentrate nel generico data scope",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    },
+    {
+        "Finding":  "### F10 — Low — Diagnostica degli errori insufficientemente discriminante",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    },
+    {
+        "Finding":  "### F11 — Medium — Test di concorrenza possono passare senza dimostrare l\u0027arrivo al lock",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    },
+    {
+        "Finding":  "### F12 — Low — Transazione autosave locale senza rilascio esplicito",
+        "HasFile":  true,
+        "HasEvidence":  true,
+        "HasImpact":  true,
+        "HasSolution":  true,
+        "HasTests":  true,
+        "HasRisk":  true
+    }
+]

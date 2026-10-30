@@ -30,10 +30,10 @@ public class Phase3_ConcurrencyTests(IntegrationFixture fixture)
         string? finalizedSnapshot = null;
         async Task FinalizeAsync(IServiceProvider sp)
         {
-            await sp.GetRequiredService<IExamSubmissionManager>().FinalizeAsync(ids.SubmissionId, new(), Phase3.Teacher);
+            await sp.GetRequiredService<FixtureSubmissionClient>().FinalizeAsync(ids.SubmissionId, new(), Phase3.Teacher);
             finalizedSnapshot = await Phase3.SnapshotAsync(fixture.ScopeFactory, ids);
         }
-        Task ReviewAsync(IServiceProvider sp) => sp.GetRequiredService<IExamSubmissionManager>()
+        Task ReviewAsync(IServiceProvider sp) => sp.GetRequiredService<FixtureSubmissionClient>()
             .ReviewAsync(ids.SubmissionId, changedReview, Phase3.Teacher);
         if (finalizeFirst)
             await Phase3.OrderedAsync(fixture, FinalizeAsync, async sp =>
@@ -75,8 +75,8 @@ public class Phase3_ConcurrencyTests(IntegrationFixture fixture)
         var autoClock = new Phase3.Clock(deadline.AddSeconds(1));
         var dto = await Phase3.SubmitDtoAsync(fixture.ScopeFactory, ids, "Last valid submitted text");
         if (closedOnly) dto.Answers.RemoveAt(0);
-        Task Manual(IServiceProvider sp) => sp.GetRequiredService<IExamManager>().SubmitAsync(ids.SubmissionId, dto, Phase3.Student(ids));
-        Task Auto(IServiceProvider sp) => sp.GetRequiredService<IExamSubmissionProcessor>().ProcessSubmitAsync(ids.SubmissionId, null, SubmitReason.TimeExpired, null);
+        Task Manual(IServiceProvider sp) => sp.GetRequiredService<FixtureExamClient>().SubmitAsync(ids.SubmissionId, dto, Phase3.Student(ids));
+        Task Auto(IServiceProvider sp) => sp.GetRequiredService<FixtureExpiryClient>().ProcessAsync(ids.SubmissionId);
         await Phase3.OrderedAsync(fixture, automaticFirst ? Auto : Manual, automaticFirst ? Manual : Auto,
             automaticFirst ? autoClock : manualClock, automaticFirst ? manualClock : autoClock);
 
@@ -100,7 +100,7 @@ public class Phase3_ConcurrencyTests(IntegrationFixture fixture)
         var committed = await Phase3.SnapshotAsync(fixture.ScopeFactory, ids);
         // Retry of the automatic delivery after either winner performs no further writes.
         using (var retry = fixture.ScopeFactory.CreateScope())
-            await retry.ServiceProvider.GetRequiredService<IExamSubmissionProcessor>().ProcessSubmitAsync(ids.SubmissionId, null, SubmitReason.TimeExpired, null);
+            await retry.ServiceProvider.GetRequiredService<FixtureExpiryClient>().ProcessAsync(ids.SubmissionId);
         Assert.Equal(committed, await Phase3.SnapshotAsync(fixture.ScopeFactory, ids));
     }
 
@@ -114,13 +114,12 @@ public class Phase3_ConcurrencyTests(IntegrationFixture fixture)
         await using (var early = Phase3.Provider(fixture, new Phase3.Clock(DateTime.UtcNow.AddDays(-1))))
         using (var scope = early.CreateScope())
         {
-            var error = await Assert.ThrowsAsync<InvalidOperationException>(() => scope.ServiceProvider.GetRequiredService<IExamSubmissionProcessor>()
-                .ProcessSubmitAsync(ids.SubmissionId, null, SubmitReason.TimeExpired, null));
+            var error = await Assert.ThrowsAsync<InvalidOperationException>(() => scope.ServiceProvider.GetRequiredService<FixtureExpiryClient>().ProcessAsync(ids.SubmissionId));
             Assert.Contains("Non è ancora tempo", error.Message);
         }
         await using (var late = Phase3.Provider(fixture, new Phase3.Clock(DateTime.UtcNow.AddDays(1))))
         using (var scope = late.CreateScope())
-            await Assert.ThrowsAsync<BusinessRuleException>(() => scope.ServiceProvider.GetRequiredService<IExamManager>().SubmitAsync(ids.SubmissionId, dto, Phase3.Student(ids)));
+            await Assert.ThrowsAsync<BusinessRuleException>(() => scope.ServiceProvider.GetRequiredService<FixtureExamClient>().SubmitAsync(ids.SubmissionId, dto, Phase3.Student(ids)));
         Assert.Equal(before, await Phase3.SnapshotAsync(fixture.ScopeFactory, ids));
     }
 }

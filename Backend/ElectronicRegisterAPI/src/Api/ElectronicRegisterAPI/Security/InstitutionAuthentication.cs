@@ -6,6 +6,7 @@ using System.Text.Json;
 using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using ElectronicRegisterAPI.Domain.Interfaces.Security;
+using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Models;
 using ElectronicRegisterAPI.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -68,7 +69,7 @@ public static class InstitutionAuthentication
         };
         options.Events = new()
         {
-            OnTokenValidated = context =>
+            OnTokenValidated = async context =>
             {
                 try
                 {
@@ -107,13 +108,15 @@ public static class InstitutionAuthentication
                         throw new SecurityTokenException();
                     if (!selection && (!payload.RootElement.TryGetProperty(InstitutionTokenContract.SecurityGeneration, out var generation) || generation.ValueKind != JsonValueKind.Number || !generation.TryGetInt64(out var value) || value < 0 || generation.GetRawText() != value.ToString(CultureInfo.InvariantCulture)))
                         throw new SecurityTokenException();
+                    var identityGeneration = InstitutionTokenContract.ReadIdentityGeneration(principal, payload.RootElement);
+                    var accounts = context.HttpContext.RequestServices.GetRequiredService<IIdentityAccountRepository>();
+                    if (await accounts.GenerationAsync(GuidClaim(principal, "sub"), context.HttpContext.RequestAborted) != identityGeneration)
+                        throw new SecurityTokenException();
                 }
                 catch (Exception ex)when (ex is ArgumentException or SecurityTokenException or JsonException or IndexOutOfRangeException)
                 {
                     context.Fail("Token non valido.");
                 }
-
-                return Task.CompletedTask;
             },
             OnChallenge = async context =>
             {
@@ -132,6 +135,11 @@ public static class InstitutionAuthentication
     }
 
     internal static Guid GuidClaim(ClaimsPrincipal principal, string type) => Guid.TryParse(One(principal, type), out var id) && id != Guid.Empty ? id : throw new SecurityTokenException();
+    internal static long IdentityGeneration(ClaimsPrincipal principal)
+    {
+        return InstitutionTokenContract.ReadIdentityGeneration(principal);
+    }
+
     internal static TenantContext ParseTenant(ClaimsPrincipal principal)
     {
         var generationText = One(principal, InstitutionTokenContract.SecurityGeneration);
@@ -141,6 +149,6 @@ public static class InstitutionAuthentication
         if (raw.Length == 0 || raw.Distinct().Count() != raw.Length)
             throw new SecurityTokenException();
         var roles = raw.Select(v => Enum.TryParse<InstitutionRole>(v, out var role) && Enum.IsDefined(role) && role.ToString() == v ? role : throw new SecurityTokenException()).ToArray();
-        return new(GuidClaim(principal, "sub"), GuidClaim(principal, InstitutionTokenContract.Institution), GuidClaim(principal, InstitutionTokenContract.Membership), roles, generation);
+        return new(GuidClaim(principal, "sub"), GuidClaim(principal, InstitutionTokenContract.Institution), GuidClaim(principal, InstitutionTokenContract.Membership), roles, generation, IdentityGeneration(principal));
     }
 }

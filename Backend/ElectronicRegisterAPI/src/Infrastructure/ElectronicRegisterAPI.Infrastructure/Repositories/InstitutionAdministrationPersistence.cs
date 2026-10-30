@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Authorization;
 using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Models;
 using ElectronicRegisterAPI.Domain.Enums;
@@ -111,7 +112,7 @@ internal sealed class InstitutionAdministrationPersistence(ElectronicRegisterCon
             await db.Database.ExecuteSqlInterpolatedAsync($"SELECT r.role FROM institution_membership_role r JOIN institution_membership m ON m.id=r.membership_id WHERE m.institution_id={actor.InstitutionId} AND m.id={actor.MembershipId} ORDER BY r.role LOCK IN SHARE MODE");
             await db.Database.ExecuteSqlInterpolatedAsync($"SELECT membership_id FROM institution_membership_security_state WHERE institution_id={actor.InstitutionId} AND membership_id={actor.MembershipId} LOCK IN SHARE MODE");
             var current = await authorization.GetAsync(actor.UserId, actor.InstitutionId, actor.MembershipId);
-            if (current is null || current.Status != MembershipStatus.Active || current.InstitutionStatus != InstitutionStatus.Active || current.SecurityGeneration is null || current.SecurityGeneration != actor.SecurityGeneration || !actor.Roles.SetEquals(current.Roles) || !current.Roles.Contains(InstitutionRole.InstitutionAdmin))
+            if (!MembershipAuthorizationRules.Matches(actor, current) || !current.Roles.Contains(InstitutionRole.InstitutionAdmin))
                 throw new UnauthorizedAccessException("Amministratore istituzionale non autorizzato.");
             await write();
         }

@@ -10,6 +10,7 @@ public sealed class TenantContext
     public Guid InstitutionId { get; }
     public Guid MembershipId { get; }
     public long? SecurityGeneration { get; }
+    public long? IdentityGeneration { get; }
     public IReadOnlySet<InstitutionRole> Roles { get; }
 
     public TenantContext(
@@ -17,14 +18,16 @@ public sealed class TenantContext
         Guid institutionId,
         Guid membershipId,
         IEnumerable<InstitutionRole> roles,
-        long? securityGeneration = null
+        long? securityGeneration = null,
+        long? identityGeneration = null
     )
     {
         var values = roles.ToFrozenSet();
-        if (userId == Guid.Empty || institutionId == Guid.Empty || membershipId == Guid.Empty || values.Count == 0 || values.Any(r => !Enum.IsDefined(r)) || securityGeneration < 0)
+        if (userId == Guid.Empty || institutionId == Guid.Empty || membershipId == Guid.Empty || values.Count == 0 || values.Any(r => !Enum.IsDefined(r)) || securityGeneration < 0 || identityGeneration < 0)
             throw new ArgumentException("Contesto istituzionale non valido.");
         (UserId, InstitutionId, MembershipId, Roles) = (userId, institutionId, membershipId, values);
         // Absence is never generation zero. Such a candidate cannot authorize or issue a JWT.
         SecurityGeneration = securityGeneration;
+        IdentityGeneration = identityGeneration;
     }
 }

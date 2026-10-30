@@ -27,8 +27,8 @@ internal static class Phase3
 {
     internal static readonly TimeSpan Timeout = TimeSpan.FromSeconds(15);
     internal static readonly DateTime WorkerNow = new(2000, 1, 2, 0, 0, 0, DateTimeKind.Utc);
-    internal static ClaimsContext Teacher => new(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
-    internal static ClaimsContext Student(ScenarioIds ids) => new(ids.StudentId, UserRole.Student, ids.StudentId, null);
+    internal static FixtureActor Teacher => new(SeedData.TeacherUserId, null, SeedData.TeacherId);
+    internal static FixtureActor Student(ScenarioIds ids) => new(ids.StudentId, ids.StudentId, null);
 
     internal sealed class Clock(DateTime now) : ITimeProvider { public DateTime UtcNow => now; }
     internal sealed class InjectedFailure : Exception;
@@ -51,6 +51,7 @@ internal static class Phase3
         services.AddInfrastructure(config);
         services.AddBusinessServices();
         services.AddApplicationManagers();
+        FixtureTenant.Register(services);
         services.AddDbContext<ElectronicRegisterContext>(options => options.AddInterceptors(interceptors));
         if (clock is not null)
         {
@@ -69,26 +70,27 @@ internal static class Phase3
         var held = Signal();
         var release = Signal();
         var save = new SaveProbe();
-        var lockAttempt = new LockProbe();
         save.AfterSave = async _ =>
         {
             held.TrySetResult(true);
             await release.Task.WaitAsync(Timeout);
         };
         await using var firstProvider = Provider(fixture, firstClock, save);
-        await using var secondProvider = Provider(fixture, secondClock, lockAttempt);
+        await using var secondProvider = Provider(fixture, secondClock);
         using var firstScope = firstProvider.CreateScope();
         using var secondScope = secondProvider.CreateScope();
         Assert.NotSame(firstScope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>(),
             secondScope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>());
-        var firstTask = first(firstScope.ServiceProvider);
+        var firstTask = SqlLockEvidence.Track(() => first(firstScope.ServiceProvider));
         Task? secondTask = null;
         try
         {
             await held.Task.WaitAsync(Timeout);
-            secondTask = second(secondScope.ServiceProvider);
-            // First has written and still holds its row lock when second attempts SELECT ... FOR UPDATE.
-            await lockAttempt.Attempted.Task.WaitAsync(Timeout);
+            secondTask = SqlLockEvidence.Track(() => second(secondScope.ServiceProvider));
+            // Observe the actual wait-for edge, even when the canonical IAM mutex
+            // now blocks the second transaction before its resource SELECT.
+            var blocker = (MySqlConnector.MySqlConnection)firstScope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().Database.GetDbConnection();
+            await SqlLockEvidence.WaitAsync(fixture.ConnectionString, secondTask, firstTask);
         }
         finally
         {
@@ -162,7 +164,7 @@ internal static class Phase3
     internal static async Task<ReviewOpenAnswersDto> ReviewDtoAsync(IServiceScopeFactory factory, ScenarioIds ids, decimal points, string comment)
     {
         using var scope = factory.CreateScope();
-        var review = await scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>().GetByIdAsync(ids.SubmissionId, Teacher);
+        var review = await scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>().GetByIdAsync(ids.SubmissionId, Teacher);
         return new ReviewOpenAnswersDto { Answers = review.Answers.Where(a => a.QuestionType == QuestionType.Open)
             .Select(a => new OpenAnswerReviewInputDto { AnswerId = a.AnswerId, AwardedPoints = points, Comment = comment }).ToList() };
     }
@@ -171,6 +173,6 @@ internal static class Phase3
     {
         var dto = await ReviewDtoAsync(factory, ids, points, "Committed review");
         using var scope = factory.CreateScope();
-        await scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>().ReviewAsync(ids.SubmissionId, dto, Teacher);
+        await scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>().ReviewAsync(ids.SubmissionId, dto, Teacher);
     }
 }

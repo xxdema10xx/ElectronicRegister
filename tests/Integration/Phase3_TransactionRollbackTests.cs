@@ -38,7 +38,7 @@ public class Phase3_TransactionRollbackTests(IntegrationFixture fixture)
         await using (var provider = Phase3.Provider(fixture, null, probe))
         using (var scope = provider.CreateScope())
         {
-            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<IExamManager>()
+            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<FixtureExamClient>()
                 .SubmitAsync(ids.SubmissionId, dto, Phase3.Student(ids)));
         }
         Assert.True(probe.Saves > 0);
@@ -76,8 +76,7 @@ public class Phase3_TransactionRollbackTests(IntegrationFixture fixture)
         // A fixed future clock makes the seeded deadline deterministically expired, without changing the snapshot.
         await using (var provider = Phase3.Provider(fixture, new Phase3.Clock(DateTime.UtcNow.AddDays(1)), probe))
         using (var scope = provider.CreateScope())
-            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<IExamSubmissionProcessor>()
-                .ProcessSubmitAsync(ids.SubmissionId, null, SubmitReason.TimeExpired, null));
+            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<FixtureExpiryClient>().ProcessAsync(ids.SubmissionId));
         Assert.NotNull(inTransaction);
         Assert.NotEqual(before, inTransaction);
         using (var written = System.Text.Json.JsonDocument.Parse(inTransaction!))
@@ -102,7 +101,7 @@ public class Phase3_TransactionRollbackTests(IntegrationFixture fixture)
             ids = await fixture.ResetScenarioAsync(IntegrationScenario.ClosedOnly);
             var submit = await Phase3.SubmitDtoAsync(fixture.ScopeFactory, ids);
             using var scope = fixture.ScopeFactory.CreateScope();
-            await scope.ServiceProvider.GetRequiredService<IExamManager>().SubmitAsync(ids.SubmissionId, submit, Phase3.Student(ids));
+            await scope.ServiceProvider.GetRequiredService<FixtureExamClient>().SubmitAsync(ids.SubmissionId, submit, Phase3.Student(ids));
         }
         else
         {
@@ -122,7 +121,7 @@ public class Phase3_TransactionRollbackTests(IntegrationFixture fixture)
         };
         await using (var provider = Phase3.Provider(fixture, null, probe))
         using (var scope = provider.CreateScope())
-            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>()
+            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>()
                 .FinalizeAsync(ids.SubmissionId, isOverride ? new FinalizeSubmissionDto { FinalGrade = 8m, OverrideReason = "Rollback override" } : new(), Phase3.Teacher));
         Assert.NotNull(inTransaction);
         using (var written = System.Text.Json.JsonDocument.Parse(inTransaction!))
@@ -150,7 +149,7 @@ public class Phase3_TransactionRollbackTests(IntegrationFixture fixture)
         }};
         await using (var provider = Phase3.Provider(fixture, null, probe))
         using (var scope = provider.CreateScope())
-            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>()
+            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>()
                 .ReviewAsync(ids.SubmissionId, dto, Phase3.Teacher));
         Assert.Equal(1, probe.Saves);
         Assert.NotEqual(before, inTransaction);

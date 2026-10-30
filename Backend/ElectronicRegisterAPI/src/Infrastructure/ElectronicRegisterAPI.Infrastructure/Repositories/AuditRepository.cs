@@ -9,9 +9,10 @@ internal class AuditRepository : IAuditRepository
 {
     private readonly ElectronicRegisterContext _context;
     private readonly InstitutionExamDataScope? _scope;
+    private CancellationToken Ct => _scope?.CancellationToken ?? CancellationToken.None;
     private IQueryable<T> Rows<T>()
         where T : class => _scope?.Query<T>() ?? _context.Set<T>();
-    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync() : _scope.SaveAsync();
+    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync(Ct) : _scope.SaveAsync();
     public AuditRepository(ElectronicRegisterContext context, InstitutionExamDataScope? scope = null)
     {
         _context = context;

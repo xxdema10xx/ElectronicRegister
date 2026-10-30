@@ -1,6 +1,3 @@
-using System.Text.Json.Serialization;
-using ElectronicRegisterAPI.Domain.Models;
-
 namespace ElectronicRegisterAPI.Domain.Configuration;
 
 public sealed record InstitutionImportFeature(
@@ -12,9 +9,7 @@ public sealed record InstitutionImportFeature(
     int MaxPendingPreviews = 20
 )
 {
-    [JsonIgnore]
-    public Func<bool>? CurrentAvailability { get; init; }
-    public bool IsEnabled => CurrentAvailability?.Invoke() ?? (Enabled && SchoolEnabled);
+    public bool IsEnabled => Enabled && SchoolEnabled;
 
     public void Validate()
     {

@@ -26,7 +26,7 @@ namespace ElectronicRegisterAPI.Tests.Integration;
 [Collection(IntegrationCollection.Name)]
 public class Phase3_WorkerRecoveryTests(IntegrationFixture fixture)
 {
-    private static IConfiguration WorkerConfiguration => new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string,string?> { ["Identity:Legacy:Enabled"] = "true" }).Build();
+    private static IConfiguration WorkerConfiguration => new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string,string?> { ["Multitenancy:InstitutionWorker:Enabled"] = "true" }).Build();
 
     private static readonly IntegrationScenario[] Scenarios =
     {
@@ -68,20 +68,21 @@ public class Phase3_WorkerRecoveryTests(IntegrationFixture fixture)
         internal ConcurrentQueue<(Guid Id, Guid ContextId)> Calls { get; } = new();
     }
 
-    private sealed class ObservedProcessor(IExamSubmissionProcessor inner, ElectronicRegisterContext context, DispatchLog log) : IExamSubmissionProcessor
+    private sealed class ObservedProcessor(IInstitutionExpiryService inner, ElectronicRegisterContext context, DispatchLog log) : IInstitutionExpiryService
     {
-        public Task<SubmissionResultDto> ProcessSubmitAsync(Guid id, SubmitExamDto? dto, SubmitReason reason, ClaimsContext? caller)
+        public Task ProcessAsync(ElectronicRegisterAPI.Domain.Persistence.ExpiryCandidate candidate, CancellationToken ct)
         {
-            log.Calls.Enqueue((id, context.ContextId.InstanceId));
-            return inner.ProcessSubmitAsync(id, dto, reason, caller);
+            log.Calls.Enqueue((candidate.SubmissionId, context.ContextId.InstanceId));
+            return inner.ProcessAsync(candidate, ct);
         }
     }
 
     private ServiceProvider Provider(DispatchLog log, params IInterceptor[] interceptors)
     {
         var services = Phase3.Services(fixture, new Phase3.Clock(Phase3.WorkerNow), interceptors);
-        services.AddScoped<IExamSubmissionProcessor>(sp => new ObservedProcessor(
-            ActivatorUtilities.CreateInstance<ExamSubmissionProcessor>(sp), sp.GetRequiredService<ElectronicRegisterContext>(), log));
+        var innerType = services.Last(d => d.ServiceType == typeof(IInstitutionExpiryService)).ImplementationType!;
+        services.AddScoped<IInstitutionExpiryService>(sp => new ObservedProcessor(
+            (IInstitutionExpiryService)ActivatorUtilities.CreateInstance(sp, innerType), sp.GetRequiredService<ElectronicRegisterContext>(), log));
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
     }
 
@@ -92,7 +93,7 @@ public class Phase3_WorkerRecoveryTests(IntegrationFixture fixture)
         public override async ValueTask<DbDataReader> ReaderExecutedAsync(DbCommand command, CommandExecutedEventData eventData,
             DbDataReader result, CancellationToken cancellationToken = default)
         {
-            if (System.Text.RegularExpressions.Regex.IsMatch(command.CommandText, @"`deadline_at`\s*<=") &&
+            if (command.CommandText.Contains("s.deadline_at<=") &&
                 command.CommandText.Contains("ORDER BY") && command.CommandText.Contains("LIMIT"))
             {
                 // Both real SELECTs have executed before either batch is dispatched.

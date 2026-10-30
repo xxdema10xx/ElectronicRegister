@@ -22,8 +22,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             _fixture = fixture;
         }
 
-        private ClaimsContext StudentCaller(ScenarioIds ids) => new ClaimsContext(ids.StudentId, UserRole.Student, ids.StudentId, null);
-        private ClaimsContext TeacherCaller(Guid teacherId) => new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, teacherId);
+        private FixtureActor StudentCaller(ScenarioIds ids) => new FixtureActor(ids.StudentId, ids.StudentId, null);
+        private FixtureActor TeacherCaller(Guid teacherId) => new FixtureActor(teacherId == SeedData.TeacherId ? SeedData.TeacherUserId : SeedData.Id(0, 13), null, teacherId);
 
         [SkippableFact]
         public async Task Review_InProgress_IsRejected()
@@ -32,7 +32,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await _fixture.ResetScenarioAsync(IntegrationScenario.ExamRegression);
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var repo = scope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
 
             var caller = TeacherCaller(SeedData.TeacherId);
@@ -61,7 +61,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             // Submit as student then finalize as teacher
             using var s1 = _fixture.ScopeFactory.CreateScope();
-            var examMgr = s1.ServiceProvider.GetRequiredService<IExamManager>();
+            var examMgr = s1.ServiceProvider.GetRequiredService<FixtureExamClient>();
             var studentCaller = StudentCaller(ids);
 
             var submitDto = new SubmitExamDto { ClientRevision = 1 };
@@ -71,7 +71,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             await examMgr.SubmitAsync(ids.SubmissionId, submitDto, studentCaller);
 
             using var s2 = _fixture.ScopeFactory.CreateScope();
-            var mgr = s2.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
+            var mgr = s2.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var repo = s2.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
             var gradeRepo = s2.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
             var teacherCaller = TeacherCaller(SeedData.TeacherId);
@@ -117,7 +117,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await _fixture.ResetScenarioAsync(IntegrationScenario.ExamRegression);
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var repo = scope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
 
@@ -139,7 +139,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await _fixture.ResetScenarioAsync(IntegrationScenario.ExamRegression);
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var manager = scope.ServiceProvider.GetRequiredService<IExamManager>();
+            var manager = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
             var repo = scope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
 
             var dto = new SaveExamAnswersDto { ClientRevision = 1 };
@@ -163,7 +163,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await _fixture.ResetScenarioAsync(IntegrationScenario.ExamRegression);
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var manager = scope.ServiceProvider.GetRequiredService<IExamManager>();
+            var manager = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
             var repo = scope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
 
             var dto = new SaveExamAnswersDto { ClientRevision = 1 };
@@ -187,7 +187,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await _fixture.ResetScenarioAsync(IntegrationScenario.ExamRegression);
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var manager = scope.ServiceProvider.GetRequiredService<IExamManager>();
+            var manager = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
             var repo = scope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
 
             var dto = new SaveExamAnswersDto { ClientRevision = 1 };
@@ -211,7 +211,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await _fixture.ResetScenarioAsync(IntegrationScenario.ExamRegression);
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var manager = scope.ServiceProvider.GetRequiredService<IExamManager>();
+            var manager = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
             var repo = scope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
 
             // Build submit DTO with invalid snapshot (foreign question)
@@ -238,7 +238,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             // Submit first so review is allowed for submitted submissions
             using var s = _fixture.ScopeFactory.CreateScope();
-            var examMgr = s.ServiceProvider.GetRequiredService<IExamManager>();
+            var examMgr = s.ServiceProvider.GetRequiredService<FixtureExamClient>();
             var studentCaller = StudentCaller(ids);
 
             var submit = new SubmitExamDto { ClientRevision = 1 };
@@ -247,7 +247,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             await examMgr.SubmitAsync(ids.SubmissionId, submit, studentCaller);
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var repo = scope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
             var teacherCaller = TeacherCaller(SeedData.TeacherId);
 
@@ -274,8 +274,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             using var s1 = _fixture.ScopeFactory.CreateScope();
             using var s2 = _fixture.ScopeFactory.CreateScope();
 
-            var manager1 = s1.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
-            var manager2 = s2.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
+            var manager1 = s1.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
+            var manager2 = s2.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var repo1 = s1.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
             var gradeRepo = s1.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
 

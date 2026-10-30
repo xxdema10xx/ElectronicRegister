@@ -17,8 +17,8 @@ public class Phase2C_VisibilityTests
 {
     private readonly IntegrationFixture _fixture;
     public Phase2C_VisibilityTests(IntegrationFixture fixture) => _fixture = fixture;
-    private static ClaimsContext Teacher => new(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
-    private static ClaimsContext Student(ScenarioIds ids) => new(ids.StudentId, UserRole.Student, ids.StudentId, null);
+    private static FixtureActor Teacher => new(SeedData.TeacherUserId, null, SeedData.TeacherId);
+    private static FixtureActor Student(ScenarioIds ids) => new(ids.StudentId, ids.StudentId, null);
 
     [Theory]
     [InlineData(SubmissionStatus.InProgress)]
@@ -40,7 +40,7 @@ public class Phase2C_VisibilityTests
             submission.TotalScore = 9m;
             submission.Passed = true;
             await repository.UpdateAfterGradingAsync(submission);
-            var mgr = scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var staff = await mgr.GetByIdAsync(ids.SubmissionId, Teacher);
             Assert.Equal(9m, staff.SuggestedGrade);
             var student = await mgr.GetByIdAsync(ids.SubmissionId, Student(ids));
@@ -49,11 +49,23 @@ public class Phase2C_VisibilityTests
             Assert.Null(student.Passed);
         }
         await using var host = await Phase2C_HttpHost.StartAsync(_fixture.ConnectionString);
-        var result = await host.As(Student(ids)).GetFromJsonAsync<SubmissionResultDto>($"/api/Exam/submission/{ids.SubmissionId}/result");
+        var result = await host.As(Student(ids)).GetFromJsonAsync<SubmissionResultDto>($"/api/institution/submissions/{ids.SubmissionId}/result");
         Assert.Equal(status, result!.Status);
         Assert.Null(result.TotalScore);
         Assert.Null(result.Grade);
         Assert.Null(result.Passed);
+        var work = await host.As(Student(ids)).GetFromJsonAsync<SubmissionReviewDto>($"/api/institution/submissions/{ids.SubmissionId}/work");
+        Assert.NotEmpty(work!.Answers);
+        Assert.Null(work.SuggestedGrade);
+        Assert.Null(work.FinalGrade);
+        Assert.Null(work.TotalScore);
+        Assert.Null(work.ReviewedByUserId);
+        Assert.All(work.Answers, answer =>
+        {
+            Assert.Null(answer.AwardedPoints);
+            Assert.Null(answer.TeacherComment);
+            Assert.All(answer.Options, option => Assert.False(option.IsCorrect));
+        });
     }
 
     [Theory]
@@ -66,7 +78,7 @@ public class Phase2C_VisibilityTests
             ? await _fixture.PreparePendingReviewScenarioAsync(IntegrationScenario.ExamRegression)
             : await _fixture.ResetScenarioAsync(IntegrationScenario.ExamRegression);
         using var scope = _fixture.ScopeFactory.CreateScope();
-        var manager = scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
+        var manager = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
         if (reviewed)
         {
             var initial = await manager.GetByIdAsync(ids.SubmissionId, Teacher);
@@ -97,11 +109,23 @@ public class Phase2C_VisibilityTests
             Assert.All(a.Options, o => Assert.False(o.IsCorrect));
         });
         await using var host = await Phase2C_HttpHost.StartAsync(_fixture.ConnectionString);
-        var result = await host.As(Student(ids)).GetFromJsonAsync<SubmissionResultDto>($"/api/Exam/submission/{ids.SubmissionId}/result");
+        var result = await host.As(Student(ids)).GetFromJsonAsync<SubmissionResultDto>($"/api/institution/submissions/{ids.SubmissionId}/result");
         Assert.Null(result!.Grade);
         Assert.Null(result.TotalScore);
         Assert.Null(result.MaxScore);
         Assert.Null(result.Passed);
+        var work = await host.As(Student(ids)).GetFromJsonAsync<SubmissionReviewDto>($"/api/institution/submissions/{ids.SubmissionId}/work");
+        Assert.NotEmpty(work!.Answers);
+        Assert.Null(work.SuggestedGrade);
+        Assert.Null(work.FinalGrade);
+        Assert.Null(work.TotalScore);
+        Assert.Null(work.ReviewedByUserId);
+        Assert.All(work.Answers, answer =>
+        {
+            Assert.Null(answer.AwardedPoints);
+            Assert.Null(answer.TeacherComment);
+            Assert.All(answer.Options, option => Assert.False(option.IsCorrect));
+        });
     }
 
     [Fact]
@@ -109,19 +133,23 @@ public class Phase2C_VisibilityTests
     {
         Assert.True(_fixture.IsAvailable, _fixture.UnavailableReason);
         var ids = await _fixture.PreparePendingReviewScenarioAsync(IntegrationScenario.ExamRegression);
-        var other = new ClaimsContext(Guid.NewGuid(), UserRole.Student, Guid.NewGuid(), null);
+        var otherIds = await _fixture.ResetScenarioAsync(IntegrationScenario.Phase4Unassigned);
+        var other = Student(otherIds);
         using var scope = _fixture.ScopeFactory.CreateScope();
-        var mgr = scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
-        var exams = scope.ServiceProvider.GetRequiredService<IExamManager>();
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => mgr.GetByIdAsync(ids.SubmissionId, other));
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => exams.GetResultAsync(ids.SubmissionId, other));
+        var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
+        var exams = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
+        await Assert.ThrowsAsync<System.Collections.Generic.KeyNotFoundException>(() => mgr.GetByIdAsync(ids.SubmissionId, other));
+        await Assert.ThrowsAsync<System.Collections.Generic.KeyNotFoundException>(() => exams.GetResultAsync(ids.SubmissionId, other));
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => mgr.GetByExamAsync(ids.ExamId, null, Student(ids)));
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => mgr.ReviewAsync(ids.SubmissionId, new ReviewOpenAnswersDto(), Student(ids)));
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto(), Student(ids)));
         await using var host = await Phase2C_HttpHost.StartAsync(_fixture.ConnectionString);
         var client = host.As(other);
-        Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync($"/api/Exam/submission/{ids.SubmissionId}/result")).StatusCode);
-        Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync($"/api/Exam/{ids.ExamId}")).StatusCode);
+        var before = await Phase3.SnapshotAsync(_fixture.ScopeFactory, ids);
+        Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync($"/api/institution/submissions/{ids.SubmissionId}/work")).StatusCode);
+        Assert.Equal(before, await Phase3.SnapshotAsync(_fixture.ScopeFactory, ids));
+        Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync($"/api/institution/submissions/{ids.SubmissionId}/result")).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync($"/api/institution/exams/{ids.ExamId}")).StatusCode);
     }
 
     [Theory]
@@ -143,14 +171,14 @@ public class Phase2C_VisibilityTests
         }
         await using var host = await Phase2C_HttpHost.StartAsync(_fixture.ConnectionString);
         var client = host.As(Student(ids));
-        var response = await client.PostAsJsonAsync($"/api/Exam/{ids.SubmissionId}/submit", dto);
+        var response = await client.PostAsJsonAsync($"/api/institution/submissions/{ids.SubmissionId}/submit", dto);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var submitted = await response.Content.ReadFromJsonAsync<SubmissionResultDto>();
-        var retrieved = await client.GetFromJsonAsync<SubmissionResultDto>($"/api/Exam/submission/{ids.SubmissionId}/result");
+        var retrieved = await client.GetFromJsonAsync<SubmissionResultDto>($"/api/institution/submissions/{ids.SubmissionId}/result");
         Assert.Equal(SubmitReason.Manual, submitted!.SubmitReason);
         Assert.Equal(submitted.Grade, retrieved!.Grade);
         Assert.Equal(submitted.Passed, retrieved.Passed);
-        var review = await scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>().GetByIdAsync(ids.SubmissionId, Student(ids));
+        var review = await scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>().GetByIdAsync(ids.SubmissionId, Student(ids));
         Assert.Null(review.SuggestedGrade);
         Assert.All(review.Answers.SelectMany(a => a.Options), o => Assert.False(o.IsCorrect));
         if (closedOnly)

@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Policies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -125,7 +126,7 @@ public class SubmissionGradingService : ISubmissionGradingService
             grade = 1m + 5m * Decimal.Divide(p, s);
             // requirement: when totalScore < passingScore, rounded grade must never be >= 6
             // we therefore cap raw grade to a value strictly below 6 when p < s
-            if (p < s && grade >= 6m)
+            if (p < s && GradeRules.IsPassing(grade))
             {
                 grade = 5.99m;
             }
@@ -144,7 +145,7 @@ public class SubmissionGradingService : ISubmissionGradingService
         // round to 2 decimals using MidpointRounding.AwayFromZero
         var rounded = Decimal.Round(grade, 2, MidpointRounding.AwayFromZero);
         // enforce the rule: if totalScore < passingScore, rounded must be < 6
-        if (totalScore < Decimal.Multiply(maxScore, s) && rounded >= 6m)
+        if (totalScore < Decimal.Multiply(maxScore, s) && GradeRules.IsPassing(rounded))
         {
             // set to 5.99 explicitly
             return 5.99m;

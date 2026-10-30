@@ -1,0 +1,42 @@
+[
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionMembershipMutationRepository.cs",
+        "Sha256":  "5528AEC477BD29C75952785E094E8163720F8132304A2C8C6CB4412E144D7A18"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionMembershipMutationRepository.Acquisition.cs",
+        "Sha256":  "C6CB4E71C354A38C5C96A4892755D37CCB34486E9616F9E394109DD6088A1CE2"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Authorization/MembershipAuthorizationRules.cs",
+        "Sha256":  "44B6D439965EED54892A95C41D8E28FBA358AE91B7123E6D660908A917E76EA6"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionWriteAuthorization.cs",
+        "Sha256":  "519283739753C21F3E384AAD04E8C0EEBEB6E99DCE75711E7AC19EC9885F823C"
+    },
+    {
+        "Path":  "tests/Integration/SqlLockEvidence.cs",
+        "Sha256":  "0B4B980070EFEB34BBFB35540C9E9FDCB53BE704393112527FBA8BED67A15F7C"
+    },
+    {
+        "Path":  "migrations/identity-account/004_release_schema.sql",
+        "Sha256":  "968C4B3FF7716EE669BBA5B793D8DE37689296A8CE7A61C77A6CB41963074307"
+    },
+    {
+        "Path":  "tools/release-preflight.cjs",
+        "Sha256":  "B661468BAD5D0D7D9484798A377E99A47E96A5C7F564893FED29DC84218BC15D"
+    },
+    {
+        "Path":  "tools/release-artifacts.cjs",
+        "Sha256":  "B8FD40C2B376D947F8C37602AB04FCFFB6F1F7EDFF753B17F15173620D573262"
+    },
+    {
+        "Path":  ".github/workflows/verify.yml",
+        "Sha256":  "F55639035C3183C17E3409D8DEF76D629DE31CE759C9B694C40E046759745D42"
+    },
+    {
+        "Path":  "infra/Dockerfile",
+        "Sha256":  "8FD7F5D063605EAD18F6C6498353968B7FA33E30A2B53A401EB95D1C069BE31B"
+    }
+]

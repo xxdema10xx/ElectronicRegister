@@ -110,7 +110,7 @@ public sealed class Mt5eIamHttpTests : IAsyncLifetime
         Assert.Equal(4,await Scalar("SELECT COUNT(*) FROM institution_membership_event WHERE institution_id=@a AND actor_user_id=@u AND actor_membership_id=@actor AND target_membership_id=@target AND revision_after=revision_before+1 AND occurred_at_utc BETWEEN UTC_TIMESTAMP()-INTERVAL 2 MINUTE AND UTC_TIMESTAMP()+INTERVAL 2 MINUTE",("@a",_a),("@u",_users[0]),("@actor",_members[0]),("@target",_members[2])));
         await Expect(await Send(Directory,admin),HttpStatusCode.OK);await Expect(await Send(Directory+"/"+_members[2],admin),HttpStatusCode.OK);
         using var legacy=await Send("/api/Auth/me",admin);
-        Assert.Contains(legacy.StatusCode,new[]{HttpStatusCode.Unauthorized,HttpStatusCode.Forbidden});
+        Assert.Equal(HttpStatusCode.NotFound,legacy.StatusCode);
     }
     [Theory]
     [InlineData(2)][InlineData(3)]

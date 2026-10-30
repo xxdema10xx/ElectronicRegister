@@ -10,7 +10,6 @@ public interface IExamSubmissionRepository
     Task<ExamSubmission?> GetByExamAndStudentAsync(Guid examId, Guid studentId, bool withAnswers = false);
     Task<List<ExamSubmission>> GetByExamAsync(Guid examId, SubmissionStatus? status = null);
     Task<List<ExamSubmission>> GetByStudentAsync(Guid studentId);
-    Task<List<ExamSubmission>> GetExpiredInProgressAsync(DateTime utcNow, int take);
     Task AddAsync(ExamSubmission submission);
     Task<SaveAnswersResult> SaveAnswersAsync(Guid submissionId, long clientRevision, IReadOnlyList<SubmissionAnswer> answers);
     Task<bool> TryBeginSubmitAsync(Guid submissionId, DateTime submittedAt, SubmitReason reason);

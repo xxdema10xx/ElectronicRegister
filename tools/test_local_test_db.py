@@ -27,7 +27,7 @@ class BootstrapSafety(unittest.TestCase):
 
     def test_artifact_closure_hashes(self):
         contract=__import__('json').loads((db.ROOT/'migrations/bootstrap/schema-contract.json').read_text())
-        self.assertEqual(len(contract['tables']),db.verify_files()['inventory']['tables'])
+        self.assertEqual(len(contract['tables']),db.verify_files()['bootstrapInventory']['tables'])
         self.assertTrue({'institution_membership_security_state','institution_membership_event',
             'institution_invitation','institution_onboarding_event','platform_operation_nonce',
             'institution_provisioning','institution_recovery','institution_recovery_approval'}<=set(contract['tables']))

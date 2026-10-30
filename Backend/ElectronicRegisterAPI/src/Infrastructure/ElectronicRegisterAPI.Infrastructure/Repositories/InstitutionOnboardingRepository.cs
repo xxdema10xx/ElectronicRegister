@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Authorization;
 using ElectronicRegisterAPI.Domain.DTOs.Onboarding;
 using ElectronicRegisterAPI.Domain.Interfaces.Security;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
@@ -107,7 +108,7 @@ internal sealed partial class InstitutionOnboardingRepository(
     private async Task RequireAdmin(TenantContext actor, CancellationToken ct)
     {
         var a = await authorization.GetAsync(actor.UserId, actor.InstitutionId, actor.MembershipId, ct);
-        if (a is null || a.Status != MembershipStatus.Active || a.InstitutionStatus != InstitutionStatus.Active || a.SecurityGeneration is null || a.SecurityGeneration != actor.SecurityGeneration || !actor.Roles.SetEquals(a.Roles) || !a.Roles.Contains(InstitutionRole.InstitutionAdmin))
+        if (!MembershipAuthorizationRules.Matches(actor, a) || !a.Roles.Contains(InstitutionRole.InstitutionAdmin))
             throw new UnauthorizedAccessException();
     }
 
@@ -333,14 +334,14 @@ internal sealed partial class InstitutionOnboardingRepository(
         Id(request.InstitutionId);
         Id(request.InvitationId);
         Id(request.EventId);
-        var user = identities.VerifySelectionTicket(ticket);
+        var user = await identities.VerifySelectionTicketAsync(ticket, ct);
         var challenge = request.Challenge ?? throw new UnauthorizedAccessException();
         if (!Regex.IsMatch(challenge, "^[A-F0-9]{64}$"))
             throw new UnauthorizedAccessException();
         var hash = Intent(new { user, request.InstitutionId, request.InvitationId, request.EventId, Proof = Hash(challenge) });
         await using var tx = await db.Database.BeginTransactionAsync(ct);
         await Mutex(request.InstitutionId, ct);
-        if (identities.VerifySelectionTicket(ticket) != user)
+        if (await identities.VerifySelectionTicketAsync(ticket, ct) != user)
             throw new UnauthorizedAccessException();
         var invite = await Load(request.InstitutionId, request.InvitationId, ct);
         var address = await Address(user, ct);
@@ -392,7 +393,7 @@ internal sealed partial class InstitutionOnboardingRepository(
         var result = new InvitationResult(request.EventId, "consumed", membership);
         await Append(request.InstitutionId, request.EventId, "Recipient", null, null, user, null, invite.Kind == "Recovery" ? "RecoveryAccepted" : "InviteAccepted", invite.Id, hash, "Verified personal invitation acceptance", null, invite.Kind == "Recovery" ? new { result.EventId, result.Status, result.MembershipId, SuspendedAdministrators = suspendedAdmins } : (object)result, ct);
         Enabled();
-        identities.VerifySelectionTicket(ticket);
+        await identities.VerifySelectionTicketAsync(ticket, ct);
         await faults.BeforeCommitAsync(invite.Kind == "Recovery" ? "RecoveryAccept" : "Accept", ct);
         if (invite.Kind == "Recovery")
             await AuthorizeRecoveryAcceptance(request.InstitutionId, invite, ct, false);

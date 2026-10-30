@@ -12,18 +12,18 @@ namespace ElectronicRegisterAPI.Api.Controllers;
 public sealed class InstitutionExamController(IInstitutionExamManager manager) : ControllerBase
 {
     [HttpGet, Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
-    public async Task<ActionResult<List<ExamSummaryDto>>> GetAll() => Ok(await manager.ExamsAsync());
+    public async Task<ActionResult<List<ExamSummaryDto>>> GetAll() => Ok(await manager.ExamsAsync(HttpContext.RequestAborted));
     [HttpGet("{id:guid}"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
-    public async Task<ActionResult<ExamDetailDto>> GetById(Guid id) => await manager.ExamAsync(id)is { } row ? Ok(row) : NotFound();
+    public async Task<ActionResult<ExamDetailDto>> GetById(Guid id) => await manager.ExamAsync(id, HttpContext.RequestAborted)is { } row ? Ok(row) : NotFound();
     [HttpGet("assigned"), Authorize(Roles = "Student")]
-    public async Task<ActionResult<List<AssignedExamDto>>> Assigned() => Ok(await manager.AssignedAsync());
+    public async Task<ActionResult<List<AssignedExamDto>>> Assigned() => Ok(await manager.AssignedAsync(HttpContext.RequestAborted));
     [HttpGet("{id:guid}/eligible-students"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
-    public async Task<ActionResult<List<StudentDto>>> EligibleStudents(Guid id) => Ok(await manager.EligibleStudentsAsync(id));
+    public async Task<ActionResult<List<StudentDto>>> EligibleStudents(Guid id) => Ok(await manager.EligibleStudentsAsync(id, HttpContext.RequestAborted));
     [HttpPost, Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     [InstitutionPermission(InstitutionPermission.ExamCreate)]
     public async Task<ActionResult<Guid>> Add(CreateExamDto dto)
     {
-        var id = await manager.CreateAsync(dto);
+        var id = await manager.CreateAsync(dto, HttpContext.RequestAborted);
         return CreatedAtAction(nameof(GetById), new { id }, id);
     }
 
@@ -31,7 +31,7 @@ public sealed class InstitutionExamController(IInstitutionExamManager manager) :
     [InstitutionPermission(InstitutionPermission.ExamUpdate)]
     public async Task<IActionResult> Update(Guid id, UpdateExamDto dto)
     {
-        await manager.UpdateAsync(id, dto);
+        await manager.UpdateAsync(id, dto, HttpContext.RequestAborted);
         return NoContent();
     }
 
@@ -39,7 +39,7 @@ public sealed class InstitutionExamController(IInstitutionExamManager manager) :
     [InstitutionPermission(InstitutionPermission.ExamAssign)]
     public async Task<IActionResult> Assign(Guid id, UpdateExamStudentsDto dto)
     {
-        await manager.AssignAsync(id, dto);
+        await manager.AssignAsync(id, dto, HttpContext.RequestAborted);
         return NoContent();
     }
 
@@ -47,7 +47,7 @@ public sealed class InstitutionExamController(IInstitutionExamManager manager) :
     [InstitutionPermission(InstitutionPermission.ExamPublish)]
     public async Task<IActionResult> Publish(Guid id)
     {
-        await manager.PublishAsync(id);
+        await manager.PublishAsync(id, HttpContext.RequestAborted);
         return NoContent();
     }
 
@@ -55,7 +55,7 @@ public sealed class InstitutionExamController(IInstitutionExamManager manager) :
     [InstitutionPermission(InstitutionPermission.ExamClose)]
     public async Task<IActionResult> Close(Guid id)
     {
-        await manager.CloseAsync(id);
+        await manager.CloseAsync(id, HttpContext.RequestAborted);
         return NoContent();
     }
 
@@ -63,7 +63,7 @@ public sealed class InstitutionExamController(IInstitutionExamManager manager) :
     [InstitutionPermission(InstitutionPermission.ExamCancel)]
     public async Task<IActionResult> Cancel(Guid id)
     {
-        await manager.CancelAsync(id);
+        await manager.CancelAsync(id, HttpContext.RequestAborted);
         return NoContent();
     }
 
@@ -71,12 +71,12 @@ public sealed class InstitutionExamController(IInstitutionExamManager manager) :
     [InstitutionPermission(InstitutionPermission.ExamDelete)]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await manager.DeleteAsync(id);
+        await manager.DeleteAsync(id, HttpContext.RequestAborted);
         return NoContent();
     }
 
     [HttpPost("{id:guid}/start"), Authorize(Roles = "Student")]
-    public async Task<ActionResult<StartExamDto>> Start(Guid id) => Ok(await manager.StartAsync(id));
+    public async Task<ActionResult<StartExamDto>> Start(Guid id) => Ok(await manager.StartAsync(id, HttpContext.RequestAborted));
     [HttpGet("{id:guid}/submissions"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
-    public async Task<ActionResult<List<SubmissionSummaryDto>>> Submissions(Guid id, [FromQuery] SubmissionStatus? status) => Ok(await manager.SubmissionsAsync(id, status));
+    public async Task<ActionResult<List<SubmissionSummaryDto>>> Submissions(Guid id, [FromQuery] SubmissionStatus? status) => Ok(await manager.SubmissionsAsync(id, status, HttpContext.RequestAborted));
 }

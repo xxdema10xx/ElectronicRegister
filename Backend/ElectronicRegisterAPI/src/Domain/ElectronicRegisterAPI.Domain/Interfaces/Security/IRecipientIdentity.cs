@@ -6,5 +6,5 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Security;
 
 public interface IRecipientIdentity
 {
-    Guid VerifySelectionTicket(string ticket);
+    Task<Guid> VerifySelectionTicketAsync(string ticket, CancellationToken ct = default);
 }

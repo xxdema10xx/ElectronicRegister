@@ -9,8 +9,8 @@ public static class ServiceCollectionExtensions
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
         services.AddHttpContextAccessor();
-        services.AddScoped<ElectronicRegisterAPI.Api.Security.LegacyEndpointGate>();
-        services.Configure<Microsoft.AspNetCore.Mvc.MvcOptions>(options => options.Filters.AddService<ElectronicRegisterAPI.Api.Security.LegacyEndpointGate>());
+        services.AddScoped<ElectronicRegisterAPI.Api.Security.InstitutionEndpointGate>();
+        services.Configure<Microsoft.AspNetCore.Mvc.MvcOptions>(options => options.Filters.AddService<ElectronicRegisterAPI.Api.Security.InstitutionEndpointGate>());
         // Background worker for expired submissions
         services.AddHostedService<ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker>();
         return services;

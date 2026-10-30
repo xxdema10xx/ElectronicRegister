@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Authorization;
 using ElectronicRegisterAPI.Domain.Configuration;
 using ElectronicRegisterAPI.Domain.DTOs.Import;
@@ -22,7 +23,7 @@ internal sealed class InstitutionImportRepository(
     ElectronicRegisterContext db,
     IMembershipAuthorizationRepository memberships,
     IInstitutionWriteAuthorization writes,
-    InstitutionImportFeature feature
+    IInstitutionImportFeature feature
 ) : IInstitutionImportRepository
 {
     private async Task Access(TenantContext actor, CancellationToken ct)
@@ -31,7 +32,7 @@ internal sealed class InstitutionImportRepository(
             throw new UnauthorizedAccessException();
         InstitutionPermissions.Require(actor, InstitutionPermission.UserCreate);
         var m = await memberships.GetAsync(actor.UserId, actor.InstitutionId, actor.MembershipId, ct);
-        if (m is null || m.Status != MembershipStatus.Active || m.InstitutionStatus != InstitutionStatus.Active || m.SecurityGeneration is null or < 0 || m.SecurityGeneration != actor.SecurityGeneration || !actor.Roles.SetEquals(m.Roles))
+        if (!MembershipAuthorizationRules.Matches(actor, m))
             throw new UnauthorizedAccessException();
     }
 
@@ -66,7 +67,7 @@ internal sealed class InstitutionImportRepository(
         ElectronicRegisterContext db,
         IInstitutionWriteAuthorization writes,
         TenantContext actor,
-        InstitutionImportFeature feature,
+        IInstitutionImportFeature feature,
         CancellationToken ct
     ) : IInstitutionImportSession
     {
@@ -170,7 +171,7 @@ internal sealed class InstitutionImportRepository(
         private string Payload(ImportPayload payload)
         {
             var json = Json(payload);
-            if (Encoding.UTF8.GetByteCount(json) > feature.MaxStageBytes)
+            if (Encoding.UTF8.GetByteCount(json) > feature.Settings.MaxStageBytes)
                 throw new ImportInputException("StageTooLarge", "Dati di staging oltre il limite.");
             return json;
         }
@@ -182,7 +183,7 @@ internal sealed class InstitutionImportRepository(
             string requestHash
         )
         {
-            if (N((await Rows("SELECT COUNT(*) n FROM institution_import_batch WHERE " + Own + " AND payload IS NOT NULL", Scope)).Single(), "n") >= feature.MaxPendingPreviews)
+            if (N((await Rows("SELECT COUNT(*) n FROM institution_import_batch WHERE " + Own + " AND payload IS NOT NULL", Scope)).Single(), "n") >= feature.Settings.MaxPendingPreviews)
                 throw new ImportConflictException("PreviewQuotaExceeded");
             await Execute("INSERT INTO institution_import_batch(id,institution_id,actor_user_id,actor_membership_id,category,state,revision,file_sha256,preview_digest,total_rows,valid_rows,invalid_rows,payload,warnings_json,policy_revision,created_at_utc,expires_at_utc) VALUES(@id,@t,@u,@m,@c,'Preview',1,@file,@digest,@total,@valid,@invalid,@payload,@warnings,@policy,@created,@expires)", Scope.Concat(new (string, object? )[] { ("@id", b.Id), ("@c", b.Category.ToString()), ("@file", b.FileSha256), ("@digest", b.PreviewDigest), ("@total", b.TotalRows), ("@valid", b.ValidRows), ("@invalid", b.InvalidRows), ("@payload", Payload(payload)), ("@warnings", Json(b.Warnings)), ("@policy", b.PolicyRevision), ("@created", b.CreatedAtUtc), ("@expires", b.ExpiresAtUtc) }).ToArray());
             await Event(b.Id, 1, eventId, "Previewed", requestHash, b with { Columns = null, Mapping = null }, "Preview caricata e validata");

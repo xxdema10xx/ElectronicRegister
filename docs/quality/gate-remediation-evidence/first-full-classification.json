@@ -1,0 +1,12 @@
+{
+    "Classification":  "Fixture identity lookup exception; original assertion preserved; corrected before new fresh regression",
+    "Failed":  [
+                   {
+                       "Outcome":  "Failed",
+                       "Message":  "Assert.Throws() Failure: Exception type was not an exact match\r\nExpected: typeof(System.UnauthorizedAccessException)\r\nActual:   typeof(System.InvalidOperationException)\r\n---- System.InvalidOperationException : Sequence contains no elements.",
+                       "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: \"wrong-user\")"
+                   }
+               ],
+    "Total":  "1530",
+    "Passed":  "1529"
+}

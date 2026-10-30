@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Policies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using ElectronicRegisterAPI.Application.Mappers;
 
 namespace ElectronicRegisterAPI.Application.Services;
 
-public class ExamSubmissionProcessor : IExamSubmissionProcessor
+public class ExamSubmissionProcessor
 {
     private readonly ITransactionManager _transactionManager;
     private readonly IExamSubmissionRepository _submissionRepository;
@@ -49,36 +50,37 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
             throw new UnauthorizedAccessException("Contesto di elaborazione non autorizzato.");
         if (reason is not (SubmitReason.Manual or SubmitReason.TimeExpired))
             throw new ArgumentException("Motivo non valido.");
-        return ProcessCoreAsync(submissionId, dto, reason, principal.VisibilityCaller);
-    }
-
-    public async Task<SubmissionResultDto> ProcessSubmitAsync(
-        Guid submissionId,
-        SubmitExamDto? dto,
-        SubmitReason reason,
-        ClaimsContext? caller
-    )
-    {
-        // Legacy worker cannot dispatch institution-owned submissions until MT3E.
-        if (_submissionRepository is IInstitutionBoundRepository bound && bound.InstitutionId != Guid.Empty)
-            throw new UnauthorizedAccessException("Usare il contesto istituzionale esplicito.");
-        if (caller is null && _submissionRepository is ILegacySubmissionBoundary legacy && !await legacy.IsLegacySubmissionAsync(submissionId))
-            throw new UnauthorizedAccessException("Submission fuori dal confine legacy.");
-        return await ProcessCoreAsync(submissionId, dto, reason, caller);
+        return ProcessCoreAsync(submissionId, dto, reason, principal.UserId, principal.IsStudent);
     }
 
     internal Task<SubmissionResultDto> ProcessExpiryAsync(SubmissionExpiryWork work, CancellationToken ct)
     {
         if (_submissionRepository is not ISubmissionExpiryBoundRepository bound || !bound.Matches(work))
             throw new UnauthorizedAccessException("Contesto tecnico non corrispondente.");
-        return ProcessCoreAsync(work.SubmissionId, null, SubmitReason.TimeExpired, null, work, ct);
+        return ProcessCoreAsync(work.SubmissionId, null, SubmitReason.TimeExpired, null, false, work, ct);
     }
 
-    private async Task<SubmissionResultDto> ProcessCoreAsync(
+    // Used by initial submit and both replay paths inside the caller's transaction.
+    // SuggestedGrade never substitutes for the persisted official Grade.
+    private async Task<SubmissionResultDto> ReadResultAsync(Guid submissionId, ExamSubmission fallback, bool studentView)
+    {
+        var current = await _submissionRepository.GetByIdAsync(submissionId, withAnswers: true) ?? fallback;
+        decimal? officialGrade = null;
+        if (current.GradeId.HasValue)
+        {
+            var grade = await _gradeRepository.GetByIdAsync(current.GradeId.Value) ?? throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
+            officialGrade = grade.Value;
+        }
+
+        return ExamSubmissionMapper.ToSubmissionResultDto(current, officialGrade, studentView);
+    }
+
+    internal async Task<SubmissionResultDto> ProcessCoreAsync(
         Guid submissionId,
         SubmitExamDto? dto,
         SubmitReason reason,
-        ClaimsContext? caller,
+        Guid? actorUserId,
+        bool studentView,
         SubmissionExpiryWork? work = null,
         CancellationToken ct = default
     )
@@ -95,18 +97,7 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
             if (submission.SubmittedAt.HasValue)
             {
                 // return current state
-                var current = await _submissionRepository.GetByIdAsync(submissionId, withAnswers: true);
-                var target = current ?? submission;
-                decimal? officialGrade = null;
-                if (target.GradeId.HasValue)
-                {
-                    var grade = await _gradeRepository.GetByIdAsync(target.GradeId.Value);
-                    if (grade is null)
-                        throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
-                    officialGrade = grade.Value;
-                }
-
-                result = ExamSubmissionMapper.ToSubmissionResultDto(target, officialGrade, caller);
+                result = await ReadResultAsync(submissionId, submission, studentView);
                 return;
             }
 
@@ -152,18 +143,7 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
             if (!began)
             {
                 // Another actor may have submitted concurrently; return current persisted state (idempotent)
-                var current = await _submissionRepository.GetByIdAsync(submissionId, withAnswers: true);
-                var target = current ?? submission;
-                decimal? officialGrade = null;
-                if (target.GradeId.HasValue)
-                {
-                    var grade = await _gradeRepository.GetByIdAsync(target.GradeId.Value);
-                    if (grade is null)
-                        throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
-                    officialGrade = grade.Value;
-                }
-
-                result = ExamSubmissionMapper.ToSubmissionResultDto(target, officialGrade, caller);
+                result = await ReadResultAsync(submissionId, submission, studentView);
                 return;
             }
 
@@ -205,7 +185,7 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
                 await _gradeRepository.AddAsync(grade);
                 submission.GradeId = grade.Id;
                 // Official Passed is derived from Grade.Value
-                submission.Passed = gradeValue >= 6m;
+                submission.Passed = GradeRules.IsPassing(gradeValue);
             }
             else if (evaluation.Status == SubmissionStatus.PendingReview)
             {
@@ -219,19 +199,8 @@ public class ExamSubmissionProcessor : IExamSubmissionProcessor
             // Set SubmittedAt only when we are actually committing the submit (we are inside transaction and passed checks above)
             submission.SubmittedAt = nowUtc;
             await _submissionRepository.UpdateAfterGradingAsync(submission);
-            await _auditRepository.AddAsync(new Domain.Models.AuditEvent { Id = Guid.NewGuid(), ActorUserId = caller?.UserId, Action = "submission.submit", EntityType = "exam_submission", EntityId = submission.Id, CreatedAt = nowUtc, RequestId = work is null ? null : "worker:" + work.SubmissionId.ToString("N"), BeforeJson = work is null ? null : System.Text.Json.JsonSerializer.Serialize(new { status = "in_progress" }), AfterJson = work is null ? null : System.Text.Json.JsonSerializer.Serialize(new { source = "institution-worker", reason = "TimeExpired", status = submission.Status.ToString() }) });
-            var current2 = await _submissionRepository.GetByIdAsync(submissionId, withAnswers: true);
-            var finalTarget = current2 ?? submission;
-            decimal? finalOfficialGrade = null;
-            if (finalTarget.GradeId.HasValue)
-            {
-                var g = await _gradeRepository.GetByIdAsync(finalTarget.GradeId.Value);
-                if (g is null)
-                    throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
-                finalOfficialGrade = g.Value;
-            }
-
-            result = ExamSubmissionMapper.ToSubmissionResultDto(finalTarget, finalOfficialGrade, caller);
+            await _auditRepository.AddAsync(new Domain.Models.AuditEvent { Id = Guid.NewGuid(), ActorUserId = actorUserId, Action = "submission.submit", EntityType = "exam_submission", EntityId = submission.Id, CreatedAt = nowUtc, RequestId = work is null ? null : "worker:" + work.SubmissionId.ToString("N"), BeforeJson = work is null ? null : System.Text.Json.JsonSerializer.Serialize(new { status = "in_progress" }), AfterJson = work is null ? null : System.Text.Json.JsonSerializer.Serialize(new { source = "institution-worker", reason = "TimeExpired", status = submission.Status.ToString() }) });
+            result = await ReadResultAsync(submissionId, submission, studentView);
             ct.ThrowIfCancellationRequested();
         }, ct);
         return result!;

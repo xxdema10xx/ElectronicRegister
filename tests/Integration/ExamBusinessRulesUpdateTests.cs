@@ -27,7 +27,7 @@ public partial class Phase4_ExamLifecycleTests
     public async Task CloseBusinessRule_HttpAndMySql(string kind, bool blocked)
     {
         var id = await CreateAsync(Draft());
-        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/publish", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{id}/publish", null)).StatusCode);
         if (kind != "none")
         {
             using var setup = fixture.ScopeFactory.CreateScope();
@@ -53,7 +53,7 @@ public partial class Phase4_ExamLifecycleTests
         var before = await ExamSnapshotAsync(id);
         var submissionsBefore = await CloseSubmissionsSnapshotAsync(id);
         Assert.Equal(blocked ? HttpStatusCode.Conflict : HttpStatusCode.NoContent,
-            (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/close", null)).StatusCode);
+            (await _host.As(Teacher).PostAsync($"/api/institution/exams/{id}/close", null)).StatusCode);
         Assert.Equal(submissionsBefore, await CloseSubmissionsSnapshotAsync(id));
         if (blocked) Assert.Equal(before, await ExamSnapshotAsync(id));
         using var verify = fixture.ScopeFactory.CreateScope();
@@ -77,9 +77,9 @@ public partial class Phase4_ExamLifecycleTests
     public async Task CloseAndStart_AreSerializedInBothOrders(bool closeFirst)
     {
         var id = await CreateAsync(Draft());
-        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/publish", null)).StatusCode);
-        Task Close(IServiceProvider sp) => sp.GetRequiredService<IExamManager>().CloseAsync(id, Teacher);
-        Task Start(IServiceProvider sp) => sp.GetRequiredService<IExamManager>().StartAsync(id, Phase3.Student(_ids));
+        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{id}/publish", null)).StatusCode);
+        Task Close(IServiceProvider sp) => sp.GetRequiredService<FixtureExamClient>().CloseAsync(id, Teacher);
+        Task Start(IServiceProvider sp) => sp.GetRequiredService<FixtureExamClient>().StartAsync(id, Phase3.Student(_ids));
         await Phase3.OrderedAsync(fixture, closeFirst ? Close : Start, async sp =>
             await Assert.ThrowsAsync<BusinessRuleException>(() => closeFirst ? Start(sp) : Close(sp)));
         using var verify = fixture.ScopeFactory.CreateScope();
@@ -105,7 +105,7 @@ public partial class Phase4_ExamLifecycleTests
         }
         var before = await ExamSnapshotAsync(ids.ExamId);
         var subBefore = await Phase3.SnapshotAsync(fixture.ScopeFactory, ids);
-        Assert.Equal(HttpStatusCode.Conflict, (await _host.As(Teacher).PostAsync($"/api/Exam/{ids.ExamId}/close", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{ids.ExamId}/close", null)).StatusCode);
         Assert.Equal(before, await ExamSnapshotAsync(ids.ExamId));
         Assert.Equal(subBefore, await Phase3.SnapshotAsync(fixture.ScopeFactory, ids));
         await using (var provider = Phase3.Provider(fixture, new Phase3.Clock(now)))
@@ -113,7 +113,7 @@ public partial class Phase4_ExamLifecycleTests
             var worker = new ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker(
                 provider.GetRequiredService<IServiceScopeFactory>(),
                 Microsoft.Extensions.Logging.Abstractions.NullLogger<ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker>.Instance,
-                new ConfigurationBuilder().AddInMemoryCollection(new System.Collections.Generic.Dictionary<string,string?> { ["Identity:Legacy:Enabled"] = "true" }).Build());
+                new ConfigurationBuilder().AddInMemoryCollection(new System.Collections.Generic.Dictionary<string,string?> { ["Multitenancy:InstitutionWorker:Enabled"] = "true" }).Build());
             await worker.ProcessBatchAsync(System.Threading.CancellationToken.None);
             worker.Dispose();
         }
@@ -125,7 +125,7 @@ public partial class Phase4_ExamLifecycleTests
             Assert.Equal(now, sub.SubmittedAt);
             Assert.Equal("time_expired", sub.SubmitReason);
         }
-        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{ids.ExamId}/close", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{ids.ExamId}/close", null)).StatusCode);
         using var final = fixture.ScopeFactory.CreateScope();
         var db = final.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
         var exam = await db.Exams.AsNoTracking().SingleAsync(e => e.Id == ids.ExamId);
@@ -151,11 +151,13 @@ public partial class Phase4_ExamLifecycleTests
                 .Where(s => s.Id == ids.SubmissionId).Select(s => s.DeadlineAt).SingleAsync();
         Exception? closeError = null;
         await Phase3.OrderedAsync(fixture,
-            async sp => await sp.GetRequiredService<ElectronicRegisterAPI.Domain.Interfaces.Services.IExamSubmissionProcessor>()
-                .ProcessSubmitAsync(ids.SubmissionId, automatic ? null : dto,
-                    automatic ? ElectronicRegisterAPI.Domain.Enums.SubmitReason.TimeExpired : ElectronicRegisterAPI.Domain.Enums.SubmitReason.Manual,
-                    automatic ? null : Phase3.Student(ids)),
-            async sp => closeError = await Record.ExceptionAsync(() => sp.GetRequiredService<IExamManager>().CloseAsync(ids.ExamId, Teacher)),
+            async sp =>
+            {
+                var manager = FixtureTenant.For(sp, ids.StudentId);
+                if (automatic) await manager.SubmitExpiredAsync(ids.SubmissionId);
+                else await manager.SubmitAsync(ids.SubmissionId, dto);
+            },
+            async sp => closeError = await Record.ExceptionAsync(() => sp.GetRequiredService<FixtureExamClient>().CloseAsync(ids.ExamId, Teacher)),
             new Phase3.Clock(automatic ? deadline.AddSeconds(1) : deadline.AddSeconds(-1)));
         using (var check = fixture.ScopeFactory.CreateScope())
         {
@@ -169,7 +171,7 @@ public partial class Phase4_ExamLifecycleTests
         if (closeError is not null)
         {
             Assert.IsType<BusinessRuleException>(closeError);
-            Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{ids.ExamId}/close", null)).StatusCode);
+            Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{ids.ExamId}/close", null)).StatusCode);
         }
         using var verify = fixture.ScopeFactory.CreateScope();
         var ctx = verify.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
@@ -181,9 +183,9 @@ public partial class Phase4_ExamLifecycleTests
     private async Task<ScenarioIds> StartBusinessExamAsync()
     {
         var id = await CreateAsync(Draft());
-        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/publish", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{id}/publish", null)).StatusCode);
         using var scope = fixture.ScopeFactory.CreateScope();
-        var started = await scope.ServiceProvider.GetRequiredService<IExamManager>().StartAsync(id, Phase3.Student(_ids));
+        var started = await scope.ServiceProvider.GetRequiredService<FixtureExamClient>().StartAsync(id, Phase3.Student(_ids));
         var detail = (await DetailAsync(id))!;
         return _ids with { ExamId = id, SubmissionId = started.SubmissionId, OpenQuestionId = detail.Questions.Single().Id };
     }

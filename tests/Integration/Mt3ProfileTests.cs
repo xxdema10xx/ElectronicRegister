@@ -121,7 +121,7 @@ public sealed class Mt3ProfileTests(IntegrationFixture fixture) : IAsyncLifetime
             await db.InstitutionTeacherProfiles.Where(p=>p.MembershipId==_ma||p.MembershipId==_mb).ExecuteDeleteAsync();
             await db.InstitutionStudentProfiles.Where(p=>p.MembershipId==_ma||p.MembershipId==_mb).ExecuteDeleteAsync();
         });
-        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString,_legacy,"MT3 controlled legacy holding - not a legal identity");
+        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString,_legacy,"MT3 controlled legacy holding - not a legal identity",Array.Empty<MembershipMigrationAssignment>());
         // MT3A: A/B profiles are already institution-owned. The legacy backfill must
         // link a legacy-owned profile, never move A's profile to the holding.
         await Db(async db=>
@@ -131,7 +131,7 @@ public sealed class Mt3ProfileTests(IntegrationFixture fixture) : IAsyncLifetime
             db.Users.Add(new E.User{Id=_legacyUser,Email=_legacyUser.ToString("N")+"@mt3.example.test",PasswordHash="",Role="teacher",TeacherId=_legacyTeacher});
             await db.SaveChangesAsync();
         });
-        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString,_legacy,"MT3 controlled legacy holding - not a legal identity");
+        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString,_legacy,"MT3 controlled legacy holding - not a legal identity",new[]{new MembershipMigrationAssignment(_legacyUser,new[]{InstitutionRole.Teacher})});
         var before=await Snapshot();
         await Mt3ProfileBackfill.ExecuteAsync(fixture.ConnectionString,_legacy);
         Assert.Equal(before,await Snapshot());
@@ -148,7 +148,7 @@ public sealed class Mt3ProfileTests(IntegrationFixture fixture) : IAsyncLifetime
     public async Task ConflictingOwnershipRollsBackEntireBackfill()
     {
         var before=await Snapshot();
-        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString,_legacy,"MT3 controlled legacy holding - not a legal identity");
+        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString,_legacy,"MT3 controlled legacy holding - not a legal identity",new[]{new MembershipMigrationAssignment(_user,new[]{InstitutionRole.Teacher})});
         await Assert.ThrowsAsync<InvalidOperationException>(()=>Mt3ProfileBackfill.ExecuteAsync(fixture.ConnectionString,_legacy));
         Assert.Equal(before,await Snapshot());
         await Db(async db=>{Assert.False(await db.InstitutionTeacherProfiles.AnyAsync(p=>p.InstitutionId==_legacy));Assert.False(await db.InstitutionStudentProfiles.AnyAsync(p=>p.InstitutionId==_legacy));});
@@ -160,11 +160,11 @@ public sealed class Mt3ProfileTests(IntegrationFixture fixture) : IAsyncLifetime
         await Assert.ThrowsAsync<ArgumentException>(()=>Mt3ProfileBackfill.ExecuteAsync("Server=not-a-server;Database="+database+";User=x;",_legacy));
 
     [Fact]
-    public async Task IncompatibleLegacyRoleBlocksBackfillWithoutChangingAnyLegacyCell()
+    public async Task ExplicitManifestCannotRelabelForeignHistoricalProfileRegardlessOfGlobalRole()
     {
         await Db(async db=>await db.Users.Where(u=>u.Id==_user).ExecuteUpdateAsync(s=>s.SetProperty(u=>u.Role,"admin")));
         var before=await Snapshot();
-        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString,_legacy,"MT3 controlled legacy holding - not a legal identity");
+        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString,_legacy,"MT3 controlled legacy holding - not a legal identity",new[]{new MembershipMigrationAssignment(_user,new[]{InstitutionRole.Teacher})});
         await Assert.ThrowsAsync<InvalidOperationException>(()=>Mt3ProfileBackfill.ExecuteAsync(fixture.ConnectionString,_legacy));
         Assert.Equal(before,await Snapshot());
     }

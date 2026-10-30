@@ -3,7 +3,7 @@
 ## MT-5B-E — superficie HTTP IAM
 
 Estensione Staff (2026-10-27): il catalogo istituzionale comprende Staff senza modificare
-i tre valori numerici precedenti e senza estendere UserRole legacy. Assegnazione e revoca
+i tre valori numerici precedenti. Il tipo UserRole e ora ritirato; il valore globale storico non autorizza membership. Assegnazione e revoca
 restano nel medesimo workflow Admin-only, con generation, EventId, revision e last Admin.
 Inviti e snapshot supportano quattro ruoli distinti. Nessuna protezione Last Staff viene introdotta.
 Le scritture CRU Staff rivalidano membership e generation dopo lock IAM-first e prima delle

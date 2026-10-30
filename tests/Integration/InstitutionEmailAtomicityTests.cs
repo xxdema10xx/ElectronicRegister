@@ -53,10 +53,10 @@ public sealed partial class InstitutionClassCrudTests
                 services.AddScoped<IInstitutionWriteAuthorization>(sp=>new StaffWriteBarrier((IInstitutionWriteAuthorization)ActivatorUtilities.CreateInstance(sp,descriptor.ImplementationType!),acquired,release));
             });
         long revision=0;await Db(async db=>revision=(await db.InstitutionMembershipSecurityStates.SingleAsync(s=>s.MembershipId==Id("teacher-membership"))).SecurityGeneration);
-        var write=Request(EmailAssignments,token,new EmailReserve(Guid.NewGuid(),EmailCategory.Student,1,new(Id("student"),null,null)),"POST",host);
+        var write = SqlLockEvidence.Track(() => Request(EmailAssignments,token,new EmailReserve(Guid.NewGuid(),EmailCategory.Student,1,new(Id("student"),null,null)),"POST",host));
         await acquired.Task.WaitAsync(TimeSpan.FromSeconds(5));
-        var revoke=Request("/api/institution/admin/members/"+Id("teacher-membership")+"/mutations",admin,new{EventId=Guid.NewGuid(),ExpectedRevision=revision,Action="RemoveRole",Role="Staff",Reason="Email concurrent revocation"},"POST",host);
-        try{await Task.WhenAny(revoke,Task.Delay(250));Assert.False(revoke.IsCompleted);}
+        var revoke = SqlLockEvidence.Track(() => Request("/api/institution/admin/members/"+Id("teacher-membership")+"/mutations",admin,new{EventId=Guid.NewGuid(),ExpectedRevision=revision,Action="RemoveRole",Role="Staff",Reason="Email concurrent revocation"},"POST",host));
+        try{await SqlLockEvidence.WaitAsync(fixture.ConnectionString, revoke, write);}
         finally{release.TrySetResult(true);}
         await Expect(await write,HttpStatusCode.OK);await Expect(await revoke,HttpStatusCode.OK);
         await Expect(await Request(EmailAssignments,token,new EmailReserve(Guid.NewGuid(),EmailCategory.Student,1,new(Id("student-other"),null,null)),"POST",setup),HttpStatusCode.Forbidden);

@@ -136,7 +136,7 @@ Teacher legge soltanto il binding di edizioni con assegnazione ClassSubject real
 una classe; Student soltanto edizioni delle proprie StudentEnrollment, anche storiche.
 Profilo sempre della membership corrente; nessuna prova basata su User.TeacherId legacy.
 Le viste personali non enumerano catalogo, persone o audit. Staff+Teacher non è Admin;
-PlatformOperator e UserRole.Admin legacy non conferiscono privilegi istituzionali.
+PlatformOperator e i ruoli globali storici non conferiscono privilegi istituzionali; UserRole e il percorso applicativo globale sono ritirati.
 Risorse fuori tenant e inesistenti producono la stessa assenza, senza dettagli SQL.
 
 Tre flag: FormativePlans.Enabled, SchoolApi.Enabled, CourseApi.Enabled, default false.

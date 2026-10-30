@@ -202,6 +202,6 @@ public sealed partial class Mt5bJwtTests : IAsyncLifetime
     public async Task InstitutionAccessNeverOpensLegacyEndpointGate()
     {
         var response=await Request("/api/Auth/me",await Access());
-        Assert.Contains(response.StatusCode,new[]{HttpStatusCode.Unauthorized,HttpStatusCode.Forbidden});
+        Assert.Equal(HttpStatusCode.NotFound,response.StatusCode);
     }
 }

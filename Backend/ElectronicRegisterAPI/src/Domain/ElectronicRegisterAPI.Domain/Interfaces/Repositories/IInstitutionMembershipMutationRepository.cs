@@ -8,4 +8,10 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 public interface IInstitutionMembershipMutationRepository
 {
     Task<MembershipMutationResult> MutateAsync(TenantContext actor, MembershipMutation request, CancellationToken ct = default);
+    Task<ProfileAcquisitionResult> AcquireProfileAsync(
+        TenantContext actor,
+        Guid membershipId,
+        AcquireHistoricalProfile request,
+        CancellationToken ct = default
+    );
 }

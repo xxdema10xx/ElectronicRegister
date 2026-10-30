@@ -51,3 +51,5 @@ These checks detect structural mistakes, not all responsibility errors, authoriz
 reflection consumers or runtime DI issues. Builds, reviews and executable tests remain
 necessary. External consumers must update CLR namespaces after type moves; JSON property
 names and HTTP routes are preserved.
+
+The route-preservation statements above describe the earlier structural migration. The subsequent authorized institutional cutover intentionally retires global routes and adapters; its current contract and executed regressions are in [the final responsibility report](../../docs/refactoring/RESPONSIBILITY_REFACTORING_REPORT.md).

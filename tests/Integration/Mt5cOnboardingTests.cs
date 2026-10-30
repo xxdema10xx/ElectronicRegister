@@ -277,7 +277,7 @@ public sealed partial class Mt5cOnboardingTests : IAsyncLifetime
     public async Task ActualAdministrativeCliVerifiesSignedIntentAndUsesOnlyOwnerInstalledChannel()
     {
         var root=System.IO.Path.GetFullPath(System.IO.Path.Combine(AppContext.BaseDirectory,"../../../../../"));
-        var folder=System.IO.Path.Combine(root,"migrations/mt4/private/mt5a-mamp-13306/cli-test-"+Guid.NewGuid().ToString("N"));System.IO.Directory.CreateDirectory(folder);PrivateTestFiles.ProtectNewDirectory(folder);
+        var folder=PrivateTestFiles.CreateDirectory("onboarding-cli");
         var op=Operation();var json=new System.Text.Json.JsonSerializerOptions();json.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter<PlatformAction>());
         var configFile=System.IO.Path.Combine(folder,"admin.json");var operationFile=System.IO.Path.Combine(folder,"signed.json");
         var assembly=typeof(PlatformCliTestChannel).Assembly.Location;

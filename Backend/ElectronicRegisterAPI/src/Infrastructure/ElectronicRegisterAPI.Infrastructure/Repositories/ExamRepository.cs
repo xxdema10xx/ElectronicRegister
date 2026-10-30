@@ -16,9 +16,10 @@ internal class ExamRepository : IExamRepository
 {
     private readonly ElectronicRegisterContext _context;
     private readonly InstitutionExamDataScope? _scope;
+    private CancellationToken Ct => _scope?.CancellationToken ?? CancellationToken.None;
     private IQueryable<T> Rows<T>()
         where T : class => _scope?.Query<T>() ?? _context.Set<T>();
-    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync() : _scope.SaveAsync();
+    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync(Ct) : _scope.SaveAsync();
     public ExamRepository(ElectronicRegisterContext context, InstitutionExamDataScope? scope = null)
     {
         _context = context;
@@ -27,6 +28,12 @@ internal class ExamRepository : IExamRepository
 
     public async Task<Exam?> GetByIdAsync(Guid id, bool includeStructure = false, bool includeStudents = false)
     {
+        // Split sibling collections only inside one repeatable-read snapshot.
+        // Reuse an existing write transaction and its parent lock when present.
+        var split = includeStructure && includeStudents;
+        await using var snapshot = split && _context.Database.CurrentTransaction is null
+            ? await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.RepeatableRead, Ct)
+            : null;
         IQueryable<ExamEntity> query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking();
         if (includeStructure)
         {
@@ -38,7 +45,11 @@ internal class ExamRepository : IExamRepository
             query = query.Include(e => e.ExamStudents);
         }
 
-        var entity = await query.FirstOrDefaultAsync(e => e.Id == id);
+        if (split)
+            query = query.AsSplitQuery();
+        var entity = await query.FirstOrDefaultAsync(e => e.Id == id, Ct);
+        if (snapshot is not null)
+            await snapshot.CommitAsync(CancellationToken.None);
         return entity is null ? null : MapToModel(entity);
     }
 
@@ -49,17 +60,17 @@ internal class ExamRepository : IExamRepository
         if (_scope is not null)
         {
             await _scope.LockStudentBeforeStartAsync();
-            if (await _scope.LockExam(id).AsTracking().FirstOrDefaultAsync()is null)
+            if (await _scope.LockExam(id).AsTracking().FirstOrDefaultAsync(Ct)is null)
                 return null;
-            var scoped = await _scope.Exams.AsTracking().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).Where(e => e.Id == id).Include(e => e.Questions).ThenInclude(q => q.QuestionOptions).Include(e => e.ExamStudents).FirstOrDefaultAsync();
+            var scoped = await _scope.Exams.AsTracking().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).Where(e => e.Id == id).Include(e => e.Questions).ThenInclude(q => q.QuestionOptions).Include(e => e.ExamStudents).AsSplitQuery().FirstOrDefaultAsync(Ct);
             return scoped is null ? null : MapToModel(scoped);
         }
 
-        var entity = await (_scope is null ? _context.Exams.FromSqlRaw("SELECT * FROM exam WHERE id = {0} FOR UPDATE", id) : _scope.LockExam(id)).AsTracking().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).Include(e => e.Questions).ThenInclude(q => q.QuestionOptions).Include(e => e.ExamStudents).FirstOrDefaultAsync();
+        var entity = await (_scope is null ? _context.Exams.FromSqlRaw("SELECT * FROM exam WHERE id = {0} FOR UPDATE", id) : _scope.LockExam(id)).AsTracking().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).Include(e => e.Questions).ThenInclude(q => q.QuestionOptions).Include(e => e.ExamStudents).FirstOrDefaultAsync(Ct);
         return entity is null ? null : MapToModel(entity);
     }
 
-    public Task<bool> HasRetakesAsync(Guid examId) => Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().AnyAsync(e => e.RetakeOfExamId == examId);
+    public Task<bool> HasRetakesAsync(Guid examId) => Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().AnyAsync(e => e.RetakeOfExamId == examId, Ct);
     public async Task<List<Exam>> GetAllAsync(Guid? teacherId = null)
     {
         var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking().AsQueryable();
@@ -68,7 +79,7 @@ internal class ExamRepository : IExamRepository
             query = query.Where(e => e.ClassSubject.TeacherId == teacherId.Value);
         }
 
-        return await query.OrderByDescending(e => e.AvailableFrom).Select(e => new Exam { Id = e.Id, ClassSubjectId = e.ClassSubjectId, RetakeOfExamId = e.RetakeOfExamId, Name = e.ClassSubject.Subject.Name, Description = e.Description, AvailableFrom = e.AvailableFrom, AvailableUntil = e.AvailableUntil, DurationMinutes = e.DurationMinutes, PassingPercent = e.PassingPercent, TotalPoints = e.TotalPoints, Status = ExamStatusMapper.FromDbString(e.Status), PublishedAt = e.PublishedAt, ClosedAt = e.ClosedAt, CancelledAt = e.CancelledAt }).ToListAsync();
+        return await query.OrderByDescending(e => e.AvailableFrom).Select(e => new Exam { Id = e.Id, ClassSubjectId = e.ClassSubjectId, RetakeOfExamId = e.RetakeOfExamId, Name = e.ClassSubject.Subject.Name, Description = e.Description, AvailableFrom = e.AvailableFrom, AvailableUntil = e.AvailableUntil, DurationMinutes = e.DurationMinutes, PassingPercent = e.PassingPercent, TotalPoints = e.TotalPoints, Status = ExamStatusMapper.FromDbString(e.Status), PublishedAt = e.PublishedAt, ClosedAt = e.ClosedAt, CancelledAt = e.CancelledAt }).ToListAsync(Ct);
     }
 
     public async Task<List<ExamSummaryDto>> GetSummariesAsync(Guid? teacherId = null)
@@ -76,25 +87,25 @@ internal class ExamRepository : IExamRepository
         var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking();
         if (teacherId.HasValue)
             query = query.Where(e => e.ClassSubject.TeacherId == teacherId.Value);
-        var rows = await query.OrderByDescending(e => e.AvailableFrom).Select(e => new { e.Id, Name = e.ClassSubject.Subject.Name, e.Description, e.ClassSubjectId, e.RetakeOfExamId, e.AvailableFrom, e.AvailableUntil, e.DurationMinutes, e.PassingPercent, e.TotalPoints, e.Status, AssignedStudentsCount = e.ExamStudents.Count, e.PublishedAt, e.ClosedAt, e.CancelledAt }).ToListAsync();
+        var rows = await query.OrderByDescending(e => e.AvailableFrom).Select(e => new { e.Id, Name = e.ClassSubject.Subject.Name, e.Description, e.ClassSubjectId, e.RetakeOfExamId, e.AvailableFrom, e.AvailableUntil, e.DurationMinutes, e.PassingPercent, e.TotalPoints, e.Status, AssignedStudentsCount = e.ExamStudents.Count, e.PublishedAt, e.ClosedAt, e.CancelledAt }).ToListAsync(Ct);
         return rows.Select(r => new ExamSummaryDto { Id = r.Id, Name = r.Name, Description = r.Description, ClassSubjectId = r.ClassSubjectId, RetakeOfExamId = r.RetakeOfExamId, AvailableFrom = DbUtc.Read(r.AvailableFrom), AvailableUntil = DbUtc.Read(r.AvailableUntil), DurationMinutes = r.DurationMinutes, PassingPercent = r.PassingPercent, TotalPoints = r.TotalPoints, Status = ExamStatusMapper.FromDbString(r.Status), AssignedStudentsCount = r.AssignedStudentsCount, PublishedAt = DbUtc.Read(r.PublishedAt), ClosedAt = DbUtc.Read(r.ClosedAt), CancelledAt = DbUtc.Read(r.CancelledAt) }).ToList();
     }
 
     public async Task<List<Exam>> GetAssignedToStudentAsync(Guid studentId)
     {
-        var entities = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking().Where(e => e.ExamStudents.Any(es => es.StudentId == studentId)).Where(e => e.Status != "draft").Include(e => e.ExamStudents.Where(es => es.StudentId == studentId)).OrderByDescending(e => e.AvailableFrom).ToListAsync();
+        var entities = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking().Where(e => e.ExamStudents.Any(es => es.StudentId == studentId)).Where(e => e.Status != "draft").Include(e => e.ExamStudents.Where(es => es.StudentId == studentId)).OrderByDescending(e => e.AvailableFrom).ToListAsync(Ct);
         return entities.Select(MapToModel).ToList();
     }
 
     public async Task<List<Exam>> GetByClassSubjectAsync(Guid classSubjectId)
     {
-        var entities = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking().Where(e => e.ClassSubjectId == classSubjectId).OrderByDescending(e => e.AvailableFrom).ToListAsync();
+        var entities = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().Include(e => e.ClassSubject).ThenInclude(cs => cs.Subject).AsNoTracking().Where(e => e.ClassSubjectId == classSubjectId).OrderByDescending(e => e.AvailableFrom).ToListAsync(Ct);
         return entities.Select(MapToModel).ToList();
     }
 
     public Task<bool> HasSubmissionsAsync(Guid examId)
     {
-        return Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AnyAsync(s => s.ExamId == examId);
+        return Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AnyAsync(s => s.ExamId == examId, Ct);
     }
 
     public Task<bool> HasInProgressSubmissionsAsync(Guid examId)
@@ -104,15 +115,15 @@ internal class ExamRepository : IExamRepository
         // Close acquires the Exam lock before any consistent read establishes a snapshot.
         // All earlier Starts have committed; later Starts wait for Close to commit/rollback.
         // Do not lock submissions: Submit/worker own those locks and can read exam structure.
-        return Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AnyAsync(s => s.ExamId == examId && s.Status == "in_progress");
+        return Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AnyAsync(s => s.ExamId == examId && s.Status == "in_progress", Ct);
     }
 
     private async Task DeriveNameForWriteAsync(Exam exam)
     {
-        var subjectId = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>().Where(cs => cs.Id == exam.ClassSubjectId).Select(cs => cs.SubjectId).SingleAsync();
+        var subjectId = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>().Where(cs => cs.Id == exam.ClassSubjectId).Select(cs => cs.SubjectId).SingleAsync(Ct);
         // A current locking read serializes with subject renames, even under REPEATABLE READ.
         // ClassSubject was resolved through the caller's authorized scope before this lock.
-        var subject = await _context.Subjects.FromSqlInterpolated($"SELECT * FROM subject WHERE id = {subjectId} FOR UPDATE").AsNoTracking().SingleAsync();
+        var subject = await _context.Subjects.FromSqlInterpolated($"SELECT * FROM subject WHERE id = {subjectId} FOR UPDATE").AsNoTracking().SingleAsync(Ct);
         exam.Name = subject.Name;
     }
 
@@ -123,7 +134,7 @@ internal class ExamRepository : IExamRepository
         if (_scope is not null)
         {
             await _scope.LockExamCreationTenantAsync();
-            if (await _scope.LockAssignmentForExamWrite(exam.ClassSubjectId).AsNoTracking().SingleOrDefaultAsync()is null)
+            if (await _scope.LockAssignmentForExamWrite(exam.ClassSubjectId).AsNoTracking().SingleOrDefaultAsync(Ct)is null)
                 throw new KeyNotFoundException("Assegnazione non disponibile.");
         }
 
@@ -179,7 +190,7 @@ internal class ExamRepository : IExamRepository
         if (exam.Status == Domain.Enums.ExamStatus.Cancelled)
             _scope?.RequireExamCancel();
         await DeriveNameForWriteAsync(exam);
-        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().FirstOrDefaultAsync(e => e.Id == exam.Id);
+        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().FirstOrDefaultAsync(e => e.Id == exam.Id, Ct);
         if (entity is null)
             return;
         entity.ClassSubjectId = exam.ClassSubjectId;
@@ -202,7 +213,7 @@ internal class ExamRepository : IExamRepository
     {
         if (_scope is not null)
             await _scope.RequireDraftReplacementAsync(exam.Id);
-        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().Include(e => e.Questions).ThenInclude(q => q.QuestionOptions).FirstOrDefaultAsync(e => e.Id == exam.Id);
+        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().Include(e => e.Questions).ThenInclude(q => q.QuestionOptions).FirstOrDefaultAsync(e => e.Id == exam.Id, Ct);
         if (entity is null)
             return;
         _context.Questions.RemoveRange(entity.Questions);
@@ -241,7 +252,7 @@ internal class ExamRepository : IExamRepository
     {
         if (_scope is not null)
             await _scope.RequireDraftReplacementAsync(examId);
-        var currentStudents = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamStudent>().Where(es => es.ExamId == examId).ToListAsync();
+        var currentStudents = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamStudent>().Where(es => es.ExamId == examId).ToListAsync(Ct);
         _context.ExamStudents.RemoveRange(currentStudents);
         var newEntities = students.Select(student => new ExamStudentEntity { ExamId = examId, StudentId = student.StudentId, ExtraTimeMinutes = student.ExtraTimeMinutes, AssignedAt = student.AssignedAt });
         await _context.ExamStudents.AddRangeAsync(newEntities);
@@ -251,7 +262,7 @@ internal class ExamRepository : IExamRepository
     public async Task DeleteDraftAsync(Guid examId)
     {
         _scope?.RequireExamDelete();
-        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().FirstOrDefaultAsync(e => e.Id == examId);
+        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Exam>().FirstOrDefaultAsync(e => e.Id == examId, Ct);
         if (entity is null)
             return;
         _context.Exams.Remove(entity);

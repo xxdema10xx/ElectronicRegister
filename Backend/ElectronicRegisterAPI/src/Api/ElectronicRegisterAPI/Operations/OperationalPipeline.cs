@@ -127,6 +127,7 @@ public static class OperationalPipeline
         IConfiguration configuration,
         RuntimePolicy policy,
         IHostApplicationLifetime lifetime,
+        ILoggerFactory loggerFactory,
         CancellationToken ct
     ) =>
         {
@@ -143,7 +144,9 @@ public static class OperationalPipeline
                 using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
                 timeout.CancelAfter(TimeSpan.FromSeconds(4));
                 await sql.OpenAsync(timeout.Token);
-                await using var command = new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE()", sql);
+                // Require this gate revision independently of the stored routine:
+                // an older 004 routine must never certify a release missing 005.
+                await using var command = new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE(),EXISTS(SELECT 1 FROM er_schema_release WHERE version='er-quality-1-closure-1')", sql);
                 await using var reader = await command.ExecuteReaderAsync(timeout.Token);
                 if (!await reader.ReadAsync(timeout.Token))
                     return Results.StatusCode(503);
@@ -152,10 +155,22 @@ public static class OperationalPipeline
                 var datadir = reader.GetString(3).TrimEnd('/');
                 var expectedData = configuration["Readiness:ExpectedDataDir"]?.Replace('\\', '/').TrimEnd('/');
                 var validData = expectedData is not null ? datadir.Equals(expectedData, StringComparison.OrdinalIgnoreCase) : policy.Local && datadir.EndsWith("/migrations/mt4/private/mt5a-mamp-13306/data", StringComparison.OrdinalIgnoreCase);
-                return reader.GetString(0) == expectedVersion && reader.GetString(1).Equals(expectedHost, StringComparison.OrdinalIgnoreCase) && reader.GetInt32(2) == connection.Port && reader.GetString(4) == connection.Database && validData ? Results.Ok(new { status = "ready" }) : Results.StatusCode(503);
+                var validIdentity = reader.GetString(0) == expectedVersion && reader.GetString(1).Equals(expectedHost, StringComparison.OrdinalIgnoreCase) && reader.GetInt32(2) == connection.Port && reader.GetString(4) == connection.Database && validData && reader.GetBoolean(5);
+                await reader.DisposeAsync();
+                if (!validIdentity)
+                    return Results.StatusCode(503);
+                await using var schema = new MySqlCommand("CALL er_schema_ready()", sql);
+                if (Convert.ToInt32(await schema.ExecuteScalarAsync(timeout.Token)) != 1)
+                {
+                    loggerFactory.CreateLogger("Readiness").LogWarning("Readiness failed {ErrorCode}", "SCHEMA_PREREQUISITE");
+                    return Results.StatusCode(503);
+                }
+                return Results.Ok(new { status = "ready" });
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                loggerFactory.CreateLogger("Readiness").LogWarning("Readiness failed {ErrorCode} {ProviderNumber}",
+                    error is MySqlException ? "DB_PREREQUISITE" : "PROBE_UNAVAILABLE", (error as MySqlException)?.Number);
                 return Results.StatusCode(503);
             }
         }).AllowAnonymous();

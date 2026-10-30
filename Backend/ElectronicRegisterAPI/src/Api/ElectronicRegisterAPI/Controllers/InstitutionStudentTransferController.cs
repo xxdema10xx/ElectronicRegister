@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ElectronicRegisterAPI.Api.Controllers;
 
-// A single existing School marker satisfies LegacyEndpointGate. Course rollout is
+// A single existing School marker satisfies InstitutionEndpointGate. Course rollout is
 // an additional fail-closed filter, not an unsupported combination of IAM policies.
 [ApiController, Route("api/institution/students"), InstitutionSchoolEndpoint, CourseApiErrors, StudentTransferErrors, Authorize(Roles = "InstitutionAdmin")]
 public sealed class InstitutionStudentTransferController(IInstitutionStudentTransferManager manager) : ControllerBase

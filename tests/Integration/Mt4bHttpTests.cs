@@ -287,7 +287,7 @@ public sealed partial class Mt4bHttpTests(IntegrationFixture fixture) : IAsyncLi
             await Expect(await Request(path,body:body,method:method),HttpStatusCode.Unauthorized);
             await Expect(await Request(path,ticket,body,method),HttpStatusCode.Unauthorized);
         }
-        await Expect(await Request("/api/Users",await Access()),HttpStatusCode.Unauthorized);
+        await Expect(await Request("/api/Users",await Access()),HttpStatusCode.NotFound);
         var legacy=new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
             issuer:"mt2-tests",audience:"mt2-client",claims:new[]{new System.Security.Claims.Claim("sub",_adminUser.ToString()),new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role,"admin")},
             expires:DateTime.UtcNow.AddMinutes(5),signingCredentials:new Microsoft.IdentityModel.Tokens.SigningCredentials(new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(Mt3cHosting.Key)),"HS256")));
@@ -366,7 +366,7 @@ public sealed partial class Mt4bHttpTests(IntegrationFixture fixture) : IAsyncLi
         Assert.Equal(MembershipHttpSurface.MvcCount,mvc.Length);
         MembershipHttpSurface.AssertRoutes(mvc); Assert.Equal(MembershipHttpSurface.AdminCount,mvc.Count(e=>e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is not null));
         var previous=mvc.Where(e=>e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null && e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()!.ControllerName!="InvitationAcceptance").ToArray();
-        Assert.Equal(214,previous.Length);Assert.Equal(191,previous.Count(e=>e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null));
+        Assert.Equal(146,previous.Length);Assert.Equal(123,previous.Count(e=>e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null));
         var rows=all.SelectMany(e=>(e.Metadata.GetMetadata<Microsoft.AspNetCore.Routing.HttpMethodMetadata>()?.HttpMethods??new[]{"GET"}).Select(method=>new {
             method,route=e.RoutePattern.RawText,course=e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is not null,
             policy=e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>().Select(a=>a.Policy).Where(p=>!string.IsNullOrEmpty(p)).ToArray(),
@@ -384,7 +384,7 @@ public sealed partial class Mt4bHttpTests(IntegrationFixture fixture) : IAsyncLi
         Assert.DoesNotContain(added.Where(e=>!e.route!.StartsWith("api/institution/campuses")),e=>e.method=="DELETE");
         await File.WriteAllTextAsync(Path.Combine(EvidenceDirectory(),"routes-"+environment+".json"),System.Text.Json.JsonSerializer.Serialize(rows,new System.Text.Json.JsonSerializerOptions {WriteIndented=true}));
         await Expect(await Request(Editions,await Access(),host:host),HttpStatusCode.OK);
-        await Expect(await Request("/api/Users",await Access(),host:host),HttpStatusCode.Unauthorized);
+        await Expect(await Request("/api/Users",await Access(),host:host),HttpStatusCode.NotFound);
         await Expect(await host.Client.GetAsync("/openapi/v1.json"),environment=="Development"?HttpStatusCode.OK:HttpStatusCode.NotFound);
     }
     [Fact]
@@ -462,7 +462,7 @@ public sealed partial class Mt4bHttpTests(IntegrationFixture fixture) : IAsyncLi
             "scheme"=>new Microsoft.AspNetCore.Authorization.AuthorizeAttribute {AuthenticationSchemes="Bearer"},"anonymous"=>new Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute(),
             _=>new Microsoft.AspNetCore.Authorization.AuthorizeAttribute {Roles="InstitutionAdmin"}});
         if(kind=="wrong-marker-policy")marker.Policy=InstitutionTokenContract.AccessScheme;
-        var gateType=typeof(InstitutionCourseEditionController).Assembly.GetType("ElectronicRegisterAPI.Api.Security.LegacyEndpointGate")!;
+        var gateType=typeof(InstitutionCourseEditionController).Assembly.GetType("ElectronicRegisterAPI.Api.Security.InstitutionEndpointGate")!;
         var gate=(Microsoft.AspNetCore.Mvc.Filters.IAsyncAuthorizationFilter)scope.ServiceProvider.GetRequiredService(gateType);
         var action=new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor {EndpointMetadata=metadata};
         var http=new Microsoft.AspNetCore.Http.DefaultHttpContext {RequestServices=scope.ServiceProvider,User=new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity(new[]{new System.Security.Claims.Claim("sub",_adminUser.ToString())},"test"))};

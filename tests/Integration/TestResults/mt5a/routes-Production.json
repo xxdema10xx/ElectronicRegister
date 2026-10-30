@@ -1,5 +1,12 @@
 [
   {
+    "route": "api/institution/admin/members/{membershipId:guid}/profile-acquisitions",
+    "methods": [
+      "GET"
+    ],
+    "policy": "InstitutionMembershipAdminAccess"
+  },
+  {
     "route": "api/institution/admin/members",
     "methods": [
       "GET"

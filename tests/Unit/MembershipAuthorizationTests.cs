@@ -1,7 +1,7 @@
 using ElectronicRegisterAPI.Domain.Authorization;
 using System;
 using System.Collections.Generic;
-using ElectronicRegisterAPI.Business.Services;
+using System.Linq;
 using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Models;
 using Xunit;
@@ -10,6 +10,49 @@ namespace ElectronicRegisterAPI.Tests.Unit;
 
 public class MembershipAuthorizationTests
 {
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]
+    [InlineData(7)]
+    [InlineData(8)]
+    [InlineData(9)]
+    [InlineData(10)]
+    [InlineData(11)]
+    [InlineData(12)]
+    [InlineData(13)]
+    [InlineData(14)]
+    [InlineData(15)]
+    public void EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(int mask)
+    {
+        var roles = Enum.GetValues<InstitutionRole>().Where(r => (mask & (1 << (int)r)) != 0).ToArray();
+        var row = Current() with { Roles = roles, SecurityGeneration = 7 };
+        var token = new TenantContext(row.UserId, row.InstitutionId, row.MembershipId, roles, 7);
+
+        Assert.True(MembershipAuthorizationRules.Matches(token, row));
+        Assert.False(MembershipAuthorizationRules.Matches(token, row with { UserId = Guid.NewGuid() }));
+        Assert.False(MembershipAuthorizationRules.Matches(token, row with { InstitutionId = Guid.NewGuid() }));
+        Assert.False(MembershipAuthorizationRules.Matches(token, row with { MembershipId = Guid.NewGuid() }));
+        Assert.False(MembershipAuthorizationRules.Matches(token, row with { SecurityGeneration = 8 }));
+        Assert.False(MembershipAuthorizationRules.Matches(token, row with { SecurityGeneration = null }));
+        Assert.False(MembershipAuthorizationRules.Matches(token, row with { Status = MembershipStatus.Suspended }));
+        Assert.False(MembershipAuthorizationRules.Matches(token, row with { InstitutionStatus = InstitutionStatus.Suspended }));
+        Assert.False(MembershipAuthorizationRules.Matches(token, row with { Roles = roles.Append(roles[0]).ToArray() }));
+        Assert.False(MembershipAuthorizationRules.Matches(token, row with { Roles = roles.Append((InstitutionRole)999).ToArray() }));
+        Assert.False(MembershipAuthorizationRules.Matches(token, row with { Roles = roles.Skip(1).ToArray() }));
+    }
+
+    [Fact]
+    public void MissingMembershipFailsClosed()
+    {
+        var row = Current();
+        var token = new TenantContext(row.UserId, row.InstitutionId, row.MembershipId, row.Roles, row.SecurityGeneration);
+        Assert.False(MembershipAuthorizationRules.Matches(token, null));
+    }
+
     [Theory]
     [InlineData(MembershipStatus.Pending)]
     [InlineData(MembershipStatus.Suspended)]

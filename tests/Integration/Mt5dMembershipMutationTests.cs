@@ -76,7 +76,8 @@ public sealed class Mt5dMembershipMutationTests : IAsyncLifetime
     {
         using var scope=_host.Host.Services.CreateScope();var m=await scope.ServiceProvider.GetRequiredService<IMembershipAuthorizationRepository>()
             .GetAsync(_users[index==4?2:index],index==4?_b:_a,_members[index]);Assert.NotNull(m);
-        return new(m!.UserId,m.InstitutionId,m.MembershipId,m.Roles,m.SecurityGeneration);
+        var identity=await scope.ServiceProvider.GetRequiredService<IIdentityAccountRepository>().GenerationAsync(m!.UserId);
+        return new(m.UserId,m.InstitutionId,m.MembershipId,m.Roles,m.SecurityGeneration,identity);
     }
     private async Task<MembershipMutationResult> Apply(MembershipMutation request,TenantContext? actor=null)
     {
@@ -245,7 +246,7 @@ public sealed class Mt5dMembershipMutationTests : IAsyncLifetime
         var afterLifecycle=await Generation();Assert.Equal(2,afterLifecycle);
         // Even a candidate with the current generation cannot authorize IAM in
         // a non-active institution; denial must not advance it again.
-        actor=new TenantContext(actor.UserId,actor.InstitutionId,actor.MembershipId,actor.Roles,afterLifecycle);
+        actor=new TenantContext(actor.UserId,actor.InstitutionId,actor.MembershipId,actor.Roles,afterLifecycle,actor.IdentityGeneration);
         request=request with{ExpectedRevision=afterLifecycle};
         await Assert.ThrowsAsync<UnauthorizedAccessException>(()=>Direct(request,actor));Assert.Equal(0,await Events());Assert.Equal(afterLifecycle,await Generation());
     }
@@ -256,7 +257,7 @@ public sealed class Mt5dMembershipMutationTests : IAsyncLifetime
         var actor=await Context();var request=await Request();
         var forged=new TenantContext(fault=="user"?_users[3]:actor.UserId,actor.InstitutionId,actor.MembershipId,
             fault=="roles"?new[]{InstitutionRole.InstitutionAdmin,InstitutionRole.Teacher}:actor.Roles,
-            fault=="generation"?null:actor.SecurityGeneration);
+            fault=="generation"?null:actor.SecurityGeneration,actor.IdentityGeneration);
         await Assert.ThrowsAsync<UnauthorizedAccessException>(()=>Direct(request,forged));Assert.Equal(0,await Events());
     }
     [Fact]

@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Authorization;
 using ElectronicRegisterAPI.Domain.Configuration;
 using ElectronicRegisterAPI.Domain.DTOs.Email;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
@@ -67,7 +68,7 @@ internal sealed class InstitutionEmailRepository(
         if (!feature.Enabled)
             throw new UnauthorizedAccessException("Modulo email non abilitato.");
         var m = await memberships.GetAsync(t.UserId, t.InstitutionId, t.MembershipId, ct);
-        if (m is null || m.Status != MembershipStatus.Active || m.InstitutionStatus != InstitutionStatus.Active || m.SecurityGeneration is null or < 0 || m.SecurityGeneration != t.SecurityGeneration || !t.Roles.SetEquals(m.Roles))
+        if (!MembershipAuthorizationRules.Matches(t, m))
             throw new UnauthorizedAccessException();
     }
 

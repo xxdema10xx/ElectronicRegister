@@ -12,14 +12,15 @@ namespace ElectronicRegisterAPI.Infrastructure.Security;
 
 internal sealed class InstitutionTokens(IOptions<JwtOptions> options) : IInstitutionTokens
 {
-    public string Selection(Guid userId) => Create(userId, InstitutionTokenContract.SelectionType, InstitutionTokenContract.SelectionAudience(options.Value.Audience), 300, []);
-    public string Access(TenantContext context)
+    public string Selection(Guid userId, long identityGeneration = 0) => Create(userId, InstitutionTokenContract.SelectionType, InstitutionTokenContract.SelectionAudience(options.Value.Audience), 300, [IdentityClaim(identityGeneration)]);
+    public string Access(TenantContext context, long identityGeneration = 0)
     {
         if (context.SecurityGeneration is not long generation || generation < 0)
             throw new UnauthorizedAccessException("Stato di sicurezza richiesto.");
-        return Create(context.UserId, InstitutionTokenContract.AccessType, InstitutionTokenContract.AccessAudience(options.Value.Audience), 900, new[] { new Claim(InstitutionTokenContract.Institution, context.InstitutionId.ToString()), new Claim(InstitutionTokenContract.Membership, context.MembershipId.ToString()), new Claim(InstitutionTokenContract.SecurityGeneration, generation.ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64) }.Concat(context.Roles.Order().Select(r => new Claim(InstitutionTokenContract.Role, r.ToString()))));
+        return Create(context.UserId, InstitutionTokenContract.AccessType, InstitutionTokenContract.AccessAudience(options.Value.Audience), 900, new[] { IdentityClaim(identityGeneration), new Claim(InstitutionTokenContract.Institution, context.InstitutionId.ToString()), new Claim(InstitutionTokenContract.Membership, context.MembershipId.ToString()), new Claim(InstitutionTokenContract.SecurityGeneration, generation.ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64) }.Concat(context.Roles.Order().Select(r => new Claim(InstitutionTokenContract.Role, r.ToString()))));
     }
 
+    private static Claim IdentityClaim(long generation) => generation >= 0 ? new(InstitutionTokenContract.IdentityGeneration, generation.ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64) : throw new UnauthorizedAccessException();
     private string Create(
         Guid userId,
         string type,

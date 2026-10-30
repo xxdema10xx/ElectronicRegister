@@ -1,0 +1,179 @@
+# Use only through host.py with a newly generated private state directory.
+# No Nginx service: the existing host installation remains independent.
+name: ${COMPOSE_PROJECT_NAME:?prepare staging state first}
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "10m", max-file: "5" }
+services:
+  volume-init:
+    image: ${MYSQL_IMAGE:?select the verified 5.7.24 image}
+    platform: linux/amd64
+    user: "0:0"
+    entrypoint: ["sh", "-ec"]
+    command:
+      - |
+        if [ -z "$$(ls -A /data)" ]; then
+          chown 999:999 /data; chmod 750 /data
+        else
+          test "$$(stat -c %u /data)" = 999
+        fi
+    volumes: ["db-data:/data"]
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN, FOWNER]
+    security_opt: ["no-new-privileges:true"]
+    restart: "no"
+    logging: *logging
+    labels: { io.er.staging.id: "${STAGING_ID}" }
+  db:
+    image: ${MYSQL_IMAGE:?required}
+    platform: linux/amd64
+    hostname: er-stage-db
+    user: "999:999"
+    depends_on:
+      volume-init: { condition: service_completed_successfully }
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/root-password
+      ER_STAGE_ID: ${STAGING_ID:?required}
+      ER_STAGE_SQL_HOST: ${SQL_HOST_PATTERN:?required}
+    command:
+      - --datadir=/var/lib/mysql
+      - --socket=/var/run/mysqld/mysqld.sock
+      - --pid-file=/var/run/mysqld/mysqld.pid
+      - --ssl-ca=/run/secrets/mysql-ca.pem
+      - --ssl-cert=/run/secrets/mysql-server.pem
+      - --ssl-key=/run/secrets/mysql-server-key.pem
+      - --tls-version=TLSv1.2
+      - --require-secure-transport=ON
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --explicit-defaults-for-timestamp=1
+      - --default-time-zone=+00:00
+      - --skip-name-resolve
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./db-bootstrap.sh:/docker-entrypoint-initdb.d/010-er-stage.sh:ro
+      - ./db-health.sh:/opt/er/db-health.sh:ro
+    secrets:
+      - { source: root-password, target: root-password }
+      - { source: root-client, target: root.cnf }
+      - { source: db-ca, target: mysql-ca.pem }
+      - { source: server-cert, target: mysql-server.pem }
+      - { source: server-key, target: mysql-server-key.pem }
+      - { source: migrator-password, target: migrator-password }
+    tmpfs:
+      - /var/run/mysqld:uid=999,gid=999,mode=0750
+      - /tmp:uid=999,gid=999,mode=1770
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    networks:
+      backend:
+        aliases: [er-stage-db, er-stage-db-wrong]
+    # Deliberately no ports, host networking or Docker socket.
+    healthcheck:
+      test: [CMD, sh, /opt/er/db-health.sh]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 60s
+    restart: unless-stopped
+    stop_grace_period: 60s
+    logging: *logging
+    labels: { io.er.staging.id: "${STAGING_ID}" }
+  api:
+    image: ${API_IMAGE:?required}
+    build:
+      context: ../..
+      dockerfile: infra/Dockerfile
+      args: { SOURCE_REVISION: "${SOURCE_REVISION:?required}" }
+    user: "1654:1654"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Staging
+      ER_RUNTIME_CONFIG: /run/config/runtime.json
+    volumes:
+      - ${STATE_DIR:?required}/public/runtime.json:/run/config/runtime.json:ro
+    secrets:
+      - { source: api-connection, target: ConnectionStrings__DefaultConnection }
+      - { source: api-jwt, target: Jwt__Key }
+      - { source: api-ca, target: mysql-ca.pem }
+    ports:
+      - "127.0.0.1:${API_PORT:?required}:8080"
+    networks: [backend]
+    depends_on:
+      db: { condition: service_healthy }
+    read_only: true
+    tmpfs: ["/tmp:uid=1654,gid=1654,mode=0700"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: [CMD, dotnet, /health/StagingSupport.dll, health, /run/config/runtime.json]
+      interval: 15s
+      timeout: 6s
+      retries: 4
+      start_period: 20s
+    restart: unless-stopped
+    stop_grace_period: 40s
+    logging: *logging
+    labels: { io.er.staging.id: "${STAGING_ID}" }
+  ops:
+    profiles: [tools]
+    image: ${OPS_IMAGE:?required}
+    build:
+      context: ../..
+      dockerfile: infra/staging/Dockerfile.ops
+      additional_contexts: { api_artifact: "service:api" }
+    user: "10001:10001"
+    entrypoint: [python3, /workspace/infra/staging/ops.py]
+    volumes:
+      - ../..:/workspace:ro
+      - ${STATE_DIR}/public:/state/public:ro
+      - ${STATE_DIR}/ops:/state/ops
+    secrets:
+      - { source: migrator-client, target: migrator.cnf }
+      - { source: reviewer-client, target: reviewer.cnf }
+      - { source: ops-ca, target: mysql-ca.pem }
+      - { source: wrong-ca, target: wrong-ca.pem }
+      - { source: api-password, target: api-password }
+      - { source: review-password, target: review-password }
+      - { source: ops-jwt, target: jwt-key }
+    networks: [backend]
+    read_only: true
+    tmpfs: ["/tmp:uid=10001,gid=10001,mode=0700"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    environment:
+      GIT_CONFIG_COUNT: "1"
+      GIT_CONFIG_KEY_0: safe.directory
+      GIT_CONFIG_VALUE_0: /workspace
+    restart: "no"
+    logging: *logging
+    labels: { io.er.staging.id: "${STAGING_ID}" }
+volumes:
+  db-data:
+    labels: { io.er.staging.id: "${STAGING_ID}" }
+networks:
+  backend:
+    driver: bridge
+    ipam:
+      config:
+        - { subnet: "${STAGING_SUBNET:?required}", gateway: "${STAGING_GATEWAY:?required}" }
+    labels: { io.er.staging.id: "${STAGING_ID}" }
+secrets:
+  root-password: { file: "${STATE_DIR}/secrets/db/root-password" }
+  root-client: { file: "${STATE_DIR}/secrets/db/root.cnf" }
+  db-ca: { file: "${STATE_DIR}/secrets/db/ca.pem" }
+  server-cert: { file: "${STATE_DIR}/secrets/db/server.pem" }
+  server-key: { file: "${STATE_DIR}/secrets/db/server-key.pem" }
+  migrator-password: { file: "${STATE_DIR}/secrets/db/migrator-password" }
+  api-connection: { file: "${STATE_DIR}/secrets/api/connection" }
+  api-jwt: { file: "${STATE_DIR}/secrets/api/jwt-key" }
+  api-ca: { file: "${STATE_DIR}/secrets/api/ca.pem" }
+  migrator-client: { file: "${STATE_DIR}/secrets/ops/migrator.cnf" }
+  reviewer-client: { file: "${STATE_DIR}/secrets/ops/reviewer.cnf" }
+  ops-ca: { file: "${STATE_DIR}/secrets/ops/ca.pem" }
+  wrong-ca: { file: "${STATE_DIR}/secrets/ops/wrong-ca.pem" }
+  api-password: { file: "${STATE_DIR}/secrets/ops/api-password" }
+  review-password: { file: "${STATE_DIR}/secrets/ops/review-password" }
+  ops-jwt: { file: "${STATE_DIR}/secrets/ops/jwt-key" }

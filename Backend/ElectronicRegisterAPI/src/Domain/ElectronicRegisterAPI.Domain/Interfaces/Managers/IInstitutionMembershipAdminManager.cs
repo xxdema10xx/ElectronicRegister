@@ -6,6 +6,14 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Managers;
 
 public interface IInstitutionMembershipAdminManager
 {
+    Task<IReadOnlyList<ProfileAcquisitionResult>> AcquisitionsAsync(
+        Guid membershipId,
+        int page = 1,
+        int size = 20,
+        string? status = null,
+        CancellationToken ct = default
+    );
+    Task<ProfileAcquisitionResult> AcquireProfileAsync(Guid membershipId, AcquireHistoricalProfile request, CancellationToken ct = default);
     Task<IReadOnlyList<InstitutionMemberDto>> ListAsync(
         int pageNumber = 1,
         int pageSize = 20,

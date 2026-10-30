@@ -1,0 +1,9 @@
+{
+    "podmanOnPath":  false,
+    "dockerOnPath":  false,
+    "imageBuilt":  false,
+    "containerStarted":  false,
+    "standardBinaries":  [
+
+                         ]
+}

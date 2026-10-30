@@ -52,7 +52,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
     private async Task Db(Func<ElectronicRegisterContext,Task> action)
     { using var scope=fixture.ScopeFactory.CreateScope();await action(scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>()); }
     private async Task Execute(string sql,params (string,object)[] values)
-    { await using var c=await Mt3aOwnershipMigration.OpenAsync(fixture.ConnectionString);await using var cmd=new MySqlCommand(sql,c);foreach(var (key,value) in values)cmd.Parameters.AddWithValue(key,value);await cmd.ExecuteNonQueryAsync(); }
+    { await using var c=await Mt3aOwnershipMigration.OpenAsync(fixture.ConnectionString);SqlLockEvidence.Capture(c);await using var cmd=new MySqlCommand(sql,c);foreach(var (key,value) in values)cmd.Parameters.AddWithValue(key,value);await cmd.ExecuteNonQueryAsync(); }
     public async Task InitializeAsync()
     {
         Assert.True(fixture.IsAvailable,fixture.UnavailableReason);
@@ -469,7 +469,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
     {
         var endpoints = _host.Host.Services.GetRequiredService<Microsoft.AspNetCore.Routing.EndpointDataSource>().Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<InstitutionExamEndpointAttribute>() is not null).ToArray();
-        Assert.Equal(37, endpoints.Length);
+        Assert.Equal(38, endpoints.Length);
         foreach (var endpoint in endpoints)
         foreach (var method in endpoint.Metadata.GetMetadata<Microsoft.AspNetCore.Routing.HttpMethodMetadata>()!.HttpMethods)
             yield return (method, "/" + Regex.Replace(endpoint.RoutePattern.RawText!, "\\{[^}]+\\}", _ => Guid.NewGuid().ToString()));
@@ -529,10 +529,8 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         var before = await Digest(false);
         using (var scope = _host.Host.Services.CreateScope())
         {
-            var repository = scope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
-            Assert.DoesNotContain(await repository.GetExpiredInProgressAsync(DateTime.UtcNow, 100), s => s.Id == start.SubmissionId);
-            await Assert.ThrowsAsync<UnauthorizedAccessException>(() => scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Services.IExamSubmissionProcessor>()
-                .ProcessSubmitAsync(start.SubmissionId, null, SubmitReason.TimeExpired, null));
+            Assert.Null(await scope.ServiceProvider.GetRequiredService<ISubmissionExpiryStore>().ResolveAsync(start.SubmissionId, Guid.NewGuid(), default));
+            await Assert.ThrowsAsync<UnauthorizedAccessException>(() => scope.ServiceProvider.GetRequiredService<IInstitutionExamManager>().SubmitExpiredAsync(start.SubmissionId));
         }
         var worker = Assert.Single(_host.Host.Services.GetServices<Microsoft.Extensions.Hosting.IHostedService>().OfType<ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker>());
         await worker.ProcessBatchAsync(CancellationToken.None);
@@ -685,7 +683,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         Assert.Equal(new[] { InstitutionTokenContract.AccessScheme }, policy!.AuthenticationSchemes);
         var endpoints = host.Host.Services.GetRequiredService<Microsoft.AspNetCore.Routing.EndpointDataSource>().Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null).ToArray();
-        Assert.Equal(191, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null && e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null && e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()!.ControllerName!="InvitationAcceptance"));
+        Assert.Equal(123, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null && e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null && e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()!.ControllerName!="InvitationAcceptance"));
         MembershipHttpSurface.AssertRoutes(endpoints); Assert.Equal(MembershipHttpSurface.AdminCount, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is not null));
         Assert.Equal(23, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is not null));
         Assert.Equal(MembershipHttpSurface.MvcCount, endpoints.Length);

@@ -1,0 +1,6 @@
+{
+    "HistoricalBootstrapManifestUnchanged":  true,
+    "ChangedExistingFiles":  54,
+    "ChangedApplicationCs":  27,
+    "NewDomainSource":  "Domain/Exceptions/IdentityRateLimitException.cs"
+}

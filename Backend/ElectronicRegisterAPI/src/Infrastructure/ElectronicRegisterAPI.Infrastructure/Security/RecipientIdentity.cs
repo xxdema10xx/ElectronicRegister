@@ -11,12 +11,13 @@ using ElectronicRegisterAPI.Domain.Models;
 using ElectronicRegisterAPI.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 
 namespace ElectronicRegisterAPI.Infrastructure.Security;
 
-internal sealed class RecipientIdentity(IOptions<JwtOptions> options) : IRecipientIdentity
+internal sealed class RecipientIdentity(IOptions<JwtOptions> options, IIdentityAccountRepository accounts) : IRecipientIdentity
 {
-    public Guid VerifySelectionTicket(string ticket)
+    public async Task<Guid> VerifySelectionTicketAsync(string ticket, CancellationToken ct = default)
     {
         try
         {
@@ -39,6 +40,7 @@ internal sealed class RecipientIdentity(IOptions<JwtOptions> options) : IRecipie
                 throw new UnauthorizedAccessException();
             if (!Guid.TryParse(One("jti"), out var tokenId) || tokenId == Guid.Empty || !long.TryParse(One("auth_time"), out var time) || time <= 0 || time > DateTimeOffset.UtcNow.ToUnixTimeSeconds() || One("aud") != InstitutionTokenContract.SelectionAudience(opt.Audience) || json.RootElement.GetProperty("sub").ValueKind != JsonValueKind.String || json.RootElement.GetProperty("purpose").ValueKind != JsonValueKind.String)
                 throw new UnauthorizedAccessException();
+            await accounts.RequireGenerationAsync(id, InstitutionTokenContract.ReadIdentityGeneration(principal, json.RootElement), ct);
             return id;
         }
         catch (Exception ex)when (ex is SecurityTokenException or ArgumentException or JsonException or IndexOutOfRangeException)

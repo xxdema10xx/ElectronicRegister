@@ -234,11 +234,11 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
             await using(var role = Cmd(second, $"INSERT INTO {Roles}(membership_id,role) VALUES(@m,'Student')", two, ("@m", _ma))) await role.ExecuteNonQueryAsync();
             await two.CommitAsync(); return observed;
         }
-        var contender = Contender();
+        var contender = SqlLockEvidence.Track(second, Contender);
         try
         {
             await started.Task.WaitAsync(TimeSpan.FromSeconds(5));
-            await Task.Delay(100); Assert.False(contender.IsCompleted);
+            await SqlLockEvidence.WaitAsync(_connection, contender, first);
             await using(var role = Cmd(first, $"INSERT INTO {Roles}(membership_id,role) VALUES(@m,'Teacher')", one, ("@m", _ma))) await role.ExecuteNonQueryAsync();
             await one.CommitAsync();
             Assert.Equal(1, await contender.WaitAsync(TimeSpan.FromSeconds(10)));
@@ -426,16 +426,16 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
     }
 
     [Fact]
-    public void PersistenceIntroducesNoHttpMutationSurface()
+    public void MembershipMutationAndAcquisitionRequireExplicitWriteGates()
     {
         var methods=typeof(ElectronicRegisterAPI.Api.Controllers.InstitutionMembershipAdminController).GetMethods()
             .SelectMany(m=>m.GetCustomAttributes(typeof(Microsoft.AspNetCore.Mvc.Routing.HttpMethodAttribute),true))
             .Cast<Microsoft.AspNetCore.Mvc.Routing.HttpMethodAttribute>().ToArray();
-        // Persistence adds no route; E explicitly adds exactly one gated mutation action.
-        Assert.Equal(3,methods.Length);
-        Assert.Equal(2,methods.Count(m=>m.HttpMethods.SequenceEqual(new[]{"GET"})));
-        Assert.Single(methods.Where(m=>m.HttpMethods.SequenceEqual(new[]{"POST"})));
-        Assert.True(typeof(ElectronicRegisterAPI.Api.Controllers.InstitutionMembershipAdminController).GetMethod("Mutate")!
-            .IsDefined(typeof(ElectronicRegisterAPI.Api.Security.InstitutionMembershipWriteEndpointAttribute),false));
+        Assert.Equal(5,methods.Length);
+        Assert.Equal(3,methods.Count(m=>m.HttpMethods.SequenceEqual(new[]{"GET"})));
+        Assert.Equal(2,methods.Count(m=>m.HttpMethods.SequenceEqual(new[]{"POST"})));
+        foreach(var name in new[]{"Mutate","AcquireProfile"})
+            Assert.True(typeof(ElectronicRegisterAPI.Api.Controllers.InstitutionMembershipAdminController).GetMethod(name)!
+                .IsDefined(typeof(ElectronicRegisterAPI.Api.Security.InstitutionMembershipWriteEndpointAttribute),false));
     }
 }

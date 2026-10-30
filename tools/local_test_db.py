@@ -63,11 +63,12 @@ def listener(port):
     return [line.split() for line in value.splitlines() if re.match(r'^\s*TCP\s+\S+:'+str(port)+r'\s+\S+\s+LISTENING\s+\d+\s*$', line)]
 
 def verify_files():
-    manifest = json.loads((ROOT/'migrations/bootstrap/manifest.json').read_text(encoding='utf-8'))
-    require(manifest['format'] == 1, 'Unknown manifest')
+    manifest = json.loads((ROOT/'migrations/release/manifest.json').read_text(encoding='utf-8'))
+    require(manifest['format'] == 2, 'Unknown manifest')
     for relative, sha in manifest['files'].items():
         path = (ROOT/relative).resolve(strict=True)
-        require(ROOT in path.parents and digest(path) == sha, 'Source SHA256 mismatch: '+relative)
+        canonical = path.read_bytes().replace(b'\r\n', b'\n')
+        require(ROOT in path.parents and hashlib.sha256(canonical).hexdigest().upper() == sha, 'Source SHA256 mismatch: '+relative)
     return manifest
 
 class Setup:
@@ -213,7 +214,11 @@ max-allowed-packet=64M
         self.identity(); self.quiet()
         self.query("INSERT INTO institution(id,name,code,status) VALUES ('4d543341-0000-4000-8000-000000000001','Technical legacy test holding','MT3A_LEGACY_TEST','provisioning'); INSERT INTO mt3a_legacy_scope(scope,institution_id) VALUES ('legacy','4d543341-0000-4000-8000-000000000001');")
         self.verify()
-        write_new(self.home/'bootstrap.completed.json', {'manifest_sha256':digest(ROOT/'migrations/bootstrap/manifest.json'),'inventory':manifest['inventory']})
+        for relative in manifest['requiredMigrations'][1:]:
+            self.identity(); self.quiet()
+            self.query((ROOT/relative).read_text(encoding='utf-8'))
+        require(self.query('CALL er_schema_ready();') == '1', 'Release schema incomplete')
+        write_new(self.home/'bootstrap.completed.json', {'manifest_sha256':digest(ROOT/'migrations/release/manifest.json'),'bootstrapInventory':manifest['bootstrapInventory']})
 
     def verify(self):
         verify_files(); self.identity(); self.quiet()
@@ -222,7 +227,12 @@ max-allowed-packet=64M
         require(self.query("SELECT CONCAT(DEFAULT_CHARACTER_SET_NAME,':',DEFAULT_COLLATION_NAME) FROM information_schema.SCHEMATA WHERE SCHEMA_NAME=DATABASE();")=='utf8mb4:utf8mb4_unicode_ci','Database collation mismatch')
         names = self.query('SHOW FULL TABLES;').splitlines()
         inventory=expected['inventory']
-        require(len(names)==inventory['tables'] and all(x.endswith('\tBASE TABLE') for x in names), 'Wrong tables/views')
+        table_names = {x.split('\t')[0] for x in names}
+        additions = {'identity_account_state', 'identity_account_event', 'institution_profile_acquisition', 'identity_password_attempt', 'er_schema_release'}
+        has_release = 'er_schema_release' in table_names
+        require(table_names == set(expected['tables']) | (additions if has_release else set()) and all(x.endswith('\tBASE TABLE') for x in names), 'Wrong tables/views')
+        if has_release:
+            require(self.query('CALL er_schema_ready();') == '1', 'Release prerequisite mismatch')
         require(self.query("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='exam_submission' AND COLUMN_NAME='display_order_json' AND DATA_TYPE='longtext' AND IS_NULLABLE='YES';")=='1', 'Submission display-order contract mismatch')
         require(self.query("SELECT COUNT(*) FROM exam_submission WHERE display_order_json IS NOT NULL AND NOT JSON_VALID(display_order_json);")=='0', 'Invalid persisted submission display order')
         class_checks = self.query((ROOT/'migrations/institution-class/002_validate.sql').read_text(encoding='utf-8')).splitlines()
@@ -239,7 +249,8 @@ max-allowed-packet=64M
             actual = self.query('SHOW CREATE TABLE `'+table+'`;').split('\t',1)[1]
             require(normalize_ddl(actual)==ddl, 'Table/column/index/FK definition mismatch: '+table)
         fields = ['TRIGGER_NAME','EVENT_OBJECT_TABLE','ACTION_TIMING','EVENT_MANIPULATION','ACTION_ORDER','DEFINER','SQL_MODE','CHARACTER_SET_CLIENT','COLLATION_CONNECTION','DATABASE_COLLATION']
-        actual = self.query('SELECT '+','.join(fields)+' FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA=DATABASE() ORDER BY TRIGGER_NAME;').splitlines()
+        baseline_names = ','.join("'"+name+"'" for name in expected['triggers'])
+        actual = self.query('SELECT '+','.join(fields)+' FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA=DATABASE() AND TRIGGER_NAME IN ('+baseline_names+') ORDER BY TRIGGER_NAME;').splitlines()
         require(len(actual)==inventory['triggers'], 'Wrong trigger count')
         for row in actual:
             values = row.split('\t'); name = values[0]; info = expected['trigger_metadata'][name]

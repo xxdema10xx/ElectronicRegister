@@ -23,7 +23,7 @@ internal sealed partial class InstitutionCalendarRepository(
     ElectronicRegisterContext db,
     IMembershipAuthorizationRepository memberships,
     IInstitutionWriteAuthorization writes,
-    CalendarFeature feature,
+    ICalendarFeature feature,
     ICalendarImportRules importRules,
     ICalendarFaultObserver faults,
     TimeProvider clock
@@ -41,7 +41,7 @@ internal sealed partial class InstitutionCalendarRepository(
         if (!feature.Enabled)
             throw new UnauthorizedAccessException();
         var m = await memberships.GetAsync(t.UserId, t.InstitutionId, t.MembershipId, ct);
-        if (m is null || m.Status != MembershipStatus.Active || m.InstitutionStatus != InstitutionStatus.Active || m.SecurityGeneration is null or < 0 || m.SecurityGeneration != t.SecurityGeneration || !t.Roles.SetEquals(m.Roles) || m.Roles.Any(r => !Enum.IsDefined(r)))
+        if (!MembershipAuthorizationRules.Matches(t, m))
             throw new UnauthorizedAccessException();
     }
 

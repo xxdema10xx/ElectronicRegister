@@ -65,20 +65,6 @@ internal class ExpiredExamSubmissionWorker : BackgroundService
         await _cycle.WaitAsync(cancellationToken);
         try
         {
-            // A legacy scan failure must not suppress the independent institutional lane.
-            try
-            {
-                await ProcessLegacyBatchAsync(cancellationToken);
-            }
-            catch (OperationCanceledException)when (cancellationToken.IsCancellationRequested)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Legacy expiry scan failed ({ErrorType}).", ex.GetType().Name);
-            }
-
             if (!bool.TryParse(_configuration["Multitenancy:InstitutionWorker:Enabled"], out var enabled) || !enabled)
                 return;
             List<ExpiryCandidate> candidates;
@@ -123,40 +109,4 @@ internal class ExpiredExamSubmissionWorker : BackgroundService
         }
     }
 
-    private async Task ProcessLegacyBatchAsync(CancellationToken cancellationToken)
-    {
-        if (!_configuration.GetValue<bool>("Identity:Legacy:Enabled"))
-            return;
-        // First scope: query expired submissions (lightweight, no answers)
-        using (var listScope = _scopeFactory.CreateScope())
-        {
-            var submissionRepo = listScope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
-            var now = listScope.ServiceProvider.GetRequiredService<ITimeProvider>().UtcNow;
-            var expired = await submissionRepo.GetExpiredInProgressAsync(now, _batchSize);
-            if (expired == null || expired.Count == 0)
-                return;
-            foreach (var s in expired)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    break;
-                // Create a separate scope per submission to avoid sharing DbContext or tracked entities
-                try
-                {
-                    using var scope = _scopeFactory.CreateScope();
-                    var processor = scope.ServiceProvider.GetRequiredService<IExamSubmissionProcessor>();
-                    // Process each submission individually; exceptions are handled per-item
-                    await processor.ProcessSubmitAsync(s.Id, null, SubmitReason.TimeExpired, null);
-                }
-                catch (OperationCanceledException)when (cancellationToken.IsCancellationRequested)
-                {
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError("Expired submission failed ({ErrorType}).", ex.GetType().Name);
-                // continue with next submission
-                }
-            }
-        }
-    }
 }

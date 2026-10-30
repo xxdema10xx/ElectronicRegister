@@ -242,7 +242,7 @@ public sealed class Mt1IntegrityTests(IntegrationFixture fixture, ITestOutputHel
     public async Task MigrationToolRejectsOtherDatabaseBeforeOpeningConnection(bool backfill)
     {
         const string forbidden = "Server=unreachable.invalid;Database=not_authorized;User=none;Password=none;";
-        await Assert.ThrowsAsync<InvalidOperationException>(() => backfill ? Mt1SchemaMigration.BackfillAsync(forbidden, Guid.NewGuid(), "Migration identity") :
+        await Assert.ThrowsAsync<InvalidOperationException>(() => backfill ? Mt1SchemaMigration.BackfillAsync(forbidden, Guid.NewGuid(), "Migration identity",Array.Empty<MembershipMigrationAssignment>()) :
             Mt1SchemaMigration.ExpandAsync(forbidden));
     }
 
@@ -266,25 +266,24 @@ public sealed class Mt1IntegrityTests(IntegrationFixture fixture, ITestOutputHel
         // Representative legacy graph includes accounts/profiles, class/subject, answers, Grade and audit.
         var ids = await fixture.PreparePendingReviewScenarioAsync(IntegrationScenario.Phase4Lifecycle);
         await Phase3.ReviewAsync(fixture.ScopeFactory, ids);
-        await InScope(sp => sp.GetRequiredService<IExamSubmissionManager>().FinalizeAsync(ids.SubmissionId, new(), Phase3.Teacher));
+        await InScope(sp => sp.GetRequiredService<FixtureSubmissionClient>().FinalizeAsync(ids.SubmissionId, new(), Phase3.Teacher));
         var before = await LegacySnapshotAsync();
         var institution = Guid.NewGuid(); _institutions.Add(institution);
         const string name = "Legacy migration holding record - test rehearsal, not an official ITS name";
-        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString, institution, name);
+        // Explicit fixture manifest deliberately differs from the global account's admin role.
+        var manifest=new[]{new MembershipMigrationAssignment(_user,new[]{InstitutionRole.Teacher,InstitutionRole.Student})};
+        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString, institution, name,manifest);
         Assert.Equal(before, await LegacySnapshotAsync());
         Guid membership;
         DateTime joined;
         await InScope(async sp =>
         {
             var db = sp.GetRequiredService<ElectronicRegisterContext>();
-            var users = await db.Users.AsNoTracking().ToListAsync();
             var members = await db.InstitutionMemberships.AsNoTracking().Include(m => m.InstitutionMembershipRoles).Where(m => m.InstitutionId == institution).ToListAsync();
-            Assert.Equal(users.Count, members.Count);
-            foreach (var user in users)
-            {
-                var row = Assert.Single(members.Where(m => m.UserId == user.Id));
-                Assert.Equal(user.Role switch { "admin" => "InstitutionAdmin", "teacher" => "Teacher", _ => "Student" }, Assert.Single(row.InstitutionMembershipRoles).Role);
-            }
+            var row=Assert.Single(members);
+            Assert.Equal(_user,row.UserId);
+            Assert.Equal(new[]{"Student","Teacher"},row.InstitutionMembershipRoles.Select(r=>r.Role).OrderBy(r=>r));
+            Assert.Equal("admin",await db.Users.Where(u=>u.Id==_user).Select(u=>u.Role).SingleAsync());
         });
         using (var scope = fixture.ScopeFactory.CreateScope())
         {
@@ -292,7 +291,7 @@ public sealed class Mt1IntegrityTests(IntegrationFixture fixture, ITestOutputHel
             membership = row.Id; joined = row.JoinedAt;
         }
         await InScope(sp => sp.GetRequiredService<IInstitutionMembershipRepository>().SuspendAsync(institution, membership, DateTime.UtcNow));
-        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString, institution, name);
+        await Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString, institution, name,manifest);
         Assert.Equal(before, await LegacySnapshotAsync());
         await InScope(async sp =>
         {
@@ -301,7 +300,8 @@ public sealed class Mt1IntegrityTests(IntegrationFixture fixture, ITestOutputHel
             Assert.Equal(InstitutionStatus.Provisioning, (await sp.GetRequiredService<IInstitutionRepository>().GetByIdAsync(institution))!.Status);
         });
         // Configuration mismatch must fail closed, without a second migration holding tenant.
-        await Assert.ThrowsAsync<InvalidOperationException>(() => Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString, Guid.NewGuid(), name));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString, Guid.NewGuid(), name,manifest));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => Mt1SchemaMigration.BackfillAsync(fixture.ConnectionString, institution, name,new[]{new MembershipMigrationAssignment(_user,new[]{InstitutionRole.InstitutionAdmin})}));
         Assert.Equal(before, await LegacySnapshotAsync());
         output.WriteLine("21-table legacy manifest (row counts and all-cell SHA256, includes every original Guid/hash/value): " + before);
     }

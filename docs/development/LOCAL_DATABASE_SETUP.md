@@ -161,3 +161,7 @@ not migration targets. No history or actors are backfilled.
 Configuration defaults: `AcademicTransfers:MaxMonthsFromCourseStart=3`,
 `AcademicTransfers:TimeZoneId=Europe/Rome`. Invalid configuration blocks startup.
 These are application-wide administrative policy, not a claim of a statutory limit.
+
+## Schema account del cutover istituzionale
+
+Dopo il bootstrap, il codice corrente richiede anche le due evoluzioni additive ordinate in migrations/identity-account: stato/generation e audit delle credenziali, poi ledger di acquisizione dei profili. Il runner autonomo New-InstitutionStaffTestInstance.ps1 le applica una sola volta alla datadir nuova. Le DDL MySQL5.7 non sono trattate come transazionali; nessun replay su uno schema parzialmente installato e nessuna applicazione implicita a istanze esistenti. Per il contratto corrente vedere il [report finale](../refactoring/RESPONSIBILITY_REFACTORING_REPORT.md).

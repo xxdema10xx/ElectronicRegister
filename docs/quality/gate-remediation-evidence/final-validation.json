@@ -1,0 +1,23 @@
+{
+  "A01": "FIXED",
+  "A02": "FIXED",
+  "A03": "FIXED",
+  "A04": "FIXED",
+  "HistoricalHashesUnchanged": true,
+  "BrokenReportLinks": [],
+  "TrxHashesVerified": true,
+  "Unit": 590,
+  "Integration": 1531,
+  "NewCases": 29,
+  "RemovedCases": 0,
+  "SqlNegativeCases": 63,
+  "ManifestNegativeCases": 14,
+  "OwnedSqlInstancesStopped": 5,
+  "NodeTlsVerificationEnabled": true,
+  "ReleaseDecision": "NOT READY",
+  "OpenEnvironmentalGates": [
+    "Docker runtime",
+    "modern destination TLS",
+    "GitHub Actions Linux/Windows"
+  ]
+}

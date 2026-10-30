@@ -4,6 +4,14 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 
 public interface IInstitutionMembershipDirectoryRepository
 {
+    Task<IReadOnlyList<ElectronicRegisterAPI.Domain.Results.ProfileAcquisitionResult>> AcquisitionsAsync(
+        Guid institutionId,
+        Guid membershipId,
+        int page,
+        int size,
+        string? status,
+        CancellationToken ct
+    );
     Task<IReadOnlyList<InstitutionMemberDto>> ListAsync(
         Guid institutionId,
         int pageNumber,

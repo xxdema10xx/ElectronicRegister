@@ -629,7 +629,7 @@ public sealed class Mt3cHttpTests(IntegrationFixture fixture) : IAsyncLifetime
     public async Task GateMetadataCannotBypassMissingContextOrWrongPolicy(bool wrongPolicy)
     {
         using var scope = _host.Host.Services.CreateScope();
-        var gateType = typeof(InstitutionStudentController).Assembly.GetType("ElectronicRegisterAPI.Api.Security.LegacyEndpointGate")!;
+        var gateType = typeof(InstitutionStudentController).Assembly.GetType("ElectronicRegisterAPI.Api.Security.InstitutionEndpointGate")!;
         var gate = (Microsoft.AspNetCore.Mvc.Filters.IAsyncAuthorizationFilter)scope.ServiceProvider.GetRequiredService(gateType);
         var marker = new InstitutionSchoolEndpointAttribute();
         if (wrongPolicy) marker.Policy = InstitutionTokenContract.AccessScheme;

@@ -13,9 +13,10 @@ internal class GradeRepository : IGradeRepository
 {
     private readonly ElectronicRegisterContext _context;
     private readonly InstitutionExamDataScope? _scope;
+    private CancellationToken Ct => _scope?.CancellationToken ?? CancellationToken.None;
     private IQueryable<T> Rows<T>()
         where T : class => _scope?.Query<T>() ?? _context.Set<T>();
-    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync() : _scope.SaveAsync();
+    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync(Ct) : _scope.SaveAsync();
     public GradeRepository(ElectronicRegisterContext context, InstitutionExamDataScope? scope = null)
     {
         _context = context;
@@ -26,7 +27,7 @@ internal class GradeRepository : IGradeRepository
     {
         if (_scope is not null)
             await _scope.LockStaffGradeAsync(id);
-        var grade = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().FirstOrDefaultAsync(g => g.Id == id);
+        var grade = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().FirstOrDefaultAsync(g => g.Id == id, Ct);
         return grade == null ? null : MapToModel(grade);
     }
 
@@ -43,7 +44,7 @@ internal class GradeRepository : IGradeRepository
             query = query.Where(g => g.StudentId == studentId.Value);
         }
 
-        return await query.Select(g => MapToModel(g)).ToListAsync();
+        return await query.Select(g => MapToModel(g)).ToListAsync(Ct);
     }
 
     public async Task<int> CountAsync(Guid? teacherId = null, Guid? studentId = null)
@@ -59,7 +60,7 @@ internal class GradeRepository : IGradeRepository
             query = query.Where(g => g.StudentId == studentId.Value);
         }
 
-        return await query.CountAsync();
+        return await query.CountAsync(Ct);
     }
 
     public async Task<List<Grade>> GetByDateAsync(DateOnly date, Guid? studentId = null, Guid? teacherId = null)
@@ -69,7 +70,7 @@ internal class GradeRepository : IGradeRepository
             query = query.Where(g => g.StudentId == studentId.Value);
         if (teacherId.HasValue)
             query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
-        return await query.Select(g => MapToModel(g)).ToListAsync();
+        return await query.Select(g => MapToModel(g)).ToListAsync(Ct);
     }
 
     public async Task<List<Grade>> GetBySubjectNameAsync(string subjectName, Guid? studentId = null, Guid? teacherId = null)
@@ -79,7 +80,7 @@ internal class GradeRepository : IGradeRepository
             query = query.Where(g => g.StudentId == studentId.Value);
         if (teacherId.HasValue)
             query = query.Where(g => g.ClassSubject.TeacherId == teacherId.Value);
-        return await query.Select(g => MapToModel(g)).ToListAsync();
+        return await query.Select(g => MapToModel(g)).ToListAsync(Ct);
     }
 
     public async Task<(List<Grade> Items, int TotalCount)> GetPagedAsync(
@@ -103,8 +104,11 @@ internal class GradeRepository : IGradeRepository
             query = query.Where(g => g.StudentId == studentId.Value);
         if (date.HasValue)
             query = query.Where(g => g.Date == date.Value);
-        var totalCount = await query.CountAsync();
-        var items = await query.OrderByDescending(g => g.Date).ThenBy(g => g.ClassSubjectId).ThenBy(g => g.Value).ThenBy(g => g.StudentId).Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(g => new Grade { Id = g.Id, StudentId = g.StudentId, ClassSubjectId = g.ClassSubjectId, Value = g.Value, Date = g.Date }).ToListAsync();
+        var offset = (long)(pageNumber - 1) * pageSize;
+        if (pageNumber < 1 || pageSize is < 1 or > 100 || offset > int.MaxValue)
+            throw new ArgumentException("Paginazione non valida.");
+        var totalCount = await query.CountAsync(Ct);
+        var items = await query.OrderByDescending(g => g.Date).ThenBy(g => g.ClassSubjectId).ThenBy(g => g.Value).ThenBy(g => g.StudentId).ThenBy(g => g.Id).Skip((int)offset).Take(pageSize).Select(g => new Grade { Id = g.Id, StudentId = g.StudentId, ClassSubjectId = g.ClassSubjectId, Value = g.Value, Date = g.Date }).ToListAsync(Ct);
         return (items, totalCount);
     }
 
@@ -117,8 +121,8 @@ internal class GradeRepository : IGradeRepository
             query = query.Where(g => g.StudentId == studentId.Value);
         if (_scope is not null)
             query = _scope.CurrentCareerGrades(query);
-        var yearlyAverage = await query.Select(g => (decimal? )g.Value).AverageAsync() ?? 0;
-        var monthlyData = await query.GroupBy(g => g.Date.Month).Select(g => new { Month = g.Key, Average = g.Average(x => x.Value) }).ToListAsync();
+        var yearlyAverage = await query.Select(g => (decimal? )g.Value).AverageAsync(Ct) ?? 0;
+        var monthlyData = await query.GroupBy(g => g.Date.Month).Select(g => new { Month = g.Key, Average = g.Average(x => x.Value) }).ToListAsync(Ct);
         var monthlyAverage = new decimal? [12];
         foreach (var item in monthlyData)
         {
@@ -134,7 +138,7 @@ internal class GradeRepository : IGradeRepository
 
     public async Task<List<Grade>> GetByStudentIdAsync(Guid studentId)
     {
-        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().Where(g => g.StudentId == studentId).Select(g => MapToModel(g)).ToListAsync();
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().Where(g => g.StudentId == studentId).Select(g => MapToModel(g)).ToListAsync(Ct);
     }
 
     public async Task AddAsync(Grade grade)
@@ -171,10 +175,10 @@ internal class GradeRepository : IGradeRepository
 
     public async Task<bool> ExistsForStudentAsync(Guid studentId)
     {
-        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().AnyAsync(g => g.StudentId == studentId);
+        return await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().AnyAsync(g => g.StudentId == studentId, Ct);
     }
 
-    public Task<bool> IsLinkedToExamSubmissionAsync(Guid gradeId) => Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AnyAsync(s => s.GradeId == gradeId);
+    public Task<bool> IsLinkedToExamSubmissionAsync(Guid gradeId) => Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AnyAsync(s => s.GradeId == gradeId, Ct);
     private static Grade MapToModel(GradeEntity gradeEntity)
     {
         return new Grade
@@ -189,7 +193,7 @@ internal class GradeRepository : IGradeRepository
 
     private async Task<GradeEntity?> MapToEntity(Grade grade)
     {
-        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().FirstOrDefaultAsync(g => g.Id == grade.Id);
+        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().FirstOrDefaultAsync(g => g.Id == grade.Id, Ct);
         if (entity is null)
             return null;
         entity.Id = grade.Id;

@@ -35,12 +35,12 @@ namespace ElectronicRegisterAPI.Tests.Integration
             using var scope1 = _fixture.ScopeFactory.CreateScope();
             using var scope2 = _fixture.ScopeFactory.CreateScope();
 
-            var manager1 = scope1.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
-            var manager2 = scope2.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
+            var manager1 = scope1.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
+            var manager2 = scope2.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
 
             // Use seeded teacher id for caller
             var persistedTeacherUserId = SeedData.TeacherUserId;
-            var caller = new ClaimsContext(persistedTeacherUserId, Domain.Enums.UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new FixtureActor(persistedTeacherUserId, null, SeedData.TeacherId);
 
             // Synchronize the start of both tasks
             var gate = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);

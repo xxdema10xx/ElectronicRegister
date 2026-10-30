@@ -66,9 +66,9 @@ public sealed partial class InstitutionClassCrudTests
         await using var host=await Mt3cHosting.ProgramHost.StartAsync(fixture.ConnectionString,_a,Array.Empty<Guid>(),enabled:false,school:true,exam:true,membershipAdmin:true,membershipWrite:true,
             extraArguments:new[]{"--Multitenancy:InstitutionImport:Enabled=true"},configureServices:services=>{var descriptor=services.Last(s=>s.ServiceType==typeof(IInstitutionWriteAuthorization));services.AddScoped<IInstitutionWriteAuthorization>(sp=>new StaffWriteBarrier((IInstitutionWriteAuthorization)ActivatorUtilities.CreateInstance(sp,descriptor.ImplementationType!),acquired,release));});
         long revision=0;await Db(async db=>revision=(await db.InstitutionMembershipSecurityStates.SingleAsync(s=>s.MembershipId==Id("teacher-membership"))).SecurityGeneration);
-        var write=ConfirmImport(host,token,b);await acquired.Task.WaitAsync(TimeSpan.FromSeconds(5));
-        var revoke=Request("/api/institution/admin/members/"+Id("teacher-membership")+"/mutations",admin,new{EventId=Guid.NewGuid(),ExpectedRevision=revision,Action="RemoveRole",Role="Staff",Reason="Concurrent import revocation"},"POST",host);
-        try{await Task.WhenAny(revoke,Task.Delay(250));Assert.False(revoke.IsCompleted);}finally{release.TrySetResult(true);}
+        var write = SqlLockEvidence.Track(() => ConfirmImport(host,token,b));await acquired.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        var revoke = SqlLockEvidence.Track(() => Request("/api/institution/admin/members/"+Id("teacher-membership")+"/mutations",admin,new{EventId=Guid.NewGuid(),ExpectedRevision=revision,Action="RemoveRole",Role="Staff",Reason="Concurrent import revocation"},"POST",host));
+        try{await SqlLockEvidence.WaitAsync(fixture.ConnectionString, revoke, write);}finally{release.TrySetResult(true);}
         await Expect(await write,HttpStatusCode.OK);await Expect(await revoke,HttpStatusCode.OK);await Expect(await ConfirmImport(setup,token,b),HttpStatusCode.Forbidden);
     }
 }

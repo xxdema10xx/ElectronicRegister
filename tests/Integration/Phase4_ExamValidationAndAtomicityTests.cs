@@ -28,14 +28,14 @@ public partial class Phase4_ExamLifecycleTests
         var retake = await CreateAsync(create, Admin);
         Assert.Empty((await DetailAsync(retake))!.AssignedStudents);
         var update = Update((await DetailAsync(retake))!);
-        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Admin).PutAsJsonAsync($"/api/Exam/{retake}", update)).StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Admin).PutAsJsonAsync($"/api/institution/exams/{retake}", update)).StatusCode);
         var assignment = new UpdateExamStudentsDto { Students = new() { new() { StudentId = otherStudent.StudentId } } };
-        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Admin).PutAsJsonAsync($"/api/Exam/{retake}/students", assignment)).StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Admin).PutAsJsonAsync($"/api/institution/exams/{retake}/students", assignment)).StatusCode);
         Assert.Equal(otherStudent.StudentId, Assert.Single((await DetailAsync(retake))!.AssignedStudents).StudentId);
         Assert.Equal(_ids.StudentId, Assert.Single((await DetailAsync(original))!.AssignedStudents).StudentId);
-        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Admin).PostAsync($"/api/Exam/{retake}/publish", null)).StatusCode);
-        Assert.DoesNotContain((await _host.As(Phase3.Student(_ids)).GetFromJsonAsync<AssignedExamDto[]>("/api/Exam/assigned"))!, e => e.Id == retake);
-        Assert.Contains((await _host.As(Phase3.Student(otherStudent)).GetFromJsonAsync<AssignedExamDto[]>("/api/Exam/assigned"))!, e => e.Id == retake);
+        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Admin).PostAsync($"/api/institution/exams/{retake}/publish", null)).StatusCode);
+        Assert.DoesNotContain((await _host.As(Phase3.Student(_ids)).GetFromJsonAsync<AssignedExamDto[]>("/api/institution/exams/assigned"))!, e => e.Id == retake);
+        Assert.Contains((await _host.As(Phase3.Student(otherStudent)).GetFromJsonAsync<AssignedExamDto[]>("/api/institution/exams/assigned"))!, e => e.Id == retake);
     }
 
     [Theory]
@@ -50,9 +50,9 @@ public partial class Phase4_ExamLifecycleTests
         if (state == "future") { dto.AvailableFrom = DateTime.UtcNow.AddDays(1); dto.AvailableUntil = dto.AvailableFrom.AddHours(2); }
         var id = await CreateAsync(dto);
         if (state != "draft")
-            Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/publish", null)).StatusCode);
+            Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{id}/publish", null)).StatusCode);
         if (state is "closed" or "cancelled")
-            Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/{(state == "closed" ? "close" : "cancel")}", null)).StatusCode);
+            Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{id}/{(state == "closed" ? "close" : "cancel")}", null)).StatusCode);
         if (state == "expired")
         {
             using var scope = fixture.ScopeFactory.CreateScope();
@@ -62,7 +62,7 @@ public partial class Phase4_ExamLifecycleTests
             exam.AvailableUntil = DateTime.UtcNow.AddHours(-1);
             await ctx.SaveChangesAsync();
         }
-        Assert.Equal(HttpStatusCode.Conflict, (await _host.As(Phase3.Student(_ids)).PostAsync($"/api/Exam/{id}/start", null)).StatusCode);
+        Assert.Equal(state == "draft" ? HttpStatusCode.NotFound : HttpStatusCode.Conflict, (await _host.As(Phase3.Student(_ids)).PostAsync($"/api/institution/exams/{id}/start", null)).StatusCode);
         using var verify = fixture.ScopeFactory.CreateScope();
         Assert.False(await verify.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().ExamSubmissions.AnyAsync(s => s.ExamId == id));
     }
@@ -81,22 +81,22 @@ public partial class Phase4_ExamLifecycleTests
         var id = await CreateAsync(Draft());
         var detail = (await DetailAsync(id))!;
         var before = JsonSerializer.Serialize(detail);
-        foreach (var caller in new ClaimsContext?[] { null, Phase3.Student(_ids), Other })
+        foreach (var caller in new FixtureActor?[] { null, Phase3.Student(_ids), Other })
         {
             var client = _host.As(caller);
             var response = operation switch
             {
-                "create" => await client.PostAsJsonAsync("/api/Exam", Draft(id)),
-                "read" => await client.GetAsync($"/api/Exam/{id}"),
-                "update" => await client.PutAsJsonAsync($"/api/Exam/{id}", Update(detail)),
-                "students" => await client.PutAsJsonAsync($"/api/Exam/{id}/students", new UpdateExamStudentsDto()),
-                "delete" => await client.DeleteAsync($"/api/Exam/{id}"),
-                _ => await client.PostAsync($"/api/Exam/{id}/{operation}", null)
+                "create" => await client.PostAsJsonAsync("/api/institution/exams", Draft(id)),
+                "read" => await client.GetAsync($"/api/institution/exams/{id}"),
+                "update" => await client.PutAsJsonAsync($"/api/institution/exams/{id}", Update(detail)),
+                "students" => await client.PutAsJsonAsync($"/api/institution/exams/{id}/students", new UpdateExamStudentsDto()),
+                "delete" => await client.DeleteAsync($"/api/institution/exams/{id}"),
+                _ => await client.PostAsync($"/api/institution/exams/{id}/{operation}", null)
             };
-            Assert.Equal(caller is null ? HttpStatusCode.Unauthorized : HttpStatusCode.Forbidden, response.StatusCode);
+            Assert.Equal(caller is null ? HttpStatusCode.Unauthorized : caller.UserId == Other.UserId ? HttpStatusCode.NotFound : HttpStatusCode.Forbidden, response.StatusCode);
         }
         Assert.Equal(before, JsonSerializer.Serialize(await DetailAsync(id)));
-        var othersList = await _host.As(Other).GetFromJsonAsync<ExamSummaryDto[]>("/api/Exam");
+        var othersList = await _host.As(Other).GetFromJsonAsync<ExamSummaryDto[]>("/api/institution/exams");
         Assert.DoesNotContain(othersList!, e => e.Id == id);
     }
 
@@ -106,16 +106,16 @@ public partial class Phase4_ExamLifecycleTests
         var otherStudent = await fixture.ResetScenarioAsync(IntegrationScenario.Phase4Unassigned);
         var original = await CreateAsync(Draft());
         var retake = await CreateAsync(Draft(original));
-        Assert.Empty((await _host.As(Phase3.Student(_ids)).GetFromJsonAsync<AssignedExamDto[]>("/api/Exam/assigned"))!.Where(e => e.Id == retake));
-        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{retake}/publish", null)).StatusCode);
-        Assert.Contains((await _host.As(Phase3.Student(_ids)).GetFromJsonAsync<AssignedExamDto[]>("/api/Exam/assigned"))!, e => e.Id == retake && e.IsRetake);
-        Assert.DoesNotContain((await _host.As(Phase3.Student(otherStudent)).GetFromJsonAsync<AssignedExamDto[]>("/api/Exam/assigned"))!, e => e.Id == retake);
-        Assert.Equal(HttpStatusCode.NotFound, (await _host.As(Phase3.Student(otherStudent)).PostAsync($"/api/Exam/{retake}/start", null)).StatusCode);
-        Assert.Equal(HttpStatusCode.Forbidden, (await _host.As(Teacher).PostAsync($"/api/Exam/{retake}/start", null)).StatusCode);
-        Assert.Equal(HttpStatusCode.Unauthorized, (await _host.As(null).PostAsync($"/api/Exam/{retake}/start", null)).StatusCode);
-        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Admin).PostAsync($"/api/Exam/{retake}/cancel", null)).StatusCode);
-        Assert.Equal(HttpStatusCode.Conflict, (await _host.As(Phase3.Student(_ids)).PostAsync($"/api/Exam/{retake}/start", null)).StatusCode);
-        Assert.Equal(HttpStatusCode.Conflict, (await _host.As(Admin).PostAsync($"/api/Exam/{retake}/cancel", null)).StatusCode);
+        Assert.Empty((await _host.As(Phase3.Student(_ids)).GetFromJsonAsync<AssignedExamDto[]>("/api/institution/exams/assigned"))!.Where(e => e.Id == retake));
+        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{retake}/publish", null)).StatusCode);
+        Assert.Contains((await _host.As(Phase3.Student(_ids)).GetFromJsonAsync<AssignedExamDto[]>("/api/institution/exams/assigned"))!, e => e.Id == retake && e.IsRetake);
+        Assert.DoesNotContain((await _host.As(Phase3.Student(otherStudent)).GetFromJsonAsync<AssignedExamDto[]>("/api/institution/exams/assigned"))!, e => e.Id == retake);
+        Assert.Equal(HttpStatusCode.NotFound, (await _host.As(Phase3.Student(otherStudent)).PostAsync($"/api/institution/exams/{retake}/start", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{retake}/start", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, (await _host.As(null).PostAsync($"/api/institution/exams/{retake}/start", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Admin).PostAsync($"/api/institution/exams/{retake}/cancel", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, (await _host.As(Phase3.Student(_ids)).PostAsync($"/api/institution/exams/{retake}/start", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, (await _host.As(Admin).PostAsync($"/api/institution/exams/{retake}/cancel", null)).StatusCode);
         using var scope = fixture.ScopeFactory.CreateScope();
         var ctx = scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
         var audit = Assert.Single(await ctx.AuditEvents.Where(a => a.EntityId == retake && a.Action == "exam.cancel").ToListAsync());
@@ -153,7 +153,7 @@ public partial class Phase4_ExamLifecycleTests
         var count = await ctx.Exams.CountAsync();
         if (kind == "name")
         {
-            var response = await _host.As(Teacher).PostAsJsonAsync("/api/Exam", dto);
+            var response = await _host.As(Teacher).PostAsJsonAsync("/api/institution/exams", dto);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             var id = await response.Content.ReadFromJsonAsync<Guid>();
             var subjectName = await ctx.ClassSubjects.Where(cs => cs.Id == dto.ClassSubjectId).Select(cs => cs.Subject.Name).SingleAsync();
@@ -162,7 +162,7 @@ public partial class Phase4_ExamLifecycleTests
         }
         else
         {
-            Assert.Equal(HttpStatusCode.BadRequest, (await _host.As(Teacher).PostAsJsonAsync("/api/Exam", dto)).StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, (await _host.As(Teacher).PostAsJsonAsync("/api/institution/exams", dto)).StatusCode);
             Assert.Equal(count, await ctx.Exams.CountAsync());
         }
     }
@@ -188,7 +188,7 @@ public partial class Phase4_ExamLifecycleTests
             await ctx.SaveChangesAsync();
         }
         var before = await ExamSnapshotAsync(id);
-        Assert.Equal((HttpStatusCode)status, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/publish", null)).StatusCode);
+        Assert.Equal((HttpStatusCode)status, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{id}/publish", null)).StatusCode);
         Assert.Equal(before, await ExamSnapshotAsync(id));
     }
 
@@ -200,7 +200,7 @@ public partial class Phase4_ExamLifecycleTests
     {
         var id = await CreateAsync(Draft());
         if (operation != "publish")
-            Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/publish", null)).StatusCode);
+            Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{id}/publish", null)).StatusCode);
         var before = await ExamSnapshotAsync(id);
         bool sawWrittenAudit = false;
         var probe = new Phase3.SaveProbe { AfterSave = async ctx =>
@@ -214,7 +214,7 @@ public partial class Phase4_ExamLifecycleTests
         await using (var provider = Phase3.Provider(fixture, null, probe))
         using (var scope = provider.CreateScope())
         {
-            var manager = scope.ServiceProvider.GetRequiredService<IExamManager>();
+            var manager = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
             await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => operation switch
             {
                 "publish" => manager.PublishAsync(id, Teacher),
@@ -246,7 +246,7 @@ public partial class Phase4_ExamLifecycleTests
         };
         await using (var provider = Phase3.Provider(fixture, null, probe))
         using (var scope = provider.CreateScope())
-            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<IExamManager>().UpdateAsync(id, dto, Teacher));
+            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<FixtureExamClient>().UpdateAsync(id, dto, Teacher));
         Assert.Equal(failOnSave, probe.Saves);
         Assert.Equal(before, await ExamSnapshotAsync(id));
     }
@@ -263,7 +263,7 @@ public partial class Phase4_ExamLifecycleTests
         }};
         await using (var provider = Phase3.Provider(fixture, null, probe))
         using (var scope = provider.CreateScope())
-            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<IExamManager>().UpdateStudentsAsync(id,
+            await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<FixtureExamClient>().UpdateStudentsAsync(id,
                 new UpdateExamStudentsDto { Students = new() { new() { StudentId = _ids.StudentId, ExtraTimeMinutes = 15 } } }, Teacher));
         Assert.Equal(before, await ExamSnapshotAsync(id));
     }
@@ -273,9 +273,9 @@ public partial class Phase4_ExamLifecycleTests
     {
         var missing = Guid.NewGuid();
         foreach (var operation in new[] { "publish", "close", "cancel" })
-            Assert.Equal(HttpStatusCode.NotFound, (await _host.As(Teacher).PostAsync($"/api/Exam/{missing}/{operation}", null)).StatusCode);
-        Assert.Equal(HttpStatusCode.NotFound, (await _host.As(Teacher).GetAsync($"/api/Exam/{missing}")).StatusCode);
-        Assert.Equal(HttpStatusCode.NotFound, (await _host.As(Teacher).PostAsJsonAsync("/api/Exam", Draft(missing))).StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{missing}/{operation}", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await _host.As(Teacher).GetAsync($"/api/institution/exams/{missing}")).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await _host.As(Teacher).PostAsJsonAsync("/api/institution/exams", Draft(missing))).StatusCode);
         using (var scope = fixture.ScopeFactory.CreateScope())
         {
             var ctx = scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
@@ -283,7 +283,7 @@ public partial class Phase4_ExamLifecycleTests
             await ctx.SaveChangesAsync();
         }
         var before = await Phase3.SnapshotAsync(fixture.ScopeFactory, _ids);
-        Assert.Equal(HttpStatusCode.Conflict, (await _host.As(Teacher).DeleteAsync($"/api/Exam/{_ids.ExamId}")).StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, (await _host.As(Teacher).DeleteAsync($"/api/institution/exams/{_ids.ExamId}")).StatusCode);
         Assert.Equal(before, await Phase3.SnapshotAsync(fixture.ScopeFactory, _ids));
         var error = await _host.As(Teacher).GetAsync("/test/internal-error");
         Assert.Equal(HttpStatusCode.InternalServerError, error.StatusCode);
@@ -305,9 +305,9 @@ public partial class Phase4_ExamLifecycleTests
     {
         var id = await CreateAsync(Draft());
         await Phase3.OrderedAsync(fixture,
-            sp => sp.GetRequiredService<IExamManager>().PublishAsync(id, Teacher),
+            sp => sp.GetRequiredService<FixtureExamClient>().PublishAsync(id, Teacher),
             async sp => await Assert.ThrowsAsync<ElectronicRegisterAPI.Domain.Exceptions.BusinessRuleException>(() =>
-                sp.GetRequiredService<IExamManager>().PublishAsync(id, Teacher)));
+                sp.GetRequiredService<FixtureExamClient>().PublishAsync(id, Teacher)));
         Assert.Equal(ExamStatus.Published, (await DetailAsync(id))!.Status);
         using var scope = fixture.ScopeFactory.CreateScope();
         Assert.Single(await scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().AuditEvents
@@ -320,9 +320,9 @@ public partial class Phase4_ExamLifecycleTests
     public async Task CancelAndStart_AreSerializedWithoutCancelledExamAttempts(bool cancelFirst)
     {
         var id = await CreateAsync(Draft());
-        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/Exam/{id}/publish", null)).StatusCode);
-        Task Cancel(IServiceProvider sp) => sp.GetRequiredService<IExamManager>().CancelAsync(id, Teacher);
-        Task Start(IServiceProvider sp) => sp.GetRequiredService<IExamManager>().StartAsync(id, Phase3.Student(_ids));
+        Assert.Equal(HttpStatusCode.NoContent, (await _host.As(Teacher).PostAsync($"/api/institution/exams/{id}/publish", null)).StatusCode);
+        Task Cancel(IServiceProvider sp) => sp.GetRequiredService<FixtureExamClient>().CancelAsync(id, Teacher);
+        Task Start(IServiceProvider sp) => sp.GetRequiredService<FixtureExamClient>().StartAsync(id, Phase3.Student(_ids));
         await Phase3.OrderedAsync(fixture, cancelFirst ? Cancel : Start, async sp =>
             await Assert.ThrowsAsync<ElectronicRegisterAPI.Domain.Exceptions.BusinessRuleException>(() => cancelFirst ? Start(sp) : Cancel(sp)));
         Assert.Equal(cancelFirst ? ExamStatus.Cancelled : ExamStatus.Published, (await DetailAsync(id))!.Status);

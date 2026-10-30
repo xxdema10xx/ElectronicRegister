@@ -89,7 +89,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await ResetScenarioAsync(scenario);
 
             using var scope = ScopeFactory.CreateScope();
-            var examMgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamManager>();
+            var examMgr = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
 
             // Build submit DTO from currently persisted answers
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
@@ -118,7 +118,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             // Use persisted user identity for the student actor when submitting
             // Create or reuse a per-scenario student user if needed; for now reuse the scenario StudentId as UserId when present
             var studentUserId = ids.StudentId; // student user persisted by scenario
-            var studentCaller = new Domain.DTOs.ClaimsContext(studentUserId, Domain.Enums.UserRole.Student, ids.StudentId, null);
+            var studentCaller = new FixtureActor(studentUserId, ids.StudentId, null);
 
             await examMgr.SubmitAsync(ids.SubmissionId, dto, studentCaller);
 
@@ -223,6 +223,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             services.AddInfrastructure(configuration);
             services.AddBusinessServices();
             services.AddApplicationManagers();
+        FixtureTenant.Register(services);
 
             return services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
         }

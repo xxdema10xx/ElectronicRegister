@@ -264,7 +264,7 @@ public sealed class Mt5aMembershipAdminTests : IAsyncLifetime
             new(_users["suspended"], _a, Member("suspended"), new[] { ElectronicRegisterAPI.Domain.Enums.InstitutionRole.InstitutionAdmin })));
         await Expect(await Request(token: suspended), HttpStatusCode.Forbidden);
         foreach (var path in new[] { "/api/Users", "/api/Users/count", "/api/institution/users" })
-            Assert.Contains((await Request(path, token)).StatusCode, new[] { HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden, HttpStatusCode.NotFound });
+            Assert.Equal(HttpStatusCode.NotFound,(await Request(path, token)).StatusCode);
         Assert.Equal(before, await Digest());
     }
 
@@ -306,7 +306,7 @@ public sealed class Mt5aMembershipAdminTests : IAsyncLifetime
         var admin = endpoints.Where(e => e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is not null &&
             e.RoutePattern.RawText!.StartsWith("api/institution/admin/members",StringComparison.Ordinal) &&
             e.Metadata.GetMetadata<HttpMethodMetadata>()!.HttpMethods.SequenceEqual(new[]{"GET"})).ToArray();
-        Assert.Equal(2, admin.Length);
+        Assert.Equal(3, admin.Length);
         Assert.All(admin, e =>
         {
             Assert.Equal(new[] { "GET" }, e.Metadata.GetMetadata<HttpMethodMetadata>()!.HttpMethods);
@@ -402,7 +402,7 @@ public sealed class Mt5aMembershipAdminTests : IAsyncLifetime
             _ => new AuthorizeAttribute { Roles = "InstitutionAdmin" }
         });
         if (kind == "wrong-marker-policy") marker.Policy = InstitutionTokenContract.AccessScheme;
-        var gateType = typeof(InstitutionMembershipAdminEndpointAttribute).Assembly.GetType("ElectronicRegisterAPI.Api.Security.LegacyEndpointGate")!;
+        var gateType = typeof(InstitutionMembershipAdminEndpointAttribute).Assembly.GetType("ElectronicRegisterAPI.Api.Security.InstitutionEndpointGate")!;
         var gate = (Microsoft.AspNetCore.Mvc.Filters.IAsyncAuthorizationFilter)scope.ServiceProvider.GetRequiredService(gateType);
         var http = new Microsoft.AspNetCore.Http.DefaultHttpContext { RequestServices = scope.ServiceProvider,
             User = new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity(new[] { new System.Security.Claims.Claim("sub", _users["admin"].ToString()) }, "test")) };

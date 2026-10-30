@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Policies;
 using ElectronicRegisterAPI.Application.Mappers;
 using ElectronicRegisterAPI.Domain.Exceptions;
 using System.Text.Json;
@@ -10,7 +11,7 @@ using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Application.Managers;
 
-internal class ExamSubmissionManager : IExamSubmissionManager
+internal class ExamSubmissionManager
 {
     private readonly IExamSubmissionRepository _submissionRepository;
     private readonly IExamRepository _examRepository;
@@ -162,7 +163,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             FinalizedAt = submission.FinalizedAt,
             Answers = answers
         };
-        return SubmissionVisibility.Apply(dto, caller.IsStaff ? null : caller.VisibilityCaller);
+        return SubmissionVisibility.Apply(dto, caller.IsStudent);
     }
 
     public async Task ReviewAsync(Guid id, ReviewOpenAnswersDto dto, ExamPrincipal caller)
@@ -347,7 +348,7 @@ internal class ExamSubmissionManager : IExamSubmissionManager
             var finalGradeRow = await _gradeRepository.GetByIdAsync(submission.GradeId.Value);
             if (finalGradeRow is null)
                 throw new InvalidOperationException("Stato incoerente: GradeId presente ma Grade non trovato.");
-            submission.Passed = finalGradeRow.Value >= 6m;
+            submission.Passed = GradeRules.IsPassing(finalGradeRow.Value);
             submission.FinalizedAt = DateTime.UtcNow;
             // ReviewedByUserId must reference a persisted User.Id (authenticated actor)
             if (caller.IsTeacher || caller.IsAdmin)
@@ -359,8 +360,4 @@ internal class ExamSubmissionManager : IExamSubmissionManager
         });
     }
 
-    Task<List<SubmissionSummaryDto>> IExamSubmissionManager.GetByExamAsync(Guid examId, SubmissionStatus? status, ClaimsContext caller) => GetByExamAsync(examId, status, ExamPrincipal.Legacy(caller));
-    Task<SubmissionReviewDto> IExamSubmissionManager.GetByIdAsync(Guid id, ClaimsContext caller) => GetByIdAsync(id, ExamPrincipal.Legacy(caller));
-    Task IExamSubmissionManager.ReviewAsync(Guid id, ReviewOpenAnswersDto dto, ClaimsContext caller) => ReviewAsync(id, dto, ExamPrincipal.Legacy(caller));
-    Task IExamSubmissionManager.FinalizeAsync(Guid id, FinalizeSubmissionDto dto, ClaimsContext caller) => FinalizeAsync(id, dto, ExamPrincipal.Legacy(caller));
 }

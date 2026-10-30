@@ -212,7 +212,7 @@ public sealed partial class Mt5cOnboardingTests
     {
         ConfigureGovernance();var a=await Active();var op=GovernanceOp(a.P.InstitutionId,PlatformAction.Suspend);
         var root=System.IO.Path.GetFullPath(System.IO.Path.Combine(AppContext.BaseDirectory,"../../../../../"));
-        var folder=System.IO.Path.Combine(root,"migrations/mt4/private/mt5a-mamp-13306/governance-cli-"+Guid.NewGuid().ToString("N"));System.IO.Directory.CreateDirectory(folder);PrivateTestFiles.ProtectNewDirectory(folder);
+        var folder=PrivateTestFiles.CreateDirectory("governance-cli");
         var json=new System.Text.Json.JsonSerializerOptions();json.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter<PlatformAction>());
         var configFile=System.IO.Path.Combine(folder,"admin.json");var opFile=System.IO.Path.Combine(folder,"signed.json");
         await System.IO.File.WriteAllTextAsync(configFile,System.Text.Json.JsonSerializer.Serialize(new {ConnectionStrings=new{DefaultConnection=connection},TestDatabase=new{Port=TestMySqlTarget.Port,ExpectedDataDir=TestMySqlTarget.DataDirectorySuffix},Multitenancy=new{Governance=new{Enabled=true}},PlatformAuthority=new{Enabled=true,Keys=new[]{key}}},json));

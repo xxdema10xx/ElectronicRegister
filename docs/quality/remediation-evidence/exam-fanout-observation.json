@@ -1,0 +1,10 @@
+[
+  {
+    "Shape": "20 questions x 2 options x 40 students",
+    "FanoutRows": 1600,
+    "SingleMilliseconds": 32.1751,
+    "SplitMilliseconds": 28.0639,
+    "Repetitions": 1,
+    "Note": "Illustrative cold-run observation, not a production benchmark. Split equivalence requires a transaction/snapshot."
+  }
+]

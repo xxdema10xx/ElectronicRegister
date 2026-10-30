@@ -1,3 +1,5 @@
+Evidenza storica della fase nominata in questo documento. Per codice, contratti ritirati e test correnti vedere il [report conclusivo](../../docs/refactoring/RESPONSIBILITY_REFACTORING_REPORT.md) e la [regressione finale](../../docs/refactoring/validation/current-cutover/final/README.md). I conteggi e i componenti sotto non certificano il working tree finale.
+
 # Fase 2C — API di correzione e visibilità dei risultati
 
 Branch: `refactor-database-entities`. Base: `f32a33b` (`test: complete Phase 2B with 86 passing tests`).

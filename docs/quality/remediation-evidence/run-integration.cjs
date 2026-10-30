@@ -1,0 +1,17 @@
+const fs=require('fs'),cp=require('child_process'),path=require('path');
+const instance=JSON.parse(fs.readFileSync(__dirname+'/instance.json','utf8').replace(/^\uFEFF/,''));
+const root=path.resolve(__dirname,'../../..'),run=path.resolve(instance.Run),port=instance.Port;
+if(!run.startsWith(path.join(root,'.staff-private','instance-'))||[3306,13306].includes(port))throw Error('Disposable instance required');
+const password=fs.readFileSync(path.join(run,'password.txt'),'utf8');
+const id=cp.spawnSync('C:/MAMP/bin/mysql/bin/mysql.exe',['--no-defaults','--protocol=TCP','--host=127.0.0.1','--port='+port,'--user=root','--batch','--skip-column-names'],{env:{...process.env,MYSQL_PWD:password},input:"SELECT VERSION(),@@port,REPLACE(@@datadir,CHAR(92),'/');",encoding:'utf8'});
+if(id.status!==0)throw Error('SQL identity unavailable');
+const [version,actualPort,data]=id.stdout.trim().split('\t');
+if(version!=='5.7.24'||+actualPort!==port||data.toLowerCase().replace(/\/$/,'')!==path.join(run,'data').replaceAll('\\','/').toLowerCase())throw Error('SQL identity mismatch');
+const name=process.argv[2];if(!/^[a-z0-9-]+$/.test(name))throw Error('Run name required');
+const results=path.join(run,name);if(fs.existsSync(results))throw Error('Evidence must not be overwritten');
+const env={...process.env,TEST_MYSQL_CONNECTION:`Server=127.0.0.1;Port=${port};Database=electronic_register_test;User ID=root;Password=${password};Allow User Variables=true;SslMode=None`,ER_TEST_ISOLATED_PORT:''+port,ER_TEST_ISOLATED_DATADIR:path.join(run,'data'),ER_TEST_STRICT_SESSION:'1',MYSQLDUMP_EXE:'C:/MAMP/bin/mysql/bin/mysqldump.exe',MYSQLDUMP_FLAVOR:'MySQL57'};
+const args=['test','tests/Integration/Integration.Tests.csproj','--no-build','--no-restore','--logger','trx;LogFileName=result.trx','--results-directory',results];
+if(process.argv[3])args.push('--filter',process.argv[3]);
+const log=fs.openSync(path.join(run,name+'.log'),'wx');
+const child=cp.spawn('dotnet',args,{cwd:root,env,stdio:['ignore',log,log],windowsHide:true});
+child.on('exit',code=>{fs.closeSync(log);console.log(`Integration ${name}: exit ${code}; ${results}`);process.exitCode=code;});

@@ -1,0 +1,14 @@
+{
+  "Deployment": { "Mode": "Production", "RolloutApproved": false },
+  "urls": "http://0.0.0.0:8080",
+  "AllowedHosts": "api.example.test",
+  "Jwt": { "Issuer": "electronic-register", "Audience": "electronic-register-client" },
+  "Readiness": { "ExpectedVersion": "5.7.24", "ExpectedHost": "REPLACE_SQL_HOSTNAME", "ExpectedDataDir": "REPLACE_SQL_DATADIR" },
+  "Transport": { "AllowedOrigins": ["https://app.example.test"], "KnownProxies": ["172.30.250.3"], "HttpsPort": 443 },
+  "Identity": { "Legacy": { "Enabled": false } },
+  "Multitenancy": {
+    "SchoolApi": { "Enabled": true }, "CourseApi": { "Enabled": true },
+    "ExamApi": { "Enabled": true }, "MembershipAdminApi": { "Enabled": true },
+    "MembershipWriteApi": { "Enabled": true }, "InstitutionWorker": { "Enabled": false }
+  }
+}

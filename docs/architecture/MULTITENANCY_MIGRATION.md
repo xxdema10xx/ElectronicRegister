@@ -1,3 +1,5 @@
+Aggiornamento 30 ottobre 2026: le sezioni MT seguenti sono tappe storiche. Il [cutover finale](../refactoring/INSTITUTIONAL_API_AND_LEGACY_CUTOVER.md) ritira API e autorizzazione globali, ClaimsContext/UserRole e la lane worker utente. [Evidenze correnti](../refactoring/validation/current-cutover/final/README.md). Non eseguire gli script storici di conversione automatica user.role: il backfill mantenuto richiede assegnazioni esplicite, e nessuna migrazione su database preesistenti e stata eseguita da questo incarico.
+
 # ElectronicRegister — migrazione MT-3A dello schema
 
 **Checkpoint A eseguito e verificato su electronic_register_test/MySQL 5.7.24. Nessun deployment/cutover; MT-3 complessiva resta parziale e il gate rimane chiuso.** Questa sezione e lo stato corrente; i piani delle fasi precedenti conservati sotto sono storici.

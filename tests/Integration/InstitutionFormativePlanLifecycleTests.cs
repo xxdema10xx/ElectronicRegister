@@ -49,10 +49,10 @@ public sealed partial class InstitutionFormativePlanTests
     [Fact] public async Task RevocationWaitsForAuthorizedMutationThenOldTokenFails()
     {
         var d=await Draft(false);var barrier=new PauseAt();await using var paused=await Host(configure:s=>s.AddSingleton<IFormativePlanFaultObserver>(barrier));
-        var mutation=Send($"formative-plan-versions/{d.Version.Id}",d.Token,Body(),"PUT",paused);
+        var mutation = SqlLockEvidence.Track(() => Send($"formative-plan-versions/{d.Version.Id}",d.Token,Body(),"PUT",paused));
         await barrier.Acquired.Task.WaitAsync(TimeSpan.FromSeconds(10));
-        var revoke=Sql("DELETE FROM institution_membership_role WHERE membership_id=@m AND role='InstitutionAdmin'",("@m",people["InstitutionAdmin"].Member));
-        try {await Task.Delay(150);Assert.False(revoke.IsCompleted);}finally{barrier.Release.TrySetResult(true);}
+        var revoke = SqlLockEvidence.Track(() => Sql("DELETE FROM institution_membership_role WHERE membership_id=@m AND role='InstitutionAdmin'",("@m",people["InstitutionAdmin"].Member)));
+        try {await SqlLockEvidence.WaitAsync(fixture.ConnectionString, revoke, mutation);}finally{barrier.Release.TrySetResult(true);}
         await Ok<FormativeReceipt>(await mutation);await revoke.WaitAsync(TimeSpan.FromSeconds(10));Assert.Equal(HttpStatusCode.Forbidden,(await Send("formative-plans",d.Token)).StatusCode);
     }
     private sealed class PauseAt:IFormativePlanFaultObserver
@@ -64,7 +64,7 @@ public sealed partial class InstitutionFormativePlanTests
     [Fact] public async Task RuntimeRolloutDisableBeforeCommitRollsBack()
     {
         var d=await Draft(false);var before=await Count("formative_plan_event");var barrier=new PauseAt();await using var paused=await Host(configure:s=>s.AddSingleton<IFormativePlanFaultObserver>(barrier));
-        var mutation=Send($"formative-plan-versions/{d.Version.Id}",d.Token,Body(),"PUT",paused);await barrier.Acquired.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        var mutation = SqlLockEvidence.Track(() => Send($"formative-plan-versions/{d.Version.Id}",d.Token,Body(),"PUT",paused));await barrier.Acquired.Task.WaitAsync(TimeSpan.FromSeconds(10));
         paused.Host.Services.GetRequiredService<IConfiguration>()["Multitenancy:FormativePlans:Enabled"]="false";barrier.Release.TrySetResult(true);
         Assert.Equal(HttpStatusCode.Forbidden,(await mutation).StatusCode);Assert.Equal(before,await Count("formative_plan_event"));Assert.Equal(0,await Count("formative_module"));
     }

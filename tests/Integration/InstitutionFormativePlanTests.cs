@@ -71,7 +71,7 @@ public sealed partial class InstitutionFormativePlanTests(IntegrationFixture fix
         return(await Ok<InstitutionAccessDto>(await host.Client.SendAsync(request))).Token;
     }
     private async Task Sql(string sql,params (string,object)[] args)
-    {await using var c=new MySqlConnection(fixture.ConnectionString);await c.OpenAsync();await using var command=new MySqlCommand(sql,c);foreach(var(k,v)in args)command.Parameters.AddWithValue(k,v);await command.ExecuteNonQueryAsync();}
+    {await using var c=new MySqlConnection(fixture.ConnectionString);await c.OpenAsync();SqlLockEvidence.Capture(c);await using var command=new MySqlCommand(sql,c);foreach(var(k,v)in args)command.Parameters.AddWithValue(k,v);await command.ExecuteNonQueryAsync();}
     private async Task<long> Count(string table,string where="",params (string,object)[] args)
     {await using var c=new MySqlConnection(fixture.ConnectionString);await c.OpenAsync();await using var command=new MySqlCommand($"SELECT COUNT(*) FROM {table} WHERE institution_id=@t "+where,c);command.Parameters.AddWithValue("@t",tenant);foreach(var(k,v)in args)command.Parameters.AddWithValue(k,v);return Convert.ToInt64(await command.ExecuteScalarAsync());}
     private CreateFormativePlan NewPlan(Guid? eventId=null,string code="SYNTH")=>new(eventId??Guid.NewGuid(),path,code,"Synthetic plan",null,"Synthetic fixture creation");

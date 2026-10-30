@@ -1,0 +1,62 @@
+[
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"student\", operation: \"answers\")",
+        "Outcome":  "Failed",
+        "Failure":  "Expected Forbidden, got OK: {\"accepted\":true,\"currentRevision\":1,\"savedAt\":\"2026-10-30T10:30:56.7024332Z\"}"
+    },
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"staff\", operation: \"grade\")",
+        "Outcome":  "Passed",
+        "Failure":  ""
+    },
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"teacher\", operation: \"review\")",
+        "Outcome":  "Failed",
+        "Failure":  "Expected OK, got BadRequest: {\"title\":\"Richiesta non valida\",\"status\":400,\"detail\":\"Richiesta non valida\"}"
+    },
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"teacher\", operation: \"update\")",
+        "Outcome":  "Failed",
+        "Failure":  "Expected Forbidden, got NoContent: "
+    },
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"staff\", operation: \"update\")",
+        "Outcome":  "Passed",
+        "Failure":  ""
+    },
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"teacher\", operation: \"publish\")",
+        "Outcome":  "Failed",
+        "Failure":  "Expected Forbidden, got NoContent: "
+    },
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"student\", operation: \"start\")",
+        "Outcome":  "Failed",
+        "Failure":  "Expected Forbidden, got OK: {\"submissionId\":\"c75566f3-5133-469c-9c6a-2782ea657f95\",\"startedAt\":\"2026-10-30T10:30:54.276187Z\",\"deadlineAt\":\"2026-10-30T11:00:54.276187Z\",\"exam\":{\"id\":\"25e2c6dd-cb68-4346-9b71-76d1c96aea40\",\"name\":\"Matematica\",\"availableUntil\":\"2026-10-30T12:30:53.992971Z\",\"durationMinutes\":30,\"totalPoints\":10.00,\"questions\":[{\"id\":\"92b3341d-cf93-4e6f-97ab-73837e277773\",\"position\":1,\"text\":\"Question\",\"type\":0,\"points\":10.00,\"required\":true,\"options\":[{\"id\":\"56893688-603f-47ee-b32b-9f4aeb398e1a\",\"position\":1,\"text\":\"Correct\"},{\"id\":\"962d1411-9490-4a42-b3d7-3b0b34fa0b3c\",\"position\":2,\"text\":\"Other\"}]}]}}"
+    },
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"teacher\", operation: \"finalize\")",
+        "Outcome":  "Failed",
+        "Failure":  "Expected OK, got BadRequest: {\"title\":\"Richiesta non valida\",\"status\":400,\"detail\":\"Richiesta non valida\"}"
+    },
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"student\", operation: \"submit\")",
+        "Outcome":  "Failed",
+        "Failure":  "Expected Forbidden, got BadRequest: {\"title\":\"Richiesta non valida\",\"status\":400,\"detail\":\"Richiesta non valida\"}"
+    },
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"teacher\", operation: \"grade\")",
+        "Outcome":  "Failed",
+        "Failure":  "Expected Forbidden, got NoContent: "
+    },
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"admin\", operation: \"update\")",
+        "Outcome":  "Failed",
+        "Failure":  "Expected Forbidden, got NoContent: "
+    },
+    {
+        "Test":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite(role: \"admin\", operation: \"grade\")",
+        "Outcome":  "Failed",
+        "Failure":  "Expected Forbidden, got NoContent: "
+    }
+]

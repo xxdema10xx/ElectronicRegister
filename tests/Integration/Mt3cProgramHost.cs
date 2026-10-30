@@ -41,7 +41,7 @@ internal static class Mt3cHosting
             using var subscription = DiagnosticListener.AllListeners.Subscribe(observer);
             var args = new List<string>
             {
-                "--Deployment:Mode=LocalTest", "--environment=" + environment, "--urls=http://127.0.0.1:0", "--applicationName=" + typeof(ExamController).Assembly.GetName().Name,
+                "--Deployment:Mode=LocalTest", "--environment=" + environment, "--urls=http://127.0.0.1:0", "--applicationName=" + typeof(InstitutionExamController).Assembly.GetName().Name,
                 "--ConnectionStrings:DefaultConnection=" + connectionString,
                 "--Jwt:Key=" + Key, "--Jwt:Issuer=mt2-tests", "--Jwt:Audience=mt2-client", "--Jwt:ExpiresInMinutes=10",
                 "--AzureAd:TenantId=11111111-2222-3333-4444-555555555555", "--AzureAd:Audience=mt2-microsoft",
@@ -64,7 +64,7 @@ internal static class Mt3cHosting
             args.AddRange(users.Select((id, i) => "--Identity:Legacy:UserIds:" + i + "=" + id));
             var run = Task.Run(async () =>
             {
-                var result = typeof(ExamController).Assembly.EntryPoint!.Invoke(null, new object[] { args.ToArray() });
+                var result = typeof(InstitutionExamController).Assembly.EntryPoint!.Invoke(null, new object[] { args.ToArray() });
                 if (result is Task task) await task;
             });
             var completed = await Task.WhenAny(observer.Built.Task, run).WaitAsync(TimeSpan.FromSeconds(30));

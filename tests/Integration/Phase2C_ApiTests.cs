@@ -20,13 +20,13 @@ public class Phase2C_ApiTests : IAsyncLifetime
     private readonly IntegrationFixture _fixture;
     private Phase2C_HttpHost _host = null!;
     public Phase2C_ApiTests(IntegrationFixture fixture) => _fixture = fixture;
-    private static ClaimsContext Teacher => new(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
-    private static ClaimsContext Admin => new(SeedData.AdminUserId, UserRole.Admin, null, null);
-    private static ClaimsContext OtherTeacher => new(SeedData.Id(0, 13), UserRole.Teacher, null, SeedData.Id(0, 12));
-    private static ClaimsContext Student(ScenarioIds ids) => new(ids.StudentId, UserRole.Student, ids.StudentId, null);
-    private static string ReviewUrl(ScenarioIds ids) => $"/api/Exam/submission/{ids.SubmissionId}/review";
-    private static string FinalizeUrl(ScenarioIds ids) => $"/api/Exam/submission/{ids.SubmissionId}/finalize";
-    private static string ResultUrl(ScenarioIds ids) => $"/api/Exam/submission/{ids.SubmissionId}/result";
+    private static FixtureActor Teacher => new(SeedData.TeacherUserId, null, SeedData.TeacherId);
+    private static FixtureActor Admin => new(SeedData.AdminUserId, null, null);
+    private static FixtureActor OtherTeacher => new(SeedData.Id(0, 13), null, SeedData.Id(0, 12));
+    private static FixtureActor Student(ScenarioIds ids) => new(ids.StudentId, ids.StudentId, null);
+    private static string ReviewUrl(ScenarioIds ids) => $"/api/institution/submissions/{ids.SubmissionId}/review";
+    private static string FinalizeUrl(ScenarioIds ids) => $"/api/institution/submissions/{ids.SubmissionId}/finalize";
+    private static string ResultUrl(ScenarioIds ids) => $"/api/institution/submissions/{ids.SubmissionId}/result";
 
     public async Task InitializeAsync()
     {
@@ -38,7 +38,7 @@ public class Phase2C_ApiTests : IAsyncLifetime
     private async Task<ReviewOpenAnswersDto> ReviewDtoAsync(ScenarioIds ids)
     {
         using var scope = _fixture.ScopeFactory.CreateScope();
-        var review = await scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>().GetByIdAsync(ids.SubmissionId, Teacher);
+        var review = await scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>().GetByIdAsync(ids.SubmissionId, Teacher);
         return new ReviewOpenAnswersDto
         {
             Answers = review.Answers.Where(a => a.QuestionType == QuestionType.Open)
@@ -54,19 +54,19 @@ public class Phase2C_ApiTests : IAsyncLifetime
     public async Task ReviewApis_RejectStudentAndAnonymous(string operation)
     {
         var ids = await _fixture.PreparePendingReviewScenarioAsync(IntegrationScenario.ExamRegression);
-        foreach (var caller in new ClaimsContext?[] { Student(ids), null })
+        foreach (var caller in new FixtureActor?[] { Student(ids), null })
         {
             var response = await SendOperationAsync(ids, operation, caller);
             Assert.Equal(caller is null ? HttpStatusCode.Unauthorized : HttpStatusCode.Forbidden, response.StatusCode);
         }
     }
 
-    private Task<HttpResponseMessage> SendOperationAsync(ScenarioIds ids, string operation, ClaimsContext? caller)
+    private Task<HttpResponseMessage> SendOperationAsync(ScenarioIds ids, string operation, FixtureActor? caller)
     {
         var client = _host.As(caller);
         return operation switch
         {
-            "list" => client.GetAsync($"/api/Exam/{ids.ExamId}/submissions"),
+            "list" => client.GetAsync($"/api/institution/exams/{ids.ExamId}/submissions"),
             "read" => client.GetAsync(ReviewUrl(ids)),
             "review" => client.PutAsJsonAsync(ReviewUrl(ids), new ReviewOpenAnswersDto()),
             _ => client.PostAsJsonAsync(FinalizeUrl(ids), new FinalizeSubmissionDto())
@@ -81,10 +81,12 @@ public class Phase2C_ApiTests : IAsyncLifetime
     public async Task NonOwnerTeacher_ForbiddenAtHttpAndApplicationLevels(string operation)
     {
         var ids = await _fixture.PreparePendingReviewScenarioAsync(IntegrationScenario.ExamRegression);
-        Assert.Equal(HttpStatusCode.Forbidden, (await SendOperationAsync(ids, operation, OtherTeacher)).StatusCode);
+        var before = await Phase3.SnapshotAsync(_fixture.ScopeFactory, ids);
+        Assert.Equal(HttpStatusCode.NotFound, (await SendOperationAsync(ids, operation, OtherTeacher)).StatusCode);
+        Assert.Equal(before, await Phase3.SnapshotAsync(_fixture.ScopeFactory, ids));
         using var scope = _fixture.ScopeFactory.CreateScope();
-        var mgr = scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>();
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+        var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
+        await Assert.ThrowsAsync<System.Collections.Generic.KeyNotFoundException>(async () =>
         {
             switch (operation)
             {
@@ -104,7 +106,7 @@ public class Phase2C_ApiTests : IAsyncLifetime
         var caller = admin ? Admin : Teacher;
         var ids = await _fixture.PreparePendingReviewScenarioAsync(IntegrationScenario.ExamRegression);
         var client = _host.As(caller);
-        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync($"/api/Exam/{ids.ExamId}/submissions")).StatusCode);
+        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync($"/api/institution/exams/{ids.ExamId}/submissions")).StatusCode);
         Assert.Equal(HttpStatusCode.OK, (await client.GetAsync(ReviewUrl(ids))).StatusCode);
         Assert.Equal(HttpStatusCode.NoContent, (await client.PutAsJsonAsync(ReviewUrl(ids), await ReviewDtoAsync(ids))).StatusCode);
         var final = new FinalizeSubmissionDto { FinalGrade = 8m, OverrideReason = "Official override" };
@@ -138,7 +140,7 @@ public class Phase2C_ApiTests : IAsyncLifetime
         Assert.NotNull(audit.AfterJson);
         Assert.Single(await ctx.AuditEvents.Where(a => a.EntityId == ids.SubmissionId &&
             (a.Action == "submission.override" || a.Action == "submission.finalize")).ToListAsync());
-        var ownReview = await scope.ServiceProvider.GetRequiredService<IExamSubmissionManager>().GetByIdAsync(ids.SubmissionId, Student(ids));
+        var ownReview = await scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>().GetByIdAsync(ids.SubmissionId, Student(ids));
         Assert.Equal(8m, ownReview.FinalGrade);
         Assert.Null(ownReview.SuggestedGrade);
         Assert.All(ownReview.Answers, a =>
@@ -177,25 +179,39 @@ public class Phase2C_ApiTests : IAsyncLifetime
             await ctx.SaveChangesAsync();
         }
         var client = _host.As(Teacher);
-        var list = await client.GetFromJsonAsync<SubmissionSummaryDto[]>($"/api/Exam/{ids.ExamId}/submissions?status=PendingReview");
+        var list = await client.GetFromJsonAsync<SubmissionSummaryDto[]>($"/api/institution/exams/{ids.ExamId}/submissions?status=PendingReview");
         var summary = Assert.Single(list!);
         Assert.Equal(3, summary.ViolationCount);
         Assert.Equal(SubmitReason.Manual, summary.SubmitReason);
-        var other = await client.GetFromJsonAsync<SubmissionSummaryDto[]>($"/api/Exam/{ids.ExamId}/submissions?status=Finalized");
+        var other = await client.GetFromJsonAsync<SubmissionSummaryDto[]>($"/api/institution/exams/{ids.ExamId}/submissions?status=Finalized");
         Assert.Empty(other!);
-        Assert.Equal(HttpStatusCode.BadRequest, (await client.GetAsync($"/api/Exam/{ids.ExamId}/submissions?status=99")).StatusCode);
-        Assert.Equal(HttpStatusCode.BadRequest, (await client.GetAsync($"/api/Exam/{ids.ExamId}/submissions?status=unknown")).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.GetAsync($"/api/institution/exams/{ids.ExamId}/submissions?status=99")).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.GetAsync($"/api/institution/exams/{ids.ExamId}/submissions?status=unknown")).StatusCode);
     }
 
     [Fact]
     public async Task MissingRoleIdentity_ForbiddenInsteadOfUnrestrictedQueries()
     {
         var ids = await _fixture.ResetScenarioAsync(IntegrationScenario.ExamRegression);
-        var missingStudent = new ClaimsContext(ids.StudentId, UserRole.Student, null, null);
-        Assert.Equal(HttpStatusCode.Forbidden, (await _host.As(missingStudent).GetAsync(ResultUrl(ids))).StatusCode);
-        Assert.Equal(HttpStatusCode.Forbidden, (await _host.As(missingStudent).GetAsync("/api/Grade")).StatusCode);
-        var missingTeacher = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, null);
-        Assert.Equal(HttpStatusCode.Forbidden, (await _host.As(missingTeacher).GetAsync(ReviewUrl(ids))).StatusCode);
+        using var scope = _fixture.ScopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
+        var studentProfile = await db.InstitutionStudentProfiles.SingleAsync(p => p.InstitutionId == SeedData.CoreInstitutionId && p.StudentId == ids.StudentId);
+        var teacherProfile = await db.InstitutionTeacherProfiles.SingleAsync(p => p.InstitutionId == SeedData.CoreInstitutionId && p.TeacherId == SeedData.TeacherId);
+        db.Remove(studentProfile);
+        db.Remove(teacherProfile);
+        await db.SaveChangesAsync();
+        try
+        {
+            Assert.Equal(HttpStatusCode.Forbidden, (await _host.As(Student(ids)).GetAsync(ResultUrl(ids))).StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, (await _host.As(Student(ids)).GetAsync("/api/institution/grades")).StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, (await _host.As(Teacher).GetAsync(ReviewUrl(ids))).StatusCode);
+        }
+        finally
+        {
+            db.Add(studentProfile);
+            db.Add(teacherProfile);
+            await db.SaveChangesAsync();
+        }
     }
 
     [Fact]
@@ -215,8 +231,8 @@ public class Phase2C_ApiTests : IAsyncLifetime
         {
             Answers = { new OpenAnswerReviewInputDto { AnswerId = closedAnswer.AnswerId, AwardedPoints = 0m } }
         })).StatusCode);
-        Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync($"/api/Exam/submission/{Guid.NewGuid()}/review")).StatusCode);
-        Assert.Equal(HttpStatusCode.NotFound, (await _host.As(Admin).GetAsync($"/api/Exam/{Guid.NewGuid()}/submissions")).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync($"/api/institution/submissions/{Guid.NewGuid()}/review")).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await _host.As(Admin).GetAsync($"/api/institution/exams/{Guid.NewGuid()}/submissions")).StatusCode);
         var internalError = await client.GetAsync("/test/internal-error");
         Assert.Equal(HttpStatusCode.InternalServerError, internalError.StatusCode);
         Assert.DoesNotContain("sensitive", await internalError.Content.ReadAsStringAsync());

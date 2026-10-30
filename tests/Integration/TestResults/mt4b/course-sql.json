@@ -2,307 +2,307 @@
   {
     "Sql": "INSERT INTO \u0060course_edition\u0060 (id,institution_id,study_path_id,code,name,start_date,end_date,status) VALUES (@p0,@p1,@p2,@p3,@p4,@p5,@p6,@p7)",
     "Guids": [
-      "c5714091-1845-45ff-81af-a00226386f7a",
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "2b94a25e-c451-4122-8c08-59c2d2b756e1"
+      "0e486960-2501-46ac-8f85-ff1286d16ab9",
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "b55043e1-7a8c-4662-9852-0b4ed9c6c8c2"
     ]
   },
   {
     "Sql": "INSERT INTO course_administration_event (institution_id,id,actor_user_id,actor_membership_id,course_edition_id,enrollment_id,campus_id,class_id,action,previous_status,new_status,previous_completion_date,new_completion_date,revision_before,revision_after,reason,request_hash,before_json,after_json,occurred_at_utc) VALUES (@p0,@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,@p17,@p18,UTC_TIMESTAMP(6))",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "a0b78ba3-1cd7-4553-83fc-dab70bc31712",
-      "2737447e-6bbc-4d9e-a8b6-1ab97258f394",
-      "eab58b6a-67d7-4e61-9412-b7ed4e6cddb4",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "13a1a646-1273-4120-9f51-3b17b8e415d3",
+      "7d628da6-f618-4172-b861-67195fc33e0c",
+      "a9da8757-aba0-441c-9602-135d735afa68",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND (\u0060c\u0060.\u0060id\u0060 = @__key_1)\r\nLIMIT 2",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   },
   {
     "Sql": "INSERT INTO \u0060course_edition\u0060 (id,institution_id,study_path_id,code,name,start_date,end_date,status) VALUES (@p0,@p1,@p2,@p3,@p4,@p5,@p6,@p7)",
     "Guids": [
-      "b97d0305-8f49-4f13-bcf8-6451719dfdf3",
-      "874de8de-039a-450f-b530-306fbc7e2908",
-      "69f5ad45-303d-4122-999d-439bf10b01b7"
+      "1c1d8953-6502-4252-8cfb-03af24529934",
+      "8403647b-0906-4c24-8563-d19bf9aeaa3a",
+      "6445581a-5f9c-4a3b-ba06-e72da21441a2"
     ]
   },
   {
     "Sql": "INSERT INTO course_administration_event (institution_id,id,actor_user_id,actor_membership_id,course_edition_id,enrollment_id,campus_id,class_id,action,previous_status,new_status,previous_completion_date,new_completion_date,revision_before,revision_after,reason,request_hash,before_json,after_json,occurred_at_utc) VALUES (@p0,@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,@p17,@p18,UTC_TIMESTAMP(6))",
     "Guids": [
-      "874de8de-039a-450f-b530-306fbc7e2908",
-      "99a80e51-eac7-4047-882f-139d7c3a44fa",
-      "2737447e-6bbc-4d9e-a8b6-1ab97258f394",
-      "71e8b847-26b1-4ed2-8c4f-7ecce1a7cd3e",
-      "b97d0305-8f49-4f13-bcf8-6451719dfdf3"
+      "8403647b-0906-4c24-8563-d19bf9aeaa3a",
+      "cadb1a27-7956-46e8-a045-26e424072bde",
+      "7d628da6-f618-4172-b861-67195fc33e0c",
+      "f3200557-317f-482b-ae56-43d0eebfcb7c",
+      "1c1d8953-6502-4252-8cfb-03af24529934"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND (\u0060c\u0060.\u0060id\u0060 = @__key_1)\r\nLIMIT 2",
     "Guids": [
-      "874de8de-039a-450f-b530-306fbc7e2908",
-      "b97d0305-8f49-4f13-bcf8-6451719dfdf3"
+      "8403647b-0906-4c24-8563-d19bf9aeaa3a",
+      "1c1d8953-6502-4252-8cfb-03af24529934"
     ]
   },
   {
     "Sql": "SELECT EXISTS (\r\n    SELECT 1\r\n    FROM \u0060course_edition\u0060 AS \u0060c\u0060\r\n    WHERE (\u0060c\u0060.\u0060id\u0060 = @__enrollment_CourseEditionId_0) AND (\u0060c\u0060.\u0060institution_id\u0060 = @__tenant_InstitutionId_1))",
     "Guids": [
-      "c5714091-1845-45ff-81af-a00226386f7a",
-      "9fa03227-f322-4284-9904-c0e92a7bb708"
+      "0e486960-2501-46ac-8f85-ff1286d16ab9",
+      "a5412901-9152-4b81-80ce-37d11a5e1a28"
     ]
   },
   {
     "Sql": "SELECT EXISTS (\r\n    SELECT 1\r\n    FROM \u0060course_edition\u0060 AS \u0060c\u0060\r\n    WHERE (\u0060c\u0060.\u0060id\u0060 = @__enrollment_CourseEditionId_0) AND (\u0060c\u0060.\u0060institution_id\u0060 = @__tenant_InstitutionId_1))",
     "Guids": [
-      "b97d0305-8f49-4f13-bcf8-6451719dfdf3",
-      "874de8de-039a-450f-b530-306fbc7e2908"
+      "1c1d8953-6502-4252-8cfb-03af24529934",
+      "8403647b-0906-4c24-8563-d19bf9aeaa3a"
     ]
   },
   {
     "Sql": "INSERT INTO \u0060student_enrollment\u0060 (id,institution_id,student_id,course_edition_id,enrollment_date,completion_date,status) VALUES (@p0,@p1,@p2,@p3,@p4,@p5,@p6)",
     "Guids": [
-      "eed293ae-48fc-4871-824b-3b37a40f9392",
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "4d63895e-4b1f-445a-9d06-7cb59a13bfed",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "061ce174-985f-4f52-86f0-51c6b16288e0",
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "875cf120-c67a-4354-9991-d439a3051e1f",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   },
   {
     "Sql": "INSERT INTO \u0060student_enrollment\u0060 (id,institution_id,student_id,course_edition_id,enrollment_date,completion_date,status) VALUES (@p0,@p1,@p2,@p3,@p4,@p5,@p6)",
     "Guids": [
-      "ba26fc24-3958-4234-a6cd-4c82fac0c9f9",
-      "874de8de-039a-450f-b530-306fbc7e2908",
-      "754fca10-effe-4a63-8d6b-28e340404976",
-      "b97d0305-8f49-4f13-bcf8-6451719dfdf3"
+      "a2bfa4e1-4c92-4e52-bf06-17973ae72229",
+      "8403647b-0906-4c24-8563-d19bf9aeaa3a",
+      "144e91e8-9375-4f74-8027-bf5d6e80af8c",
+      "1c1d8953-6502-4252-8cfb-03af24529934"
     ]
   },
   {
     "Sql": "INSERT INTO course_administration_event (institution_id,id,actor_user_id,actor_membership_id,course_edition_id,enrollment_id,campus_id,class_id,action,previous_status,new_status,previous_completion_date,new_completion_date,revision_before,revision_after,reason,request_hash,before_json,after_json,occurred_at_utc) VALUES (@p0,@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,@p17,@p18,UTC_TIMESTAMP(6))",
     "Guids": [
-      "874de8de-039a-450f-b530-306fbc7e2908",
-      "ea64cac6-53b9-4444-a289-97cee808e9c1",
-      "2737447e-6bbc-4d9e-a8b6-1ab97258f394",
-      "71e8b847-26b1-4ed2-8c4f-7ecce1a7cd3e",
-      "b97d0305-8f49-4f13-bcf8-6451719dfdf3",
-      "ba26fc24-3958-4234-a6cd-4c82fac0c9f9"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "d16099b6-f290-49c8-95f5-1adea7732ffe",
+      "7d628da6-f618-4172-b861-67195fc33e0c",
+      "a9da8757-aba0-441c-9602-135d735afa68",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9",
+      "061ce174-985f-4f52-86f0-51c6b16288e0"
     ]
   },
   {
     "Sql": "INSERT INTO course_administration_event (institution_id,id,actor_user_id,actor_membership_id,course_edition_id,enrollment_id,campus_id,class_id,action,previous_status,new_status,previous_completion_date,new_completion_date,revision_before,revision_after,reason,request_hash,before_json,after_json,occurred_at_utc) VALUES (@p0,@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,@p17,@p18,UTC_TIMESTAMP(6))",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "eef65179-7db5-4e78-b03b-fafd332f35d0",
-      "2737447e-6bbc-4d9e-a8b6-1ab97258f394",
-      "eab58b6a-67d7-4e61-9412-b7ed4e6cddb4",
-      "c5714091-1845-45ff-81af-a00226386f7a",
-      "eed293ae-48fc-4871-824b-3b37a40f9392"
+      "8403647b-0906-4c24-8563-d19bf9aeaa3a",
+      "fcd718c4-ba5e-4fdc-a572-4c8bbab56b4a",
+      "7d628da6-f618-4172-b861-67195fc33e0c",
+      "f3200557-317f-482b-ae56-43d0eebfcb7c",
+      "1c1d8953-6502-4252-8cfb-03af24529934",
+      "a2bfa4e1-4c92-4e52-bf06-17973ae72229"
     ]
   },
   {
     "Sql": "SELECT \u0060s\u0060.\u0060id\u0060, \u0060s\u0060.\u0060course_edition_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060s\u0060.\u0060student_id\u0060, \u0060s\u0060.\u0060enrollment_date\u0060, \u0060s\u0060.\u0060completion_date\u0060, \u0060s\u0060.\u0060status\u0060, \u0060s\u0060.\u0060revision\u0060\r\nFROM \u0060student_enrollment\u0060 AS \u0060s\u0060\r\nINNER JOIN \u0060course_edition\u0060 AS \u0060c\u0060 ON (\u0060s\u0060.\u0060institution_id\u0060 = \u0060c\u0060.\u0060institution_id\u0060) AND (\u0060s\u0060.\u0060course_edition_id\u0060 = \u0060c\u0060.\u0060id\u0060)\r\nWHERE ((\u0060s\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0)) AND (\u0060s\u0060.\u0060id\u0060 = @__id_1)\r\nLIMIT 2",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "eed293ae-48fc-4871-824b-3b37a40f9392"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "061ce174-985f-4f52-86f0-51c6b16288e0"
     ]
   },
   {
     "Sql": "SELECT \u0060s\u0060.\u0060id\u0060, \u0060s\u0060.\u0060course_edition_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060s\u0060.\u0060student_id\u0060, \u0060s\u0060.\u0060enrollment_date\u0060, \u0060s\u0060.\u0060completion_date\u0060, \u0060s\u0060.\u0060status\u0060, \u0060s\u0060.\u0060revision\u0060\r\nFROM \u0060student_enrollment\u0060 AS \u0060s\u0060\r\nINNER JOIN \u0060course_edition\u0060 AS \u0060c\u0060 ON (\u0060s\u0060.\u0060institution_id\u0060 = \u0060c\u0060.\u0060institution_id\u0060) AND (\u0060s\u0060.\u0060course_edition_id\u0060 = \u0060c\u0060.\u0060id\u0060)\r\nWHERE ((\u0060s\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0)) AND (\u0060s\u0060.\u0060id\u0060 = @__id_1)\r\nLIMIT 2",
     "Guids": [
-      "874de8de-039a-450f-b530-306fbc7e2908",
-      "ba26fc24-3958-4234-a6cd-4c82fac0c9f9"
+      "8403647b-0906-4c24-8563-d19bf9aeaa3a",
+      "a2bfa4e1-4c92-4e52-bf06-17973ae72229"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE \u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0\r\nORDER BY \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060id\u0060\r\nLIMIT @__p_2 OFFSET @__p_1",
     "Guids": [
-      "874de8de-039a-450f-b530-306fbc7e2908"
+      "8403647b-0906-4c24-8563-d19bf9aeaa3a"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE \u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0\r\nORDER BY \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060id\u0060\r\nLIMIT @__p_2 OFFSET @__p_1",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE \u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0\r\nORDER BY \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060id\u0060\r\nLIMIT @__p_2 OFFSET @__p_1",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE \u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0\r\nORDER BY \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060id\u0060\r\nLIMIT @__p_2 OFFSET @__p_1",
     "Guids": [
-      "874de8de-039a-450f-b530-306fbc7e2908"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE \u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0\r\nORDER BY \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060id\u0060\r\nLIMIT @__p_2 OFFSET @__p_1",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708"
+      "8403647b-0906-4c24-8563-d19bf9aeaa3a"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE \u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0\r\nORDER BY \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060id\u0060\r\nLIMIT @__p_2 OFFSET @__p_1",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708"
+      "8403647b-0906-4c24-8563-d19bf9aeaa3a"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE \u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0\r\nORDER BY \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060id\u0060\r\nLIMIT @__p_2 OFFSET @__p_1",
     "Guids": [
-      "874de8de-039a-450f-b530-306fbc7e2908"
+      "8403647b-0906-4c24-8563-d19bf9aeaa3a"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE \u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0\r\nORDER BY \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060id\u0060\r\nLIMIT @__p_2 OFFSET @__p_1",
     "Guids": [
-      "874de8de-039a-450f-b530-306fbc7e2908"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28"
     ]
   },
   {
     "Sql": "SELECT EXISTS (\r\n    SELECT 1\r\n    FROM \u0060course_edition\u0060 AS \u0060c\u0060\r\n    WHERE (\u0060c\u0060.\u0060id\u0060 = @__editionId_0) AND (\u0060c\u0060.\u0060institution_id\u0060 = @__tenant_InstitutionId_1))",
     "Guids": [
-      "c5714091-1845-45ff-81af-a00226386f7a",
-      "9fa03227-f322-4284-9904-c0e92a7bb708"
+      "0e486960-2501-46ac-8f85-ff1286d16ab9",
+      "a5412901-9152-4b81-80ce-37d11a5e1a28"
     ]
   },
   {
     "Sql": "SET AUTOCOMMIT = 1;\r\nINSERT INTO \u0060course_edition_campus\u0060 (\u0060campus_id\u0060, \u0060course_edition_id\u0060, \u0060institution_id\u0060)\r\nVALUES (@p0, @p1, @p2);\r\n",
     "Guids": [
-      "eee701b7-7e3b-4420-b008-4232e59422f3",
-      "c5714091-1845-45ff-81af-a00226386f7a",
-      "9fa03227-f322-4284-9904-c0e92a7bb708"
+      "6d007939-a9bc-4149-a5ce-4b91b70524a9",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9",
+      "a5412901-9152-4b81-80ce-37d11a5e1a28"
     ]
   },
   {
     "Sql": "INSERT INTO course_administration_event (institution_id,id,actor_user_id,actor_membership_id,course_edition_id,enrollment_id,campus_id,class_id,action,previous_status,new_status,previous_completion_date,new_completion_date,revision_before,revision_after,reason,request_hash,before_json,after_json,occurred_at_utc) VALUES (@p0,@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,@p17,@p18,UTC_TIMESTAMP(6))",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "4c3e0c3e-e651-4936-83f8-3fe9a2339e68",
-      "2737447e-6bbc-4d9e-a8b6-1ab97258f394",
-      "eab58b6a-67d7-4e61-9412-b7ed4e6cddb4",
-      "c5714091-1845-45ff-81af-a00226386f7a",
-      "eee701b7-7e3b-4420-b008-4232e59422f3"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "79deca3b-2edd-4a68-87bf-c54b8e5a5360",
+      "7d628da6-f618-4172-b861-67195fc33e0c",
+      "a9da8757-aba0-441c-9602-135d735afa68",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9",
+      "6d007939-a9bc-4149-a5ce-4b91b70524a9"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060course_edition_id\u0060 AS \u0060Edition\u0060\r\nFROM \u0060class\u0060 AS \u0060c\u0060\r\nWHERE (\u0060c\u0060.\u0060id\u0060 = @__id_0) AND (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_1)\r\nLIMIT 2",
     "Guids": [
-      "2967b309-d179-4984-af6d-0ff1f105483f",
-      "9fa03227-f322-4284-9904-c0e92a7bb708"
+      "30adf0ff-016d-4541-8574-af97c1c28586",
+      "a5412901-9152-4b81-80ce-37d11a5e1a28"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060biennium_study_path_id\u0060, \u0060c\u0060.\u0060course_edition_id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060name\u0060\r\nFROM \u0060class\u0060 AS \u0060c\u0060\r\nWHERE (\u0060c\u0060.\u0060id\u0060 = @__classId_0) AND (\u0060c\u0060.\u0060institution_id\u0060 = @__tenant_InstitutionId_1)\r\nLIMIT 2",
     "Guids": [
-      "2967b309-d179-4984-af6d-0ff1f105483f",
-      "9fa03227-f322-4284-9904-c0e92a7bb708"
+      "30adf0ff-016d-4541-8574-af97c1c28586",
+      "a5412901-9152-4b81-80ce-37d11a5e1a28"
     ]
   },
   {
     "Sql": "SELECT EXISTS (\r\n    SELECT 1\r\n    FROM \u0060course_edition\u0060 AS \u0060c\u0060\r\n    WHERE ((\u0060c\u0060.\u0060id\u0060 = @__editionId_0) AND (\u0060c\u0060.\u0060institution_id\u0060 = @__tenant_InstitutionId_1)) AND (\u0060c\u0060.\u0060study_path_id\u0060 = @__path_2))",
     "Guids": [
-      "c5714091-1845-45ff-81af-a00226386f7a",
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "2b94a25e-c451-4122-8c08-59c2d2b756e1"
+      "0e486960-2501-46ac-8f85-ff1286d16ab9",
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "b55043e1-7a8c-4662-9852-0b4ed9c6c8c2"
     ]
   },
   {
     "Sql": "SET AUTOCOMMIT = 1;\r\nUPDATE \u0060class\u0060 SET \u0060course_edition_id\u0060 = @p0\r\nWHERE \u0060id\u0060 = @p1 AND \u0060course_edition_id\u0060 IS NULL AND \u0060institution_id\u0060 = @p2;\r\nSELECT ROW_COUNT();\r\n\r\n",
     "Guids": [
-      "2967b309-d179-4984-af6d-0ff1f105483f",
-      "c5714091-1845-45ff-81af-a00226386f7a",
-      "9fa03227-f322-4284-9904-c0e92a7bb708"
+      "30adf0ff-016d-4541-8574-af97c1c28586",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9",
+      "a5412901-9152-4b81-80ce-37d11a5e1a28"
     ]
   },
   {
     "Sql": "INSERT INTO course_administration_event (institution_id,id,actor_user_id,actor_membership_id,course_edition_id,enrollment_id,campus_id,class_id,action,previous_status,new_status,previous_completion_date,new_completion_date,revision_before,revision_after,reason,request_hash,before_json,after_json,occurred_at_utc) VALUES (@p0,@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,@p17,@p18,UTC_TIMESTAMP(6))",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "b0d8db8d-5eef-4d54-a55e-67e5283fd5f4",
-      "2737447e-6bbc-4d9e-a8b6-1ab97258f394",
-      "eab58b6a-67d7-4e61-9412-b7ed4e6cddb4",
-      "c5714091-1845-45ff-81af-a00226386f7a",
-      "2967b309-d179-4984-af6d-0ff1f105483f"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "f07d78a1-689f-4980-9c7a-38d3ccdd1847",
+      "7d628da6-f618-4172-b861-67195fc33e0c",
+      "a9da8757-aba0-441c-9602-135d735afa68",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9",
+      "30adf0ff-016d-4541-8574-af97c1c28586"
     ]
   },
   {
     "Sql": "SELECT \u0060s\u0060.\u0060id\u0060, \u0060s\u0060.\u0060course_edition_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060s\u0060.\u0060student_id\u0060, \u0060s\u0060.\u0060enrollment_date\u0060, \u0060s\u0060.\u0060completion_date\u0060, \u0060s\u0060.\u0060status\u0060, \u0060s\u0060.\u0060revision\u0060\r\nFROM \u0060student_enrollment\u0060 AS \u0060s\u0060\r\nINNER JOIN \u0060course_edition\u0060 AS \u0060c\u0060 ON (\u0060s\u0060.\u0060institution_id\u0060 = \u0060c\u0060.\u0060institution_id\u0060) AND (\u0060s\u0060.\u0060course_edition_id\u0060 = \u0060c\u0060.\u0060id\u0060)\r\nWHERE ((\u0060s\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0)) AND (\u0060s\u0060.\u0060student_id\u0060 = @__s_1)\r\nORDER BY \u0060s\u0060.\u0060enrollment_date\u0060, \u0060s\u0060.\u0060id\u0060\r\nLIMIT @__p_3 OFFSET @__p_2",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "4d63895e-4b1f-445a-9d06-7cb59a13bfed"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "875cf120-c67a-4354-9991-d439a3051e1f"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND (\u0060c\u0060.\u0060id\u0060 = @__key_1)\r\nLIMIT 2",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060biennium_study_path_id\u0060\r\nFROM \u0060class\u0060 AS \u0060c\u0060\r\nWHERE (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND (\u0060c\u0060.\u0060course_edition_id\u0060 = @__editionId_1)\r\nORDER BY \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060id\u0060\r\nLIMIT @__p_3 OFFSET @__p_2",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND (\u0060c\u0060.\u0060id\u0060 = @__key_1)\r\nLIMIT 2",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060address\u0060, \u0060c\u0060.\u0060city\u0060, \u0060c\u0060.\u0060province\u0060, \u0060c\u0060.\u0060is_active\u0060\r\nFROM \u0060campus\u0060 AS \u0060c\u0060\r\nWHERE (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND EXISTS (\r\n    SELECT 1\r\n    FROM \u0060course_edition_campus\u0060 AS \u0060c0\u0060\r\n    WHERE ((\u0060c0\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND (\u0060c0\u0060.\u0060course_edition_id\u0060 = @__id_1)) AND (\u0060c0\u0060.\u0060campus_id\u0060 = \u0060c\u0060.\u0060id\u0060))\r\nORDER BY \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060id\u0060\r\nLIMIT @__p_3 OFFSET @__p_2",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND (\u0060c\u0060.\u0060id\u0060 = @__key_1)\r\nLIMIT 2",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   },
   {
     "Sql": "SELECT id FROM course_edition WHERE institution_id=@p0 AND id=@p1 FOR UPDATE",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   },
   {
     "Sql": "SELECT \u0060c\u0060.\u0060id\u0060, \u0060c\u0060.\u0060institution_id\u0060, \u0060c\u0060.\u0060study_path_id\u0060, \u0060c\u0060.\u0060code\u0060, \u0060c\u0060.\u0060name\u0060, \u0060c\u0060.\u0060start_date\u0060, \u0060c\u0060.\u0060end_date\u0060, \u0060c\u0060.\u0060status\u0060, \u0060c\u0060.\u0060created_at\u0060, \u0060c\u0060.\u0060updated_at\u0060\r\nFROM \u0060course_edition\u0060 AS \u0060c\u0060\r\nWHERE (\u0060c\u0060.\u0060institution_id\u0060 = @__t_InstitutionId_0) AND (\u0060c\u0060.\u0060id\u0060 = @__key_1)\r\nLIMIT 2",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   },
   {
     "Sql": "UPDATE \u0060course_edition\u0060 AS \u0060c\u0060\r\nSET \u0060c\u0060.\u0060updated_at\u0060 = @__now_6,\r\n    \u0060c\u0060.\u0060end_date\u0060 = NULL,\r\n    \u0060c\u0060.\u0060start_date\u0060 = NULL,\r\n    \u0060c\u0060.\u0060name\u0060 = @__8__locals1_input_Name_3,\r\n    \u0060c\u0060.\u0060code\u0060 = @__8__locals1_input_Code_2\r\nWHERE (\u0060c\u0060.\u0060institution_id\u0060 = @__8__locals1_t_InstitutionId_0) AND (\u0060c\u0060.\u0060id\u0060 = @__8__locals1_id_1)",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   },
   {
     "Sql": "INSERT INTO course_administration_event (institution_id,id,actor_user_id,actor_membership_id,course_edition_id,enrollment_id,campus_id,class_id,action,previous_status,new_status,previous_completion_date,new_completion_date,revision_before,revision_after,reason,request_hash,before_json,after_json,occurred_at_utc) VALUES (@p0,@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,@p17,@p18,UTC_TIMESTAMP(6))",
     "Guids": [
-      "9fa03227-f322-4284-9904-c0e92a7bb708",
-      "468290ea-7559-413d-b164-8e93dd6c209b",
-      "2737447e-6bbc-4d9e-a8b6-1ab97258f394",
-      "eab58b6a-67d7-4e61-9412-b7ed4e6cddb4",
-      "c5714091-1845-45ff-81af-a00226386f7a"
+      "a5412901-9152-4b81-80ce-37d11a5e1a28",
+      "0340e171-31e4-4ae6-9261-9d6e1a1745b3",
+      "7d628da6-f618-4172-b861-67195fc33e0c",
+      "a9da8757-aba0-441c-9602-135d735afa68",
+      "0e486960-2501-46ac-8f85-ff1286d16ab9"
     ]
   }
 ]

@@ -7,7 +7,7 @@ Il codice non è una certificazione di completamento delle verifiche elencate ne
 
 `InstitutionRole.Staff = 3`. I valori esistenti restano Admin=0, Teacher=1, Student=2.
 L'ENUM SQL conserva l'ordine `InstitutionAdmin,Teacher,Student,Staff`.
-`UserRole` legacy non contiene Staff. User globale e membership non sono intercambiabili.
+Il tipo CLR `UserRole` e il percorso autorizzativo globale sono ritirati. La colonna storica `user.role` e conservata ma non conferisce membership o capability. Identita globale e membership non sono intercambiabili.
 La gerarchia organizzativa non produce ereditarietà di permessi.
 
 Staff gestisce anagrafiche locali, voti ed esami della Fondazione selezionata.

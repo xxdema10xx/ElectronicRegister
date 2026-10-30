@@ -32,13 +32,13 @@ namespace ElectronicRegisterAPI.Tests.Integration
             using var scope = _fixture.ScopeFactory.CreateScope();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
             var gradeRepo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IGradeRepository>();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
 
             // Finalize as teacher to create Grade from persisted scores
-            var teacherCaller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
+            var teacherCaller = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
             // Submit answers as student, then allow automatic grading to create Grade
-            var examMgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamManager>();
-            var studentCaller = new ClaimsContext(ids.StudentId, UserRole.Student, ids.StudentId, null);
+            var examMgr = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
+            var studentCaller = new FixtureActor(ids.StudentId, ids.StudentId, null);
             var submit = new SubmitExamDto { ClientRevision = 1 };
             // populate answers from seed
             var current = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
@@ -78,13 +78,13 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             using var scope = _fixture.ScopeFactory.CreateScope();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamManager>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
 
-            var teacherCaller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
+            var teacherCaller = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
 
             // Finalize with explicit dto.FinalGrade
             var dto = new FinalizeSubmissionDto { FinalGrade = 7.5m, OverrideReason = "Teacher confirmed override" };
-            var submissionMgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            var submissionMgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             // Ensure all open answers are reviewed before finalization
             var toReview = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
             var reviewDto = new ReviewOpenAnswersDto();
@@ -93,9 +93,9 @@ namespace ElectronicRegisterAPI.Tests.Integration
                 reviewDto.Answers.Add(new OpenAnswerReviewInputDto { AnswerId = a.Id, AwardedPoints = 5m });
             }
             if (reviewDto.Answers.Count > 0)
-                await submissionMgr.ReviewAsync(ids.SubmissionId, reviewDto, new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId));
+                await submissionMgr.ReviewAsync(ids.SubmissionId, reviewDto, new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId));
 
-            await submissionMgr.FinalizeAsync(ids.SubmissionId, dto, new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId));
+            await submissionMgr.FinalizeAsync(ids.SubmissionId, dto, new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId));
 
             var result = await mgr.GetResultAsync(ids.SubmissionId, teacherCaller);
             Assert.NotNull(result);
@@ -115,8 +115,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await ResetToPendingReviewAsync();
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamManager>();
-            var caller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
+            var caller = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
 
             var result = await mgr.GetResultAsync(ids.SubmissionId, caller);
             Assert.NotNull(result);
@@ -130,14 +130,13 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ids = await ResetToPendingReviewAsync();
 
             using var scope = _fixture.ScopeFactory.CreateScope();
-            var mgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamManager>();
-            var submissionProcessor = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Services.IExamSubmissionProcessor>();
+            var mgr = scope.ServiceProvider.GetRequiredService<FixtureExamClient>();
             var repo = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
-            var caller = new ClaimsContext(ids.StudentId, UserRole.Student, ids.StudentId, null);
-            var teacherCaller = new ClaimsContext(SeedData.TeacherUserId, UserRole.Teacher, null, SeedData.TeacherId);
+            var caller = new FixtureActor(ids.StudentId, ids.StudentId, null);
+            var teacherCaller = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
 
             // perform initial submit (idempotent path should create grade if no open questions remain)
-            var submissionMgr = scope.ServiceProvider.GetRequiredService<Domain.Interfaces.Managers.IExamSubmissionManager>();
+            var submissionMgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
 
             // Ensure open answers are reviewed before finalization so FinalizeAsync won't throw
             var toReview2 = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);
@@ -152,7 +151,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             await submissionMgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto(), teacherCaller);
 
             // Now call processor.ProcessSubmitAsync which should return persisted grade value when submission already submitted
-            var res = await submissionProcessor.ProcessSubmitAsync(ids.SubmissionId, null, Domain.Enums.SubmitReason.TimeExpired, caller);
+            var res = await FixtureTenant.For(scope.ServiceProvider, caller.UserId).SubmitExpiredAsync(ids.SubmissionId);
             Assert.NotNull(res);
 
             using var verifyScope = _fixture.ScopeFactory.CreateScope();

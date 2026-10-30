@@ -24,7 +24,7 @@ internal sealed class InstitutionImportManager(
     IInstitutionEmailRepository emails,
     IInstitutionStudentRepository students,
     IInstitutionTeacherRepository teachers,
-    InstitutionImportFeature feature
+    IInstitutionImportFeature feature
 ) : IInstitutionImportManager
 {
     private async Task<TenantContext> Actor(CancellationToken ct)
@@ -149,13 +149,13 @@ internal sealed class InstitutionImportManager(
     )
     {
         var actor = await Actor(ct);
-        var table = await reader.ReadAsync(file, fileName, parsing, feature.Limits, ct);
+        var table = await reader.ReadAsync(file, fileName, parsing, feature.Settings.Limits, ct);
         return await repository.ExecuteAsync(actor, async session =>
         {
             var id = Guid.NewGuid();
             var payload = await Prepare(actor, session, table, settings, id, ct);
             var now = DateTime.UtcNow;
-            var b = Metadata(id, payload, 1, now, now.AddMinutes(feature.TtlMinutes));
+            var b = Metadata(id, payload, 1, now, now.AddMinutes(feature.Settings.TtlMinutes));
             await session.CreateAsync(b, payload, Guid.NewGuid(), Intent(actor, new { Op = "Preview", Id = id, table.Sha256, Settings = settings }));
             return b;
         }, ct);

@@ -1,3 +1,5 @@
+Evidenza storica della fase nominata in questo documento. Per codice, contratti ritirati e test correnti vedere il [report conclusivo](../../docs/refactoring/RESPONSIBILITY_REFACTORING_REPORT.md) e la [regressione finale](../../docs/refactoring/validation/current-cutover/final/README.md). I conteggi e i componenti sotto non certificano il working tree finale.
+
 # ElectronicRegister - MT-3D
 
 Migrazione HTTP istituzionale del modulo Exam/Submission/Grade, ClassSubject dropdown, selezione studenti e continuita delle prove. **MT-3D completata nel perimetro HTTP: due suite 540/540 Passed. Rollout operativo chiuso, nessun cutover, MT-3E non iniziata.** Scansione e dispatch automatico istituzionale offline restano bloccati fino a MT-3E. La piattaforma nel suo complesso non e dichiarata pronta per produzione.

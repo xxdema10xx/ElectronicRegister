@@ -1,0 +1,669 @@
+{
+  "format": 1,
+  "release": "er-quality-1",
+  "marker": "er-quality-1-closure-1",
+  "sources": {
+    "migrations/identity-account/001_identity_account.sql": "BB9DF7CC82EE4AB297E27C78E31D650B02A3B9B4E6FE7E35886DDD2EE83BE083",
+    "migrations/identity-account/002_profile_acquisition.sql": "46705F845110EE706763A14299E64843BA234D94EB02D1C27BA746B8A85F910F",
+    "migrations/identity-account/003_password_attempt.sql": "AA7AEAED856924B4667F3B47D0B24284690FA4A629721895BD372D92B3C4A40D",
+    "migrations/identity-account/004_release_schema.sql": "968C4B3FF7716EE669BBA5B793D8DE37689296A8CE7A61C77A6CB41963074307"
+  },
+  "tables": {
+    "identity_account_state": "CREATE TABLE `identity_account_state` (\r\n  `user_id` char(36) CHARACTER SET ascii NOT NULL,\r\n  `generation` bigint(20) NOT NULL DEFAULT '0',\r\n  `display_name` varchar(160) COLLATE utf8mb4_unicode_ci DEFAULT NULL,\r\n  PRIMARY KEY (`user_id`),\r\n  CONSTRAINT `fk_identity_state_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)\r\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+    "identity_account_event": "CREATE TABLE `identity_account_event` (\r\n  `id` char(36) CHARACTER SET ascii NOT NULL,\r\n  `user_id` char(36) CHARACTER SET ascii NOT NULL,\r\n  `action` varchar(40) CHARACTER SET ascii NOT NULL,\r\n  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),\r\n  PRIMARY KEY (`id`),\r\n  KEY `idx_identity_event_user` (`user_id`,`created_at`),\r\n  CONSTRAINT `fk_identity_event_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)\r\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+    "institution_profile_acquisition": "CREATE TABLE `institution_profile_acquisition` (\r\n  `institution_id` char(36) CHARACTER SET ascii NOT NULL,\r\n  `id` char(36) CHARACTER SET ascii NOT NULL,\r\n  `actor_user_id` char(36) CHARACTER SET ascii NOT NULL,\r\n  `actor_membership_id` char(36) CHARACTER SET ascii NOT NULL,\r\n  `target_user_id` char(36) CHARACTER SET ascii NOT NULL,\r\n  `target_membership_id` char(36) CHARACTER SET ascii NOT NULL,\r\n  `student_id` char(36) CHARACTER SET ascii DEFAULT NULL,\r\n  `teacher_id` char(36) CHARACTER SET ascii DEFAULT NULL,\r\n  `status` varchar(20) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,\r\n  `request_hash` char(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,\r\n  `reason` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL,\r\n  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),\r\n  PRIMARY KEY (`institution_id`,`id`),\r\n  KEY `fk_profile_acquisition_actor` (`institution_id`,`actor_membership_id`,`actor_user_id`),\r\n  KEY `fk_profile_acquisition_target` (`institution_id`,`target_membership_id`,`target_user_id`),\r\n  KEY `fk_profile_acquisition_student` (`institution_id`,`student_id`),\r\n  KEY `fk_profile_acquisition_teacher` (`institution_id`,`teacher_id`),\r\n  CONSTRAINT `fk_profile_acquisition_actor` FOREIGN KEY (`institution_id`, `actor_membership_id`, `actor_user_id`) REFERENCES `institution_membership` (`institution_id`, `id`, `user_id`),\r\n  CONSTRAINT `fk_profile_acquisition_student` FOREIGN KEY (`institution_id`, `student_id`) REFERENCES `student` (`institution_id`, `id`),\r\n  CONSTRAINT `fk_profile_acquisition_target` FOREIGN KEY (`institution_id`, `target_membership_id`, `target_user_id`) REFERENCES `institution_membership` (`institution_id`, `id`, `user_id`),\r\n  CONSTRAINT `fk_profile_acquisition_teacher` FOREIGN KEY (`institution_id`, `teacher_id`) REFERENCES `teacher` (`institution_id`, `id`)\r\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+    "identity_password_attempt": "CREATE TABLE `identity_password_attempt` (\r\n  `user_id` char(36) CHARACTER SET ascii NOT NULL,\r\n  `window_start` datetime(6) NOT NULL,\r\n  `attempts` int(11) NOT NULL,\r\n  `lease_id` char(36) CHARACTER SET ascii DEFAULT NULL,\r\n  `lease_until` datetime(6) DEFAULT NULL,\r\n  PRIMARY KEY (`user_id`),\r\n  CONSTRAINT `fk_password_attempt_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)\r\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+    "er_schema_release": "CREATE TABLE `er_schema_release` (\r\n  `version` varchar(64) CHARACTER SET ascii NOT NULL,\r\n  `applied_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),\r\n  PRIMARY KEY (`version`)\r\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+  },
+  "columns": [
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "er_schema_release",
+      "COLUMN_NAME": "version",
+      "COLUMN_TYPE": "varchar(64)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 1
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "er_schema_release",
+      "COLUMN_NAME": "applied_at",
+      "COLUMN_TYPE": "datetime(6)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": null,
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP(6)",
+      "ORDINAL_POSITION": 2
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_account_event",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 1
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_account_event",
+      "COLUMN_NAME": "user_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 2
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_account_event",
+      "COLUMN_NAME": "action",
+      "COLUMN_TYPE": "varchar(40)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 3
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_account_event",
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "datetime(6)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": null,
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP(6)",
+      "ORDINAL_POSITION": 4
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_account_state",
+      "COLUMN_NAME": "user_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 1
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_account_state",
+      "COLUMN_NAME": "generation",
+      "COLUMN_TYPE": "bigint(20)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": null,
+      "COLUMN_DEFAULT": "0",
+      "ORDINAL_POSITION": 2
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_account_state",
+      "COLUMN_NAME": "display_name",
+      "COLUMN_TYPE": "varchar(160)",
+      "IS_NULLABLE": "YES",
+      "COLLATION_NAME": "utf8mb4_unicode_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 3
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_password_attempt",
+      "COLUMN_NAME": "user_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 1
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_password_attempt",
+      "COLUMN_NAME": "window_start",
+      "COLUMN_TYPE": "datetime(6)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": null,
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 2
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_password_attempt",
+      "COLUMN_NAME": "attempts",
+      "COLUMN_TYPE": "int(11)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": null,
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 3
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_password_attempt",
+      "COLUMN_NAME": "lease_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "YES",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 4
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "identity_password_attempt",
+      "COLUMN_NAME": "lease_until",
+      "COLUMN_TYPE": "datetime(6)",
+      "IS_NULLABLE": "YES",
+      "COLLATION_NAME": null,
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 5
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "institution_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 1
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 2
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "actor_user_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 3
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "actor_membership_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 4
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "target_user_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 5
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "target_membership_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 6
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "student_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "YES",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 7
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "teacher_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "YES",
+      "COLLATION_NAME": "ascii_general_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 8
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "status",
+      "COLUMN_TYPE": "varchar(20)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_bin",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 9
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "request_hash",
+      "COLUMN_TYPE": "char(64)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "ascii_bin",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 10
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "reason",
+      "COLUMN_TYPE": "varchar(1000)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": "utf8mb4_unicode_ci",
+      "COLUMN_DEFAULT": null,
+      "ORDINAL_POSITION": 11
+    },
+    {
+      "EXTRA": "",
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "datetime(6)",
+      "IS_NULLABLE": "NO",
+      "COLLATION_NAME": null,
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP(6)",
+      "ORDINAL_POSITION": 12
+    }
+  ],
+  "indexes": [
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "PRIMARY",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 0,
+      "TABLE_NAME": "er_schema_release",
+      "COLUMN_NAME": "version",
+      "SEQ_IN_INDEX": 1
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "idx_identity_event_user",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "identity_account_event",
+      "COLUMN_NAME": "user_id",
+      "SEQ_IN_INDEX": 1
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "idx_identity_event_user",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "identity_account_event",
+      "COLUMN_NAME": "created_at",
+      "SEQ_IN_INDEX": 2
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "PRIMARY",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 0,
+      "TABLE_NAME": "identity_account_event",
+      "COLUMN_NAME": "id",
+      "SEQ_IN_INDEX": 1
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "PRIMARY",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 0,
+      "TABLE_NAME": "identity_account_state",
+      "COLUMN_NAME": "user_id",
+      "SEQ_IN_INDEX": 1
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "PRIMARY",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 0,
+      "TABLE_NAME": "identity_password_attempt",
+      "COLUMN_NAME": "user_id",
+      "SEQ_IN_INDEX": 1
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "fk_profile_acquisition_actor",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "institution_id",
+      "SEQ_IN_INDEX": 1
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "fk_profile_acquisition_actor",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "actor_membership_id",
+      "SEQ_IN_INDEX": 2
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "fk_profile_acquisition_actor",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "actor_user_id",
+      "SEQ_IN_INDEX": 3
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "fk_profile_acquisition_student",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "institution_id",
+      "SEQ_IN_INDEX": 1
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "fk_profile_acquisition_student",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "student_id",
+      "SEQ_IN_INDEX": 2
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "fk_profile_acquisition_target",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "institution_id",
+      "SEQ_IN_INDEX": 1
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "fk_profile_acquisition_target",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "target_membership_id",
+      "SEQ_IN_INDEX": 2
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "fk_profile_acquisition_target",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "target_user_id",
+      "SEQ_IN_INDEX": 3
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "fk_profile_acquisition_teacher",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "institution_id",
+      "SEQ_IN_INDEX": 1
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "fk_profile_acquisition_teacher",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 1,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "teacher_id",
+      "SEQ_IN_INDEX": 2
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "PRIMARY",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 0,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "institution_id",
+      "SEQ_IN_INDEX": 1
+    },
+    {
+      "SUB_PART": null,
+      "COLLATION": "A",
+      "INDEX_NAME": "PRIMARY",
+      "INDEX_TYPE": "BTREE",
+      "NON_UNIQUE": 0,
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "id",
+      "SEQ_IN_INDEX": 2
+    }
+  ],
+  "foreignKeys": [
+    {
+      "TABLE_NAME": "identity_account_event",
+      "DELETE_RULE": "RESTRICT",
+      "UPDATE_RULE": "RESTRICT",
+      "CONSTRAINT_NAME": "fk_identity_event_user",
+      "REFERENCED_TABLE_NAME": "user"
+    },
+    {
+      "TABLE_NAME": "identity_account_state",
+      "DELETE_RULE": "RESTRICT",
+      "UPDATE_RULE": "RESTRICT",
+      "CONSTRAINT_NAME": "fk_identity_state_user",
+      "REFERENCED_TABLE_NAME": "user"
+    },
+    {
+      "TABLE_NAME": "identity_password_attempt",
+      "DELETE_RULE": "RESTRICT",
+      "UPDATE_RULE": "RESTRICT",
+      "CONSTRAINT_NAME": "fk_password_attempt_user",
+      "REFERENCED_TABLE_NAME": "user"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "DELETE_RULE": "RESTRICT",
+      "UPDATE_RULE": "RESTRICT",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_actor",
+      "REFERENCED_TABLE_NAME": "institution_membership"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "DELETE_RULE": "RESTRICT",
+      "UPDATE_RULE": "RESTRICT",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_student",
+      "REFERENCED_TABLE_NAME": "student"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "DELETE_RULE": "RESTRICT",
+      "UPDATE_RULE": "RESTRICT",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_target",
+      "REFERENCED_TABLE_NAME": "institution_membership"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "DELETE_RULE": "RESTRICT",
+      "UPDATE_RULE": "RESTRICT",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_teacher",
+      "REFERENCED_TABLE_NAME": "teacher"
+    }
+  ],
+  "keyColumns": [
+    {
+      "TABLE_NAME": "identity_account_event",
+      "COLUMN_NAME": "user_id",
+      "CONSTRAINT_NAME": "fk_identity_event_user",
+      "ORDINAL_POSITION": 1,
+      "REFERENCED_TABLE_NAME": "user",
+      "REFERENCED_COLUMN_NAME": "id"
+    },
+    {
+      "TABLE_NAME": "identity_account_state",
+      "COLUMN_NAME": "user_id",
+      "CONSTRAINT_NAME": "fk_identity_state_user",
+      "ORDINAL_POSITION": 1,
+      "REFERENCED_TABLE_NAME": "user",
+      "REFERENCED_COLUMN_NAME": "id"
+    },
+    {
+      "TABLE_NAME": "identity_password_attempt",
+      "COLUMN_NAME": "user_id",
+      "CONSTRAINT_NAME": "fk_password_attempt_user",
+      "ORDINAL_POSITION": 1,
+      "REFERENCED_TABLE_NAME": "user",
+      "REFERENCED_COLUMN_NAME": "id"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "institution_id",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_actor",
+      "ORDINAL_POSITION": 1,
+      "REFERENCED_TABLE_NAME": "institution_membership",
+      "REFERENCED_COLUMN_NAME": "institution_id"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "actor_membership_id",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_actor",
+      "ORDINAL_POSITION": 2,
+      "REFERENCED_TABLE_NAME": "institution_membership",
+      "REFERENCED_COLUMN_NAME": "id"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "actor_user_id",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_actor",
+      "ORDINAL_POSITION": 3,
+      "REFERENCED_TABLE_NAME": "institution_membership",
+      "REFERENCED_COLUMN_NAME": "user_id"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "institution_id",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_student",
+      "ORDINAL_POSITION": 1,
+      "REFERENCED_TABLE_NAME": "student",
+      "REFERENCED_COLUMN_NAME": "institution_id"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "student_id",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_student",
+      "ORDINAL_POSITION": 2,
+      "REFERENCED_TABLE_NAME": "student",
+      "REFERENCED_COLUMN_NAME": "id"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "institution_id",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_target",
+      "ORDINAL_POSITION": 1,
+      "REFERENCED_TABLE_NAME": "institution_membership",
+      "REFERENCED_COLUMN_NAME": "institution_id"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "target_membership_id",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_target",
+      "ORDINAL_POSITION": 2,
+      "REFERENCED_TABLE_NAME": "institution_membership",
+      "REFERENCED_COLUMN_NAME": "id"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "target_user_id",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_target",
+      "ORDINAL_POSITION": 3,
+      "REFERENCED_TABLE_NAME": "institution_membership",
+      "REFERENCED_COLUMN_NAME": "user_id"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "institution_id",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_teacher",
+      "ORDINAL_POSITION": 1,
+      "REFERENCED_TABLE_NAME": "teacher",
+      "REFERENCED_COLUMN_NAME": "institution_id"
+    },
+    {
+      "TABLE_NAME": "institution_profile_acquisition",
+      "COLUMN_NAME": "teacher_id",
+      "CONSTRAINT_NAME": "fk_profile_acquisition_teacher",
+      "ORDINAL_POSITION": 2,
+      "REFERENCED_TABLE_NAME": "teacher",
+      "REFERENCED_COLUMN_NAME": "id"
+    }
+  ],
+  "triggers": [
+    {
+      "SQL_MODE": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+      "TRIGGER_NAME": "identity_account_event_no_delete",
+      "ACTION_TIMING": "BEFORE",
+      "ACTION_STATEMENT": "BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Identity events are append-only'; END",
+      "EVENT_MANIPULATION": "DELETE",
+      "EVENT_OBJECT_TABLE": "identity_account_event"
+    },
+    {
+      "SQL_MODE": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+      "TRIGGER_NAME": "identity_account_event_no_update",
+      "ACTION_TIMING": "BEFORE",
+      "ACTION_STATEMENT": "BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Identity events are append-only'; END",
+      "EVENT_MANIPULATION": "UPDATE",
+      "EVENT_OBJECT_TABLE": "identity_account_event"
+    },
+    {
+      "SQL_MODE": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+      "TRIGGER_NAME": "identity_account_state_guard",
+      "ACTION_TIMING": "BEFORE",
+      "ACTION_STATEMENT": "BEGIN\n IF NEW.user_id<>OLD.user_id OR NEW.generation<OLD.generation OR NEW.generation>OLD.generation+1 THEN\n  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Invalid identity security transition';\n END IF;\nEND",
+      "EVENT_MANIPULATION": "UPDATE",
+      "EVENT_OBJECT_TABLE": "identity_account_state"
+    },
+    {
+      "SQL_MODE": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+      "TRIGGER_NAME": "profile_acquisition_insert",
+      "ACTION_TIMING": "BEFORE",
+      "ACTION_STATEMENT": "BEGIN\n IF (NEW.student_id IS NULL)=(NEW.teacher_id IS NULL) OR NEW.status NOT IN ('linked','requires-review') OR CHAR_LENGTH(TRIM(NEW.reason))=0 OR NEW.request_hash NOT REGEXP '^[A-F0-9]{64}$' THEN\n  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Invalid profile acquisition event';\n END IF;\n IF NOT EXISTS(SELECT 1 FROM institution i JOIN institution_membership m ON m.institution_id=i.id JOIN institution_membership_role r ON r.membership_id=m.id WHERE i.id=NEW.institution_id AND i.status='active' AND m.id=NEW.actor_membership_id AND m.user_id=NEW.actor_user_id AND m.status='active' AND r.role='InstitutionAdmin') THEN\n  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Unauthorized profile acquisition actor';\n END IF;\n IF NEW.status='linked' AND NOT (\n  (NEW.student_id IS NOT NULL AND EXISTS(SELECT 1 FROM institution_student_profile p JOIN `user` u ON u.id=NEW.target_user_id WHERE p.institution_id=NEW.institution_id AND p.membership_id=NEW.target_membership_id AND p.student_id=NEW.student_id AND u.student_id=NEW.student_id)) OR\n  (NEW.teacher_id IS NOT NULL AND EXISTS(SELECT 1 FROM institution_teacher_profile p JOIN `user` u ON u.id=NEW.target_user_id WHERE p.institution_id=NEW.institution_id AND p.membership_id=NEW.target_membership_id AND p.teacher_id=NEW.teacher_id AND u.teacher_id=NEW.teacher_id))\n ) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Unverified historical profile link'; END IF;\n IF NOT EXISTS(SELECT 1 FROM institution_membership m JOIN institution_membership_role r ON r.membership_id=m.id WHERE m.institution_id=NEW.institution_id AND m.id=NEW.target_membership_id AND m.user_id=NEW.target_user_id AND m.status='active' AND r.role=IF(NEW.student_id IS NOT NULL,'Student','Teacher')) THEN\n  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Unauthorized profile acquisition target';\n END IF;\nEND",
+      "EVENT_MANIPULATION": "INSERT",
+      "EVENT_OBJECT_TABLE": "institution_profile_acquisition"
+    },
+    {
+      "SQL_MODE": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+      "TRIGGER_NAME": "profile_acquisition_no_delete",
+      "ACTION_TIMING": "BEFORE",
+      "ACTION_STATEMENT": "BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Profile acquisition is append-only'; END",
+      "EVENT_MANIPULATION": "DELETE",
+      "EVENT_OBJECT_TABLE": "institution_profile_acquisition"
+    },
+    {
+      "SQL_MODE": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+      "TRIGGER_NAME": "profile_acquisition_no_update",
+      "ACTION_TIMING": "BEFORE",
+      "ACTION_STATEMENT": "BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Profile acquisition is append-only'; END",
+      "EVENT_MANIPULATION": "UPDATE",
+      "EVENT_OBJECT_TABLE": "institution_profile_acquisition"
+    }
+  ]
+}

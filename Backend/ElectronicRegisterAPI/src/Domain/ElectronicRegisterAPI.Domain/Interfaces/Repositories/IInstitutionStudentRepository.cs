@@ -3,7 +3,7 @@ using ElectronicRegisterAPI.Domain.Models;
 namespace ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 
 // Application managers must verify the immutable context against current membership.
-// No institution-id overloads, legacy UserRole, or unscoped school lookups.
+// No institution-id overloads, historical global roles, or unscoped school lookups.
 public interface IInstitutionStudentRepository
 {
     Task<List<Student>> GetForClassAsync(TenantContext tenant, Guid classId, CancellationToken ct = default);

@@ -63,9 +63,9 @@ public sealed partial class InstitutionFormativePlanTests
     {
         await using var setup=await CalendarHost();var admin=await Token();var d=await CalendarSetup(setup,admin);var staff=await Token("Staff");
         var barrier=new CalendarPause("after-iam-lock");await using var h=await CalendarHost(s=>s.AddSingleton<ICalendarFaultObserver>(barrier));
-        var write=Send("calendar/lessons",staff,CalendarLessonRequest(d.Classes[0],d.Module,d.Teacher),"POST",h);await barrier.Acquired.Task.WaitAsync(TimeSpan.FromSeconds(10));
-        var revoke=Sql("DELETE FROM institution_membership_role WHERE membership_id=@m AND role='Staff'",("@m",people["Staff"].Member));
-        try{await Task.Delay(150);Assert.False(revoke.IsCompleted);}finally{barrier.Release.TrySetResult(true);}
+        var write = SqlLockEvidence.Track(() => Send("calendar/lessons",staff,CalendarLessonRequest(d.Classes[0],d.Module,d.Teacher),"POST",h));await barrier.Acquired.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        var revoke = SqlLockEvidence.Track(() => Sql("DELETE FROM institution_membership_role WHERE membership_id=@m AND role='Staff'",("@m",people["Staff"].Member)));
+        try{await SqlLockEvidence.WaitAsync(fixture.ConnectionString, revoke, write);}finally{barrier.Release.TrySetResult(true);}
         await Ok<CalendarReceipt>(await write);await revoke.WaitAsync(TimeSpan.FromSeconds(10));
         Assert.Equal(HttpStatusCode.Forbidden,(await Send("calendar/lessons",staff,CalendarLessonRequest(d.Classes[1],d.Module,d.Teacher,day:6),"POST",setup)).StatusCode);
     }
@@ -73,7 +73,7 @@ public sealed partial class InstitutionFormativePlanTests
     {
         await using var setup=await CalendarHost();var admin=await Token();var d=await CalendarSetup(setup,admin);var count=await Count("institution_calendar_event");
         var barrier=new CalendarPause("before-commit");await using var h=await CalendarHost(s=>s.AddSingleton<ICalendarFaultObserver>(barrier));
-        var write=Send("calendar/lessons",admin,CalendarLessonRequest(d.Classes[0],d.Module,d.Teacher),"POST",h);await barrier.Acquired.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        var write = SqlLockEvidence.Track(() => Send("calendar/lessons",admin,CalendarLessonRequest(d.Classes[0],d.Module,d.Teacher),"POST",h));await barrier.Acquired.Task.WaitAsync(TimeSpan.FromSeconds(10));
         h.Host.Services.GetRequiredService<IConfiguration>()["Multitenancy:InstitutionCalendar:Enabled"]="false";barrier.Release.TrySetResult(true);
         Assert.Equal(HttpStatusCode.Forbidden,(await write).StatusCode);Assert.Equal(0,await Count("institution_lesson"));Assert.Equal(count,await Count("institution_calendar_event"));
     }

@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Results;
 using ElectronicRegisterAPI.Domain.Configuration;
 using ElectronicRegisterAPI.Domain.DTOs.FormativePlans;
@@ -9,7 +10,7 @@ using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Application.Managers;
 
-internal sealed class InstitutionFormativePlanManager(InstitutionSchoolAuthorization authorization, IInstitutionFormativePlanRepository repository, FormativePlanFeature feature) : IInstitutionFormativePlanManager
+internal sealed class InstitutionFormativePlanManager(InstitutionSchoolAuthorization authorization, IInstitutionFormativePlanRepository repository, IFormativePlanFeature feature) : IInstitutionFormativePlanManager
 {
     private async Task<TenantContext> Actor(CancellationToken ct, bool admin = false, bool catalog = false)
     {

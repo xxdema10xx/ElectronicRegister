@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
 using ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
@@ -67,9 +68,15 @@ namespace ElectronicRegisterAPI.Tests.Integration
         // Persisted integration users (authenticated identities)
         public static readonly Guid TeacherUserId = Id(0, 10);
         public static readonly Guid AdminUserId = Id(0, 11);
+        // Explicit synthetic foundation for canonical engine fixtures. Never migrate
+        // existing holding rows into it; use a fresh isolated test database.
+        public static readonly Guid CoreInstitutionId = Id(0, 9000);
+        public static Guid CoreMembershipId(Guid user) => new(SHA256.HashData(user.ToByteArray()).AsSpan(0,16));
 
         public static async Task EnsureBaseDataAsync(ElectronicRegisterContext ctx)
         {
+            await EnsureAsync(ctx,new Institution{Id=CoreInstitutionId,Code="CANONICAL_CORE_FIXTURE",Name="Synthetic canonical engine fixture",Status="active",CreatedAt=DateTime.UtcNow,UpdatedAt=DateTime.UtcNow},i=>i.Code=="CANONICAL_CORE_FIXTURE"&&i.Status=="active");
+            await ctx.SaveChangesAsync();
             // Each row is checked by id (not by "any rows exist"), and an existing row must keep the expected references.
             await EnsureAsync(ctx, new Biennium { Id = BienniumId, StartYear = new DateOnly(2090, 9, 1), EndYear = new DateOnly(2092, 8, 31) });
             await EnsureAsync(ctx, new StudyArea { Id = StudyAreaId, Name = "IT Integration Area", Description = "Integration tests" });
@@ -117,6 +124,9 @@ namespace ElectronicRegisterAPI.Tests.Integration
             }, e => e.Role == "admin");
 
             await ctx.SaveChangesAsync();
+            await EnsureMembershipAsync(ctx,AdminUserId,"InstitutionAdmin");
+            await EnsureMembershipAsync(ctx,TeacherUserId,"Teacher",teacher:TeacherId);
+            await EnsureMembershipAsync(ctx,Id(0,13),"Teacher",teacher:OtherTeacherId);
         }
 
         public static async Task<ScenarioIds> ResetScenarioAsync(ElectronicRegisterContext ctx, IntegrationScenario scenario)
@@ -126,8 +136,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
             await using var transaction = await ctx.Database.BeginTransactionAsync();
 
             await DeleteScenarioAsync(ctx, ids);
-            AddScenario(ctx, scenario, ids);
+            await AddScenarioAsync(ctx, scenario, ids);
+            StampNewOwnedRows(ctx);
             await ctx.SaveChangesAsync();
+            await EnsureMembershipAsync(ctx,ids.StudentId,"Student",student:ids.StudentId);
 
             await transaction.CommitAsync();
             ctx.ChangeTracker.Clear();
@@ -162,19 +174,19 @@ namespace ElectronicRegisterAPI.Tests.Integration
             await ctx.QuestionOptions.Where(o => questionIds.Contains(o.QuestionId)).ExecuteDeleteAsync();
             await ctx.Questions.Where(q => q.ExamId == ids.ExamId).ExecuteDeleteAsync();
             await ctx.Exams.Where(e => e.Id == ids.ExamId).ExecuteDeleteAsync();
-            // Remove the scenario student and any User row that was created for that student
-            await ctx.Students.Where(s => s.Id == ids.StudentId).ExecuteDeleteAsync();
-            await ctx.Users.Where(u => u.Id == ids.StudentId).ExecuteDeleteAsync();
+            // Keep the explicitly assigned identity/membership and profile stable.
+            // Reset only scenario work; never reset a security generation by recreating IAM rows.
         }
 
-        private static void AddScenario(ElectronicRegisterContext ctx, IntegrationScenario scenario, ScenarioIds ids)
+        private static async Task AddScenarioAsync(ElectronicRegisterContext ctx, IntegrationScenario scenario, ScenarioIds ids)
         {
             var now = DateTime.UtcNow;
             var n = (int)scenario;
 
-            ctx.Students.Add(new Student { Id = ids.StudentId, FirstName = "IT", LastName = $"Student{n}", ClassId = ClassId });
-            // Also create a corresponding persisted User for the student so ClaimsContext.UserId references exist
-            ctx.Users.Add(new ElectronicRegisterAPI.Infrastructure.Persistence.Entities.User
+            var existingStudent=await ctx.Students.FindAsync(ids.StudentId);
+            if(existingStudent is null)ctx.Students.Add(new Student { Id = ids.StudentId, FirstName = "IT", LastName = $"Student{n}", ClassId = ClassId });
+            else {existingStudent.FirstName="IT";existingStudent.LastName=$"Student{n}";existingStudent.ClassId=ClassId;}
+            if(!await ctx.Users.AnyAsync(u=>u.Id==ids.StudentId))ctx.Users.Add(new ElectronicRegisterAPI.Infrastructure.Persistence.Entities.User
             {
                 Id = ids.StudentId,
                 Email = $"student{n}.integration@example.test",
@@ -290,6 +302,30 @@ namespace ElectronicRegisterAPI.Tests.Integration
             ctx.SubmissionAnswers.Add(singleAnswer);
         }
 
+        internal static void StampNewOwnedRows(ElectronicRegisterContext ctx)
+        {
+            ctx.ChangeTracker.DetectChanges();
+            foreach(var entry in ctx.ChangeTracker.Entries().Where(e=>e.State==EntityState.Added && e.Metadata.FindProperty("InstitutionId") is not null))
+            {
+                var owner=entry.Property("InstitutionId");
+                owner.CurrentValue=CoreInstitutionId;
+                owner.IsTemporary=false;
+            }
+        }
+
+        private static async Task EnsureMembershipAsync(ElectronicRegisterContext ctx,Guid user,string role,Guid? student=null,Guid? teacher=null)
+        {
+            var member=CoreMembershipId(user);
+            if(!await ctx.InstitutionMemberships.AnyAsync(m=>m.Id==member))
+            {
+                ctx.InstitutionMemberships.Add(new(){Id=member,InstitutionId=CoreInstitutionId,UserId=user,Status="active",JoinedAt=DateTime.UtcNow,InstitutionMembershipRoles=new[]{new InstitutionMembershipRole{MembershipId=member,Role=role}}});
+                await ctx.SaveChangesAsync();
+            }
+            if(student.HasValue && !await ctx.InstitutionStudentProfiles.AnyAsync(p=>p.InstitutionId==CoreInstitutionId&&p.MembershipId==member))ctx.InstitutionStudentProfiles.Add(new(){InstitutionId=CoreInstitutionId,MembershipId=member,StudentId=student.Value});
+            if(teacher.HasValue && !await ctx.InstitutionTeacherProfiles.AnyAsync(p=>p.InstitutionId==CoreInstitutionId&&p.MembershipId==member))ctx.InstitutionTeacherProfiles.Add(new(){InstitutionId=CoreInstitutionId,MembershipId=member,TeacherId=teacher.Value});
+            await ctx.SaveChangesAsync();
+        }
+
         private static async Task EnsureAsync<T>(ElectronicRegisterContext ctx, T expected, Func<T, bool>? isConsistent = null) where T : class
         {
             var id = ctx.Entry(expected).Property<Guid>("Id").CurrentValue;
@@ -298,6 +334,10 @@ namespace ElectronicRegisterAPI.Tests.Integration
             if (existing is null)
             {
                 ctx.Set<T>().Add(expected);
+                StampNewOwnedRows(ctx);
+                // Flush this explicit parent before the next dependent. The Database
+                // First model has overlapping historical and composite ownership FKs.
+                await ctx.SaveChangesAsync();
                 return;
             }
 

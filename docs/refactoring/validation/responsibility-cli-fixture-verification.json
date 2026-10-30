@@ -1,0 +1,173 @@
+﻿{
+    "schemaVersion":  1,
+    "head":  "f12a0e1ac6b95507bc0ac571600c797fd9ededfc",
+    "hostResultBeforeFix":  {
+                                "port":  13429,
+                                "passed":  1415,
+                                "source":  "user reported, host TRX not inspected by Codex",
+                                "failed":  3,
+                                "total":  1418,
+                                "skipped":  0
+                            },
+    "fixtureRoot":  ".staff-private/cli-fixtures-\u003crun-guid\u003e/\u003clabel\u003e-\u003ctest-guid\u003e",
+    "newRootPerProcess":  true,
+    "uniqueDirectoryPerTest":  true,
+    "historicalDirectoryAclsChanged":  false,
+    "applicationSourceHashesPreserved":  719,
+    "cliApplicationChanged":  false,
+    "sqlChanged":  false,
+    "databaseAccessByCodexThisTask":  false,
+    "modifiedTestSources":  [
+                                {
+                                    "path":  "tests/Integration/PrivateTestFiles.cs",
+                                    "sha256":  "3A2A41042FD800DE8319073341D3B718DC65B4599C48C0DE0D4DAF9A3A63BB74"
+                                },
+                                {
+                                    "path":  "tests/Integration/PrivateTestFilesTests.cs",
+                                    "sha256":  "D82CB7A2ADE13255F0AA37FB489C98A033667C857BAE0D699E4EEEFBEBC2125D"
+                                },
+                                {
+                                    "path":  "tests/Integration/Mt5cOnboardingTests.cs",
+                                    "sha256":  "440E6272770263D16AC9DE281519EC977C42A29524D45B9876714AD42DC928DD"
+                                },
+                                {
+                                    "path":  "tests/Integration/Mt5dGovernanceTests.cs",
+                                    "sha256":  "C3E611435D1A527DB181E48A6A10CAD5716BB4366F9FD9BB69FC4B0DD1C1936A"
+                                },
+                                {
+                                    "path":  "tests/Integration/Mt6OperatorSecurityTests.cs",
+                                    "sha256":  "73F4FF505EEF174DB21468026A6C6329D40E26DF8335CC764B318DF7E8C148B8"
+                                }
+                            ],
+    "targetedThree":  {
+                          "tests":  [
+                                        "Governance_ActualCliUsesTheDedicatedManagerWithoutRequiringNotificationDelivery",
+                                        "ActualAdministrativeCliVerifiesSignedIntentAndUsesOnlyOwnerInstalledChannel",
+                                        "PlatformCliRefusesAuthorityConfigurationReadableByEveryoneBeforeMutation"
+                                    ],
+                          "status":  "not_executed_in_Codex",
+                          "reason":  "TEST_MYSQL_CONNECTION, ER_TEST_ISOLATED_PORT and ER_TEST_ISOLATED_DATADIR absent"
+                      },
+    "localBuild":  {
+                       "exitCode":  0,
+                       "sha256":  "C01838E0E1C3DA22E657ADDE2A2FEBACFF42235CC28C241A177DFEDED86637F5",
+                       "warnings":  10,
+                       "log":  "docs/refactoring/validation/responsibility-fixture-build.log"
+                   },
+    "localTrxRuns":  [
+                         {
+                             "suite":  "unit",
+                             "path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\docs\\refactoring\\validation\\responsibility-fixture-unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-29_19_57_47_net10.0.trx",
+                             "sha256":  "6AC607A10CCAAF838813F3066162BCCC55B9E42488018EAEC9C223D75639E489",
+                             "total":  587,
+                             "passed":  587,
+                             "failed":  0,
+                             "skipped":  0
+                         },
+                         {
+                             "suite":  "unit",
+                             "path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\docs\\refactoring\\validation\\responsibility-fixture-unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-29_19_58_53_net10.0.trx",
+                             "sha256":  "491751AD53693B0AAB7AB2F2468F2DA786858B71B5CB5FC366289763CFEAF13C",
+                             "total":  587,
+                             "passed":  587,
+                             "failed":  0,
+                             "skipped":  0
+                         },
+                         {
+                             "suite":  "filesystem",
+                             "path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\docs\\refactoring\\validation\\responsibility-fixture-filesystem\\Lorenzo_DESKTOP-QUOAG32_2026-10-29_19_57_48_net10.0.trx",
+                             "sha256":  "836BBA6D8532BB8D3358358F4F93B34177F2F073C97C8A6F97E29978E9410472",
+                             "total":  2,
+                             "passed":  1,
+                             "failed":  1,
+                             "skipped":  0
+                         },
+                         {
+                             "suite":  "filesystem",
+                             "path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\docs\\refactoring\\validation\\responsibility-fixture-filesystem\\Lorenzo_DESKTOP-QUOAG32_2026-10-29_19_58_53_net10.0.trx",
+                             "sha256":  "195ACEC3963E8E03502AADF41DB525333F7213816967AA1F735181E1E399E36E",
+                             "total":  2,
+                             "passed":  2,
+                             "failed":  0,
+                             "skipped":  0
+                         }
+                     ],
+    "notes":  [
+                  "First filesystem probe detected a DACL restoration failure (1 pass/1 fail); corrected by explicitly setting the original Access section. Final filesystem run: 2 pass/0 fail.",
+                  "Everyone negative CLI fixture now includes a valid explicit target and provider; unchanged signed intent must succeed after restoring private DACL. CLI workflow awaits host execution.",
+                  "Scan of compiled integration sources found no other writable reference to the historical directory. TestMySqlTarget retains its read-only legacy target suffix; a negative path assertion also names it.",
+                  "Preexisting host-generated TestResults changes were preserved; application sources retain their prior hashes."
+              ],
+    "hostCommands":  {
+                         "executed":  false,
+                         "path":  "docs/refactoring/RESPONSIBILITY_CLI_FIXTURE_HOST_COMMANDS.md",
+                         "syntaxErrors":  0,
+                         "powerShellBlocks":  2
+                     },
+    "requiredForCertification":  "Current full regression requirement satisfied by inspected host TRX; all three CLI and two filesystem cases Passed within full run. A separate targeted host run is not claimed.",
+    "status":  "current_code_sql_http_regression_passed_refactoring_partial",
+    "currentVerification":  {
+                                "status":  "current_code_sql_http_regression_passed_refactoring_partial",
+                                "evidence":  "docs/refactoring/validation/responsibility-host-regression-verification.json",
+                                "unit":  {
+                                             "suite":  "Unit",
+                                             "path":  ".staff-private/instance-50d37b8bb5564efb8a125521531ad5e6/Unit/result.trx",
+                                             "sha256":  "905AE164994B770C27C4951F7BFDEE6F0CEB8E3248AB9C969C18A6195C85F92D",
+                                             "start":  "2026-10-29T20:14:20.1530167+01:00",
+                                             "finish":  "2026-10-29T20:14:21.3756174+01:00",
+                                             "summaryOutcome":  "Completed",
+                                             "total":  587,
+                                             "executed":  587,
+                                             "passed":  587,
+                                             "failed":  0,
+                                             "skipped":  0,
+                                             "actualResultElements":  587,
+                                             "nonPassedResultElements":  0,
+                                             "cliAndFilesystemResults":  [
+
+                                                                         ]
+                                         },
+                                "integration":  {
+                                                    "suite":  "Integration",
+                                                    "path":  ".staff-private/instance-50d37b8bb5564efb8a125521531ad5e6/Integration/result.trx",
+                                                    "sha256":  "36C335D69D08684F81B9AA9D341D77EFA80A1C56959CABBB3F8327EC54196F7C",
+                                                    "start":  "2026-10-29T20:14:21.9705278+01:00",
+                                                    "finish":  "2026-10-29T20:21:02.8376508+01:00",
+                                                    "summaryOutcome":  "Completed",
+                                                    "total":  1420,
+                                                    "executed":  1420,
+                                                    "passed":  1420,
+                                                    "failed":  0,
+                                                    "skipped":  0,
+                                                    "actualResultElements":  1420,
+                                                    "nonPassedResultElements":  0,
+                                                    "cliAndFilesystemResults":  [
+                                                                                    {
+                                                                                        "name":  "ElectronicRegisterAPI.Tests.Integration.PrivateTestFilesTests.EveryoneReadIsActuallyAppliedAndCanBeRestoredOnTheNewFileOnly",
+                                                                                        "outcome":  "Passed"
+                                                                                    },
+                                                                                    {
+                                                                                        "name":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_ActualCliUsesTheDedicatedManagerWithoutRequiringNotificationDelivery",
+                                                                                        "outcome":  "Passed"
+                                                                                    },
+                                                                                    {
+                                                                                        "name":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.PlatformCliRefusesAuthorityConfigurationReadableByEveryoneBeforeMutation",
+                                                                                        "outcome":  "Passed"
+                                                                                    },
+                                                                                    {
+                                                                                        "name":  "ElectronicRegisterAPI.Tests.Integration.PrivateTestFilesTests.EachFixtureHasItsOwnPrivateDirectoryOutsideDatabaseDatadirs",
+                                                                                        "outcome":  "Passed"
+                                                                                    },
+                                                                                    {
+                                                                                        "name":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.ActualAdministrativeCliVerifiesSignedIntentAndUsesOnlyOwnerInstalledChannel",
+                                                                                        "outcome":  "Passed"
+                                                                                    }
+                                                                                ]
+                                                },
+                                "fullHttpMySqlExecuted":  true,
+                                "fullResponsibilityRefactoringCompleted":  false,
+                                "baselineSqlBeforeRefactoringExecuted":  false,
+                                "proposal":  "docs/refactoring/RESPONSIBILITY_COMPLETION_PROPOSAL.md"
+                            },
+    "historicalCheckpointPolicy":  "Earlier baseline, comparison, continuation and local-run fields describe their original checkpoints; currentVerification is the authoritative current SQL/HTTP status. No green pre-refactoring SQL baseline is claimed."
+}

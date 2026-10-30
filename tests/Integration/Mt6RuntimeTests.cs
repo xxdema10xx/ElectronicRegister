@@ -64,7 +64,7 @@ public sealed class Mt6RuntimeTests
         values["Jwt:Key"] = new string('x', 64);
         values["AllowedHosts"] = "staging.example.test";
         values["Transport:HttpsPort"] = "443";
-        values["ConnectionStrings:DefaultConnection"] = "Server=db.example.test;User ID=application;Password=synthetic-policy-value;SslMode=VerifyFull;Database=staging";
+        values["ConnectionStrings:DefaultConnection"] = "Server=db.example.test;User ID=application;Password=synthetic-policy-value;SslMode=VerifyFull;SslCa=owner-ca.pem;Database=staging";
         values["Readiness:ExpectedVersion"] = "OWNER-CERTIFIED";
         values["Readiness:ExpectedHost"] = "expected-host";
         values["Readiness:ExpectedDataDir"] = "/expected-data";
@@ -79,10 +79,15 @@ public sealed class Mt6RuntimeTests
     [Fact]
     public async Task RealProgramRefusesIncompleteProductionConfigurationAtStartup()
     {
-        await Assert.ThrowsAnyAsync<Exception>(async () =>
+        var invocation = await Assert.ThrowsAsync<System.Reflection.TargetInvocationException>(async () =>
         {
-            await using var host = await Start("--Deployment:Mode=Production");
+            await using var host = await Mt3cHosting.ProgramHost.StartAsync(
+                Settings()["ConnectionStrings:DefaultConnection"]!, Guid.Empty, [], enabled: false,
+                extraArguments: ["--Deployment:Mode=Production", "--Jwt:Key=deliberately-incomplete"]);
         });
+        var error = Assert.IsType<InvalidOperationException>(invocation.InnerException);
+        Assert.Equal("Runtime security configuration is incomplete or unsafe.", error.Message);
+        Assert.Contains("RuntimePolicy.Read", error.StackTrace);
     }
 
     [Fact]
@@ -184,7 +189,7 @@ public sealed class Mt6RuntimeTests
             "--Jwt:Key=" + new string('x', 64), "--Transport:KnownProxies:0=127.0.0.1", "--Transport:HttpsPort=443",
             "--Readiness:ExpectedVersion=5.7.24", "--Readiness:ExpectedHost=" + System.Environment.MachineName,
             "--Readiness:ExpectedDataDir=not-an-operational-deployment",
-            "--ConnectionStrings:DefaultConnection=Server=127.0.0.1;Port=13306;Database=electronic_register_test;User ID=unusable-transport-test;Password=not-a-real-credential;SslMode=VerifyFull");
+            "--ConnectionStrings:DefaultConnection=Server=127.0.0.1;Port=13306;Database=electronic_register_test;User ID=unusable-transport-test;Password=not-a-real-credential;SslMode=VerifyFull;SslCa=owner-ca.pem");
         using var client = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }) { BaseAddress = host.Client.BaseAddress };
         using var clear = new HttpRequestMessage(HttpMethod.Get, "/health/live"); clear.Headers.Host = "api.staging.example.test";
         using var redirected = await client.SendAsync(clear);

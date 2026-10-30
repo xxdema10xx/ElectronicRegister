@@ -30,13 +30,13 @@ public class InstitutionStaffPermissionsTests
     }
 
     [Fact]
-    public void PersistedOrdinalsAndLegacyCatalogArePreserved()
+    public void PersistedInstitutionRoleOrdinalsArePreserved()
     {
         Assert.Equal(0, (int)InstitutionRole.InstitutionAdmin);
         Assert.Equal(1, (int)InstitutionRole.Teacher);
         Assert.Equal(2, (int)InstitutionRole.Student);
         Assert.Equal(3, (int)InstitutionRole.Staff);
-        Assert.DoesNotContain("Staff", Enum.GetNames<UserRole>());
+        Assert.Equal(4, Enum.GetNames<InstitutionRole>().Length);
     }
 
     [Fact]
@@ -63,10 +63,35 @@ public class InstitutionStaffPermissionsTests
         Assert.False(actor.IsAdmin);
         Assert.Null(actor.TeacherId);
         Assert.Null(actor.StudentId);
-        Assert.Throws<InvalidOperationException>(() => actor.VisibilityCaller);
+        Assert.NotNull(actor.Tenant);
         Assert.True(actor.Can(InstitutionPermission.ExamCreate));
         Assert.False(actor.CanDeleteExam);
         Assert.False(actor.CanCancelExam);
+    }
+
+    [Theory]
+    [InlineData(InstitutionRole.InstitutionAdmin)]
+    [InlineData(InstitutionRole.Teacher)]
+    [InlineData(InstitutionRole.Student)]
+    [InlineData(InstitutionRole.Staff)]
+    public void InstitutionalPrincipalPreservesRolesWithoutGlobalProjection(InstitutionRole role)
+    {
+        var student = role == InstitutionRole.Student;
+        var actor = new ExamPrincipal(new(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), new[] { role }, 7),
+            student, student ? Guid.NewGuid() : null, role == InstitutionRole.Teacher ? Guid.NewGuid() : null);
+
+        Assert.Contains(role, actor.Tenant.Roles);
+        Assert.Equal(7, actor.Tenant.SecurityGeneration);
+        Assert.Null(typeof(ExamPrincipal).GetProperty("LegacyCaller"));
+    }
+
+    [Fact]
+    public void RetiredGlobalPrincipalAdapterIsAbsent()
+    {
+        Assert.Null(typeof(ExamPrincipal).GetMethod("Legacy"));
+        Assert.Null(typeof(ExamPrincipal).GetProperty("LegacyCaller"));
+        Assert.Null(typeof(ExamPrincipal).Assembly.GetType("ElectronicRegisterAPI.Domain.DTOs.ClaimsContext"));
+        Assert.Null(typeof(ExamPrincipal).Assembly.GetType("ElectronicRegisterAPI.Domain.Enums.UserRole"));
     }
 
     [Theory]

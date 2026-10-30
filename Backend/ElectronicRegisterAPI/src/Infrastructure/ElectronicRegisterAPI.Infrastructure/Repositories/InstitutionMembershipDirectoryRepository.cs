@@ -8,6 +8,21 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
 internal sealed class InstitutionMembershipDirectoryRepository(ElectronicRegisterContext db) : IInstitutionMembershipDirectoryRepository
 {
+    public async Task<IReadOnlyList<ElectronicRegisterAPI.Domain.Results.ProfileAcquisitionResult>> AcquisitionsAsync(
+        Guid institutionId,
+        Guid membershipId,
+        int page,
+        int size,
+        string? status,
+        CancellationToken ct
+    )
+    {
+        if (institutionId == Guid.Empty || page < 1 || size is < 1 or > 100 || (long)(page - 1) * size > int.MaxValue || status is not (null or "linked" or "requires-review"))
+            throw new ArgumentException();
+        var offset = (page - 1) * size;
+        return await db.Database.SqlQuery<ElectronicRegisterAPI.Domain.Results.ProfileAcquisitionResult>($"SELECT id AS EventId,target_membership_id AS MembershipId,COALESCE(student_id,teacher_id) AS ProfileId,IF(student_id IS NOT NULL,'Student','Teacher') AS Kind,status AS Status FROM institution_profile_acquisition WHERE institution_id={institutionId} AND target_membership_id={membershipId} AND ({status} IS NULL OR status={status}) ORDER BY created_at DESC,id LIMIT {size} OFFSET {offset}").ToListAsync(ct);
+    }
+
     private IQueryable<Member> Scoped(Guid institutionId)
     {
         if (institutionId == Guid.Empty)

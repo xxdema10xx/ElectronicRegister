@@ -230,7 +230,7 @@ public sealed partial class InstitutionClassCrudTests
         {
             await using var host = await Mt3cHosting.ProgramHost.StartAsync(fixture.ConnectionString, _a, new[] { user }, enabled: true, school: true, exam: true);
             var login = await Request("/api/Auth/login", body: new LoginDto { Email = user.ToString("N") + "@staff.example.test", Password = Password }, method: "POST", host: host);
-            Assert.Contains(login.StatusCode, new[] { HttpStatusCode.Forbidden, HttpStatusCode.Unauthorized });
+            Assert.Equal(HttpStatusCode.NotFound, login.StatusCode);
         }
         finally
         {

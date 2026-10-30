@@ -166,8 +166,9 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
             else await db.InstitutionMemberships.Where(m => m.Id == membership).ExecuteUpdateAsync(s => s.SetProperty(m => m.Status, change));
         });
         var denied = await Request("/api/Auth/context", token);
-        Assert.Equal(HttpStatusCode.Forbidden, denied.StatusCode);
-        Assert.Equal(403, (await denied.Content.ReadFromJsonAsync<JsonObject>())!["status"]!.GetValue<int>());
+        var expectedStatus=change=="user-deleted" ? HttpStatusCode.Unauthorized : HttpStatusCode.Forbidden;
+        Assert.Equal(expectedStatus, denied.StatusCode);
+        Assert.Equal((int)expectedStatus, (await denied.Content.ReadFromJsonAsync<JsonObject>())!["status"]!.GetValue<int>());
         if (change is "pending" or "suspended" or "left")
         {
             await Change(async db => Assert.Equal(change, (await db.InstitutionMemberships.AsNoTracking().SingleAsync(m => m.Id == _ma)).Status));
@@ -180,7 +181,7 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
             Assert.Equal(HttpStatusCode.OK, (await Request("/api/Auth/context", refreshed)).StatusCode);
         }
         else
-            Assert.Equal(HttpStatusCode.Forbidden, (await Request("/api/Auth/select-institution", ticket,
+            Assert.Equal(change=="user-deleted" ? HttpStatusCode.Unauthorized : HttpStatusCode.Forbidden, (await Request("/api/Auth/select-institution", ticket,
                 new SelectInstitutionDto { InstitutionId = isB ? _b : _a, MembershipId = membership })).StatusCode);
     }
 
@@ -301,9 +302,8 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
         Assert.Equal(MembershipHttpSurface.AdminCount, sources.Endpoints.Count(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionMembershipAdminEndpointAttribute>() is not null));
         Assert.Equal(23, sources.Endpoints.Count(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null));
         // Discover every current legacy action; new explicitly migrated endpoints have their own HTTP suite.
-        Assert.Equal(73, endpoints.Length); // Preserved baseline plus dynamic traversal of every discovered action below.
-        Assert.Contains(endpoints, e => e.RoutePattern.RawText!.StartsWith("api/Student", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(endpoints, e => e.RoutePattern.RawText!.StartsWith("api/Exam", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(endpoints, e => e.RoutePattern.RawText!.StartsWith("api/Student", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(endpoints, e => e.RoutePattern.RawText!.StartsWith("api/Exam", StringComparison.OrdinalIgnoreCase));
         Assert.All(endpoints, e => Assert.DoesNotContain(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),
             p => p.Policy is InstitutionTokenContract.AccessScheme or ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute.PolicyName or ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute.PolicyName));
         var before = await LegacyCounts();
@@ -322,16 +322,67 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
         }
         Assert.Equal(before, await LegacyCounts());
         // Even explicitly allowlisting X cannot open legacy access when X has a membership in B.
-        Assert.Equal(HttpStatusCode.Unauthorized, (await Request("/api/Auth/login", body: new LoginDto { Email = Email(_user), Password = Password })).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await Request("/api/Auth/login", body: new LoginDto { Email = Email(_user), Password = Password })).StatusCode);
         var legacy = await Request("/api/Auth/login", body: new LoginDto { Email = Email(_legacy), Password = Password });
-        Assert.Equal(HttpStatusCode.OK, legacy.StatusCode);
-        var tokenLegacy = (await legacy.Content.ReadFromJsonAsync<JsonObject>())!["token"]!.GetValue<string>();
-        Assert.Equal(HttpStatusCode.OK, (await Request("/api/Student", tokenLegacy)).StatusCode);
-        Assert.Equal(HttpStatusCode.Unauthorized, (await Request("/api/Auth/context", tokenLegacy)).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, legacy.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await Request("/api/Student", ticket)).StatusCode);
         using var scope = _host.Host.Services.CreateScope();
         Assert.Throws<UnauthorizedAccessException>(() => scope.ServiceProvider.GetRequiredService<ICurrentTenant>().Value);
     }
 
+    [Fact]
+    public async Task RetiredExamGradeRoutesStayAbsentAndGlobalJwtCannotAuthorizeInstitutionalApis()
+    {
+        var ticket = await Ticket();
+        var access = await Access(ticket: ticket);
+        var legacy = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken("mt2-tests", "mt2-client",
+            new[] { new System.Security.Claims.Claim("sub", _user.ToString()), new System.Security.Claims.Claim("role", "admin") },
+            expires: DateTime.UtcNow.AddMinutes(5), signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Key)), SecurityAlgorithms.HmacSha256)));
+        var before = await LegacyCounts();
+        var retired = new (string Method, string Path)[]
+        {
+            ("GET", "/api/Exam"),
+            ("GET", "/api/Exam/{id}"),
+            ("GET", "/api/Exam/assigned"),
+            ("POST", "/api/Exam"),
+            ("PUT", "/api/Exam/{id}"),
+            ("PUT", "/api/Exam/{id}/students"),
+            ("POST", "/api/Exam/{id}/publish"),
+            ("POST", "/api/Exam/{id}/close"),
+            ("POST", "/api/Exam/{id}/cancel"),
+            ("DELETE", "/api/Exam/{id}"),
+            ("POST", "/api/Exam/{id}/start"),
+            ("POST", "/api/Exam/{id}/answers/save"),
+            ("POST", "/api/Exam/{id}/submit"),
+            ("GET", "/api/Exam/{examId}/submissions"),
+            ("GET", "/api/Exam/submission/{id}/review"),
+            ("PUT", "/api/Exam/submission/{id}/review"),
+            ("POST", "/api/Exam/submission/{id}/finalize"),
+            ("GET", "/api/Exam/submission/{id}/result"),
+            ("GET", "/api/Grade/count"),
+            ("GET", "/api/Grade/statistics"),
+            ("GET", "/api/Grade/filters"),
+            ("GET", "/api/Grade/paged"),
+            ("GET", "/api/Grade"),
+            ("GET", "/api/Grade/{id}"),
+            ("GET", "/api/Grade/bystudentid/{id}"),
+            ("GET", "/api/Grade/bysubject/{subject}"),
+            ("GET", "/api/Grade/bydate/{date}"),
+            ("POST", "/api/Grade"),
+            ("PUT", "/api/Grade/update/{id}"),
+            ("DELETE", "/api/Grade/{id}"),
+        };
+        Assert.Equal(30, retired.Length);
+        foreach (var route in retired)
+        {
+            var path = route.Path.Replace("{id}", Guid.NewGuid().ToString()).Replace("{examId}", Guid.NewGuid().ToString()).Replace("{subject}", "Subject").Replace("{date}", "2026-10-30");
+            foreach (var token in new string?[] { null, legacy, ticket, access })
+                Assert.Equal(HttpStatusCode.NotFound, (await Request(path, token, route.Method is "POST" or "PUT" ? new { } : null, route.Method)).StatusCode);
+        }
+        foreach (var path in new[] { "/api/Auth/context", "/api/institution/exams", "/api/institution/grades" })
+            Assert.Equal(HttpStatusCode.Unauthorized, (await Request(path, legacy)).StatusCode);
+        Assert.Equal(before, await LegacyCounts());
+    }
     private async Task<string> LegacyCounts()
     {
         string result = "";
@@ -360,13 +411,13 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
     [InlineData("institution")]
     [InlineData("role")]
     [InlineData("global-role")]
-    public async Task BackfilledLegacyBridgeAlsoChecksCurrentAuthorization(string change)
+    public async Task CanonicalAccessChecksLiveMembershipAndDoesNotUseGlobalRole(string change)
     {
         await Change(async db => { db.InstitutionMemberships.Add(Membership(_legacyMembership, _a, _legacy, "InstitutionAdmin")); await db.SaveChangesAsync(); });
-        var login = await Request("/api/Auth/login", body: new LoginDto { Email = Email(_legacy), Password = Password });
+        var login = await Request("/api/Auth/select-institution", await Ticket(_legacy), new SelectInstitutionDto { InstitutionId=_a, MembershipId=_legacyMembership });
         Assert.Equal(HttpStatusCode.OK, login.StatusCode);
-        var token = (await login.Content.ReadFromJsonAsync<JsonObject>())!["token"]!.GetValue<string>();
-        Assert.Equal(HttpStatusCode.OK, (await Request("/api/Auth/me", token)).StatusCode);
+        var token = (await login.Content.ReadFromJsonAsync<InstitutionAccessDto>())!.Token;
+        Assert.Equal(HttpStatusCode.OK, (await Request("/api/Auth/context", token)).StatusCode);
         await Change(async db =>
         {
             switch (change)
@@ -377,23 +428,22 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
                 case "global-role": await db.Users.Where(u => u.Id == _legacy).ExecuteUpdateAsync(s => s.SetProperty(u => u.Role, "student")); break;
             }
         });
-        Assert.Equal(HttpStatusCode.Forbidden, (await Request("/api/Auth/me", token)).StatusCode);
-        Assert.Equal(HttpStatusCode.Unauthorized, (await Request("/api/Auth/login", body: new LoginDto { Email = Email(_legacy), Password = Password })).StatusCode);
+        Assert.Equal(change=="global-role" ? HttpStatusCode.OK : HttpStatusCode.Forbidden, (await Request("/api/Auth/context", token)).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await Request("/api/Auth/login", body: new LoginDto { Email = Email(_legacy), Password = Password })).StatusCode);
     }
 
     [Theory]
     [InlineData(false, false)]
     [InlineData(true, false)]
-    public async Task LegacyNeedsExplicitEnablementAndUnbackfilledOptIn(bool enabled, bool unbackfilled)
+    public async Task LegacyConfigurationCannotReenableRetiredIdentityOrStudentEndpoints(bool enabled, bool unbackfilled)
     {
         await using var otherHost = await ProgramHost.StartAsync(fixture.ConnectionString, _a, new[] { _legacy }, enabled, unbackfilled);
         var login = await otherHost.Client.PostAsJsonAsync("/api/Auth/login", new LoginDto { Email = Email(_legacy), Password = Password });
-        Assert.Equal(enabled ? HttpStatusCode.Unauthorized : HttpStatusCode.Forbidden, login.StatusCode);
-        var originalLogin = await Request("/api/Auth/login", body: new LoginDto { Email = Email(_legacy), Password = Password });
-        var oldToken = (await originalLogin.Content.ReadFromJsonAsync<JsonObject>())!["token"]!.GetValue<string>();
+        Assert.Equal(HttpStatusCode.NotFound, login.StatusCode);
+        var oldToken = await Ticket(_legacy);
         using var request = new HttpRequestMessage(HttpMethod.Get, "/api/Student");
         request.Headers.Authorization = new("Bearer", oldToken);
-        Assert.Equal(HttpStatusCode.Forbidden, (await otherHost.Client.SendAsync(request)).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await otherHost.Client.SendAsync(request)).StatusCode);
         var identity = await otherHost.Client.PostAsJsonAsync("/api/Auth/identity/login", new LoginDto { Email = Email(_user), Password = Password });
         Assert.Equal(HttpStatusCode.OK, identity.StatusCode);
     }
@@ -423,7 +473,7 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
             using var subscription = DiagnosticListener.AllListeners.Subscribe(observer);
             var args = new List<string>
             {
-                "--Deployment:Mode=LocalTest", "--environment=Production", "--urls=http://127.0.0.1:0", "--applicationName=" + typeof(ExamController).Assembly.GetName().Name,
+                "--Deployment:Mode=LocalTest", "--environment=Production", "--urls=http://127.0.0.1:0", "--applicationName=" + typeof(InstitutionExamController).Assembly.GetName().Name,
                 "--ConnectionStrings:DefaultConnection=" + connectionString,
                 "--Jwt:Key=" + Key, "--Jwt:Issuer=mt2-tests", "--Jwt:Audience=mt2-client", "--Jwt:ExpiresInMinutes=10",
                 "--AzureAd:TenantId=11111111-2222-3333-4444-555555555555", "--AzureAd:Audience=mt2-microsoft",
@@ -436,7 +486,7 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
             args.AddRange(users.Select((id, i) => "--Identity:Legacy:UserIds:" + i + "=" + id));
             var run = Task.Run(async () =>
             {
-                var result = typeof(ExamController).Assembly.EntryPoint!.Invoke(null, new object[] { args.ToArray() });
+                var result = typeof(InstitutionExamController).Assembly.EntryPoint!.Invoke(null, new object[] { args.ToArray() });
                 if (result is Task task) await task;
             });
             var completed = await Task.WhenAny(observer.Built.Task, run).WaitAsync(TimeSpan.FromSeconds(30));

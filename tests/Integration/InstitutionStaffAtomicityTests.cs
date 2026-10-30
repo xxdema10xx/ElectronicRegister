@@ -77,16 +77,15 @@ public sealed partial class InstitutionClassCrudTests
             });
         var admin = await Access(); long revision = -1;
         await Db(async db => revision = (await db.InstitutionMembershipSecurityStates.AsNoTracking().SingleAsync(s => s.MembershipId == Id("teacher-membership"))).SecurityGeneration);
-        var write = Request(Route("teacher"), token, Input("teacher", "Before revocation"), "POST", host);
+        var write = SqlLockEvidence.Track(() => Request(Route("teacher"), token, Input("teacher", "Before revocation"), "POST", host));
         await acquired.Task.WaitAsync(TimeSpan.FromSeconds(5));
-        var revoke = Request("/api/institution/admin/members/" + Id("teacher-membership") + "/mutations", admin,
-            new { EventId = Guid.NewGuid(), ExpectedRevision = revision, Action = "RemoveRole", Role = "Staff", Reason = "Concurrent revocation" }, "POST", host);
+        var revoke = SqlLockEvidence.Track(() => Request("/api/institution/admin/members/" + Id("teacher-membership") + "/mutations", admin,
+            new { EventId = Guid.NewGuid(), ExpectedRevision = revision, Action = "RemoveRole", Role = "Staff", Reason = "Concurrent revocation" }, "POST", host));
         try
         {
             // Keep the authorized write open while a real concurrent IAM HTTP
             // request runs; success is checked only after that transaction commits.
-            await Task.WhenAny(revoke, Task.Delay(250));
-            Assert.False(revoke.IsCompleted);
+            await SqlLockEvidence.WaitAsync(fixture.ConnectionString, revoke, write);
         }
         finally { release.TrySetResult(true); }
         await Expect(await write, HttpStatusCode.Created);
@@ -97,6 +96,8 @@ public sealed partial class InstitutionClassCrudTests
     {
         public async Task LockAsync(TenantContext actor, CancellationToken ct = default)
         { await inner.LockAsync(actor, ct); acquired.TrySetResult(true); await release.Task.WaitAsync(ct); }
+        public async Task LockExamAsync(TenantContext actor, CancellationToken ct = default)
+        { await inner.LockExamAsync(actor, ct); acquired.TrySetResult(true); await release.Task.WaitAsync(ct); }
         public void RequireLocked(TenantContext actor) => inner.RequireLocked(actor);
     }
 }
