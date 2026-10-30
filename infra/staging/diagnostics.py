@@ -4,6 +4,33 @@ import os
 import re
 import subprocess
 
+SQL_STEPS={'00-login-users','00-principals.sql','01-001_schema.sql',
+           '02-001_identity_account.sql','03-002_profile_acquisition.sql',
+           '04-003_password_attempt.sql','05-004_release_schema.sql',
+           '06-005_release_gate.sql','99-routine-grants.sql','synthetic-seed'}
+PHASES={'precheck','bundle-generation','account-creation','migrations','preflight'}
+
+def provisioning_evidence(folder):
+    """Allowlist projection, including when private state is malformed or hostile."""
+    result={}
+    for name in ('operation-failure.json','journal.json'):
+        path=folder/'ops'/name
+        if not path.exists():continue
+        try:
+            if path.stat().st_size>1024*1024:raise ValueError()
+            value=json.loads(path.read_text())
+            if not isinstance(value,dict):raise ValueError()
+            if name=='journal.json':
+                result['startedSteps']=sorted(k for k,v in value.items() if k in SQL_STEPS and isinstance(v,dict) and v.get('state')=='started')
+                continue
+            result['failure']={
+                'phase':value.get('phase') if value.get('phase') in PHASES else None,
+                'step':value.get('step') if value.get('step') in SQL_STEPS or re.fullmatch(r'preflight-query-[0-9]{1,5}',str(value.get('step'))) else None,
+                **{k:value.get(k) if type(value.get(k)) is int and -2147483648<=value[k]<=2147483647 else None for k in ('exitCode','mysqlErrno','line')},
+                'sqlstate':value.get('sqlstate') if re.fullmatch(r'[A-Z0-9]{5}',str(value.get('sqlstate'))) else None}
+        except (OSError,ValueError,TypeError):result[name]={'unavailable':True}
+    return result
+
 
 def sanitizer(folder):
     # Read all generated credentials BEFORE collecting anything. A read error
@@ -64,6 +91,7 @@ def collect(folder, state):
             emit(section, {'unavailable': True})
             return ''
 
+    emit('provisioning',provisioning_evidence(folder))
     command('docker-version', ['docker', 'version', '--format', '{{json .Server.Version}}'])
     command('compose-version', ['docker', 'compose', 'version', '--short'])
     failure = folder / 'ops/transport-failure.json'

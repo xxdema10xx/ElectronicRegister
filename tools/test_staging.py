@@ -16,6 +16,66 @@ def load(name):
 host=load('host');ops=load('ops');diagnostics=load('diagnostics')
 
 class StagingTests(unittest.TestCase):
+    def setUp(self):
+        ops.phase('precheck')
+
+    def test_sql_failure_metadata_never_contains_provider_text_or_secrets(self):
+        with tempfile.TemporaryDirectory() as tmp,mock.patch.object(ops,'STATE',Path(tmp)),mock.patch.object(ops.subprocess,'run') as run:
+            raw="CREATE USER secret_user IDENTIFIED BY 'fake-password';\nERROR 1064 (42000) at line 17: fake-password mysql://secret@host\n-----BEGIN PRIVATE KEY-----fake-key"
+            run.return_value=mock.Mock(returncode=1,stderr=raw,stdout='fake-output-secret')
+            ops.phase('migrations')
+            with self.assertRaises(RuntimeError):ops.Journal().apply('01-001_schema.sql','secret SQL')
+            evidence=json.loads((Path(tmp)/'operation-failure.json').read_text())
+            self.assertEqual(evidence,dict(phase='migrations',step='01-001_schema.sql',exitCode=1,mysqlErrno=1064,sqlstate='42000',line=17))
+            self.assertEqual(ops.Journal().records['01-001_schema.sql']['state'],'started')
+            run.reset_mock()
+            with self.assertRaises(RuntimeError):ops.Journal().apply('01-001_schema.sql','secret SQL')
+            run.assert_not_called()
+            # A child's SQL-looking text is not trusted as a mysql client error.
+            self.assertIsNone(ops.failure_data(1,raw)['mysqlErrno'])
+            for text in ('ERROR 1045 (28000): password=fake-secret','unknown fake-secret'):
+                data=ops.failure_data(1,text,True)
+                self.assertNotIn('fake-secret',json.dumps(data));self.assertIsNone(data['line'])
+
+    def test_prejournal_failures_keep_their_phase(self):
+        with tempfile.TemporaryDirectory() as tmp,mock.patch.object(ops,'STATE',Path(tmp)),mock.patch.object(ops,'PUBLIC',Path(tmp)),mock.patch.object(ops,'mysql',return_value='1'):
+            with self.assertRaises(RuntimeError):ops.provision({})
+            self.assertEqual(ops.failure_data()['phase'],'precheck')
+            self.assertFalse((Path(tmp)/'journal.json').exists())
+            (Path(tmp)/'binding.json').write_text('{}')
+            with mock.patch.object(ops,'mysql',return_value='0'),mock.patch.object(ops,'process',side_effect=OSError('fake-secret')):
+                with self.assertRaises(OSError):ops.provision({})
+            self.assertEqual(ops.failure_data()['phase'],'bundle-generation')
+            (Path(tmp)/'bundle').mkdir();(Path(tmp)/'bundle/binding.json').write_text('{}')
+            with mock.patch.object(ops,'mysql',return_value='0'):
+                with self.assertRaises(OSError):ops.provision({})
+            self.assertEqual(ops.failure_data()['phase'],'account-creation')
+            with mock.patch.object(ops,'process',side_effect=OSError('fake-secret')):
+                with self.assertRaises(OSError):ops.preflight()
+            self.assertEqual(ops.failure_data()['phase'],'preflight')
+
+    def test_provisioning_collector_projects_only_safe_fields(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp);(folder/'ops').mkdir()
+            (folder/'ops/errors.log').write_text('fake-password raw SQL traceback')
+            (folder/'ops/journal.json').write_text(json.dumps({'01-001_schema.sql':{'state':'started','sql':'fake-password'},'password=fake-secret':{'state':'started'}}))
+            failure=dict(phase='migrations',step='01-001_schema.sql',exitCode=1,mysqlErrno=1064,sqlstate='42000',line=9,stderr='fake-password')
+            (folder/'ops/operation-failure.json').write_text(json.dumps(failure))
+            safe=diagnostics.provisioning_evidence(folder)
+            self.assertEqual(safe['startedSteps'],['01-001_schema.sql'])
+            self.assertEqual(safe['failure'],{k:v for k,v in failure.items() if k!='stderr'})
+            for key in failure:failure[key]='fake-secret'
+            (folder/'ops/operation-failure.json').write_text(json.dumps(failure))
+            self.assertNotIn('fake-secret',json.dumps(diagnostics.provisioning_evidence(folder)))
+            (folder/'ops/operation-failure.json').write_text('{invalid fake-secret')
+            self.assertTrue(diagnostics.provisioning_evidence(folder)['operation-failure.json']['unavailable'])
+
+    def test_preflight_child_metadata_is_bounded_and_sanitized(self):
+        ops.phase('preflight')
+        text='ER_SQL_FAILURE '+json.dumps(dict(step='preflight-query-1',exitCode=1,mysqlErrno=1142,sqlstate='42000',line=1,sql='fake-password'))
+        self.assertEqual(ops.failure_data(1,text)['mysqlErrno'],1142)
+        self.assertNotIn('fake-password',json.dumps(ops.failure_data(1,text)))
+
     def test_server_openssl_linkage_fails_closed_and_normalizes_aslr(self):
         for linkage in ('', 'libssl.so.3 => not found\nlibcrypto.so.3 => /lib/libcrypto.so.3', 'libcrypto.so.3 => /lib/libcrypto.so.3'):
             with self.assertRaises(RuntimeError):host.check_mysql_openssl(linkage)

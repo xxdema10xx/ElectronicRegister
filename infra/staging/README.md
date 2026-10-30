@@ -276,4 +276,16 @@ Restart usa gli stessi artifact congelati, riprende SQL e API, ripete preflight,
 
 ## Criterio di esito
 
+`host.py --state "$STATE" diagnostics` pubblica la sezione JSON `provisioning`:
+fase (`precheck`, `bundle-generation`, `account-creation`, `migrations`, `preflight`),
+passo SQL, exit code del comando fallito, errno MySQL, SQLSTATE e riga quando disponibili.
+Un campo `null` indica che il provider non lo ha restituito. Per il preflight,
+`preflight-query-N` identifica la chiamata SQL in ordine nel verificatore.
+`startedSteps` elenca solo i nomi canonici dei passi ancora `started` nel journal.
+Il collector proietta questi campi da `operation-failure.json` e `journal.json`;
+non legge `errors.log`, SQL, messaggi del provider o traceback. Lo stato diagnostico
+del comando precedente viene rimosso dopo aver acquisito il lock operatore.
+Un passo parziale resta bloccato anche dopo il riavvio: conservare le prove private
+per la diagnosi manuale, senza cancellare journal o bundle e senza ripetere DDL.
+
 La preparazione locale non è un PASS Docker/TLS/EC2. Prima di dichiarare lo staging collaudato servono run Actions della SHA pubblicata, build e startup reali, driver TLS positivo/negativi, preflight/UID/binding corretti e smoke HTTPS completi attraverso l'Nginx host. Questo runbook non assegna READY Production né riapre gli audit conclusi.

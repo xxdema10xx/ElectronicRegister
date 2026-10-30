@@ -22,6 +22,19 @@ for(const [name,ddl]of Object.entries(tables))for(const fk of ddl.matchAll(/FORE
  assert(unique.includes(key(fk[3])),`${name}: nonstandard referenced key`);fks++;
 }
 const temp=fs.mkdtempSync(path.join(os.tmpdir(),'er-mysql84-'));
+// Exercise the actual preflight child failure path without a database or shell.
+{
+ const vm=require('vm'),file=path.join(root,'tools/release-preflight.cjs');
+ for(const stderr of ['ERROR 1142 (42000) at line 7: fake-password CREATE USER secret;', 'unstructured fake-password']){
+  const output=[],stop=new Error('test exit');
+  const config={caFile:'fake-ca',passwordFile:'fake-password-file',user:'review',schemaDefiner:'owner@%',host:'host',port:3306,database:'db'};
+  const context={require:id=>id==='fs'?{readFileSync:f=>f==='config'?JSON.stringify(config):'fake-password'}:id==='child_process'?{spawnSync:()=>({status:1,stderr})}:require(id),__dirname:path.dirname(file),console:{error:s=>output.push(s)},process:{argv:['node',file,'config'],env:{},exit:()=>{throw stop;}}};
+  assert.throws(()=>vm.runInNewContext(fs.readFileSync(file,'utf8'),context),e=>e===stop);
+  assert.equal(output.length,1);assert(!output[0].includes('fake-password'));assert(!output[0].includes('CREATE USER'));
+  const data=JSON.parse(output[0].replace('ER_SQL_FAILURE ',''));assert.equal(data.step,'preflight-query-1');assert.equal(data.exitCode,1);
+  assert.equal(data.mysqlErrno,stderr.startsWith('ERROR')?1142:null);assert.equal(data.sqlstate,stderr.startsWith('ERROR')?'42000':null);assert.equal(data.line,stderr.startsWith('ERROR')?7:null);
+ }
+}
 try{
  const binding={artifactRoot:root,mysqlSeries:'8.4',database:'electronic_register_staging',definerUser:'er_stage_definer',definerHost:'%',apiUser:'er_api',apiHost:'172.30.252.%',reviewUser:'er_review',reviewHost:'172.30.252.%'};
  const input=path.join(temp,'input.json'),bundle=path.join(temp,'bundle');fs.writeFileSync(input,JSON.stringify(binding));

@@ -7,7 +7,18 @@ if((!isolated||config.schemaDefiner)&&!/^[A-Za-z0-9_.%-]+@[A-Za-z0-9_.%-]+$/.tes
 if(isolated&&(!path.resolve(config.expectedDataDir).startsWith(path.join(root,'.staff-private','instance-'))||config.host!=='127.0.0.1'||config.database!=='electronic_register_test'||[3306,13306].includes(config.port)))throw Error('Unattested isolated target');
 const password=fs.readFileSync(config.passwordFile,'utf8');
 const args=['--no-defaults','--protocol=TCP','--host='+config.host,'--port='+config.port,'--database='+config.database,'--user='+config.user,'--batch','--raw','--skip-column-names','--default-character-set=utf8mb4',...isolated?['--ssl-mode=DISABLED']:['--ssl-mode=VERIFY_IDENTITY','--tls-version=TLSv1.2','--ssl-ca='+config.caFile]];
-function read(sql){if(!/^(SELECT|SHOW|CALL er_schema_ready\(\))/i.test(sql))throw Error('Read-only statements only');const p=cp.spawnSync(config.mysqlClient||'mysql',args,{input:sql,encoding:'utf8',env:{...process.env,MYSQL_PWD:password},maxBuffer:10*1024*1024});if(p.status!==0)throw Error('Preflight query unavailable; no change attempted');return p.stdout.trim();}
+let queryNumber=0;
+function read(sql){
+ if(!/^(SELECT|SHOW|CALL er_schema_ready\(\))/i.test(sql))throw Error('Read-only statements only');
+ const step='preflight-query-'+(++queryNumber);
+ const p=cp.spawnSync(config.mysqlClient||'mysql',args,{input:sql,encoding:'utf8',env:{...process.env,MYSQL_PWD:password},maxBuffer:10*1024*1024});
+ if(p.status!==0){
+  const match=/^ERROR (\d{1,5}) \(([A-Z0-9]{5})\)(?: at line (\d{1,9}))?:/m.exec(p.stderr||'');
+  console.error('ER_SQL_FAILURE '+JSON.stringify({step,exitCode:p.status,mysqlErrno:match?+match[1]:null,sqlstate:match?match[2]:null,line:match&&match[3]?+match[3]:null}));
+  process.exit(1);
+ }
+ return p.stdout.trim();
+}
 const [version,port,datadir,database]=read("SELECT VERSION(),@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE();").split('\t');
 if(version!==config.expectedVersion||+port!==config.port||database!==config.database||datadir.toLowerCase().replace(/\/$/,'')!==config.expectedDataDir.replaceAll('\\','/').toLowerCase().replace(/\/$/,''))throw Error('Release database identity mismatch');
 const contract=JSON.parse(fs.readFileSync(path.join(root,'migrations/bootstrap/schema-contract.json'),'utf8'));

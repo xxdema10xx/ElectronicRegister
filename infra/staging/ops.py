@@ -7,6 +7,7 @@ except ImportError: # Pure rendering tests also run on Windows; operations never
     fcntl=None
 import hashlib
 import json
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -16,6 +17,36 @@ ROOT=Path('/workspace')
 STATE=Path('/state/ops')
 PUBLIC=Path('/state/public')
 MYSQL=json.loads((Path(__file__).with_name('mysql-image.json')).read_text())
+PHASE='precheck'
+STEP=None
+
+def phase(name,step=None):
+    global PHASE,STEP
+    PHASE,STEP=name,step
+
+def failure_data(exit_code=1,stderr='',is_mysql=False):
+    # Extract only protocol metadata. Never copy provider messages or SQL excerpts.
+    result=dict(phase=PHASE,step=STEP,exitCode=exit_code,mysqlErrno=None,sqlstate=None,line=None)
+    if is_mysql:
+        match=re.search(r'^ERROR (\d{1,5}) \(([A-Z0-9]{5})\)(?: at line (\d{1,9}))?:',stderr,re.M)
+        if match:
+            result.update(mysqlErrno=int(match[1]),sqlstate=match[2],line=int(match[3]) if match[3] else None)
+    else:
+        # The preflight child emits a metadata-only record, without a traceback.
+        for line in stderr.splitlines():
+            if line.startswith('ER_SQL_FAILURE '):
+                try:
+                    value=json.loads(line.removeprefix('ER_SQL_FAILURE '))
+                    if re.fullmatch(r'preflight-query-[0-9]{1,5}',value.get('step','')):
+                        result['step']=value['step']
+                        for key in ('exitCode','mysqlErrno','line'):
+                            if type(value.get(key)) is int:result[key]=value[key]
+                        if re.fullmatch(r'[A-Z0-9]{5}',value.get('sqlstate') or ''):result['sqlstate']=value['sqlstate']
+                except (ValueError,TypeError,AttributeError):pass
+    return result
+
+def record_failure(data):
+    saved(STATE/'operation-failure.json',data)
 
 def require(value,message):
     if not value:raise RuntimeError(message)
@@ -31,6 +62,7 @@ def saved(path,value):
 def process(args,input=None):
     p=subprocess.run([str(a) for a in args],input=input,text=True,capture_output=True)
     if p.returncode:
+        record_failure(failure_data(p.returncode,p.stderr,Path(str(args[0])).name=='mysql'))
         with (STATE/'errors.log').open('a') as file:file.write(p.stderr+'\n')
         raise RuntimeError('Operator command failed; inspect private /state/ops/errors.log. No automatic DDL replay.')
     return p.stdout.strip()
@@ -66,6 +98,7 @@ class Journal:
         self.path=STATE/'journal.json'
         self.records=json.loads(self.path.read_text()) if self.path.exists() else {}
     def apply(self,name,statement):
+        phase(PHASE,name)
         fingerprint=sha(statement.encode())
         old=self.records.get(name)
         if old:
@@ -81,28 +114,36 @@ def literal(value):
     return 'CONVERT(0x'+str(value).encode().hex()+' USING utf8mb4)'
 
 def provision(config):
+    phase('precheck')
     journal=Journal()
     if not journal.records:
         require(mysql("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='electronic_register_staging'")=='0','Nonempty application schema without this journal: refusing bootstrap')
     binding=json.loads((PUBLIC/'binding.json').read_text())
     bundle=STATE/'bundle'
+    phase('bundle-generation')
     if not bundle.exists():process(['node',ROOT/'tools/prepare-release-sql.cjs',PUBLIC/'binding.json',bundle])
     require((bundle/'binding.json').exists(),'Incomplete derived bundle: inspect it without deleting/replaying automatically')
     user_sql=[]
+    phase('account-creation')
     for user,file in [('er_api','api-password'),('er_review','review-password')]:
         password=Path('/run/secrets/'+file).read_text()
         require(len(password)==64 and all(c in '0123456789abcdef' for c in password),'Unexpected generated credential format')
         user_sql.append(f"CREATE USER '{user}'@'{binding['apiHost']}' IDENTIFIED WITH caching_sha2_password BY '{password}' REQUIRE SSL;")
     journal.apply('00-login-users','\n'.join(user_sql))
+    phase('migrations')
     derived=json.loads((bundle/'binding.json').read_text())
     for item in derived['records']:
+        phase('migrations',item['artifact'])
         actual=(bundle/item['artifact']).read_text().replace('\r\n','\n').encode()
         require(sha(actual)==item['artifactHash'],'Derived SQL artifact changed')
     # Names are numeric-prefixed; 99 is required after 005 resets routine grants.
-    for file in sorted(bundle.glob('*.sql')):journal.apply(file.name,file.read_text())
+    for file in sorted(bundle.glob('*.sql')):
+        phase('account-creation' if file.name=='00-principals.sql' else 'migrations',file.name)
+        journal.apply(file.name,file.read_text())
     preflight()
 
 def preflight():
+    phase('preflight')
     result=process(['node',ROOT/'tools/release-preflight.cjs',PUBLIC/'preflight.json'])
     saved(STATE/'preflight-result.json',json.loads(result))
 
@@ -199,6 +240,7 @@ def main():
     STATE.mkdir(exist_ok=True,mode=0o700)
     with (STATE/'operation.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        (STATE/'operation-failure.json').unlink(missing_ok=True)
         config=json.loads((PUBLIC/'staging.json').read_text())
         checkout(config)
         if sys.argv[1]=='source':
@@ -215,6 +257,7 @@ def main():
         elif sys.argv[1]=='preflight':preflight()
         elif sys.argv[1]=='tls':tls()
         else:
+            phase(sys.argv[1])
             preflight()
             import smoke
             smoke.run(config,STATE)
@@ -225,6 +268,7 @@ if __name__=='__main__':
     except Exception as error:
         import traceback
         if STATE.exists():
+            if not (STATE/'operation-failure.json').exists():record_failure(failure_data())
             with (STATE/'errors.log').open('a') as file:file.write(traceback.format_exc()+'\n')
         # Full provider/DDL diagnostics stay in the protected state, not Compose stdout.
         print('Staging operation failed: '+type(error).__name__+'. Inspect private state; no replay/repair was attempted.',file=sys.stderr)
