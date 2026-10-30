@@ -38,7 +38,13 @@ const normalize=s=>s.replaceAll('\r\n','\n');
 for(const [table,ddl]of Object.entries(contract.tables)){
  identify('table',table,'base-table-ddl');
  const actual=read('SHOW CREATE TABLE `'+table+'`;').split('\t').slice(1).join('\t').replace(/ AUTO_INCREMENT=\d+/g,'').replaceAll('\r\n','\n');
- equal(mysql84?adapter.ddl(actual):actual,mysql84?adapter.ddl(ddl):ddl,'ddl');
+ equal(mysql84?adapter.ddl(actual):actual,mysql84?adapter.tableDdl(table,ddl):ddl,'ddl');
+}
+if(mysql84){
+ identify('table','mt3a_legacy_scope','base-table-collation');
+ equal(read("SELECT TABLE_COLLATION FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='mt3a_legacy_scope'"),'utf8mb4_general_ci','TABLE_COLLATION');
+ identify('column','mt3a_legacy_scope.scope','base-column-collation');
+ equal(read("SELECT COLLATION_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='mt3a_legacy_scope' AND COLUMN_NAME='scope'"),'utf8mb4_general_ci','COLLATION_NAME');
 }
 for(const [table,ddl]of Object.entries(additive.contract.tables)){
  identify('table',table,'additive-table-ddl');

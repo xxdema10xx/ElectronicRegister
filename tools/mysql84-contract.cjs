@@ -1,9 +1,16 @@
 // Versioned compatibility rules. Historical 5.7 artifacts remain byte-for-byte intact.
 const mode=s=>s.split(',').filter(v=>v!=='NO_AUTO_CREATE_USER').join(',');
 const column=s=>s.replace(/\b(tinyint|smallint|mediumint|int|bigint)\((\d+)\)/gi,(all,type,width)=>type.toLowerCase()==='tinyint'&&width==='1'?all:type);
+// Derive input/expected SQL only; never rewrite observed server collations.
+function legacyScopeCollation(source){
+ return source.replace(/(CREATE TABLE `mt3a_legacy_scope` \([^;]*?\) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4)(?=;|\r?\n|$)/g,'$1 COLLATE=utf8mb4_general_ci');
+}
+function tableDdl(name,source){
+ return ddl(name==='mt3a_legacy_scope'?legacyScopeCollation(source):source);
+}
 function sql(source){
  // ROW_NUMBER is reserved in 8.x. Qualified NEW.row_number stays legal/unchanged.
- return source.replaceAll(',NO_AUTO_CREATE_USER','').replace(/(?<![.\w`])row_number(?![\w`])/g,'`row_number`');
+ return legacyScopeCollation(source).replaceAll(',NO_AUTO_CREATE_USER','').replace(/(?<![.\w`])row_number(?![\w`])/g,'`row_number`');
 }
 function ddl(source){
  // MySQL 8 removes integer display widths and prints explicit default collations.
@@ -21,4 +28,4 @@ function contract(value){
  }
  return copy;
 }
-module.exports={mode,column,sql,ddl,contract};
+module.exports={mode,column,sql,ddl,tableDdl,contract};

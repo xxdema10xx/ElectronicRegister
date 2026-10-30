@@ -8,8 +8,10 @@ function simulate(mutant){
  const output=[];
  function read(sql){
   if(sql.startsWith('SELECT VERSION'))return '8.4.13\t3306\t/data/\tdb';
-  if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];return name+'\t'+((base.tables[name]||add.contract.tables[name]).replace(/ COLLATE utf8mb4_unicode_ci/g,' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')+(mutant==='table'?' SQL secret-password':''));}
+  if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];return name+'\t'+((name==='mt3a_legacy_scope'?adapter.tableDdl(name,base.tables[name]):base.tables[name]||add.contract.tables[name]).replace(/ COLLATE utf8mb4_unicode_ci/g,' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')+(mutant==='table'?' SQL secret-password':'')).replace('COLLATE=utf8mb4_general_ci',mutant==='ddl-collation'?'COLLATE=utf8mb4_0900_ai_ci':'COLLATE=utf8mb4_general_ci');}
   if(sql.startsWith('SHOW CREATE TRIGGER')){const name=/`([^`]+)`/.exec(sql)[1],t=base.triggers[name];return [name,adapter.mode(t.mode),t.statement+(mutant==='trigger'?' SQL secret-password':''),t.charset,t.collation,t.database_collation,'timestamp'].join('\t');}
+  if(sql.startsWith('SELECT TABLE_COLLATION'))return mutant==='table-collation'?'utf8mb4_0900_ai_ci':'utf8mb4_general_ci';
+  if(sql.startsWith('SELECT COLLATION_NAME'))return mutant==='column-collation'?'utf8mb4_0900_ai_ci':'utf8mb4_general_ci';
   if(sql.includes('information_schema.TRIGGERS'))return JSON.stringify([
    ...Object.keys(base.triggers).map(name=>({name,definer:mutant==='trigger-definer'?'secret-password':config.schemaDefiner})),
    ...add.contract.triggers.map(t=>({name:t.TRIGGER_NAME,table:t.EVENT_OBJECT_TABLE,event:t.EVENT_MANIPULATION,timing:t.ACTION_TIMING,body:t.ACTION_STATEMENT,mode:t.SQL_MODE,definer:config.schemaDefiner}))]);
@@ -23,6 +25,9 @@ function simulate(mutant){
  return JSON.parse(output[0].replace('ER_PREFLIGHT_FAILURE ',''));
 }
 simulate();
+for(const [mutant,id,object] of [['ddl-collation','base-table-ddl','mt3a_legacy_scope'],['table-collation','base-table-collation','mt3a_legacy_scope'],['column-collation','base-column-collation','mt3a_legacy_scope.scope']]){
+ const failure=simulate(mutant);assert.equal(failure.id,id);assert.equal(failure.object,object);assert.notEqual(failure.actualHash,failure.expectedHash);
+}
 const failures=['table','trigger','routine','definer','trigger-definer'].map(simulate);
 assert.deepEqual(failures.map(f=>f.id),['base-table-ddl','base-trigger-ddl','routine-body','routine-definer','trigger-definer']);
 assert.equal(failures[0].object,Object.keys(base.tables)[0]);assert.equal(failures[1].object,Object.keys(base.triggers)[0]);
@@ -52,6 +57,20 @@ assert.equal(adapter.ddl(expected.replace('CHARACTER SET ascii','CHARACTER SET a
 for(const changed of [expected.replace('ascii','utf8mb4'),expected.replace('NOT NULL','NULL'),expected.replace('UNIQUE KEY','KEY'),expected.replace('`institution_id`,`id`','`id`,`institution_id`')])assert.notEqual(adapter.ddl(changed),adapter.ddl(expected));
 assert.notEqual(adapter.ddl('COLLATE=utf8mb4_unicode_ci'),adapter.ddl('COLLATE=utf8mb4_0900_ai_ci'));
 const base=JSON.parse(fs.readFileSync(path.join(root,'migrations/bootstrap/schema-contract.json')));
+const legacy=base.tables.mt3a_legacy_scope;
+const derivedLegacy=legacy+' COLLATE=utf8mb4_general_ci';
+assert.equal(adapter.tableDdl('mt3a_legacy_scope',legacy),derivedLegacy);
+assert.equal(adapter.sql(legacy+';'),derivedLegacy+';');
+assert.equal(adapter.sql(derivedLegacy+';'),derivedLegacy+';');
+assert.equal(adapter.sql(legacy+' COLLATE=utf8mb4_0900_ai_ci;'),legacy+' COLLATE=utf8mb4_0900_ai_ci;');
+for(const [name,ddl] of Object.entries(base.tables).filter(([name])=>name!=='mt3a_legacy_scope'))assert.equal(adapter.tableDdl(name,ddl),adapter.ddl(ddl));
+assert.notEqual(adapter.ddl(legacy+' COLLATE=utf8mb4_0900_ai_ci'),adapter.tableDdl('mt3a_legacy_scope',legacy));
+assert.deepStrictEqual(Object.entries(base.tables).filter(([,d])=>!d.slice(d.lastIndexOf('ENGINE=')).includes('COLLATE=')).map(([n])=>n),['mt3a_legacy_scope']);
+for(const [name,ddl] of Object.entries(old.contract.tables)){
+ assert(ddl.endsWith('ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'));
+ assert.equal(adapter.tableDdl(name,ddl),adapter.ddl(ddl));
+ assert.equal(adapter.sql(ddl),ddl);
+}
 const tables={...base.tables,...old.contract.tables};let fks=0;
 const key=s=>s.replaceAll(' ','');
 for(const [name,ddl]of Object.entries(tables))for(const fk of ddl.matchAll(/FOREIGN KEY \(([^)]+)\) REFERENCES `([^`]+)` \(([^)]+)\)/g)){
@@ -82,6 +101,7 @@ try{
   assert.equal(record.sourceHash,manifest.files[record.source]);
   const sql=fs.readFileSync(path.join(bundle,record.artifact),'utf8');
   assert.equal(record.artifactHash,crypto.createHash('sha256').update(sql).digest('hex').toUpperCase());
+  if(record.source==='migrations/bootstrap/001_schema.sql'){const historical=fs.readFileSync(path.join(root,record.source),'utf8').match(/CREATE TABLE `mt3a_legacy_scope` \([\s\S]*?;/)[0];assert(sql.includes(historical.replace(/;$/,' COLLATE=utf8mb4_general_ci;')));assert(!sql.includes(historical));}
   assert(!sql.includes('NO_AUTO_CREATE_USER'));assert(!sql.includes('mysql.proc'));
  }
  const grants=fs.readFileSync(path.join(bundle,'00-principals.sql'),'utf8');assert(grants.includes('GRANT SHOW_ROUTINE'));assert(!grants.includes('mysql.proc'));
