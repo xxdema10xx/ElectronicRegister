@@ -1,0 +1,12 @@
+# Explicit build-only overlay. Never load this file for operational commands.
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: infra/Dockerfile
+      args: { SOURCE_REVISION: "${SOURCE_REVISION:?required}" }
+  ops:
+    build:
+      context: ../..
+      dockerfile: infra/staging/Dockerfile.ops
+      additional_contexts: { api_artifact: "service:api" }

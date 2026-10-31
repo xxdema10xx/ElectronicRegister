@@ -342,3 +342,11 @@ solo l'atteso 8.4 usa uno spazio. Corpo e artefatti 5.7 restano immutati.
 Il test simulato comprende differenze simultanee e i negativi per corpo, evento,
 timing, target, SQL mode, collation e DEFINER. La prova reale e il gate Docker
 GitHub Actions: i test offline non attestano un PASS del server provisionato.
+
+### Immutabilita delle immagini dopo la build
+
+`compose.yaml` e esclusivamente runtime: nessuna direttiva build o additional_contexts, pull_policy never per tutti i servizi. Solo `host.py build` carica anche `compose.build.yaml`, che mantiene il collegamento OPS/API per copiare gli stessi artefatti. I comandi operativi non caricano mai l'overlay. `up` usa --no-build --pull never; `run` usa --pull never (Compose v5.6.1 non espone --no-build per run).
+
+Gli ID vengono controllati prima e dopo ogni invocazione Compose operativa, anche quando il processo fallisce; una sostituzione blocca il comando prima del passo successivo. images.json resta invariato. Un'immagine mancante non viene scaricata o ricostruita. Lo stato con drift gia rilevato resta bloccato: non riscrivere images.json e non ritaggare per aggirarlo; dopo pubblicazione della correzione usare un nuovo stato isolato attraverso il processo ordinario. Il vecchio stato e volume restano intatti.
+
+Il workflow confronta Compose del runner e v5.6.1 scaricata dalla release ufficiale con controllo checksum, registra Engine/flag, verifica anche preflight esplicito, restart e verify. Ubuntu/Engine del runner non sono una replica esatta di Ubuntu 26.04/Engine 29.9.2: questa differenza resta visibile nei log e richiede un runner effimero equivalente per una riproduzione esatta.

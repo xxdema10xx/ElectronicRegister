@@ -168,9 +168,60 @@ def load(folder):
     require(state['repository']==str(ROOT), 'Use the recorded checkout; create new staging for another checkout')
     return folder,state
 
-def compose(folder, *args, capture=False):
-    cmd=['docker','compose','--env-file',folder/'.env','-f',COMPOSE,*args]
-    return output(cmd) if capture else run(cmd)
+def image_tags(state):
+    return dict(db=state['mysql_image'], api=state['project']+'-api:'+state['revision'],
+                ops=state['project']+'-ops:'+state['revision'])
+
+
+def image_ids(state):
+    result = {}
+    for service, tag in image_tags(state).items():
+        try:
+            inspection = subprocess.run(['docker', 'image', 'inspect', tag], capture_output=True, text=True)
+            require(inspection.returncode == 0, 'Image unavailable: '+service)
+            obj = json.loads(inspection.stdout)[0]
+            value = obj['Id']
+        except (subprocess.CalledProcessError, OSError, ValueError, KeyError, IndexError):
+            raise RuntimeError('Image unavailable: '+service) from None
+        require(re.fullmatch(r'sha256:[a-f0-9]{64}', value), 'Invalid image identity: '+service)
+        result[service] = value
+    return result
+
+
+def check_images(folder, state, expected=None):
+    if expected is None:
+        require((folder/'images.json').exists(), 'Build and record images first')
+        expected = json.loads((folder/'images.json').read_text())
+    require(isinstance(expected, dict) and set(expected) == {'db', 'api', 'ops'} and
+            all(isinstance(v, str) and re.fullmatch(r'sha256:[a-f0-9]{64}', v) for v in expected.values()),
+            'Invalid recorded image identities; operation blocked')
+    actual = image_ids(state)
+    for service in ('db', 'api', 'ops'):
+        require(actual[service] == expected.get(service), 'Image drift: '+service+'; expected='+expected[service]+'; actual='+actual[service]+'; operation blocked (recorded artifacts retained)')
+    return expected
+
+
+def compose(folder, *args, capture=False, build=False, expected=None):
+    require(bool(args) and (args[0] == 'build') == build, 'Build is allowed only through the explicit build phase')
+    cmd=['docker','compose','--env-file',folder/'.env','-f',COMPOSE]
+    guarded = not build and args[0] not in ('config', 'logs', 'stop')
+    if build:
+        cmd += ['-f', ROOT/'infra/staging/compose.build.yaml']
+    if guarded:
+        _, state = load(folder)
+        check_images(folder, state, expected)
+    if args[0] == 'up':
+        args = (args[0], '--no-build', '--pull', 'never', *args[1:])
+    elif args[0] == 'run':
+        args = (args[0], '--pull', 'never', *args[1:])
+    cmd += args
+    try:
+        return output(cmd) if capture else run(cmd)
+    finally:
+        # Also detect substitution when Compose itself fails; never continue to SQL/HTTP.
+        if guarded:
+            check_images(folder, state, expected)
+
 
 def owned(state):
     for kind, names in [('volume',[state['project']+'_db-data']),('network',[state['project']+'_backend'])]:
@@ -263,19 +314,18 @@ def main():
         cap_file=folder/'mysql-capabilities.json'
         if cap_file.exists():require(json.loads(cap_file.read_text())==capabilities,'MySQL capabilities changed: prepare a new state')
         else:write(cap_file,json.dumps(capabilities,indent=2))
-        compose(folder,'build','api','ops')
+        compose(folder,'build','api','ops',build=True)
         api=json.loads(output(['docker','image','inspect',s['project']+'-api:'+s['revision']]))[0]
         require(api['Config']['Labels'].get('org.opencontainers.image.revision')==s['revision'],'API image revision label mismatch')
-        compose(folder,'run','--rm','--no-deps','ops','source')
-        images={k:json.loads(output(['docker','image','inspect',tag]))[0]['Id'] for k,tag in [('db',s['mysql_image']),('api',s['project']+'-api:'+s['revision']),('ops',s['project']+'-ops:'+s['revision'])]}
+        images=image_ids(s)
+        # The source attestation uses runtime-only Compose and the just-built snapshot.
+        # Record images.json only after the packaged manifest/source check succeeds.
+        compose(folder,'run','--rm','--no-deps','ops','source',expected=images)
         dest=folder/'images.json'
         if dest.exists():require(json.loads(dest.read_text())==images,'Images changed: use a new state, never silently replace the staged artifacts')
         else:write(dest,json.dumps(images,indent=2))
         return
-    require((folder/'images.json').exists(),'Build and record images first')
-    images=json.loads((folder/'images.json').read_text())
-    for k,tag in [('db',s['mysql_image']),('api',s['project']+'-api:'+s['revision']),('ops',s['project']+'-ops:'+s['revision'])]:
-        require(json.loads(output(['docker','image','inspect',tag]))[0]['Id']==images[k], 'Image drift: '+k)
+    check_images(folder,s)
     if a.command=='db':
         if subprocess.run(['docker','network','inspect',s['project']+'_backend'],capture_output=True).returncode!=0:
             candidate=ipaddress.ip_network(s['subnet'])

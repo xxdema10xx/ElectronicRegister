@@ -18,6 +18,81 @@ host=load('host');ops=load('ops');diagnostics=load('diagnostics')
 sys.modules['diagnostics']=diagnostics
 
 class StagingTests(unittest.TestCase):
+    def test_runtime_sequence_preserves_all_image_ids_and_never_loads_build_overlay(self):
+        state=dict(project='er-stage-synthetic',revision='a'*40,mysql_image=host.MYSQL['image'],port=18080)
+        images={name:'sha256:'+digit*64 for name,digit in zip(('db','api','ops'),'123')}
+        tags={tag:images[name] for name,tag in host.image_tags(state).items()}
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp);record=json.dumps(images);(folder/'images.json').write_text(record)
+            def inspect(args, **kwargs):
+                if args[:3]==['docker','image','inspect']:
+                    return mock.Mock(returncode=0,stdout=json.dumps([dict(Id=tags[args[-1]])]))
+                return mock.Mock(returncode=0)
+            def output(args):
+                if args[1:4]==['context','inspect','default']:
+                    return json.dumps([dict(Endpoints=dict(docker=dict(Host='unix:///var/run/docker.sock')))])
+                if args[1]=='version':return '29.9.2'
+                if args[1:3]==['compose','version']:return '5.6.1'
+                return ''
+            fake_smoke=mock.Mock()
+            with mock.patch.object(host,'load',return_value=(folder,state)),mock.patch.object(host,'owned'),mock.patch.object(host,'clean'),mock.patch.object(host,'verify'),mock.patch.object(host.sys,'platform','linux'),mock.patch.dict(host.os.environ,{'DOCKER_HOST':'unix:///var/run/docker.sock','DOCKER_CONTEXT':'default'}),mock.patch.object(host,'output',side_effect=output),mock.patch.object(host.subprocess,'run',side_effect=inspect),mock.patch.object(host,'run') as run,mock.patch.object(host.socket,'socket'),mock.patch.dict(sys.modules,{'smoke':fake_smoke}):
+                for command in ('db','sql-check','provision','compatibility','preflight','tls','seed','start','verify','smoke','restart','http'):
+                    with self.subTest(command=command),mock.patch.object(sys,'argv',['host.py','--state',str(folder),command]):
+                        host.main()
+                        self.assertEqual(record,(folder/'images.json').read_text())
+                        self.assertEqual(images,host.check_images(folder,state))
+                self.assertTrue(run.called)
+                for call in run.call_args_list:
+                    args=list(map(str,call.args[0]))
+                    self.assertNotIn(str(ROOT/'infra/staging/compose.build.yaml'),args)
+                    self.assertNotIn('--build',args)
+                    if 'run' in args or 'up' in args:
+                        self.assertIn('--pull',args);self.assertIn('never',args)
+                    if 'up' in args:self.assertIn('--no-build',args)
+                with self.assertRaisesRegex(RuntimeError,'explicit build phase'):
+                    host.compose(folder,'build','api')
+        runtime=(ROOT/'infra/staging/compose.yaml').read_text()
+        self.assertNotIn('build:',runtime);self.assertNotIn('additional_contexts:',runtime)
+        self.assertEqual(4,runtime.count('pull_policy: never'))
+        self.assertIn('service:api',(ROOT/'infra/staging/compose.build.yaml').read_text())
+
+    def test_drift_before_or_during_compose_aborts_without_rewriting_evidence(self):
+        state=dict(project='synthetic',revision='a'*40,mysql_image=host.MYSQL['image'])
+        images={name:'sha256:'+digit*64 for name,digit in zip(('db','api','ops'),'123')}
+        for service in images:
+            for when in ('before','after','failed'):
+                with self.subTest(service=service,when=when),tempfile.TemporaryDirectory() as tmp:
+                    folder=Path(tmp);record=json.dumps(images);(folder/'images.json').write_text(record)
+                    current=dict(images)
+                    def mutate(*args,**kwargs):
+                        current[service]='sha256:'+'f'*64
+                        if when=='failed':raise subprocess.CalledProcessError(1,['compose'])
+                    if when=='before':mutate()
+                    with mock.patch.object(host,'load',return_value=(folder,state)),mock.patch.object(host,'image_ids',side_effect=lambda _:dict(current)),mock.patch.object(host,'run',side_effect=mutate) as run:
+                        with self.assertRaisesRegex(RuntimeError,'Image drift: '+service):
+                            host.compose(folder,'run','--rm','--no-deps','ops','provision')
+                        self.assertEqual(0 if when=='before' else 1,run.call_count)
+                    self.assertEqual(record,(folder/'images.json').read_text())
+
+    def test_explicit_build_overlay_and_source_snapshot_guard(self):
+        state=dict(project='synthetic',revision='a'*40,mysql_image=host.MYSQL['image'])
+        images={name:'sha256:'+digit*64 for name,digit in zip(('db','api','ops'),'123')}
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp)
+            with mock.patch.object(host,'run') as run,mock.patch.object(host,'load',return_value=(folder,state)),mock.patch.object(host,'image_ids',return_value=images):
+                host.compose(folder,'build','api','ops',build=True)
+                self.assertIn(ROOT/'infra/staging/compose.build.yaml',run.call_args.args[0])
+                host.compose(folder,'run','--rm','--no-deps','ops','source',expected=images)
+                self.assertNotIn(ROOT/'infra/staging/compose.build.yaml',run.call_args.args[0])
+                self.assertFalse((folder/'images.json').exists())
+                with self.assertRaisesRegex(RuntimeError,'record images first'):
+                    host.compose(folder,'run','--rm','--no-deps','ops','provision')
+
+    def test_missing_image_diagnostic_excludes_daemon_payload(self):
+        state=dict(project='synthetic',revision='a'*40,mysql_image=host.MYSQL['image'])
+        with mock.patch.object(host.subprocess,'run',return_value=mock.Mock(returncode=1,stdout='secret',stderr='password=secret')):
+            with self.assertRaisesRegex(RuntimeError, r'^Image unavailable: db$'):host.image_ids(state)
+
     def test_class_delete_audit_requires_retained_event_snapshot_and_deleted_row(self):
         with tempfile.TemporaryDirectory() as tmp:
             folder=Path(tmp)

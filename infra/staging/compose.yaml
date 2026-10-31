@@ -7,6 +7,7 @@ x-logging: &logging
 services:
   volume-init:
     image: ${MYSQL_IMAGE:?select the verified 8.4 LTS OpenSSL image}
+    pull_policy: never
     platform: linux/amd64
     user: "0:0"
     entrypoint: ["sh", "-ec"]
@@ -29,6 +30,7 @@ services:
     labels: { io.er.staging.id: "${STAGING_ID}" }
   db:
     image: ${MYSQL_IMAGE:?required}
+    pull_policy: never
     platform: linux/amd64
     hostname: er-stage-db
     user: "999:999"
@@ -89,10 +91,7 @@ services:
     labels: { io.er.staging.id: "${STAGING_ID}" }
   api:
     image: ${API_IMAGE:?required}
-    build:
-      context: ../..
-      dockerfile: infra/Dockerfile
-      args: { SOURCE_REVISION: "${SOURCE_REVISION:?required}" }
+    pull_policy: never
     user: "1654:1654"
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
@@ -125,10 +124,7 @@ services:
   ops:
     profiles: [tools]
     image: ${OPS_IMAGE:?required}
-    build:
-      context: ../..
-      dockerfile: infra/staging/Dockerfile.ops
-      additional_contexts: { api_artifact: "service:api" }
+    pull_policy: never
     user: "10001:10001"
     entrypoint: [python3, /workspace/infra/staging/ops.py]
     volumes:
