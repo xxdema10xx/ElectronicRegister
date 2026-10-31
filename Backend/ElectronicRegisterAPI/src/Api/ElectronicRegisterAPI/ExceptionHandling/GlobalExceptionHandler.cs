@@ -1,53 +1,47 @@
-﻿using ElectronicRegisterAPI.Domain.Exceptions;
+using ElectronicRegisterAPI.Domain.Exceptions;
+using ElectronicRegisterAPI.Domain.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ElectronicRegisterAPI.Api.ExceptionHandling;
 
-internal class GlobalExceptionHandler : IExceptionHandler
+internal class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
-    public async ValueTask<bool> TryHandleAsync(
-        HttpContext httpContext,
-        Exception exception,
-        CancellationToken cancellationToken)
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        var (statusCode, title) = exception switch
+        var(statusCode, title) = exception switch
         {
-            KeyNotFoundException => 
-                (StatusCodes.Status404NotFound, "La risorsa non esiste"),
-
-            ArgumentException =>
-                (StatusCodes.Status400BadRequest, "Richiesta non valida"),
-
-            UnauthorizedAccessException =>
-                (httpContext.User.Identity?.IsAuthenticated == true ? StatusCodes.Status403Forbidden : StatusCodes.Status401Unauthorized, "Non autorizzato"),
-
-            InvalidOperationException when SubmissionErrors.IsInvalidRequest(exception) =>
-                (StatusCodes.Status400BadRequest, "Richiesta non valida"),
-
-            InvalidOperationException when SubmissionErrors.IsConflict(exception) =>
-                (StatusCodes.Status409Conflict, "Operazione non consentita"),
-
-            BusinessRuleException =>
-                (StatusCodes.Status409Conflict, "Operazione non consentita"),
-
-            _ =>
-                (StatusCodes.Status500InternalServerError, "Errore interno del server")
-        };
-
-        httpContext.Response.StatusCode = statusCode;
-
-        await httpContext.Response.WriteAsJsonAsync(
-            new ProblemDetails
+            IdentityRateLimitException => (StatusCodes.Status429TooManyRequests, "Request limit exceeded"),
+            BadHttpRequestException { StatusCode: StatusCodes.Status413PayloadTooLarge } => (StatusCodes.Status413PayloadTooLarge, "Richiesta troppo grande"),
+            KeyNotFoundException => (StatusCodes.Status404NotFound, "La risorsa non esiste"),
+            ImportConflictException => (StatusCodes.Status409Conflict, "Conflitto sulla preview di importazione"),
+            ImportInputException e => (e.Code switch
             {
-                Status = statusCode,
-                Title = title,
-                Detail = statusCode == StatusCodes.Status500InternalServerError
-                    ? "Si è verificato un errore interno."
-                    : title
-            },
-            cancellationToken);
-
+                "UnsupportedFormat" or "UnsupportedEncoding" => 415,
+                "FileTooLarge" or "TooManyRows" or "TooManyColumns" or "CellTooLong" or "RecordTooLong" or "StageTooLarge" or "ZipLimitExceeded" or "XmlLimitExceeded" or "TooManySharedStrings" => 413,
+                "RowsInvalid" => 422,
+                _ => 400
+            }, "Importazione non valida"),
+            ArgumentException => (StatusCodes.Status400BadRequest, "Richiesta non valida"),
+            UnauthorizedAccessException => (httpContext.User.Identity?.IsAuthenticated == true ? StatusCodes.Status403Forbidden : StatusCodes.Status401Unauthorized, "Non autorizzato"),
+            InvalidOperationException when SubmissionErrors.IsInvalidRequest(exception) => (StatusCodes.Status400BadRequest, "Richiesta non valida"),
+            InvalidOperationException when SubmissionErrors.IsConflict(exception) => (StatusCodes.Status409Conflict, "Operazione non consentita"),
+            BusinessRuleException => (StatusCodes.Status409Conflict, "Operazione non consentita"),
+            MembershipConflictException => (StatusCodes.Status409Conflict, "Conflitto sulla membership istituzionale"),
+            _ => (StatusCodes.Status500InternalServerError, "Errore interno del server")};
+        if (statusCode == 429)
+            httpContext.Response.Headers.RetryAfter = "60";
+        if (statusCode == 500)
+        {
+            // Allowlisted provider codes and method locations, never exception
+            // messages, SQL, parameters, file paths or request/account data.
+            var sql = exception as MySqlConnector.MySqlException ?? exception.InnerException as MySqlConnector.MySqlException;
+            var code = sql?.Number switch { 1213 => "DB_DEADLOCK", 1205 => "DB_LOCK_TIMEOUT", 1146 => "DB_SCHEMA_MISSING", 1044 or 1045 or 1142 => "DB_PERMISSION", _ => exception is OperationCanceledException ? "REQUEST_CANCELLED" : "REQUEST_FAILURE" };
+            logger.LogError("Request failed {ErrorCode} {ErrorType} {ProviderNumber} {SqlState} {Location}", code, exception.GetType().Name, sql?.Number, sql?.SqlState,
+                exception.TargetSite?.DeclaringType?.FullName + "." + exception.TargetSite?.Name);
+        }
+        httpContext.Response.StatusCode = statusCode;
+        await httpContext.Response.WriteAsJsonAsync(new ProblemDetails { Status = statusCode, Title = title, Detail = statusCode == StatusCodes.Status500InternalServerError ? "Si è verificato un errore interno." : title, Extensions = exception is ImportConflictException conflict ? new Dictionary<string, object?> { { "code", conflict.Code } } : exception is ImportInputException input ? new Dictionary<string, object?> { { "code", input.Code } } : new Dictionary<string, object?>() }, cancellationToken);
         return true;
     }
 }

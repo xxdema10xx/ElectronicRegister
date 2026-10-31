@@ -1,4 +1,3 @@
-﻿
 using ElectronicRegisterAPI.Domain.Models;
 
 namespace ElectronicRegisterAPI.Domain.Interfaces.Services;
@@ -12,7 +11,12 @@ public interface IExamService
     void EnsureValidQuestions(IReadOnlyList<Question> questions);
     void EnsureValidRetakeExam(Exam? originalExam, Guid classSubjectId);
     void EnsureValidAssignedStudents(IReadOnlyList<ExamStudent> assignedStudents, IReadOnlyList<Student> students, Guid classId);
-    void EnsureStartAllowed(Exam? exam, ExamSubmission? existingSubmission, Guid studentId, DateTime nowUtc);
+    void EnsureStartAllowed(
+        Exam? exam,
+        ExamSubmission? existingSubmission,
+        Guid studentId,
+        DateTime nowUtc
+    );
     void EnsureSubmissionInProgress(ExamSubmission submission);
     void EnsureEditable(Exam exam);
     void EnsurePublishable(Exam exam, DateTime nowUtc);

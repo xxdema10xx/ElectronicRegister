@@ -1,4 +1,3 @@
-// Domain — modello di dominio (Domain/Models/Grade.cs)
 namespace ElectronicRegisterAPI.Domain.Models;
 
 public class Grade

@@ -8,17 +8,11 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddBusinessServices(this IServiceCollection services)
     {
-        services.AddScoped<IBienniumService, BienniumService>();
-        services.AddScoped<IStudyAreaService, StudyAreaService>();
-        services.AddScoped<IStudyPathService, StudyPathService>();
-        services.AddScoped<IGradeService, GradeService>();
-        services.AddScoped<IStudentService, StudentService>();
-        services.AddScoped<ISubjectService, SubjectService>();
-        services.AddScoped<ITeacherService, TeacherService>();
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IExamService, ExamService>();
+        services.AddSingleton<ElectronicRegisterAPI.Domain.Interfaces.Services.ICalendarImportRules, CalendarImportRules>();
+        services.AddSingleton<ElectronicRegisterAPI.Domain.Interfaces.Services.IInstitutionEmailGenerator, InstitutionEmailGenerator>();
+        services.AddSingleton<ElectronicRegisterAPI.Domain.Interfaces.Services.IFormativeDraftBuilder, FormativeDraftBuilder>();
+        services.AddSingleton<ElectronicRegisterAPI.Domain.Interfaces.Services.IInstitutionImportRules, InstitutionImportRules>();
         services.AddScoped<ISubmissionGradingService, SubmissionGradingService>();
-
         return services;
     }
 }

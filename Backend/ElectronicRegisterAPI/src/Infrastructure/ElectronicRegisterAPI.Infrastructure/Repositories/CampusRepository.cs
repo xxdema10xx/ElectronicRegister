@@ -14,25 +14,24 @@ internal sealed class CampusRepository(ElectronicRegisterContext context) : ICam
         return row is null ? null : Map(row);
     }
 
-    public async Task<List<Campus>> GetByInstitutionAsync(Guid institutionId) =>
-        (await context.Campuses.AsNoTracking().Where(c => c.InstitutionId == institutionId).ToListAsync()).Select(Map).ToList();
-
+    public async Task<List<Campus>> GetByInstitutionAsync(Guid institutionId) => (await context.Campuses.AsNoTracking().Where(c => c.InstitutionId == institutionId).ToListAsync()).Select(Map).ToList();
     public async Task AddAsync(Campus campus)
     {
         ArgumentNullException.ThrowIfNull(campus);
         if (campus.Id == Guid.Empty || campus.InstitutionId == Guid.Empty || string.IsNullOrWhiteSpace(campus.Name))
             throw new ArgumentException("Campus requires its own identity and one institution.");
-        context.Campuses.Add(new Entity
-        {
-            Id = campus.Id, InstitutionId = campus.InstitutionId, Name = campus.Name,
-            Address = campus.Address, City = campus.City, Province = campus.Province, IsActive = campus.IsActive
-        });
+        context.Campuses.Add(new Entity { Id = campus.Id, InstitutionId = campus.InstitutionId, Name = campus.Name, Address = campus.Address, City = campus.City, Province = campus.Province, IsActive = campus.IsActive });
         await context.SaveChangesAsync();
     }
 
     private static Campus Map(Entity row) => new()
     {
-        Id = row.Id, InstitutionId = row.InstitutionId, Name = row.Name, Address = row.Address,
-        City = row.City, Province = row.Province, IsActive = row.IsActive ?? true
+        Id = row.Id,
+        InstitutionId = row.InstitutionId,
+        Name = row.Name,
+        Address = row.Address,
+        City = row.City,
+        Province = row.Province,
+        IsActive = row.IsActive ?? true
     };
 }

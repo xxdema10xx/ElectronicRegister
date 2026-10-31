@@ -13,10 +13,7 @@ internal class MicrosoftTokenValidator : IMicrosoftTokenValidator
 {
     private readonly ConfigurationManager<OpenIdConnectConfiguration> _configManager;
     private readonly AzureAdOptions _options;
-
-    public MicrosoftTokenValidator(
-        ConfigurationManager<OpenIdConnectConfiguration> configManager,
-        IOptions<AzureAdOptions> options)
+    public MicrosoftTokenValidator(ConfigurationManager<OpenIdConnectConfiguration> configManager, IOptions<AzureAdOptions> options)
     {
         _configManager = configManager;
         _options = options.Value;
@@ -25,7 +22,6 @@ internal class MicrosoftTokenValidator : IMicrosoftTokenValidator
     public async Task<ClaimsPrincipal> ValidateAsync(string accessToken)
     {
         var config = await _configManager.GetConfigurationAsync();
-
         var validationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -36,7 +32,6 @@ internal class MicrosoftTokenValidator : IMicrosoftTokenValidator
             ValidateIssuerSigningKey = true,
             IssuerSigningKeys = config.SigningKeys
         };
-
         var handler = new JwtSecurityTokenHandler();
         return handler.ValidateToken(accessToken, validationParameters, out _);
     }

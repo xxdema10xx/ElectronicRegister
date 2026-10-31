@@ -343,6 +343,7 @@ public partial class ElectronicRegisterContext : DbContext
                 .HasMaxLength(6)
                 .HasColumnName("finalized_at");
             entity.Property(e => e.GradeId).HasColumnName("grade_id");
+            entity.Property(e => e.DisplayOrderJson).HasColumnName("display_order_json").HasColumnType("longtext");
             entity.Property(e => e.LastClientRevision)
                 .HasColumnType("bigint(20) unsigned")
                 .HasColumnName("last_client_revision");

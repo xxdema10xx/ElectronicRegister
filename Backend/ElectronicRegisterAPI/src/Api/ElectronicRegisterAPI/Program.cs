@@ -1,68 +1,56 @@
+using ElectronicRegisterAPI.Domain.Configuration;
 using Scalar.AspNetCore;
+using ElectronicRegisterAPI.Api.Operations;
 using ElectronicRegisterAPI.Infrastructure.DependencyInjection;
 using ElectronicRegisterAPI.Business.DependencyInjection;
 using ElectronicRegisterAPI.Application.DependencyInjection;
 using ElectronicRegisterAPI.Api.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var runtimeConfig = Environment.GetEnvironmentVariable("ER_RUNTIME_CONFIG");
+if (!string.IsNullOrWhiteSpace(runtimeConfig))
+    builder.Configuration.AddJsonFile(Path.GetFullPath(runtimeConfig), optional: false, reloadOnChange: false);
+builder.Configuration.AddKeyPerFile("/run/secrets", optional: true);
+builder.Configuration.AddEnvironmentVariables().AddCommandLine(args);
 builder.Host.UseDefaultServiceProvider(options =>
 {
     options.ValidateScopes = true;
     options.ValidateOnBuild = true;
 });
 if (string.IsNullOrWhiteSpace(builder.Configuration["urls"]))
-    builder.WebHost.UseUrls("http://0.0.0.0:5000");
-
+    builder.WebHost.UseUrls("http://127.0.0.1:5000");
+var runtimePolicy = RuntimePolicy.Read(builder.Configuration, builder.Environment);
+builder.AddOperationalServices(runtimePolicy);
+builder.WebHost.ConfigureKestrel(o =>
+{
+    o.AddServerHeader = false;
+    o.Limits.MaxRequestBodySize = 1048576;
+    o.Limits.RequestHeadersTimeout = TimeSpan.FromSeconds(15);
+});
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddBusinessServices();
 builder.Services.AddApplicationManagers();
+builder.Services.AddOptions<ElectronicRegisterAPI.Domain.Configuration.AcademicTransferOptions>().Bind(builder.Configuration.GetSection(ElectronicRegisterAPI.Domain.Configuration.AcademicTransferOptions.Section)).Validate(ElectronicRegisterAPI.Domain.Configuration.AcademicTransferOptions.Valid, "Invalid academic transfer configuration").ValidateOnStart();
+builder.Services.AddSingleton(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<ElectronicRegisterAPI.Domain.Configuration.AcademicTransferOptions>>().Value);
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddApiServices();
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-});
-
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
-
-builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
-        };
-    });
-
+builder.Services.AddApiControllers(builder.Configuration);
+builder.Services.AddAuthentication(ElectronicRegisterAPI.Infrastructure.Security.InstitutionTokenContract.AccessScheme);
 builder.Services.AddAuthorization();
 ElectronicRegisterAPI.Api.Security.InstitutionAuthentication.AddInstitutionAuthentication(builder.Services, builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
-
 var app = builder.Build();
-
+app.UseOperationalPipeline();
 app.UseExceptionHandler();
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
 
-app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
+app.MapOperationalEndpoints();
 app.Run();

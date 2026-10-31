@@ -1,4 +1,3 @@
-﻿// Domain/Models/Student.cs
 namespace ElectronicRegisterAPI.Domain.Models;
 
 public class Student

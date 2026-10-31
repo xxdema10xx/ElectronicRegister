@@ -1,20 +1,26 @@
-﻿using ElectronicRegisterAPI.Api.ExceptionHandling;
+using ElectronicRegisterAPI.Api.ExceptionHandling;
 
 namespace ElectronicRegisterAPI.Api.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
+    // Shared by Program and the offline EndpointDataSource contract audit.
+    public static IMvcBuilder AddApiControllers(this IServiceCollection services, IConfiguration configuration) =>
+        services.AddControllers()
+            .AddApplicationPart(typeof(ElectronicRegisterAPI.Api.Controllers.InstitutionCalendarController).Assembly)
+            .ConfigureApplicationPartManager(parts => parts.FeatureProviders.Add(new ElectronicRegisterAPI.Api.Security.CalendarControllerFeatureProvider(configuration)))
+            .ConfigureApplicationPartManager(parts => parts.FeatureProviders.Add(new ElectronicRegisterAPI.Api.Security.FormativePlanControllerFeatureProvider(configuration)))
+            .AddJsonOptions(options => options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
+
     public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
         services.AddHttpContextAccessor();
-        services.AddScoped<ElectronicRegisterAPI.Api.Security.LegacyEndpointGate>();
-        services.Configure<Microsoft.AspNetCore.Mvc.MvcOptions>(options =>
-            options.Filters.AddService<ElectronicRegisterAPI.Api.Security.LegacyEndpointGate>());
+        services.AddScoped<ElectronicRegisterAPI.Api.Security.InstitutionEndpointGate>();
+        services.Configure<Microsoft.AspNetCore.Mvc.MvcOptions>(options => options.Filters.AddService<ElectronicRegisterAPI.Api.Security.InstitutionEndpointGate>());
         // Background worker for expired submissions
         services.AddHostedService<ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker>();
-
         return services;
     }
 }

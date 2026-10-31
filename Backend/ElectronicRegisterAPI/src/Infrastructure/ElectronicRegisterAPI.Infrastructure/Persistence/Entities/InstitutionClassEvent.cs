@@ -1,0 +1,15 @@
+namespace ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
+
+public sealed class InstitutionClassEvent
+{
+    public Guid InstitutionId { get; set; }
+    public Guid Id { get; set; }
+    public Guid ActorUserId { get; set; }
+    public Guid ActorMembershipId { get; set; }
+    public Guid ClassId { get; set; }
+    public long Revision { get; set; }
+    public string Action { get; set; } = null!;
+    public string? BeforeJson { get; set; }
+    public string? AfterJson { get; set; }
+    public DateTime OccurredAtUtc { get; set; }
+}

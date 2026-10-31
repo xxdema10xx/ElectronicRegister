@@ -4,7 +4,9 @@ public class CreateExamDto
 {
     public Guid ClassSubjectId { get; set; }
     public Guid? RetakeOfExamId { get; set; }
-    public required string Name { get; set; }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public DateTime AvailableFrom { get; set; }
     public DateTime AvailableUntil { get; set; }

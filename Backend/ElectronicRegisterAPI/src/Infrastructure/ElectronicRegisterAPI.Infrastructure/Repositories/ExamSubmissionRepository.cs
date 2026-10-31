@@ -1,3 +1,4 @@
+using ElectronicRegisterAPI.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Models;
@@ -11,33 +12,37 @@ using ElectronicRegisterAPI.Domain.Enums;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
-internal class ExamSubmissionRepository : IExamSubmissionRepository
+internal class ExamSubmissionRepository : IExamSubmissionRepository, IInstitutionBoundRepository, ISubmissionExpiryBoundRepository
 {
-    private readonly ElectronicRegisterContext _context;
-    private readonly ElectronicRegisterAPI.Domain.Interfaces.Services.ITimeProvider _timeProvider;
+    public bool Matches(SubmissionExpiryWork work) => _scope?.Matches(work) == true;
+    public Guid InstitutionId => _scope?.InstitutionId ?? Guid.Empty;
 
-    public ExamSubmissionRepository(ElectronicRegisterContext context, ElectronicRegisterAPI.Domain.Interfaces.Services.ITimeProvider timeProvider)
+    public bool Matches(ExamPrincipal principal) => _scope?.Matches(principal) == true;
+    private readonly ElectronicRegisterContext _context;
+    private readonly InstitutionExamDataScope? _scope;
+    private CancellationToken Ct => _scope?.CancellationToken ?? CancellationToken.None;
+    private IQueryable<T> Rows<T>()
+        where T : class => _scope?.Query<T>() ?? _context.Set<T>();
+    private Task SaveAsync() => _scope is null ? _context.SaveChangesAsync(Ct) : _scope.SaveAsync();
+    private readonly ElectronicRegisterAPI.Domain.Interfaces.Services.ITimeProvider _timeProvider;
+    public ExamSubmissionRepository(ElectronicRegisterContext context, ElectronicRegisterAPI.Domain.Interfaces.Services.ITimeProvider timeProvider, InstitutionExamDataScope? scope = null)
     {
         _context = context;
+        _scope = scope;
         _timeProvider = timeProvider;
     }
 
     public async Task<ExamSubmission?> GetByIdAsync(Guid id, bool withAnswers = false)
     {
-        IQueryable<SubmissionEntity> query = _context.ExamSubmissions.AsNoTracking();
-
+        IQueryable<SubmissionEntity> query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AsNoTracking();
         if (withAnswers)
         {
-            query = query
-                .Include(s => s.SubmissionAnswers)
-                    .ThenInclude(a => a.Options);
+            query = query.Include(s => s.SubmissionAnswers).ThenInclude(a => a.Options);
         }
 
-        var entity = await query.FirstOrDefaultAsync(s => s.Id == id);
-
+        var entity = await query.FirstOrDefaultAsync(s => s.Id == id, Ct);
         if (entity is null)
             return null;
-
         return MapToModel(entity, withAnswers);
     }
 
@@ -46,96 +51,77 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
         // Must be executed inside an existing EF Core transaction to ensure FOR UPDATE lock is held
         if (_context.Database.CurrentTransaction == null)
             throw new InvalidOperationException("GetByIdForUpdateAsync requires an ambient EF Core transaction. Call inside ITransactionManager.ExecuteAsync.");
+        if (_scope is not null)
+        {
+            await _scope.LockTechnicalTenantAsync();
+            if (await _scope.LockSubmission(id).AsTracking().FirstOrDefaultAsync(Ct)is null)
+                return null;
+            var scoped = _scope.Submissions.AsTracking().Where(s => s.Id == id);
+            if (withAnswers)
+                scoped = scoped.Include(s => s.SubmissionAnswers).ThenInclude(a => a.Options);
+            var authorized = await scoped.FirstOrDefaultAsync(Ct);
+            return authorized is null ? null : MapToModel(authorized, withAnswers);
+        }
 
         // Use FromSqlRaw with FOR UPDATE to acquire row lock within the existing transaction
         // Build base query including answers if requested
         IQueryable<SubmissionEntity> query = _context.ExamSubmissions;
-
         if (withAnswers)
         {
-            query = query
-                .Include(s => s.SubmissionAnswers)
-                    .ThenInclude(a => a.Options);
+            query = query.Include(s => s.SubmissionAnswers).ThenInclude(a => a.Options);
         }
 
         // Execute raw SQL on the mapped table to ensure FOR UPDATE is applied
         var sql = "SELECT * FROM exam_submission WHERE id = {0} FOR UPDATE";
-        var lockedEntityQuery = _context.ExamSubmissions.FromSqlRaw(sql, id).AsTracking();
+        var lockedEntityQuery = (_scope is null ? _context.ExamSubmissions.FromSqlRaw(sql, id) : _scope.LockSubmission(id)).AsTracking();
         if (withAnswers)
         {
             lockedEntityQuery = lockedEntityQuery.Include(s => s.SubmissionAnswers).ThenInclude(a => a.Options);
         }
 
-        var lockedEntity = await lockedEntityQuery.FirstOrDefaultAsync();
-
+        var lockedEntity = await lockedEntityQuery.FirstOrDefaultAsync(Ct);
         return lockedEntity is null ? null : MapToModel(lockedEntity, withAnswers);
     }
 
     public async Task<ExamSubmission?> GetByExamAndStudentAsync(Guid examId, Guid studentId, bool withAnswers = false)
     {
-        IQueryable<SubmissionEntity> query = _context.ExamSubmissions.AsNoTracking();
-
+        IQueryable<SubmissionEntity> query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AsNoTracking();
         if (withAnswers)
         {
-            query = query
-                .Include(s => s.SubmissionAnswers)
-                    .ThenInclude(a => a.Options);
+            query = query.Include(s => s.SubmissionAnswers).ThenInclude(a => a.Options);
         }
 
-        var entity = await query.FirstOrDefaultAsync(s => s.ExamId == examId && s.StudentId == studentId);
-
+        var entity = await query.FirstOrDefaultAsync(s => s.ExamId == examId && s.StudentId == studentId, Ct);
         return entity is null ? null : MapToModel(entity, withAnswers);
     }
 
     public async Task<List<ExamSubmission>> GetByExamAsync(Guid examId, SubmissionStatus? status = null)
     {
-        var query = _context.ExamSubmissions.AsNoTracking().AsQueryable();
-
+        var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AsNoTracking().AsQueryable();
         query = query.Where(s => s.ExamId == examId);
-
         if (status.HasValue)
         {
             var dbStatus = SubmissionStatusMapper.ToDbString(status.Value);
             query = query.Where(s => s.Status == dbStatus);
         }
 
-        var entities = await query
-            .OrderBy(s => s.StartedAt)
-            .ToListAsync();
-
+        var entities = await query.OrderBy(s => s.StartedAt).ToListAsync(Ct);
         return entities.Select(e => MapToModel(e, withAnswers: false)).ToList();
     }
 
     public async Task<List<ExamSubmission>> GetByStudentAsync(Guid studentId)
     {
-        var entities = await _context.ExamSubmissions
-            .AsNoTracking()
-            .Where(s => s.StudentId == studentId)
-            .OrderByDescending(s => s.StartedAt)
-            .ToListAsync();
-
-        return entities.Select(e => MapToModel(e, withAnswers: false)).ToList();
-    }
-
-    public async Task<List<ExamSubmission>> GetExpiredInProgressAsync(DateTime utcNow, int take)
-    {
-        var dbStatus = SubmissionStatusMapper.ToDbString(Domain.Enums.SubmissionStatus.InProgress);
-
-        // For worker search we only need ids and minimal fields. However repository contract requires returning models with answers for now.
-        var entities = await _context.ExamSubmissions
-            .AsNoTracking()
-            .Where(s => s.Status == dbStatus && s.DeadlineAt <= utcNow)
-            .OrderBy(s => s.DeadlineAt)
-            .Take(take)
-            .ToListAsync();
-
+        var entities = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().AsNoTracking().Where(s => s.StudentId == studentId).OrderByDescending(s => s.StartedAt).ToListAsync(Ct);
         return entities.Select(e => MapToModel(e, withAnswers: false)).ToList();
     }
 
     public async Task AddAsync(ExamSubmission submission)
     {
+        if (_scope?.IsTechnical == true)
+            throw new UnauthorizedAccessException();
         var entity = new SubmissionEntity
         {
+            DisplayOrderJson = submission.DisplayOrderJson,
             Id = submission.Id,
             ExamId = submission.ExamId,
             StudentId = submission.StudentId,
@@ -143,13 +129,13 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
             StartedAt = submission.StartedAt,
             DeadlineAt = submission.DeadlineAt,
             SubmittedAt = submission.SubmittedAt,
-                LastClientRevision = (ulong)submission.Revision,
-                SubmitReason = submission.SubmitReason.HasValue ? SubmitReasonMapper.ToDbString(submission.SubmitReason.Value) : null,
-                ViolationCount = submission.ViolationCount,
-                OpenMaxPoints = submission.OpenMaxPoints,
-                SuggestedGrade = submission.SuggestedGrade,
-                ReviewedByUserId = submission.ReviewedByUserId,
-                FinalizedAt = submission.FinalizedAt,
+            LastClientRevision = (ulong)submission.Revision,
+            SubmitReason = submission.SubmitReason.HasValue ? SubmitReasonMapper.ToDbString(submission.SubmitReason.Value) : null,
+            ViolationCount = submission.ViolationCount,
+            OpenMaxPoints = submission.OpenMaxPoints,
+            SuggestedGrade = submission.SuggestedGrade,
+            ReviewedByUserId = submission.ReviewedByUserId,
+            FinalizedAt = submission.FinalizedAt,
             MaxScore = submission.MaxScore,
             PassingScore = submission.PassingScore,
             ClosedScore = submission.ClosedScore,
@@ -160,7 +146,6 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
-
         // map answers if present
         if (submission.Answers != null && submission.Answers.Count > 0)
         {
@@ -177,10 +162,9 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
                     TeacherComment = a.TeacherComment,
                     LastSavedAt = DateTime.UtcNow
                 };
-
                 if (a.SelectedOptionIds != null && a.SelectedOptionIds.Count > 0)
                 {
-                    var options = await _context.QuestionOptions.Where(o => a.SelectedOptionIds.Contains(o.Id)).ToListAsync();
+                    var options = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.QuestionOption>().Where(o => a.SelectedOptionIds.Contains(o.Id)).ToListAsync(Ct);
                     foreach (var opt in options)
                         answerEntity.Options.Add(opt);
                 }
@@ -190,32 +174,32 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
         }
 
         _context.ExamSubmissions.Add(entity);
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 
     public async Task<SaveAnswersResult> SaveAnswersAsync(Guid submissionId, long clientRevision, IReadOnlyList<SubmissionAnswer> answers)
     {
+        if (_scope?.IsTechnical == true)
+            throw new UnauthorizedAccessException();
         var ambient = _context.Database.CurrentTransaction != null;
-        var tx = ambient ? null : await _context.Database.BeginTransactionAsync();
-
+        await using var tx = ambient ? null : await _context.Database.BeginTransactionAsync(Ct);
         try
         {
             // Acquire row lock to protect revision and answers (SELECT ... FOR UPDATE)
             var sql = "SELECT * FROM exam_submission WHERE id = {0} FOR UPDATE";
-            var lockedQuery = _context.ExamSubmissions.FromSqlRaw(sql, submissionId).AsTracking();
+            var lockedQuery = (_scope is null ? _context.ExamSubmissions.FromSqlRaw(sql, submissionId) : _scope.LockSubmission(submissionId)).AsTracking();
             lockedQuery = lockedQuery.Include(s => s.SubmissionAnswers).ThenInclude(a => a.Options);
-            var entity = await lockedQuery.FirstOrDefaultAsync();
-
+            var entity = await lockedQuery.FirstOrDefaultAsync(Ct);
             if (entity is null)
             {
                 throw new KeyNotFoundException("La submission non esiste.");
             }
 
             var currentRevision = (long)entity.LastClientRevision;
-
             if (clientRevision <= currentRevision)
             {
-                if (tx != null) await tx.RollbackAsync();
+                if (tx != null)
+                    await tx.RollbackAsync();
                 return new SaveAnswersResult
                 {
                     Accepted = false,
@@ -227,14 +211,20 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
             // Ensure submission in progress and not past deadline
             if (entity.Status != SubmissionStatusMapper.ToDbString(Domain.Enums.SubmissionStatus.InProgress))
             {
-                throw new InvalidOperationException("Submission non è in stato InProgress.");
+                throw ElectronicRegisterAPI.Domain.Exceptions.SubmissionErrors.Conflict("Submission non è in stato InProgress.");
             }
 
             var now = _timeProvider.UtcNow;
             if (entity.DeadlineAt <= now)
             {
-                if (tx != null) await tx.RollbackAsync();
-                return new SaveAnswersResult { Accepted = false, CurrentRevision = currentRevision, SavedAt = null };
+                if (tx != null)
+                    await tx.RollbackAsync();
+                return new SaveAnswersResult
+                {
+                    Accepted = false,
+                    CurrentRevision = currentRevision,
+                    SavedAt = null
+                };
             }
 
             // Replace answers completely
@@ -245,15 +235,11 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
                 var dupQ = answers.GroupBy(a => a.QuestionId).FirstOrDefault(g => g.Count() > 1);
                 if (dupQ != null)
                 {
-                    throw new InvalidOperationException($"Risposte duplicate per la domanda {dupQ.Key}.");
+                    throw ElectronicRegisterAPI.Domain.Exceptions.SubmissionErrors.InvalidRequest($"Risposte duplicate per la domanda {dupQ.Key}.");
                 }
 
                 // load questions and options for the exam (persistence entities)
-                var questionEntities = await _context.Questions
-                    .Where(q => q.ExamId == entity.ExamId)
-                    .Include(q => q.QuestionOptions)
-                    .ToListAsync();
-
+                var questionEntities = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Question>().Where(q => q.ExamId == entity.ExamId).Include(q => q.QuestionOptions).ToListAsync(Ct);
                 foreach (var a in answers)
                 {
                     var q = questionEntities.FirstOrDefault(x => x.Id == a.QuestionId);
@@ -265,7 +251,7 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
                     // ensure no duplicate selected options
                     if (a.SelectedOptionIds != null && a.SelectedOptionIds.Count != a.SelectedOptionIds.Distinct().Count())
                     {
-                        throw new InvalidOperationException($"Opzioni duplicate nella risposta per la domanda {a.QuestionId}.");
+                        throw ElectronicRegisterAPI.Domain.Exceptions.SubmissionErrors.InvalidRequest($"Opzioni duplicate nella risposta per la domanda {a.QuestionId}.");
                     }
 
                     // validate selected options belong to question
@@ -284,23 +270,23 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
                     {
                         if (a.SelectedOptionIds != null && a.SelectedOptionIds.Count > 0)
                         {
-                            throw new InvalidOperationException($"La domanda {a.QuestionId} è di tipo Open e non può avere opzioni selezionate.");
+                            throw ElectronicRegisterAPI.Domain.Exceptions.SubmissionErrors.InvalidRequest($"La domanda {a.QuestionId} è di tipo Open e non può avere opzioni selezionate.");
                         }
                     }
                     else if (qType == Domain.Enums.QuestionType.Single)
                     {
                         if (a.SelectedOptionIds != null && a.SelectedOptionIds.Count > 1)
                         {
-                            throw new InvalidOperationException($"La domanda {a.QuestionId} è di tipo Single e non può avere più di un'opzione selezionata.");
+                            throw ElectronicRegisterAPI.Domain.Exceptions.SubmissionErrors.InvalidRequest($"La domanda {a.QuestionId} è di tipo Single e non può avere più di un'opzione selezionata.");
                         }
                     }
                 }
             }
 
             _context.SubmissionAnswers.RemoveRange(entity.SubmissionAnswers);
-
             var newAnswers = new List<SubmissionAnswerEntity>();
-
+            var selectedIds = (answers ?? Array.Empty<SubmissionAnswer>()).SelectMany(a => a.SelectedOptionIds ?? new List<Guid>()).Distinct().ToList();
+            var selectedOptions = selectedIds.Count == 0 ? new Dictionary<Guid, QuestionOptionEntity>() : await Rows<QuestionOptionEntity>().Where(o => selectedIds.Contains(o.Id)).ToDictionaryAsync(o => o.Id, Ct);
             if (answers != null)
             {
                 foreach (var a in answers)
@@ -317,11 +303,10 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
                         TeacherComment = null,
                         LastSavedAt = now
                     };
-
                     if (a.SelectedOptionIds != null && a.SelectedOptionIds.Count > 0)
                     {
-                        var opts = await _context.QuestionOptions.Where(o => a.SelectedOptionIds.Contains(o.Id)).ToListAsync();
-                        foreach (var o in opts) ae.Options.Add(o);
+                        foreach (var optionId in a.SelectedOptionIds)
+                            ae.Options.Add(selectedOptions[optionId]);
                     }
 
                     newAnswers.Add(ae);
@@ -329,15 +314,12 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
             }
 
             await _context.SubmissionAnswers.AddRangeAsync(newAnswers);
-
             // update revision
             entity.LastClientRevision = (ulong)clientRevision;
             entity.UpdatedAt = DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
-
-            if (tx != null) await tx.CommitAsync();
-
+            await SaveAsync();
+            if (tx != null)
+                await tx.CommitAsync();
             return new SaveAnswersResult
             {
                 Accepted = true,
@@ -347,35 +329,36 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
         }
         catch
         {
-            if (tx != null) await tx.RollbackAsync();
+            if (tx != null)
+                await tx.RollbackAsync();
             throw;
         }
     }
 
     public async Task<bool> TryBeginSubmitAsync(Guid submissionId, DateTime submittedAt, SubmitReason reason)
     {
-        var entity = await _context.ExamSubmissions.FirstOrDefaultAsync(s => s.Id == submissionId);
-        if (entity is null) throw new KeyNotFoundException("La submission non esiste.");
-
+        if (_scope?.IsTechnical == true && reason != SubmitReason.TimeExpired)
+            throw new UnauthorizedAccessException();
+        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().FirstOrDefaultAsync(s => s.Id == submissionId, Ct);
+        if (entity is null)
+            throw new KeyNotFoundException("La submission non esiste.");
         // Only allow if still in progress and not previously submitted
         var inProgress = entity.Status == SubmissionStatusMapper.ToDbString(Domain.Enums.SubmissionStatus.InProgress);
         if (!inProgress || entity.SubmittedAt.HasValue)
             return false;
-
         entity.SubmittedAt = submittedAt;
         entity.SubmitReason = SubmitReasonMapper.ToDbString(reason);
         entity.Status = SubmissionStatusMapper.ToDbString(Domain.Enums.SubmissionStatus.PendingReview);
         entity.UpdatedAt = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
+        await SaveAsync();
         return true;
     }
 
     public async Task UpdateAfterGradingAsync(ExamSubmission submission)
     {
-        var entity = await _context.ExamSubmissions.FirstOrDefaultAsync(s => s.Id == submission.Id);
-        if (entity is null) throw new KeyNotFoundException("La submission non esiste.");
-
+        var entity = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ExamSubmission>().FirstOrDefaultAsync(s => s.Id == submission.Id, Ct);
+        if (entity is null)
+            throw new KeyNotFoundException("La submission non esiste.");
         entity.Status = SubmissionStatusMapper.ToDbString(submission.Status);
         entity.MaxScore = submission.MaxScore;
         entity.PassingScore = submission.PassingScore;
@@ -384,19 +367,17 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
         entity.TotalScore = submission.TotalScore;
         entity.Passed = submission.Passed;
         entity.GradeId = submission.GradeId;
-            entity.OpenMaxPoints = submission.OpenMaxPoints;
-            entity.SuggestedGrade = submission.SuggestedGrade;
-            entity.OverrideReason = submission.OverrideReason;
-            entity.ReviewedByUserId = submission.ReviewedByUserId;
-            entity.FinalizedAt = submission.FinalizedAt;
+        entity.OpenMaxPoints = submission.OpenMaxPoints;
+        entity.SuggestedGrade = submission.SuggestedGrade;
+        entity.OverrideReason = submission.OverrideReason;
+        entity.ReviewedByUserId = submission.ReviewedByUserId;
+        entity.FinalizedAt = submission.FinalizedAt;
         entity.UpdatedAt = DateTime.UtcNow;
-
         // Also persist awarded points and teacher comments on answers if present in the model
         if (submission.Answers != null && submission.Answers.Count > 0)
         {
             // load tracked answer entities
-            var answerEntities = await _context.SubmissionAnswers.Where(a => a.SubmissionId == submission.Id).ToListAsync();
-
+            var answerEntities = await Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.SubmissionAnswer>().Where(a => a.SubmissionId == submission.Id).ToListAsync(Ct);
             foreach (var a in submission.Answers)
             {
                 var ae = answerEntities.FirstOrDefault(x => x.Id == a.Id);
@@ -410,11 +391,13 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
             }
         }
 
-        await _context.SaveChangesAsync();
+        await SaveAsync();
     }
 
     public async Task UpdateAfterReviewAsync(ExamSubmission submission)
     {
+        if (_scope?.IsTechnical == true)
+            throw new UnauthorizedAccessException();
         // Same fields updated after review
         await UpdateAfterGradingAsync(submission);
     }
@@ -423,13 +406,14 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
     {
         var model = new ExamSubmission
         {
+            DisplayOrderJson = entity.DisplayOrderJson,
             Id = entity.Id,
             ExamId = entity.ExamId,
             StudentId = entity.StudentId,
             Status = SubmissionStatusMapper.FromDbString(entity.Status),
-            StartedAt = entity.StartedAt,
-            DeadlineAt = entity.DeadlineAt,
-            SubmittedAt = entity.SubmittedAt,
+            StartedAt = DbUtc.Read(entity.StartedAt),
+            DeadlineAt = DbUtc.Read(entity.DeadlineAt),
+            SubmittedAt = DbUtc.Read(entity.SubmittedAt),
             Revision = (long)entity.LastClientRevision,
             MaxScore = entity.MaxScore,
             PassingScore = entity.PassingScore,
@@ -444,25 +428,14 @@ internal class ExamSubmissionRepository : IExamSubmissionRepository
             SuggestedGrade = entity.SuggestedGrade,
             OverrideReason = entity.OverrideReason,
             ReviewedByUserId = entity.ReviewedByUserId,
-            FinalizedAt = entity.FinalizedAt,
-            CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt,
+            FinalizedAt = DbUtc.Read(entity.FinalizedAt),
+            CreatedAt = DbUtc.Read(entity.CreatedAt),
+            UpdatedAt = DbUtc.Read(entity.UpdatedAt),
             Answers = new List<SubmissionAnswer>()
         };
-
         if (withAnswers && entity.SubmissionAnswers != null)
         {
-            model.Answers = entity.SubmissionAnswers.Select(a => new SubmissionAnswer
-            {
-                Id = a.Id,
-                SubmissionId = a.SubmissionId,
-                QuestionId = a.QuestionId,
-                OpenText = a.OpenText,
-                IsCorrect = a.IsCorrect,
-                AwardedPoints = a.AwardedPoints,
-                TeacherComment = a.TeacherComment,
-                SelectedOptionIds = a.Options?.Select(o => o.Id).ToList() ?? new List<Guid>()
-            }).ToList();
+            model.Answers = entity.SubmissionAnswers.Select(a => new SubmissionAnswer { Id = a.Id, SubmissionId = a.SubmissionId, QuestionId = a.QuestionId, OpenText = a.OpenText, IsCorrect = a.IsCorrect, AwardedPoints = a.AwardedPoints, TeacherComment = a.TeacherComment, SelectedOptionIds = a.Options?.Select(o => o.Id).ToList() ?? new List<Guid>() }).ToList();
         }
 
         return model;

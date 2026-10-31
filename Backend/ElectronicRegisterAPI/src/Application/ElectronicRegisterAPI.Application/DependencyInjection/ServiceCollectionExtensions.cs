@@ -1,0 +1,40 @@
+using ElectronicRegisterAPI.Domain.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
+using ElectronicRegisterAPI.Domain.Interfaces.Managers;
+using ElectronicRegisterAPI.Application.Managers;
+
+namespace ElectronicRegisterAPI.Application.DependencyInjection;
+
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddApplicationManagers(this IServiceCollection services)
+    {
+        services.AddScoped<IIdentityAccountManager, IdentityAccountManager>();
+        services.AddScoped<ElectronicRegisterAPI.Application.Services.InstitutionSchoolAuthorization>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IInstitutionCalendarManager, InstitutionCalendarManager>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IInstitutionFormativePlanManager, InstitutionFormativePlanManager>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IInstitutionEmailManager, InstitutionEmailManager>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IInstitutionImportManager, InstitutionImportManager>();
+        services.AddScoped<IInstitutionCourseManager, InstitutionCourseManager>();
+        services.AddScoped<IInstitutionMembershipAdminManager, InstitutionMembershipAdminManager>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IInstitutionOnboardingManager, InstitutionOnboardingManager>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IInstitutionGovernanceManager, InstitutionGovernanceManager>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IMembershipAuditManager, MembershipAuditManager>();
+        services.AddScoped<IInstitutionStudentManager, InstitutionStudentManager>();
+        Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions.TryAddSingleton(services, new ElectronicRegisterAPI.Domain.Configuration.AcademicTransferOptions());
+        Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions.TryAddSingleton(services, TimeProvider.System);
+        services.AddScoped<IInstitutionStudentTransferManager, InstitutionStudentTransferManager>();
+        services.AddScoped<IInstitutionTeacherManager, InstitutionTeacherManager>();
+        services.AddScoped<IInstitutionSubjectManager, InstitutionSubjectManager>();
+        services.AddScoped<IInstitutionClassManager, InstitutionClassManager>();
+        services.AddScoped<IInstitutionAcademicCatalogManager, InstitutionAcademicCatalogManager>();
+        services.AddScoped<IInstitutionClassSubjectManager, InstitutionClassSubjectManager>();
+        services.AddScoped<IInstitutionCampusManager, InstitutionCampusManager>();
+        services.AddScoped<IInstitutionExamManager, InstitutionExamManager>();
+        services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Services.IInstitutionExpiryService, ElectronicRegisterAPI.Application.Services.InstitutionExpiryService>();
+        services.AddScoped<IInstitutionAuthManager, InstitutionAuthManager>();
+        services.AddScoped<IInstitutionProfileResolver, ElectronicRegisterAPI.Application.Services.InstitutionProfileResolver>();
+        return services;
+    }
+}
