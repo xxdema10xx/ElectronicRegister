@@ -18,8 +18,8 @@ import FormModal from "../components/FormModal";
 import GradeCircle from "../components/GradeCircle";
 import { filterBySearch } from "../utils/search";
 import { getMyClasses } from "../api/classService";
-import { getGradesForStudent, addClassGrade, updateClassGrade, deleteClassGrade } from "../api/classGradeService";
-import { notify, confirmAction } from "../utils/dialogs";
+import { getGradesForStudent, addClassGrade, updateClassGrade } from "../api/classGradeService";
+import { notify } from "../utils/dialogs";
 
 const initials = (a, b) => `${a?.[0] ?? ""}${b?.[0] ?? ""}`.toUpperCase();
 
@@ -28,44 +28,47 @@ const DETAIL_TABS = [
   { key: "students", label: "Studenti" },
 ];
 
-// Il collegamento classe↔docente non esiste ancora lato backend: questi dati sono simulati
-// (vedi getMyClasses in classService.js), quindi lo segnaliamo in UI per non trarre in inganno.
-const MockBadge = () => (
-  <View style={{ backgroundColor: "#FEF3C7", borderRadius: 12, paddingVertical: 4, paddingHorizontal: 10 }}>
-    <Text style={{ color: "#92400E", fontSize: 12, fontWeight: "700" }}>Dati di prova</Text>
-  </View>
-);
-
 // Voti di uno studente, limitati alle materie che il docente insegna in questa classe: può
-// aggiungere, modificare ed eliminare un voto, ma solo per quelle materie.
-function StudentGradesSheet({ student, klassSubjects, onClose }) {
+// aggiungere e modificare un voto, ma solo per quelle materie (l'eliminazione è riservata all'admin).
+function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
   const [grades, setGrades] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(null);
   const [newGrade, setNewGrade] = useState({ subjectId: "", value: "", date: "" });
+  const [saving, setSaving] = useState(false);
 
-  const subjectName = (id) => klassSubjects.find(sb => sb.subjectId === id)?.subjectName || id?.slice(0, 8) || "—";
-  const load = useCallback(() => setGrades(getGradesForStudent(student.id)), [student.id]);
+  const subjectName = (g) => klassSubjects.find(sb => sb.subjectId === g.subjectId)?.subjectName || g.subjectName || "—";
+  const load = useCallback(async () => {
+    try {
+      const all = await getGradesForStudent(student.id, token);
+      setGrades(all.filter(g => klassSubjects.some(sb => sb.subjectId === g.subjectId)));
+    } catch (e) { notify("Errore", e.message); setGrades([]); }
+  }, [student.id, token, klassSubjects]);
   useEffect(() => { load(); }, [load]);
 
-  function addGrade() {
+  const validValue = (v) => { const n = parseFloat(String(v).replace(",", ".")); return n >= 1 && n <= 10; };
+
+  async function addGrade() {
     if (!newGrade.subjectId || !newGrade.value || !newGrade.date) return notify("Attenzione", "Compila materia, voto e data.");
-    const n = Number(newGrade.value);
-    if (!(n >= 1 && n <= 10)) return notify("Attenzione", "Il voto deve essere compreso tra 1 e 10.");
-    addClassGrade({ studentId: student.id, ...newGrade });
-    setShowAdd(false);
-    setNewGrade({ subjectId: "", value: "", date: "" });
-    load();
+    if (!validValue(newGrade.value)) return notify("Attenzione", "Il voto deve essere compreso tra 1 e 10.");
+    setSaving(true);
+    try {
+      await addClassGrade({ studentId: student.id, ...newGrade }, token);
+      setShowAdd(false);
+      setNewGrade({ subjectId: "", value: "", date: "" });
+      load();
+    } catch (e) { notify("Errore", e.message); }
+    finally { setSaving(false); }
   }
-  function saveEdit() {
-    const n = Number(showEdit.value);
-    if (!(n >= 1 && n <= 10)) return notify("Attenzione", "Il voto deve essere compreso tra 1 e 10.");
-    updateClassGrade(showEdit.id, { subjectId: showEdit.subjectId, value: showEdit.value, date: showEdit.date });
-    setShowEdit(null);
-    load();
-  }
-  function removeGrade(id) {
-    confirmAction("Elimina voto", "Eliminare questo voto?", () => { deleteClassGrade(id); load(); });
+  async function saveEdit() {
+    if (!validValue(showEdit.value)) return notify("Attenzione", "Il voto deve essere compreso tra 1 e 10.");
+    setSaving(true);
+    try {
+      await updateClassGrade(showEdit.id, { subjectId: showEdit.subjectId, value: showEdit.value, date: showEdit.date }, token);
+      setShowEdit(null);
+      load();
+    } catch (e) { notify("Errore", e.message); }
+    finally { setSaving(false); }
   }
 
   return (
@@ -87,13 +90,10 @@ function StudentGradesSheet({ student, klassSubjects, onClose }) {
             <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
               <GradeCircle value={g.value} />
               <View style={{ flex: 1, marginLeft: 12 }}>
-                <Text style={s.itemTitle}>{subjectName(g.subjectId)}</Text>
+                <Text style={s.itemTitle}>{subjectName(g)}</Text>
                 <Text style={s.itemSub}>{g.date}</Text>
               </View>
-              <View style={{ flexDirection: "row", gap: 6 }}>
-                <TouchableOpacity onPress={() => setShowEdit({ ...g })}><Ionicons name="create-outline" size={26} color={C.footer} /></TouchableOpacity>
-                <TouchableOpacity onPress={() => removeGrade(g.id)}><Ionicons name="trash-outline" size={26} color={C.footer} /></TouchableOpacity>
-              </View>
+              <TouchableOpacity onPress={() => setShowEdit({ ...g })}><Ionicons name="create-outline" size={26} color={C.footer} /></TouchableOpacity>
             </Card>
           )}
         />
@@ -104,7 +104,7 @@ function StudentGradesSheet({ student, klassSubjects, onClose }) {
           onSelect={(v) => setNewGrade(f => ({ ...f, subjectId: v }))} placeholder="Seleziona materia…" emptyMessage="Nessuna materia insegnata in questa classe" />
         <Input label="Voto (1-10)" value={newGrade.value} onChangeText={v => setNewGrade(f => ({ ...f, value: v }))} keyboardType="decimal-pad" />
         <DateField label="Data" value={newGrade.date} onChange={(v) => setNewGrade(f => ({ ...f, date: v }))} />
-        <Btn label="Salva" onPress={addGrade} />
+        <Btn label="Salva" onPress={addGrade} loading={saving} />
       </FormModal>
 
       <FormModal visible={!!showEdit} title="Modifica voto" onClose={() => setShowEdit(null)}>
@@ -113,7 +113,7 @@ function StudentGradesSheet({ student, klassSubjects, onClose }) {
             onSelect={(v) => setShowEdit(f => ({ ...f, subjectId: v }))} placeholder="Seleziona materia…" />
           <Input label="Voto" value={String(showEdit.value)} onChangeText={v => setShowEdit(f => ({ ...f, value: v }))} keyboardType="decimal-pad" />
           <DateField label="Data" value={showEdit.date} onChange={(v) => setShowEdit(f => ({ ...f, date: v }))} />
-          <Btn label="Aggiorna" onPress={saveEdit} />
+          <Btn label="Aggiorna" onPress={saveEdit} loading={saving} />
         </>}
       </FormModal>
     </View>
@@ -142,7 +142,7 @@ export default function MyClassesScreen() {
   useEffect(() => { load(); }, [load]);
 
   if (klass && openStudent) {
-    return <StudentGradesSheet student={openStudent} klassSubjects={klass.subjects} onClose={() => setOpenStudent(null)} />;
+    return <StudentGradesSheet student={openStudent} klassSubjects={klass.subjects} token={token} onClose={() => setOpenStudent(null)} />;
   }
 
   if (klass) {
@@ -153,7 +153,6 @@ export default function MyClassesScreen() {
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 8 }}>
             <TouchableOpacity onPress={() => setKlass(null)}><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
             <Text style={{ fontSize: 20, fontWeight: "700", color: C.text, flex: 1 }}>Classe {klass.name}</Text>
-            <MockBadge />
           </View>
         </View>
 
@@ -202,11 +201,12 @@ export default function MyClassesScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
-        <SectionHeader title="Classi" action={<MockBadge />} />
+        <SectionHeader title="Classi" />
         <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca classe…"
           placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
       </View>
-      {loading ? <Loader /> : visibleClasses.length === 0 ? <EmptyState message="Nessuna classe assegnata" /> :
+      {loading ? <Loader /> : visibleClasses.length === 0 ? <EmptyState message={user?.teacherId
+        ? "Nessuna classe assegnata" : "Il tuo account non è collegato a un profilo docente: contatta la segreteria"} /> :
         <FlatList
           data={visibleClasses}
           keyExtractor={k => k.id}

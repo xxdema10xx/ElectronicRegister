@@ -10,14 +10,15 @@ import Input from "./Input";
 import SelectField from "./SelectField";
 import DateField from "./DateField";
 import Btn from "./Btn";
-import { getGradesPage, createGrade, updateGrade, deleteGrade } from "../api/gradeService";
+import { getGradesPage, getGradeFilters, createGrade, updateGrade, deleteGrade } from "../api/gradeService";
 import { getSubjects } from "../api/subjectService";
 import { formatDateForDisplay, toISODate } from "../utils/dateUtils";
 import { notify, confirmAction } from "../utils/dialogs";
 
 const emptyForm = () => ({ id: null, subjectId: "", value: "", date: toISODate(new Date()) });
 
-export default function StudentGrades({ student, token, onClose }) {
+// canDelete: solo l'admin può eliminare un voto (lo Staff può inserirlo e modificarlo)
+export default function StudentGrades({ student, token, onClose, canDelete = true }) {
   const [grades, setGrades] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +31,8 @@ export default function StudentGrades({ student, token, onClose }) {
     try {
       const [page, subs] = await Promise.all([
         getGradesPage({ pageNumber: 1, pageSize: 100, studentId: student.id }, token),
-        getSubjects(undefined, token),
+        // lo Staff non può leggere /subjects: si ripiega sulle materie presenti nei filtri dei voti
+        getSubjects(undefined, token).catch(() => getGradeFilters(token).then(f => f?.subjects || []).catch(() => [])),
       ]);
       const items = Array.isArray(page?.items) ? page.items : [];
       setGrades(items.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))));
@@ -43,7 +45,7 @@ export default function StudentGrades({ student, token, onClose }) {
 
   useEffect(() => { setForm(null); load(); }, [load]);
 
-  const subjectName = id => subjects.find(x => x.id === id)?.name || "—";
+  const subjectName = g => g.subjectName || subjects.find(x => x.id === g.subjectId)?.name || "—";
 
   async function save() {
     const value = parseFloat(String(form.value).replace(",", "."));
@@ -99,15 +101,17 @@ export default function StudentGrades({ student, token, onClose }) {
             <View key={g.id} style={[s.profileRow, { alignItems: "center", paddingVertical: 10 }]}>
               <GradeCircle value={g.value} />
               <View style={{ flex: 1, marginLeft: 12 }}>
-                <Text style={s.itemTitle}>{subjectName(g.subjectId)}</Text>
+                <Text style={s.itemTitle}>{subjectName(g)}</Text>
                 <Text style={s.itemSub}>{formatDateForDisplay(g.date)}</Text>
               </View>
               <TouchableOpacity onPress={() => setForm({ id: g.id, subjectId: g.subjectId, value: String(g.value), date: g.date })} style={{ padding: 6 }}>
                 <Ionicons name="create-outline" size={26} color={C.footer} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => remove(g)} style={{ padding: 6 }}>
-                <Ionicons name="trash-outline" size={26} color={C.footer} />
-              </TouchableOpacity>
+              {canDelete && (
+                <TouchableOpacity onPress={() => remove(g)} style={{ padding: 6 }}>
+                  <Ionicons name="trash-outline" size={26} color={C.footer} />
+                </TouchableOpacity>
+              )}
             </View>
           ))}
         </View>

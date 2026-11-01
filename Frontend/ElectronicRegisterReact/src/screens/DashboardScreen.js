@@ -84,8 +84,10 @@ export default function DashboardScreen({ navigate }) {
       examApi.listExams().then(d => set(() => setExams(toList(d)))).catch(() => set(() => setExams([])));
       getStudents(undefined, token).then(d => set(() => setCounts(c => ({ ...c, students: toList(d).length })))).catch(() => {});
     }
-    if (role === "admin") {
+    if (role === "admin" || role === "staff") {
       getTeachers(token).then(d => set(() => setCounts(c => ({ ...c, teachers: toList(d).length })))).catch(() => {});
+    }
+    if (role === "admin") {
       getUsers("", token).then(d => set(() => setCounts(c => ({ ...c, users: toList(d).length })))).catch(() => {});
     }
     if (role === "teacher") getMyClasses(user?.teacherId, token).then(d => set(() => setMyClasses(toList(d)))).catch(() => set(() => setMyClasses([])));
@@ -151,11 +153,15 @@ export default function DashboardScreen({ navigate }) {
     ...(role === "admin" ? [
       nav("school-outline", "Studenti", "students"), nav("people-outline", "Classi", "classes"),
       nav("pencil-outline", "Professori", "teachers"), nav("library-outline", "Materie", "subjects"),
-      nav("people-circle-outline", "Utenti", "users"), nav("document-text-outline", "Esami", "exams"),
+      nav("people-circle-outline", "Membri", "users"), nav("document-text-outline", "Esami", "exams"),
+    ] : []),
+    ...(role === "staff" ? [
+      nav("school-outline", "Studenti", "students"), nav("pencil-outline", "Professori", "teachers"),
+      nav("ribbon-outline", "Voti", "grades"), nav("document-text-outline", "Esami", "exams"),
     ] : []),
   ];
 
-  const name = user?.studentFirstName || user?.teacherFirstName || user?.email?.split(".")[0] || "Utente";
+  const name = user?.studentFirstName || user?.teacherFirstName || user?.displayName || user?.email?.split(".")[0] || "Utente";
 
   const lessonsPanel = (
     <View style={{ flexGrow: 1, flexBasis: 420 }}>
@@ -249,8 +255,13 @@ export default function DashboardScreen({ navigate }) {
           {role === "admin" && <>
             <StatTile icon="school-outline" label="Studenti" value={counts.students} onPress={() => navigate("students")} />
             <StatTile icon="pencil-outline" label="Professori" value={counts.teachers} onPress={() => navigate("teachers")} />
-            <StatTile icon="people-circle-outline" label="Utenti" value={counts.users} onPress={() => navigate("users")} />
+            <StatTile icon="people-circle-outline" label="Membri" value={counts.users} onPress={() => navigate("users")} />
             <StatTile icon="library-outline" label="Materie" value={counts.subjects} onPress={() => navigate("subjects")} />
+          </>}
+          {role === "staff" && <>
+            <StatTile icon="school-outline" label="Studenti" value={counts.students} onPress={() => navigate("students")} />
+            <StatTile icon="pencil-outline" label="Professori" value={counts.teachers} onPress={() => navigate("teachers")} />
+            <StatTile icon="document-text-outline" label="Esami in programma" value={exams ? upcomingExams.length : null} onPress={() => navigate("exams")} />
           </>}
         </View>
 
@@ -258,7 +269,7 @@ export default function DashboardScreen({ navigate }) {
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
           {role !== "teacher" && examsPanel}
           {role !== "teacher" && myClassesPanel}
-          {lessonsPanel}
+          {role !== "staff" && lessonsPanel}
         </View>
 
         {/* Sezioni (solo senza sidebar) */}

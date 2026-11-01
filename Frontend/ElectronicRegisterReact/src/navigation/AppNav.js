@@ -22,7 +22,7 @@ import { CONTENT_MAX_WIDTH, useLayout } from "../hooks/useLayout";
 
 const TITLES = {
   dashboard: "Electronic Register", grades: "Voti", students: "Studenti", myClasses: "Classi", classes: "Classi", exams: "Esami",
-  teachers: "Professori", subjects: "Materie", users: "Utenti", profile: "Profilo",
+  teachers: "Professori", subjects: "Materie", users: "Membri", profile: "Profilo",
 };
 
 const icon = name => <Ionicons name={name} size={32} color={C.white} />;
@@ -41,16 +41,17 @@ export default function AppNav({ user, onLogout }) {
   ];
 
   // Sulla sidebar (schermi larghi) c'è spazio per tutte le sezioni, non solo per quelle della tab bar.
+  // staff = segreteria: anagrafiche, voti ed esami, ma non catalogo, materie e membri (docs/AUTH.md §4.2)
   const sideTabs = [
     { key: "dashboard", icon: "home-outline", label: "Home" },
-    ...(role === "student" ? [{ key: "grades", icon: "ribbon-outline", label: "Voti" }] : []),
+    ...(role === "student" || role === "staff" ? [{ key: "grades", icon: "ribbon-outline", label: "Voti" }] : []),
     ...(role === "admin" ? [{ key: "classes", icon: "people-outline", label: "Classi" }] : []),
     ...(role === "teacher" ? [{ key: "myClasses", icon: "school-outline", label: "Classi" }] : []),
-    ...(role === "admin" ? [{ key: "students", icon: "school-outline", label: "Studenti" }] : []),
-    ...(role === "admin" || role === "student" ? [{ key: "teachers", icon: "pencil-outline", label: "Professori" }] : []),
-    { key: "subjects", icon: "library-outline", label: "Materie" },
+    ...(role === "admin" || role === "staff" ? [{ key: "students", icon: "school-outline", label: "Studenti" }] : []),
+    ...(role === "admin" || role === "staff" || role === "student" ? [{ key: "teachers", icon: "pencil-outline", label: "Professori" }] : []),
+    ...(role !== "staff" ? [{ key: "subjects", icon: "library-outline", label: "Materie" }] : []),
     { key: "exams", icon: "document-text-outline", label: "Esami", dot: role === "student" && unseenCount > 0 },
-    ...(role === "admin" ? [{ key: "users", icon: "people-circle-outline", label: "Utenti" }] : []),
+    ...(role === "admin" ? [{ key: "users", icon: "people-circle-outline", label: "Membri" }] : []),
     { key: "profile", icon: "person-circle-outline", label: "Profilo" },
   ];
 
@@ -67,7 +68,7 @@ export default function AppNav({ user, onLogout }) {
     profile: <ProfileScreen onLogout={onLogout} />,
   };
 
-  const userName = user?.studentFirstName || user?.teacherFirstName || user?.email?.split("@")[0] || "Utente";
+  const userName = user?.studentFirstName || user?.teacherFirstName || user?.displayName || user?.email?.split("@")[0] || "Utente";
   const content = SCREENS[screen] || <DashboardScreen navigate={setScreen} />;
 
   if (isDesktop) {

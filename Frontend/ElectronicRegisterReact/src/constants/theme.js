@@ -21,8 +21,8 @@ export const C = {
   adminBadge: "#FEE2E2",
 };
 
-export const ROLE_COLOR = { student: C.studentBadge, teacher: C.teacherBadge, admin: C.adminBadge };
-export const ROLE_TEXT = { student: "#1D4ED8", teacher: "#065F46", admin: "#991B1B" };
+export const ROLE_COLOR = { student: C.studentBadge, teacher: C.teacherBadge, admin: C.adminBadge, staff: "#EDE9FE" };
+export const ROLE_TEXT = { student: "#1D4ED8", teacher: "#065F46", admin: "#991B1B", staff: "#5B21B6" };
 
 export const s = StyleSheet.create({
   // Auth

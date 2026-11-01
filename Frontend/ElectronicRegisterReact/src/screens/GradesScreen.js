@@ -133,21 +133,19 @@ function TeacherAdminGrades() {
   // vengono ricaricate solo al mount e col pull-to-refresh, non a ogni tap
   // su un filtro.
   const loadMeta = useCallback(async () => {
-    try {
-      const sub = await getSubjects(undefined, token);
-      setSubjects(Array.isArray(sub) ? sub : []);
-      if (role !== "student") {
-        const st = await getStudents(undefined, token);
-        setStudents(Array.isArray(st) ? st : []);
-        const te = await getTeachers(token);
-        setTeachers(Array.isArray(te) ? te : []);
-      }
-      const filters = await getGradeFilters(token).catch(() => ({ subjects: [], students: [] }));
-      setFilterOptions({
-        subjects: Array.isArray(filters?.subjects) ? filters.subjects : [],
-        students: Array.isArray(filters?.students) ? filters.students : [],
-      });
-    } catch (e) { /* non bloccante per la lista voti */ }
+    // Ogni elenco è indipendente: lo Staff, ad esempio, non può leggere /subjects (si usano i filtri dei voti)
+    const list = (p) => p.then(d => (Array.isArray(d) ? d : [])).catch(() => null);
+    const [sub, st, te, filters] = await Promise.all([
+      list(getSubjects(undefined, token)),
+      role !== "student" ? list(getStudents(undefined, token)) : Promise.resolve([]),
+      role !== "student" ? list(getTeachers(token)) : Promise.resolve([]),
+      getGradeFilters(token).catch(() => ({ subjects: [], students: [] })),
+    ]);
+    const filterSubjects = Array.isArray(filters?.subjects) ? filters.subjects : [];
+    setSubjects(sub ?? filterSubjects);
+    setStudents(st ?? []);
+    setTeachers(te ?? []);
+    setFilterOptions({ subjects: filterSubjects, students: Array.isArray(filters?.students) ? filters.students : [] });
   }, [token, role]);
 
   const loadGrades = useCallback(async ({ isRefresh } = {}) => {
@@ -189,8 +187,12 @@ function TeacherAdminGrades() {
     loadGrades();
   }
 
-  function subjectName(id) { return subjects.find(s => s.id === id)?.name || id?.slice(0, 8) || "—"; }
-  function studentName(id) { const st = students.find(s => s.id === id); return st ? `${st.firstName} ${st.lastName}` : id?.slice(0, 8) || "—"; }
+  // Il voto porta già nome materia e studente: le anagrafiche servono solo come ripiego
+  function subjectName(g) { return g.subjectName || subjects.find(s => s.id === g.subjectId)?.name || g.subjectId?.slice(0, 8) || "—"; }
+  function studentName(g) {
+    const st = g.student || students.find(s => s.id === g.studentId);
+    return st ? `${st.firstName} ${st.lastName}` : g.studentId?.slice(0, 8) || "—";
+  }
 
   async function addGrade() {
     try {
@@ -223,7 +225,7 @@ function TeacherAdminGrades() {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
         <SectionHeader title="Voti" action={
-          (role === "teacher" || role === "admin") &&
+          (role === "teacher" || role === "admin" || role === "staff") &&
           <Btn label="+ Voto" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
         } />
         {/* Filters */}
@@ -286,11 +288,11 @@ function TeacherAdminGrades() {
             <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
               <GradeCircle value={g.value} />
               <View style={{ flex: 1, marginLeft: 12 }}>
-                <Text style={s.itemTitle}>{subjectName(g.subjectId)}</Text>
-                {role !== "student" && <Text style={s.itemSub}>👤 {studentName(g.studentId)}</Text>}
+                <Text style={s.itemTitle}>{subjectName(g)}</Text>
+                {role !== "student" && <Text style={s.itemSub}>👤 {studentName(g)}</Text>}
                 <Text style={s.itemSub}>📅 {g.date}</Text>
               </View>
-              {(role === "teacher" || role === "admin") && (
+              {(role === "teacher" || role === "admin" || role === "staff") && (
                 <View style={{ flexDirection: "row", gap: 6 }}>
                   <TouchableOpacity onPress={() => setShowEdit({ ...g })}>
                     <Ionicons name="create-outline" size={32} color={C.footer} />
