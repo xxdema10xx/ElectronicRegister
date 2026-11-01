@@ -43,7 +43,7 @@ export default function LoginScreen({ onLogin, goRegister }) {
   async function submitMicrosoftToken(msAccessToken) {
     try {
       const data = await loginWithMicrosoft(msAccessToken);
-      onLogin(data.token);
+      await onLogin({ ticket: data.ticket });
     } catch (e) {
       Alert.alert("Errore login Microsoft", String(e.message));
     } finally {
@@ -55,8 +55,8 @@ export default function LoginScreen({ onLogin, goRegister }) {
     if (!email || !password) { Alert.alert("Attenzione", "Compila tutti i campi"); return; }
     setLoading(true);
     try {
-      const data = await login(email, password);
-      onLogin(data.token);
+      const data = await login(email.trim(), password);
+      await onLogin({ ticket: data.ticket, credentials: { email: email.trim(), password } });
     } catch (e) { Alert.alert("Errore login", e.message); }
     finally { setLoading(false); }
   }
