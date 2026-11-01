@@ -28,9 +28,10 @@ function stateOf(a) {
   const sub = fromEnum(a.submissionStatus, SUBMISSION_STATUS);
   const st = fromEnum(a.status, EXAM_STATUS);
   if (sub === "in_progress") {
-    if (a.deadlineAt && parseUtc(a.deadlineAt).getTime() <= now) return { label: "Scaduto", tone: "red", action: null };
-    const run = getRun(a.id);
-    return { label: "In corso", tone: "amber", action: run && !run.finished && run.exam ? "resume" : null };
+    // Scaduto ma non ancora consegnato: si consegnano le risposte salvate (il server lo chiude solo se il worker è attivo)
+    if (a.deadlineAt && parseUtc(a.deadlineAt).getTime() <= now) return { label: "Scaduto: tocca per consegnare", tone: "red", action: "expire" };
+    // Si riprende dai dati locali o, se mancano (altro dispositivo), dalla sessione sul server
+    return { label: "In corso", tone: "amber", action: a.submissionId || getRun(a.id)?.exam ? "resume" : null };
   }
   if (sub === "pending_review") return { label: "In correzione", tone: "amber", action: "result" };
   if (sub === "failed_auto") return { label: "Non superato", tone: "red", action: "result" };
@@ -80,10 +81,42 @@ export default function StudentExamsScreen() {
     } finally { setStarting(false); }
   }
 
-  function resume(item) {
-    const run = getRun(item.id);
-    enterFullscreen();
-    setTaking(run);
+  async function resume(item) {
+    enterFullscreen(); // va chiamato direttamente dal click, prima di qualunque attesa
+    const local = getRun(item.id);
+    if (local?.exam && !local.finished) return setTaking(local);
+    setStarting(true);
+    try {
+      const session = await api.getSession(item.submissionId);
+      const questions = [...session.exam.questions].sort((a, b) => a.position - b.position).map(studentQuestionFromDto);
+      // Risposte salvate sul server → forma dello svolgimento ({ [questionId]: optionId | [optionId] | testo })
+      const answers = {};
+      for (const a of session.answers || []) {
+        const q = questions.find(x => x.id === a.questionId);
+        if (!q) continue;
+        answers[q.id] = q.type === "open" ? (a.openText || "") : q.type === "multiple" ? (a.selectedOptionIds || []) : a.selectedOptionIds?.[0];
+      }
+      const run = {
+        examId: item.id, submissionId: session.submissionId, startedAt: session.startedAt, deadlineAt: session.deadlineAt,
+        exam: { name: session.exam.name, description: session.exam.description, questions },
+        answers, revision: session.currentRevision || 0, finished: false,
+      };
+      saveRun(item.id, run);
+      setTaking(run);
+    } catch (e) {
+      exitFullscreen();
+      notify("Impossibile riprendere", e.message);
+    } finally { setStarting(false); }
+  }
+
+  // Consegna di un esame scaduto con le risposte già salvate sul server
+  async function expire(item) {
+    try {
+      const result = await api.submitExpired(item.submissionId);
+      saveRun(item.id, { finished: true, result, meta: { auto: true, reason: "tempo scaduto" } });
+      setView({ item, result, meta: { auto: true, reason: "tempo scaduto" } });
+    } catch (e) { notify("Consegna non riuscita", e.message); }
+    finally { reload(); notifyStudentExamsChanged(); }
   }
 
   function finish(run, outcome) {
@@ -100,23 +133,24 @@ export default function StudentExamsScreen() {
 
   async function openResult(item) {
     const run = getRun(item.id);
-    if (run?.result) return setView({ item, result: run.result, meta: run.meta, loading: !!run.submissionId });
-    if (!run?.submissionId) {
-      // il server non indica l'id della consegna: si mostra solo lo stato
-      return setView({ item, result: { status: item.submissionStatus, submittedAt: item.submittedAt }, meta: null });
+    const submissionId = item.submissionId || run?.submissionId;
+    if (!submissionId) {
+      return setView({ item, result: run?.result || { status: item.submissionStatus, submittedAt: item.submittedAt }, meta: run?.meta || null });
     }
-    setView({ item, result: { status: item.submissionStatus, submittedAt: item.submittedAt }, loading: true });
+    // Si mostra subito l'ultimo esito noto, poi si aggiorna dal server (il voto può arrivare dopo la correzione)
+    setView({ item, result: run?.result || { status: item.submissionStatus, submittedAt: item.submittedAt }, meta: run?.meta, loading: true });
     try {
-      const result = await api.getResult(run.submissionId);
-      saveRun(item.id, { result });
-      setView({ item, result, meta: run.meta });
-    } catch (e) { setView({ item, result: { status: item.submissionStatus, submittedAt: item.submittedAt }, meta: run.meta }); }
+      const result = await api.getResult(submissionId);
+      saveRun(item.id, { submissionId, result });
+      setView({ item, result, meta: run?.meta });
+    } catch (e) { setView({ item, result: run?.result || { status: item.submissionStatus, submittedAt: item.submittedAt }, meta: run?.meta }); }
   }
 
   function press(item) {
     const st = stateOf(item);
     if (st.action === "intro") setIntro(item);
     else if (st.action === "resume") resume(item);
+    else if (st.action === "expire") expire(item);
     else if (st.action === "result") openResult(item);
   }
 

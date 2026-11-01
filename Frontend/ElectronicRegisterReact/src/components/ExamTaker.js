@@ -3,19 +3,23 @@
 // su web usa lo schermo intero, e uscire, cambiare scheda/finestra o perdere il focus conta come uscita;
 // su nativo si controlla che l'app resti in primo piano. Alla terza uscita, o allo scadere del tempo,
 // l'esame viene consegnato automaticamente. Le risposte si salvano da sole sul server; la scadenza è quella
-// decisa dal server (deadlineAt), non un timer del dispositivo.
+// decisa dal server (deadlineAt), non un timer del dispositivo. Ogni uscita è segnalata anche al server
+// (POST /violations), che la mostra al docente nella correzione.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Animated, AppState, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import Btn from "./Btn";
 import Card from "./Card";
+import * as Crypto from "expo-crypto";
 import { answersToDto, isAnswered, parseUtc } from "../api/examContract";
 import { saveRun } from "../data/studentExams";
 
 export const MAX_VIOLATIONS = 3;
 const SAVE_DELAY_MS = 2500;
 const isWeb = Platform.OS === "web";
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const newEventId = () => globalThis.crypto?.randomUUID?.() ?? Crypto.randomUUID();
 
 export function enterFullscreen() {
   if (isWeb) return document.documentElement.requestFullscreen?.().catch(() => {});
@@ -93,7 +97,20 @@ export default function ExamTaker({ run, api, onFinish }) {
     setSubmitting(true);
     setFailure(null);
     try {
-      const result = await api.submitExam(run.submissionId, { clientRevision: revisionRef.current + 1, answers: answersToDto(questions, answersRef.current) });
+      let result;
+      if (reason === "tempo scaduto") {
+        // Scaduto il tempo il server non accetta più risposte: consegna quelle già salvate. L'orologio del
+        // dispositivo può essere qualche secondo avanti rispetto al server (409 "non è ancora tempo"): si riprova.
+        for (let attempt = 0; ; attempt++) {
+          try { result = await api.submitExpired(run.submissionId); break; }
+          catch (e) { if (e.status !== 409 || attempt >= 4) throw e; await sleep(3000); }
+        }
+      } else {
+        // +2: resta maggiore anche di un salvataggio automatico ancora in volo (altrimenti il server risponde 409)
+        const clientRevision = revisionRef.current + 2;
+        result = await api.submitExam(run.submissionId, { clientRevision, answers: answersToDto(questions, answersRef.current) });
+        revisionRef.current = clientRevision;
+      }
       finishedRef.current = true;
       exitFullscreen();
       onFinish({ result, auto, reason, violations: violationsRef.current });
@@ -105,11 +122,14 @@ export default function ExamTaker({ run, api, onFinish }) {
     }
   }, [api, onFinish, questions, run.submissionId]);
 
-  const registerViolation = useCallback((message) => {
+  // type: tab_hidden | window_blur | fullscreen_exit (valori ammessi dal server)
+  const registerViolation = useCallback((message, type) => {
     if (finishedRef.current || submittingRef.current || pausedRef.current) return;
     pausedRef.current = true;
     violationsRef.current += 1;
     setViolations(violationsRef.current);
+    // Il server registra l'evento per il docente; un errore qui non deve bloccare l'esame
+    api.reportViolation(run.submissionId, { eventId: newEventId(), type }).catch(() => {});
     if (violationsRef.current >= MAX_VIOLATIONS) return submit(true, "troppe uscite dal test");
     setPaused(message);
   }, [submit]);
@@ -134,16 +154,19 @@ export default function ExamTaker({ run, api, onFinish }) {
     return () => clearInterval(id);
   }, []);
   const expiredRef = useRef(false);
+  const lastSaveRef = useRef(false);
   useEffect(() => {
+    // Ultimo salvataggio poco prima della fine: dopo la scadenza contano solo le risposte già sul server
+    if (remaining <= 5 && remaining > 0 && !lastSaveRef.current) { lastSaveRef.current = true; save(); }
     if (remaining <= 0 && !expiredRef.current) { expiredRef.current = true; submit(true, "tempo scaduto"); }
-  }, [remaining, submit]);
+  }, [remaining, submit, save]);
 
   // Controlli anti-uscita
   useEffect(() => {
     if (isWeb) {
-      const onFullscreen = () => { if (!document.fullscreenElement) registerViolation("Sei uscito dalla modalità a schermo intero."); };
-      const onVisibility = () => { if (document.visibilityState === "hidden") registerViolation("Hai cambiato scheda o finestra."); };
-      const onBlur = () => registerViolation("La finestra dell'esame ha perso il focus.");
+      const onFullscreen = () => { if (!document.fullscreenElement) registerViolation("Sei uscito dalla modalità a schermo intero.", "fullscreen_exit"); };
+      const onVisibility = () => { if (document.visibilityState === "hidden") registerViolation("Hai cambiato scheda o finestra.", "tab_hidden"); };
+      const onBlur = () => registerViolation("La finestra dell'esame ha perso il focus.", "window_blur");
       const stop = (e) => e.preventDefault();
       const onKey = (e) => {
         const k = e.key.toLowerCase();
@@ -165,7 +188,7 @@ export default function ExamTaker({ run, api, onFinish }) {
         ["contextmenu", "copy", "cut", "paste", "dragstart"].forEach(ev => document.removeEventListener(ev, stop));
       };
     }
-    const sub = AppState.addEventListener("change", (st) => { if (st !== "active") registerViolation("Hai lasciato l'app durante l'esame."); });
+    const sub = AppState.addEventListener("change", (st) => { if (st !== "active") registerViolation("Hai lasciato l'app durante l'esame.", "tab_hidden"); });
     return () => sub.remove();
   }, [registerViolation]);
 
