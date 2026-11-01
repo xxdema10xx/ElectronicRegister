@@ -9,6 +9,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useLayout } from "../hooks/useLayout";
 import { useExamApi } from "../hooks/useExamApi";
 import Card from "../components/Card";
+import ExamCard from "../components/ExamCard";
 import Btn from "../components/Btn";
 import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
@@ -35,7 +36,9 @@ const draftStore = {
 export default function ExamsScreen() {
   const { user } = useAuth();
   const role = user?.role?.toLowerCase();
-  const canWrite = role === "admin" || role === "teacher";
+  const canWrite = role === "admin" || role === "teacher" || role === "staff";
+  // Lo Staff gestisce gli esami ma non può annullarli né eliminarli (docs/AUTH.md §4.1)
+  const canDestroy = role === "admin" || role === "teacher";
   const { isDesktop } = useLayout();
   const api = useExamApi();
 
@@ -218,38 +221,17 @@ export default function ExamsScreen() {
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
           renderItem={({ item: exam }) => {
             const status = fromEnum(exam.status, EXAM_STATUS);
-            const working = busy === exam.id;
-            const btn = (label, onPress, variant = "ghost") => (
-              <Btn key={label} label={label} variant={variant} onPress={onPress} disabled={working} style={[s.smBtn, { paddingHorizontal: 14 }]} textStyle={s.smBtnText} />
-            );
             return (
-              <Card style={{ marginBottom: 10 }}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <View style={[s.avatar, { backgroundColor: "#FDE68A" }]}><Ionicons name="document-text-outline" size={24} color="#92400E" /></View>
-                  <View style={{ flex: 1, marginLeft: 12 }}>
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <Text style={s.itemTitle}>{exam.name}</Text>
-                      <StatusChip label={EXAM_STATUS_LABEL[status]} tone={EXAM_TONE[status]} />
-                      {exam.isRetake && <StatusChip label="Recupero" tone="amber" />}
-                    </View>
-                    {!!(csLabel(exam.classSubjectId)) && <Text style={s.itemSub}>{csLabel(exam.classSubjectId)}</Text>}
-                    <Text style={s.itemSub}>{formatDateTime(exam.availableFrom)} → {formatDateTime(exam.availableUntil)}</Text>
-                    <Text style={s.itemSub}>
-                      {exam.durationMinutes} min · soglia {exam.passingPercent}% · {exam.totalPoints} punti · {exam.assignedStudentsCount} studenti
-                    </Text>
-                  </View>
-                </View>
-
-                <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
-                  {btn("Vedi", () => view(exam))}
-                  {canWrite && status === "draft" && btn("Modifica", () => edit(exam))}
-                  {canWrite && status === "draft" && btn("Pubblica", () => publish(exam), "success")}
-                  {canWrite && (status === "published" || status === "closed") && btn("Consegne", () => setSubmissionsFor(exam), "secondary")}
-                  {canWrite && status === "published" && btn("Chiudi", () => close(exam))}
-                  {canWrite && status === "published" && btn("Annulla", () => cancel(exam), "danger")}
-                  {canWrite && status === "draft" && btn("Elimina", () => remove(exam), "danger")}
-                </View>
-              </Card>
+              <ExamCard exam={exam} status={status} contextLabel={csLabel(exam.classSubjectId)} busy={busy === exam.id}
+                actions={{
+                  view: () => view(exam),
+                  edit: canWrite && status === "draft" ? () => edit(exam) : null,
+                  submissions: canWrite && (status === "published" || status === "closed") ? () => setSubmissionsFor(exam) : null,
+                  close: canWrite && status === "published" ? () => close(exam) : null,
+                  publish: canWrite && status === "draft" ? () => publish(exam) : null,
+                  cancel: canDestroy && status === "published" ? () => cancel(exam) : null,
+                  remove: canDestroy && status === "draft" ? () => remove(exam) : null,
+                }} />
             );
           }}
         />
