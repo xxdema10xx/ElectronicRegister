@@ -318,45 +318,67 @@ def run(config_path, output):
         acceptance = probes.all()
         verify_schema(db, load_contract(), config)
         (output/'runtime-result.json').write_text(json.dumps(dict(upgrade=True, predecessor3995Reproduced=True, snapshot=True, dataPreserved=True, idempotent=True, interruptedDropRecovered=True, lostCreateAckRecovered=True, persistedMaintenanceAcrossServerRestart=True, driftRejected=True, acceptance=acceptance), indent=2))
-        # A second new database exercises the actual direct-install command.
-        fresh = copy.deepcopy(config)
-        # RuntimePolicy confines the real HTTP application to this database in
-        # LocalTest mode. CREATE without IF NOT EXISTS refuses any existing one.
-        fresh['database'] = 'electronic_register_test'
-        for role in ('api','review','definer'):
-            fresh[role+'User'] += '_f'
-        db.execute('CREATE DATABASE `' + fresh['database'] + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
-        for role in ('api','review'):
-            db.execute("CREATE USER '" + fresh[role+'User'] + "'@'" + fresh[role+'Host'] + "' IDENTIFIED BY 'Synthetic-ci-only-credential'")
-        fresh_config = output/'fresh-config.json'
-        fresh_config.write_text(json.dumps(fresh))
-        fresh_bundle = output/'fresh-bundle'
-        subprocess.run(['node', str(ROOT/'tools/mysql84-release.cjs'),'bundle',str(fresh_config),str(fresh_bundle)],check=True)
-        artifact = fresh_bundle/'98-new-release.sql'
-        original_sql = artifact.read_text()
-        original_binding = (fresh_bundle/'binding.json').read_text()
-        altered_binding = json.loads(original_binding)
-        artifact.write_text(original_sql+'\nSELECT 1;\n')
-        altered_binding['files'][artifact.name] = sha(artifact.read_text())
-        (fresh_bundle/'binding.json').write_text(json.dumps(altered_binding))
-        try:
-            install(db, fresh, output/'tampered-journal.json', fresh_bundle)
-            raise AssertionError('Self-authorized tampered bundle accepted')
-        except RuntimeError as error:
-            require('Untrusted derived bundle' in str(error), 'Wrong tamper rejection')
-            require(not (output/'tampered-journal.json').exists(), 'Tampered bundle wrote a journal')
-        artifact.write_text(original_sql)
-        (fresh_bundle/'binding.json').write_text(original_binding)
-        install(db, fresh, output/'fresh-journal.json', fresh_bundle)
-        install(db, fresh, output/'fresh-journal.json', fresh_bundle)
-        fresh_probes = Probes(db, fresh)
-        fresh_probes.seed()
-        fresh_acceptance = fresh_probes.all()
-        verify_schema(db, load_contract(), fresh)
-        (output/'fresh-result.json').write_text(json.dumps(dict(fresh=True, idempotent=True, equivalentSchemaContract=True, acceptance=fresh_acceptance)))
+        fresh_install(db, config, output)
+    finally:
+        db.close()
+
+
+def fresh_install(db, config, output):
+    # A second new database exercises the actual direct-install command.
+    fresh = copy.deepcopy(config)
+    # RuntimePolicy confines the real HTTP application to this database in
+    # LocalTest mode. CREATE without IF NOT EXISTS refuses any existing one.
+    fresh['database'] = 'electronic_register_test'
+    for role in ('api','review','definer'):
+        fresh[role+'User'] += '_f'
+    db.execute('CREATE DATABASE `' + fresh['database'] + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
+    for role in ('api','review'):
+        db.execute("CREATE USER '" + fresh[role+'User'] + "'@'" + fresh[role+'Host'] + "' IDENTIFIED BY 'Synthetic-ci-only-credential'")
+    fresh_config = output/'fresh-config.json'
+    fresh_config.write_text(json.dumps(fresh))
+    fresh_bundle = output/'fresh-bundle'
+    subprocess.run(['node', str(ROOT/'tools/mysql84-release.cjs'),'bundle',str(fresh_config),str(fresh_bundle)],check=True)
+    artifact = fresh_bundle/'98-new-release.sql'
+    original_sql = artifact.read_text()
+    original_binding = (fresh_bundle/'binding.json').read_text()
+    altered_binding = json.loads(original_binding)
+    artifact.write_text(original_sql+'\nSELECT 1;\n')
+    altered_binding['files'][artifact.name] = sha(artifact.read_text())
+    (fresh_bundle/'binding.json').write_text(json.dumps(altered_binding))
+    try:
+        install(db, fresh, output/'tampered-journal.json', fresh_bundle)
+        raise AssertionError('Self-authorized tampered bundle accepted')
+    except RuntimeError as error:
+        require('Untrusted derived bundle' in str(error), 'Wrong tamper rejection')
+        require(not (output/'tampered-journal.json').exists(), 'Tampered bundle wrote a journal')
+    artifact.write_text(original_sql)
+    (fresh_bundle/'binding.json').write_text(original_binding)
+    install(db, fresh, output/'fresh-journal.json', fresh_bundle)
+    install(db, fresh, output/'fresh-journal.json', fresh_bundle)
+    fresh_probes = Probes(db, fresh)
+    fresh_probes.seed()
+    fresh_acceptance = fresh_probes.all()
+    verify_schema(db, load_contract(), fresh)
+    (output/'fresh-result.json').write_text(json.dumps(dict(fresh=True, idempotent=True, equivalentSchemaContract=True, acceptance=fresh_acceptance)))
+
+
+def run_fresh(config_path, output):
+    require(os.environ.get('GITHUB_ACTIONS') == 'true', 'Only disposable GitHub service accepted')
+    config = json.loads(Path(config_path).read_text())
+    require(config.get('isolatedCI') is True, 'CI config required')
+    container = config.get('mysqlContainer', '')
+    require(re.fullmatch(r'[a-f0-9]{64}', container), 'Explicit disposable service container ID required')
+    image = subprocess.check_output(['docker','inspect','--format','{{.Config.Image}}',container],text=True).strip()
+    require(image == json.loads((ROOT/'infra/staging/mysql-image.json').read_text())['image'], 'Service image digest differs from staging')
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=False)
+    subprocess.run(['node', str(ROOT / 'tools/mysql84-release.cjs')], check=True)
+    db = Mysql(config)
+    try:
+        fresh_install(db, config, output)
     finally:
         db.close()
 
 
 if __name__ == '__main__':
-    run(sys.argv[1], sys.argv[2])
+    (run_fresh if '--fresh-only' in sys.argv else run)(sys.argv[1], sys.argv[2])

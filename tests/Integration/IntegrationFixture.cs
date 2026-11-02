@@ -208,6 +208,9 @@ namespace ElectronicRegisterAPI.Tests.Integration
                     _mysql = null;
                 }
 
+                if (Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true")
+                    throw new InvalidOperationException("Disposable MySQL 8.4.13 container required in CI.", ex);
+
                 UnavailableReason = $"Docker non disponibile e {ConnectionEnvVar} non impostata: {ex.Message}";
                 return null;
             }

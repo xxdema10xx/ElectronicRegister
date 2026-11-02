@@ -162,3 +162,5 @@ __pycache__/
 /infra/staging/__pycache__/
 
 /.migration-tools/
+
+/.diagnostics/

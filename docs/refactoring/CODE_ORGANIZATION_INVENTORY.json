@@ -1257,7 +1257,7 @@
             },
             {
               "name": "Work",
-              "visibility": "\n    private sealed "
+              "visibility": "\r\n    private sealed "
             },
             {
               "name": "AuthorizedTransaction",
@@ -9857,7 +9857,7 @@
           "nestedTypes": [
             {
               "name": "BoundRepositories",
-              "visibility": "\n    private sealed "
+              "visibility": "\r\n    private sealed "
             }
           ]
         }
@@ -9910,7 +9910,7 @@
           "nestedTypes": [
             {
               "name": "Session",
-              "visibility": "\n    private sealed "
+              "visibility": "\r\n    private sealed "
             }
           ]
         }
