@@ -11,6 +11,7 @@ COPY migrations/bootstrap/ /release/migrations/bootstrap/
 COPY migrations/identity-account/ /release/migrations/identity-account/
 COPY migrations/release/manifest.json /release/migrations/release/manifest.json
 COPY migrations/release/additive-contract.json /release/migrations/release/additive-contract.json
+COPY migrations/mysql84-remediation/manifest.json migrations/mysql84-remediation/contract.json migrations/mysql84-remediation/candidate.json /release/migrations/mysql84-remediation/
 FROM build AS health-build
 COPY tools/StagingSupport/ tools/StagingSupport/
 RUN dotnet restore tools/StagingSupport/StagingSupport.csproj --locked-mode

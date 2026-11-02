@@ -146,7 +146,9 @@ public static class OperationalPipeline
                 await sql.OpenAsync(timeout.Token);
                 // Require this gate revision independently of the stored routine:
                 // an older 004 routine must never certify a release missing 005.
-                await using var command = new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE(),EXISTS(SELECT 1 FROM er_schema_release WHERE version='er-quality-1-closure-1')", sql);
+                // The 8.4 application must not become ready against the unrepaired
+                // predecessor. Keep the certified 5.7 gate for the legacy variant.
+                await using var command = new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE(),EXISTS(SELECT 1 FROM er_schema_release WHERE version='er-quality-1-closure-1') AND (VERSION() NOT LIKE '8.4.%' OR EXISTS(SELECT 1 FROM er_schema_release WHERE version='er-quality-2-mysql84'))", sql);
                 await using var reader = await command.ExecuteReaderAsync(timeout.Token);
                 if (!await reader.ReadAsync(timeout.Token))
                     return Results.StatusCode(503);

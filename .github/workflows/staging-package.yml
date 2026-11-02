@@ -1,4 +1,4 @@
-name: Staging package and real SQL TLS
+name: Historical er-quality-1 package and real SQL TLS
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       source_sha:
-        description: Exact published 40-character commit; must match workflow ref
+        description: Immutable er-quality-1 commit; corrective release has its separate workflow
         required: true
         type: string
 permissions: { contents: read }
@@ -21,15 +21,15 @@ jobs:
     timeout-minutes: 30
     env:
       STAGE_STATE: /tmp/er-stage-${{ github.run_id }}-${{ github.run_attempt }}
-      EXPECTED_SHA: ${{ inputs.source_sha || github.sha }}
+      EXPECTED_SHA: ${{ inputs.source_sha || '8e7d9ecd42c001f1fa9b30e120535ce1bb0ef6e8' }}
     steps:
-      - name: Bind workflow and source to the same published SHA
+      - name: Bind historical source to the immutable predecessor SHA
         run: |
           [[ "$EXPECTED_SHA" =~ ^[a-f0-9]{40}$ ]]
-          test "$EXPECTED_SHA" = "$GITHUB_SHA"
+          test "$EXPECTED_SHA" = "8e7d9ecd42c001f1fa9b30e120535ce1bb0ef6e8"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: ${{ inputs.source_sha || github.sha }}
+          ref: ${{ inputs.source_sha || '8e7d9ecd42c001f1fa9b30e120535ce1bb0ef6e8' }}
           persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:

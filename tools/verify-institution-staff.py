@@ -1,3 +1,4 @@
+from historical_artifacts import verify_historical_artifact
 from calendar_schema_contract import phase4_contract
 """Read-only Staff artifact/schema verifier. No Python database packages required."""
 import argparse
@@ -13,9 +14,9 @@ ROOT = Path(__file__).resolve().parents[1]
 def verify_files():
     manifest = json.loads((ROOT / 'migrations/bootstrap/manifest.json').read_text(encoding='utf-8'))
     for name, expected in manifest['files'].items():
-        path = (ROOT / name).resolve(strict=True)
+        path = (ROOT / name).resolve()
         assert ROOT in path.parents, name
-        assert hashlib.sha256(path.read_bytes()).hexdigest().upper() == expected, name
+        assert verify_historical_artifact(ROOT, name, expected), name
     schema = (ROOT / 'migrations/bootstrap/001_schema.sql').read_text(encoding='utf-8')
     contract = json.loads((ROOT / 'migrations/bootstrap/schema-contract.json').read_text(encoding='utf-8'))
     assert contract['inventory'] == manifest['inventory']

@@ -15,6 +15,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: '10.0.x'
@@ -22,7 +23,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: node --version
-      - run: node tools/release-artifacts.cjs
+      - run: node tools/mysql84-release.cjs
       - run: node tools/test-release-manifest.cjs
       - run: node tools/test-mysql84.cjs
       - run: python -m unittest discover -s tools -p 'test_*.py'
@@ -52,6 +53,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: '10.0.x'
@@ -64,7 +66,7 @@ jobs:
           ER_MYSQL_BIN: ${{ vars.ER_MYSQL_BIN }}
         run: |
           $ErrorActionPreference='Stop'
-          node tools/release-artifacts.cjs
+          node tools/mysql84-release.cjs
           if($LASTEXITCODE -ne 0){throw 'Release manifest failed'}
           node tools/test-release-manifest.cjs
           if($LASTEXITCODE -ne 0){throw 'Manifest negative controls failed'}
@@ -79,7 +81,7 @@ jobs:
           try {
             $env:MYSQL_PWD=[IO.File]::ReadAllText("$run/password.txt")
             ./tools/Bind-StaffDisposableFixtureRetention.ps1 -MySqlBin $env:ER_MYSQL_BIN -Port $port -ExpectedDataDirectory "$run/data"
-            ./tools/Invoke-QualityIntegration.ps1 -InstanceDirectory $run -Port $port -MySqlBin $env:ER_MYSQL_BIN -Name ci-complete
+            ./tools/Invoke-QualityIntegration.ps1 -InstanceDirectory $run -Port $port -MySqlBin $env:ER_MYSQL_BIN -Name ci-complete -Filter "Category!=MySQL84Release"
           } finally {
             # The server was created by this job; the binder/runner attest its exact identity.
             & "$env:ER_MYSQL_BIN/mysqladmin.exe" --no-defaults --host=127.0.0.1 --port=$port --user=root shutdown

@@ -1,3 +1,4 @@
+from historical_artifacts import verify_historical_artifact
 from calendar_schema_contract import phase4_contract
 """Offline Phase 4 artifact/schema/evidence verifier. Never executes SQL or HTTP.
 
@@ -26,8 +27,8 @@ def verify():
     for name,sha in manifest['files'].items():
         relative=Path(name)
         require(not relative.is_absolute() and '..' not in relative.parts,'Unsafe manifest path')
-        path=(ROOT/relative).resolve(strict=True)
-        require(ROOT in path.parents and digest(path)==sha,'Digest mismatch: '+name)
+        path=(ROOT/relative).resolve()
+        require(ROOT in path.parents and verify_historical_artifact(ROOT,name,sha),'Digest mismatch: '+name)
         require(subprocess.run(['git','check-ignore','--no-index','-q',name],cwd=ROOT).returncode==1,'Ignored artifact: '+name)
     contract=json.loads((ROOT/'migrations/bootstrap/schema-contract.json').read_text(encoding='utf-8-sig'))
     require(contract['inventory']==manifest['inventory'],'Manifest inventory mismatch')

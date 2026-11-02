@@ -1,3 +1,4 @@
+from historical_artifacts import verify_historical_artifact
 from calendar_schema_contract import phase4_contract
 """Offline institutional bulk-import schema/artifact verifier. Never connects to SQL."""
 import hashlib
@@ -12,9 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 def verify():
     manifest = json.loads((ROOT / 'migrations/bootstrap/manifest.json').read_text(encoding='utf-8'))
     for name, digest in manifest['files'].items():
-        path = (ROOT / name).resolve(strict=True)
+        path = (ROOT / name).resolve()
         assert ROOT in path.parents, name
-        assert hashlib.sha256(path.read_bytes()).hexdigest().upper() == digest, name
+        assert verify_historical_artifact(ROOT, name, digest), name
         assert subprocess.run(['git', 'check-ignore', '--no-index', '-q', name], cwd=ROOT).returncode == 1, name
     contract = json.loads((ROOT / 'migrations/bootstrap/schema-contract.json').read_text(encoding='utf-8'))
     assert contract['inventory'] == manifest['inventory']
@@ -43,15 +44,18 @@ def verify():
         assert 'fk_import_item_' + suffix in contract['tables']['institution_import_item']
     assert 'PRIMARY KEY (`institution_id`,`category`,`reference`)' in contract['tables']['institution_import_external_reference']
     assert 'uq_import_event_revision' in contract['tables']['institution_import_event']
-    domain = (ROOT / 'Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/InstitutionImport.cs').read_text(encoding='utf-8')
+    domain_root = ROOT / 'Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain'
+    domain = (domain_root / 'Enums/ImportField.cs').read_text(encoding='utf-8')
     fields = re.search(r'enum ImportField\s*\{([^}]+)\}', domain).group(1)
     assert {value.strip() for value in fields.split(',')} == {'Ignore', 'FirstName', 'LastName', 'Class', 'ExternalReference'}
-    assert 'JsonUnmappedMemberHandling.Disallow' in domain
+    for dto in ('ImportRemap', 'ImportPreviewSettings', 'ImportParsingOptions', 'ImportEmailCandidateChoice',
+                'ImportConfirmation', 'ImportColumnMapping', 'ImportClassChoice'):
+        assert 'JsonUnmappedMemberHandling.Disallow' in (domain_root / ('DTOs/Import/' + dto + '.cs')).read_text(encoding='utf-8'), dto
     reader = (ROOT / 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Services/InstitutionImportFileReader.cs').read_text(encoding='utf-8')
-    assert 'new UTF8Encoding(false,true)' in reader and 'MaxFileBytes' in reader and 'MaxDataRows' in reader
+    assert 'newUTF8Encoding(false,true)' in re.sub(r'\s+', '', reader) and 'MaxFileBytes' in reader and 'MaxDataRows' in reader
     workbook = (ROOT / 'Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Services/InstitutionImportFileReader.Xlsx.cs').read_text(encoding='utf-8')
     assert 'SpreadsheetDocument.Open' in workbook and 'OpenXmlReader.Create' in workbook
-    assert 'DtdProcessing.Prohibit' in workbook and 'XmlResolver=null' in workbook
+    assert 'DtdProcessing.Prohibit' in workbook and 'XmlResolver=null' in re.sub(r'\s+', '', workbook)
     assert 'MaxUncompressedBytes' in workbook and 'MaxXmlNodes' in workbook
     assert 'FormulaNotAllowed' in workbook and 'ExternalReferenceNotAllowed' in workbook
     for relative in ('Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/packages.lock.json',

@@ -65,7 +65,11 @@ def listener(port):
 def verify_files():
     manifest = json.loads((ROOT/'migrations/release/manifest.json').read_text(encoding='utf-8'))
     require(manifest['format'] == 2, 'Unknown manifest')
-    for relative, sha in manifest['files'].items():
+    # SQL inputs remain historical; tooling/application inputs now belong to the
+    # corrective release. Do not rewrite the predecessor to certify new bytes.
+    current = json.loads((ROOT/'migrations/mysql84-remediation/manifest.json').read_text(encoding='utf-8'))
+    require(current['release'] == 'er-quality-2-mysql84' and current['predecessor'] == manifest['release'], 'Unknown corrective closure')
+    for relative, sha in current['files'].items():
         path = (ROOT/relative).resolve(strict=True)
         canonical = path.read_bytes().replace(b'\r\n', b'\n')
         require(ROOT in path.parents and hashlib.sha256(canonical).hexdigest().upper() == sha, 'Source SHA256 mismatch: '+relative)

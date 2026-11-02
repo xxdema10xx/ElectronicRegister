@@ -1,0 +1,123 @@
+name: MySQL 8.4 corrective release and upgrade
+on:
+  workflow_dispatch:
+  push:
+    branches: [refactor-database-entities]
+  pull_request:
+    branches: [refactor-database-entities]
+permissions: { contents: read }
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    services:
+      mysql:
+        image: mysql:8.4.13@sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_ROOT_HOST: '%'
+        ports: ['3306/tcp']
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: '10.0.x'
+      - name: Tools and actionlint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+          go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+          "$(go env GOPATH)/bin/actionlint" -shellcheck= -pyflakes=
+      - name: Immutable predecessor positive and negative controls
+        run: |
+          git clone --no-hardlinks . "$RUNNER_TEMP/er-quality-1"
+          git -C "$RUNNER_TEMP/er-quality-1" checkout --detach 8e7d9ecd42c001f1fa9b30e120535ce1bb0ef6e8
+          node "$RUNNER_TEMP/er-quality-1/tools/release-artifacts.cjs"
+          node "$RUNNER_TEMP/er-quality-1/tools/test-release-manifest.cjs"
+          node "$RUNNER_TEMP/er-quality-1/tools/test-mysql84.cjs"
+      - name: New closure, static contracts and regressions
+        run: |
+          node tools/mysql84-release.cjs
+          node tools/test-release-manifest.cjs
+          node tools/test-mysql84-release.cjs
+          node tools/test-mysql84.cjs
+          node tools/mysql84-remediation.cjs
+          node tools/test-mysql84-remediation.cjs
+          python3 -m unittest discover -s tools -p 'test_*.py'
+          python3 tools/verify-institution-email.py
+          python3 tools/verify-institution-import.py
+          python3 tools/verify-institution-formative-plan.py
+          python3 tools/verify-institution-calendar.py
+          python3 tools/verify-institution-staff.py
+          dotnet restore Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --locked-mode
+          dotnet build Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx -c Release --no-restore
+          dotnet test tests/Unit/Unit.Tests.csproj -c Release --no-build
+          dotnet restore tools/CodeOrganization/CodeOrganization.csproj --locked-mode
+          dotnet run --project tools/CodeOrganization --no-restore -- check .
+          git diff --check
+      - name: Bind only the disposable service
+        env:
+          MYSQL_PORT: ${{ job.services.mysql.ports[3306] }}
+          MYSQL_CONTAINER: ${{ job.services.mysql.id }}
+        run: |
+          printf '[client]\nuser=root\n' > "$RUNNER_TEMP/er84.cnf"
+          chmod 600 "$RUNNER_TEMP/er84.cnf"
+          mysql --defaults-extra-file="$RUNNER_TEMP/er84.cnf" --host=127.0.0.1 --port="$MYSQL_PORT" --protocol=TCP --ssl-mode=DISABLED -e 'SET GLOBAL event_scheduler=OFF'
+          export ER84_UUID
+          ER84_UUID=$(mysql --defaults-extra-file="$RUNNER_TEMP/er84.cnf" --host=127.0.0.1 --port="$MYSQL_PORT" --protocol=TCP --ssl-mode=DISABLED --batch --skip-column-names -e 'SELECT @@server_uuid')
+          python3 - <<'PY'
+          import json, os, pathlib, uuid
+          name = 'er84_' + uuid.uuid4().hex[:12]
+          config = dict(database=name, host='127.0.0.1', port=int(os.environ['MYSQL_PORT']), serverPort=3306, serverUuid=os.environ['ER84_UUID'], defaultsFile=os.environ['RUNNER_TEMP']+'/er84.cnf', isolatedCI=True, mysqlContainer=os.environ['MYSQL_CONTAINER'])
+          for role in ('definer','api','review'):
+              config[role+'User'] = name+'_'+role
+              config[role+'Host'] = '%'
+          pathlib.Path(os.environ['RUNNER_TEMP']+'/er84-config.json').write_text(json.dumps(config))
+          PY
+      - name: ICU ASCII, case, absolute end and NULL on real server
+        env:
+          MYSQL_CONTAINER: ${{ job.services.mysql.id }}
+        run: |
+          node tools/test-mysql84-remediation.cjs --sql > "$RUNNER_TEMP/predicates.sql"
+          docker exec -i "$MYSQL_CONTAINER" mysql --batch --raw --skip-column-names --default-character-set=utf8mb4 < "$RUNNER_TEMP/predicates.sql" > "$RUNNER_TEMP/predicates.out"
+          python3 - "$RUNNER_TEMP/predicates.out" <<'PY'
+          import pathlib, sys
+          rows = pathlib.Path(sys.argv[1]).read_text().splitlines()
+          assert rows[0] == '8.4.13' and len(rows) > 8
+          assert all(row == '1' for row in rows[1:]), rows
+          PY
+      - name: Original install, snapshot, upgrade, interrupted DDL, recovery, fresh install and trigger DML
+        run: python3 tools/mysql84_runtime.py "$RUNNER_TEMP/er84-config.json" "$RUNNER_TEMP/er84-evidence"
+      - name: Actual embedded C# validation and MySqlConnector predicates
+        env:
+          ER_MYSQL84_RELEASE_CONFIG: ${{ runner.temp }}/er84-config.json
+          ER_MYSQL84_EVIDENCE: ${{ runner.temp }}/er84-evidence
+        run: |
+          dotnet test tests/Integration/Integration.Tests.csproj -c Release --no-build --filter Category=MySQL84Release --logger 'trx;LogFileName=mysql84-release.trx'
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          root = ET.parse('tests/Integration/TestResults/mysql84-release.trx').getroot()
+          counts = root.find('{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}ResultSummary/{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}Counters').attrib
+          assert counts['total'] == counts['executed'] == counts['passed'] == '1', counts
+          PY
+      - name: Preserve synthetic runtime evidence (no credentials)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mysql84-corrective-release-evidence
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/predicates.out
+            ${{ runner.temp }}/er84-evidence/*result.json
+            ${{ runner.temp }}/er84-evidence/*journal.json
+            ${{ runner.temp }}/er84-evidence/before.json
+            ${{ runner.temp }}/er84-evidence/synthetic-before.sql
+            tests/Integration/TestResults/mysql84-release.trx

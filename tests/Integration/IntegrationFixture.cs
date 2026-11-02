@@ -30,7 +30,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
         // The only database a local (non-container) connection may target.
         public const string AllowedLocalDatabase = "electronic_register_test";
 
-        private const string ContainerImage = "mysql:8.4.3";
+        private const string ContainerImage = "mysql:8.4.13@sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b";
 
         private MySqlContainer? _mysql;
         private ServiceProvider? _serviceProvider;

@@ -1,3 +1,4 @@
+from historical_artifacts import verify_historical_artifact
 from calendar_schema_contract import phase4_contract
 """Offline Phase 2 schema/artifact contract verification. Never connects to SQL."""
 import hashlib
@@ -12,9 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 def verify():
     manifest = json.loads((ROOT / 'migrations/bootstrap/manifest.json').read_text(encoding='utf-8'))
     for name, digest in manifest['files'].items():
-        path = (ROOT / name).resolve(strict=True)
+        path = (ROOT / name).resolve()
         assert ROOT in path.parents, name
-        assert hashlib.sha256(path.read_bytes()).hexdigest().upper() == digest, name
+        assert verify_historical_artifact(ROOT, name, digest), name
         assert subprocess.run(['git', 'check-ignore', '--no-index', '-q', name], cwd=ROOT).returncode == 1, name
     contract = json.loads((ROOT / 'migrations/bootstrap/schema-contract.json').read_text(encoding='utf-8'))
     assert contract['inventory'] == manifest['inventory']

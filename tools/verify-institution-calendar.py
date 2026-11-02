@@ -1,3 +1,4 @@
+from historical_artifacts import verify_historical_artifact
 """Offline evidence checks only. Does not execute HTTP, SQL, migrations or races."""
 import argparse
 import hashlib
@@ -54,7 +55,7 @@ def verify(root, verification):
     else:
         require(report['status'] in ('INCOMPLETE','IMPLEMENTED_PENDING_VERIFICATION') and report['remaining'],'Missing incomplete work inventory')
     for artifact in report['artifacts']:
-        require(sha(local(root, artifact['path'])) == artifact['sha256'], 'Artifact digest mismatch: ' + artifact['path'])
+        require(verify_historical_artifact(root, artifact['path'], artifact['sha256']), 'Artifact digest mismatch: ' + artifact['path'])
     runs = {}
     for run in report['tests']['runs']:
         path = local(root, run['path'])
