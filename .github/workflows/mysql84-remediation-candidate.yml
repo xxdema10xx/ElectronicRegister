@@ -65,7 +65,7 @@ jobs:
           git diff --check
       - name: Bind only the disposable service
         env:
-          MYSQL_PORT: ${{ job.services.mysql.ports[3306] }}
+          MYSQL_PORT: ${{ job.services.mysql.ports['3306'] }}
           MYSQL_CONTAINER: ${{ job.services.mysql.id }}
         run: |
           printf '[client]\nuser=root\n' > "$RUNNER_TEMP/er84.cnf"
