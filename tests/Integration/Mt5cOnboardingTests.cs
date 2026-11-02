@@ -52,7 +52,7 @@ public sealed partial class Mt5cOnboardingTests : IAsyncLifetime
     }
     private async Task<MySqlConnection> Open()
     {
-        var c=new MySqlConnection(connection);await c.OpenAsync();
+        var c=new MySqlConnection(connection);await c.OpenAsync(); if(await Mysql84FixtureTarget.VerifyAsync(c)) return c;
         await using var cmd=new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE()",c);
         await using var r=await cmd.ExecuteReaderAsync();Assert.True(await r.ReadAsync());Assert.Equal("5.7.24",r.GetString(0));Assert.Equal(Environment.MachineName,r.GetString(1),true);Assert.Equal((int)TestMySqlTarget.Port,r.GetInt32(2));Assert.EndsWith(TestMySqlTarget.DataDirectorySuffix,r.GetString(3),StringComparison.OrdinalIgnoreCase);Assert.Equal("electronic_register_test",r.GetString(4));return c;
     }
@@ -72,6 +72,7 @@ public sealed partial class Mt5cOnboardingTests : IAsyncLifetime
     {
         if(host is not null)await host.DisposeAsync();
         if(connection is null)return;
+        if(Mysql84FixtureTarget.IsOwned(connection))return; // Retain immutable audits until owned container disposal.
         foreach(var owner in owners.Distinct())await Exec("SET @er_mt5b_fixture_owners=@p0; DELETE FROM institution_recovery_approval WHERE institution_id=@p0; DELETE FROM institution_recovery WHERE institution_id=@p0; DELETE FROM institution_provisioning WHERE institution_id=@p0; DELETE FROM platform_operation_nonce WHERE institution_id=@p0; DELETE FROM institution_onboarding_event WHERE institution_id=@p0; DELETE FROM institution_invitation WHERE institution_id=@p0; DELETE FROM institution_membership_event WHERE institution_id=@p0; DELETE r FROM institution_membership_role r JOIN institution_membership m ON m.id=r.membership_id WHERE m.institution_id=@p0; DELETE FROM institution_membership WHERE institution_id=@p0; DELETE FROM institution WHERE id=@p0; SET @er_mt5b_fixture_owners=NULL",owner);
         foreach(var user in users)await Exec("DELETE FROM user WHERE id=@p0",user);
     }

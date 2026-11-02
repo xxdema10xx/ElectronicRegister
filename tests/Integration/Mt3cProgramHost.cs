@@ -49,6 +49,7 @@ internal static class Mt3cHosting
                 "--Identity:Legacy:AllowUnbackfilledAccounts=" + unbackfilled,
                 "--Logging:LogLevel:Default=Critical", "--Logging:EventLog:LogLevel:Default=None"
             };
+            args.Add("--Deployment:LocalTestDatabasePort=" + new MySqlConnector.MySqlConnectionStringBuilder(connectionString).Port);
             if (Environment.GetEnvironmentVariable("ER_TEST_ISOLATED_PORT") is { } isolatedPort)
             {
                 args.Add("--Deployment:LocalTestDatabasePort=" + isolatedPort);

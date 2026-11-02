@@ -15,6 +15,8 @@ import re
 import subprocess
 import tempfile
 import threading
+import time
+from collections import deque
 import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -71,7 +73,7 @@ class Mysql:
             require(os.environ.get('DOCKER_HOST', 'unix:///var/run/docker.sock') == 'unix:///var/run/docker.sock' and os.environ.get('DOCKER_CONTEXT', 'default') == 'default', 'Only local Docker transport accepted')
         args = prefix + [config.get('mysqlClient', 'mysql'), '--defaults-extra-file=' + config['defaultsFile'],
                 '--batch', '--raw', '--skip-column-names', '--unbuffered', '--skip-reconnect',
-                '--default-character-set=utf8mb4']
+                '--default-character-set=utf8mb4', '--connect-timeout=5']
         if socket_mode:
             require(not isolated and config.get('socketFile') == '/var/run/mysqld/mysqld.sock', 'Explicit staging socket required')
             args += ['--protocol=SOCKET', '--socket=' + config['socketFile']]
@@ -80,32 +82,99 @@ class Mysql:
             args += ['--ssl-mode=DISABLED', '--get-server-public-key'] if isolated else ['--ssl-mode=VERIFY_IDENTITY', '--ssl-ca=' + config['caFile']]
         self.args = args
         self.process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                        stderr=subprocess.PIPE, text=True, encoding='utf-8', bufsize=1)
-        self.output = queue.Queue()
-        def pump():
-            for line in self.process.stdout:
-                self.output.put(line.rstrip('\n'))
-            self.output.put(None)
-        threading.Thread(target=pump, daemon=True).start()
+                                        stderr=subprocess.PIPE, text=True, encoding='utf-8', errors='replace', bufsize=1)
         self.config = config
+        self.output = queue.Queue()
+        self.stderr = deque(maxlen=100)
+        self.broken = False
+        self.lock = threading.Lock()
+        self.readers = []
+        def pump(stream, name):
+            try:
+                for line in stream:
+                    if name == 'stderr':
+                        self.stderr.append(line.rstrip('\n'))
+                    self.output.put((name, line.rstrip('\n')))
+            finally:
+                self.output.put((name, None))
+        for name in ('stdout', 'stderr'):
+            reader = threading.Thread(target=pump, args=(getattr(self.process, name), name), daemon=True)
+            reader.start()
+            self.readers.append(reader)
 
-    def execute(self, sql):
+    def execute(self, sql, timeout=120):
+        with self.lock:
+            require(not self.broken, 'MySQL connection unusable; no automatic retry; reconcile journal')
+            return self._execute(sql, timeout)
+
+    def _execute(self, sql, timeout):
         marker = 'er_' + uuid.uuid4().hex
-        delimiter = '$$' + uuid.uuid4().hex
+        # mysql stores delimiters in a 16-byte array (including NUL). A UUID
+        # delimiter is truncated by the client and leaves SQL buffered forever.
+        delimiter = '$' + uuid.uuid4().hex[:12]
+        while delimiter in sql:
+            delimiter = '$' + uuid.uuid4().hex[:12]
         script = f"DELIMITER {delimiter}\n{sql}\n{delimiter}\nDELIMITER ;\nSELECT '{marker}';\n"
-        self.process.stdin.write(script)
-        self.process.stdin.flush()
+        started = time.monotonic()
+        deadline = started + timeout
         rows = []
+        eof = set()
+        flushed = False
+        def failure(reason):
+            self.broken = True
+            diagnostic = dict(kind=reason, pid=self.process.pid, returnCode=self.process.poll(),
+                              elapsedSeconds=round(time.monotonic()-started, 3), timeoutSeconds=timeout,
+                              statementHash=sha(sql), statementVerb=sql.lstrip().split(None, 1)[0] if sql.strip() else '',
+                              delimiterLength=len(delimiter), stdinFlushed=flushed, stdoutRows=len(rows), eof=sorted(eof),
+                              stderr=list(self.stderr))
+            match = re.search(r'ERROR (\d+) \(([A-Z0-9]{5})\)', '\n'.join(self.stderr))
+            if match:
+                diagnostic.update(mysqlErrno=int(match[1]), sqlstate=match[2])
+            # The observer uses a separate bounded connection: no SQL or credentials
+            # are written into diagnostics. Failure here must never replay DDL.
+            try:
+                observer = subprocess.run(self.args + ['--connect-timeout=3', '-e',
+                    'SELECT ID,COMMAND,TIME,STATE FROM information_schema.PROCESSLIST'],
+                    capture_output=True, text=True, timeout=5)
+                diagnostic['processlist'] = observer.stdout
+                diagnostic['observerExitCode'] = observer.returncode
+            except Exception as error:
+                diagnostic['observerError'] = type(error).__name__
+            self.close()
+            raise RuntimeError('MySQL '+reason+'; no automatic retry; keep maintenance enabled and reconcile journal; diagnostic='+json.dumps(diagnostic))
+        # A full stdin pipe must also obey the deadline (e.g. a stopped client).
+        def write():
+            try:
+                self.process.stdin.write(script)
+                self.process.stdin.flush()
+                self.output.put(('sent', marker))
+            except (BrokenPipeError, OSError, ValueError):
+                self.output.put(('write-error', 'client pipe closed'))
+        writer = threading.Thread(target=write, daemon=True)
+        writer.start()
         while True:
             try:
-                row = self.output.get(timeout=120)
+                remaining = deadline-time.monotonic()
+                if remaining <= 0:
+                    failure('timeout')
+                stream, row = self.output.get(timeout=remaining)
             except queue.Empty:
-                raise RuntimeError('MySQL timeout; keep maintenance enabled and reconcile journal') from None
+                failure('timeout')
+            if stream == 'write-error':
+                failure(row)
+            if stream == 'sent':
+                if row == marker:
+                    flushed = True
+                continue
             if row is None:
-                self.process.wait(timeout=5)
-                match = re.search(r'ERROR (\d+) \(([A-Z0-9]{5})\)', self.process.stderr.read())
-                code = ' errno=' + match[1] + ' sqlstate=' + match[2] if match else ''
-                raise RuntimeError('MySQL statement failed;' + code + '; no automatic retry; maintenance must remain enabled')
+                eof.add(stream)
+                if len(eof) == 2:
+                    failure('client EOF')
+                continue
+            if stream == 'stderr':
+                if re.search(r'ERROR \d+ \(', row):
+                    failure('SQL error')
+                continue
             if row == marker:
                 return '\n'.join(rows)
             rows.append(row)
@@ -118,11 +187,26 @@ class Mysql:
 
     def close(self):
         if self.process.poll() is None:
-            self.process.stdin.close()
+            # Broken protocol: terminate before closing stdin, which may be
+            # locked by a blocked writer. Never send another SQL statement.
+            if self.broken:
+                self.process.terminate()
+            else:
+                self.process.stdin.close()
             try:
                 self.process.wait(timeout=5)
             except subprocess.TimeoutExpired:
                 self.process.terminate()
+                try:
+                    self.process.wait(timeout=3)
+                except subprocess.TimeoutExpired:
+                    self.process.kill()
+                    self.process.wait(timeout=3)
+        for reader in self.readers:
+            reader.join(timeout=1)
+        for stream in (self.process.stdin, self.process.stdout, self.process.stderr):
+            if not stream.closed:
+                stream.close()
 
 
 def load_contract(modern=True):

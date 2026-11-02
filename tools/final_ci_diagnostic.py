@@ -5,7 +5,7 @@ from pathlib import Path
 from ci_diagnostic import failed
 
 
-EXPECTED = {'static': {'restore', 'build', 'unit', 'python', 'whitespace', 'organization',
+EXPECTED = {'static': {'restore', 'build', 'unit', 'fixture-config', 'python', 'whitespace', 'organization',
                        'mysql84-release', 'test-release-manifest', 'test-mysql84-release',
                        'test-mysql84', 'mysql84-remediation', 'test-mysql84-remediation'},
             **{name: {'restore', 'build', name} for name in

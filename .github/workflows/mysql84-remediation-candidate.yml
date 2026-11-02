@@ -98,6 +98,7 @@ jobs:
           PY
       - name: Isolated install or upgrade and recovery
         id: runtime
+        timeout-minutes: 30
         if: always() && steps.bind.outcome == 'success'
         env:
           RUNTIME_MODE: ${{ matrix.mode }}
@@ -108,7 +109,8 @@ jobs:
           temp = pathlib.Path(os.environ['RUNNER_TEMP'])
           args = ['--fresh-only'] if os.environ['RUNTIME_MODE'] == 'fresh' else []
           command = ['python3','tools/mysql84_runtime.py',str(temp/'er84-config.json'),str(temp/'er84-evidence')]+args
-          (temp/'runtime-plan.json').write_text(json.dumps([dict(id='runtime-execution',command=command)]))
+          protocol = ['python3','tools/mysql84_protocol.py',str(temp/'er84-config.json'),str(temp/'protocol-result.json')]
+          (temp/'runtime-plan.json').write_text(json.dumps([dict(id='client-protocol',command=protocol,timeout=240),dict(id='runtime-execution',needs=['client-protocol'],command=command,timeout=1500)]))
           PY
           python3 tools/ci_diagnostic.py --plan "$RUNNER_TEMP/runtime-plan.json" --output "$RUNNER_TEMP/runtime-check.json"
       - name: Actual embedded C# validation and MySqlConnector predicates
@@ -171,6 +173,7 @@ jobs:
             ${{ runner.temp }}/*.log
             ${{ runner.temp }}/runtime-diagnostic.json
             ${{ runner.temp }}/predicates.out
+            ${{ runner.temp }}/protocol-result.json
             ${{ runner.temp }}/er84-evidence/*result.json
             ${{ runner.temp }}/er84-evidence/*journal.json
             ${{ runner.temp }}/er84-evidence/runtime-phases.json
@@ -199,7 +202,7 @@ jobs:
 
   integration:
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:
@@ -212,9 +215,11 @@ jobs:
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
         with:
           dotnet-version: '10.0.x'
-      - name: Real tests in a new pinned MySQL container for every method
+      - name: Fixture preflight and isolated functional tests on pinned MySQL
+        timeout-minutes: 65
         env:
           DOMAIN: ${{ matrix.domain }}
+          ER_TEST_MYSQL84: '1'
         run: python3 tools/ci_diagnostic.py --integration "$DOMAIN" --output ".diagnostics/$DOMAIN-diagnostic.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()

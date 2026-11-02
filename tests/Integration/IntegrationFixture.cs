@@ -131,11 +131,15 @@ namespace ElectronicRegisterAPI.Tests.Integration
                 await _serviceProvider.DisposeAsync();
 
             if (_mysql != null)
+            {
+                Mysql84FixtureTarget.Forget(ConnectionString);
                 await _mysql.DisposeAsync();
+            }
         }
 
         internal static string ValidateLocalConnectionString(string connectionString)
         {
+            if (Mysql84FixtureTarget.IsOwned(connectionString)) return connectionString;
             MySqlConnectionStringBuilder builder;
             try
             {
@@ -191,13 +195,15 @@ namespace ElectronicRegisterAPI.Tests.Integration
             try
             {
                 _mysql = new MySqlBuilder(ContainerImage)
-                    .WithDatabase("testdb")
-                    .WithUsername("test")
+                    .WithDatabase("electronic_register_test")
+                    .WithUsername("root")
                     .WithPassword("test")
                     .Build();
 
                 await _mysql.StartAsync();
-                return _mysql.GetConnectionString();
+                var owned = new MySqlConnectionStringBuilder(_mysql.GetConnectionString()) { Server = "127.0.0.1", AllowUserVariables = true }.ConnectionString;
+                await Mysql84FixtureTarget.ProvisionAsync(_mysql, owned);
+                return owned;
             }
             catch (DockerUnavailableException ex)
             {

@@ -35,7 +35,7 @@ namespace ElectronicRegisterAPI.Tests.Integration;
 // Identity-only fixture: no schema preparation, migrations or dependency on course data.
 // Serial collection also prevents concurrent snapshots against legacy suites.
 [CollectionDefinition("Mt5aIdentityOnly", DisableParallelization = true)]
-public sealed class Mt5aIdentityCollection;
+public sealed class Mt5aIdentityCollection : ICollectionFixture<Mysql84IdentityFixture>;
 
 [Collection("Mt5aIdentityOnly")]
 public sealed class Mt5aMembershipAdminTests : IAsyncLifetime

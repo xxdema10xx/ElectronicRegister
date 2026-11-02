@@ -49,6 +49,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             // In-process entry point invocation must retain the production assembly identity.
             "--applicationName=" + typeof(InstitutionExamController).Assembly.GetName().Name,
             "--ConnectionStrings:DefaultConnection=" + fixture.ConnectionString,
+            "--Deployment:LocalTestDatabasePort=" + new MySqlConnector.MySqlConnectionStringBuilder(fixture.ConnectionString).Port,
             "--Jwt:Key=audit-bootstrap-test-key-only-0123456789abcdef",
             "--Jwt:Issuer=audit-bootstrap", "--Jwt:Audience=audit-client", "--Jwt:ExpiresInMinutes=10",
             "--AzureAd:TenantId=11111111-2222-3333-4444-555555555555", "--AzureAd:Audience=audit-microsoft",

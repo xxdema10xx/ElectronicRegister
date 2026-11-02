@@ -450,6 +450,11 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
 
     public async Task DisposeAsync()
     {
+        if (Mysql84FixtureTarget.IsOwned(fixture.ConnectionString))
+        {
+            if (_host is not null) await _host.DisposeAsync();
+            return; // Immutable audit remains until owned container disposal.
+        }
         try { if (_host is not null) await _host.DisposeAsync(); }
         finally { await Change(async db =>
         {
@@ -475,6 +480,7 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
             {
                 "--Deployment:Mode=LocalTest", "--environment=Production", "--urls=http://127.0.0.1:0", "--applicationName=" + typeof(InstitutionExamController).Assembly.GetName().Name,
                 "--ConnectionStrings:DefaultConnection=" + connectionString,
+                "--Deployment:LocalTestDatabasePort=" + new MySqlConnector.MySqlConnectionStringBuilder(connectionString).Port,
                 "--Jwt:Key=" + Key, "--Jwt:Issuer=mt2-tests", "--Jwt:Audience=mt2-client", "--Jwt:ExpiresInMinutes=10",
                 "--AzureAd:TenantId=11111111-2222-3333-4444-555555555555", "--AzureAd:Audience=mt2-microsoft",
                 "--Identity:Legacy:Enabled=" + enabled, "--Identity:Legacy:InstitutionId=" + legacyInstitution,

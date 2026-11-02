@@ -45,7 +45,7 @@ class Probes:
         schema = load_contract()
         subset = {'tables': {t: schema['tables'][t] for t in tables}}
         before = fingerprint(self.db, subset)
-        result = subprocess.run(self.db.args, input='USE `' + self.config['database'] + '`;\nSTART TRANSACTION;\n' + sql + ';\nROLLBACK;\n', text=True, capture_output=True)
+        result = subprocess.run(self.db.args, input='USE `' + self.config['database'] + '`;\nSTART TRANSACTION;\n' + sql + ';\nROLLBACK;\n', text=True, capture_output=True, timeout=120)
         match = re.search(r'ERROR (\d+) \(', result.stderr)
         require(result.returncode != 0 and match is not None and int(match[1]) in codes,
                 'Expected rejection not reached: errno=' + (match[1] if match else 'none'))
@@ -54,12 +54,12 @@ class Probes:
     def api(self, sql):
         env = dict(os.environ, MYSQL_PWD='Synthetic-ci-only-credential')
         return subprocess.run(self.db.args + ['--user=' + self.config['apiUser']],
-                              input='USE `' + self.config['database'] + '`;\n' + sql + ';\n', text=True, capture_output=True, env=env)
+                              input='USE `' + self.config['database'] + '`;\n' + sql + ';\n', text=True, capture_output=True, env=env, timeout=30)
 
     def reproduce_predecessor_failure(self):
         _, table, row, _ = self.rows()[0]
         before = fingerprint(self.db, {'tables':{table:None}})
-        result = subprocess.run(self.db.args, input='USE `' + self.config['database'] + '`;\n' + insert(table,row) + ';\n', text=True, capture_output=True)
+        result = subprocess.run(self.db.args, input='USE `' + self.config['database'] + '`;\n' + insert(table,row) + ';\n', text=True, capture_output=True, timeout=120)
         require(result.returncode != 0 and 'ERROR 3995 ' in result.stderr, 'Predecessor 3995 was not reproduced through invitation INSERT')
         require(fingerprint(self.db, {'tables':{table:None}}) == before, 'Failed predecessor INSERT persisted data')
 

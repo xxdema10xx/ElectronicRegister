@@ -9,6 +9,52 @@ from ci_diagnostic import execute, failed
 
 
 class AggregateDiagnosticTests(unittest.TestCase):
+    def test_unknown_concurrency_rollback_and_fault_methods_are_never_batched(self):
+        from ci_diagnostic import integration_plan, REUSABLE_METHODS
+        methods = ['ElectronicRegisterAPI.Tests.Integration.NewTests.'+n for n in ('OrdinaryUnknown','ConcurrentWrites','Rollback','FaultInjection','DeleteRows')]
+        methods += sorted(REUSABLE_METHODS)
+        plan = integration_plan(methods, Path.cwd(), 'iam')
+        individual = {c['id'] for c in plan if not c.get('members')}
+        self.assertTrue(set(methods[:5]) <= individual)
+        accounted = [m for c in plan for m in c.get('members', [c['id']]) if m in methods]
+        self.assertEqual(sorted(accounted), sorted(methods))
+
+    def test_batch_maps_every_theory_case_and_refuses_partial_timeout_evidence(self):
+        from ci_diagnostic import batch_methods
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'current.trx'
+            path.write_text('''<TestRun xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+              <Results><UnitTestResult testId="a" outcome="Passed"/><UnitTestResult testId="b" outcome="Failed"/></Results>
+              <TestDefinitions><UnitTest id="a"><TestMethod className="Fixture" name="Theory"/></UnitTest><UnitTest id="b"><TestMethod className="Fixture" name="Theory"/></UnitTest></TestDefinitions>
+              <ResultSummary outcome="Failed"><Counters total="2" executed="2" passed="1" failed="1"/></ResultSummary></TestRun>''')
+            check = dict(id='batch', members=['Fixture.Theory','Fixture.Missing'], trx=str(path))
+            rows = batch_methods(check, dict(status='FAIL', error='failure'), directory)
+            self.assertEqual([r['status'] for r in rows], ['FAIL','FAIL'])
+            self.assertEqual(rows[0]['cases'], 2)
+            self.assertEqual(len(rows), len(check['members']))
+            rows = batch_methods(check, dict(status='FAIL', error='deadline', outcome='TIMEOUT'), directory)
+            self.assertTrue(all(r['status']=='FAIL' and r['outcome']=='TIMEOUT' for r in rows))
+
+    def test_shared_preflight_runs_once_blocks_dependents_and_continues_independent(self):
+        from ci_diagnostic import integration_plan
+        from unittest.mock import patch, Mock
+        methods = ['ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.'+n for n in ('One','Two')]
+        methods += ['ElectronicRegisterAPI.Tests.Integration.IdentityAccountTests.IndependentRollback']
+        plan = integration_plan(methods, Path.cwd(), 'iam')
+        calls = []
+        def run(command, **kwargs):
+            calls.append(command)
+            identity = 'IdentityDiagnosticPreflightTests.' in ' '.join(command)
+            return Mock(returncode=1 if identity else 0, stdout='shared initialization error' if identity else '', stderr='')
+        with patch('ci_diagnostic.run_command', side_effect=run), patch('ci_diagnostic.validate_trx'):
+            rows = execute(plan, Path.cwd())
+        by_id = {r['id']:r for r in rows}
+        self.assertEqual(sum('IdentityDiagnosticPreflightTests.' in ' '.join(c) for c in calls), 1)
+        self.assertEqual([by_id[m]['status'] for m in methods], ['BLOCKED','BLOCKED','PASS'])
+        self.assertIn('preflight-identity', by_id[methods[0]]['error'])
+        self.assertEqual(len(methods), sum(by_id[m]['status'] in ('PASS','FAIL','BLOCKED') for m in methods))
+        self.assertTrue(failed(rows))
+
     def test_timeout_preserves_partial_output_and_continues_independent_checks(self):
         with tempfile.TemporaryDirectory() as directory:
             rows = execute([
@@ -16,6 +62,8 @@ class AggregateDiagnosticTests(unittest.TestCase):
                 dict(id='independent', command=[sys.executable,'-c','pass'])], directory)
             self.assertEqual([row['status'] for row in rows], ['FAIL','PASS'])
             self.assertIn('before timeout', rows[0]['error'])
+            self.assertEqual(rows[0]['outcome'], 'TIMEOUT')
+            self.assertTrue(rows[0]['infrastructure'])
 
     def test_runtime_bootstrap_failure_records_all_dependent_phases(self):
         import os

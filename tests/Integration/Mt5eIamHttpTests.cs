@@ -35,7 +35,7 @@ public sealed class Mt5eIamHttpTests : IAsyncLifetime
     private string Route(int i=2)=>Directory+"/"+_members[i]+"/mutations";
     private async Task<MySqlConnection> Open()
     {
-        var c=new MySqlConnection(_connection);await c.OpenAsync();
+        var c=new MySqlConnection(_connection);await c.OpenAsync(); if(await Mysql84FixtureTarget.VerifyAsync(c)) return c;
         await using var cmd=new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE(),SUBSTRING_INDEX(USER(),'@',1)",c);
         await using var r=await cmd.ExecuteReaderAsync();Assert.True(await r.ReadAsync());
         Assert.Equal("5.7.24",r.GetString(0));Assert.Equal(Environment.MachineName,r.GetString(1),ignoreCase:true);Assert.Equal((int)TestMySqlTarget.Port,r.GetInt32(2));
@@ -53,7 +53,7 @@ public sealed class Mt5eIamHttpTests : IAsyncLifetime
     public async Task InitializeAsync()
     {
         _connection=IntegrationFixture.ValidateLocalConnectionString(Environment.GetEnvironmentVariable("TEST_MYSQL_CONNECTION")??throw new InvalidOperationException("Explicit isolated database required"));
-        var builder=new MySqlConnectionStringBuilder(_connection);Assert.Equal("127.0.0.1",builder.Server);Assert.Equal(TestMySqlTarget.Port,builder.Port);builder.AllowUserVariables=true;_connection=builder.ConnectionString;
+        var builder=new MySqlConnectionStringBuilder(_connection);Assert.Equal("127.0.0.1",builder.Server);if(!Mysql84FixtureTarget.IsOwned(_connection))Assert.Equal(TestMySqlTarget.Port,builder.Port);builder.AllowUserVariables=true;_connection=builder.ConnectionString;
         await Exec("INSERT INTO institution(id,code,name,status) VALUES(@a,@ca,'Synthetic HTTP IAM A','active'),(@b,@cb,'Synthetic HTTP IAM B','active')",("@a",_a),("@b",_b),("@ca","MT5BP_"+_a.ToString("N")),("@cb","MT5BP_"+_b.ToString("N")));
         var hash=BCrypt.Net.BCrypt.HashPassword(Password);
         for(var i=0;i<_users.Length;i++)await Exec("INSERT INTO user(id,email,password_hash,role) VALUES(@u,@email,@hash,'admin')",("@u",_users[i]),("@email",Email(i)),("@hash",hash));
@@ -66,6 +66,7 @@ public sealed class Mt5eIamHttpTests : IAsyncLifetime
     public async Task DisposeAsync()
     {
         if(_host is not null)await _host.DisposeAsync();if(_connection is null)return;
+        if(Mysql84FixtureTarget.IsOwned(_connection))return; // Retain immutable audits until owned container disposal.
         await Exec("SET @er_mt5b_fixture_owners=@owners; DELETE FROM institution_membership_event WHERE institution_id IN (@a,@b); DELETE r FROM institution_membership_role r JOIN institution_membership m ON m.id=r.membership_id WHERE m.institution_id IN (@a,@b); DELETE FROM institution_membership WHERE institution_id IN (@a,@b); DELETE FROM institution WHERE id IN (@a,@b); DELETE FROM user WHERE id IN (@u0,@u1,@u2,@u3,@u4); SET @er_mt5b_fixture_owners=NULL",
             ("@owners",_a+","+_b),("@a",_a),("@b",_b),("@u0",_users[0]),("@u1",_users[1]),("@u2",_users[2]),("@u3",_users[3]),("@u4",_users[4]));
     }
