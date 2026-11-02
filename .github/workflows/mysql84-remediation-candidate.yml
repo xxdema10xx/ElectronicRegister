@@ -37,6 +37,7 @@ jobs:
       - name: Tools and actionlint
         id: tools
         run: |
+          exec > >(tee "$RUNNER_TEMP/tools.log") 2>&1
           sudo apt-get update
           sudo apt-get install -y mysql-client
           go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
@@ -45,6 +46,7 @@ jobs:
         id: predecessor
         if: always()
         run: |
+          exec > >(tee "$RUNNER_TEMP/predecessor.log") 2>&1
           git clone --no-hardlinks . "$RUNNER_TEMP/er-quality-1"
           git -C "$RUNNER_TEMP/er-quality-1" checkout --detach 8e7d9ecd42c001f1fa9b30e120535ce1bb0ef6e8
           node "$RUNNER_TEMP/er-quality-1/tools/release-artifacts.cjs"
@@ -54,6 +56,7 @@ jobs:
         id: build
         if: always()
         run: |
+          exec > >(tee "$RUNNER_TEMP/build.log") 2>&1
           dotnet restore Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --locked-mode
           dotnet build Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx -c Release --no-restore
       - name: Bind only the disposable service
@@ -63,6 +66,7 @@ jobs:
           MYSQL_PORT: ${{ job.services.mysql.ports['3306'] }}
           MYSQL_CONTAINER: ${{ job.services.mysql.id }}
         run: |
+          exec > >(tee "$RUNNER_TEMP/bind.log") 2>&1
           printf '[client]\nuser=root\n' > "$RUNNER_TEMP/er84.cnf"
           chmod 600 "$RUNNER_TEMP/er84.cnf"
           mysql --defaults-extra-file="$RUNNER_TEMP/er84.cnf" --host=127.0.0.1 --port="$MYSQL_PORT" --protocol=TCP --ssl-mode=DISABLED -e 'SET GLOBAL event_scheduler=OFF'
@@ -83,6 +87,7 @@ jobs:
         env:
           MYSQL_CONTAINER: ${{ job.services.mysql.id }}
         run: |
+          exec > >(tee "$RUNNER_TEMP/predicates.log") 2>&1
           node tools/test-mysql84-remediation.cjs --sql > "$RUNNER_TEMP/predicates.sql"
           docker exec -i "$MYSQL_CONTAINER" mysql --batch --raw --skip-column-names --default-character-set=utf8mb4 < "$RUNNER_TEMP/predicates.sql" > "$RUNNER_TEMP/predicates.out"
           python3 - "$RUNNER_TEMP/predicates.out" <<'PY'
@@ -97,6 +102,7 @@ jobs:
         env:
           RUNTIME_MODE: ${{ matrix.mode }}
         run: |
+          exec > >(tee "$RUNNER_TEMP/runtime.log") 2>&1
           python3 - <<'PY'
           import json, os, pathlib
           temp = pathlib.Path(os.environ['RUNNER_TEMP'])
@@ -112,9 +118,15 @@ jobs:
           ER_MYSQL84_RELEASE_CONFIG: ${{ runner.temp }}/er84-config.json
           ER_MYSQL84_EVIDENCE: ${{ runner.temp }}/er84-evidence
         run: |
+          exec > >(tee "$RUNNER_TEMP/csharp.log") 2>&1
+          python3 -c "from pathlib import Path; Path('tests/Integration/TestResults/mysql84-release.trx').unlink(missing_ok=True)"
           dotnet test tests/Integration/Integration.Tests.csproj -c Release --no-build --filter Category=MySQL84Release --logger 'trx;LogFileName=mysql84-release.trx'
           python3 - <<'PY'
           import xml.etree.ElementTree as ET
+          import pathlib, sys
+          sys.path.insert(0, 'tools')
+          from ci_diagnostic import validate_trx
+          validate_trx(pathlib.Path('tests/Integration/TestResults/mysql84-release.trx'))
           root = ET.parse('tests/Integration/TestResults/mysql84-release.trx').getroot()
           counts = root.find('{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}ResultSummary/{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}Counters').attrib
           assert counts['total'] == counts['executed'] == counts['passed'] == '1', counts
@@ -131,7 +143,7 @@ jobs:
           rows = []
           for name in ('tools', 'predecessor', 'build', 'bind', 'predicates', 'runtime', 'csharp'):
               value = steps.get(name, {}).get('outcome', 'skipped')
-              rows.append(dict(id=name, category='runtime', file='.github/workflows/mysql84-remediation-candidate.yml', line=1, test=name, error=value, cause='See workflow log and runtime journals', priority='P1', required=True, status='PASS' if value == 'success' else 'BLOCKED' if value == 'skipped' else 'FAIL', dependents=[]))
+              rows.append(dict(id=name, category='runtime', file='.github/workflows/mysql84-remediation-candidate.yml', line=1, test=name, error=(pathlib.Path(os.environ['RUNNER_TEMP'])/(name+'.log')).read_text() if (pathlib.Path(os.environ['RUNNER_TEMP'])/(name+'.log')).exists() else value, cause='Command failed; complete output captured in error and uploaded log' if value == 'failure' else 'Workflow step outcome', priority='P1', required=True, status='PASS' if value == 'success' else 'BLOCKED' if value == 'skipped' else 'FAIL', dependents=[]))
           dependencies = dict(predicates=['bind'], runtime=['bind'], csharp=['runtime','build'])
           by_id = {row['id']:row for row in rows}
           for row in rows:
@@ -145,7 +157,9 @@ jobs:
                       row.update(status='SKIPPED', justification='Embedded validation and HTTP release test execute in upgrade job after both installs; fresh-only job has no upgraded database.')
           log = pathlib.Path(os.environ['RUNNER_TEMP']+'/runtime-check.json')
           if log.exists(): rows.extend(json.loads(log.read_text())['problems'])
-          pathlib.Path(os.environ['RUNNER_TEMP']+'/runtime-diagnostic.json').write_text(json.dumps(dict(problems=rows)))
+          phases = pathlib.Path(os.environ['RUNNER_TEMP']+'/er84-evidence/runtime-phases.json')
+          if phases.exists(): rows.extend(json.loads(phases.read_text())['problems'])
+          pathlib.Path(os.environ['RUNNER_TEMP']+'/runtime-diagnostic.json').write_text(json.dumps(dict(suite='runtime-'+os.environ['RUNTIME_MODE'],problems=rows)))
           PY
       - name: Preserve synthetic runtime evidence (no credentials)
         if: always()
@@ -154,10 +168,12 @@ jobs:
           name: mysql84-corrective-release-evidence-${{ matrix.mode }}
           if-no-files-found: warn
           path: |
+            ${{ runner.temp }}/*.log
             ${{ runner.temp }}/runtime-diagnostic.json
             ${{ runner.temp }}/predicates.out
             ${{ runner.temp }}/er84-evidence/*result.json
             ${{ runner.temp }}/er84-evidence/*journal.json
+            ${{ runner.temp }}/er84-evidence/runtime-phases.json
             ${{ runner.temp }}/er84-evidence/before.json
             ${{ runner.temp }}/er84-evidence/synthetic-before.sql
             tests/Integration/TestResults/mysql84-release.trx
@@ -183,7 +199,7 @@ jobs:
 
   integration:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
@@ -196,7 +212,7 @@ jobs:
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
         with:
           dotnet-version: '10.0.x'
-      - name: Real tests in a new pinned MySQL container for this domain
+      - name: Real tests in a new pinned MySQL container for every method
         env:
           DOMAIN: ${{ matrix.domain }}
         run: python3 tools/ci_diagnostic.py --integration "$DOMAIN" --output ".diagnostics/$DOMAIN-diagnostic.json"
@@ -215,7 +231,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           pattern: mysql84-*
           path: .diagnostics/downloaded

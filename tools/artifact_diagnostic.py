@@ -81,10 +81,15 @@ def audit(root):
             for name in paths:
                 target=(root/name).resolve()
                 if root not in target.parents: continue
+                try:
+                    exists = target.is_file()
+                except OSError as error:
+                    problems.append(issue('report-reference-unreadable', name, str(error), state='historical', sources=[source]))
+                    exists = None
                 references.append(dict(file=name, source=source, line=line_number,
-                                       exists=target.is_file(), tracked=name in tracked,
+                                       exists=exists, tracked=name in tracked,
                                        included=name in current, state='retired' if name in retired else 'historical'))
-                if not target.is_file():
+                if exists is False:
                     problems.append(issue('report-reference-missing', name, 'Report reference missing: '+source+':'+str(line_number), state='historical', sources=[source]))
     objects = defaultdict(set)
     # Raw history retains every pathname, including identical blobs at multiple paths.

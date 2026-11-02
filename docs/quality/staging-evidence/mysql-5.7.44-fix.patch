@@ -1,0 +1,1190 @@
+diff --git a/.github/workflows/staging-package.yml b/.github/workflows/staging-package.yml
+index 14f9cbf..80f2a57 100644
+--- a/.github/workflows/staging-package.yml
++++ b/.github/workflows/staging-package.yml
+@@ -40,10 +40,17 @@ jobs:
+           sudo python3 infra/staging/host.py --state "$STAGE_STATE" build
+           sudo python3 infra/staging/host.py --state "$STAGE_STATE" db
+           sudo python3 infra/staging/host.py --state "$STAGE_STATE" provision
++          sudo python3 infra/staging/host.py --state "$STAGE_STATE" compatibility
+           sudo python3 infra/staging/host.py --state "$STAGE_STATE" tls
+           sudo python3 infra/staging/host.py --state "$STAGE_STATE" seed
+           sudo python3 infra/staging/host.py --state "$STAGE_STATE" start
+-          sudo cat "$STAGE_STATE/images.json" "$STAGE_STATE/ops/database-identity.json" "$STAGE_STATE/ops/preflight-result.json" "$STAGE_STATE/ops/transport-result.json"
++          sudo cat "$STAGE_STATE/images.json" "$STAGE_STATE/mysql-capabilities.json" "$STAGE_STATE/ops/database-identity.json" "$STAGE_STATE/ops/compatibility-result.json" "$STAGE_STATE/ops/preflight-result.json" "$STAGE_STATE/ops/transport-result.json"
++      - name: Sanitized Docker and MySQL failure diagnostics (before stop)
++        if: failure()
++        run: |
++          if sudo test -f "$STAGE_STATE/state.json"; then
++            sudo python3 infra/staging/host.py --state "$STAGE_STATE" diagnostics
++          fi
+       - name: Stop only this job's staging (keep volume/data; never touch host Nginx)
+         if: always()
+         run: |
+diff --git a/infra/staging/README.md b/infra/staging/README.md
+index 5bcdc7e..5f83566 100644
+--- a/infra/staging/README.md
++++ b/infra/staging/README.md
+@@ -1,10 +1,51 @@
+ # Staging EC2: API Docker, MySQL privato, Nginx sull'host
+ 
++## Target temporaneo: MySQL 5.7.44 / OpenSSL
++
++Lo staging usa esclusivamente `mysql:5.7.44@sha256:dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da`,
++Docker Official Image `library/mysql`, linux/amd64, UID/GID 999:999. Il manifest,
++il config e i layer ispezionati sono stati verificati tramite SHA256 dal registry:
++[evidenze](../../docs/quality/staging-evidence/mysql-5.7.44-registry.json).
++Il binario estratto riporta 5.7.44, dipendenze OpenSSL e capacità TLS 1.2.
++Queste sono prove statiche: build controlla nuovamente versione/UID/GID/piattaforma
++ed esegue il binario; attestation e driver devono poi dimostrare TLS 1.2 reale.
++Il candidato yaSSL 5.7.24 del run 41109867548 è stato sostituito solo qui;
++ambienti locali, contratti SQL storici e suite 5.7.24 rimangono invariati.
++
++La policy revisionata è `mysql-image.json`. Non sono ammessi override del digest
++nel workflow. Gli stati hanno formato 2 e versione motore esplicita: gli stati
++precedenti vengono rifiutati, senza avviare, aggiornare o riutilizzare i loro volumi.
++Preparare sempre un nuovo stato/namespace per il passaggio a 5.7.44. Per fermare
++un vecchio stato usare il suo checkout originale e la relativa procedura.
++Non migrare automaticamente dati o reimpiegare directory MySQL esistenti.
++
++In caso di errore Actions esegue `host.py --state "$STATE" diagnostics` prima dello
++stop: stato/exit/OOM/restart, ultime sonde, log db/volume-init, UID e permessi dei
++mount, replay health e variabili SQL non sensibili. I segreti generati, credenziali
++fixture, PEM, token e password vengono sanitizzati in memoria prima della stampa
++JSON. I marker del bootstrap distinguono inizio/completamento/errore SQL.
++
++Il comando `compatibility`, eseguito dopo `provision`, richiede journal completo,
++hash sorgente/bundle/journal coerenti, preflight esatto, 71 tabelle, 180 trigger,
++la procedura `er_schema_ready` con DEFINER esplicito e nessuna stored function
++(il bundle canonico non ne contiene). Non attenua le verifiche su definizioni o
++SQL_MODE per accomodare differenze di versione: ogni divergenza blocca il gate.
++`start` verifica inoltre un HTTP 200 reale da loopback senza seguire redirect.
++
++**Release gate bloccato:** nessun Docker locale disponibile. Senza pubblicare la
++revisione non è possibile far eseguire le modifiche a GitHub Actions: checkout,
++SHA e manifest devono coincidere e il checkout deve essere pulito. Nessun commit,
++push, dispatch del vecchio codice o PASS Docker è stato eseguito qui.
++Per EC2 servono prima run verdi della nuova SHA, compatibilità/TLS/UID/binding
++positivi e una successiva autorizzazione alla fase EC2; HTTPS/Nginx rimane un gate
++separato. MySQL 5.7.44/Oracle Linux 7 è un target legacy temporaneo, non una
++certificazione di sicurezza o supporto per un deployment Production.
++
+ **Stato: preparato localmente, collaudo Docker/EC2/TLS ancora da eseguire.** Nessun collegamento EC2, modifica Nginx/certificati, commit, push o deployment è stato effettuato per preparare questi file. Il backend e le remediation concluse non sono rifattorizzati. Le istruzioni server sotto richiedono una successiva autorizzazione esplicita; non sono una sua sostituzione.
+ 
+ ## Architettura e file
+ 
+-Internet → Nginx **esistente sull'host**, nuova vhost `staging.consoliprojects.dev` → `127.0.0.1:18080` → API non-root 1654 → TLS 1.2/VerifyFull/CA esplicita → MySQL 5.7.24 non-root 999 su bridge dedicato, **senza ports**. Il progetto/volume/rete hanno nomi casuali e label di ownership. Nessun Nginx container e nessun Docker socket nei container.
++Internet → Nginx **esistente sull'host**, nuova vhost `staging.consoliprojects.dev` → `127.0.0.1:18080` → API non-root 1654 → TLS 1.2/VerifyFull/CA esplicita → MySQL 5.7.44 non-root 999 su bridge dedicato, **senza ports**. Il progetto/volume/rete hanno nomi casuali e label di ownership. Nessun Nginx container e nessun Docker socket nei container.
+ 
+ - `compose.yaml`: API, SQL, inizializzatore di permessi del solo volume nuovo, operator job separati.
+ - `host.py`: prepara stato/certificati/secret, controlla esclusivamente il daemon locale e i propri oggetti; nessuna funzione SSH, Nginx, delete/down/prune.
+@@ -38,7 +79,7 @@ gh run view "$DOCKER_RUN_ID" --repo "$REPOSITORY" --json headSha,conclusion,jobs
+ 
+ Entrambi devono avere **headSha=REV**, conclusion success, source matrix Linux/Windows verde e job SQL dedicato verde. Se il branch avanza fra lettura e dispatch il nuovo workflow fallisce correttamente il confronto SHA: selezionare di nuovo la revisione desiderata. `verify.yml` include il job MySQL manuale sul runner Windows dedicato: se runner/environment non disponibili, il relativo gate resta aperto.
+ 
+-`staging-package.yml` è solo workflow_dispatch su runner Ubuntu effimero: build Docker reale, nuovo DB, TLS/definer/preflight/seed e UID/readiness. Non ha credenziali AWS, SSH o deploy. Non prova il dominio/Nginx EC2: quello è il passo smoke separato. Nessuno di questi run è stato avviato o dichiarato verde qui.
++`staging-package.yml` usa push sul branch dedicato (workflow/manifest) oppure workflow_dispatch su runner Ubuntu effimero: build Docker reale, nuovo DB, TLS/definer/preflight/seed e UID/readiness. Non ha credenziali AWS, SSH o deploy. Non prova il dominio/Nginx EC2: quello è il passo smoke separato. Nessuno di questi run è stato avviato o dichiarato verde qui.
+ 
+ ## 2. Ricognizione server — solo dopo autorizzazione EC2
+ 
+@@ -59,7 +100,7 @@ command -v docker && sudo docker version
+ command -v docker && sudo docker compose version
+ ```
+ 
+-Richiesti **Ubuntu supportata, x86_64, Docker Engine ≥28, Compose ≥2.24**, Git, Python 3 e OpenSSL. Il manifest pubblico verificato per MySQL 5.7.24 è solo linux/amd64: niente emulazione Graviton o upgrade MySQL automatici. [Digest controllato](../../docs/quality/staging-evidence/registry-metadata.json) fissato nel preparatore; l'esistenza del manifest **non dimostra TLS**.
++Richiesti **Ubuntu supportata, x86_64, Docker Engine ≥28, Compose ≥2.24**, Git, Python 3 e OpenSSL. Il manifest pubblico verificato per MySQL 5.7.44 è solo linux/amd64: niente emulazione Graviton o upgrade MySQL automatici. [Digest controllato](../../docs/quality/staging-evidence/mysql-5.7.44-registry.json) fissato nel preparatore; l'esistenza del manifest **non dimostra TLS**.
+ 
+ Docker ≥28 è richiesto anche per la corretta segregazione della pubblicazione loopback. Il controllo è coerente con le [limitazioni delle porte pubblicate](https://docs.docker.com/engine/network/port-publishing/). Mantenere le regole AWS esistenti e non aprire 18080/3306: non sono porte Internet. Verificare che il daemon non abbia configurazioni di routing diretto inattese. Il tool non modifica security group, firewall o routing operativo.
+ 
+@@ -130,6 +171,7 @@ cd "$SOURCE"
+ sudo python3 infra/staging/host.py --state "$STATE" build
+ sudo python3 infra/staging/host.py --state "$STATE" db
+ sudo python3 infra/staging/host.py --state "$STATE" provision
++sudo python3 infra/staging/host.py --state "$STATE" compatibility
+ sudo python3 infra/staging/host.py --state "$STATE" preflight
+ sudo python3 infra/staging/host.py --state "$STATE" tls
+ sudo python3 infra/staging/host.py --state "$STATE" seed
+@@ -139,7 +181,7 @@ sudo python3 infra/staging/host.py --state "$STATE" verify
+ 
+ Build verifica UID e versione del binario MySQL, etichetta SHA dell'API e coerenza fra source manifest e bundle copiato dall'immagine. Le immagini effettive vengono congelate per ID in images.json. Tag/digest o checkout differenti vengono rifiutati. Il volume-init può cambiare il proprietario della sola directory vuota appena creata; su dati presenti controlla soltanto l'owner. Non fa chown ricorsivi o wipe.
+ 
+-La prima inizializzazione **del database** crea solo namespace vuoto, record di ownership e login migratore. L'API non applica DDL. `provision` è un comando one-shot esplicito: TLS 1.2 effettivo, VerifyIdentity, CA, UUID, VERSION=5.7.24, hostname, datadir e require_secure_transport devono corrispondere prima del bootstrap. Poi crea i login API/reviewer REQUIRE SSL, deriva i definer espliciti ACCOUNT LOCK e applica bootstrap+001–005+grant finali.
++La prima inizializzazione **del database** crea solo namespace vuoto, record di ownership e login migratore. L'API non applica DDL. `provision` è un comando one-shot esplicito: TLS 1.2 effettivo, VerifyIdentity, CA, UUID, VERSION=5.7.44, hostname, datadir e require_secure_transport devono corrispondere prima del bootstrap. Poi crea i login API/reviewer REQUIRE SSL, deriva i definer espliciti ACCOUNT LOCK e applica bootstrap+001–005+grant finali.
+ 
+ Journal e lock su file condiviso impediscono due provisioning contemporanei. Un passo completato con lo stesso hash non viene rieseguito; un passo `started` o con hash diverso **blocca**, perché le DDL 5.7 non sono transazionali. Non cancellare il journal per forzare il verde. Ripetere `provision` completo equivale a verifica/preflight, non a replay delle SQL. 005 elimina i grant della routine e il passo 99 li riapplica.
+ 
+diff --git a/infra/staging/compose.yaml b/infra/staging/compose.yaml
+index 840b51b..7e9352a 100644
+--- a/infra/staging/compose.yaml
++++ b/infra/staging/compose.yaml
+@@ -6,7 +6,7 @@ x-logging: &logging
+   options: { max-size: "10m", max-file: "5" }
+ services:
+   volume-init:
+-    image: ${MYSQL_IMAGE:?select the verified 5.7.24 image}
++    image: ${MYSQL_IMAGE:?select the verified 5.7.44 OpenSSL image}
+     platform: linux/amd64
+     user: "0:0"
+     entrypoint: ["sh", "-ec"]
+@@ -35,6 +35,8 @@ services:
+       volume-init: { condition: service_completed_successfully }
+     environment:
+       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/root-password
++      # This historical entrypoint otherwise creates root@'%'. Admin uses socket.
++      MYSQL_ROOT_HOST: localhost
+       ER_STAGE_ID: ${STAGING_ID:?required}
+       ER_STAGE_SQL_HOST: ${SQL_HOST_PATTERN:?required}
+     command:
+diff --git a/infra/staging/db-bootstrap.sh b/infra/staging/db-bootstrap.sh
+index e08835a..f653aac 100644
+--- a/infra/staging/db-bootstrap.sh
++++ b/infra/staging/db-bootstrap.sh
+@@ -3,6 +3,8 @@
+ # Application schema DDL is a separate operator command, never API startup.
+ (
+ set -euo pipefail
++echo 'ER staging bootstrap: started'
++trap 'echo "ER staging bootstrap: failed at line $LINENO" >&2' ERR
+ [[ "$ER_STAGE_ID" =~ ^[a-f0-9]{32}$ ]]
+ [[ "$ER_STAGE_SQL_HOST" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.%$ ]]
+ password=$(cat /run/secrets/migrator-password)
+@@ -20,4 +22,5 @@ GRANT SELECT ON mysql.proc TO 'er_migrator'@'$ER_STAGE_SQL_HOST' WITH GRANT OPTI
+ GRANT SELECT ON er_stage_control.identity TO 'er_migrator'@'$ER_STAGE_SQL_HOST';
+ SQL
+ unset password
++echo 'ER staging bootstrap: completed'
+ )
+diff --git a/infra/staging/db-health.sh b/infra/staging/db-health.sh
+index 716c3c1..d90c813 100644
+--- a/infra/staging/db-health.sh
++++ b/infra/staging/db-health.sh
+@@ -1,5 +1,8 @@
+ #!/bin/sh
+ set -eu
+-value=$(mysql --defaults-extra-file=/run/secrets/root.cnf --protocol=SOCKET --batch --skip-column-names \
+-  -e "SELECT IF(VERSION()='5.7.24' AND @@global.have_ssl='YES' AND FIND_IN_SET('TLSv1.2',@@global.tls_version)>0 AND @@global.skip_networking=0,1,0)")
+-test "$value" = 1
++value=$(mysql --defaults-extra-file=/run/secrets/root.cnf --protocol=SOCKET --connect-timeout=3 --batch --skip-column-names \
++  -e "SELECT IF(VERSION()='5.7.44' AND @@global.have_ssl='YES' AND @@global.have_openssl='YES' AND @@global.tls_version='TLSv1.2' AND @@global.require_secure_transport=1 AND @@global.skip_networking=0,1,0)")
++if [ "$value" != 1 ]; then
++  echo 'MySQL readiness rejected: version, SSL availability, TLSv1.2, secure transport or final network startup mismatch' >&2
++  exit 1
++fi
+diff --git a/infra/staging/host.py b/infra/staging/host.py
+index 6db28e4..02a6b3d 100644
+--- a/infra/staging/host.py
++++ b/infra/staging/host.py
+@@ -1,6 +1,7 @@
+ """Host-side staging preparation/control. No SSH, Nginx edits, deletion or DDL."""
+ import argparse
+ import hashlib
++import http.client
+ import ipaddress
+ import json
+ import os
+@@ -15,6 +16,7 @@ import uuid
+ 
+ ROOT = Path(__file__).resolve().parents[2]
+ COMPOSE = ROOT / 'infra/staging/compose.yaml'
++MYSQL = json.loads((ROOT / 'infra/staging/mysql-image.json').read_text())
+ 
+ def require(value, message):
+     if not value:
+@@ -90,11 +92,12 @@ def prepare(args):
+     require(folder!=ROOT and ROOT not in folder.parents,'Keep secrets/state OUTSIDE the checkout and build context')
+     require(not folder.exists() and not any(c in str(folder) for c in '\n\r $\"\''), 'Use a NEW absolute state directory without shell metacharacters/spaces')
+     net = validate(args.domain, args.subnet, args.port)
+-    require(re.fullmatch(r'[a-zA-Z0-9_./:@-]+',args.mysql_image),'Use an explicit image reference without whitespace/metacharacters')
++    require(re.fullmatch(r'[a-zA-Z0-9_./:-]+@sha256:[a-f0-9]{64}',args.mysql_image),'Use an explicit image reference pinned by sha256 digest without whitespace/metacharacters')
++    require(args.mysql_image == MYSQL['image'], 'Only the reviewed staging image is allowed; update mysql-image.json and its registry evidence before selecting another image')
+     revision = output(['git', '-c', 'safe.directory='+str(ROOT), '-C', ROOT, 'rev-parse', 'HEAD'])
+     dirty = bool(output(['git', '-c', 'safe.directory='+str(ROOT), '-C', ROOT, 'status', '--porcelain', '--untracked-files=normal']))
+     identity = uuid.uuid4().hex
+-    state = dict(format=1, id=identity, project='er-stage-'+identity[:12], domain=args.domain,
++    state = dict(format=2, mysql_version=MYSQL['version'], id=identity, project='er-stage-'+identity[:12], domain=args.domain,
+                  subnet=str(net), gateway=str(net.network_address+1), sql_host=str(net.network_address).rsplit('.', 1)[0]+'.%',
+                  port=args.port, mysql_image=args.mysql_image, revision=revision, source_dirty=dirty,
+                  manifest=digest(ROOT/'migrations/release/manifest.json'), repository=str(ROOT))
+@@ -134,7 +137,7 @@ def prepare(args):
+     write(folder/'secrets/api/connection', connection, 1654, 1654)
+     runtime = {'Deployment': {'Mode':'Staging','RolloutApproved':True}, 'urls':'http://0.0.0.0:8080', 'AllowedHosts':args.domain,
+                'Jwt':{'Issuer':'er-staging','Audience':'er-staging-client'},
+-               'Readiness':{'ExpectedVersion':'5.7.24','ExpectedHost':'er-stage-db','ExpectedDataDir':'/var/lib/mysql'},
++               'Readiness':{'ExpectedVersion':MYSQL['version'],'ExpectedHost':'er-stage-db','ExpectedDataDir':'/var/lib/mysql'},
+                'Transport':{'KnownProxies':[state['gateway'],'127.0.0.1'], 'AllowedOrigins':['https://consoliprojects.dev'], 'HttpsPort':443},
+                'Identity':{'Legacy':{'Enabled':False}},
+                'Multitenancy':{k:{'Enabled':k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi')} for k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','Onboarding','Governance','InstitutionWorker')}}
+@@ -142,7 +145,7 @@ def prepare(args):
+     write(folder/'public/staging.json', json.dumps(public, indent=2), mode=0o444)
+     write(folder/'public/runtime.json', json.dumps(runtime, indent=2), mode=0o444)
+     write(folder/'public/binding.json', json.dumps(dict(artifactRoot='/opt/release',database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%',apiUser='er_api',apiHost=state['sql_host'],reviewUser='er_review',reviewHost=state['sql_host']),indent=2), mode=0o444)
+-    write(folder/'public/preflight.json', json.dumps(dict(host='er-stage-db',port=3306,database='electronic_register_staging',user='er_review',passwordFile='/run/secrets/review-password',caFile='/run/secrets/mysql-ca.pem',expectedVersion='5.7.24',expectedDataDir='/var/lib/mysql',schemaDefiner='er_stage_definer@%',mysqlClient='mysql'),indent=2), mode=0o444)
++    write(folder/'public/preflight.json', json.dumps(dict(host='er-stage-db',port=3306,database='electronic_register_staging',user='er_review',passwordFile='/run/secrets/review-password',caFile='/run/secrets/mysql-ca.pem',expectedVersion=MYSQL['version'],expectedDataDir='/var/lib/mysql',schemaDefiner='er_stage_definer@%',mysqlClient='mysql'),indent=2), mode=0o444)
+     seed = {'stage_id':identity,'ids':{k:str(uuid.uuid4()) for k in ('tenant_a','tenant_b','biennium_a','biennium_b','area_a','area_b','path_a','path_b','bsa_a','bsa_b','bsp_a','bsp_b','class_a','class_b','teacher','student','subject','assignment')},'accounts':{}}
+     for name, role, tenant in [('admin_a','InstitutionAdmin','a'),('admin_b','InstitutionAdmin','b'),('teacher','Teacher','a'),('student','Student','a')]:
+         seed['accounts'][name]=dict(id=str(uuid.uuid4()),membership=str(uuid.uuid4()),role=role,tenant=tenant,email=f'{identity}.{name}@example.invalid',password=secrets.token_hex(24)+'aA!9')
+@@ -155,7 +158,9 @@ def prepare(args):
+ def load(folder):
+     folder = Path(folder).resolve()
+     state = json.loads((folder/'state.json').read_text())
+-    require(state.get('format') == 1 and re.fullmatch(r'[a-f0-9]{32}',state['id']) and state['project']=='er-stage-'+state['id'][:12], 'Invalid staging ownership record')
++    require(state.get('format') == 2 and state.get('mysql_version') == MYSQL['version'] and state.get('mysql_image') == MYSQL['image'],
++            'Incompatible staging state/image: prepare a NEW isolated state and volume; never upgrade/reuse older MySQL volumes')
++    require(re.fullmatch(r'[a-f0-9]{32}',state['id']) and state['project']=='er-stage-'+state['id'][:12], 'Invalid staging ownership record')
+     require(state['repository']==str(ROOT), 'Use the recorded checkout; create new staging for another checkout')
+     return folder,state
+ 
+@@ -181,16 +186,30 @@ def clean(state):
+     require(not state['source_dirty'] and not output(['git','-c','safe.directory='+str(ROOT),'-C',ROOT,'status','--porcelain','--untracked-files=normal']), 'Build/start requires clean PUBLISHED code; no automatic commit/push')
+     require(output(['git','-c','safe.directory='+str(ROOT),'-C',ROOT,'rev-parse','HEAD'])==state['revision'] and digest(ROOT/'migrations/release/manifest.json')==state['manifest'], 'Checkout differs from prepared release')
+ 
++
++def check_mysql_tls(help_text):
++    # Inspect the binary's compiled defaults, not an option we pass ourselves.
++    match = re.search(r'^tls-version\s+(\S+)\s*$', help_text, re.M)
++    require(match and 'TLSv1.2' in match[1].split(','),
++            'MySQL binary lacks compiled TLSv1.2 support. '
++            'Staging requires the reviewed MySQL 5.7.44 OpenSSL image in a NEW state; '
++            'do not lower TLS policy. Runtime TLS/identity probes remain mandatory.')
++    return match[1]
++
++
++def check_mysql_version(version_text):
++    require(re.search(r'\bVer\s+' + re.escape(MYSQL['version']) + r'\s', version_text), 'Wrong MySQL binary: exact staging version required')
++
+ def main():
+     p=argparse.ArgumentParser(description=__doc__)
+     p.add_argument('--state',required=True)
+-    p.add_argument('command',choices=['prepare','config','build','db','provision','seed','preflight','tls','start','verify','smoke','logs','stop','restart'])
++    p.add_argument('command',choices=['prepare','config','build','db','provision','compatibility','seed','preflight','tls','start','verify','smoke','logs','diagnostics','stop','restart'])
+     p.add_argument('--domain',default='staging.consoliprojects.dev')
+     p.add_argument('--subnet',default='172.30.252.0/24')
+     p.add_argument('--port',type=int,default=18080)
+-    # Public linux/amd64 manifest checked in staging-evidence/registry-metadata.json.
+-    # Availability is not proof of runtime TLS; db health + driver probe still gate it.
+-    p.add_argument('--mysql-image',default='mysql:5.7.24@sha256:1f627f590dac0b2c4659282258ce205033adf94ebe8775a3e3a8424a87cdd746')
++    # Registry provenance in staging-evidence/mysql-5.7.44-registry.json.
++    # Only this reviewed digest is allowed; runtime checks remain mandatory.
++    p.add_argument('--mysql-image',default=MYSQL['image'])
+     a=p.parse_args()
+     if a.command=='prepare':return prepare(a)
+     folder,s=load(a.state)
+@@ -199,6 +218,10 @@ def main():
+     context=json.loads(output(['docker','context','inspect','default']))[0]
+     require(context['Endpoints']['docker']['Host']=='unix:///var/run/docker.sock','Unexpected Docker endpoint')
+     owned(s)
++    if a.command=='diagnostics':
++        # No clean-source/build requirement: diagnostics must work on failed builds.
++        from diagnostics import collect
++        return collect(folder, s)
+     if a.command=='config':return compose(folder,'config','--quiet')
+     if a.command=='logs':return compose(folder,'logs','--tail','100','api','db')
+     if a.command=='stop':return compose(folder,'stop','api','db')
+@@ -206,10 +229,25 @@ def main():
+     require(tuple(map(int,output(['docker','version','--format','{{.Server.Version}}']).split('-')[0].split('.')[:2]))>=(28,0),'Docker Engine >=28 required for loopback publication isolation')
+     require(tuple(map(int,output(['docker','compose','version','--short']).lstrip('v').split('-')[0].split('.')[:2]))>=(2,24),'Docker Compose >=2.24 required')
+     if a.command=='build':
+-        require(output(['uname','-m'])=='x86_64','MySQL 5.7.24 candidate is amd64; do not silently emulate/upgrade on Graviton')
+-        run(['docker','pull',s['mysql_image']])
+-        require(output(['docker','run','--rm','--network','none','--entrypoint','id',s['mysql_image'],'-u','mysql'])=='999','Unexpected MySQL UID')
+-        require('5.7.24' in output(['docker','run','--rm','--network','none','--entrypoint','mysqld',s['mysql_image'],'--version']),'Wrong MySQL binary')
++        require(output(['uname','-m'])=='x86_64','MySQL staging image is amd64; do not silently emulate/upgrade on Graviton')
++        run(['docker','pull','--platform',MYSQL['platform'],s['mysql_image']])
++        db_image=json.loads(output(['docker','image','inspect',s['mysql_image']]))[0]
++        require(db_image['Os']=='linux' and db_image['Architecture']=='amd64','Unexpected MySQL image platform')
++        for flag, expected in [('-u',MYSQL['uid']),('-g',MYSQL['gid'])]:
++            require(output(['docker','run','--rm','--network','none','--entrypoint','id',s['mysql_image'],flag,'mysql'])==expected,'Unexpected MySQL UID/GID')
++        version=output(['docker','run','--rm','--network','none','--entrypoint','mysqld',s['mysql_image'],'--version'])
++        check_mysql_version(version)
++        compiled_tls=check_mysql_tls(output(['docker','run','--rm','--network','none','--read-only',
++                               '--user','999:999','--cap-drop','ALL',
++                               '--security-opt','no-new-privileges:true',
++                               '--entrypoint','mysqld',s['mysql_image'],
++                               '--no-defaults','--verbose','--help']))
++        capabilities=dict(image=s['mysql_image'],imageId=db_image['Id'],platform=MYSQL['platform'],
++                          versionOutput=version,uid=MYSQL['uid'],gid=MYSQL['gid'],compiledTls=compiled_tls,
++                          runtimeTlsVerified=False)
++        cap_file=folder/'mysql-capabilities.json'
++        if cap_file.exists():require(json.loads(cap_file.read_text())==capabilities,'MySQL capabilities changed: prepare a new state')
++        else:write(cap_file,json.dumps(capabilities,indent=2))
+         compose(folder,'build','api','ops')
+         api=json.loads(output(['docker','image','inspect',s['project']+'-api:'+s['revision']]))[0]
+         require(api['Config']['Labels'].get('org.opencontainers.image.revision')==s['revision'],'API image revision label mismatch')
+@@ -233,7 +271,7 @@ def main():
+             for route in json.loads(output(['ip','-json','route'])):
+                 if route.get('dst','default')!='default' and ':' not in route['dst']:require(not candidate.overlaps(ipaddress.ip_network(route['dst'],strict=False)), 'Host/VPC route collision')
+         return compose(folder,'up','-d','--wait','--wait-timeout','180','db')
+-    if a.command in ('provision','seed','preflight','tls','smoke'):
++    if a.command in ('provision','compatibility','seed','preflight','tls','smoke'):
+         return compose(folder,'run','--rm','--no-deps','ops',a.command)
+     if a.command in ('start','restart'):
+         if a.command=='restart':compose(folder,'up','-d','--wait','--wait-timeout','180','db')
+@@ -257,7 +295,12 @@ def verify(folder,s):
+         else:require(ports=={'8080/tcp':[{'HostIp':'127.0.0.1','HostPort':str(s['port'])}]},'API bind is not loopback-only')
+         status=compose(folder,'exec','-T',service,'cat','/proc/1/status',capture=True)
+         require(re.search(r'^Uid:\s+'+uid+r'\s',status,re.M),'PID 1 is not the configured non-root user')
+-    print('Owned containers healthy, API loopback-only, SQL unpublished, PID 1 non-root. Nginx/HTTPS still requires smoke.')
++    connection=http.client.HTTPConnection('127.0.0.1',s['port'],timeout=6)
++    try:
++        connection.request('GET','/health/ready',headers={'Host':s['domain'],'X-Forwarded-Proto':'https'})
++        require(connection.getresponse().status==200,'Host loopback readiness did not return HTTP 200')
++    finally:connection.close()
++    print('Owned containers healthy, host loopback readiness HTTP 200, API loopback-only, SQL unpublished, PID 1 non-root. Nginx/HTTPS still requires smoke.')
+ 
+ if __name__=='__main__':
+     try:main()
+diff --git a/infra/staging/ops.py b/infra/staging/ops.py
+index a7f29c3..11c8cb4 100644
+--- a/infra/staging/ops.py
++++ b/infra/staging/ops.py
+@@ -15,6 +15,7 @@ import uuid
+ ROOT=Path('/workspace')
+ STATE=Path('/state/ops')
+ PUBLIC=Path('/state/public')
++MYSQL=json.loads((Path(__file__).with_name('mysql-image.json')).read_text())
+ 
+ def require(value,message):
+     if not value:raise RuntimeError(message)
+@@ -39,8 +40,10 @@ def mysql(statement,review=False):
+     return process(['mysql','--defaults-extra-file='+cnf,'--batch','--raw','--skip-column-names','--default-character-set=utf8mb4'],statement)
+ 
+ def identity(config):
+-    row=json.loads(mysql("SELECT JSON_OBJECT('version',VERSION(),'host',@@hostname,'port',@@port,'dir',@@datadir,'secure',@@global.require_secure_transport,'id',(SELECT id FROM er_stage_control.identity))"))
+-    require(row==dict(version='5.7.24',host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,id=config['id']), 'Database identity/ownership/secure transport mismatch')
++    require(config.get('format')==2 and config.get('mysql_version')==MYSQL['version'] and config.get('mysql_image')==MYSQL['image'], 'Wrong staging engine/state: use a fresh namespace')
++    row=json.loads(mysql("SELECT JSON_OBJECT('version',VERSION(),'host',@@hostname,'port',@@port,'dir',@@datadir,'secure',@@global.require_secure_transport,'ssl',@@global.have_ssl,'openssl',@@global.have_openssl,'tls',@@global.tls_version,'id',(SELECT id FROM er_stage_control.identity))"))
++    require(row==dict(version=MYSQL['version'],host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,
++                      ssl='YES',openssl='YES',tls='TLSv1.2',id=config['id']), 'Database identity/ownership/OpenSSL/secure transport mismatch')
+     protocol=mysql("SHOW SESSION STATUS LIKE 'Ssl_version'").split('\t')[-1]
+     cipher=mysql("SHOW SESSION STATUS LIKE 'Ssl_cipher'").split('\t')[-1]
+     require(protocol=='TLSv1.2' and cipher, 'A successful TLS 1.2 session is required before DDL')
+@@ -98,6 +101,33 @@ def preflight():
+     result=process(['node',ROOT/'tools/release-preflight.cjs',PUBLIC/'preflight.json'])
+     saved(STATE/'preflight-result.json',json.loads(result))
+ 
++
++def compatibility():
++    # Actual execution/metadata checks on the new staging DB, not a parser claim.
++    preflight()
++    base=json.loads((ROOT/'migrations/bootstrap/schema-contract.json').read_text())
++    additive=json.loads((ROOT/'migrations/release/additive-contract.json').read_text())
++    binding=json.loads((STATE/'bundle/binding.json').read_text())
++    manifest=json.loads((ROOT/'migrations/release/manifest.json').read_text())
++    require([r['source'] for r in binding['records']]==manifest['requiredMigrations'],'Incomplete migration closure')
++    journal=Journal().records
++    steps=['00-login-users','00-principals.sql',*(r['artifact'] for r in binding['records']),'99-routine-grants.sql']
++    require(all(journal.get(step,{}).get('state')=='done' for step in steps),'Incomplete staging migrations/provisioning')
++    for record in binding['records']:
++        statement=(STATE/'bundle'/record['artifact']).read_text()
++        require(record['sourceHash']==manifest['files'][record['source']] and
++                sha(statement.encode())==record['artifactHash']==journal[record['artifact']]['hash'],
++                'Migration source/bundle/journal hash mismatch')
++    routines=json.loads(mysql("SELECT JSON_ARRAYAGG(JSON_OBJECT('name',ROUTINE_NAME,'type',ROUTINE_TYPE,'definer',DEFINER,'security',SECURITY_TYPE,'access',SQL_DATA_ACCESS)) FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA='electronic_register_staging'"))
++    require(routines==[dict(name='er_schema_ready',type='PROCEDURE',definer=binding['definer'],security='DEFINER',access='READS SQL DATA')], 'Unexpected/missing procedure or stored function')
++    counts=json.loads(mysql("SELECT JSON_OBJECT('tables',(SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='electronic_register_staging' AND TABLE_TYPE='BASE TABLE'),'triggers',(SELECT COUNT(*) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA='electronic_register_staging'))"))
++    tables=len(set(base['tables'])|set(additive['tables']))
++    triggers=len(set(base['triggers'])|{t['TRIGGER_NAME'] for t in additive['triggers']})
++    require(counts==dict(tables=tables,triggers=triggers),'Unexpected/missing staging schema objects')
++    saved(STATE/'compatibility-result.json',dict(version=MYSQL['version'],**counts,procedures=1,storedFunctions=0,
++          definer=binding['definer'],migrations=[r['source'] for r in binding['records']],
++          provisioningSteps=steps,preflightVerified=True,runtimeVerified=True))
++
+ def tls():
+     preflight()
+     password=Path('/run/secrets/api-password').read_text()
+@@ -151,7 +181,7 @@ def seed(config):
+ 
+ def main():
+     require(fcntl is not None,'Operator jobs require Linux file locks')
+-    require(len(sys.argv)==2 and sys.argv[1] in ('source','provision','seed','preflight','tls','smoke'),'Explicit operator command required')
++    require(len(sys.argv)==2 and sys.argv[1] in ('source','provision','compatibility','seed','preflight','tls','smoke'),'Explicit operator command required')
+     STATE.mkdir(exist_ok=True,mode=0o700)
+     with (STATE/'operation.lock').open('a') as lock:
+         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+@@ -163,6 +193,7 @@ def main():
+             return
+         identity(config)
+         if sys.argv[1]=='provision':provision(config)
++        elif sys.argv[1]=='compatibility':compatibility()
+         elif sys.argv[1]=='seed':seed(config)
+         elif sys.argv[1]=='preflight':preflight()
+         elif sys.argv[1]=='tls':tls()
+diff --git a/migrations/release/manifest.json b/migrations/release/manifest.json
+index 52bfd0c..58b3784 100644
+--- a/migrations/release/manifest.json
++++ b/migrations/release/manifest.json
+@@ -20,7 +20,7 @@
+   "files": {
+     ".dockerignore": "62E0FA0CD5BF4FD4EE0282E96A6F1F78C8CE1032ED5EAEFAD4E552844F9068FC",
+     ".gitattributes": "E9CB21749B89652FCD5ED25086B22DA59A39F1BBC958B10DC5E067D7E42A957D",
+-    ".github/workflows/staging-package.yml": "3112CF431EDD5EB6F40D80AA081C1B5298B3ED268D80ED733B5F49E40E30BD01",
++    ".github/workflows/staging-package.yml": "1A7B66C1AC23839EF407D90EF3235A32E457A7663201F5C74A1AA8F13FA48AFF",
+     ".github/workflows/verify.yml": "FE775AB70D41A2735CE975D5082B06014477C1891FB8543AC111D6929119BA45",
+     ".gitignore": "9AFFC10138F9083EE3F9DC5099789F69C495DD27A4E9268CF9AD8196D0D30ABD",
+     "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs": "34224D824B36A09A24E08EBDAE15EB95864F63B2C73A745F2A7E68B06743539B",
+@@ -702,11 +702,13 @@
+     "infra/release.runtime.example.json": "85C2C86BE0BC2C0CCE41E8CD0FAF06521AEAA1833168C1D3CC063C454FF6DCF4",
+     "infra/runtime.example.json": "1EF54479B3070B9A9474F016B3B431A87CA370093100934AA765FB7C01D6C69B",
+     "infra/staging/Dockerfile.ops": "41053F5B477D17B71A1599BD8E3187AD2FFEB74F894F646A14336CDEA4E47D88",
+-    "infra/staging/compose.yaml": "3FF547418949478DD4691C04CAD5E622310F7AD021127E505089008F3B4D7623",
+-    "infra/staging/db-bootstrap.sh": "F780ACEBFE1DAD8E8B400EE76627B8CA24DA00D614E6362476259E54BEDFD0EC",
+-    "infra/staging/db-health.sh": "DE3AEBB096B8E0D59D4790911CD2099524FD051096B907CCFA4EB9F3CC35A1DD",
+-    "infra/staging/host.py": "1905443DCC07DBD68EA661DF1E455B377E7242A3E269454F624E40CD1CA069B1",
+-    "infra/staging/ops.py": "87AD8E633FB1B9AFBEA5CD58EC01C8CDFCB29CEC54BA1795BEF4102755AC3326",
++    "infra/staging/compose.yaml": "E8861B9DCA40072D23A82D262D485CA34ADAB2A32FD0EE9A9CD8088779753BB5",
++    "infra/staging/db-bootstrap.sh": "614DFF76527B647C8C0B65F7E82645CC256339B73DB7EFD232DCA192C7C7D6B8",
++    "infra/staging/db-health.sh": "C401C22A8F8E569457672320DD85473A3B3A18E4C73C256B1AE9570AA6FF0D5D",
++    "infra/staging/diagnostics.py": "EDA08CD8ED831E54B3A2D1F7680F6F693F6C224F29C31EA19FFFFFC9883152E1",
++    "infra/staging/host.py": "12EA4F880E95104EDE289D75554E70D2CF23EAB6EB23AF93E1CA028EE69D736A",
++    "infra/staging/mysql-image.json": "BB5C6E63B7340296818FEE1F5CA02CCF306EAFA01B839D1DC90FC9EBA5E6C822",
++    "infra/staging/ops.py": "C65A9A5CA6626781AC02E4D2543BDABB575A79EDAAE6ADE4A0C3F8CEFE82137C",
+     "infra/staging/smoke.py": "E2503560FEA99B3EEA94F4DE17B85EEFF579A55FE5E683D42C0B275F7AD17168",
+     "migrations/bootstrap/001_schema.sql": "B7BDBEB33C1ABFF165DB72C84DDCA852E851DAB3634A04E19F1B7F579D994402",
+     "migrations/bootstrap/manifest.json": "CB1097278CC0A67CE386CBF2D87FBD2BA4B5EF1319C9A2A38373499719609E23",
+@@ -766,7 +768,7 @@
+     "tools/release-artifacts.cjs": "67327103807E613FD5FCF19CFE7645606A37140AEA6FC3AF6266694F7A2FE670",
+     "tools/release-preflight.cjs": "60AF45DC66BED4295AACB0A151B3D03B4F3671AA3A353ADC87736B578AC0CE0F",
+     "tools/test-release-manifest.cjs": "D89EF7A7875BC374E7A52F91611CEB835BB07022C0B6C7F885DFB63A482A853B",
+-    "tools/test_staging.py": "EFE250117325E225D8A0C9E5E896C51E9FD4101FD0C5E90EA21197F589DBE383",
++    "tools/test_staging.py": "DF52343095899C8043A363294C170CCA79647941EB3CAA4B49A5A8EB91DCD71F",
+     "tools/verify-project-artifacts.py": "F724639301A143B52FE25438A1565FD39F80EFE56AD6770DBBC0D364049804BA"
+   }
+ }
+diff --git a/tools/test_staging.py b/tools/test_staging.py
+index 465c161..db8fe70 100644
+--- a/tools/test_staging.py
++++ b/tools/test_staging.py
+@@ -1,6 +1,8 @@
+ """Local, non-Docker tests for staging guardrails. Real container/TLS tests are separate."""
+ import importlib.util
++import io
+ import json
++import subprocess
+ from pathlib import Path
+ import tempfile
+ import unittest
+@@ -10,9 +12,109 @@ ROOT=Path(__file__).resolve().parents[1]
+ def load(name):
+     spec=importlib.util.spec_from_file_location('stage_'+name,ROOT/'infra/staging'/f'{name}.py')
+     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
+-host=load('host');ops=load('ops')
++host=load('host');ops=load('ops');diagnostics=load('diagnostics')
+ 
+ class StagingTests(unittest.TestCase):
++    def test_compiled_tls_capability_fails_closed(self):
++        for help_text in ('tls-version TLSv1,TLSv1.1\n', '', 'tls-version TLSv1.20\n'):
++            with self.assertRaises(RuntimeError):host.check_mysql_tls(help_text)
++        host.check_mysql_tls('other option\ntls-version TLSv1,TLSv1.1,TLSv1.2\n')
++
++    def test_staging_version_is_exact_and_historical_default_is_preserved(self):
++        host.check_mysql_version('mysqld  Ver 5.7.44 for Linux on x86_64 (MySQL Community Server (GPL))')
++        for version in ('5.7.24','5.7.440','5.7.44-custom','8.0.44'):
++            with self.assertRaises(RuntimeError):host.check_mysql_version('mysqld  Ver '+version+' for Linux')
++        self.assertIn("VERSION()='5.7.44'",(ROOT/'infra/staging/db-health.sh').read_text())
++        self.assertEqual(host.MYSQL,ops.MYSQL)
++        self.assertIn('policy.Local ? "5.7.24"', (ROOT/'Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Operations/OperationalPipeline.cs').read_text())
++        self.assertEqual(json.loads((ROOT/'infra/release.runtime.example.json').read_text())['Readiness']['ExpectedVersion'],'5.7.24')
++
++    def test_pinned_image_matches_registry_evidence_without_claiming_runtime(self):
++        evidence=json.loads((ROOT/'docs/quality/staging-evidence/mysql-5.7.44-registry.json').read_text())
++        self.assertEqual(host.MYSQL['image'],evidence['image'])
++        self.assertEqual(evidence['image'],'mysql:5.7.44@'+evidence['amd64Digest'])
++        self.assertEqual((evidence['os'],evidence['architecture']),('linux','amd64'))
++        self.assertIn('libssl.so.10',evidence['staticInspection']['elfNeededLibraries'])
++        self.assertIn('TLSv1.2',evidence['staticInspection']['compiledTlsString'].split(','))
++        self.assertFalse(evidence['containersExecuted'])
++        self.assertFalse(evidence['runtimeTlsVerified'])
++
++    def test_old_staging_states_are_never_upgraded(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            folder=Path(tmp)
++            state=dict(format=2,mysql_version=host.MYSQL['version'],mysql_image=host.MYSQL['image'],id='a'*32,
++                       project='er-stage-'+'a'*12,repository=str(host.ROOT))
++            (folder/'state.json').write_text(json.dumps(state))
++            self.assertEqual(host.load(folder)[1],state)
++            for fields in ({'format':1},{'mysql_version':'5.7.24'},{'mysql_image':'mysql:5.7.24@sha256:'+'a'*64}):
++                (folder/'state.json').write_text(json.dumps({**state,**fields}))
++                with self.assertRaisesRegex(RuntimeError,'NEW isolated state'):host.load(folder)
++
++    def test_prepare_binds_runtime_and_preflight_to_staging_only(self):
++        import argparse
++        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(host.sys,'platform','linux'), mock.patch.object(host.os,'geteuid',return_value=0,create=True), mock.patch.object(host.os,'chown',create=True), mock.patch.object(host.shutil,'which',return_value='openssl'), mock.patch.object(host,'output',side_effect=['a'*40,'']), mock.patch.object(host,'run') as run, mock.patch('sys.stdout',new_callable=io.StringIO):
++            folder=Path(tmp)/'new-state'
++            def openssl(args,**kwargs):
++                for option in ('-out','-keyout'):
++                    if option in args:Path(args[args.index(option)+1]).write_text('synthetic-test-pem')
++            run.side_effect=openssl
++            args=argparse.Namespace(state=str(folder),domain='staging.example.invalid',subnet='172.30.252.0/24',port=18080,mysql_image=host.MYSQL['image'])
++            host.prepare(args)
++            self.assertEqual(json.loads((folder/'public/runtime.json').read_text())['Readiness']['ExpectedVersion'],'5.7.44')
++            self.assertEqual(json.loads((folder/'public/preflight.json').read_text())['expectedVersion'],'5.7.44')
++            self.assertEqual(json.loads((folder/'state.json').read_text())['format'],2)
++            with self.assertRaises(RuntimeError):host.prepare(args)
++
++    def test_diagnostics_redacts_generated_and_unexpected_credentials(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            folder=Path(tmp);(folder/'secrets/db').mkdir(parents=True)
++            (folder/'ops').mkdir()
++            (folder/'secrets/db/root.cnf').write_text('[client]\npassword=generated-root-password\n')
++            (folder/'ops/seed.json').write_text(json.dumps({'accounts':{'a':{'password':'seed-aA!9'}}}))
++            redact=diagnostics.sanitizer(folder)
++            raw="generated-root-password seed-aA!9 password=unexpected Bearer abc.def.ghi IDENTIFIED BY 'sql-secret' ghp_unknownToken "
++            raw+='-----BEGIN PRIVATE KEY-----\nprivate-body\n-----END PRIVATE KEY-----'
++            safe=redact(raw)
++            for secret in ('generated-root-password','seed-aA!9','unexpected','abc.def.ghi','sql-secret','ghp_unknownToken','private-body'):
++                self.assertNotIn(secret,safe)
++
++    def test_diagnostics_preserves_crash_health_evidence_without_env(self):
++        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(diagnostics.subprocess,'run') as run, mock.patch('sys.stdout',new_callable=io.StringIO) as stdout:
++            obj={'Config':{'Labels':{'io.er.staging.id':'owned','com.docker.compose.service':'db'},'Env':['PASSWORD=must-not-escape']},
++                 'State':{'Running':False,'ExitCode':1,'OOMKilled':True,'Health':{'Log':[{'ExitCode':1,'Output':'password=hidden\n::warning::untrusted'}]}},'RestartCount':3}
++            def result(args,**kwargs):
++                value='abc123def456\n' if args[1:3]==['ps','-aq'] else json.dumps([obj]) if args[1]=='inspect' else 'bounded log'
++                return mock.Mock(returncode=0,stdout=value,stderr='')
++            run.side_effect=result
++            diagnostics.collect(Path(tmp),{'id':'owned','project':'er-stage-test'})
++            lines=stdout.getvalue().splitlines()
++            records=[json.loads(line) for line in lines]
++            state=next(r['data'] for r in records if r['section']=='container-state')
++            self.assertEqual(state['restartCount'],3);self.assertTrue(state['state']['OOMKilled'])
++            self.assertNotIn('hidden',stdout.getvalue());self.assertNotIn('must-not-escape',stdout.getvalue())
++            self.assertFalse(any(line.startswith('::') for line in lines))
++
++    def test_diagnostics_refuses_foreign_containers_and_timeout_payloads(self):
++        import subprocess
++        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(diagnostics.subprocess,'run') as run, mock.patch('sys.stdout',new_callable=io.StringIO) as stdout:
++            foreign={'Config':{'Labels':{'io.er.staging.id':'foreign'}}}
++            def result(args,**kwargs):
++                if args[1]=='version':
++                    raise subprocess.TimeoutExpired(args,15,output='password=timeout-secret')
++                value='abc123def456' if args[1:3]==['ps','-aq'] else json.dumps([foreign]) if args[1]=='inspect' else ''
++                return mock.Mock(returncode=0,stdout=value,stderr='')
++            run.side_effect=result
++            diagnostics.collect(Path(tmp),{'id':'owned','project':'er-stage-test'})
++            self.assertNotIn('timeout-secret',stdout.getvalue())
++            self.assertIn('"rejected": true',stdout.getvalue())
++            self.assertFalse(any(call.args[0][1] in ('logs','exec') for call in run.call_args_list))
++
++    def test_diagnostics_aborts_before_docker_if_credentials_cannot_be_read(self):
++        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(diagnostics.subprocess,'run') as run, mock.patch.object(diagnostics,'sanitizer',side_effect=PermissionError('unreadable credentials')):
++            with self.assertRaises(PermissionError):
++                diagnostics.collect(Path(tmp),{'id':'owned','project':'er-stage-test'})
++            run.assert_not_called()
++
+     def test_publication_and_no_remote_daemon(self):
+         text=(ROOT/'infra/staging/compose.yaml').read_text()
+         self.assertIn('127.0.0.1:${API_PORT:?required}:8080',text)
+@@ -20,6 +122,24 @@ class StagingTests(unittest.TestCase):
+         self.assertNotIn('ports:',db)
+         self.assertNotIn('docker.sock',text.replace('# Deliberately no ports, host networking or Docker socket.',''))
+         self.assertIn("Only the local rootful Docker daemon",(ROOT/'infra/staging/host.py').read_text())
++
++    def test_host_loopback_gate_requires_200_and_closes_connection(self):
++        state={'port':18080,'domain':'staging.example.invalid'}
++        def compose(folder,*args,**kwargs):
++            if args[0]=='ps':return args[-1]
++            return 'Uid:\t'+('1654' if args[2]=='api' else '999')+'\t999\t999\t999'
++        def inspect(args):
++            ports={'8080/tcp':[{'HostIp':'127.0.0.1','HostPort':'18080'}]} if args[-1]=='api' else {}
++            return json.dumps([{'State':{'Health':{'Status':'healthy'}},'HostConfig':{'PortBindings':ports}}])
++        with mock.patch.object(host,'compose',side_effect=compose),mock.patch.object(host,'output',side_effect=inspect),mock.patch.object(host.http.client,'HTTPConnection') as http,mock.patch('sys.stdout',new_callable=io.StringIO):
++            http.return_value.getresponse.return_value.status=200
++            host.verify(Path('unused'),state)
++            http.return_value.request.assert_called_once_with('GET','/health/ready',headers={'Host':state['domain'],'X-Forwarded-Proto':'https'})
++            http.return_value.close.assert_called_once()
++            http.return_value.reset_mock()
++            http.return_value.getresponse.return_value.status=302
++            with self.assertRaisesRegex(RuntimeError,'HTTP 200'):host.verify(Path('unused'),state)
++            http.return_value.close.assert_called_once()
+     def test_inputs_are_restricted(self):
+         self.assertEqual(str(host.validate('staging.consoliprojects.dev','172.30.252.0/24',18080)),'172.30.252.0/24')
+         for domain,subnet,port in [('consoliprojects.dev','172.30.252.0/24',18080),('bad;nginx','172.30.252.0/24',18080),('a..dev','172.30.252.0/24',18080),('a.dev','0.0.0.0/0',18080),('a.dev','127.0.0.0/24',18080),('a.dev','172.30.252.0/24',3306)]:
+@@ -43,13 +163,40 @@ class StagingTests(unittest.TestCase):
+             with self.assertRaises(RuntimeError):ops.Journal().apply('002','CREATE TABLE b(id int);')
+             self.assertEqual(sql.call_count,2)
+     def test_mysql_identity_is_exact_before_ddl(self):
+-        cfg={'id':'a'*32}
+-        row=dict(version='5.7.24',host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,id=cfg['id'])
++        cfg={'id':'a'*32,'format':2,'mysql_version':ops.MYSQL['version'],'mysql_image':ops.MYSQL['image']}
++        row=dict(version='5.7.44',host='er-stage-db',port=3306,dir='/var/lib/mysql/',secure=1,ssl='YES',openssl='YES',tls='TLSv1.2',id=cfg['id'])
+         with mock.patch.object(ops,'mysql',side_effect=[json.dumps(row),'Ssl_version\tTLSv1.2','Ssl_cipher\tECDHE-RSA-AES256-GCM-SHA384']),mock.patch.object(ops,'saved'):
+             ops.identity(cfg)
+-        for field,value in [('id','foreign'),('secure',0),('version','8.0.0'),('dir','/real-data/')]:
++        for field,value in [('id','foreign'),('secure',0),('version','5.7.24'),('version','8.0.0'),('dir','/real-data/'),('ssl','NO'),('openssl','NO'),('tls','TLSv1.1')]:
+             wrong={**row,field:value}
+             with mock.patch.object(ops,'mysql',return_value=json.dumps(wrong)),self.assertRaises(RuntimeError):ops.identity(cfg)
++
++    def test_compatibility_requires_complete_journal_and_exact_routines(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            folder=Path(tmp)
++            binding=dict(artifactRoot=str(ROOT),database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%',apiUser='er_api',apiHost='172.30.252.%',reviewUser='er_review',reviewHost='172.30.252.%')
++            config=folder/'binding-input.json';config.write_text(json.dumps(binding))
++            subprocess.run(['node',str(ROOT/'tools/prepare-release-sql.cjs'),str(config),str(folder/'bundle')],check=True,capture_output=True)
++            journal={'00-login-users':dict(state='done',hash='synthetic-login-hash')}
++            journal.update({p.name:dict(state='done',hash=ops.sha(p.read_text().encode())) for p in (folder/'bundle').glob('*.sql')})
++            (folder/'journal.json').write_text(json.dumps(journal))
++            routines=[dict(name='er_schema_ready',type='PROCEDURE',definer='er_stage_definer@%',security='DEFINER',access='READS SQL DATA')]
++            with mock.patch.object(ops,'ROOT',ROOT), mock.patch.object(ops,'STATE',folder), mock.patch.object(ops,'preflight'), mock.patch.object(ops,'mysql') as sql, mock.patch.object(ops,'saved') as saved:
++                sql.side_effect=[json.dumps(routines),json.dumps(dict(tables=71,triggers=180))]
++                ops.compatibility()
++                self.assertEqual(saved.call_args.args[1]['storedFunctions'],0)
++                sql.side_effect=[json.dumps(routines+[dict(name='unexpected',type='FUNCTION')])]
++                with self.assertRaisesRegex(RuntimeError,'stored function'):ops.compatibility()
++                journal['99-routine-grants.sql']['state']='started'
++                (folder/'journal.json').write_text(json.dumps(journal))
++                sql.reset_mock()
++                with self.assertRaisesRegex(RuntimeError,'Incomplete staging migrations'):ops.compatibility()
++                sql.assert_not_called()
++                journal['99-routine-grants.sql']['state']='done'
++                (folder/'journal.json').write_text(json.dumps(journal))
++                migration=next((folder/'bundle').glob('01-*.sql'))
++                migration.write_text(migration.read_text()+'\n-- tampered\n')
++                with self.assertRaisesRegex(RuntimeError,'hash mismatch'):ops.compatibility()
+     def test_seed_has_explicit_roles_owners_and_no_bypass(self):
+         import uuid
+         names=('tenant_a','tenant_b','biennium_a','biennium_b','area_a','area_b','path_a','path_b','bsa_a','bsa_b','bsp_a','bsp_b','class_a','class_b','teacher','student','subject','assignment')
+diff --git a/infra/staging/diagnostics.py b/infra/staging/diagnostics.py
+new file mode 100644
+index 0000000..b0fc7fb
+--- /dev/null
++++ b/infra/staging/diagnostics.py
+@@ -0,0 +1,110 @@
++"""Read-only, bounded staging evidence. Never emit raw Docker inspect/config/env."""
++import json
++import os
++import re
++import subprocess
++
++
++def sanitizer(folder):
++    # Read all generated credentials BEFORE collecting anything. A read error
++    # aborts collection, rather than publishing output with incomplete masking.
++    values = set()
++    for base in ('secrets', 'pki'):
++        for path in (folder / base).rglob('*'):
++            if path.is_file():
++                content = path.read_text().strip()
++                if content:
++                    values.add(content)
++                values.update(re.findall(r'(?im)(?:password|Password|Jwt__Key)\s*[=:]\s*([^;\r\n]+)', content))
++    seed = folder / 'ops/seed.json'
++    if seed.exists():
++        for account in json.loads(seed.read_text())['accounts'].values():
++            values.add(account['password'])
++    values.update(v for k, v in os.environ.items()
++                  if re.search(r'password|token|secret|jwt|credential', k, re.I) and len(v) >= 8)
++
++    def redact(text):
++        # Whole PEM blocks first, including keys that were not generated here.
++        text = re.sub(r'-----BEGIN ([A-Z0-9 ]+)-----.*?-----END \1-----',
++                      '[REDACTED PEM]', text, flags=re.S)
++        for value in sorted(values, key=len, reverse=True):
++            text = text.replace(value, '[REDACTED]')
++        text = re.sub(r'(?i)\bBearer\s+[^\s"\\]+', 'Bearer [REDACTED]', text)
++        text = re.sub(r'\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+', '[REDACTED JWT]', text)
++        text = re.sub(r'\b(?:gh[pousr]_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+)\b', '[REDACTED TOKEN]', text)
++        text = re.sub(r'(?i)(\b(?:password|passwd|token|secret|jwt__key)\s*[=:]\s*)([^\s;]+)',
++                      r'\1[REDACTED]', text)
++        text = re.sub(r"(?i)(IDENTIFIED BY\s*)'[^']*'", r"\1'[REDACTED]'", text)
++        return text
++    return redact
++
++
++def collect(folder, state):
++    redact = sanitizer(folder)
++
++    def emit(section, data):
++        # JSON escapes newlines/control bytes, including Actions workflow commands.
++        def safe(value):
++            if isinstance(value, str):
++                return redact(value)
++            if isinstance(value, dict):
++                return {k: safe(v) for k, v in value.items()}
++            if isinstance(value, list):
++                return [safe(v) for v in value]
++            return value
++        print(json.dumps({'section': section, 'data': safe(data)}, ensure_ascii=True))
++
++    def command(section, args):
++        try:
++            result = subprocess.run(args, capture_output=True, text=True, errors='replace', timeout=15)
++            emit(section, {'exitCode': result.returncode, 'stdout': result.stdout, 'stderr': result.stderr})
++            return result.stdout if result.returncode == 0 else ''
++        except (OSError, subprocess.TimeoutExpired):
++            # Exception/timeout payloads can contain unsanitized output.
++            emit(section, {'unavailable': True})
++            return ''
++
++    command('docker-version', ['docker', 'version', '--format', '{{json .Server.Version}}'])
++    command('compose-version', ['docker', 'compose', 'version', '--short'])
++    ids = command('project-containers', ['docker', 'ps', '-aq', '--filter',
++                                        'label=com.docker.compose.project=' + state['project']]).splitlines()
++    for cid in ids:
++        if not re.fullmatch(r'[a-f0-9]{12,64}', cid):
++            continue
++        # Only selected lifecycle fields, never Config.Env or complete inspect.
++        try:
++            result = subprocess.run(['docker', 'inspect', cid], capture_output=True,
++                                    text=True, errors='replace', timeout=15)
++            obj = json.loads(result.stdout)[0]
++            labels = obj['Config']['Labels']
++            if labels.get('io.er.staging.id') != state['id']:
++                emit('ownership', {'container': cid, 'rejected': True})
++                continue
++            service = labels.get('com.docker.compose.service')
++            status = obj['State']
++            emit('container-state', {'container': cid, 'service': service,
++                                    'restartCount': obj.get('RestartCount'),
++                                    'state': {k: status.get(k) for k in
++                                              ('Status', 'Running', 'Restarting', 'OOMKilled', 'ExitCode',
++                                               'Error', 'StartedAt', 'FinishedAt', 'Health')}})
++        except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, IndexError):
++            emit('container-state', {'container': cid, 'unavailable': True})
++            continue
++        if service in ('db', 'volume-init'):
++            command(service + '-logs', ['docker', 'logs', '--timestamps', '--tail', '200', cid])
++        if service == 'db' and status.get('Running'):
++            command('db-filesystem', ['docker', 'exec', cid, 'sh', '-c',
++                    'id; stat -c "%n uid=%u gid=%g mode=%a" /var/lib/mysql /var/lib/mysql/mysql '
++                    '/var/run/mysqld /var/run/mysqld/mysqld.sock /tmp /run/secrets/*; '
++                    'for f in /run/secrets/*; do test -r "$f" || echo "unreadable: $f"; done'])
++            command('db-health-replay', ['docker', 'exec', cid, 'sh', '/opt/er/db-health.sh'])
++            # Socket access is the same local administrative transport as bootstrap.
++            # No DDL, password arguments, user tables or account hashes in evidence.
++            command('db-runtime', ['docker', 'exec', cid, 'mysql',
++                    '--defaults-extra-file=/run/secrets/root.cnf', '--protocol=SOCKET',
++                    '--connect-timeout=3', '--batch', '-e',
++                    "SELECT VERSION(),@@hostname,@@datadir; "
++                    "SHOW GLOBAL VARIABLES WHERE Variable_name IN "
++                    "('have_ssl','have_openssl','tls_version','require_secure_transport','skip_networking',"
++                    "'ssl_ca','ssl_cert','ssl_key','log_error'); "
++                    "SELECT id FROM er_stage_control.identity;"])
+diff --git a/infra/staging/mysql-image.json b/infra/staging/mysql-image.json
+new file mode 100644
+index 0000000..9077387
+--- /dev/null
++++ b/infra/staging/mysql-image.json
+@@ -0,0 +1,9 @@
++{
++  "version": "5.7.44",
++  "image": "mysql:5.7.44@sha256:dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da",
++  "platform": "linux/amd64",
++  "uid": "999",
++  "gid": "999",
++  "tls": "TLSv1.2",
++  "sslLibrary": "OpenSSL"
++}
+diff --git a/docs/quality/staging-evidence/mysql-health-diagnosis.md b/docs/quality/staging-evidence/mysql-health-diagnosis.md
+new file mode 100644
+index 0000000..7e92296
+--- /dev/null
++++ b/docs/quality/staging-evidence/mysql-health-diagnosis.md
+@@ -0,0 +1,108 @@
++# MySQL healthcheck: run 41109867548
++
++Repository `xxdema10xx/ElectronicRegister`, branch `refactor-database-entities`,
++SHA `d580727dedb1d37fc8dce8aee81ccd597e031c45`. Analisi del 2026-10-30.
++
++## Evidenze e limite della diagnosi
++
++Il [job 124249193290](https://github.com/xxdema10xx/ElectronicRegister/actions/runs/41109867548/job/124249193290)
++conferma build API/Ops, verifica source/manifest, volume-init completato, container
++db avviato alle 18:48:16 UTC e timeout alle 18:51:16 UTC. Non pubblica inspect,
++health output o log MySQL. "Started" non dimostra che mysqld sia rimasto attivo,
++che abbia completato il bootstrap o che abbia caricato i certificati.
++
++È stata verificata una causa bloccante concreta: l'immagine fissata per digest
++è compilata con **yaSSL e non supporta TLS 1.2**. Sono stati scaricati dal registry
++ufficiale il manifest e i layer dell'immagine, senza avviare container. Gli hash
++SHA256 dei layer scaricati coincidono con quelli dichiarati dal manifest:
++
++| Oggetto | SHA256 |
++| --- | --- |
++| Manifest linux/amd64 | `1f627f590dac0b2c4659282258ce205033adf94ebe8775a3e3a8424a87cdd746` |
++| Layer contenente mysqld | `d7e648ad64aa7fc69805c62b1b656c8717d204a02f877f9aff3d1ecf3d3f186d` |
++| Layer entrypoint | `4120d828ea6b1e9400b3b715c25b3d9a9f44cbaa90441aefb6b297d8f8430705` |
++| `/usr/sbin/mysqld` estratto | `fa9756ecfacabca9c20db6be0567376bc99a3fb87301834859e26853ff1543ce` |
++
++Il binario contiene simboli `yaTLSv1_client_method`,
++`yaTLSv1_1_server_method`, numerosi simboli C++ `yaSSL`, il valore
++`TLSv1,TLSv1.1` e la descrizione `TLS version, permitted values are TLSv1,
++TLSv1.1, TLSv1.2(Only for openssl)`.
++La [documentazione ufficiale MySQL](https://dev.mysql.com/doc/mysql-security-excerpt/5.7/en/ssl-libraries.html)
++conferma la limitazione di yaSSL a TLS 1.0/1.1. Il compose impone TLS 1.2,
++require_secure_transport e certificati dedicati; la health richiede SSL attivo.
++Questa combinazione non può soddisfare la policy. Non si tratta di un semplice
++timeout troppo breve né di una sonda da rendere permissiva.
++
++Non è dimostrato quale percorso abbia seguito **quel processo**: errore di
++inizializzazione/TLS, restart dopo errore, bootstrap incompleto oppure mysqld
++attivo con SSL indisponibile. Il [comportamento descritto da MySQL](https://dev.mysql.com/blog-archive/ssltls-improvements-in-mysql-5-7-10/)
++ammette che valori TLS non supportati disabilitino TLS. Questo è compatibile
++con il sintomo, ma non sostituisce log runtime mancanti.
++
++## Distinzione delle ipotesi
++
++| Ipotesi | Evidenza disponibile / controllo aggiunto |
++| --- | --- |
++| Inizializzazione/configurazione fallita | Log db, exit code, restart count; incompatibilità yaSSL già verificata staticamente |
++| Crash/OOM | State.Status, Running, Restarting, OOMKilled, ExitCode, Error e timestamp |
++| Bootstrap SQL fallito | Marker started/completed/failed con riga; log SQL; lettura identity senza DDL |
++| Permessi/secrets | UID/GID/mode e leggibilità dentro il container con il suo utente; nessun contenuto dei secret |
++| Sola healthcheck | Ultimi esiti Docker e replay della sonda; versione, have_ssl, have_openssl, tls_version, require_secure_transport e skip_networking via socket |
++
++`host.py` assegna owner 999 e mode 0400 ai secret DB; la directory dati viene
++inizializzata separatamente. Queste impostazioni non provano un problema di
++permessi nel run: non sono state allargate. Il bootstrap usa socket locale,
++password validata e subshell per non alterare le variabili dell'entrypoint che
++lo include. La rete temporaneamente disabilitata durante init non deve far
++passare readiness. Nessuna prova giustifica modifiche alle DDL o ai certificati.
++
++## Correzioni e stato finale
++
++- Gate preventivo su `mysqld --no-defaults --verbose --help`, eseguito senza rete,
++  non-root, readonly, senza capability. Rifiuta binari privi di TLS 1.2 prima
++  della build API/Ops e della creazione del volume dati. Versione esatta 5.7.24.
++- Input workflow `mysql_image` per un'immagine 5.7.24/OpenSSL auditata; il
++  preparatore impone il digest SHA256. Nessuna immagine alternativa scelta senza
++  verifica. Il default storico rimane riproducibile e viene rifiutato dal gate.
++- `MYSQL_ROOT_HOST=localhost`: l'entrypoint estratto usa altrimenti `%` e crea
++  un account root remoto. È un problema di configurazione verificato, distinto
++  dall'incompatibilità TLS; il fix vale per stati nuovi, senza alterare volumi.
++- Health invariata nei requisiti preesistenti, con aggiunta esplicita di
++  require_secure_transport, connect timeout interno di 3 secondi e messaggio
++  diagnostico. Nessun aumento dei 180 secondi o cambio della policy TLS.
++- Diagnostica Actions `if: failure()` prima dello stop, in JSON sanitizzato.
++  Non pubblica Config.Env, inspect completo, configurazioni o artifact grezzi.
++  Maschera secret dello stato, password fixture, PEM, token e password note;
++  se non riesce a leggere i secret interrompe la raccolta prima di Docker.
++  Timeout ed errori di raccolta non stampano payload grezzi. Ownership sempre
++  verificata prima di leggere log o eseguire comandi nei container.
++- Manifest canonico aggiornato con `node tools/release-artifacts.cjs --write`;
++  nessun manifest storico rigenerato.
++
++**Il collaudo non è dichiarato risolto/verde:** è necessaria un'immagine auditata
++5.7.24/OpenSSL e una nuova esecuzione Docker/TLS. La patch elimina il timeout
++opaco per il candidato incompatibile e rende verificabili gli altri fallimenti.
++Non viene fornito un digest sostitutivo non collaudato. I test TLS reali positivi
++e negativi con driver rimangono obbligatori dopo il gate sulle capacità compilate.
++MySQL senza porte pubbliche, API UID 1654 e database separato restano preservati.
++Nessuna modifica Nginx/EC2, nessun commit o push, nessun run remoto avviato.
++
++## Verifiche locali finali
++
++- Python: **30 test passati**, inclusi rifiuto yaSSL, sanitizzazione,
++  conservazione delle prove crash/health, ownership, timeout e fail-closed.
++- Backend Unit: **598 passati, 0 falliti, 0 ignorati**, Release, no restore.
++- Manifest: **751 artifact verificati**, LF/CRLF invarianti; verifica ufficiale
++  e wrapper Python passati; **14 controlli negativi** passati.
++- Sintassi shell bootstrap/health: `bash -n` passato.
++- Python host/diagnostics: `py_compile` passato.
++- Workflow: actionlint **v1.7.12**, passato; integrazioni shellcheck/pyflakes
++  non disponibili e disabilitate, con controlli shell/Python separati sopra.
++- `git diff --check`: passato.
++- Docker, compose runtime, SQL/TLS reali: **non eseguiti**. Docker assente;
++  WSL non installato. Non sono state alterate installazioni di sistema.
++
++Per i test è stato usato Python 3.12.10 embedded temporaneo nel workspace,
++con il percorso tools configurato per i subprocess dei test. Le prime esecuzioni
++intermedie hanno rilevato quel percorso mancante e, dopo ulteriori modifiche,
++hash manifest da aggiornare; il risultato finale sopra è successivo alle correzioni.
+diff --git a/docs/quality/staging-evidence/mysql-5.7.44-registry.json b/docs/quality/staging-evidence/mysql-5.7.44-registry.json
+new file mode 100644
+index 0000000..35b76ae
+--- /dev/null
++++ b/docs/quality/staging-evidence/mysql-5.7.44-registry.json
+@@ -0,0 +1,136 @@
++{
++  "checkedAt": "2026-10-30T19:15:05.568Z",
++  "registry": "registry-1.docker.io",
++  "repository": "library/mysql",
++  "tag": "5.7.44",
++  "tagDigest": "sha256:4bc6bc963e6d8443453676cae56536f4b8156d78bae03c0145cbe47c2aad73bb",
++  "platforms": [
++    {
++      "digest": "sha256:dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da",
++      "platform": {
++        "architecture": "amd64",
++        "os": "linux"
++      }
++    },
++    {
++      "digest": "sha256:b46f7aa9c680644d4233655e3ef5ab3aa1e96ca118000501ab2f178f03589616",
++      "platform": {
++        "architecture": "unknown",
++        "os": "unknown"
++      }
++    }
++  ],
++  "amd64Digest": "sha256:dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da",
++  "configDigest": "sha256:5107333e08a87b836d48ff7528b1e84b9c86781cc9f1748bbc1b8c42a870d933",
++  "architecture": "amd64",
++  "os": "linux",
++  "env": [
++    "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
++    "GOSU_VERSION=1.16",
++    "MYSQL_MAJOR=5.7",
++    "MYSQL_VERSION=5.7.44-1.el7",
++    "MYSQL_SHELL_VERSION=8.0.35-1.el7"
++  ],
++  "entrypoint": [
++    "docker-entrypoint.sh"
++  ],
++  "layers": [
++    {
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:20e4dcae4c693910efbf28a556e2fa88ef717e15364f63da7e0a4a130b9b714e",
++      "size": 50499235
++    },
++    {
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:1c56c3d4ce74a53225aa9fa60ee8be21d81aad4fede8431225dff84c25e1c79e",
++      "size": 869
++    },
++    {
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:e9f03a1c24cebdce0bffa69aec1a9f2d7cf5b21db611576f6263d10ec86e02b7",
++      "size": 983548
++    },
++    {
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:68c3898c2015e66367dcdb126db7f1ad3d4284d84e2095671964e90a8d288fd7",
++      "size": 4578487
++    },
++    {
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:6b95a940e7b64b6a3312090f58127b6d725198b9be263e1878e1059abe692eeb",
++      "size": 3080
++    },
++    {
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:90986bb8de6ed46958837e14261553640aad289c15d741739b71b418fc8ebf0f",
++      "size": 331
++    },
++    {
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:ae71319cb7793e84b1f0ba04d4cc4a0d8a9a0387b1cd8895ebff9218d81388a3",
++      "size": 25534522
++    },
++    {
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:ffc89e9dfd889f56aaad15dea72609ab8936b5ca017deadbc8e7ba0d5840037f",
++      "size": 317
++    },
++    {
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:43d05e938198ff7303eee62b5a3c2598c927954ea4cbeceac121101b281db972",
++      "size": 56293054
++    },
++    {
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:064b2d298fba6c6f19d44eb4a3f32bdcc0f229ea1964d3bb70bbde2d76b5cc0c",
++      "size": 5384
++    },
++    {
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:df9a4d85569bd266293512fc5a7a9c35b878ea7a06185dbd02abf88c04e9bccf",
++      "size": 122
++    }
++  ],
++  "containersExecuted": false,
++  "image": "mysql:5.7.44@sha256:dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da",
++  "source": "Docker Official Image library/mysql; https://hub.docker.com/_/mysql",
++  "manifestAndConfigDigestsVerified": true,
++  "staticInspection": {
++    "mysqlUid": "999",
++    "mysqlGid": "999",
++    "passwdLayer": "sha256:1c56c3d4ce74a53225aa9fa60ee8be21d81aad4fede8431225dff84c25e1c79e",
++    "serverLayer": "sha256:ae71319cb7793e84b1f0ba04d4cc4a0d8a9a0387b1cd8895ebff9218d81388a3",
++    "entrypointLayer": "sha256:064b2d298fba6c6f19d44eb4a3f32bdcc0f229ea1964d3bb70bbde2d76b5cc0c",
++    "downloadedLayersSha256Verified": true,
++    "serverBinarySha256": "491165213f15b6bcfe103f8faafbdfbb6a7417c6cda327ea37d2dad2d6fc00c8",
++    "serverVersionString": "5.7.44",
++    "linkedLibraries": [
++      "libssl.so.10",
++      "libcrypto.so.10"
++    ],
++    "compiledTlsString": "TLSv1,TLSv1.1,TLSv1.2",
++    "packageRepository": "https://repo.mysql.com/yum/mysql-5.7-community/docker/el/7/$basearch/",
++    "entrypointSupportsNonRootAndPasswordFile": true,
++    "elfMachine": 62,
++    "elfNeededLibraries": [
++      "libpthread.so.0",
++      "libaio.so.1",
++      "libnuma.so.1",
++      "libcrypt.so.1",
++      "libssl.so.10",
++      "libcrypto.so.10",
++      "libdl.so.2",
++      "librt.so.1",
++      "libstdc++.so.6",
++      "libm.so.6",
++      "libgcc_s.so.1",
++      "libc.so.6"
++    ],
++    "inspectionMethod": "ELF64 program headers / PT_DYNAMIC / DT_NEEDED; package passwd; literal binary version/TLS strings; no execution"
++  },
++  "runtimeVersionVerified": false,
++  "runtimeUidVerified": false,
++  "runtimeOpenSslVerified": false,
++  "runtimeTlsVerified": false,
++  "sqlCompatibilityRuntimeVerified": false
++}
+diff --git a/docs/quality/staging-evidence/mysql-5.7.44-validation.md b/docs/quality/staging-evidence/mysql-5.7.44-validation.md
+new file mode 100644
+index 0000000..b97867e
+--- /dev/null
++++ b/docs/quality/staging-evidence/mysql-5.7.44-validation.md
+@@ -0,0 +1,152 @@
++# Staging MySQL 5.7.44 / OpenSSL — release gate BLOCCATO
++
++Data: 2026-10-30. Branch: `refactor-database-entities`.
++Base del diff cumulativo: `d580727dedb1d37fc8dce8aee81ccd597e031c45`.
++Nessun commit, push, modifica main/Nginx/EC2 o accesso a database esistenti.
++
++## Immagine disponibile e verifiche di provenienza
++
++Fonte: [Docker Official Image mysql](https://hub.docker.com/_/mysql), repository
++`registry-1.docker.io/library/mysql`, tag `5.7.44`.
++Non viene presentata come immagine con supporto commerciale Oracle.
++Le [note ufficiali 5.7.44](https://dev.mysql.com/doc/relnotes/mysql/5.7/en/news-5-7-44.html)
++identificano questa versione come ultima release della serie 5.7.
++
++Immagine selezionata:
++
++```text
++mysql:5.7.44@sha256:dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da
++```
++
++| Verifica eseguita localmente | Risultato |
++| --- | --- |
++| Index del tag, SHA256 dei byte ricevuti | `4bc6bc963e6d8443453676cae56536f4b8156d78bae03c0145cbe47c2aad73bb` |
++| Manifest linux/amd64, SHA256 e header registry | `dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da` |
++| Config verificato contro il descriptor | `5107333e08a87b836d48ff7528b1e84b9c86781cc9f1748bbc1b8c42a870d933` |
++| Config architettura/OS | amd64 / linux |
++| `/etc/passwd` dal layer verificato | mysql UID/GID 999:999 |
++| Env pacchetto e stringa binario | `MYSQL_VERSION=5.7.44-1.el7`, binario `5.7.44` |
++| ELF64 DT_NEEDED del server | `libssl.so.10`, `libcrypto.so.10`; macchina 62, x86-64 |
++| Protocolli compilati, stringa nel binario | `TLSv1,TLSv1.1,TLSv1.2` |
++| SHA256 del server estratto | `491165213f15b6bcfe103f8faafbdfbb6a7417c6cda327ea37d2dad2d6fc00c8` |
++
++Manifest, config e layer ispezionati sono stati ottenuti con HTTPS dal registry
++ufficiale. I byte scaricati sono stati confrontati con i rispettivi SHA256.
++La history mostra pacchetti dal repository `repo.mysql.com`, `gpgcheck=1` e
++creazione dell'utente mysql 999. Non è stata effettuata una verifica indipendente
++della firma dell'immagine o del pacchetto RPM installato: non viene dichiarata.
++Entrypoint e configurazione sono stati ispezionati: supportano avvio non-root,
++password da file, socket esplicito e log su stderr; la directory secure-file-priv
++è già presente nell'immagine. I certificati dedicati restano forniti dallo stato.
++
++[Evidenza strutturata](mysql-5.7.44-registry.json), con descriptor dei layer e
++flag runtime esplicitamente falsi. Le prove statiche non equivalgono a esecuzione
++di `mysqld --version`, UID effettivo di PID 1 o negoziazione TLS: questi controlli
++sono obbligatori nel workflow aggiornato e non risultano ancora eseguiti.
++
++## Modifiche dello staging
++
++- `mysql-image.json` contiene la policy condivisa: versione esatta 5.7.44,
++  digest verificato, linux/amd64, UID/GID 999 e TLS 1.2/OpenSSL.
++- `host.py` accetta solo il digest revisionato, controlla piattaforma, UID/GID,
++  versione esatta e capacità TLS eseguendo il binario durante build. Registra
++  `mysql-capabilities.json`; le prove TLS vere restano separate.
++- Nuovo formato stato 2 con versione e immagine esplicite. Gli stati precedenti
++  vengono rifiutati prima di qualsiasi operazione Docker. Nuova directory,
++  UUID, rete e volume per il passaggio di versione; nessun upgrade o riuso dei
++  volumi 5.7.24. Un restart è consentito soltanto per lo stesso stato 5.7.44.
++- Runtime config `.NET` e preflight generati richiedono esattamente 5.7.44.
++  Attestation verifica VERSION, UUID, hostname, datadir, porta,
++  require_secure_transport, have_ssl/have_openssl e TLSv1.2. Verifica inoltre
++  sessione TLSv1.2 e cipher non vuoto prima del DDL.
++- Health SQL richiede versione esatta, SSL e OpenSSL attivi, TLSv1.2 esclusivo,
++  secure transport e server finale con rete attiva. Il timeout 180s è invariato.
++- `compatibility` dopo `provision`: preflight reale, journal completo,
++  hash manifest/bundle/journal, numero di oggetti, metadati routine e DEFINER.
++- `start` dimostra anche HTTP 200 dalla porta host loopback, senza seguire
++  redirect. Restano le verifiche dei binding esatti e UID non-root di PID 1.
++- Workflow Ubuntu: build → db → provision → compatibility → TLS → seed → start.
++  Il gate non ammette selezione arbitraria di immagini via input workflow.
++  Diagnostica sanitizzata prima dello stop preservata, inclusi marker bootstrap.
++
++Restano obbligatori VerifyFull/VERIFY_IDENTITY, CA esplicita, TLS 1.2, test
++negativi su hostname e CA, API 1654, SQL 999, ops 10001, DB senza porte pubbliche,
++API solo `127.0.0.1`, ruoli/grant SQL separati, definer ACCOUNT LOCK,
++verifica source/manifest e provisioning separato dall'avvio API.
++
++## Compatibilità SQL e audit dei vincoli di versione
++
++Nessuna modifica ai byte di schema, trigger, procedure o migrazioni storiche.
++Il generatore ufficiale produce il bundle isolato con bootstrap e 001–005,
++DEFINER esplicito, SQL_MODE canonico, grant finali riapplicati dopo 005.
++Le primitive usate (JSON, SIGNAL, trigger multipli, ACCOUNT LOCK, mysql.proc,
++SQL SECURITY DEFINER e READS SQL DATA) appartengono alla serie MySQL 5.7.
++Non è stato identificato un cambiamento SQL necessario nella revisione statica.
++
++Questo non dimostra compatibilità esecutiva: il nuovo gate deve confrontare
++SHOW CREATE TABLE/TRIGGER, corpi e SQL_MODE canonici, routine e DEFINER e
++chiamare `er_schema_ready()`. Deve verificare 71 tabelle, 180 trigger,
++1 procedura e 0 stored function (non ne esistono nel bundle canonico).
++Definizioni o metadati diversi bloccano il rilascio; non vengono normalizzate
++ulteriori differenze per ottenere il verde.
++
++Ricerca globale con `git grep` di `5.7.24`: i controlli attivi dello staging
++sono stati aggiornati; i riferimenti residui nello staging sono contesto storico
++e test negativi. Sono rimasti invariati il fallback Local di
++`OperationalPipeline.cs`, `infra/release.runtime.example.json`, IntegrationFixture,
++fixture/test IAM/MT5/MT6, `local_test_db.py`, `formative_test_db.py`, script locali
++di migrazione e retention, PlatformAdmin, manifest e report storici.
++I test verificano espressamente la conservazione del default locale 5.7.24.
++
++## Verifiche locali
++
++| Verifica | Risultato |
++| --- | --- |
++| `node tools/release-artifacts.cjs --write` e verifica ufficiale | 752 artifact, LF/CRLF invarianti |
++| `node tools/test-release-manifest.cjs` | 14 controlli negativi passati |
++| `python -m unittest discover -s tools -p 'test_*.py'` | 36 passati |
++| `python tools/verify-project-artifacts.py` | PASS |
++| `py_compile` host/ops/diagnostics | PASS |
++| `bash -n` bootstrap e health | PASS |
++| actionlint 1.7.12 sul workflow | PASS; shellcheck/pyflakes non disponibili, disabilitati |
++| Build solution Release `--no-restore` | PASS, 0 errori; 10 warning nullable in file Integration non modificati |
++| Unit backend Release `--no-build --no-restore` | 598 passati, 0 falliti, 0 ignorati |
++| Build ReleaseTransportProbe e StagingSupport Release `--no-restore` | PASS, 0 warning/errori |
++| CodeOrganization `check .` | PASS, 660 file / 657 tipi, 0 violazioni |
++| `git diff --check` | PASS |
++| Docker, Compose runtime, SQL/TLS reali, Integration DB | NON ESEGUITI |
++
++I test Python coprono versione esatta, rifiuto 5.7.24 e stati precedenti,
++config runtime/preflight, TLS fail-closed, binding dell'evidenza registry,
++journal incompleto, migrazione alterata, stored function inattesa, HTTP redirect,
++sanitizzazione, ownership e timeout diagnostici. Sono test locali con mock dove
++necessario: non costituiscono risultati di provisioning/TLS su server reale.
++Python embedded e actionlint sono stati usati temporaneamente nel workspace.
++Non sono state alterate installazioni di sistema o usati database esistenti.
++
++## Rischi residui e condizioni EC2
++
++**GitHub Actions non è stato eseguito con queste modifiche.** Docker non è
++installato su questa workstation e WSL non è disponibile. Inoltre il workflow
++fa checkout di una SHA pubblicata e richiede codice pulito: con il divieto di
++commit/push, un dispatch o rerun della SHA precedente eseguirebbe il vecchio codice
++e non potrebbe validare questa patch. Non è stato aggirato questo vincolo.
++
++Il release gate resta BLOCCATO finché il proprietario non pubblica la patch con
++il proprio processo e ottiene entrambi i run CI/source e staging Docker verdi
++sulla medesima nuova SHA. Il run staging deve mostrare tutti i gate sopra,
++in particolare provisioning/compatibilità, TLS positivo e negativi CA/hostname,
++MySQL healthy senza port binding, API healthy HTTP 200 loopback e UID corretti.
++Qualsiasi failure richiede diagnosi dai log sanitizzati, senza replay DDL,
++abbassamento TLS o riuso del volume per cambiare versione.
++
++5.7.44 e Oracle Linux 7 sono componenti legacy: digest e TLS non equivalgono a
++assenza di vulnerabilità o supporto corrente. L'immagine non è stata sottoposta
++qui a vulnerability scan; l'uso resta temporaneo e isolato, non READY Production.
++La preservazione dei contratti SHOW CREATE e il comportamento dei trigger sotto
++5.7.44 rimangono rischi esecutivi da chiudere con il run, non conclusioni statiche.
++
++Solo dopo questi PASS si può pianificare la fase EC2 separatamente autorizzata:
++stessa SHA/digest, host Ubuntu amd64 e Docker >=28, nuovo stato/volume, subnet e
++porta libere. Il collaudo pubblico HTTPS/JWT/CORS tramite Nginx rimane un gate
++successivo. Questa attività non modifica né autorizza implicitamente EC2/Nginx.

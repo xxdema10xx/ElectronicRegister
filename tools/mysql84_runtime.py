@@ -13,6 +13,7 @@ import subprocess
 import sys
 import time
 import uuid
+from runtime_diagnostic import RuntimeDiagnostic
 from mysql84_release import Mysql, Runner, ROOT, identity, install, load_contract, verify_schema, fingerprint, literal, require, sha
 
 
@@ -240,85 +241,93 @@ def run(config_path, output):
     output.mkdir(parents=True, exist_ok=False)
     subprocess.run(['node', str(ROOT / 'tools/mysql84-release.cjs')], check=True)
     db = Mysql(config)
+    diagnostic = RuntimeDiagnostic(output/'runtime-phases.json', ['identity-and-legacy-bootstrap', 'seed-and-predecessor', 'snapshot', 'drift-rejection', 'ddl-recovery', 'trigger-routine-acceptance', 'fresh-install-after-upgrade'])
     try:
-        # The CI caller supplies a brand-new unpredictable name. Never DROP or
-        # reuse an existing schema, even on a disposable service.
-        require(config['database'].startswith('er84_'), 'Unsafe namespace')
-        db.execute('CREATE DATABASE `' + config['database'] + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
-        identity(db, config)
-        for role in ('api', 'review'):
-            db.execute("CREATE USER '" + config[role+'User'] + "'@'" + config[role+'Host'] + "' IDENTIFIED BY 'Synthetic-ci-only-credential'")
-        binding_file = output / 'binding.json'
-        binding_file.write_text(json.dumps(config))
-        bundle = output / 'old-bundle'
-        subprocess.run(['node', str(ROOT / 'tools/mysql84-release.cjs'), 'bundle', str(binding_file), str(bundle), 'old'], check=True)
-        for file in sorted(bundle.glob('*.sql')):
-            # Execute the immutable legacy-derived provisioning bundle.
-            result = subprocess.run(db.args, input=file.read_text(), text=True, capture_output=True)
-            require(result.returncode == 0, 'Original bootstrap failed: ' + file.name + ' ' + result.stderr[:180])
-        old = load_contract(False)
-        verify_schema(db, old, config)
-        probes = Probes(db, config)
-        probes.seed()
-        probes.reproduce_predecessor_failure()
-        before = fingerprint(db, old)
-        (output/'before.json').write_text(json.dumps(before, indent=2))
-        dump_args = [config.get('dumpClient','mysqldump'), '--defaults-extra-file='+config['defaultsFile'], '--host='+config['host'], '--port='+str(config['port']), '--protocol=TCP', '--ssl-mode=DISABLED', '--single-transaction', '--set-gtid-purged=OFF', config['database']]
-        with (output/'synthetic-before.sql').open('w') as stream:
-            subprocess.run(dump_args, stdout=stream, check=True)
-        # Deliberate predecessor drift must be rejected BEFORE maintenance/DDL.
-        db.execute('ALTER TABLE institution ADD COLUMN synthetic_drift int NULL')
-        try:
-            Runner(db, config, output/'drift-journal.json').upgrade()
-            raise AssertionError('Drift accepted')
-        except RuntimeError:
-            require(not (output/'drift-journal.json').exists(), 'Drift changed journal')
-        db.execute('ALTER TABLE institution DROP COLUMN synthetic_drift')
-        verify_schema(db, old, config)
-        journal = output/'upgrade-journal.json'
-        for name, recovery in [('email_event_insert',False), ('fpe_insert',True)]:
-            try:
-                Runner(db, config, journal).upgrade(recover=recovery, fault=name+(':after-create' if recovery else ':after-drop'))
-                raise AssertionError('Fault injection not reached')
-            except RuntimeError as error:
-                require('Injected interruption' in str(error), 'Unexpected failure before injected DDL boundary: '+str(error))
-            require(db.scalar('SELECT @@global.offline_mode') == '1', 'Maintenance lost after interruption')
-            blocked = probes.api('SELECT 1')
-            require(blocked.returncode != 0 and 'ERROR 3032 ' in blocked.stderr, 'API can connect during incomplete DDL')
-            # Simulate loss of the migration connection and its GET_LOCK; the
-            # persisted barrier and durable journal must survive independently.
-            db.close()
-            if not recovery:
-                # This is the service created by this workflow, never an external
-                # container. Restart preserves its data volume and UUID.
-                subprocess.run(['docker','restart',container],check=True)
-                deadline = time.monotonic()+60
-                while True:
-                    ready = subprocess.run(db.args,input='SELECT 1;\n',text=True,capture_output=True)
-                    if ready.returncode == 0:
-                        break
-                    require(time.monotonic() < deadline,'Service did not return after controlled restart')
-                    time.sleep(1)
-                blocked = probes.api('SELECT 1')
-                require(blocked.returncode != 0 and 'ERROR 3032 ' in blocked.stderr, 'Persisted maintenance barrier lost on server restart')
-            db = Mysql(config)
+        with diagnostic.phase('identity-and-legacy-bootstrap'):
+            # The CI caller supplies a brand-new unpredictable name. Never DROP or
+            # reuse an existing schema, even on a disposable service.
+            require(config['database'].startswith('er84_'), 'Unsafe namespace')
+            db.execute('CREATE DATABASE `' + config['database'] + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
             identity(db, config)
-            probes.db = db
-            saved = journal.read_bytes()
+            for role in ('api', 'review'):
+                db.execute("CREATE USER '" + config[role+'User'] + "'@'" + config[role+'Host'] + "' IDENTIFIED BY 'Synthetic-ci-only-credential'")
+            binding_file = output / 'binding.json'
+            binding_file.write_text(json.dumps(config))
+            bundle = output / 'old-bundle'
+            subprocess.run(['node', str(ROOT / 'tools/mysql84-release.cjs'), 'bundle', str(binding_file), str(bundle), 'old'], check=True)
+            for file in sorted(bundle.glob('*.sql')):
+                # Execute the immutable legacy-derived provisioning bundle.
+                result = subprocess.run(db.args, input=file.read_text(), text=True, capture_output=True)
+                require(result.returncode == 0, 'Original bootstrap failed: ' + file.name + ' ' + result.stderr[:180])
+            old = load_contract(False)
+            verify_schema(db, old, config)
+        with diagnostic.phase('seed-and-predecessor'):
+            probes = Probes(db, config)
+            probes.seed()
+            probes.reproduce_predecessor_failure()
+        with diagnostic.phase('snapshot'):
+            before = fingerprint(db, old)
+            (output/'before.json').write_text(json.dumps(before, indent=2))
+            dump_args = [config.get('dumpClient','mysqldump'), '--defaults-extra-file='+config['defaultsFile'], '--host='+config['host'], '--port='+str(config['port']), '--protocol=TCP', '--ssl-mode=DISABLED', '--single-transaction', '--set-gtid-purged=OFF', config['database']]
+            with (output/'synthetic-before.sql').open('w') as stream:
+                subprocess.run(dump_args, stdout=stream, check=True)
+        with diagnostic.phase('drift-rejection'):
+            # Deliberate predecessor drift must be rejected BEFORE maintenance/DDL.
+            db.execute('ALTER TABLE institution ADD COLUMN synthetic_drift int NULL')
             try:
-                Runner(db, config, journal).upgrade()
-                raise AssertionError('Blind replay accepted')
+                Runner(db, config, output/'drift-journal.json').upgrade()
+                raise AssertionError('Drift accepted')
             except RuntimeError:
-                require(journal.read_bytes() == saved, 'Refused replay changed journal')
-        Runner(db, config, journal).upgrade(recover=True)
-        require(fingerprint(db, load_contract()) == before, 'Existing data lost')
-        saved = journal.read_bytes()
-        Runner(db, config, journal).upgrade()
-        require(saved == journal.read_bytes(), 'Completed upgrade replayed')
-        acceptance = probes.all()
-        verify_schema(db, load_contract(), config)
-        (output/'runtime-result.json').write_text(json.dumps(dict(upgrade=True, predecessor3995Reproduced=True, snapshot=True, dataPreserved=True, idempotent=True, interruptedDropRecovered=True, lostCreateAckRecovered=True, persistedMaintenanceAcrossServerRestart=True, driftRejected=True, acceptance=acceptance), indent=2))
-        fresh_install(db, config, output)
+                require(not (output/'drift-journal.json').exists(), 'Drift changed journal')
+            db.execute('ALTER TABLE institution DROP COLUMN synthetic_drift')
+            verify_schema(db, old, config)
+        with diagnostic.phase('ddl-recovery'):
+            journal = output/'upgrade-journal.json'
+            for name, recovery in [('email_event_insert',False), ('fpe_insert',True)]:
+                try:
+                    Runner(db, config, journal).upgrade(recover=recovery, fault=name+(':after-create' if recovery else ':after-drop'))
+                    raise AssertionError('Fault injection not reached')
+                except RuntimeError as error:
+                    require('Injected interruption' in str(error), 'Unexpected failure before injected DDL boundary: '+str(error))
+                require(db.scalar('SELECT @@global.offline_mode') == '1', 'Maintenance lost after interruption')
+                blocked = probes.api('SELECT 1')
+                require(blocked.returncode != 0 and 'ERROR 3032 ' in blocked.stderr, 'API can connect during incomplete DDL')
+                # Simulate loss of the migration connection and its GET_LOCK; the
+                # persisted barrier and durable journal must survive independently.
+                db.close()
+                if not recovery:
+                    # This is the service created by this workflow, never an external
+                    # container. Restart preserves its data volume and UUID.
+                    subprocess.run(['docker','restart',container],check=True)
+                    deadline = time.monotonic()+60
+                    while True:
+                        ready = subprocess.run(db.args,input='SELECT 1;\n',text=True,capture_output=True)
+                        if ready.returncode == 0:
+                            break
+                        require(time.monotonic() < deadline,'Service did not return after controlled restart')
+                        time.sleep(1)
+                    blocked = probes.api('SELECT 1')
+                    require(blocked.returncode != 0 and 'ERROR 3032 ' in blocked.stderr, 'Persisted maintenance barrier lost on server restart')
+                db = Mysql(config)
+                identity(db, config)
+                probes.db = db
+                saved = journal.read_bytes()
+                try:
+                    Runner(db, config, journal).upgrade()
+                    raise AssertionError('Blind replay accepted')
+                except RuntimeError:
+                    require(journal.read_bytes() == saved, 'Refused replay changed journal')
+            Runner(db, config, journal).upgrade(recover=True)
+            require(fingerprint(db, load_contract()) == before, 'Existing data lost')
+            saved = journal.read_bytes()
+            Runner(db, config, journal).upgrade()
+            require(saved == journal.read_bytes(), 'Completed upgrade replayed')
+        with diagnostic.phase('trigger-routine-acceptance'):
+            acceptance = probes.all()
+            verify_schema(db, load_contract(), config)
+            (output/'runtime-result.json').write_text(json.dumps(dict(upgrade=True, predecessor3995Reproduced=True, snapshot=True, dataPreserved=True, idempotent=True, interruptedDropRecovered=True, lostCreateAckRecovered=True, persistedMaintenanceAcrossServerRestart=True, driftRejected=True, acceptance=acceptance), indent=2))
+        with diagnostic.phase('fresh-install-after-upgrade'):
+            fresh_install(db, config, output)
     finally:
         db.close()
 
@@ -374,8 +383,10 @@ def run_fresh(config_path, output):
     output.mkdir(parents=True, exist_ok=False)
     subprocess.run(['node', str(ROOT / 'tools/mysql84-release.cjs')], check=True)
     db = Mysql(config)
+    diagnostic = RuntimeDiagnostic(output/'runtime-phases.json', ['direct-install-and-acceptance'])
     try:
-        fresh_install(db, config, output)
+        with diagnostic.phase('direct-install-and-acceptance'):
+            fresh_install(db, config, output)
     finally:
         db.close()
 

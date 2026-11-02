@@ -1,6 +1,7 @@
 """Run every independent check, record dependencies, and fail closed at the end."""
 import argparse
 import json
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -21,10 +22,18 @@ def execute(checks, root, progress=None):
                 if name in by_id: by_id[name]['dependents'].append(check['id'])
         else:
             try:
+                # A previous run must never supply evidence for this invocation.
+                if check.get('trx'):
+                    (Path(root)/check['trx']).unlink(missing_ok=True)
                 run = subprocess.run(check['command'], cwd=root, capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=check.get('timeout', 1200))
                 row.update(status='PASS' if run.returncode == 0 else 'FAIL', error=run.stdout+run.stderr, exitCode=run.returncode)
                 if row['status'] == 'PASS' and check.get('trx'):
                     validate_trx(Path(root)/check['trx'])
+            except subprocess.TimeoutExpired as error:
+                def decoded(value):
+                    return value.decode('utf-8', errors='replace') if isinstance(value, bytes) else value or ''
+                row.update(status='FAIL', error=decoded(error.stdout)+decoded(error.stderr)+traceback.format_exc(),
+                           cause='Command timed out; partial stdout and stderr preserved')
             except Exception:
                 row.update(status='FAIL', error=traceback.format_exc())
         results.append(row); by_id[check['id']] = row
@@ -49,6 +58,21 @@ def validate_trx(path):
 
 def failed(rows):
     return any(r.get('required', True) and r['status'] != 'PASS' and not (r['status'] == 'SKIPPED' and r.get('justification')) for r in rows)
+
+
+def discovered_methods(output):
+    # dotnet --list-tests prints fully qualified names, with optional theory data.
+    methods = set()
+    for line in output.splitlines():
+        if not line.startswith('    ElectronicRegisterAPI.Tests.Integration.'):
+            continue
+        name = line.strip().split('(', 1)[0]
+        if not re.fullmatch(r'[A-Za-z_][\w.]+', name):
+            raise ValueError('Unrecognized discovered test: '+line)
+        methods.add(name)
+    if not methods:
+        raise ValueError('No integration test methods discovered')
+    return sorted(methods)
 
 
 def static_checks():
@@ -83,6 +107,7 @@ def main():
         for row in report['problems']:
             # Historical claims stay failed, but have no authority over the new release.
             row['required'] = (row.get('state') == 'active' and row['category'] != 'encoding-difference') or row['category'] in ('active-drift','state-conflict')
+    report['suite'] = a.integration or ('static' if a.audit else 'custom')
     checks = json.loads(a.plan.read_text()) if a.plan else static_checks()
     if a.integration:
         filters = {
@@ -93,18 +118,45 @@ def main():
             'iam':'FullyQualifiedName~Mt5eIamHttpTests|FullyQualifiedName~IdentityAccountTests',
             'onboarding':'FullyQualifiedName~Mt5cOnboardingTests',
             'tenants':'FullyQualifiedName~Mt2IdentityTests|FullyQualifiedName~InstitutionClassCrudTests'}
-        trx = '.diagnostics/'+a.integration+'/current.trx'
         checks = [c for c in static_checks() if c['id'] in ('restore','build')]
-        checks.append(dict(id=a.integration,needs=['build'],trx=trx,command=[
+        checks.append(dict(id='docker', command=['docker','info']))
+        checks.append(dict(id='discovery',needs=['build','docker'],command=[
             'dotnet','test','tests/Integration/Integration.Tests.csproj','-c','Release','--no-build',
-            '--filter',filters[a.integration], '--results-directory',str(a.root/'.diagnostics'/a.integration),
-            '--logger','trx;LogFileName=current.trx']))
+            '--list-tests','--filter',filters[a.integration]]))
     initial = list(report['problems'])
     def progress(rows):
         partial = dict(report, problems=initial+rows)
         a.output.write_text(json.dumps(partial,indent=2)+'\n',encoding='utf-8')
     progress([])
     report['problems'] += execute(checks,a.root,progress)
+    if a.integration:
+        discovery = report['problems'][-1]
+        domain = issue('integration', 'tests/Integration/Integration.Tests.csproj', '', test=a.integration)
+        domain.update(id=a.integration, required=True)
+        if discovery['status'] != 'PASS':
+            domain.update(status='BLOCKED', error='Blocked by: discovery', cause='Build or discovery prerequisite failed')
+            discovery['dependents'].append(a.integration)
+        else:
+            try:
+                methods = discovered_methods(discovery['error'])
+                isolated = []
+                for index, method in enumerate(methods):
+                    directory = a.root/'.diagnostics'/a.integration/str(index)
+                    isolated.append(dict(id=method, file='tests/Integration/Integration.Tests.csproj',
+                        trx=str(directory/'current.trx'), command=[
+                            'dotnet','test','tests/Integration/Integration.Tests.csproj','-c','Release','--no-build',
+                            '--filter','FullyQualifiedName='+method,'--results-directory',str(directory),
+                            '--logger','trx;LogFileName=current.trx']))
+                before = list(report['problems'])
+                rows = execute(isolated, a.root, lambda rows: a.output.write_text(
+                    json.dumps(dict(report, problems=before+rows),indent=2)+'\n',encoding='utf-8'))
+                report['problems'] += rows
+                domain.update(status='FAIL' if failed(rows) else 'PASS',
+                              error=f'{len(methods)} isolated method invocations; see individual outcomes',
+                              cause='Every method runs in a new process and Testcontainers fixture')
+            except Exception:
+                domain.update(status='FAIL',error=traceback.format_exc(),cause='Integration orchestration failed')
+        report['problems'].append(domain)
     a.output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print('Historical anomalies retain FAIL and NON_CERTIFIABLE outcomes; they do not certify the new release.')
     for row in report['problems']:
