@@ -24,6 +24,7 @@ jobs:
           python-version: '3.12'
       - run: node --version
       - run: node tools/mysql84-release.cjs
+      - run: node tools/test-mysql84-release.cjs
       - run: node tools/test-release-manifest.cjs
       - run: node tools/test-mysql84.cjs
       - run: python -m unittest discover -s tools -p 'test_*.py'

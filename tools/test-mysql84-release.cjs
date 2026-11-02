@@ -3,10 +3,26 @@ const fs=require('fs'),path=require('path'),Module=require('module'),assert=requ
 const root=path.resolve(__dirname,'..'),file=path.join(__dirname,'mysql84-release.cjs');
 const target=path.join(root,'migrations/mysql84-remediation/manifest.json');
 const original=JSON.parse(fs.readFileSync(target));
+const cp=require('child_process'),release=require('./mysql84-release.cjs');
+const tracked=new Set(cp.execFileSync('git',['ls-files','--cached','--others','--exclude-standard','-z'],{cwd:root,encoding:'utf8'}).split('\0'));
+const names=Object.keys(original.files);
+const ignored=cp.spawnSync('git',['check-ignore','--no-index','-z','--stdin'],
+ {cwd:root,input:names.join('\0')+'\0',encoding:'utf8'});
+assert.equal(ignored.status,1,'Manifest contains ignored files: '+ignored.stdout+ignored.stderr);
+for(const [name,expected] of Object.entries(original.files)){
+ assert(!/(^|\/)(\.staff-private|\.formative-private)(\/|$)/.test(name),name);
+ assert(tracked.has(name),'Unavailable in a clean checkout (not tracked or addable): '+name);
+ assert(fs.statSync(path.join(root,name)).isFile(),name);
+ assert.equal(release.sha(fs.readFileSync(path.join(root,name))),expected,name);
+}
+release.verify();
+console.log(names.length+' publishable closure files and checksums verified');
 const mutations={release:m=>m.release='er-quality-1',predecessor:m=>m.predecessor='unknown',
  revision:m=>m.predecessorRevision='0'.repeat(40),engine:m=>m.mysql.version='8.4.3',
  digest:m=>m.mysql.image='mysql:latest',omission:m=>m.changedTriggers.pop(),order:m=>m.changedTriggers.reverse(),
  file:m=>delete m.files['tools/mysql84_release.py'],hash:m=>m.files['tools/mysql84_release.py']='0'.repeat(64),
+ privateStaff:m=>m.files['.staff-private/injected.json']='0'.repeat(64),
+ privateFormative:m=>m.files['.formative-private/injected.json']='0'.repeat(64),
  extra:m=>m.unreviewed=true};
 for(const [name,mutate] of Object.entries(mutations)){
  const value=structuredClone(original);mutate(value);
@@ -15,7 +31,16 @@ for(const [name,mutate] of Object.entries(mutations)){
  mod._compile(fs.readFileSync(file,'utf8'),file);
  assert.throws(()=>mod.exports.verify(),undefined,name+' accepted');
 }
-console.log('10 corrective-manifest negative controls passed; no disk mutation');
+// Simulate a tracked source edit through the filesystem seam without touching disk.
+{
+ const source=path.join(root,'tools/mysql84_release.py');
+ const mod=new Module(file,module);mod.filename=file;mod.paths=Module._nodeModulePaths(__dirname);
+ mod.require=id=>id==='fs'?{...fs,readFileSync:(f,...args)=>path.resolve(f)===source
+  ?Buffer.concat([fs.readFileSync(f),Buffer.from('\n# unrecorded tracked edit\n')]):fs.readFileSync(f,...args)}:require(id);
+ mod._compile(fs.readFileSync(file,'utf8'),file);
+ assert.throws(()=>mod.exports.verify(),/New release closure drift/,'Tracked edit accepted');
+}
+console.log(Object.keys(mutations).length+' manifest negative controls and tracked-source drift passed; no disk mutation');
 // Build the actual environment-bound fresh and predecessor artifacts locally.
 // No MySQL client or network is involved in these generation tests.
 const os=require('os');

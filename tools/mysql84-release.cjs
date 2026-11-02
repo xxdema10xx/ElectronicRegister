@@ -33,22 +33,29 @@ function contract(modern=true){
  return {release:modern?'er-quality-2-mysql84':'er-quality-1',tables,triggers,routine:{body:add.body,mode:add.contract.triggers[0].SQL_MODE},
   metadata};
 }
+// Git is the authority for publishable inputs, including new addable source files.
+const localArtifact=/(^|\/)(?:\.staff-private|\.formative-private|[^/]*-private|private|bin|obj|node_modules|__pycache__|\.git)(?:\/|$)/;
+function publishableFiles(){
+ return new Set(cp.execFileSync('git',['ls-files','--cached','--others','--exclude-standard','-z'],
+  {cwd:root,encoding:'utf8',maxBuffer:32*1024*1024}).split('\0').filter(f=>f&&!localArtifact.test(f)));
+}
 function records(){
+ const publishable=publishableFiles();
  const extra=['tools/mysql84-remediation.cjs','tools/test-mysql84-remediation.cjs','tools/mysql84-release.cjs',
   'tools/mysql84_release.py','tools/test_mysql84_release.py','tools/mysql84_runtime.py','tools/historical_artifacts.py','tools/test-mysql84-release.cjs',
-  '.github/workflows/mysql84-remediation-candidate.yml',dir+'/candidate.json',dir+'/contract.json',
+  '.github/workflows/mysql84-remediation-candidate.yml','.github/workflows/verify.yml','.github/actionlint.yaml',dir+'/candidate.json',dir+'/contract.json',
   'tests/Integration/IntegrationFixture.cs','tests/Integration/Mysql84ReleaseTests.cs','tests/Integration/Mysql84ReleaseHttp.cs','infra/release.mysql84.example.json'];
  const bootstrap=Object.keys(require('../migrations/bootstrap/manifest.json').files);
  const calendar=require('../tests/Integration/INSTITUTION_CALENDAR_VERIFICATION.json').artifacts.map(a=>a.path);
- const scan=dir=>fs.readdirSync(path.join(root,dir),{withFileTypes:true}).flatMap(e=>e.isDirectory()?(['bin','obj','private','node_modules','TestResults'].includes(e.name)?[]:scan(dir+'/'+e.name)):[dir+'/'+e.name]);
- const active=['Backend/ElectronicRegisterAPI/src','tests/Unit','tests/Integration','tools','infra','migrations/mt1','migrations/mt3','migrations/identity-account'].flatMap(scan)
+ const roots=['Backend/ElectronicRegisterAPI/src','tests/Unit','tests/Integration','tools','infra','migrations/mt1','migrations/mt3','migrations/identity-account'];
+ const active=[...publishable].filter(f=>roots.some(r=>f.startsWith(r+'/'))&&!f.split('/').includes('TestResults'))
   .filter(f=>/\.(cs|csproj|cjs|py|ps1|sql|json|config|ya?ml|sh|conf)$/.test(f)&&(!f.includes('appsettings')||f.endsWith('appsettings.example.json')));
- return Object.fromEntries([...new Set([...Object.keys(old.files),...bootstrap,...calendar,...extra,...active])].filter(f=>fs.existsSync(path.join(root,f))).sort().map(f=>[f,sha(fs.readFileSync(path.join(root,f)))]));
+ return Object.fromEntries([...new Set([...Object.keys(old.files),...bootstrap,...calendar,...extra,...active])].filter(f=>publishable.has(f)&&fs.existsSync(path.join(root,f))).sort().map(f=>[f,sha(fs.readFileSync(path.join(root,f)))]));
 }
-function manifest(){return {format:1,release:'er-quality-2-mysql84',predecessor:'er-quality-1',
+function manifest(){const publishable=publishableFiles();return {format:1,release:'er-quality-2-mysql84',predecessor:'er-quality-1',
  predecessorRevision:'8e7d9ecd42c001f1fa9b30e120535ce1bb0ef6e8',predecessorManifestHash:sha(fs.readFileSync(path.join(root,'migrations/release/manifest.json'))),
  mysql:candidate().mysql,requiredMigrations:old.requiredMigrations,changedTriggers:candidate().triggers.map(t=>t.name),
- retiredArtifacts:[...new Set([...Object.keys(require('../migrations/bootstrap/manifest.json').files),...require('../tests/Integration/INSTITUTION_CALENDAR_VERIFICATION.json').artifacts.map(a=>a.path)])].filter(f=>!fs.existsSync(path.join(root,f))).sort(),files:records()};}
+ retiredArtifacts:[...new Set([...Object.keys(require('../migrations/bootstrap/manifest.json').files),...require('../tests/Integration/INSTITUTION_CALENDAR_VERIFICATION.json').artifacts.map(a=>a.path)])].filter(f=>!publishable.has(f)||!fs.existsSync(path.join(root,f))).sort(),files:records()};}
 function verify(){
  const actual=manifest(),saved=JSON.parse(fs.readFileSync(path.join(root,dir,'manifest.json')));
  if(JSON.stringify(actual)!==JSON.stringify(saved))throw Error('New release closure drift');
