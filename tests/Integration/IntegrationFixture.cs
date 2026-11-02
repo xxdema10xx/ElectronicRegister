@@ -132,6 +132,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             if (_mysql != null)
             {
+                if (Environment.GetEnvironmentVariable("ER_TEST_MYSQL84_RETAIN") == "1") return;
                 Mysql84FixtureTarget.Forget(ConnectionString);
                 await _mysql.DisposeAsync();
             }
@@ -194,11 +195,17 @@ namespace ElectronicRegisterAPI.Tests.Integration
         {
             try
             {
-                _mysql = new MySqlBuilder(ContainerImage)
+                var builder = new MySqlBuilder(ContainerImage)
                     .WithDatabase("electronic_register_test")
                     .WithUsername("root")
-                    .WithPassword("test")
-                    .Build();
+                    .WithPassword("test");
+                if (Environment.GetEnvironmentVariable("ER_TEST_MYSQL84_RETAIN") == "1")
+                {
+                    var name = "er84-dotnet-" + Guid.NewGuid().ToString("N");
+                    builder = builder.WithName(name).WithLabel("er84.local.attestation", name)
+                        .WithVolumeMount(name + "-data", "/var/lib/mysql").WithCleanUp(false);
+                }
+                _mysql = builder.Build();
 
                 await _mysql.StartAsync();
                 var owned = new MySqlConnectionStringBuilder(_mysql.GetConnectionString()) { Server = "127.0.0.1", AllowUserVariables = true }.ConnectionString;

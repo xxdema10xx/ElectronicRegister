@@ -208,7 +208,9 @@ class AggregateDiagnosticTests(unittest.TestCase):
             for index, (suite, checks) in enumerate(EXPECTED.items()):
                 path = reports/str(index); path.mkdir()
                 (path/'suite-diagnostic.json').write_text(json.dumps(dict(suite=suite,problems=[dict(id=name,status='PASS',required=True) for name in checks])))
-            self.assertEqual(subprocess.run(command,cwd=root,env=env,capture_output=True).returncode,0)
+            # Job labels and minimal PASS rows cannot certify absent method/TRX
+            # evidence or the mandatory Windows CLI environment.
+            self.assertNotEqual(subprocess.run(command,cwd=root,env=env,capture_output=True).returncode,0)
             path = reports/'0/suite-diagnostic.json'
             report = json.loads(path.read_text()); report['problems'] = []
             path.write_text(json.dumps(report))

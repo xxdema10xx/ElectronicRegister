@@ -157,7 +157,8 @@ public static class OperationalPipeline
                 var datadir = reader.GetString(3).TrimEnd('/');
                 var expectedData = configuration["Readiness:ExpectedDataDir"]?.Replace('\\', '/').TrimEnd('/');
                 var validData = expectedData is not null ? datadir.Equals(expectedData, StringComparison.OrdinalIgnoreCase) : policy.Local && datadir.EndsWith("/migrations/mt4/private/mt5a-mamp-13306/data", StringComparison.OrdinalIgnoreCase);
-                var validIdentity = reader.GetString(0) == expectedVersion && reader.GetString(1).Equals(expectedHost, StringComparison.OrdinalIgnoreCase) && reader.GetInt32(2) == connection.Port && reader.GetString(4) == connection.Database && validData && reader.GetBoolean(5);
+                var expectedServerPort = configuration.GetValue<uint?>("Readiness:ExpectedServerPort") ?? connection.Port;
+                var validIdentity = reader.GetString(0) == expectedVersion && reader.GetString(1).Equals(expectedHost, StringComparison.OrdinalIgnoreCase) && reader.GetUInt32(2) == expectedServerPort && reader.GetString(4) == connection.Database && validData && reader.GetBoolean(5);
                 await reader.DisposeAsync();
                 if (!validIdentity)
                     return Results.StatusCode(503);

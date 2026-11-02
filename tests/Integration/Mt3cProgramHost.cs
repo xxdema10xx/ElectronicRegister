@@ -50,6 +50,7 @@ internal static class Mt3cHosting
                 "--Logging:LogLevel:Default=Critical", "--Logging:EventLog:LogLevel:Default=None"
             };
             args.Add("--Deployment:LocalTestDatabasePort=" + new MySqlConnector.MySqlConnectionStringBuilder(connectionString).Port);
+            args.AddRange(Mysql84FixtureTarget.ReadinessArguments(connectionString));
             if (Environment.GetEnvironmentVariable("ER_TEST_ISOLATED_PORT") is { } isolatedPort)
             {
                 args.Add("--Deployment:LocalTestDatabasePort=" + isolatedPort);

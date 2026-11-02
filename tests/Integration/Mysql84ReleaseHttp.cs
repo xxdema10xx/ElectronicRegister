@@ -23,7 +23,8 @@ internal static class Mysql84ReleaseHttp
     {
         using var configDocument = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(evidence, "fresh-config.json")));
         var config = configDocument.RootElement;
-        Assert.True(config.GetProperty("isolatedCI").GetBoolean());
+        var local=Mysql84LocalReleaseTarget.IsLocal(config);
+        if(!local)Assert.True(config.GetProperty("isolatedCI").GetBoolean());
         Assert.Equal("127.0.0.1", config.GetProperty("host").GetString());
         Assert.Equal("electronic_register_test", config.GetProperty("database").GetString());
         Assert.Equal(serverUuid, config.GetProperty("serverUuid").GetString());
@@ -31,6 +32,7 @@ internal static class Mysql84ReleaseHttp
         var ids = result.RootElement.GetProperty("acceptance").GetProperty("ids");
         Guid Id(string key) => ids.GetProperty(key).GetGuid();
         var root = new MySqlConnectionStringBuilder { Server="127.0.0.1", Port=config.GetProperty("port").GetUInt32(), Database="electronic_register_test", UserID="root", SslMode=MySqlSslMode.Disabled };
+        if(local)root=await Mysql84LocalReleaseTarget.ConnectionAsync(config,"electronic_register_test");
         Assert.DoesNotContain(root.Port, new uint[] {3306,13306});
         await using var connection = new MySqlConnection(root.ConnectionString);
         await connection.OpenAsync();
@@ -47,7 +49,7 @@ internal static class Mysql84ReleaseHttp
         // Staging retains its existing VerifyFull TLS connection configuration.
         var api = new MySqlConnectionStringBuilder(root.ConnectionString) { UserID=config.GetProperty("apiUser").GetString(), Password="Synthetic-ci-only-credential", AllowPublicKeyRetrieval=true };
         await using var host = await Mt3cHosting.ProgramHost.StartAsync(api.ConnectionString,Id("tenant"),[],enabled:false,school:true,course:true,exam:true,membershipAdmin:true,membershipWrite:true,onboarding:true,
-            extraArguments:["--Deployment:LocalTestDatabasePort="+root.Port,"--Multitenancy:FormativePlans:Enabled=true","--Multitenancy:InstitutionEmail:Enabled=true","--Multitenancy:InstitutionImport:Enabled=true","--Multitenancy:InstitutionCalendar:Enabled=true"]);
+            extraArguments:["--Deployment:LocalTestDatabasePort="+root.Port,"--Multitenancy:FormativePlans:Enabled=true","--Multitenancy:InstitutionEmail:Enabled=true","--Multitenancy:InstitutionImport:Enabled=true","--Multitenancy:InstitutionCalendar:Enabled=true",..(local?new[]{"--Readiness:ExpectedVersion=8.4.13","--Readiness:ExpectedHost="+config.GetProperty("serverHost").GetString(),"--Readiness:ExpectedDataDir=/var/lib/mysql/","--Readiness:ExpectedServerPort=3306"}:Array.Empty<string>())]);
         var login = await host.Client.PostAsJsonAsync("/api/Auth/identity/login",new LoginDto { Email=Id("user")+"@example.test", Password=password });
         Assert.Equal(HttpStatusCode.OK,login.StatusCode);
         var ticket=(await login.Content.ReadFromJsonAsync<IdentityTicketDto>())!;

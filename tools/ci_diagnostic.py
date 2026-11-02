@@ -9,6 +9,7 @@ import traceback
 import time
 import os
 import signal
+from integration_partition import SHARDS, WINDOWS_METHODS, partition
 from artifact_diagnostic import audit, issue
 
 
@@ -128,7 +129,7 @@ def batch_methods(check, invocation, root):
         cases = observed.get(method, [])
         if invocation['status'] == 'BLOCKED':
             row.update(status='BLOCKED', cause=invocation['cause'], error=invocation['error'])
-        elif not cases or parse_error:
+        elif not cases or parse_error or len(cases) != check.get('expectedCases', {}).get(method, len(cases)):
             row.update(status='FAIL', cause='Batch did not provide complete method evidence', error=parse_error or invocation['error'])
             if invocation.get('outcome') == 'TIMEOUT': row.update(outcome='TIMEOUT', infrastructure=True)
         else:
@@ -232,6 +233,8 @@ def main():
     p.add_argument('--plan',type=Path)
     p.add_argument('--audit',action='store_true')
     p.add_argument('--integration')
+    p.add_argument('--shard', type=int, default=0)
+    p.add_argument('--shards', type=int, default=1)
     a = p.parse_args(); report = dict(format=1, problems=[], artifacts=[])
     a.output.parent.mkdir(parents=True,exist_ok=True)
     if a.audit:
@@ -242,11 +245,13 @@ def main():
         for row in report['problems']:
             # Historical claims stay failed, but have no authority over the new release.
             row['required'] = (row.get('state') == 'active' and row['category'] != 'encoding-difference') or row['category'] in ('active-drift','state-conflict')
-    report['suite'] = a.integration or ('static' if a.audit else 'custom')
+    suite = a.integration
+    if suite and a.shards > 1: suite += '-'+str(a.shard)
+    report['suite'] = suite or ('static' if a.audit else 'custom')
     checks = json.loads(a.plan.read_text()) if a.plan else static_checks()
     if a.integration:
         filters = {
-            'calendar':'FullyQualifiedName~Calendar_',
+            'calendar':'FullyQualifiedName~Calendar_|FullyQualifiedName~SqlLockEvidenceTests',
             'formative':'FullyQualifiedName~InstitutionFormativePlanTests&FullyQualifiedName!~Calendar_',
             'email':'FullyQualifiedName~EmailPolicy_',
             'imports':'FullyQualifiedName~BulkImport_',
@@ -274,7 +279,19 @@ def main():
         else:
             try:
                 methods = discovered_methods(discovery['error'])
-                isolated = integration_plan(methods, a.root, a.integration)
+                inventory, methods = partition(methods, a.integration, a.shard, a.shards)
+                report['assignment'] = dict(domain=a.integration, shard=a.shard, shards=a.shards,
+                    inventory=inventory, methods=methods, isolation='process and ephemeral database per method')
+                isolated = integration_plan(methods, a.root, report['suite'])
+                case_counts = {method: sum(line.strip().split('(', 1)[0] == method
+                    for line in discovery['error'].splitlines()) for method in methods}
+                report['assignment']['expectedCases'] = case_counts
+                for check in isolated:
+                    if check['id'] in methods:
+                        check['members'] = [check['id']]
+                        check['id'] = 'invoke-'+check['id']
+                    if check.get('members'):
+                        check['expectedCases'] = {m: case_counts[m] for m in check['members']}
                 for check in isolated:
                     if check['id'].startswith('preflight-'):
                         check['needs'] = ['build', 'docker']

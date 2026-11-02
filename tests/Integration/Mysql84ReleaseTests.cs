@@ -20,8 +20,8 @@ public sealed class Mysql84ReleaseTests
             ?? throw new InvalidOperationException("Explicit disposable MySQL 8.4 release config required.");
         using var document = JsonDocument.Parse(await File.ReadAllTextAsync(configPath));
         var config = document.RootElement;
-        Assert.Equal("true", Environment.GetEnvironmentVariable("GITHUB_ACTIONS"));
-        Assert.True(config.GetProperty("isolatedCI").GetBoolean());
+        var local=Mysql84LocalReleaseTarget.IsLocal(config);
+        if(!local){Assert.Equal("true", Environment.GetEnvironmentVariable("GITHUB_ACTIONS"));Assert.True(config.GetProperty("isolatedCI").GetBoolean());}
         Assert.Equal("127.0.0.1", config.GetProperty("host").GetString());
         Assert.StartsWith("er84_", config.GetProperty("database").GetString());
         var port = config.GetProperty("port").GetUInt32();
@@ -31,6 +31,7 @@ public sealed class Mysql84ReleaseTests
             Server = "127.0.0.1", Port = port, Database = config.GetProperty("database").GetString(),
             UserID = "root", Password = "", SslMode = MySqlSslMode.Disabled
         };
+        if(local)connectionString=await Mysql84LocalReleaseTarget.ConnectionAsync(config,config.GetProperty("database").GetString()!);
         await using var connection = new MySqlConnection(connectionString.ConnectionString);
         await connection.OpenAsync();
         await using (var identity = new MySqlCommand("SELECT VERSION(),@@server_uuid,(SELECT COUNT(*) FROM er_schema_release WHERE version='er-quality-2-mysql84')", connection))

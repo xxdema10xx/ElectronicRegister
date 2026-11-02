@@ -36,24 +36,38 @@ class Probes:
         self.now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
         self.created = self.now.strftime('%Y-%m-%d %H:%M:%S.%f')
         self.expiry = (self.now + datetime.timedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S.%f')
-        self.hash = 'A' * 64
+        self.hash = sha(str(uuid.uuid4()))
+        self.contract = load_contract()
+        self.failures, self.results = [], []
+        self.hash_rows={}
+
+    def data_digest(self):
+        queries=[]
+        for table, ddl in self.contract['tables'].items():
+            columns=re.findall(r'^  `([^`]+)` ',ddl,re.M)
+            fields=','.join('IF(`'+c+'` IS NULL,NULL,HEX(CAST(`'+c+'` AS BINARY)))' for c in columns)
+            queries.append('SELECT '+literal(table)+',JSON_ARRAY('+fields+') FROM `'+table+'`')
+        return sha('\n'.join(sorted(self.db.execute(' UNION ALL '.join(queries)).splitlines())))
 
     def add(self, table, row):
         self.db.execute(insert(table, row))
 
-    def reject(self, sql, tables, codes=(1644,)):
-        schema = load_contract()
-        subset = {'tables': {t: schema['tables'][t] for t in tables}}
-        before = fingerprint(self.db, subset)
-        result = subprocess.run(self.db.args, input='USE `' + self.config['database'] + '`;\nSTART TRANSACTION;\n' + sql + ';\nROLLBACK;\n', text=True, capture_output=True, timeout=120)
+    def reject(self, sql, tables, codes=(1644,), mode=None):
+        before = self.data_digest()
+        self.db.scalar('SELECT 1') # identity guard before the independent DML client
+        header=('SET SESSION sql_mode='+literal(mode)+';\n') if mode is not None else ''
+        result = subprocess.run(self.db.args, input=header+'USE `' + self.config['database'] + '`;\nSTART TRANSACTION;\n' + sql + ';\nROLLBACK;\n', text=True, capture_output=True, timeout=120)
         match = re.search(r'ERROR (\d+) \(', result.stderr)
-        require(result.returncode != 0 and match is not None and int(match[1]) in codes,
-                'Expected rejection not reached: errno=' + (match[1] if match else 'none'))
-        require(int(match[1]) != 3995 and fingerprint(self.db, subset) == before, 'Rejected DML changed data or hit 3995')
+        unchanged=self.data_digest()==before
+        passed=result.returncode!=0 and match is not None and int(match[1]) in (*codes,3819) and unchanged
+        record=dict(statementHash=sha(sql),status='PASS' if passed else 'FAIL',mysqlErrno=int(match[1]) if match else None,dataUnchanged=unchanged,mode=mode,context=getattr(self,'context',None))
+        self.results.append(record)
+        if not passed:self.failures.append(record)
+        require(unchanged,'Rejected DML changed persistent data; stop to preserve evidence')
 
     def api(self, sql):
         env = dict(os.environ, MYSQL_PWD='Synthetic-ci-only-credential')
-        return subprocess.run(self.db.args + ['--user=' + self.config['apiUser']],
+        return subprocess.run(self.db.args + ['--user=' + self.config['apiUser']] + (['--password=Synthetic-ci-only-credential'] if self.config.get('isolatedLocal') else []),
                               input='USE `' + self.config['database'] + '`;\n' + sql + ';\n', text=True, capture_output=True, env=env, timeout=30)
 
     def reproduce_predecessor_failure(self):
@@ -93,15 +107,21 @@ class Probes:
 
     def matrix(self, name, table, row, fields):
         for field in fields:
-            for bad in [self.hash[:-1], self.hash + 'A', 'G' + self.hash[1:], self.hash.lower(), 'é' + self.hash[1:], self.hash + '\n', None]:
+          for mode in [None,'','NO_BACKSLASH_ESCAPES']:
+            for bad in [self.hash[:-1], self.hash + 'A', 'G' + self.hash[1:], self.hash.lower(), 'é' + self.hash[1:], self.hash + '\n', self.hash+' ', ' '+self.hash, self.hash+'\r\n', self.hash+'\t', self.hash+' '*1024, None]:
                 mutated = dict(row, **{field: bad})
                 # NOT NULL/ASCII/width may reject before the trigger. The direct
                 # ICU matrix separately covers those values as character input.
-                self.reject(insert(table, mutated), [table], (1644, 1048, 1366, 1406))
+                try:
+                    self.context=dict(trigger=name,table=table,column=field,input=repr(bad),operation='INSERT')
+                    self.reject(insert(table, mutated), [table], (1644, 1048, 1366, 1406),mode=mode)
+                except Exception as error:
+                    raise RuntimeError(f'{name}: {field}={bad!r}: {error}') from error
         self.add(table, row)
+        self.hash_rows[table]=(dict(row),fields)
         self.coverage.append(name)
 
-    def all(self):
+    def core(self):
         i = self.ids
         visible = self.api('SELECT COUNT(*) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA=DATABASE()')
         require(visible.returncode == 0 and visible.stdout.strip() == '0', 'API trigger metadata privilege expanded')
@@ -130,7 +150,7 @@ class Probes:
                 self.reject(insert('institution_membership_event', dict(row, request_hash=bad)), ['institution_membership_event'], (1644, 1048, 1366, 1406))
             self.reject(insert('institution_membership_event', dict(row, actor_membership_id=i['target'], actor_user_id=i['targetUser'], target_membership_id=i['member'])), ['institution_membership_event'])
             self.reject(insert('institution_membership_event', dict(row, institution_id=i['other'])), ['institution_membership_event'])
-            self.add('institution_membership_event', row)
+            self.matrix('mt5d_event_insert','institution_membership_event',row,['request_hash'])
         self.coverage.append('mt5d_event_insert')
         # Role removal is the application's membership permission revocation.
         generation = int(self.db.scalar('SELECT security_generation FROM institution_membership_security_state WHERE membership_id=' + literal(i['target'])))
@@ -141,17 +161,93 @@ class Probes:
         self.add('institution_membership_event',role_event)
         self.db.execute("INSERT INTO institution_membership_role(membership_id,role) VALUES(" + literal(i['target']) + ",'Student')")
         self.add('institution_membership_event',dict(role_event,id=str(uuid.uuid4()),action='AddRole',previous_roles=[],new_roles=['Student'],revision_before=generation+1,revision_after=generation+2))
-        self.email()
-        self.import_people()
-        self.governance()
-        self.calendar_and_version()
-        self.retention()
+    def all(self):
+        phases=[]
+        for name,action in [('core',self.core),('email',self.email),('imports',self.import_people),('governance',self.governance),('calendar',self.calendar_and_version),('profile-hash',self.profile_hash),('calendar-import-hash',self.calendar_import_hash),('school-hashes',self.school_hashes),('hash-updates',self.hash_updates),('pending-hash-updates',self.pending_hash_updates),('retention',self.retention),('audit',self.audit_checks)]:
+            try:
+                before=len(self.failures);action();phases.append(dict(phase=name,status='PASS' if len(self.failures)==before else 'FAIL'))
+            except Exception as error:
+                phases.append(dict(phase=name,status='FAIL',error=str(error)));self.failures.append(phases[-1])
+                if 'identity' in str(error).lower() or self.db.broken:
+                    if self.config.get('acceptanceEvidenceFile'):
+                        Path(self.config['acceptanceEvidenceFile']).write_text(json.dumps(dict(phases=phases,cases=self.results,failures=self.failures),indent=2))
+                    raise
+        evidence=dict(phases=phases,cases=self.results,failures=self.failures)
+        if self.config.get('acceptanceEvidenceFile'):
+            Path(self.config['acceptanceEvidenceFile']).write_text(json.dumps(evidence,indent=2))
+        require(not self.failures,'Acceptance failures: '+json.dumps(self.failures))
+        return dict(triggerDml=self.coverage,deleteGuards='Production 8.4 rejects fixture cleanup',ids=self.ids,matrix=evidence)
+
+    def audit_checks(self):
+        i=self.ids
         for table in ('institution_membership_event','institution_onboarding_event','institution_email_event','institution_import_event','formative_plan_event'):
             self.reject('UPDATE `' + table + "` SET reason=CONCAT(reason,'!') WHERE institution_id=" + literal(i['tenant']), [table])
         self.reject('UPDATE institution_membership SET institution_id=' + literal(i['other']) + ' WHERE id=' + literal(i['target']), ['institution_membership','institution_membership_security_state'])
         unauthorized = dict(self.rows()[5][2], actor_user_id=i['targetUser'], actor_membership_id=i['target'])
         self.reject(insert('formative_plan_event', unauthorized), ['formative_plan_event'])
-        return dict(triggerDml=self.coverage, deleteGuards='8.4 blocks historical 5.7 cleanup before regex; same code predicates probed independently', ids=i)
+
+    def profile_hash(self):
+        i=self.ids
+        row=dict(institution_id=i['tenant'],id=str(uuid.uuid4()),actor_user_id=i['user'],actor_membership_id=i['member'],target_user_id=i['targetUser'],target_membership_id=i['target'],teacher_id=i['teacher'],status='requires-review',request_hash=self.hash,reason='Synthetic profile validation')
+        self.matrix('profile_acquisition_insert','institution_profile_acquisition',row,['request_hash'])
+
+    def calendar_import_hash(self):
+        i=self.ids; import_id=str(uuid.uuid4()); event_id=str(uuid.uuid4())
+        event=dict(id=event_id,institution_id=i['tenant'],actor_user_id=i['user'],actor_membership_id=i['member'],resource_kind='Import',resource_id=import_id,operation='ImportPreviewed',revision_before=None,revision_after=0,request_hash=self.hash,state_json={'Revision':0},receipt_json={},reason='Synthetic calendar import',occurred_at_utc=self.created)
+        self.add('institution_calendar_event',event)
+        row=dict(id=import_id,institution_id=i['tenant'],actor_user_id=i['user'],actor_membership_id=i['member'],revision=0,status='Preview',file_sha256=self.hash,preview_digest=self.hash,raw_json=[],settings_json={},preview_json={},created_at_utc=self.created,expires_at_utc=self.expiry,event_id=event_id)
+        self.matrix('institution_calendar_import_bi','institution_calendar_import',row,['file_sha256','preview_digest'])
+
+    def school_hashes(self):
+        i=self.ids; ids={k:str(uuid.uuid4()) for k in ['edition','student','enrollment','biennium','area','bsa','bsp','from','to']}
+        self.add('course_edition',dict(id=ids['edition'],institution_id=i['tenant'],study_path_id=i['path'],code='CERT_'+uuid.uuid4().hex,name='Synthetic course',status='active',start_date='2026-01-01',end_date='2027-12-31'))
+        self.add('student',dict(id=ids['student'],institution_id=i['tenant'],first_name='Synthetic',last_name='Transfer'))
+        self.add('student_enrollment',dict(id=ids['enrollment'],institution_id=i['tenant'],student_id=ids['student'],course_edition_id=ids['edition'],enrollment_date='2026-01-01',status='enrolled',revision=0))
+        day=self.created[:10]
+        self.db.execute("UPDATE student_enrollment SET status='completed',completion_date="+literal(day)+",revision=1 WHERE id="+literal(ids['enrollment']))
+        event=dict(institution_id=i['tenant'],id=str(uuid.uuid4()),actor_user_id=i['user'],actor_membership_id=i['member'],course_edition_id=ids['edition'],enrollment_id=ids['enrollment'],action='enrollment.transition',previous_status='enrolled',new_status='completed',new_completion_date=day,revision_before=0,revision_after=1,reason='Synthetic lifecycle',request_hash=self.hash,after_json='{}',occurred_at_utc=self.created)
+        self.matrix('mt4c_course_event_insert','course_administration_event',event,['request_hash'])
+        # A separate enrollment supplies a legitimate same-course transfer.
+        student=str(uuid.uuid4()); enrollment=str(uuid.uuid4())
+        self.add('biennium',dict(id=ids['biennium'],institution_id=i['tenant'],start_year='2026-01-01',end_year='2027-12-31'))
+        self.add('study_area',dict(id=ids['area'],institution_id=i['tenant'],name='Synthetic area',description='Synthetic certification fixture'))
+        self.add('biennium_study_area',dict(id=ids['bsa'],institution_id=i['tenant'],biennium_id=ids['biennium'],study_area_id=ids['area']))
+        self.add('biennium_study_path',dict(id=ids['bsp'],institution_id=i['tenant'],biennium_study_area_id=ids['bsa'],study_path_id=i['path']))
+        for key in ['from','to']:self.add('class',dict(id=ids[key],institution_id=i['tenant'],biennium_study_path_id=ids['bsp'],name=key,course_edition_id=ids['edition']))
+        self.add('student',dict(id=student,institution_id=i['tenant'],first_name='Synthetic',last_name='Transfer',class_id=ids['from']))
+        self.add('student_enrollment',dict(id=enrollment,institution_id=i['tenant'],student_id=student,course_edition_id=ids['edition'],enrollment_date='2026-01-01',status='enrolled',revision=0))
+        self.db.execute('UPDATE student SET class_id='+literal(ids['to'])+',transfer_revision=1 WHERE id='+literal(student))
+        row=dict(institution_id=i['tenant'],id=str(uuid.uuid4()),student_id=student,from_class_id=ids['from'],to_class_id=ids['to'],from_course_edition_id=ids['edition'],to_course_edition_id=ids['edition'],source_enrollment_id=enrollment,destination_enrollment_id=enrollment,actor_user_id=i['user'],actor_membership_id=i['member'],effective_date=day,source_course_start_date='2026-01-01',destination_course_start_date='2026-01-01',occurred_at_utc=self.created,applied_limit_months=24,revision_before=0,revision_after=1,reason='Synthetic transfer',request_hash=self.hash,from_class_name='from',to_class_name='to',from_course_name='Synthetic',to_course_name='Synthetic')
+        self.matrix('transfer_event_insert','student_class_transfer_event',row,['request_hash'])
+
+    def hash_updates(self):
+        for table,fields in self.contract['hashColumns'].items():
+            require(table in self.hash_rows,'Missing real INSERT control for '+table)
+            row,_=self.hash_rows[table]
+            keys=re.search(r'PRIMARY KEY \(([^)]+)\)',self.contract['tables'][table])[1].replace('`','').split(',')
+            where=' AND '.join('`'+key+'`='+value(row[key]) for key in keys)
+            for field in fields:
+                for mode in [None,'','NO_BACKSLASH_ESCAPES']:
+                    for bad in [self.hash+'\n',self.hash+' ',self.hash+'\r\n',self.hash+'\t',' '+self.hash,self.hash.lower(),'G'+self.hash[1:],'é'+self.hash[1:],self.hash[:-1],self.hash+'A',self.hash+' '*1024]:
+                        self.context=dict(table=table,column=field['name'],input=repr(bad),operation='UPDATE')
+                        self.reject('UPDATE `'+table+'` SET `'+field['name']+'`='+value(bad)+' WHERE '+where,[table],(1644,1048,1366,1406),mode=mode)
+
+    def pending_hash_updates(self):
+        # A pending invitation permits hash rotation, so its negative UPDATEs
+        # cannot pass merely because an unrelated consumed/immutable guard fires.
+        row=dict(self.rows()[0][2],id=str(uuid.uuid4()))
+        self.add('institution_invitation',row)
+        where=' WHERE institution_id='+literal(self.ids['tenant'])+' AND id='+literal(row['id'])
+        for field in ('token_hash','channel_hash'):
+            for mode in (None,'','NO_BACKSLASH_ESCAPES'):
+                for bad in ['A'*64+'\n','\n'+'A'*63,'A'*31+'\n'+'A'*32,'A'*31+' '+'A'*32,'A'*63+'\u00a0','A'*63+'\u200b','\uff21'*64,'A'*63+'\U0001f600','A'*63+'\0']:
+                    self.context=dict(table='institution_invitation',column=field,input=repr(bad),operation='UPDATE pending invitation')
+                    self.reject('UPDATE institution_invitation SET `'+field+'`='+value(bad)+where,['institution_invitation'],(1644,1048,1366,1406),mode=mode)
+            valid='0123456789ABCDEF'*4
+            self.db.execute('UPDATE institution_invitation SET `'+field+'`='+literal(valid)+where)
+            require(self.db.scalar('SELECT BINARY `'+field+'`='+literal(valid)+' FROM institution_invitation'+where)=='1','Valid hash update did not persist')
+        self.coverage.append('mt5c_invitation_update:pending-hash')
+        return dict(pendingInvitation=row['id'],validUpdates=2)
 
     def email(self):
         i = self.ids
@@ -206,7 +302,7 @@ class Probes:
         # A Teacher acting through an unlinked membership must be rejected by the
         # real calendar authorization predicate, even with otherwise shaped JSON.
         event = dict(id=str(uuid.uuid4()), institution_id=i['tenant'], actor_user_id=i['user'], actor_membership_id=i['member'], resource_kind='Settings', resource_id=i['tenant'], operation='SettingsCreated', revision_before=None, revision_after=0, request_hash=self.hash, state_json={'Revision':0}, receipt_json={}, reason='Synthetic calendar', occurred_at_utc=self.created)
-        self.add('institution_calendar_event', event)
+        self.matrix('institution_calendar_event_bi','institution_calendar_event',event,['request_hash'])
         self.add('institution_calendar_settings', dict(institution_id=i['tenant'], time_zone_id='Europe/Rome', approval_lead_days=1, revision=0, event_id=event['id']))
         self.reject(insert('institution_calendar_event', dict(event, id=str(uuid.uuid4()), institution_id=i['other'], revision_after=1)), ['institution_calendar_event'])
         self.reject(insert('institution_calendar_event', dict(event, id=str(uuid.uuid4()), resource_kind='Lesson', resource_id=str(uuid.uuid4()), operation='LessonCompleted',
@@ -230,15 +326,20 @@ class Probes:
 
 
 def run(config_path, output):
-    require(os.environ.get('GITHUB_ACTIONS') == 'true', 'Only disposable GitHub service accepted')
-    config = json.loads(Path(config_path).read_text())
-    require(config.get('isolatedCI') is True, 'CI config required')
+    config = json.loads(Path(config_path).read_text(encoding='utf-8-sig'))
+    local = config.get('isolatedLocal') is True
+    if local:
+        from mysql84_local import attest
+        attest(config)
+    else:
+        require(os.environ.get('GITHUB_ACTIONS') == 'true' and config.get('isolatedCI') is True, 'Disposable CI config required')
     container = config.get('mysqlContainer', '')
     require(re.fullmatch(r'[a-f0-9]{64}', container), 'Explicit disposable service container ID required')
     image = subprocess.check_output(['docker','inspect','--format','{{.Config.Image}}',container],text=True).strip()
     require(image == json.loads((ROOT/'infra/staging/mysql-image.json').read_text())['image'], 'Service image digest differs from staging')
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
+    config['acceptanceEvidenceFile']=str(output/'upgrade-acceptance.json')
     subprocess.run(['node', str(ROOT / 'tools/mysql84-release.cjs')], check=True)
     db = Mysql(config)
     diagnostic = RuntimeDiagnostic(output/'runtime-phases.json', ['identity-and-legacy-bootstrap', 'seed-and-predecessor', 'snapshot', 'drift-rejection', 'ddl-recovery', 'trigger-routine-acceptance', 'fresh-install-after-upgrade'])
@@ -250,15 +351,27 @@ def run(config_path, output):
             db.execute('CREATE DATABASE `' + config['database'] + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
             identity(db, config)
             for role in ('api', 'review'):
-                db.execute("CREATE USER '" + config[role+'User'] + "'@'" + config[role+'Host'] + "' IDENTIFIED BY 'Synthetic-ci-only-credential'")
+                db.execute("CREATE USER '" + config[role+'User'] + "'@'" + config[role+'Host'] + "' IDENTIFIED BY 'Synthetic-ci-only-credential'" + (' REQUIRE SSL' if local else ''))
             binding_file = output / 'binding.json'
             binding_file.write_text(json.dumps(config))
             bundle = output / 'old-bundle'
             subprocess.run(['node', str(ROOT / 'tools/mysql84-release.cjs'), 'bundle', str(binding_file), str(bundle), 'old'], check=True)
             for file in sorted(bundle.glob('*.sql')):
                 # Execute the immutable legacy-derived provisioning bundle.
-                result = subprocess.run(db.args, input=file.read_text(), text=True, capture_output=True)
-                require(result.returncode == 0, 'Original bootstrap failed: ' + file.name + ' ' + result.stderr[:180])
+                sql=file.read_text()
+                first=re.search(r'(?m)^CREATE (?:DEFINER=\S+ )?TRIGGER ',sql)
+                if file.name.endswith('001_schema.sql') and first:
+                    # Restore legitimate historical data during initial database
+                    # restore, before any trigger exists. No installed protection
+                    # is disabled and the immutable bundle bytes stay unchanged.
+                    db.execute_script(sql[:first.start()]+'\nDELIMITER ;\n')
+                    owner,event=str(uuid.uuid4()),str(uuid.uuid4())
+                    db.execute(insert('institution',dict(id=owner,code='MT5BP_'+uuid.UUID(owner).hex,name='Historical synthetic owner',status='active')))
+                    db.execute(insert('institution_onboarding_event',dict(institution_id=owner,id=event,actor_kind='Operator',operator_id='historical-synthetic',key_id='historical-key',action='Provision',intent_hash='0123456789ABCDEF'*4,reason='Historical legitimate hash',result_json={},occurred_at_utc=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'))))
+                    db.execute(insert('platform_operation_nonce',dict(institution_id=owner,event_id=event,operator_id='historical-synthetic',key_id='historical-key',nonce='0123456789ABCDEF'*4,expires_at_utc=(datetime.datetime.now()+datetime.timedelta(hours=3)).strftime('%Y-%m-%d %H:%M:%S.%f'))))
+                    (output/'historical-hash-seed.json').write_text(json.dumps(dict(owner=owner,event=event,hash='0123456789ABCDEF'*4)))
+                    db.execute_script('DELIMITER $$\n'+sql[first.start():])
+                else:db.execute_script(sql)
             old = load_contract(False)
             verify_schema(db, old, config)
         with diagnostic.phase('seed-and-predecessor'):
@@ -268,7 +381,7 @@ def run(config_path, output):
         with diagnostic.phase('snapshot'):
             before = fingerprint(db, old)
             (output/'before.json').write_text(json.dumps(before, indent=2))
-            dump_args = [config.get('dumpClient','mysqldump'), '--defaults-extra-file='+config['defaultsFile'], '--host='+config['host'], '--port='+str(config['port']), '--protocol=TCP', '--ssl-mode=DISABLED', '--single-transaction', '--set-gtid-purged=OFF', config['database']]
+            dump_args = [config.get('dumpClient','mysqldump'), '--defaults-extra-file='+config['defaultsFile'], '--host='+config['host'], '--port='+str(config['port']), '--protocol=TCP', '--ssl-mode=' + ('REQUIRED' if local else 'DISABLED'), '--single-transaction', '--set-gtid-purged=OFF', config['database']]
             with (output/'synthetic-before.sql').open('w') as stream:
                 subprocess.run(dump_args, stdout=stream, check=True)
         with diagnostic.phase('drift-rejection'):
@@ -283,9 +396,10 @@ def run(config_path, output):
             verify_schema(db, old, config)
         with diagnostic.phase('ddl-recovery'):
             journal = output/'upgrade-journal.json'
-            for name, recovery in [('email_event_insert',False), ('fpe_insert',True)]:
+            first_table=next(iter(load_contract()['tableChanges']))
+            for fault,recovery,restart in [(first_table+':after-alter',False,True),('email_event_insert:after-drop',True,False),('fpe_insert:after-create',True,False),('routine:after-drop',True,False),('routine:after-create',True,False)]:
                 try:
-                    Runner(db, config, journal).upgrade(recover=recovery, fault=name+(':after-create' if recovery else ':after-drop'))
+                    Runner(db, config, journal).upgrade(recover=recovery, fault=fault)
                     raise AssertionError('Fault injection not reached')
                 except RuntimeError as error:
                     require('Injected interruption' in str(error), 'Unexpected failure before injected DDL boundary: '+str(error))
@@ -295,10 +409,21 @@ def run(config_path, output):
                 # Simulate loss of the migration connection and its GET_LOCK; the
                 # persisted barrier and durable journal must survive independently.
                 db.close()
-                if not recovery:
+                if restart:
                     # This is the service created by this workflow, never an external
                     # container. Restart preserves its data volume and UUID.
-                    subprocess.run(['docker','restart',container],check=True)
+                    if local:
+                        # Never hide a Docker restart inside approval for a Python
+                        # runner. Root requests approval for the single Docker command.
+                        (output/'restart-request.json').write_text(json.dumps(dict(container=container, uuid=config['serverUuid'])))
+                        approval = output/'restart-completed.json'
+                        wait_until = time.monotonic() + 900
+                        while not approval.exists():
+                            require(time.monotonic() < wait_until, 'Explicit local restart approval not completed')
+                            time.sleep(1)
+                        require(json.loads(approval.read_text()) == dict(container=container, uuid=config['serverUuid']), 'Restart attestation mismatch')
+                    else:
+                        subprocess.run(['docker','restart',container],check=True)
                     deadline = time.monotonic()+60
                     while True:
                         ready = subprocess.run(db.args,input='SELECT 1;\n',text=True,capture_output=True)
@@ -322,6 +447,17 @@ def run(config_path, output):
             saved = journal.read_bytes()
             Runner(db, config, journal).upgrade()
             require(saved == journal.read_bytes(), 'Completed upgrade replayed')
+            guard='ck_er84_institution_invitation_token_hash'
+            db.execute('ALTER TABLE institution_invitation ALTER CHECK `'+guard+'` NOT ENFORCED')
+            try:
+                Runner(db,config,journal).upgrade()
+                raise AssertionError('Disabled CHECK drift accepted')
+            except RuntimeError:
+                require(saved==journal.read_bytes(),'Drift rejection changed completed journal')
+                body=load_contract()['routine']['body']
+                require(db.scalar(body[len('BEGIN\n'):-len('\nEND')].strip())=='0','Readiness accepted a disabled hash constraint')
+            finally:db.execute('ALTER TABLE institution_invitation ALTER CHECK `'+guard+'` ENFORCED')
+            verify_schema(db,load_contract(),config)
         with diagnostic.phase('trigger-routine-acceptance'):
             acceptance = probes.all()
             verify_schema(db, load_contract(), config)
@@ -338,11 +474,12 @@ def fresh_install(db, config, output):
     # RuntimePolicy confines the real HTTP application to this database in
     # LocalTest mode. CREATE without IF NOT EXISTS refuses any existing one.
     fresh['database'] = 'electronic_register_test'
+    fresh['acceptanceEvidenceFile']=str(output/'fresh-acceptance.json')
     for role in ('api','review','definer'):
         fresh[role+'User'] += '_f'
     db.execute('CREATE DATABASE `' + fresh['database'] + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
     for role in ('api','review'):
-        db.execute("CREATE USER '" + fresh[role+'User'] + "'@'" + fresh[role+'Host'] + "' IDENTIFIED BY 'Synthetic-ci-only-credential'")
+        db.execute("CREATE USER '" + fresh[role+'User'] + "'@'" + fresh[role+'Host'] + "' IDENTIFIED BY 'Synthetic-ci-only-credential'" + (' REQUIRE SSL' if config.get('isolatedLocal') else ''))
     fresh_config = output/'fresh-config.json'
     fresh_config.write_text(json.dumps(fresh))
     fresh_bundle = output/'fresh-bundle'

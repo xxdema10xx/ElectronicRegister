@@ -4,21 +4,24 @@ const fs=require('fs'),path=require('path'),crypto=require('crypto'),cp=require(
 const root=path.resolve(__dirname,'..'),dir='migrations/mysql84-remediation';
 const old=require('../migrations/release/manifest.json'),adapter=require('./mysql84-contract.cjs');
 const {derive,candidate,forbidden}=require('./mysql84-remediation.cjs');
+const hashes=require('./mysql84-hashes.cjs');
 const sha=s=>crypto.createHash('sha256').update(s.toString().replaceAll('\r\n','\n')).digest('hex').toUpperCase();
 function contract(modern=true){
  const base=structuredClone(require('../migrations/bootstrap/schema-contract.json'));
- const add=require('./release-additive-contract.cjs').forMySql84();
+ const add=require('./release-additive-contract.cjs').forMySql84({strictHashes:modern});
  const triggers=Object.fromEntries(Object.entries(base.triggers).map(([name,t])=>{
   const m=base.trigger_metadata[name];
   return [name,{statement:adapter.triggerDdl(modern?derive(t.statement):t.statement).replace(/^CREATE DEFINER=`[^`]+`@`[^`]+` /,'CREATE '),
    mode:adapter.mode(t.mode),charset:t.charset,collation:t.collation,database_collation:t.database_collation,
-   table:m.EVENT_OBJECT_TABLE,event:m.EVENT_MANIPULATION,timing:m.ACTION_TIMING,order:m.ACTION_ORDER}];
+   table:m.EVENT_OBJECT_TABLE,event:m.EVENT_MANIPULATION,timing:m.ACTION_TIMING,order:Number(m.ACTION_ORDER)}];
  }));
  for(const t of add.contract.triggers)triggers[t.TRIGGER_NAME]={body:t.ACTION_STATEMENT,mode:t.SQL_MODE,
   charset:'utf8mb4',collation:'utf8mb4_unicode_ci',database_collation:'utf8mb4_unicode_ci',
   table:t.EVENT_OBJECT_TABLE,event:t.EVENT_MANIPULATION,timing:t.ACTION_TIMING,order:1};
  const tables=Object.fromEntries([...Object.entries(base.tables).map(([n,s])=>[n,adapter.tableDdl(n,s)]),
   ...Object.entries(add.contract.tables).map(([n,s])=>[n,adapter.ddl(s)])]);
+ const hashColumns=hashes.columns(base.tables);
+ if(modern)for(const name of Object.keys(hashColumns))tables[name]=hashes.tableDdl(name,tables[name],hashColumns[name]);
  const foreignKeys=[],keyColumns=[];
  for(const [name,ddl] of Object.entries(base.tables))for(const m of ddl.matchAll(/CONSTRAINT `([^`]+)` FOREIGN KEY \(([^)]+)\) REFERENCES `([^`]+)` \(([^)]+)\)([^\n]*)/g)){
   const columns=s=>s.replaceAll('`','').split(',').map(v=>v.trim());
@@ -30,8 +33,11 @@ function contract(modern=true){
  if(foreignKeys.length!==base.inventory.fks)throw Error('Incomplete base FK contract');
  const metadata=Object.fromEntries(['columns','indexes','foreignKeys','keyColumns'].map(k=>[k,structuredClone(add.contract[k])]));
  metadata.foreignKeys.push(...foreignKeys);metadata.keyColumns.push(...keyColumns);
- return {release:modern?'er-quality-2-mysql84':'er-quality-1',tables,triggers,routine:{body:add.body,mode:add.contract.triggers[0].SQL_MODE},
-  metadata};
+ for(const name of Object.keys(tables))tables[name]=tables[name].replaceAll('\r\n','\n');
+ for(const trigger of Object.values(triggers))for(const key of ['statement','body'])if(trigger[key])trigger[key]=trigger[key].replaceAll('\r\n','\n');
+ const allHashColumns=hashes.columns({...base.tables,...require('./release-additive-contract.cjs').forMySql84().contract.tables});
+ return {release:modern?'er-quality-2-mysql84':'er-quality-1',tables,triggers,routine:{body:add.body.replaceAll('\r\n','\n'),mode:add.contract.triggers[0].SQL_MODE},
+  metadata,...(modern?{hashColumns:allHashColumns,tableChanges:Object.fromEntries(Object.entries(allHashColumns).map(([name,fields])=>[name,hashes.alter(name,fields)]))}:{})};
 }
 // Git is the authority for publishable inputs, including new addable source files.
 const localArtifact=/(^|\/)(?:\.staff-private|\.formative-private|[^/]*-private|private|bin|obj|node_modules|__pycache__|\.git)(?:\/|$)/;
@@ -82,7 +88,11 @@ function bundle(config,out,modern=true){
  const binding=JSON.parse(fs.readFileSync(path.join(out,'binding.json')));
  if(modern){
   for(const r of binding.records){
-   const file=path.join(out,r.artifact),sql=derive(fs.readFileSync(file,'utf8'));
+   const file=path.join(out,r.artifact);let sql=derive(fs.readFileSync(file,'utf8').replaceAll('\r\n','\n'));
+   sql=hashes.adaptSql(sql,contract().hashColumns);
+   const additive=require('./release-additive-contract.cjs');
+   if(sql.includes(additive.forMySql84().body))sql=sql.replace(additive.forMySql84().body,additive.forMySql84({strictHashes:true}).body);
+   sql=require('./mysql84-fixture.cjs').bind(sql,config);
    if(forbidden.test(sql))throw Error('Forbidden bundle SQL');
    fs.writeFileSync(file,sql);r.artifactHash=sha(sql);
   }

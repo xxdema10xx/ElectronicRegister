@@ -258,12 +258,17 @@ public static class Mt3aOwnershipMigration
         // Only their exact owner tables, names, types and collation are classified.
         // Email's database coordination singleton is an explicitly typed integer PK,
         // not a resource identifier. All other resource/tenant/actor keys stay Guid.
-        var wrong = Convert.ToInt64(await new MySqlCommand("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND (COLUMN_NAME='id' OR RIGHT(COLUMN_NAME,3)='_id') AND COLUMN_NAME<>'request_id' AND NOT(TABLE_NAME IN ('institution_calendar_settings','institution_lesson') AND COLUMN_NAME='time_zone_id' AND COLUMN_TYPE='varchar(128)' AND IS_NULLABLE='NO' AND COLLATION_NAME='utf8mb4_unicode_ci') AND NOT(TABLE_NAME='institution_email_mutex' AND COLUMN_NAME='id' AND COLUMN_TYPE='int(11)' AND IS_NULLABLE='NO' AND COLUMN_KEY='PRI') AND NOT(((TABLE_NAME IN ('institution_onboarding_event','platform_operation_nonce') AND COLUMN_NAME IN ('operator_id','key_id')) OR (TABLE_NAME='institution_recovery_approval' AND COLUMN_NAME='operator_id')) AND COLUMN_TYPE='varchar(64)' AND COLLATION_NAME='ascii_bin') AND (COLUMN_TYPE<>'char(36)' OR COLLATION_NAME<>'ascii_general_ci')", c).ExecuteScalarAsync());
+        var wrong = Convert.ToInt64(await new MySqlCommand("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND (COLUMN_NAME='id' OR RIGHT(COLUMN_NAME,3)='_id') AND COLUMN_NAME<>'request_id' AND NOT(TABLE_NAME IN ('institution_calendar_settings','institution_lesson') AND COLUMN_NAME='time_zone_id' AND COLUMN_TYPE='varchar(128)' AND IS_NULLABLE='NO' AND COLLATION_NAME='utf8mb4_unicode_ci') AND NOT(TABLE_NAME='institution_email_mutex' AND COLUMN_NAME='id' AND COLUMN_TYPE IN ('int','int(11)') AND IS_NULLABLE='NO' AND COLUMN_KEY='PRI') AND NOT(((TABLE_NAME IN ('institution_onboarding_event','platform_operation_nonce') AND COLUMN_NAME IN ('operator_id','key_id')) OR (TABLE_NAME='institution_recovery_approval' AND COLUMN_NAME='operator_id')) AND COLUMN_TYPE='varchar(64)' AND COLLATION_NAME='ascii_bin') AND (COLUMN_TYPE<>'char(36)' OR COLLATION_NAME<>'ascii_general_ci')", c).ExecuteScalarAsync());
         if (wrong != 0)
-            throw new InvalidOperationException("Guid types/collations differ; review before migration.");
+        {
+            // Capture real metadata before any operator considers a migration.
+            // No conversion, ALTER or broad type/collation normalization occurs.
+            await using var evidence = new MySqlCommand("SELECT JSON_ARRAYAGG(JSON_OBJECT('table',TABLE_NAME,'column',COLUMN_NAME,'type',COLUMN_TYPE,'dataType',DATA_TYPE,'collation',COLLATION_NAME,'nullable',IS_NULLABLE,'key',COLUMN_KEY)) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND (COLUMN_NAME='id' OR RIGHT(COLUMN_NAME,3)='_id')", c);
+            throw new InvalidOperationException("Guid types/collations differ; review before migration. Identifier metadata=" + Convert.ToString(await evidence.ExecuteScalarAsync()));
+        }
     }
 
-    public static async Task BackupBeforeDdlAsync(MySqlConnection c, string basePath)
+    public static async Task BackupBeforeDdlAsync(MySqlConnection c, string basePath, string? explicitTestConnection = null)
     {
         // Each CREATE/ALTER (including triggers) has its own verified backup and
         // target/version/mode evidence. Never attempt a rollback with destructive DROP.
@@ -313,9 +318,9 @@ public static class Mt3aOwnershipMigration
             )
                 start.ArgumentList.Add(arg);
         start.ArgumentList.Add(database);
-        // The open connector hides passwords by default. Only the original env
-        // connection can supply the dump credential; never log it or use argv.
-        var original = new MySqlConnectionStringBuilder(Environment.GetEnvironmentVariable("TEST_MYSQL_CONNECTION") ?? throw new InvalidOperationException("Explicit test connection required for backups."));
+        // The open connector hides passwords by default. Use an explicit original
+        // test credential, and require the exact same target; never log it or use argv.
+        var original = new MySqlConnectionStringBuilder(explicitTestConnection ?? Environment.GetEnvironmentVariable("TEST_MYSQL_CONNECTION") ?? throw new InvalidOperationException("Explicit test connection required for backups."));
         if (original.Database != database || original.Server != b.Server || original.UserID != b.UserID || original.Port != b.Port)
             throw new InvalidOperationException("Backup connection differs.");
         start.Environment["MYSQL_PWD"] = original.Password;

@@ -70,7 +70,7 @@ public sealed partial class Mt5cOnboardingTests
         await File.WriteAllTextAsync(config, JsonSerializer.Serialize(new
         {
             ConnectionStrings = new { DefaultConnection = connection },
-            TestDatabase = new { Port = TestMySqlTarget.Port, ExpectedDataDir = TestMySqlTarget.DataDirectorySuffix },
+            TestDatabase = Mysql84FixtureTarget.AdministrativeTarget(connection),
             Multitenancy = new { Onboarding = new { Enabled = true } },
             PlatformAuthority = new { Enabled = true, Keys = new[] { key } },
             TestInbox = folder,

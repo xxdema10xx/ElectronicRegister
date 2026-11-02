@@ -68,5 +68,32 @@ class ProtocolTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'unusable'): db.execute('SELECT 1')
         db.close()
 
+    def test_bundle_uses_same_acknowledgement_and_failure_protocol(self):
+        for sql, reason in [('SELECT 1;', None),
+                            ('DELIMITER $$\nCREATE PROCEDURE p() BEGIN SELECT 1; END$$\nDELIMITER ;\n', None),
+                            ('SIMULATE_ERROR;', '1064'), ('SIMULATE_EOF;', 'client EOF'),
+                            ('SIMULATE_WAIT;', 'MySQL timeout;')]:
+            db = self.client()
+            try:
+                with mock.patch.object(release.subprocess, 'run', return_value=mock.Mock(stdout='', returncode=0)):
+                    if reason:
+                        with self.assertRaisesRegex(RuntimeError, reason):
+                            db.execute_script(sql, timeout=0.3)
+                        with self.assertRaisesRegex(RuntimeError, 'unusable'):
+                            db.execute_script('SELECT 1;')
+                    else:
+                        self.assertEqual('42', db.execute_script(sql))
+            finally:
+                db.close()
+
+    def test_bundle_rejects_unrestored_or_truncated_delimiter_before_write(self):
+        db = self.client()
+        try:
+            for sql in ('DELIMITER $$\nSELECT 1$$', 'DELIMITER '+('x'*16)+'\nDELIMITER ;\n'):
+                with self.assertRaises(RuntimeError): db.execute_script(sql)
+            self.assertEqual('42', db.scalar('SELECT 42'))
+        finally:
+            db.close()
+
 
 if __name__ == '__main__': unittest.main()

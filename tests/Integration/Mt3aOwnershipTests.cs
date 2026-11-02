@@ -33,6 +33,12 @@ public sealed class Mt3aOwnershipTests(IntegrationFixture fixture) : IAsyncLifet
         await using var c=await Open();await using var tx=await c.BeginTransactionAsync();
         async Task Execute(string sql,params (string,object?)[] ps)
         { await using var cmd=new MySqlCommand(sql,c,tx);foreach(var (name,value) in ps) cmd.Parameters.AddWithValue(name,value);await cmd.ExecuteNonQueryAsync(); }
+        if(Mysql84FixtureTarget.IsOwned(fixture.ConnectionString))
+        {
+            var legacy=Guid.Parse("4d543341-0000-4000-8000-000000000001");
+            await Execute("INSERT INTO institution(id,code,name,status) SELECT @id,'MT3A_LEGACY_TEST','Explicit legacy fixture','active' WHERE NOT EXISTS(SELECT 1 FROM institution WHERE id=@id)",("@id",legacy));
+            await Execute("INSERT INTO mt3a_legacy_scope(scope,institution_id) SELECT 'legacy',@id WHERE NOT EXISTS(SELECT 1 FROM mt3a_legacy_scope WHERE scope='legacy')",("@id",legacy));
+        }
         await Execute("INSERT INTO user(id,email,password_hash,role) VALUES (@u,@email,'preserved-test-hash','admin')",("@u",_user),("@email",_user.ToString("N")+"@mt3a.example.test"));
         foreach(var isB in new[]{false,true})
         {
@@ -229,8 +235,10 @@ public sealed class Mt3aOwnershipTests(IntegrationFixture fixture) : IAsyncLifet
             // Session-local clone models the BEFORE-enforcement legacy ambiguity.
             // The temporary table has legacy columns without enforcement. No production table
             // is altered, no foreign_key_checks bypass, no DROP or mock repository.
-            var backupDir=Path.Combine(Path.GetTempPath(),"ElectronicRegister-MT3A-private");Directory.CreateDirectory(backupDir);
-            await Mt3aOwnershipMigration.BackupBeforeDdlAsync(probe,Path.Combine(backupDir,"probe.sql"));
+            var owned=Mysql84FixtureTarget.IsOwned(fixture.ConnectionString);
+            if(owned)Assert.True(await Mysql84FixtureTarget.VerifyAsync(probe));
+            var backupDir=owned ? PrivateTestFiles.CreateDirectory("mt3a-backup") : Path.Combine(Path.GetTempPath(),"ElectronicRegister-MT3A-private");Directory.CreateDirectory(backupDir);
+            await Mt3aOwnershipMigration.BackupBeforeDdlAsync(probe,Path.Combine(backupDir,"probe.sql"),owned ? fixture.ConnectionString : null);
             await using(var create=new MySqlCommand("CREATE TEMPORARY TABLE audit_event (id CHAR(36) PRIMARY KEY,actor_user_id CHAR(36) NULL,action VARCHAR(100),entity_type VARCHAR(100),entity_id CHAR(36) NULL,before_json LONGTEXT NULL,after_json LONGTEXT NULL,request_id VARCHAR(100) NULL,created_at DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6),institution_id CHAR(36) NULL)",probe)) await create.ExecuteNonQueryAsync();
             await using(var ambiguous=new MySqlCommand("INSERT INTO audit_event(id,entity_type,entity_id,action,before_json) VALUES (UUID(),'unclassified',UUID(),'historical','{\"retained\":true}')",probe)) await ambiguous.ExecuteNonQueryAsync();
             var error=await Assert.ThrowsAsync<InvalidOperationException>(()=>Mt3aOwnershipMigration.BackfillConnectionAsync(probe,legacy));
@@ -279,7 +287,19 @@ public sealed class Mt3aOwnershipTests(IntegrationFixture fixture) : IAsyncLifet
             {
                 await using var cmd=new MySqlCommand("SELECT k.TABLE_NAME,GROUP_CONCAT(k.COLUMN_NAME ORDER BY k.ORDINAL_POSITION),k.REFERENCED_TABLE_NAME,GROUP_CONCAT(k.REFERENCED_COLUMN_NAME ORDER BY k.ORDINAL_POSITION),r.DELETE_RULE,r.UPDATE_RULE FROM information_schema.KEY_COLUMN_USAGE k JOIN information_schema.REFERENTIAL_CONSTRAINTS r ON r.CONSTRAINT_SCHEMA=k.CONSTRAINT_SCHEMA AND r.CONSTRAINT_NAME=k.CONSTRAINT_NAME WHERE k.CONSTRAINT_SCHEMA=DATABASE() AND k.CONSTRAINT_NAME=@name GROUP BY k.TABLE_NAME,k.REFERENCED_TABLE_NAME,r.DELETE_RULE,r.UPDATE_RULE",c);
                 cmd.Parameters.AddWithValue("@name",fk.Groups[1].Value);await using var reader=await cmd.ExecuteReaderAsync();Assert.True(await reader.ReadAsync(),fk.Groups[1].Value);
-                Assert.Equal(new[]{table,fk.Groups[2].Value,fk.Groups[3].Value,fk.Groups[4].Value,fk.Groups[5].Value,fk.Groups[6].Value},Enumerable.Range(0,6).Select(reader.GetString).ToArray());
+                var deleteRule=fk.Groups[5].Value;var updateRule=fk.Groups[6].Value;
+                if(Mysql84FixtureTarget.IsOwned(fixture.ConnectionString))
+                {
+                    // This fixture installs the immutable final bootstrap dump,
+                    // not the earlier 006 ALTER script. Its omitted actions have
+                    // exact per-FK NO ACTION metadata on 8.4; no loose equivalence.
+                    var root=new DirectoryInfo(AppContext.BaseDirectory);
+                    while(root is not null && !File.Exists(Path.Combine(root.FullName,"migrations/mysql84-remediation/contract.json")))root=root.Parent;
+                    using var contract=JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(root!.FullName,"migrations/mysql84-remediation/contract.json")));
+                    var declared=contract.RootElement.GetProperty("metadata").GetProperty("foreignKeys").EnumerateArray().Single(x=>x.GetProperty("CONSTRAINT_NAME").GetString()==fk.Groups[1].Value);
+                    deleteRule=declared.GetProperty("DELETE_RULE").GetString()!;updateRule=declared.GetProperty("UPDATE_RULE").GetString()!;
+                }
+                Assert.Equal(new[]{table,fk.Groups[2].Value,fk.Groups[3].Value,fk.Groups[4].Value,deleteRule,updateRule},Enumerable.Range(0,6).Select(reader.GetString).ToArray());
             }
             foreach(Match index in Regex.Matches(text,@"ADD (UNIQUE KEY|KEY) (\w+) \(([^)]+)\)"))
             {

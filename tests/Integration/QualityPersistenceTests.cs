@@ -85,26 +85,42 @@ public sealed partial class InstitutionClassCrudTests
     public async Task Quality_ReadinessRequiresReleaseMarkerAndExecutePermission()
     {
         await Expect(await Request("/health/ready"), HttpStatusCode.OK);
-        await Execute("DELETE FROM er_schema_release WHERE version='er-quality-1'");
-        try
+        var markers = new System.Collections.Generic.List<string> { "er-quality-1", "er-quality-1-closure-1" };
+        await using (var identity = new MySqlConnection(fixture.ConnectionString))
         {
-            await Expect(await Request("/health/ready"), HttpStatusCode.ServiceUnavailable);
-            await Expect(await Request("/health/live"), HttpStatusCode.OK);
+            await identity.OpenAsync();
+            await using var version = new MySqlCommand("SELECT VERSION()", identity);
+            if (Convert.ToString(await version.ExecuteScalarAsync())!.StartsWith("8.4.", StringComparison.Ordinal))
+                markers.Add("er-quality-2-mysql84");
         }
-        finally { await Execute("INSERT INTO er_schema_release(version) VALUES('er-quality-1')"); }
-        await Expect(await Request("/health/ready"), HttpStatusCode.OK);
+        foreach (var marker in markers)
+        {
+            await Execute("DELETE FROM er_schema_release WHERE version=@marker", ("@marker", marker));
+            try
+            {
+                await Expect(await Request("/health/ready"), HttpStatusCode.ServiceUnavailable);
+                await Expect(await Request("/health/live"), HttpStatusCode.OK);
+            }
+            finally { await Execute("INSERT INTO er_schema_release(version) VALUES(@marker)", ("@marker", marker)); }
+            await Expect(await Request("/health/ready"), HttpStatusCode.OK);
+        }
         var user = "qready_" + Guid.NewGuid().ToString("N")[..12];
         var secret = Guid.NewGuid().ToString("N");
-        await Execute("CREATE USER '" + user + "'@'localhost' IDENTIFIED BY '" + secret + "'");
+        var account = "'" + user + "'@'" + (Mysql84FixtureTarget.IsOwned(fixture.ConnectionString) ? "%" : "localhost") + "'";
+        await Execute("CREATE USER " + account + " IDENTIFIED BY '" + secret + "'");
         try
         {
-            await Execute("GRANT SELECT ON electronic_register_test.* TO '" + user + "'@'localhost'");
+            await Execute("GRANT SELECT ON electronic_register_test.* TO " + account);
             var connection = new MySqlConnectionStringBuilder(fixture.ConnectionString) { UserID = user, Password = secret };
             await using var host = await Mt3cHosting.ProgramHost.StartAsync(connection.ConnectionString, _a, [], enabled: false);
             await Expect(await Request("/health/ready", host: host), HttpStatusCode.ServiceUnavailable);
             await Expect(await Request("/health/live", host: host), HttpStatusCode.OK);
+            await Execute("GRANT EXECUTE ON PROCEDURE electronic_register_test.er_schema_ready TO " + account);
+            await Expect(await Request("/health/ready", host: host), HttpStatusCode.OK);
+            await Execute("REVOKE EXECUTE ON PROCEDURE electronic_register_test.er_schema_ready FROM " + account);
+            await Expect(await Request("/health/ready", host: host), HttpStatusCode.ServiceUnavailable);
         }
-        finally { await Execute("DROP USER '" + user + "'@'localhost'"); }
+        finally { await Execute("DROP USER " + account); }
     }
 }
 

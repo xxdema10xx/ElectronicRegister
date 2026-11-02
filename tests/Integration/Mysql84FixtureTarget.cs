@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MySqlConnector;
 using Testcontainers.MySql;
@@ -16,14 +17,36 @@ namespace ElectronicRegisterAPI.Tests.Integration;
 // never authorize an arbitrary 8.4 server or relax the historical MAMP checks.
 internal static class Mysql84FixtureTarget
 {
-    private sealed record Identity(string Uuid, string Host, uint ServerPort, string DataDir);
+    private sealed record Identity(string Uuid, string Host, uint ServerPort, string DataDir, [property: JsonIgnore] string Capability);
     private static readonly ConcurrentDictionary<string, Identity> Owned = new();
+    private static readonly ConcurrentDictionary<string, string> Containers = new();
+    internal static object AdministrativeTarget(string connection)
+    {
+        if (!Owned.TryGetValue(Key(connection), out var identity))
+            return new { Port = TestMySqlTarget.Port, ExpectedDataDir = TestMySqlTarget.DataDirectorySuffix };
+        return new { Port = new MySqlConnectionStringBuilder(connection).Port, ExpectedDataDir = identity.DataDir,
+            LocalMysql84 = new { ContainerId = Containers[Key(connection)], ServerUuid = identity.Uuid, ServerHost = identity.Host } };
+    }
     internal static bool IsOwned(string connection)
     {
         try { return Owned.ContainsKey(Key(connection)); }
         catch (ArgumentException) { return false; }
     }
     internal static void Forget(string connection) => Owned.TryRemove(Key(connection), out _);
+    internal static async Task<string?> PurgeCapabilityAsync(MySqlConnection connection)
+    {
+        if(!Owned.TryGetValue(Key(connection.ConnectionString),out var identity)) return null;
+        Assert.True(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DOCKER_HOST")) && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DOCKER_CONTEXT")), "Only local owned fixtures may purge");
+        Assert.True(await VerifyAsync(connection));
+        return identity.Capability;
+    }
+    internal static string[] ReadinessArguments(string connection)
+    {
+        if (!Owned.TryGetValue(Key(connection), out var identity)) return [];
+        return ["--Readiness:ExpectedVersion=8.4.13", "--Readiness:ExpectedHost=" + identity.Host,
+            "--Readiness:ExpectedDataDir=" + identity.DataDir,
+            "--Readiness:ExpectedServerPort=" + identity.ServerPort];
+    }
     private static string Key(string connection)
     {
         var b = new MySqlConnectionStringBuilder(connection);
@@ -54,24 +77,33 @@ internal static class Mysql84FixtureTarget
 
     internal static async Task ProvisionAsync(MySqlContainer container, string connection)
     {
+        Assert.True(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DOCKER_HOST")) && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DOCKER_CONTEXT")), "Only local Docker fixtures may issue capabilities");
         var b = new MySqlConnectionStringBuilder(connection);
         Assert.Equal("127.0.0.1", b.Server); Assert.Equal("electronic_register_test", b.Database);
-        Assert.DoesNotContain(b.Port, new uint[] { 3306, 13306 });
+        Assert.DoesNotContain(b.Port, new uint[] { 3306, 3307, 13306 });
         await using var c = new MySqlConnection(connection); await c.OpenAsync();
         Identity identity;
         await using (var cmd = new MySqlCommand("SELECT VERSION(),@@server_uuid,@@hostname,@@port,@@datadir", c))
         await using (var r = await cmd.ExecuteReaderAsync())
         {
             Assert.True(await r.ReadAsync()); Assert.Equal("8.4.13", r.GetString(0));
-            identity = new(r.GetString(1), r.GetString(2), r.GetUInt32(3), r.GetString(4));
+            Assert.Equal(container.Id[..12],r.GetString(2));
+            identity = new(r.GetString(1), r.GetString(2), r.GetUInt32(3), r.GetString(4),Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32)));
         }
         var root = new DirectoryInfo(AppContext.BaseDirectory);
         while (root is not null && !File.Exists(Path.Combine(root.FullName, "tools", "mysql84-release.cjs"))) root = root.Parent;
         if (root is null) throw new InvalidOperationException("Release sources unavailable");
         var work = Path.Combine(root.FullName, ".diagnostics", "fixture-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(work);
-        var config = Path.Combine(work, "binding.json"); var bundle = Path.Combine(work, "bundle");
-        await File.WriteAllTextAsync(config, JsonSerializer.Serialize(new { database = b.Database,
+        await File.WriteAllTextAsync(Path.Combine(work, "server-identity.json"), JsonSerializer.Serialize(new {
+            container = container.Id, image = "mysql:8.4.13@sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+            host = b.Server, port = b.Port, database = b.Database, server = identity,
+            retained = Environment.GetEnvironmentVariable("ER_TEST_MYSQL84_RETAIN") == "1"
+        }));
+        var privateWork = OperatingSystem.IsWindows() ? PrivateTestFiles.CreateDirectory("mysql84-binding") : work;
+        var config = Path.Combine(privateWork, "binding.json"); var bundle = Path.Combine(privateWork, "bundle");
+        await File.WriteAllTextAsync(config, JsonSerializer.Serialize(new { database = b.Database,host=b.Server,port=(int)b.Port,
+            ownedFixture=new { uuid=identity.Uuid,host=identity.Host,capability=identity.Capability },
             definerUser = "fixture_definer", definerHost = "%", apiUser = "fixture_api", apiHost = "%", reviewUser = "fixture_review", reviewHost = "%" }));
         var start = new ProcessStartInfo("node") { WorkingDirectory = root.FullName, RedirectStandardOutput = true, RedirectStandardError = true };
         foreach (var arg in new[] { "tools/mysql84-release.cjs", "bundle", config, bundle }) start.ArgumentList.Add(arg);
@@ -95,6 +127,7 @@ internal static class Mysql84FixtureTarget
             await Exec("base64 -d /tmp/er-fixture.b64 > /tmp/er-fixture.sql; MYSQL_PWD=test mysql --user=root --default-character-set=utf8mb4 < /tmp/er-fixture.sql");
         }
         Owned[Key(connection)] = identity;
+        Containers[Key(connection)] = container.Id;
         async Task Exec(string script)
         {
             var result = await container.ExecAsync(new[] { "sh", "-c", script }).WaitAsync(TimeSpan.FromSeconds(90));

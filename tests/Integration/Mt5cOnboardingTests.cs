@@ -283,7 +283,7 @@ public sealed partial class Mt5cOnboardingTests : IAsyncLifetime
         var configFile=System.IO.Path.Combine(folder,"admin.json");var operationFile=System.IO.Path.Combine(folder,"signed.json");
         var assembly=typeof(PlatformCliTestChannel).Assembly.Location;
         await System.IO.File.WriteAllTextAsync(configFile,System.Text.Json.JsonSerializer.Serialize(new {
-            ConnectionStrings=new{DefaultConnection=connection},TestDatabase=new{Port=TestMySqlTarget.Port,ExpectedDataDir=TestMySqlTarget.DataDirectorySuffix},Multitenancy=new{Onboarding=new{Enabled=true}},
+            ConnectionStrings=new{DefaultConnection=connection},TestDatabase=Mysql84FixtureTarget.AdministrativeTarget(connection),Multitenancy=new{Onboarding=new{Enabled=true}},
             PlatformAuthority=new{Enabled=true,Keys=new[]{key}},TestInbox=folder,
             InvitationChannel=new{AssemblyPath=assembly,SHA256=Convert.ToHexString(SHA256.HashData(await System.IO.File.ReadAllBytesAsync(assembly))),Type=typeof(PlatformCliTestChannel).FullName}},json));
         await System.IO.File.WriteAllTextAsync(operationFile,System.Text.Json.JsonSerializer.Serialize(op,json));

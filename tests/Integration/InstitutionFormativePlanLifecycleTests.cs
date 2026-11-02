@@ -120,7 +120,18 @@ public sealed partial class InstitutionFormativePlanTests
     [Fact] public async Task LegacyBackfillDoesNotRewriteFormativeSnapshots()
     {
         var p=await Published();var token=await Token();var before=System.Text.Json.JsonSerializer.Serialize(p);var count=await Count("formative_plan_event");
-        await ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.BackfillAsync(fixture.ConnectionString,Guid.Parse("4d543341-0000-4000-8000-000000000001"));
+        var legacy=Guid.Parse("4d543341-0000-4000-8000-000000000001");
+        if(Mysql84FixtureTarget.IsOwned(fixture.ConnectionString))
+        {
+            // The immutable release bundle contains schema, not the historical
+            // MAMP fixture's synthetic institution. Supply the explicit input;
+            // never relax the migration's absent-owner rejection.
+            var absent=await Assert.ThrowsAsync<InvalidOperationException>(()=>ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.BackfillAsync(fixture.ConnectionString,legacy));
+            Assert.Contains("Explicit legacy institution is absent",absent.Message);
+            Assert.Equal(before,System.Text.Json.JsonSerializer.Serialize(await Version(p.Id,token)));Assert.Equal(count,await Count("formative_plan_event"));
+            await Sql("INSERT INTO institution(id,code,name,status) VALUES(@id,'MT3A_LEGACY_TEST','Explicit synthetic legacy','active')",("@id",legacy));
+        }
+        await ElectronicRegisterAPI.Infrastructure.Persistence.Migrations.Mt3aOwnershipMigration.BackfillAsync(fixture.ConnectionString,legacy);
         Assert.Equal(before,System.Text.Json.JsonSerializer.Serialize(await Version(p.Id,token)));Assert.Equal(count,await Count("formative_plan_event"));
     }
 }

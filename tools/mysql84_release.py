@@ -61,12 +61,16 @@ class Mysql:
         for key in ('database', 'definerUser', 'definerHost', 'apiUser', 'apiHost', 'reviewUser', 'reviewHost'):
             require(re.fullmatch(r'[A-Za-z0-9_.%-]+', config.get(key, '')), 'Unsafe or missing ' + key)
         isolated = config.get('isolatedCI') is True
+        local = config.get('isolatedLocal') is True
+        if local:
+            from mysql84_local import attest
+            attest(config)
         socket_mode = config.get('transport') == 'socket'
         if isolated:
             require(os.environ.get('GITHUB_ACTIONS') == 'true' and config['host'] == '127.0.0.1'
                     and (config['database'].startswith('er84_') or config['database'] == 'electronic_register_test') and config['port'] not in (3306, 13306), 'CI target rejected')
         else:
-            require(config.get('dedicatedServer') is True and (socket_mode or config.get('caFile')), 'Dedicated server and secure transport required')
+            require(config.get('dedicatedServer') is True and (socket_mode or config.get('caFile') or local), 'Dedicated server and secure transport required')
         prefix = config.get('mysqlPrefix', [])
         if prefix:
             require(not isolated and len(prefix) == 4 and prefix[:3] == ['docker', 'exec', '-i'] and re.fullmatch(r'[a-f0-9]{64}', prefix[3]), 'Only an explicit local container ID may prefix the client')
@@ -79,7 +83,7 @@ class Mysql:
             args += ['--protocol=SOCKET', '--socket=' + config['socketFile']]
         else:
             args += ['--host=' + config['host'], '--port=' + str(config['port']), '--protocol=TCP']
-            args += ['--ssl-mode=DISABLED', '--get-server-public-key'] if isolated else ['--ssl-mode=VERIFY_IDENTITY', '--ssl-ca=' + config['caFile']]
+            args += (['--ssl-mode=REQUIRED'] if local else ['--ssl-mode=DISABLED', '--get-server-public-key'] if isolated else ['--ssl-mode=VERIFY_IDENTITY', '--ssl-ca=' + config['caFile']])
         self.args = args
         self.process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE, text=True, encoding='utf-8', errors='replace', bufsize=1)
@@ -107,14 +111,34 @@ class Mysql:
             require(not self.broken, 'MySQL connection unusable; no automatic retry; reconcile journal')
             return self._execute(sql, timeout)
 
-    def _execute(self, sql, timeout):
+    def execute_script(self, sql, timeout=120):
+        """Execute a verified bundle, including its mysql DELIMITER directives.
+
+        The reviewed generators finish every statement and restore delimiter ;.
+        Do not wrap a script in a statement delimiter: procedures contain their
+        own delimiters. Both entry points use the same acknowledgement protocol.
+        """
+        directives = re.findall(r'^\s*DELIMITER\s+(\S+)\s*$', sql, re.M | re.I)
+        require(all(len(d) <= 15 for d in directives), 'Unsupported bundle delimiter')
+        require(not directives or directives[-1] == ';', 'Bundle must restore delimiter ;')
+        with self.lock:
+            require(not self.broken, 'MySQL connection unusable; no automatic retry; reconcile journal')
+            return self._execute(sql, timeout, script_mode=True)
+
+    def _execute(self, sql, timeout, script_mode=False):
+        if self.config.get('isolatedLocal'):
+            # Independent observer before every statement/bundle, including DDL.
+            observed = subprocess.run(self.args + ['-e', 'SELECT VERSION(),@@server_uuid,@@hostname,@@port,@@datadir'], capture_output=True, text=True, timeout=10)
+            require(observed.returncode == 0 and observed.stdout.strip().split('\t') == [
+                '8.4.13', self.config['serverUuid'], self.config['serverHost'], '3306', '/var/lib/mysql/'], 'Local server identity changed; mutation refused')
         marker = 'er_' + uuid.uuid4().hex
         # mysql stores delimiters in a 16-byte array (including NUL). A UUID
         # delimiter is truncated by the client and leaves SQL buffered forever.
         delimiter = '$' + uuid.uuid4().hex[:12]
         while delimiter in sql:
             delimiter = '$' + uuid.uuid4().hex[:12]
-        script = f"DELIMITER {delimiter}\n{sql}\n{delimiter}\nDELIMITER ;\nSELECT '{marker}';\n"
+        script = (sql + f"\nSELECT '{marker}';\n" if script_mode else
+                  f"DELIMITER {delimiter}\n{sql}\n{delimiter}\nDELIMITER ;\nSELECT '{marker}';\n")
         started = time.monotonic()
         deadline = started + timeout
         rows = []
@@ -127,6 +151,7 @@ class Mysql:
                               statementHash=sha(sql), statementVerb=sql.lstrip().split(None, 1)[0] if sql.strip() else '',
                               delimiterLength=len(delimiter), stdinFlushed=flushed, stdoutRows=len(rows), eof=sorted(eof),
                               stderr=list(self.stderr))
+            diagnostic['confirmation'] = 'UNCONFIRMED; DDL may have committed; explicit reconciliation required'
             match = re.search(r'ERROR (\d+) \(([A-Z0-9]{5})\)', '\n'.join(self.stderr))
             if match:
                 diagnostic.update(mysqlErrno=int(match[1]), sqlstate=match[2])
@@ -210,8 +235,17 @@ class Mysql:
 
 
 def load_contract(modern=True):
-    return json.loads(subprocess.check_output(['node', str(ROOT / 'tools/mysql84-release.cjs'), 'contract',
+    contract = json.loads(subprocess.check_output(['node', str(ROOT / 'tools/mysql84-release.cjs'), 'contract',
                                               'new' if modern else 'old'], cwd=ROOT, text=True))
+    # SQL source files checked out on Windows carry CRLF inside JSON strings.
+    # SHOW CREATE returns LF. Preserve all SQL tokens and metadata exactly.
+    contract['tables'] = {name: ddl.replace('\r\n', '\n') for name, ddl in contract['tables'].items()}
+    for trigger in contract['triggers'].values():
+        for key in ('body', 'statement'):
+            if key in trigger:
+                trigger[key] = trigger[key].replace('\r\n', '\n')
+    contract['routine']['body'] = contract['routine']['body'].replace('\r\n', '\n')
+    return contract
 
 
 def identity(db, config):
@@ -221,7 +255,8 @@ def identity(db, config):
     require(set(row['mode'].split(',')) == {'ONLY_FULL_GROUP_BY', 'STRICT_TRANS_TABLES', 'NO_ZERO_IN_DATE', 'NO_ZERO_DATE', 'ERROR_FOR_DIVISION_BY_ZERO', 'NO_ENGINE_SUBSTITUTION'}, 'Server SQL mode differs from the certified 8.4 mode')
     if not config.get('isolatedCI'):
         schemas = db.json('SELECT JSON_ARRAYAGG(SCHEMA_NAME) FROM information_schema.SCHEMATA')
-        require(set(schemas) <= {'mysql', 'information_schema', 'performance_schema', 'sys', 'er_stage_control', config['database']}, 'Other application schemas exist; global maintenance is refused')
+        allowed = {'mysql', 'information_schema', 'performance_schema', 'sys', 'er_stage_control', config['database']}
+        require(all(s in allowed or (config.get('isolatedLocal') and (s.startswith('er84_') or s == 'electronic_register_test')) for s in schemas), 'Other application schemas exist; global maintenance is refused')
         if config['database'] == 'electronic_register_staging':
             require(re.fullmatch(r'[a-f0-9]{32}', config.get('stageId', '')), 'Staging ownership binding required')
             require(db.scalar('SELECT id FROM er_stage_control.identity') == config['stageId'], 'Staging ownership mismatch')
@@ -249,36 +284,65 @@ def trigger_rows(db):
 
 
 def expected_body(trigger):
-    return trigger.get('body') or re.split(r' FOR EACH ROW\s+', trigger['statement'], maxsplit=1)[1]
+    if trigger.get('body'):
+        return trigger['body']
+    body = re.split(r' FOR EACH ROW\s+', trigger['statement'], maxsplit=1)[1]
+    # ACTION_STATEMENT exposes the parsed literal's one backslash; CREATE SQL
+    # needs two under the certified SQL mode. Only derive the new hash regex.
+    return re.sub(r"(REGEXP_LIKE\([^\n]*?)\\\\z(')", lambda m: m[1] + "\\z" + m[2], body)
 
 
-def verify_schema(db, contract, config, absent=()):
+def table_ddl(db, name):
+    actual = db.execute('SHOW CREATE TABLE `' + name + '`').split('\t', 1)[1]
+    actual = re.sub(r' AUTO_INCREMENT=\d+', '', actual)
+    actual = re.sub(r"(^  `[^`]+` (?:(?:char|varchar)\(\d+\)|enum\('[^']*'(?:,'[^']*')*\)|tinytext|text|mediumtext|longtext)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", r'\1 COLLATE utf8mb4_unicode_ci', actual, flags=re.M)
+    return actual.replace(' CHARACTER SET ascii COLLATE ascii_general_ci', ' CHARACTER SET ascii')
+
+
+def verify_schema(db, contract, config, absent=(), ready=True, routine_absent=False, grant_pending=False):
     # Never derive expectations from observed data. Full inventory + SHOW CREATE,
     # complete bodies, order, metadata and owner are checked independently.
     owner = literal(config['definerUser'])
     owner_host = literal(config['definerHost'])
     require(db.scalar('SELECT COUNT(*) FROM mysql.user WHERE User=' + owner + ' AND Host=' + owner_host + " AND account_locked='Y' AND plugin='caching_sha2_password'") == '1', 'Definer must exist and remain locked with the 8.4 authentication plugin')
     owner_grants = db.execute("SHOW GRANTS FOR '" + config['definerUser'] + "'@'" + config['definerHost'] + "'").splitlines()
-    require(len(owner_grants) == 3 and {g.split(' TO ')[0] for g in owner_grants} == {
+    owner_required = {
         'GRANT USAGE ON *.*', 'GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER ON `' + config['database'] + '`.*',
-        'GRANT EXECUTE ON PROCEDURE `' + config['database'] + '`.`er_schema_ready`'} and all('WITH GRANT OPTION' not in g for g in owner_grants), 'Definer privileges/roles drift')
+        'GRANT EXECUTE ON PROCEDURE `' + config['database'] + '`.`er_schema_ready`'}
+    owner_actual = {g.split(' TO ')[0] for g in owner_grants}
+    owner_without_execute = {g for g in owner_required if not g.startswith('GRANT EXECUTE')}
+    require(owner_actual == owner_required or (grant_pending and owner_actual == owner_without_execute), 'Definer privileges/roles drift')
+    require(len(owner_grants)==len(owner_actual) and all('WITH GRANT OPTION' not in g for g in owner_grants), 'Definer grant drift')
     api = "'" + config['apiUser'] + "'@'" + config['apiHost'] + "'"
     ssl_type = '' if config.get('isolatedCI') else 'ANY'
     require(db.scalar('SELECT COUNT(*) FROM mysql.user WHERE User=' + literal(config['apiUser']) + ' AND Host=' + literal(config['apiHost']) +
                       " AND account_locked='N' AND plugin='caching_sha2_password' AND ssl_type=" + literal(ssl_type)) == '1', 'API authentication/TLS account properties drift')
     grants = db.execute('SHOW GRANTS FOR ' + api).splitlines()
     prefixes = {g.split(' TO ')[0] for g in grants}
-    require(len(grants) == 3 and prefixes == {'GRANT USAGE ON *.*', 'GRANT SELECT, INSERT, UPDATE, DELETE ON `' + config['database'] + '`.*',
-             'GRANT EXECUTE ON PROCEDURE `' + config['database'] + '`.`er_schema_ready`'} and all('WITH GRANT OPTION' not in g for g in grants), 'API privileges/roles drift')
+    api_required = {'GRANT USAGE ON *.*', 'GRANT SELECT, INSERT, UPDATE, DELETE ON `' + config['database'] + '`.*',
+             'GRANT EXECUTE ON PROCEDURE `' + config['database'] + '`.`er_schema_ready`'}
+    require((prefixes == api_required or (grant_pending and prefixes == {g for g in api_required if not g.startswith('GRANT EXECUTE')})) and len(grants)==len(prefixes) and all('WITH GRANT OPTION' not in g for g in grants), 'API privileges/roles drift')
     tables = db.json("SELECT COALESCE(JSON_ARRAYAGG(TABLE_NAME),JSON_ARRAY()) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()")
     require(sorted(tables) == sorted(contract['tables']), 'Table inventory drift')
     require(db.scalar('SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME=DATABASE()') == 'utf8mb4_unicode_ci', 'Database collation drift')
     for name, expected in contract['tables'].items():
-        actual = db.execute('SHOW CREATE TABLE `' + name + '`').split('\t', 1)[1]
-        actual = re.sub(r' AUTO_INCREMENT=\d+', '', actual)
-        actual = re.sub(r"(^  `[^`]+` (?:(?:char|varchar)\(\d+\)|enum\('[^']*'(?:,'[^']*')*\)|tinytext|text|mediumtext|longtext)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", r'\1 COLLATE utf8mb4_unicode_ci', actual, flags=re.M)
-        actual = actual.replace(' CHARACTER SET ascii COLLATE ascii_general_ci', ' CHARACTER SET ascii')
-        require(actual == expected, 'Table DDL drift: ' + name)
+        actual = table_ddl(db, name)
+        if actual != expected:
+            # Preserve the pre-normalization server response and independent
+            # contract before deciding whether a difference is representational.
+            import difflib
+            evidence = dict(table=name, version=db.scalar('SELECT VERSION()'),
+                            actual=db.execute('SHOW CREATE TABLE `' + name + '`'), expected=expected,
+                            comparedActual=actual, diff='\n'.join(difflib.unified_diff(
+                                expected.splitlines(), actual.splitlines(), fromfile='contract', tofile='server')))
+            for source, predicate in (
+                ('COLUMNS', 'TABLE_SCHEMA=DATABASE()'), ('STATISTICS', 'TABLE_SCHEMA=DATABASE()'),
+                ('TABLES', 'TABLE_SCHEMA=DATABASE()'),
+                ('REFERENTIAL_CONSTRAINTS', 'CONSTRAINT_SCHEMA=DATABASE()'),
+                ('KEY_COLUMN_USAGE', 'TABLE_SCHEMA=DATABASE()')):
+                evidence[source] = db.execute('SELECT * FROM information_schema.' + source +
+                    ' WHERE ' + predicate + ' AND TABLE_NAME=' + literal(name))
+            raise RuntimeError('Table DDL drift: ' + name + '; evidence=' + json.dumps(evidence))
     sources = dict(columns=('COLUMNS', 'TABLE_SCHEMA=DATABASE()'), indexes=('STATISTICS', 'TABLE_SCHEMA=DATABASE()'),
                    foreignKeys=('REFERENTIAL_CONSTRAINTS', 'CONSTRAINT_SCHEMA=DATABASE()'),
                    keyColumns=('KEY_COLUMN_USAGE', 'TABLE_SCHEMA=DATABASE() AND REFERENCED_TABLE_NAME IS NOT NULL'))
@@ -304,15 +368,17 @@ def verify_schema(db, contract, config, absent=()):
             t = contract['triggers'][missing]
             if all(t[k] == expected[k] for k in ('table', 'event', 'timing')) and t['order'] < expected['order']:
                 wanted['order'] -= 1
-        require(observed == wanted, 'Trigger metadata/body drift: ' + name)
+        require(observed == wanted, 'Trigger metadata/body drift: ' + name + '; evidence=' + json.dumps(dict(actual=observed, expected=wanted)))
     routines = db.json("SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT('name',ROUTINE_NAME,'type',ROUTINE_TYPE,'body',ROUTINE_DEFINITION,'definer',DEFINER,'mode',SQL_MODE,'security',SECURITY_TYPE,'access',SQL_DATA_ACCESS,'charset',CHARACTER_SET_CLIENT,'collation',COLLATION_CONNECTION,'dbcollation',DATABASE_COLLATION,'deterministic',IS_DETERMINISTIC,'comment',ROUTINE_COMMENT)),JSON_ARRAY()) FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA=DATABASE()")
-    require(routines == [dict(name='er_schema_ready', type='PROCEDURE', body=contract['routine']['body'],
+    expected_routines = [dict(name='er_schema_ready', type='PROCEDURE', body=contract['routine']['body'],
                               definer=config['definerUser'] + '@' + config['definerHost'], mode=contract['routine']['mode'],
                               security='DEFINER', access='READS SQL DATA', charset='utf8mb4', collation='utf8mb4_unicode_ci',
-                              dbcollation='utf8mb4_unicode_ci', deterministic='NO', comment='')], 'Routine drift')
+                              dbcollation='utf8mb4_unicode_ci', deterministic='NO', comment='')]
+    require(not routine_absent or (grant_pending and not ready), 'Missing routine only permitted during journaled transition')
+    require(routines == ([] if routine_absent else expected_routines), 'Routine drift')
     require(db.scalar("SELECT COUNT(*) FROM information_schema.PARAMETERS WHERE SPECIFIC_SCHEMA=DATABASE()") == '0', 'Unexpected routine parameters')
     # Evaluate the trusted reviewed gate directly, never execute an untrusted body.
-    if not absent:
+    if not absent and ready:
         require(db.scalar(contract['routine']['body'][len('BEGIN\n'):-len('\nEND')].strip()) == '1', 'Readiness gate failed')
     return actual
 
@@ -360,9 +426,20 @@ class Runner:
         require(self.state and self.state.get('format') == 1 and self.state['manifest'] == sha(json.dumps(self.manifest, sort_keys=True)) and
                 self.state['database'] == self.config['database'] and self.state['serverUuid'] == self.config['serverUuid'], 'Journal identity/checksum mismatch')
         if self.state['operation'] == 'upgrade':
+            changes = self.state.get('tableChanges', {})
+            require(list(changes) == list(self.new.get('tableChanges',{}))[:len(changes)], 'Table journal sequence drift')
+            partial_table = False
+            for name, record in changes.items():
+                require(not partial_table and record['phase'] in ('intent','done') and record['hash']==sha(self.new['tableChanges'][name]), 'Table DDL journal drift')
+                partial_table = record['phase']!='done'
+            routine = self.state.get('routine')
+            if routine:
+                require(routine['phase'] in ('drop-intent','create-intent','created','done') and routine['createHash']==sha(self.plan_routine()), 'Routine journal drift')
             names = self.manifest['changedTriggers']
             require(list(self.state['triggers']) == names[:len(self.state['triggers'])], 'Journal trigger sequence drift')
             if self.state['phase'] in ('marker-intent', 'verified-maintenance', 'done'):
+                if self.new.get('tableChanges'):
+                    require(list(changes)==list(self.new['tableChanges']) and all(r['phase']=='done' for r in changes.values()) and self.state.get('routine',{}).get('phase')=='done', 'Incomplete terminal structural journal')
                 require(list(self.state['triggers']) == names and all(r['phase'] == 'done' for r in self.state['triggers'].values()), 'Incomplete terminal journal')
             partial = False
             for name, record in self.state['triggers'].items():
@@ -373,10 +450,68 @@ class Runner:
 
     def projected(self):
         expected = copy.deepcopy(self.old)
+        for table, record in self.state.get('tableChanges',{}).items():
+            if record['phase']=='done':
+                expected['tables'][table]=self.new['tables'][table]
+                expected['metadata']['columns']=[r for r in expected['metadata']['columns'] if r['TABLE_NAME']!=table]+[r for r in self.new['metadata']['columns'] if r['TABLE_NAME']==table]
         for name, record in self.state['triggers'].items():
             if record['phase'] == 'done':
                 expected['triggers'][name] = self.new['triggers'][name]
+        if self.state.get('routine',{}).get('phase') in ('created','done'):
+            expected['routine']=self.new['routine']
         return expected
+
+    def plan_routine(self):
+        return ('CREATE DEFINER=`'+self.config['definerUser']+'`@`'+self.config['definerHost']+'` PROCEDURE er_schema_ready()\nSQL SECURITY DEFINER\nREADS SQL DATA\n'+self.new['routine']['body'])
+
+    def structural_upgrade(self, fault):
+        changes=self.state.setdefault('tableChanges',{})
+        for table, ddl in self.new.get('tableChanges',{}).items():
+            record=changes.get(table)
+            if record and record['phase']=='done':continue
+            expected=self.projected()
+            if record and table_ddl(self.db,table)==self.new['tables'][table]:
+                record['phase']='done'
+                verify_schema(self.db,self.projected(),self.config,ready=False)
+                self.persist();continue
+            verify_schema(self.db,expected,self.config,ready=False)
+            if not record:
+                record=dict(phase='intent',hash=sha(ddl));changes[table]=record;self.persist()
+            self.quiescent()
+            self.db.execute(ddl)
+            if fault==table+':after-alter':raise RuntimeError('Injected interruption after committed ALTER')
+            record['phase']='done'
+            verify_schema(self.db,self.projected(),self.config,ready=False)
+            self.persist()
+
+    def routine_upgrade(self, fault):
+        record=self.state.get('routine')
+        if record and record['phase']=='done':return
+        if not record:
+            record=dict(phase='drop-intent',createHash=sha(self.plan_routine()));self.state['routine']=record;self.persist()
+        routines=self.db.json("SELECT COALESCE(JSON_ARRAYAGG(ROUTINE_DEFINITION),JSON_ARRAY()) FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA=DATABASE()")
+        if routines==[self.new['routine']['body']]:
+            record['phase']='created'
+        elif routines:
+            require(record['phase']=='drop-intent', 'Unexpected routine at recovery boundary')
+            verify_schema(self.db,self.projected(),self.config,ready=False)
+            self.quiescent();self.db.execute('DROP PROCEDURE er_schema_ready')
+            if fault=='routine:after-drop':raise RuntimeError('Injected interruption after committed routine DROP')
+            record['phase']='create-intent';self.persist()
+        else:
+            record['phase']='create-intent';self.persist()
+        if record['phase']=='create-intent':
+            verify_schema(self.db,self.projected(),self.config,ready=False,routine_absent=True,grant_pending=True)
+            self.db.execute('SET SESSION sql_mode='+literal(self.new['routine']['mode']))
+            self.db.execute('SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci')
+            self.quiescent();self.db.execute(self.plan_routine())
+            if fault=='routine:after-create':raise RuntimeError('Injected interruption after committed routine CREATE')
+            record['phase']='created';self.persist()
+        verify_schema(self.db,self.projected(),self.config,ready=False,grant_pending=True)
+        for role in ('definer','api','review'):
+            self.db.execute("GRANT EXECUTE ON PROCEDURE `"+self.config['database']+"`.er_schema_ready TO '"+self.config[role+'User']+"'@'"+self.config[role+'Host']+"'")
+        verify_schema(self.db,self.projected(),self.config)
+        record['phase']='done';self.persist()
 
     def plan_create(self, name):
         t = self.new['triggers'][name]
@@ -413,6 +548,7 @@ class Runner:
             self.state['fingerprint'] = fingerprint(self.db, self.old)
             self.state['phase'] = 'triggers'
             self.persist()
+        self.structural_upgrade(fault)
         for name in self.manifest['changedTriggers']:
             record = self.state['triggers'].get(name)
             expected = self.projected()
@@ -426,19 +562,19 @@ class Runner:
                     # CREATE committed but acknowledgement was lost. Verify the
                     # ENTIRE projected state before recording done, never replay.
                     expected['triggers'][name] = self.new['triggers'][name]
-                    verify_schema(self.db, expected, self.config)
+                    verify_schema(self.db, expected, self.config, ready=False)
                     record['phase'] = 'done'
                     self.persist()
                     continue
                 if present:
                     require(record['phase'] == 'drop-intent', 'Unexpected old trigger after recorded DROP')
-                    verify_schema(self.db, expected, self.config)
+                    verify_schema(self.db, expected, self.config, ready=False)
                 else:
-                    verify_schema(self.db, expected, self.config, absent=[name])
+                    verify_schema(self.db, expected, self.config, absent=[name], ready=False)
                     record['phase'] = 'create-intent'
                     self.persist()
             else:
-                verify_schema(self.db, expected, self.config)
+                verify_schema(self.db, expected, self.config, ready=False)
                 record = dict(phase='drop-intent', dropHash=sha('DROP TRIGGER `' + name + '`'), createHash=sha(self.plan_create(name)))
                 self.state['triggers'][name] = record
                 self.persist()
@@ -459,9 +595,10 @@ class Runner:
             if fault == name + ':after-create':
                 raise RuntimeError('Injected interruption after committed CREATE')
             expected['triggers'][name] = t
-            verify_schema(self.db, expected, self.config)
+            verify_schema(self.db, expected, self.config, ready=False)
             record['phase'] = 'done'
             self.persist()
+        self.routine_upgrade(fault)
         verify_schema(self.db, self.new, self.config)
         require(fingerprint(self.db, self.new) == self.state['fingerprint'], 'Data changed during upgrade; keep maintenance enabled')
         # DML is idempotently reconciled, never rewrites existing release history.
@@ -511,15 +648,9 @@ def install(db, config, journal, bundle):
     for name in sorted(files):
         runner.state['files'][name] = dict(hash=files[name], phase='started')
         runner.persist()
-        # This script already contains reviewed DELIMITER commands.
-        marker = 'er_' + uuid.uuid4().hex
-        db.process.stdin.write((Path(bundle) / name).read_text() + f"\nSELECT '{marker}';\n")
-        db.process.stdin.flush()
-        while True:
-            row = db.output.get(timeout=120)
-            require(row is not None, 'Fresh SQL failed; no replay')
-            if row == marker:
-                break
+        # Same bounded client protocol as individual statements. On any failure
+        # the durable started record is retained; uncertain DDL is never replayed.
+        db.execute_script((Path(bundle) / name).read_text())
         runner.state['files'][name]['phase'] = 'done'
         runner.persist()
     verify_schema(db, runner.new, config)

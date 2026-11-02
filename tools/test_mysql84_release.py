@@ -9,6 +9,23 @@ import mysql84_release as release
 
 
 class ReleaseTests(unittest.TestCase):
+    def test_contract_crlf_only_changes_line_endings_and_preserves_sql(self):
+        raw = dict(tables={'t': 'CREATE TABLE t (\r\n id char(36) COLLATE ascii_bin\r\n)'},
+                   triggers={'x': {'body': 'BEGIN\r\n SIGNAL SQLSTATE \'45000\';\r\nEND'}},
+                   routine={'body': 'BEGIN\r\n SELECT 1;\r\nEND'}, metadata={'type': 'int'})
+        with mock.patch.object(release.subprocess, 'check_output', return_value=json.dumps(raw)):
+            contract = release.load_contract()
+        self.assertEqual(contract['tables']['t'], raw['tables']['t'].replace('\r\n', '\n'))
+        self.assertIn('ascii_bin', contract['tables']['t'])
+        self.assertEqual(contract['metadata'], raw['metadata'])
+
+    def test_only_derived_regexp_anchor_is_decoded_for_metadata(self):
+        sql = r"CREATE TRIGGER x BEFORE INSERT ON t FOR EACH ROW BEGIN SELECT REGEXP_LIKE(CONVERT(NEW.h USING utf8mb4) COLLATE utf8mb4_bin, '^[A-F0-9]{64}\\z', 'c'); END"
+        expected = release.expected_body({'statement': sql})
+        self.assertIn(r"{64}\z'", expected)
+        self.assertNotIn(r"{64}\\z'", expected)
+        self.assertEqual(release.expected_body({'body': r"BEGIN SELECT '\\z'; END"}), r"BEGIN SELECT '\\z'; END")
+
     def runner(self, tmp):
         db = mock.Mock()
         db.scalar.return_value = '1'
@@ -19,7 +36,27 @@ class ReleaseTests(unittest.TestCase):
 
     def state(self, runner):
         return dict(format=1, operation='upgrade', phase='triggers', database=runner.config['database'], serverUuid=runner.config['serverUuid'],
-                    manifest=release.sha(json.dumps(runner.manifest, sort_keys=True)), triggers={}, fingerprint={})
+                    manifest=release.sha(json.dumps(runner.manifest, sort_keys=True)), triggers={}, fingerprint={},
+                    tableChanges={name:dict(phase='done',hash=release.sha(sql)) for name,sql in runner.new.get('tableChanges',{}).items()},
+                    routine=dict(phase='done',createHash=release.sha(runner.plan_routine())))
+
+    def test_lost_alter_ack_reconciles_exact_new_table_without_replay(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            db,runner=self.runner(tmp); runner.state=self.state(runner)
+            name=next(iter(runner.new['tableChanges']))
+            runner.new['tableChanges']={name:runner.new['tableChanges'][name]}
+            runner.state['tableChanges']={name:dict(phase='intent',hash=release.sha(runner.new['tableChanges'][name]))}
+            with mock.patch.object(release,'table_ddl',return_value=runner.new['tables'][name]),mock.patch.object(release,'verify_schema'):
+                runner.structural_upgrade(None)
+            db.execute.assert_not_called()
+            self.assertEqual('done',runner.state['tableChanges'][name]['phase'])
+
+    def test_terminal_state_cannot_omit_structural_changes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            _,runner=self.runner(tmp);runner.state=self.state(runner)
+            runner.state.update(phase='done',tableChanges={})
+            with self.assertRaisesRegex(RuntimeError,'terminal structural'):
+                runner.validate_state()
 
     def test_partial_requires_explicit_recovery_without_ddl(self):
         with tempfile.TemporaryDirectory() as tmp:

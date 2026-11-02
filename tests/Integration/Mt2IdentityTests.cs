@@ -165,6 +165,20 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
             }
             else await db.InstitutionMemberships.Where(m => m.Id == membership).ExecuteUpdateAsync(s => s.SetProperty(m => m.Status, change));
         });
+        if (change is "membership-deleted" or "user-deleted")
+        {
+            // A new context reads committed authority, independently of the HTTP
+            // result and of the earlier role deletion. Do not let that deletion
+            // alone masquerade as a successful membership/user purge.
+            await Change(async db =>
+            {
+                Assert.False(await db.InstitutionMemberships.AsNoTracking().AnyAsync(m => m.Id == _ma));
+                Assert.Equal(change != "user-deleted", await db.Users.AsNoTracking().AnyAsync(u => u.Id == _user));
+                Assert.Equal(change != "user-deleted", await db.InstitutionMemberships.AsNoTracking().AnyAsync(m => m.Id == _mb));
+                Assert.True(await db.InstitutionMemberships.AsNoTracking().AnyAsync(m => m.Id == _otherMembership));
+                Assert.True(await db.Institutions.AsNoTracking().AnyAsync(i => i.Id == _b));
+            });
+        }
         var denied = await Request("/api/Auth/context", token);
         var expectedStatus=change=="user-deleted" ? HttpStatusCode.Unauthorized : HttpStatusCode.Forbidden;
         Assert.Equal(expectedStatus, denied.StatusCode);

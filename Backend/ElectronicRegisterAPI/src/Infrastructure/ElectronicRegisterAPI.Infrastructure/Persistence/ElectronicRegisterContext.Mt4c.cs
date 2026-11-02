@@ -39,7 +39,7 @@ public partial class ElectronicRegisterContext
             entity.Property(e => e.PreviousCompletionDate).HasColumnName("previous_completion_date");
             entity.Property(e => e.PreviousStatus).HasMaxLength(20).HasColumnName("previous_status").UseCollation("ascii_bin").HasCharSet("ascii");
             entity.Property(e => e.Reason).HasMaxLength(1000).HasColumnName("reason");
-            entity.Property(e => e.RequestHash).HasMaxLength(64).IsFixedLength().HasColumnName("request_hash").UseCollation("ascii_bin").HasCharSet("ascii");
+            entity.Property(e => e.RequestHash).HasMaxLength(65).IsFixedLength(false).HasColumnName("request_hash").UseCollation("ascii_bin").HasCharSet("ascii");
             entity.Property(e => e.RevisionAfter).HasColumnType("bigint(20)").HasColumnName("revision_after");
             entity.Property(e => e.RevisionBefore).HasColumnType("bigint(20)").HasColumnName("revision_before");
             entity.HasOne(d => d.ActorUser).WithMany().HasForeignKey(d => d.ActorUserId).OnDelete(DeleteBehavior.Restrict).HasConstraintName("fk_mt4c_actor");

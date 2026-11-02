@@ -132,7 +132,7 @@ public partial class ElectronicRegisterContext
             e.Property(x => x.Operation).HasColumnName("operation").HasColumnType("varchar(40)").IsRequired();
             e.Property(x => x.RevisionBefore).HasColumnName("revision_before").HasColumnType("bigint");
             e.Property(x => x.RevisionAfter).HasColumnName("revision_after").HasColumnType("bigint").IsRequired();
-            e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("char(64)").IsRequired();
+            e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("varchar(65)").IsRequired();
             e.Property(x => x.BeforeJson).HasColumnName("before_json").HasColumnType("json");
             e.Property(x => x.AfterJson).HasColumnName("after_json").HasColumnType("json").IsRequired();
             e.Property(x => x.Reason).HasColumnName("reason").HasColumnType("varchar(500)").IsRequired();

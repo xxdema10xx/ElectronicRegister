@@ -65,8 +65,11 @@ try
     var config=new ConfigurationBuilder().AddJsonFile(file,false,false).Build();
     var connection=new MySqlConnectionStringBuilder(config.GetConnectionString("DefaultConnection")??throw new ArgumentException("Private connection configuration required."));
     var testPort=config.GetValue<uint?>("TestDatabase:Port")??13306;
+    var local84 = config["TestDatabase:LocalMysql84:ContainerId"] is not null;
     string? testData=null;
-    if(testPort!=13306)
+    if(local84)
+        await LocalMysql84Target.VerifyAsync(config, connection);
+    else if(testPort!=13306)
     {
         if(testPort is <1024 or >65535 or 3306)throw new UnauthorizedAccessException();
         testData=Path.GetFullPath(config["TestDatabase:ExpectedDataDir"]??throw new UnauthorizedAccessException()).TrimEnd('\\','/').Replace('\\','/')+"/";
@@ -75,7 +78,7 @@ try
         if(root is null || !testData.StartsWith(Path.Combine(root.FullName,".staff-private").Replace('\\','/')+"/",StringComparison.OrdinalIgnoreCase))throw new UnauthorizedAccessException();
     }
     if(connection.Server!="127.0.0.1" || connection.Port!=testPort || connection.Database!="electronic_register_test")throw new UnauthorizedAccessException("Explicit isolated test target required.");
-    await using(var sql=new MySqlConnection(connection.ConnectionString))
+    if(!local84) await using(var sql=new MySqlConnection(connection.ConnectionString))
     {
         await sql.OpenAsync();await using var command=new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE()",sql);
         await using var r=await command.ExecuteReaderAsync();
