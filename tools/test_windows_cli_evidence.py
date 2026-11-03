@@ -63,6 +63,42 @@ class WindowsEvidenceTests(unittest.TestCase):
         self.validate()
         self.assertEqual(0, self.aggregate())
 
+    def test_windows_creator_file_owners_are_accepted(self):
+        for owner in (self.report['acl'][0]['owner'], 'S-1-5-32-544'):
+            with self.subTest(owner=owner):
+                for entry in self.report['acl'][1:] + self.report['aclNegative']:
+                    entry['owner'] = owner
+                self.validate()
+                self.assertEqual(0, self.aggregate())
+
+    def test_foreign_and_system_owners_are_refused(self):
+        for owner in ('S-1-5-21-9-8-7-1001', 'S-1-5-18', 'S-1-1-0'):
+            for index in range(4):
+                r = copy.deepcopy(self.report)
+                r['acl'][index]['owner'] = owner
+                with self.subTest(owner=owner, index=index), self.assertRaises(ValueError):
+                    self.validate(r)
+            r = copy.deepcopy(self.report)
+            for entry in r['aclNegative']:
+                entry['owner'] = owner
+            with self.assertRaises(ValueError): self.validate(r)
+        r = copy.deepcopy(self.report)
+        r['acl'][0]['owner'] = 'S-1-5-32-544'
+        with self.assertRaises(ValueError): self.validate(r)
+
+    def test_negative_control_owner_must_remain_stable_even_if_both_are_valid(self):
+        for index in range(3):
+            r = copy.deepcopy(self.report)
+            r['aclNegative'][index]['owner'] = 'S-1-5-32-544'
+            with self.subTest(index=index), self.assertRaisesRegex(ValueError, 'owner continuity'):
+                self.validate(r)
+
+    def test_everyone_grant_on_each_private_object_is_refused(self):
+        for index in range(4):
+            r = copy.deepcopy(self.report)
+            r['acl'][index]['rules'].append(dict(sid='S-1-1-0', type='Allow', rights='ReadData'))
+            with self.subTest(index=index), self.assertRaises(ValueError): self.validate(r)
+
     def test_primary_provision_failure_survives_missing_checks(self):
         self.report['problems'] = [dict(id='provision', required=True, status='FAIL',
                                        error='Private ACL setup/verification failed: Set-Acl original error')]

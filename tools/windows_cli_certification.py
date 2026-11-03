@@ -17,7 +17,7 @@ import traceback
 import uuid
 from types import SimpleNamespace
 from local_test_db import Setup, private_acl, verify_files
-from windows_cli_evidence import METHODS, PACKAGE, require, trx_methods, validate_report
+from windows_cli_evidence import METHODS, PACKAGE, require, trx_methods, validate_report, validate_private_acl
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -149,8 +149,7 @@ def main():
         def acl():
             report['acl'] = acl_evidence(run)
             report['aclNegative'] = [json.loads(line) for line in (run/'cli/authority-acl.jsonl').read_text().splitlines()]
-            require(len(report['acl']) == 4, 'Three authority files plus private parent expected')
-            require(all(a['owner'] in a['trusted'] and a['rules'] and all(r['sid'] in a['trusted'] for r in a['rules']) for a in report['acl']), 'Authority ACL is not private')
+            validate_private_acl(report['acl'])
         check('acl', acl)
     except Exception:
         pass  # detailed failing check is retained; no success inferred

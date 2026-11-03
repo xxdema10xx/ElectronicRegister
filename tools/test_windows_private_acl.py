@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 from local_test_db import private_acl
 from windows_cli_certification import acl_evidence
+from windows_cli_evidence import validate_private_acl
 
 
 @unittest.skipUnless(os.name == 'nt', 'Requires real Windows NTFS ACLs')
@@ -37,8 +38,11 @@ class WindowsPrivateAclTests(unittest.TestCase):
                 evidence = acl_evidence(base)
             self.assertEqual(4, len(evidence))
             self.assertTrue(evidence[0]['protected'])
+            self.assertEqual(setup['user'], evidence[0]['owner'])
+            # Exercise the same policy on local and elevated GitHub tokens.
+            # File ownership follows the creator token's default owner.
+            validate_private_acl(evidence)
             for entry in evidence:
-                self.assertEqual(setup['user'], entry['owner'])
                 self.assertEqual(set(entry['trusted']), {r['sid'] for r in entry['rules']})
                 self.assertEqual(3, len(entry['rules']))
                 self.assertTrue(all(r['type'] == 'Allow' and r['rights'] == 'FullControl' for r in entry['rules']))

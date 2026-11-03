@@ -11,6 +11,32 @@ from ci_diagnostic import validate_trx
 METHODS = sorted('ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.'+m for m in WINDOWS_METHODS)
 CHECKS = {'platform', 'restore', 'build', 'provision', 'acl', 'cleanup', *METHODS}
 PACKAGE = json.loads(Path(__file__).with_name('windows-cli-mysql.json').read_text())
+SYSTEM = 'S-1-5-18'
+ADMINISTRATORS = 'S-1-5-32-544'
+
+
+def validate_private_acl(acl):
+    """The writer pins the directory owner; Windows chooses new file owners.
+
+    An elevated token may default file ownership to Administrators. SYSTEM is
+    granted access but is not a creator in this fixture, so cannot own a file.
+    Ownership never expands the exact three-principal DACL policy.
+    """
+    require(len(acl) == 4, 'Three authority files plus private parent expected')
+    user = acl[0]['owner']
+    require(re.fullmatch(r'S-1-5-21-(?:\d+-){3}\d+', user), 'Private directory must belong to the user')
+    trusted = {user, SYSTEM, ADMINISTRATORS}
+    for index, entry in enumerate(acl):
+        require(entry['owner'] in ({user} if index == 0 else {user, ADMINISTRATORS}),
+                'Unexpected directory/file owner')
+        require(set(entry['trusted']) == trusted and len(entry['trusted']) == 3 and
+                len(entry['rules']) == 3 and {r['sid'] for r in entry['rules']} == trusted,
+                'Incomplete private DACL')
+        require(entry.get('protected') is (index == 0), 'Unexpected ACL protection/inheritance')
+        require(all(r.get('type') == 'Allow' and r.get('rights') == 'FullControl' and
+                    r.get('inherited') is (index != 0) and
+                    r.get('inheritance') == ('ContainerInherit, ObjectInherit' if index == 0 else 'None') and
+                    r.get('propagation') == 'None' for r in entry['rules']), 'Unexpected private ACL rules')
 
 
 def require(value, message):
@@ -53,24 +79,17 @@ def validate_report(report, directory):
             identity['port'] not in (3306, 3307, 13306) and identity['uuid'] and identity['pid'] > 0,
             'Native isolated identity missing')
     acl = report['acl']
-    require(len(acl) == 4 and all(re.fullmatch(r'S-1-5-21-(?:\d+-){3}\d+', a['owner']) and
-            set(a['trusted']) == {a['owner'], 'S-1-5-18', 'S-1-5-32-544'} and a['rules'] and
-            all(r['sid'] in a['trusted'] for r in a['rules']) for a in acl), 'Untrusted authority ACL')
-    for index, entry in enumerate(acl):
-        require(entry['owner'] == acl[0]['owner'] and len(entry['rules']) == 3 and
-                {r['sid'] for r in entry['rules']} == set(entry['trusted']), 'Incomplete private DACL')
-        require(entry.get('protected') is (index == 0), 'Unexpected ACL protection/inheritance')
-        require(all(r.get('type') == 'Allow' and r.get('rights') == 'FullControl' and
-                    r.get('inherited') is (index != 0) and
-                    r.get('inheritance') == ('ContainerInherit, ObjectInherit' if index == 0 else 'None') and
-                    r.get('propagation') == 'None' for r in entry['rules']), 'Unexpected private ACL rules')
+    validate_private_acl(acl)
     negative = report['aclNegative']
     require([a['stage'] for a in negative] == ['private-before', 'broad-refused-without-mutation', 'private-restored-and-accepted'], 'ACL negative control evidence missing/duplicated')
     require(negative[0]['sddl'] == negative[2]['sddl'], 'Authority ACL was not restored exactly')
     for index, entry in enumerate(negative):
         broad = any(r['sid'] == 'S-1-1-0' and r['allow'] and r['rights'] & 1 for r in entry['rules'])
         require(broad == (index == 1), 'ACL negative control did not change Everyone ReadData')
-        require(entry['owner'] == acl[0]['owner'] and entry['sddl'], 'ACL owner continuity missing')
+        # These three snapshots are emitted by the mandatory negative-control
+        # fact for one config file; the directory is a different object.
+        require(entry['owner'] in {acl[0]['owner'], ADMINISTRATORS} and
+                entry['owner'] == negative[0]['owner'] and entry['sddl'], 'ACL owner continuity missing')
     evidence = report['trx']
     require(len(evidence) == len(METHODS), 'Missing or duplicated TRX evidence')
     observed = []
