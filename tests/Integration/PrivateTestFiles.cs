@@ -9,6 +9,23 @@ internal static class PrivateTestFiles
 {
     private static readonly Lazy<string> RunDirectory = new(CreateRunDirectory);
 
+    internal static void RecordAuthorityAcl(string path, string stage)
+    {
+        if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("Protected Windows administrative host required");
+        var parent = Environment.GetEnvironmentVariable("ER_TEST_CLI_PRIVATE_ROOT");
+        if (parent is null) return;
+        var security = new FileInfo(path).GetAccessControl();
+        var evidence = System.Text.Json.JsonSerializer.Serialize(new {
+            stage,
+            owner = security.GetOwner(typeof(SecurityIdentifier))!.Value,
+            sddl = security.GetSecurityDescriptorSddlForm(AccessControlSections.Access | AccessControlSections.Owner),
+            rules = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Select(
+                System.Linq.Enumerable.Cast<FileSystemAccessRule>(security.GetAccessRules(true, true, typeof(SecurityIdentifier))),
+                rule => new { sid = rule.IdentityReference.Value, rights = (long)rule.FileSystemRights, allow = rule.AccessControlType == AccessControlType.Allow }))
+        });
+        File.AppendAllText(Path.Combine(parent, "authority-acl.jsonl"), evidence + Environment.NewLine);
+    }
+
     internal static string CreateDirectory(string label)
     {
         if (string.IsNullOrWhiteSpace(label) || label is "." or ".." || label.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
@@ -42,7 +59,12 @@ internal static class PrivateTestFiles
         if (root is null)
             throw new InvalidOperationException("Cannot locate the fixture workspace.");
         // A sibling of instance-* datadirs, never a child of a database directory.
-        var path = Path.Combine(root.FullName, ".staff-private", "cli-fixtures-" + Guid.NewGuid().ToString("N"));
+        var parent = Environment.GetEnvironmentVariable("ER_TEST_CLI_PRIVATE_ROOT") ?? Path.Combine(root.FullName, ".staff-private");
+        parent = Path.GetFullPath(parent);
+        if (!parent.StartsWith(Path.Combine(root.FullName, ".staff-private") + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+            && parent != Path.Combine(root.FullName, ".staff-private"))
+            throw new InvalidOperationException("CLI fixture parent must be inside workspace .staff-private.");
+        var path = Path.Combine(parent, "cli-fixtures-" + Guid.NewGuid().ToString("N"));
         CreateNewProtectedDirectory(path);
         return path;
     }

@@ -83,6 +83,7 @@ public sealed partial class Mt5cOnboardingTests
         }, options));
         await File.WriteAllTextAsync(signed, JsonSerializer.Serialize(operation, options));
         var originalAcl = new FileInfo(config).GetAccessControl();
+        PrivateTestFiles.RecordAuthorityAcl(config, "private-before");
         var acl = new FileInfo(config).GetAccessControl();
         acl.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier("S-1-1-0"), FileSystemRights.ReadData, AccessControlType.Allow));
         new FileInfo(config).SetAccessControl(acl);
@@ -105,6 +106,7 @@ public sealed partial class Mt5cOnboardingTests
             Assert.Equal(1, refused.ExitCode); Assert.Empty(refused.Output);
             Assert.DoesNotContain(connection, refused.Error);
             Assert.Equal(0, await Count("SELECT COUNT(*) FROM institution WHERE id=@p0", operation.Intent.InstitutionId));
+            PrivateTestFiles.RecordAuthorityAcl(config, "broad-refused-without-mutation");
         }
         finally { PrivateTestFiles.RestoreAccessRules(config, originalAcl); }
         // Same target, signature and channel: only the file ACL has changed.
@@ -112,5 +114,6 @@ public sealed partial class Mt5cOnboardingTests
         Assert.True(accepted.ExitCode == 0, "Private authority configuration must be accepted; inspect private test evidence.");
         Assert.Equal(operation.Intent.InstitutionId, JsonSerializer.Deserialize<PlatformResult>(accepted.Output)!.InstitutionId);
         Assert.Equal(1, await Count("SELECT COUNT(*) FROM institution WHERE id=@p0", operation.Intent.InstitutionId));
+        PrivateTestFiles.RecordAuthorityAcl(config, "private-restored-and-accepted");
     }
 }

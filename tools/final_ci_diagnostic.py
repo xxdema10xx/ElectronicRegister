@@ -3,10 +3,11 @@ import json
 import os
 from pathlib import Path
 from ci_diagnostic import failed, discovered_methods
-from integration_partition import SHARDS, WINDOWS_METHODS, partition
+from integration_partition import SHARDS, partition
+from windows_cli_evidence import CHECKS as WINDOWS_CHECKS, validate_report as validate_windows_report
 
 
-EXPECTED = {'static': {'restore', 'build', 'unit', 'fixture-config', 'python', 'whitespace', 'organization',
+EXPECTED = {'windows-cli': WINDOWS_CHECKS, 'static': {'restore', 'build', 'unit', 'fixture-config', 'python', 'whitespace', 'organization',
                        'mysql84-release', 'test-release-manifest', 'test-mysql84-release',
                        'test-mysql84', 'mysql84-remediation', 'test-mysql84-remediation'},
             **{name+('-'+str(i) if count > 1 else ''): {'restore', 'build', 'docker', 'discovery', name}
@@ -58,7 +59,9 @@ def main():
             missing = EXPECTED[suite] - actual
             if missing:
                 raise ValueError('Missing mandatory checks in '+suite+': '+', '.join(sorted(missing)))
-            if suite not in ('static', 'runtime-fresh', 'runtime-upgrade'):
+            if suite == 'windows-cli':
+                validate_windows_report(report, path.parent)
+            elif suite not in ('static', 'runtime-fresh', 'runtime-upgrade'):
                 assignment = report['assignment']
                 inventory, selected = partition(assignment['inventory'], assignment['domain'],
                                                 assignment['shard'], assignment['shards'])
@@ -81,7 +84,7 @@ def main():
             sources.append(str(path))
         except Exception as error:
             rows.append(dict(id='unreadable-report',status='FAIL',required=True,error=str(error),file=str(path),line=1,category='aggregation',test='report-read',cause='Invalid diagnostic report',priority='P1',dependents=[]))
-    for name in ('release','diagnostic','integration'):
+    for name in ('release','diagnostic','integration','windows-cli'):
         value=json.loads(os.environ.get('JOB_RESULTS','{}')).get(name,{}).get('result','absent')
         rows.append(dict(id='job-'+name,status='PASS' if value=='success' else 'BLOCKED' if value in ('skipped','absent') else 'FAIL',required=True,error=value,file='.github/workflows/mysql84-remediation-candidate.yml',line=1,category='aggregation',test=name,cause='Job outcome, including setup and upload failures',priority='P1',dependents=[]))
     for domain in SHARDS:
@@ -93,13 +96,6 @@ def main():
             assigned = [m for a in domain_assignments for m in a['methods']]
             if sorted(assigned) != inventories[0]:
                 rows.append(dict(id='coverage-'+domain, status='FAIL', required=True, error='Shard union is incomplete or duplicated'))
-    # No secure Windows database provisioner is available in this workflow yet.
-    # These mandatory real ACL/CLI tests cannot be replaced by Linux or mocks.
-    for method in sorted(WINDOWS_METHODS):
-        rows.append(dict(id='windows-cli-'+method, status='BLOCKED', required=True,
-                         test='ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.'+method,
-                         category='infrastructure', error='Secure Windows administrative host with isolated compatible database required',
-                         cause='Windows certification environment unavailable'))
     if len(sources) != len(EXPECTED):
         rows.append(dict(id='report-count',status='FAIL',required=True,error=f'Expected {len(EXPECTED)} reports; found {len(sources)}',file='.diagnostics/downloaded',line=1,category='aggregation',test='report-presence',cause='Report absent or duplicate',priority='P1',dependents=[]))
     for suite in sorted(EXPECTED.keys() - suites.keys()):

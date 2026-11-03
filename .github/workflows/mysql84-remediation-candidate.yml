@@ -253,9 +253,44 @@ jobs:
           include-hidden-files: true
           path: .diagnostics/
 
+  windows-cli:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: '10.0.x'
+      - name: Download pinned native Windows compatibility fixture
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $package = Get-Content tools/windows-cli-mysql.json -Raw | ConvertFrom-Json
+          $archive = Join-Path $env:RUNNER_TEMP 'mysql-5.7.24-winx64.zip'
+          Invoke-WebRequest $package.url -OutFile $archive
+          if ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash -ne $package.sha256) { throw 'MySQL archive digest mismatch' }
+          Expand-Archive -LiteralPath $archive -DestinationPath (Join-Path $env:RUNNER_TEMP 'windows-cli-mysql')
+      - name: Real signed CLI operations and NTFS authority ACL negative control
+        shell: pwsh
+        run: |
+          python tools/windows_cli_certification.py --mysql-bin "$env:RUNNER_TEMP/windows-cli-mysql/mysql-5.7.24-winx64/bin" --output .diagnostics/windows-cli
+          if ($LASTEXITCODE -ne 0) { throw 'Mandatory Windows certification failed' }
+      - name: Preserve sanitized report and exact TRX evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mysql84-windows-cli
+          include-hidden-files: true
+          if-no-files-found: error
+          path: |
+            .diagnostics/windows-cli/windows-cli-diagnostic.json
+            .diagnostics/windows-cli/*.trx
+
   final-gate:
     if: always()
-    needs: [release, diagnostic, integration]
+    needs: [release, diagnostic, integration, windows-cli]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
