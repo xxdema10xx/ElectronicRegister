@@ -96,7 +96,9 @@ public sealed partial class InstitutionClassCrudTests(IntegrationFixture fixture
             db.InstitutionMemberships.Add(new(){Id=Id("admin2-membership"),InstitutionId=_a,UserId=_admin2,Status="active",InstitutionMembershipRoles=new List<E.InstitutionMembershipRole>{new(){MembershipId=Id("admin2-membership"),Role="InstitutionAdmin"}}});
             await db.SaveChangesAsync();
         });
-        _host=await Mt3cHosting.ProgramHost.StartAsync(fixture.ConnectionString,_a,Array.Empty<Guid>(),enabled:false,school:true,exam:true,course:true);
+        _host=await Mt3cHosting.ProgramHost.StartAsync(fixture.ConnectionString,_a,Array.Empty<Guid>(),enabled:false,school:true,exam:true,course:true,
+            configureServices: services => services.Insert(0, ServiceDescriptor.Singleton<Microsoft.AspNetCore.Diagnostics.IExceptionHandler>(_campusFailure)),
+            extraArguments: ["--Logging:LogLevel:ElectronicRegisterAPI.Api.ExceptionHandling=Error"]);
     }
 
     private async Task<HttpResponseMessage> Request(string route, string? token = null, object? body = null, string method = "GET", Mt3cHosting.ProgramHost? host = null, string? etag = null)
