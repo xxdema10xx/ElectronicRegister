@@ -36,6 +36,10 @@ def trx_methods(path):
 def validate_report(report, directory):
     require(report.get('suite') == 'windows-cli', 'Windows suite required')
     rows = report['problems']
+    failures = [r for r in rows if r.get('status') == 'FAIL']
+    if failures:
+        first = failures[0]
+        raise ValueError('Primary Windows failure ['+str(first.get('id'))+']: '+str(first.get('error', 'No detail recorded')))
     require(len(rows) == len(CHECKS) and {r['id'] for r in rows} == CHECKS, 'Missing or duplicate Windows checks')
     require(all(r.get('required') is True and r.get('status') == 'PASS' for r in rows), 'Every Windows check must PASS; skips refused')
     provenance = report['provenance']

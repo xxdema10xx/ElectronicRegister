@@ -55,17 +55,21 @@ def main():
     a = p.parse_args()
     output = a.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
-    report = dict(format=1, suite='windows-cli', problems=[], trx=[], acl=[], provenance={
+    report = dict(format=1, suite='windows-cli', problems=[
+        dict(id=name, test=name, required=True, status='BLOCKED', error='Not executed: prerequisite failed')
+        for name in ['platform', 'restore', 'build', 'provision', *METHODS, 'acl', 'cleanup']], trx=[], acl=[], provenance={
         'platform': sys.platform, **{k: os.environ.get(k, '') for k in ('GITHUB_SHA', 'GITHUB_RUN_ID', 'GITHUB_RUN_ATTEMPT')}})
     def check(name, action):
-        row = dict(id=name, test=name, required=True, status='FAIL', error='')
-        report['problems'].append(row)
+        row = next(row for row in report['problems'] if row['id'] == name)
+        row.update(status='FAIL', error='')
         try:
             result = action()
             row['status'] = 'PASS'
             return result
-        except Exception:
+        except Exception as error:
             row['error'] = traceback.format_exc()
+            if hasattr(error, 'acl_diagnostic'):
+                report['aclSetupFailure'] = error.acl_diagnostic
             raise
     run = None
     setup = None
@@ -99,7 +103,7 @@ def main():
             setup = OwnedSetup(args, password)
             # Setup validates the full ancestry for reparse points before creation.
             run.mkdir(parents=True, exist_ok=False)
-            private_acl(run)
+            report['aclSetup'] = private_acl(run)
             setup.create()  # password installed offline via random shared-memory channel
             setup.identity()  # PID, executable, socket, UUID, version, mode, exact datadir
             require(setup.client("SELECT COUNT(*) FROM information_schema.SCHEMATA WHERE SCHEMA_NAME NOT IN ('mysql','sys','information_schema','performance_schema');") == '0', 'Fresh instance required')

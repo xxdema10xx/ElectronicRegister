@@ -57,6 +57,23 @@ class WindowsEvidenceTests(unittest.TestCase):
         self.validate()
         self.assertEqual(0, self.aggregate())
 
+    def test_primary_provision_failure_survives_missing_checks(self):
+        self.report['problems'] = [dict(id='provision', required=True, status='FAIL',
+                                       error='Private ACL setup/verification failed: Set-Acl original error')]
+        with self.assertRaisesRegex(ValueError, 'Primary Windows failure.*provision.*Set-Acl original error'):
+            self.validate()
+        self.assertEqual(1, self.aggregate(job='failure'))
+        summary = json.loads((self.base/'.diagnostics/MYSQL84_CI_DIAGNOSTIC_REPORT.json').read_text())
+        self.assertTrue(any('Primary Windows failure [provision]' in r.get('error', '')
+                            for r in summary['problems']))
+
+    def test_blocked_checks_never_certify_execution(self):
+        for row in self.report['problems']:
+            if row['id'] in METHODS:
+                row['status'] = 'BLOCKED'
+        with self.assertRaisesRegex(ValueError, 'Every Windows check must PASS'):
+            self.validate()
+
     def test_absent_skipped_failed_job_blocks(self):
         for job in (None, 'skipped', 'failure', 'cancelled'):
             with self.subTest(job=job):

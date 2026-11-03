@@ -44,19 +44,20 @@ def validate_target(port, datadir, main):
 
 def private_acl(path):
     env = dict(os.environ, ER_SETUP_PRIVATE_PATH=str(path))
-    code = """$ErrorActionPreference='Stop'; $p=$env:ER_SETUP_PRIVATE_PATH;
-$sid=[Security.Principal.WindowsIdentity]::GetCurrent().User;
-$a=New-Object Security.AccessControl.DirectorySecurity;
-$a.SetAccessRuleProtection($true,$false);
-foreach($id in @($sid.Value,'S-1-5-18','S-1-5-32-544')){
- $s=New-Object Security.Principal.SecurityIdentifier($id);
- $r=New-Object Security.AccessControl.FileSystemAccessRule($s,'FullControl','ContainerInherit,ObjectInherit','None','Allow'); $a.AddAccessRule($r)};
-Set-Acl -LiteralPath $p -AclObject $a;
-$a=Get-Acl -LiteralPath $p; if(!$a.AreAccessRulesProtected){throw 'ACL not private'};
-foreach($r in $a.Access){if($r.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value -notin @($sid.Value,'S-1-5-18','S-1-5-32-544')){throw 'Unexpected ACL'}}
-"""
-    p = subprocess.run(['powershell', '-NoProfile', '-Command', code], env=env, capture_output=True)
-    require(p.returncode == 0, 'Private ACL setup/verification failed')
+    p = subprocess.run(['powershell', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass',
+                        '-File', str(Path(__file__).with_name('private_acl.ps1'))], env=env, capture_output=True)
+    try:
+        diagnostic = json.loads(p.stdout.decode('utf-8-sig'))
+    except (ValueError, UnicodeError):
+        # A host/parse failure occurs before our structured handler. This process
+        # executes only the ACL script, never SQL or private configuration.
+        diagnostic = dict(operation='powershell-host', stderr=p.stderr.decode(errors='replace')
+                          .replace(str(path), '<target>'))
+    if p.returncode or diagnostic.get('status') != 'PASS':
+        error = RuntimeError('Private ACL setup/verification failed: '+json.dumps(diagnostic))
+        error.acl_diagnostic = diagnostic
+        raise error
+    return diagnostic
 
 def listener(port):
     value = subprocess.check_output(['netstat', '-ano', '-p', 'tcp']).decode(errors='replace')

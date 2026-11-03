@@ -57,7 +57,7 @@ def main():
                 raise ValueError('Unknown or duplicate report suite: '+str(suite))
             actual = {row['id'] for row in report['problems'] if row.get('required', True)}
             missing = EXPECTED[suite] - actual
-            if missing:
+            if missing and suite != 'windows-cli':
                 raise ValueError('Missing mandatory checks in '+suite+': '+', '.join(sorted(missing)))
             if suite == 'windows-cli':
                 validate_windows_report(report, path.parent)
