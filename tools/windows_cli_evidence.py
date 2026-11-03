@@ -56,6 +56,14 @@ def validate_report(report, directory):
     require(len(acl) == 4 and all(re.fullmatch(r'S-1-5-21-(?:\d+-){3}\d+', a['owner']) and
             set(a['trusted']) == {a['owner'], 'S-1-5-18', 'S-1-5-32-544'} and a['rules'] and
             all(r['sid'] in a['trusted'] for r in a['rules']) for a in acl), 'Untrusted authority ACL')
+    for index, entry in enumerate(acl):
+        require(entry['owner'] == acl[0]['owner'] and len(entry['rules']) == 3 and
+                {r['sid'] for r in entry['rules']} == set(entry['trusted']), 'Incomplete private DACL')
+        require(entry.get('protected') is (index == 0), 'Unexpected ACL protection/inheritance')
+        require(all(r.get('type') == 'Allow' and r.get('rights') == 'FullControl' and
+                    r.get('inherited') is (index != 0) and
+                    r.get('inheritance') == ('ContainerInherit, ObjectInherit' if index == 0 else 'None') and
+                    r.get('propagation') == 'None' for r in entry['rules']), 'Unexpected private ACL rules')
     negative = report['aclNegative']
     require([a['stage'] for a in negative] == ['private-before', 'broad-refused-without-mutation', 'private-restored-and-accepted'], 'ACL negative control evidence missing/duplicated')
     require(negative[0]['sddl'] == negative[2]['sddl'], 'Authority ACL was not restored exactly')

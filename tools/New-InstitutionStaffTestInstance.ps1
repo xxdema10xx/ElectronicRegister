@@ -14,15 +14,15 @@ $server=Join-Path $MySqlBin 'mysqld.exe'
 if((& $server --no-defaults --version) -notmatch '\b5\.7\.24\b'){throw 'MySQL 5.7.24 required'}
 $run=Join-Path $root ('.staff-private/instance-'+[guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $run | Out-Null
-$sid=[Security.Principal.WindowsIdentity]::GetCurrent().User
-$acl=New-Object Security.AccessControl.DirectorySecurity
-$acl.SetAccessRuleProtection($true,$false)
-foreach($id in @($sid.Value,'S-1-5-18','S-1-5-32-544')){
-    $identity=New-Object Security.Principal.SecurityIdentifier($id)
-    $rule=New-Object Security.AccessControl.FileSystemAccessRule($identity,'FullControl','ContainerInherit,ObjectInherit','None','Allow')
-    $acl.AddAccessRule($rule)
+$previousPrivatePath=$env:ER_SETUP_PRIVATE_PATH
+try {
+    $env:ER_SETUP_PRIVATE_PATH=$run
+    $aclEvidence=& powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'private_acl.ps1')
+    if($LASTEXITCODE -ne 0){throw ('Private ACL setup failed: '+($aclEvidence -join [Environment]::NewLine))}
+    if(($aclEvidence | ConvertFrom-Json).status -ne 'PASS'){throw 'Private ACL verification did not PASS'}
+} finally {
+    $env:ER_SETUP_PRIVATE_PATH=$previousPrivatePath
 }
-Set-Acl -LiteralPath $run -AclObject $acl
 $data=Join-Path $run 'data'
 $init=Start-Process $server -ArgumentList @('--no-defaults','--initialize-insecure','--log-syslog=0',"--datadir=$data", "--basedir=$((Split-Path $MySqlBin -Parent))") -WindowStyle Hidden -RedirectStandardOutput "$run/init-out.log" -RedirectStandardError "$run/init-error.log" -PassThru -Wait
 if($init.ExitCode -ne 0){throw 'Initialization failed; preserve datadir and logs'}

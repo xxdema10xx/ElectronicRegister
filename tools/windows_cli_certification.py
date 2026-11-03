@@ -37,14 +37,22 @@ def acl_evidence(run):
     code = r"""
 $ErrorActionPreference='Stop'; $base=$env:ER_TEST_CLI_PRIVATE_ROOT;
 $trusted=@([Security.Principal.WindowsIdentity]::GetCurrent().User.Value,'S-1-5-18','S-1-5-32-544');
-$paths=@((Get-Item -LiteralPath $base))+@(Get-ChildItem -LiteralPath $base -Recurse -Filter admin.json -File);
-@($paths | ForEach-Object { $a=Get-Acl -LiteralPath $_.FullName;
+$paths=@($base)+@([IO.Directory]::GetFiles($base,'admin.json',[IO.SearchOption]::AllDirectories));
+@($paths | ForEach-Object {
+  $sections=[Security.AccessControl.AccessControlSections]'Access,Owner,Group';
+  if([IO.Directory]::Exists($_)) { $a=[IO.Directory]::GetAccessControl($_,$sections) }
+  else { $a=[IO.File]::GetAccessControl($_,$sections) };
   @{owner=$a.GetOwner([Security.Principal.SecurityIdentifier]).Value; trusted=$trusted;
+    protected=$a.AreAccessRulesProtected;
     rules=@($a.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier]) | ForEach-Object {
-      @{sid=$_.IdentityReference.Value; rights=[string]$_.FileSystemRights; type=[string]$_.AccessControlType}});
+      @{sid=$_.IdentityReference.Value; rights=[string]$_.FileSystemRights; type=[string]$_.AccessControlType;
+        inherited=$_.IsInherited; inheritance=[string]$_.InheritanceFlags; propagation=[string]$_.PropagationFlags}});
     sddl=$a.Sddl} }) | ConvertTo-Json -Depth 6 -Compress
 """
-    result = subprocess.run(['powershell', '-NoProfile', '-Command', code], capture_output=True, text=True, check=True)
+    env = dict(os.environ, ER_TEST_CLI_PRIVATE_ROOT=str(run))
+    result = subprocess.run(['powershell', '-NoProfile', '-NonInteractive', '-Command', code], env=env,
+                            capture_output=True, text=True)
+    require(result.returncode == 0, 'ACL evidence read failed: '+result.stderr.replace(str(run), '<target>'))
     return json.loads(result.stdout)
 
 

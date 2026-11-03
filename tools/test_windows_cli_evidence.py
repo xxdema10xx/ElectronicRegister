@@ -25,6 +25,7 @@ class WindowsEvidenceTests(unittest.TestCase):
                            aclNegative=[dict(stage=stage, owner='S-1-5-21-1-2-3-1001', sddl='parser-fixture', rules=[dict(sid='S-1-1-0', allow=True, rights=1)] if i == 1 else [])
                                         for i, stage in enumerate(('private-before','broad-refused-without-mutation','private-restored-and-accepted'))])
         for i, method in enumerate(METHODS):
+            # Metadata fixture only; real NTFS behavior is tested separately.
             cls, name = method.rsplit('.', 1)
             path = self.directory/(str(i)+'.trx')
             path.write_text('<TestRun xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">'
@@ -32,6 +33,11 @@ class WindowsEvidenceTests(unittest.TestCase):
                 '<Results><UnitTestResult testId="one" outcome="Passed" /></Results>'
                 '<ResultSummary outcome="Completed"><Counters total="1" executed="1" passed="1" /></ResultSummary></TestRun>')
             self.report['trx'].append(dict(file=path.name, sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
+        for index, entry in enumerate(self.report['acl']):
+            entry['protected'] = index == 0
+            entry['rules'] = [dict(sid=sid, type='Allow', rights='FullControl', inherited=index != 0,
+                                   inheritance='ContainerInherit, ObjectInherit' if index == 0 else 'None',
+                                   propagation='None') for sid in entry['trusted']]
 
     def validate(self, report=None):
         validate_report(self.report if report is None else report, self.directory)
@@ -125,6 +131,19 @@ class WindowsEvidenceTests(unittest.TestCase):
         with self.assertRaises(ValueError): self.validate(r)
         self.report['provenance']['platform'] = 'linux'
         with self.assertRaises(ValueError): self.validate()
+
+    def test_owner_protection_rights_and_inheritance_drift_block(self):
+        for index in range(4):
+            mutations = [('protected', not self.report['acl'][index]['protected'])]
+            for field, value in mutations:
+                r = copy.deepcopy(self.report); r['acl'][index][field] = value
+                with self.assertRaises(ValueError): self.validate(r)
+            for field, value in [('type', 'Deny'), ('rights', 'Read'), ('inherited', index == 0),
+                                 ('inheritance', 'ObjectInherit'), ('propagation', 'InheritOnly')]:
+                r = copy.deepcopy(self.report); r['acl'][index]['rules'][0][field] = value
+                with self.assertRaises(ValueError): self.validate(r)
+            r = copy.deepcopy(self.report); r['acl'][index]['rules'].pop()
+            with self.assertRaises(ValueError): self.validate(r)
 
     def test_wrong_run_provenance_and_traversal_block(self):
         with patch.dict(os.environ, GITHUB_RUN_ID='another-run'):

@@ -5,7 +5,7 @@ $p = $env:ER_SETUP_PRIVATE_PATH
 $operation = 'identity'
 $result = @{status='FAIL'; operation=$operation; snapshots=@{}}
 function Snapshot($path) {
-    $acl = Get-Acl -LiteralPath $path
+    $acl = [IO.Directory]::GetAccessControl($path, [Security.AccessControl.AccessControlSections]'Access,Owner,Group')
     return @{owner=$acl.GetOwner([Security.Principal.SecurityIdentifier]).Value;
         group=$acl.GetGroup([Security.Principal.SecurityIdentifier]).Value;
         protected=$acl.AreAccessRulesProtected; sddl=$acl.Sddl;
@@ -25,7 +25,7 @@ try {
     # Start with the existing descriptor: preserve group, and avoid submitting
     # an uninitialized owner/group through the PowerShell security provider.
     $operation = 'prepare-dacl'
-    $a = Get-Acl -LiteralPath $p
+    $a = [IO.Directory]::GetAccessControl($p, [Security.AccessControl.AccessControlSections]'Access,Owner,Group')
     $a.SetAccessRuleProtection($true,$false)
     foreach($rule in @($a.GetAccessRules($true,$false,[Security.Principal.SecurityIdentifier]))) {
         [void]$a.RemoveAccessRuleSpecific($rule)
