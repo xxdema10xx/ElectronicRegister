@@ -1,0 +1,217 @@
+{
+  "run": 41547078989,
+  "analyzedCommit": "f5b2acb08186a22e32bf13dc6e728f1640507af7",
+  "localRestart": "PASS",
+  "python": {
+    "tests": 104,
+    "status": "PASS",
+    "logSha256": "8c63be9fd8c9f25db0d1b3a9a0f35b85aabe63c9f416d72ec01ee07209d107f2"
+  },
+  "unit": {
+    "total": "598",
+    "executed": "598",
+    "passed": "598",
+    "failed": "0",
+    "error": "0",
+    "timeout": "0",
+    "aborted": "0",
+    "inconclusive": "0",
+    "passedButRunAborted": "0",
+    "notRunnable": "0",
+    "notExecuted": "0",
+    "disconnected": "0",
+    "warning": "0",
+    "completed": "0",
+    "inProgress": "0",
+    "pending": "0"
+  },
+  "sources": {
+    "tools/mysql84_release.py": "34d7214e70835ff3ac7b7ef075dc1c4e40c2b080b7a3cf6083dbcf6550c76870",
+    "tools/mysql84_runtime.py": "9d683281f24bac32c4a65490360ea10dd801ecafddca535f3242ffa555b7f27e",
+    "tools/mysql84_recovery.py": "78efd02b65aeaceff011e6246df82d4041d4adc33901850f6a681101b4d69d54",
+    "tools/test_mysql84_restart.py": "8ee21638adc93f0beab46c938bcc0e5087440abe826e44ccab091b234d479758",
+    "tools/test_mysql84_release.py": "4627f233338d112531f4c46741e2cbc2f1898311fb23fa4aba7263d3a80c5c94",
+    ".github/workflows/mysql84-remediation-candidate.yml": "ee2224f055f0101fef9f739ccbaef45a8ee9716bc933b1cf7107a729118146cd",
+    "migrations/mysql84-remediation/manifest.json": "c11269aef091e3a5010e396778c5ddc57856ec3d2b1beef575194e71347abe94"
+  },
+  "evidence": [
+    {
+      "source": ".diagnostics/run8-local/targeted-restart-result.json",
+      "artifact": "targeted-restart-result.json",
+      "sha256": "5c1e55e76800347532525e60981e14963e1196adcfda2cc8e74c59765331018f"
+    },
+    {
+      "source": ".diagnostics/run8-local/refused-tcp-restart-result.json",
+      "artifact": "refused-tcp-restart-result.json",
+      "sha256": "3792c12d58c32d2ae0fc18391a3b9deaebdc68e94624258db40f110802b8c6b1"
+    },
+    {
+      "source": ".diagnostics/run8-local/rejected-uuid-result.json",
+      "artifact": "rejected-uuid-result.json",
+      "sha256": "e85c9d7746e34d478dca743ae108c925112e860029e3efaab59f24bed1c395ba"
+    },
+    {
+      "source": ".diagnostics/run8-local/immutable-predecessor.json",
+      "artifact": "immutable-predecessor.json",
+      "sha256": "7199966784c48fd199609030d73164767d57ac1f8ae9a122d92405d4a7698e1e"
+    },
+    {
+      "source": ".diagnostics/run8-local/node-release.log",
+      "artifact": "node-release.log",
+      "sha256": "75e5525d26c6bd7f1fd4cef6b476ed22f22c924c929551f667c0a76baf3bf058"
+    },
+    {
+      "source": ".diagnostics/run8-local/node-remediation.log",
+      "artifact": "node-remediation.log",
+      "sha256": "112884c1d090f60d1ff95489968714ee7dabcc1e45407366ef7112df10720c34"
+    },
+    {
+      "source": ".diagnostics/run8-local/node-hashes.log",
+      "artifact": "node-hashes.log",
+      "sha256": "cd03c4ad5f69c7bb3d86a76daf1eb717a2507cd931b66b52df2c64145413465a"
+    },
+    {
+      "source": ".diagnostics/run8-local/node-adapter.log",
+      "artifact": "node-adapter.log",
+      "sha256": "1c8aebfda61f1b2e9c60fce1dd3f87218baf7aeed6fc42fc02d9888fd764c10a"
+    },
+    {
+      "source": ".diagnostics/run8-local/manifest.log",
+      "artifact": "manifest.log",
+      "sha256": "b0c5786e467475dbd19dcce55d698fbd560fe5a76abc9405523e105b3b52cf66"
+    },
+    {
+      "source": ".diagnostics/run8-local/final-attempt-1046-phases.json",
+      "artifact": "final-attempt-1046-phases.json",
+      "sha256": "64e2228775626aeb818760a914756a21e7b2b6ae5f4299793952861410e49b8f"
+    },
+    {
+      "source": ".diagnostics/run8-local/containers.json",
+      "artifact": "containers.json",
+      "sha256": "7835e2c996af6e65827e16c4b9f0b53a4a370948a19c1083441d70b1cd8fe20a"
+    },
+    {
+      "source": ".diagnostics/run8-local/containers-before-final.json",
+      "artifact": "containers-before-final.json",
+      "sha256": "e3f2c70a3610ede53fcb352326bd732bc38ac644a60f3c3d21ef3eece241eca4"
+    },
+    {
+      "source": ".diagnostics/run8-local/final-server.log",
+      "artifact": "final-server.log",
+      "sha256": "62a3b6a4c4b2887edd24d42b7a453b8a267501aa3d186b615a3dbef5cdd77249"
+    },
+    {
+      "source": ".diagnostics/run8-local/resume_verified.py",
+      "artifact": "resume_verified.py",
+      "sha256": "461fc83ae011d718e8500b051665d27ae82a3aed6e965d55d9672a9e7608e8dc"
+    },
+    {
+      "source": ".diagnostics/run8-local/final-identity.json",
+      "artifact": "final-identity.json",
+      "sha256": "f24eade77cd270c632dc850ddf9be05ec5710c8787a869f17e30f9fc7074ac6e"
+    },
+    {
+      "source": ".diagnostics/run8-local/final_identity.py",
+      "artifact": "final_identity.py",
+      "sha256": "d9b5039c04ccf3ea92fb5dfc3ede1c0314b849280479d97a8a9ce9c75ca26bb9"
+    },
+    {
+      "source": ".diagnostics/run8-local/unit/run8-unit.trx",
+      "artifact": "unit.trx",
+      "sha256": "a5eb549389b78c3b5d839ef76f122a68f9dd7f9af4b37f51d0fa7032d1e64c5c"
+    },
+    {
+      "source": ".diagnostics/run8-local/python-final.log",
+      "artifact": "python-final.log",
+      "sha256": "8c63be9fd8c9f25db0d1b3a9a0f35b85aabe63c9f416d72ec01ee07209d107f2"
+    },
+    {
+      "source": ".diagnostics/run8-local/upgrade-verified/restart-result.json",
+      "artifact": "restart-result.json",
+      "sha256": "a05bced330edff00e6f8bf490253630a489a72885591c533272e9ef304d3ae32"
+    },
+    {
+      "source": ".diagnostics/run8-local/upgrade-verified/recovery-result.json",
+      "artifact": "recovery-result.json",
+      "sha256": "def13a8d3c12fcdbcd9cab856b5ff9f7e9d0b718524f3401bfc14b998924eabf"
+    },
+    {
+      "source": ".diagnostics/run8-local/upgrade-verified/upgrade-journal.json",
+      "artifact": "upgrade-journal.json",
+      "sha256": "56fd82b21df75323cc0d0afb04b806fcde0823a971d4d449cbf4a0cd202ecd59"
+    },
+    {
+      "source": ".diagnostics/run8-local/upgrade-verified/runtime-phases.json",
+      "artifact": "runtime-monolithic-phases.json",
+      "sha256": "e87d940e4bf620813b8b324e0af85db90c6b59d4d5868feea24aec46916c427a"
+    },
+    {
+      "source": ".diagnostics/run8-local/recovery-verified/runtime-phases.json",
+      "artifact": "recovery-runtime-phases.json",
+      "sha256": "8a00cddf5ba7a75963f69a8b34eec1e31525ce4b68a3ffe6cd2af38d4dc3dcce"
+    },
+    {
+      "source": ".diagnostics/run8-local/recovery-verified/fresh-journal.json",
+      "artifact": "recovery-fresh-journal.json",
+      "sha256": "ab005e8955679f7633315f659f456d749219a63aea86df0360cdf774ca595f5a"
+    },
+    {
+      "source": ".diagnostics/run8-local/recovery-verified/api-barrier-result.json",
+      "artifact": "recovery-api-barrier-result.json",
+      "sha256": "0f0f939e25ebe28f6531c5e0398b9ae4a3e0dfcbfd93523b7ed751543bfa9f07"
+    },
+    {
+      "source": ".diagnostics/run8-local/recovery-verified/runtime-result.json",
+      "artifact": "upgrade-summary.json",
+      "sourceSha256": "5aaab53c69a4e417feff28baae1bc93d76016b79973c81e231a1ae4632783682",
+      "sha256": "5e45bf43e75897454db02e052e5fa005340732089195d81c849abc49da2d9e79"
+    },
+    {
+      "source": ".diagnostics/run8-local/recovery-verified/fresh-result.json",
+      "artifact": "fresh-summary.json",
+      "sourceSha256": "7f0c251da32678af0ca2498bd5d97758dc68af5dcd37bbfd62a0e9a1f3c613fd",
+      "sha256": "2ddf6fc348bfbb540fcc36434cb016cf7a12a11a3669c03e08f24fc8ec64955c"
+    },
+    {
+      "source": ".diagnostics/run8-source/mysql84-corrective-release-evidence-upgrade/_temp/er84-evidence/runtime-phases.json",
+      "artifact": "run8-original-phases.json",
+      "sha256": "d880e530d76ac56cce5763b0330387eda9b7d90c4d5a0af91c5fc2881890a993"
+    }
+  ],
+  "originalTcpError": "NOT RECORDED by original code; cannot reconstruct errno/SQLSTATE or selected administrative account",
+  "historicalFailureNotExactlyReproduced": "Local root@% TCP is accepted with offline_mode ON; refused TCP case uses a real unprivileged account",
+  "pendingGitHub": [
+    "actionlint on updated workflow",
+    "upgrade service TCP identity/error diagnostics and authorized socket recovery",
+    "release fresh",
+    "embedded C# MySqlConnector and HTTP release test",
+    "dependent integration matrix",
+    "final-gate"
+  ],
+  "runtimePhases": [
+    {
+      "id": "persistent-state-and-authorized-channel",
+      "status": "PASS",
+      "elapsedSeconds": 3.438
+    },
+    {
+      "id": "remaining-ddl-recovery",
+      "status": "PASS",
+      "elapsedSeconds": 1495.812
+    },
+    {
+      "id": "post-completion-acceptance",
+      "status": "PASS",
+      "elapsedSeconds": 235.469
+    },
+    {
+      "id": "fresh-install-after-recovery",
+      "status": "PASS",
+      "elapsedSeconds": 355.703
+    }
+  ],
+  "upgradeAndFresh": "PASS_WITH_EXPLICIT_RECOVERY",
+  "monolithicRuntime": "FAIL: read-only Docker observer timed out after 10 seconds; original outcome preserved",
+  "journalDone": true,
+  "protectedMetadataBetweenSnapshots": "PASS"
+}

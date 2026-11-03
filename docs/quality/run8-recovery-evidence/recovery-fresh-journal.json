@@ -1,0 +1,47 @@
+{
+  "format": 1,
+  "operation": "install",
+  "phase": "done",
+  "database": "electronic_register_test",
+  "serverUuid": "ccb5af5b-d772-11f1-a92e-62d36692ed32",
+  "manifest": "D9CF71DDA922EBE361FDC6C2CF38B139FF735EC15E83C4CF6F62218E072F4628",
+  "bundle": "A6B15501B519715AC4A651D4D00A5856AD0E44DE6651EBAA86A513BC23EAC017",
+  "files": {
+    "00-principals.sql": {
+      "hash": "5A0C4B432AB70E3610634BD2A797DABDF717A2EA46A4CD7F46018B60BBE6CEE1",
+      "phase": "done"
+    },
+    "01-001_schema.sql": {
+      "hash": "B0D34F99EB5F4A17B2758C5CBE9A44CAA4EF3126F18F95C1E483B390D06A0C9F",
+      "phase": "done"
+    },
+    "02-001_identity_account.sql": {
+      "hash": "F36EB92037F6CDEDADA2D2C26DB498BA0D0DC2CF3E204DF7CB59FF8AA0763BC7",
+      "phase": "done"
+    },
+    "03-002_profile_acquisition.sql": {
+      "hash": "C392F0E80857E9F1FBA2144AEC89E56854388BF18D83C118516D197D1D25C37E",
+      "phase": "done"
+    },
+    "04-003_password_attempt.sql": {
+      "hash": "620AFA5EAB9F4B505C5655FF4737E42EB0FF5C53EAAE1B59C5A5A3356ACDBE16",
+      "phase": "done"
+    },
+    "05-004_release_schema.sql": {
+      "hash": "0A493E739DB45691B215A3A2E8B1C4C17496FBBEB01359A8CFCBE2091F7B7416",
+      "phase": "done"
+    },
+    "06-005_release_gate.sql": {
+      "hash": "6A8CA520CF78F368697C697ECB945B1DAEEFFDFA4A28BAE46655FA6DBF6AD053",
+      "phase": "done"
+    },
+    "98-new-release.sql": {
+      "hash": "06CC5E433603EAC9D2CCC38BF73FCA7610DDD3CF766CEB160BBC93657A0BD808",
+      "phase": "done"
+    },
+    "99-routine-grants.sql": {
+      "hash": "6A3444C1DF145E31E20A33AE6C82A2FF19F1BEFB0D4AF5F394E51A7E5E7B6723",
+      "phase": "done"
+    }
+  }
+}

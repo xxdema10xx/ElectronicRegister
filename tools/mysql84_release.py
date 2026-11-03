@@ -64,7 +64,7 @@ class Mysql:
         local = config.get('isolatedLocal') is True
         if local:
             from mysql84_local import attest
-            attest(config)
+            attest(config, check_port=not config.get('recoverySocket'))
         socket_mode = config.get('transport') == 'socket'
         if isolated:
             require(os.environ.get('GITHUB_ACTIONS') == 'true' and config['host'] == '127.0.0.1'

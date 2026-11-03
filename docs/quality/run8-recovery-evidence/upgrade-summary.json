@@ -1,0 +1,114 @@
+{
+  "upgrade": true,
+  "explicitRecoveryAfterObserverTimeout": true,
+  "interruptedDropRecovered": true,
+  "lostCreateAckRecovered": true,
+  "dataPreserved": true,
+  "idempotent": true,
+  "persistedMaintenanceAcrossServerRestart": true,
+  "barrierRemoved": true,
+  "acceptance": {
+    "triggerDml": [
+      "mt5c_invitation_insert",
+      "mt5c_event_insert",
+      "mt5c_nonce_insert",
+      "import_batch_insert",
+      "import_event_insert",
+      "fpe_insert",
+      "mt5c_invitation_update",
+      "mt5d_event_insert",
+      "mt5d_event_insert",
+      "mt5d_event_insert",
+      "email_event_insert",
+      "import_event_insert:Confirmed:Student",
+      "import_batch_insert:Teacher",
+      "import_event_insert:Confirmed:Teacher",
+      "institution_calendar_event_bi",
+      "profile_acquisition_insert",
+      "institution_calendar_import_bi",
+      "mt4c_course_event_insert",
+      "transfer_event_insert",
+      "mt5c_invitation_update:pending-hash",
+      "mt5c_invitation_delete",
+      "mt5d_event_delete",
+      "mt5c_event_delete",
+      "mt5c_nonce_delete",
+      "mt5c_provisioning_delete",
+      "mt5gov_recovery_delete",
+      "mt5gov_approval_delete",
+      "mt5b_security_delete",
+      "mt5b_membership_delete_contract"
+    ],
+    "deleteGuards": "Production 8.4 rejects fixture cleanup",
+    "ids": {
+      "tenant": "796fe0a8-acf5-417e-b74c-c3bbdde99671",
+      "other": "640ba962-aae0-495e-a619-bf1542b94f85",
+      "user": "2da8a1c5-10f8-4216-ba3d-1a485cd090fb",
+      "targetUser": "da6b77f3-3775-4813-8a7a-dab9fbd68289",
+      "member": "def1b6d6-482f-4ada-b247-7f7ca2142ea9",
+      "target": "2a05458b-21c3-476c-ac48-67232e6059e2",
+      "invite": "46caee6d-7638-4caf-81ba-1939638a1eac",
+      "event": "2b0e7094-5afd-402b-8404-170838ae5d1d",
+      "batch": "6e69c8cd-761f-4d90-aadc-0db06cfe2750",
+      "plan": "3c93e608-7f2a-497c-8a3b-43edcd38f154",
+      "path": "424b0cba-f42c-4f01-9d30-b74cd0834efd",
+      "recovery": "eab8bb2d-8bbf-4795-b0a1-6a345b934e51",
+      "recoveryEvent": "99e14256-b9c4-4e38-a75b-79f28888568b",
+      "approvalEvent": "c9fb6b46-37f2-4e91-851b-ba0b5a2ff015",
+      "student": "71ec05d9-24f3-4ebb-883b-0a958365cb2c",
+      "teacher": "15aaf1ae-f244-4b69-8af5-073bd3341a07"
+    },
+    "cases": 1386,
+    "failures": [],
+    "phases": [
+      {
+        "phase": "core",
+        "status": "PASS"
+      },
+      {
+        "phase": "email",
+        "status": "PASS"
+      },
+      {
+        "phase": "imports",
+        "status": "PASS"
+      },
+      {
+        "phase": "governance",
+        "status": "PASS"
+      },
+      {
+        "phase": "calendar",
+        "status": "PASS"
+      },
+      {
+        "phase": "profile-hash",
+        "status": "PASS"
+      },
+      {
+        "phase": "calendar-import-hash",
+        "status": "PASS"
+      },
+      {
+        "phase": "school-hashes",
+        "status": "PASS"
+      },
+      {
+        "phase": "hash-updates",
+        "status": "PASS"
+      },
+      {
+        "phase": "pending-hash-updates",
+        "status": "PASS"
+      },
+      {
+        "phase": "retention",
+        "status": "PASS"
+      },
+      {
+        "phase": "audit",
+        "status": "PASS"
+      }
+    ]
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "problems": [
+    {
+      "id": "identity-and-legacy-bootstrap",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "identity-and-legacy-bootstrap",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 7.014
+    },
+    {
+      "id": "seed-and-predecessor",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "seed-and-predecessor",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 0.103
+    },
+    {
+      "id": "snapshot",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "snapshot",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 0.728
+    },
+    {
+      "id": "drift-rejection",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "drift-rejection",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 0.443
+    },
+    {
+      "id": "ddl-recovery",
+      "category": "runtime-phase",
+      "file": "/home/runner/work/ElectronicRegister/ElectronicRegister/tools/mysql84_release.py",
+      "line": 28,
+      "test": "ddl-recovery",
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/ElectronicRegister/ElectronicRegister/tools/runtime_diagnostic.py\", line 31, in phase\n    yield\n  File \"/home/runner/work/ElectronicRegister/ElectronicRegister/tools/mysql84_runtime.py\", line 432, in run\n    require(time.monotonic() < deadline,'Service did not return after controlled restart')\n  File \"/home/runner/work/ElectronicRegister/ElectronicRegister/tools/mysql84_release.py\", line 28, in require\n    raise RuntimeError(message)\nRuntimeError: Service did not return after controlled restart\n",
+      "cause": "Runtime phase failed; subsequent phases share its database state",
+      "priority": "P1",
+      "status": "FAIL",
+      "dependents": [
+        "trigger-routine-acceptance",
+        "fresh-install-after-upgrade"
+      ],
+      "required": true,
+      "elapsedSeconds": 62.296
+    },
+    {
+      "id": "trigger-routine-acceptance",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "trigger-routine-acceptance",
+      "error": "Blocked by: ddl-recovery",
+      "cause": "Prerequisite failed; contaminated state is not reused",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "dependents": [],
+      "required": true
+    },
+    {
+      "id": "fresh-install-after-upgrade",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "fresh-install-after-upgrade",
+      "error": "Blocked by: ddl-recovery",
+      "cause": "Prerequisite failed; contaminated state is not reused",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "dependents": [],
+      "required": true
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+[
+  {
+    "container": "3ccbb050937e59810333fdd89fa946d1573d1b7d0b384efd0411cdde4661d4f2",
+    "beforeBinding": {
+      "container": "3ccbb050937e59810333fdd89fa946d1573d1b7d0b384efd0411cdde4661d4f2",
+      "image": "sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+      "hostname": "3ccbb050937e",
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "er84-run10-20261103-data",
+          "Source": "/var/lib/docker/volumes/er84-run10-20261103-data/_data",
+          "Destination": "/var/lib/mysql",
+          "RW": true
+        }
+      ],
+      "ports": {
+        "3306/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": ""
+          }
+        ]
+      },
+      "publishedPorts": {
+        "3306/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "60704"
+          }
+        ]
+      }
+    },
+    "afterBinding": {
+      "container": "3ccbb050937e59810333fdd89fa946d1573d1b7d0b384efd0411cdde4661d4f2",
+      "image": "sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+      "hostname": "3ccbb050937e",
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "er84-run10-20261103-data",
+          "Source": "/var/lib/docker/volumes/er84-run10-20261103-data/_data",
+          "Destination": "/var/lib/mysql",
+          "RW": true
+        }
+      ],
+      "ports": {
+        "3306/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": ""
+          }
+        ]
+      },
+      "publishedPorts": {
+        "3306/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "60704"
+          }
+        ]
+      }
+    },
+    "tcpReachable": true,
+    "socket": {
+      "returncode": 0,
+      "stdout": "8.4.13\t07381d54-d792-11f1-9a89-a291036c5940\t3ccbb050937e\t3306\t/var/lib/mysql/\t1\troot@localhost\troot@localhost\n",
+      "stderr": "mysql: [Warning] Using a password on the command line interface can be insecure.\n",
+      "mysqlErrno": null,
+      "sqlstate": null
+    }
+  }
+]

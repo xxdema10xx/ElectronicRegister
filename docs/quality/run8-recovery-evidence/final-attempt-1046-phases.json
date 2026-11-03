@@ -1,0 +1,103 @@
+{
+  "problems": [
+    {
+      "id": "identity-and-legacy-bootstrap",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "identity-and-legacy-bootstrap",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 49.375
+    },
+    {
+      "id": "seed-and-predecessor",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "seed-and-predecessor",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 0.579
+    },
+    {
+      "id": "snapshot",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "snapshot",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 4.968
+    },
+    {
+      "id": "drift-rejection",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "drift-rejection",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 3.891
+    },
+    {
+      "id": "ddl-recovery",
+      "category": "runtime-phase",
+      "file": "C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py",
+      "line": 180,
+      "test": "ddl-recovery",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\runtime_diagnostic.py\", line 31, in phase\n    yield\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_runtime.py\", line 466, in run\n    require(fingerprint(db, load_contract()) == before, 'Existing data lost')\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py\", line 405, in fingerprint\n    rows = db.execute('SELECT JSON_ARRAY(' + fields + ') FROM `' + table + '`' + where)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py\", line 116, in execute\n    return self._execute(sql, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py\", line 212, in _execute\n    failure('SQL error')\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py\", line 180, in failure\n    raise RuntimeError('MySQL '+reason+'; no automatic retry; keep maintenance enabled and reconcile journal; diagnostic='+json.dumps(diagnostic))\nRuntimeError: MySQL SQL error; no automatic retry; keep maintenance enabled and reconcile journal; diagnostic={\"kind\": \"SQL error\", \"pid\": 25620, \"returnCode\": null, \"elapsedSeconds\": 0.0, \"timeoutSeconds\": 120, \"statementHash\": \"BC213331FC6CCC068F6A1831EF093CAA35C23B0AEBA8C38057A1FB2B67CA48C2\", \"statementVerb\": \"SELECT\", \"delimiterLength\": 13, \"stdinFlushed\": true, \"stdoutRows\": 0, \"eof\": [], \"stderr\": [\"ERROR 1046 (3D000) at line 17: No database selected\"], \"confirmation\": \"UNCONFIRMED; DDL may have committed; explicit reconciliation required\", \"mysqlErrno\": 1046, \"sqlstate\": \"3D000\", \"processlist\": \"12867\\tQuery\\t0\\texecuting\\n5\\tDaemon\\t1311\\tWaiting on empty queue\\n\", \"observerExitCode\": 0}\n",
+      "cause": "Runtime phase failed; subsequent phases share its database state",
+      "priority": "P1",
+      "status": "FAIL",
+      "dependents": [
+        "trigger-routine-acceptance",
+        "fresh-install-after-upgrade"
+      ],
+      "required": true,
+      "elapsedSeconds": 1346.5
+    },
+    {
+      "id": "trigger-routine-acceptance",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "trigger-routine-acceptance",
+      "error": "Blocked by: ddl-recovery",
+      "cause": "Prerequisite failed; contaminated state is not reused",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "dependents": [],
+      "required": true
+    },
+    {
+      "id": "fresh-install-after-upgrade",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "fresh-install-after-upgrade",
+      "error": "Blocked by: ddl-recovery",
+      "cause": "Prerequisite failed; contaminated state is not reused",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "dependents": [],
+      "required": true
+    }
+  ]
+}

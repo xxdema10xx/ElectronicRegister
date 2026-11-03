@@ -428,8 +428,14 @@ def run(config_path, output):
                     else:
                         subprocess.run(['docker','restart',container],check=True)
                     config = resume_channel(config, db.tcp_args, output/'restart-result.json')
+                    published_config = json.loads(Path(config_path).read_text(encoding='utf-8-sig'))
+                    published_config['port'] = config['port']
+                    Path(config_path).write_text(json.dumps(published_config))
+                    db = Mysql(config)
+                    probes.db, probes.config = db, config
                     blocked = probes.api('SELECT 1')
-                    require(blocked.returncode != 0 and 'ERROR 3032 ' in blocked.stderr, 'Persisted maintenance barrier lost on server restart')
+                    require(blocked.returncode != 0 and 'ERROR 3032 (HY000)' in blocked.stderr, 'Persisted maintenance barrier lost on server restart')
+                    db.close()
                 db = Mysql(config)
                 identity(db, config)
                 probes.db = db

@@ -1,0 +1,72 @@
+{
+  "status": "PASS",
+  "revision": "8e7d9ecd42c001f1fa9b30e120535ce1bb0ef6e8",
+  "files": [
+    {
+      "path": "migrations/bootstrap/001_schema.sql",
+      "historicalSha256": "b7bdbeb33c1abff165db72c84ddca852e851dab3634a04e19f1b7f579d994402",
+      "currentSha256": "b7bdbeb33c1abff165db72c84ddca852e851dab3634a04e19f1b7f579d994402",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/bootstrap/README.md",
+      "historicalSha256": "25b294f94f218c0cad98055dc91542ab7d21c9996979c72edb8a4a73a999dbac",
+      "currentSha256": "25b294f94f218c0cad98055dc91542ab7d21c9996979c72edb8a4a73a999dbac",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/bootstrap/manifest.json",
+      "historicalSha256": "cb1097278cc0a67ce386cbf2d87fbd2ba4b5ef1319c9a2a38373499719609e23",
+      "currentSha256": "cb1097278cc0a67ce386cbf2d87fbd2ba4b5ef1319c9a2a38373499719609e23",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/bootstrap/schema-contract.json",
+      "historicalSha256": "75f7b58fa460942ee58f806fc7f928147b2dfeb4fb5a8ff01dfece0c48a83028",
+      "currentSha256": "75f7b58fa460942ee58f806fc7f928147b2dfeb4fb5a8ff01dfece0c48a83028",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/identity-account/001_identity_account.sql",
+      "historicalSha256": "bb9df7cc82ee4ab297e27c78e31d650b02a3b9b4e6fe7e35886ddd2ee83be083",
+      "currentSha256": "bb9df7cc82ee4ab297e27c78e31d650b02a3b9b4e6fe7e35886ddd2ee83be083",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/identity-account/002_profile_acquisition.sql",
+      "historicalSha256": "46705f845110ee706763a14299e64843ba234d94eb02d1c27ba746b8a85f910f",
+      "currentSha256": "46705f845110ee706763a14299e64843ba234d94eb02d1c27ba746b8a85f910f",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/identity-account/003_password_attempt.sql",
+      "historicalSha256": "aa7aeaed856924b4667f3b47d0b24284690fa4a629721895bd372d92b3c4a40d",
+      "currentSha256": "aa7aeaed856924b4667f3b47d0b24284690fa4a629721895bd372d92b3c4a40d",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/identity-account/004_release_schema.sql",
+      "historicalSha256": "968c4b3ff7716ee669bba5b793d8de37689296a8ce7a61c77a6cb41963074307",
+      "currentSha256": "968c4b3ff7716ee669bba5b793d8de37689296a8ce7a61c77a6cb41963074307",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/identity-account/005_release_gate.sql",
+      "historicalSha256": "9a92fc0222a3789ba555dbdf1cda3bd9f8a61b52089c29a72bdf84cdb357c590",
+      "currentSha256": "9a92fc0222a3789ba555dbdf1cda3bd9f8a61b52089c29a72bdf84cdb357c590",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/release/additive-contract.json",
+      "historicalSha256": "f3a42ece4a362087534fafe4ebb72ad7a2468e0e0bf97d73986307d6db922048",
+      "currentSha256": "f3a42ece4a362087534fafe4ebb72ad7a2468e0e0bf97d73986307d6db922048",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/release/manifest.json",
+      "historicalSha256": "0d3e6a04cb1442fc728480e6f806da94b50dc00e972c91271e4bfd3477fe5596",
+      "currentSha256": "0d3e6a04cb1442fc728480e6f806da94b50dc00e972c91271e4bfd3477fe5596",
+      "unchanged": true
+    }
+  ]
+}

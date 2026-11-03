@@ -20,7 +20,7 @@ def container_binding(config):
     require(re.fullmatch(r'[a-f0-9]{64}', cid), 'Recovery container identity rejected')
     if config.get('isolatedLocal'):
         from mysql84_local import attest
-        attest(config)
+        attest(config, check_port=False)
     observed = json.loads(subprocess.check_output(['docker', 'inspect', cid], text=True, timeout=10))[0]
     require(observed['Id'] == cid and observed['State']['Running'], 'Recovery container identity/state mismatch')
     require(observed['Config']['Image'] == json.loads((ROOT/'infra/staging/mysql-image.json').read_text())['image'],
@@ -30,11 +30,32 @@ def container_binding(config):
             'Recovery requires an attested data volume')
     return dict(container=cid, image=observed['Image'], hostname=observed['Config']['Hostname'],
                 mounts=[{k: m.get(k) for k in ('Type', 'Name', 'Source', 'Destination', 'RW')} for m in mounts],
-                ports=observed['HostConfig']['PortBindings'])
+                ports=observed['HostConfig']['PortBindings'],
+                publishedPorts=observed['NetworkSettings']['Ports'])
 
 
 def check_binding(config):
-    require(container_binding(config) == config['recoveryBinding'], 'Recovery container/volume binding changed')
+    observed = container_binding(config)
+    require({k:v for k,v in observed.items() if k != 'publishedPorts'} ==
+            {k:v for k,v in config['recoveryBinding'].items() if k != 'publishedPorts'},
+            'Recovery container/volume binding changed')
+    return observed
+
+
+def published_port(binding):
+    """Only IPv4 loopback on the attested container, never a supplied address."""
+    entries = binding['publishedPorts'].get('3306/tcp') or []
+    require(entries and all(e['HostIp'] in ('127.0.0.1', '0.0.0.0', '::') for e in entries),
+            'Recovery published address rejected')
+    ipv4 = [e for e in entries if e['HostIp'] in ('127.0.0.1', '0.0.0.0')]
+    ports = {int(e['HostPort']) for e in entries}
+    require(ipv4 and len(ports) == 1, 'Recovery ambiguous published port')
+    port = ports.pop()
+    require(1024 <= port <= 65535 and port not in (3306, 3307, 13306), 'Recovery published port rejected')
+    requested = binding['ports'].get('3306/tcp') or []
+    require(requested and all(e['HostIp'] in ('', '127.0.0.1', '0.0.0.0', '::') and
+            e['HostPort'] in ('', '0', str(port)) for e in requested), 'Recovery requested port mismatch')
+    return port
 
 
 def socket_args(config):
@@ -63,8 +84,8 @@ def resume_channel(config, tcp_args, evidence):
     deadline = time.monotonic() + 60
     query = 'SELECT VERSION(),@@server_uuid,@@hostname,@@port,@@datadir,@@global.offline_mode,USER(),CURRENT_USER();\n'
     while True:
-        check_binding(config)
-        record = dict(container=config['mysqlContainer'])
+        binding = check_binding(config)
+        record = dict(container=config['mysqlContainer'], beforeBinding=config['recoveryBinding'], afterBinding=binding)
         try:
             with socket.create_connection((config['host'], config['port']), timeout=3):
                 record['tcpReachable'] = True
@@ -87,7 +108,10 @@ def resume_channel(config, tcp_args, evidence):
     tcp = subprocess.run(tcp_args, input=query, text=True, capture_output=True, timeout=10)
     record['administrativeTcp'] = result_record(tcp)
     save()
-    recovered = dict(config, recoverySocket=True)
+    # The SQL identity above precedes adopting ANY new TCP destination. Docker
+    # supplies only a port; the destination host remains literal loopback.
+    require(check_binding(config) == binding, 'Recovery published mapping changed during attestation')
+    recovered = dict(config, recoverySocket=True, port=published_port(binding), recoveryBinding=binding)
     db = Mysql(recovered)
     try:
         identity(db, recovered)
@@ -99,6 +123,7 @@ def resume_channel(config, tcp_args, evidence):
         require(any(re.search(r'\bSYSTEM_USER\b', line.split(' ON ')[0]) and ' ON *.*' in line for line in record['grants']),
                 'Recovery root requires SYSTEM_USER')
         record['status'] = 'PASS'
+        record['attestedTcpTarget'] = dict(host=recovered['host'], port=recovered['port'])
         save()
     finally:
         db.close()

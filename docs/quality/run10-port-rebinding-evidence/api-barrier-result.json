@@ -1,0 +1,7 @@
+{
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "mysql: [Warning] Using a password on the command line interface can be insecure.\nERROR 3032 (HY000): The server is currently in offline mode\n",
+  "mysqlErrno": 3032,
+  "sqlstate": "HY000"
+}

@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "before": {
+    "Id": "2299602d4bce333ef0fb626e9b1fb22758ae15ed62edb637357c7ebd4d8bc1b2",
+    "Name": "/mysql84-local",
+    "Image": "sha256:a0225d1ea6631c8bc2385dc4c2faba17bbf1834ecf369e1659a9a382bd8d5dd7",
+    "ConfigImage": "mysql:8.4.13",
+    "StartedAt": "2026-11-03T10:21:03.108229749Z",
+    "FinishedAt": "2026-11-03T10:21:02.309023377Z",
+    "Running": true,
+    "Status": "running",
+    "RestartCount": 0,
+    "Mounts": [
+      {
+        "Type": "volume",
+        "Name": "mysql84_data",
+        "Source": "/var/lib/docker/volumes/mysql84_data/_data",
+        "Destination": "/var/lib/mysql",
+        "Driver": "local",
+        "Mode": "z",
+        "RW": true,
+        "Propagation": ""
+      }
+    ],
+    "Ports": {
+      "3306/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "3307"
+        }
+      ]
+    },
+    "PortBindings": {
+      "3306/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "3307"
+        }
+      ]
+    }
+  },
+  "after": {
+    "Id": "2299602d4bce333ef0fb626e9b1fb22758ae15ed62edb637357c7ebd4d8bc1b2",
+    "Name": "/mysql84-local",
+    "Image": "sha256:a0225d1ea6631c8bc2385dc4c2faba17bbf1834ecf369e1659a9a382bd8d5dd7",
+    "ConfigImage": "mysql:8.4.13",
+    "StartedAt": "2026-11-03T10:21:03.108229749Z",
+    "FinishedAt": "2026-11-03T10:21:02.309023377Z",
+    "Running": true,
+    "Status": "running",
+    "RestartCount": 0,
+    "Mounts": [
+      {
+        "Type": "volume",
+        "Name": "mysql84_data",
+        "Source": "/var/lib/docker/volumes/mysql84_data/_data",
+        "Destination": "/var/lib/mysql",
+        "Driver": "local",
+        "Mode": "z",
+        "RW": true,
+        "Propagation": ""
+      }
+    ],
+    "Ports": {
+      "3306/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "3307"
+        }
+      ]
+    },
+    "PortBindings": {
+      "3306/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "3307"
+        }
+      ]
+    }
+  }
+}

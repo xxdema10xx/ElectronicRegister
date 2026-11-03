@@ -13,7 +13,7 @@ import time
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def attest(config):
+def attest(config, check_port=True):
     from mysql84_release import require
     require(config.get('isolatedLocal') is True and not config.get('isolatedCI'), 'Distinct local mode required')
     require(os.environ.get('GITHUB_ACTIONS') != 'true', 'Local runner refuses GitHub impersonation')
@@ -31,7 +31,8 @@ def attest(config):
     mounts = target['Mounts']
     require(len(mounts) == 1 and mounts[0]['Type'] == 'volume' and mounts[0]['Name'] == config['volumeName'] and mounts[0]['Destination'] == '/var/lib/mysql', 'Dedicated volume required')
     require(all(mounts[0]['Source'] != m['Source'] and mounts[0]['Name'] != m.get('Name') for m in protected['Mounts']), 'Shared data mount refused')
-    require(target['NetworkSettings']['Ports']['3306/tcp'] == [{'HostIp':'127.0.0.1','HostPort':str(config['port'])}], 'Port binding mismatch')
+    if check_port:
+        require(target['NetworkSettings']['Ports']['3306/tcp'] == [{'HostIp':'127.0.0.1','HostPort':str(config['port'])}], 'Port binding mismatch')
     require(config['host'] == '127.0.0.1' and config['port'] not in (3306, 3307, 13306), 'Local target rejected')
     require(config['database'].startswith('er84_') or config['database'] == 'electronic_register_test', 'Schema namespace rejected')
     return dict(container=cid, protectedContainer=original, image=image, mounts=mounts, port=config['port'])
