@@ -67,7 +67,7 @@ class Probes:
 
     def api(self, sql):
         env = dict(os.environ, MYSQL_PWD='Synthetic-ci-only-credential')
-        return subprocess.run(self.db.args + ['--user=' + self.config['apiUser']] + (['--password=Synthetic-ci-only-credential'] if self.config.get('isolatedLocal') else []),
+        return subprocess.run(self.db.tcp_args + ['--user=' + self.config['apiUser']] + (['--password=Synthetic-ci-only-credential'] if self.config.get('isolatedLocal') else []),
                               input='USE `' + self.config['database'] + '`;\n' + sql + ';\n', text=True, capture_output=True, env=env, timeout=30)
 
     def reproduce_predecessor_failure(self):
@@ -395,6 +395,9 @@ def run(config_path, output):
             db.execute('ALTER TABLE institution DROP COLUMN synthetic_drift')
             verify_schema(db, old, config)
         with diagnostic.phase('ddl-recovery'):
+            from mysql84_recovery import container_binding, resume_channel
+            config['recoveryBinding'] = container_binding(config)
+            require(config.get('recoverySocketAccount') == 'root@localhost', 'Explicit disposable recovery account required')
             journal = output/'upgrade-journal.json'
             first_table=next(iter(load_contract()['tableChanges']))
             for fault,recovery,restart in [(first_table+':after-alter',False,True),('email_event_insert:after-drop',True,False),('fpe_insert:after-create',True,False),('routine:after-drop',True,False),('routine:after-create',True,False)]:
@@ -424,13 +427,7 @@ def run(config_path, output):
                         require(json.loads(approval.read_text()) == dict(container=container, uuid=config['serverUuid']), 'Restart attestation mismatch')
                     else:
                         subprocess.run(['docker','restart',container],check=True)
-                    deadline = time.monotonic()+60
-                    while True:
-                        ready = subprocess.run(db.args,input='SELECT 1;\n',text=True,capture_output=True)
-                        if ready.returncode == 0:
-                            break
-                        require(time.monotonic() < deadline,'Service did not return after controlled restart')
-                        time.sleep(1)
+                    config = resume_channel(config, db.tcp_args, output/'restart-result.json')
                     blocked = probes.api('SELECT 1')
                     require(blocked.returncode != 0 and 'ERROR 3032 ' in blocked.stderr, 'Persisted maintenance barrier lost on server restart')
                 db = Mysql(config)
@@ -440,9 +437,33 @@ def run(config_path, output):
                 try:
                     Runner(db, config, journal).upgrade()
                     raise AssertionError('Blind replay accepted')
-                except RuntimeError:
+                except RuntimeError as error:
+                    require('explicit recover required; no DDL replay' in str(error), 'Wrong blind replay rejection: '+str(error))
                     require(journal.read_bytes() == saved, 'Refused replay changed journal')
+                if restart:
+                    # A real persistent drift must block recovery before any
+                    # uncertain ALTER is accepted or further release DDL runs.
+                    db.execute('ALTER TABLE institution ADD COLUMN recovery_drift INT NULL')
+                    try:
+                        Runner(db, config, journal).upgrade(recover=True)
+                        raise AssertionError('Recovery accepted persistent schema drift')
+                    except RuntimeError as error:
+                        require('Table DDL drift: institution;' in str(error), 'Wrong recovery drift rejection: '+str(error))
+                        require(journal.read_bytes() == saved, 'Rejected recovery advanced persistent journal')
+                        require(db.scalar('SELECT @@global.offline_mode') == '1', 'Rejected recovery removed maintenance')
+                    db.execute('ALTER TABLE institution DROP COLUMN recovery_drift')
+                    (output/'recovery-result.json').write_text(json.dumps(dict(blindReplayRejected=True,
+                        persistentSchemaDriftRejected=True, refusedRecoveryJournalUnchanged=True, barrierRetained=True)))
             Runner(db, config, journal).upgrade(recover=True)
+            # The authorized runner has now removed the barrier. Return to the
+            # original transport; recovery-only guards require maintenance ON.
+            db.close()
+            config.pop('recoverySocket', None)
+            db = Mysql(config)
+            identity(db, config)
+            probes.db = db
+            require(db.scalar('SELECT @@global.offline_mode') == '0', 'Completion retained maintenance barrier')
+            require(db.scalar("SELECT VARIABLE_VALUE FROM performance_schema.persisted_variables WHERE VARIABLE_NAME='offline_mode'") == 'OFF', 'Completion did not persist barrier removal')
             require(fingerprint(db, load_contract()) == before, 'Existing data lost')
             saved = journal.read_bytes()
             Runner(db, config, journal).upgrade()

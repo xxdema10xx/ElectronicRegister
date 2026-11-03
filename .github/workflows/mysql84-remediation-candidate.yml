@@ -77,6 +77,7 @@ jobs:
           import json, os, pathlib, uuid
           name = 'er84_' + uuid.uuid4().hex[:12]
           config = dict(database=name, host='127.0.0.1', port=int(os.environ['MYSQL_PORT']), serverPort=3306, serverUuid=os.environ['ER84_UUID'], defaultsFile=os.environ['RUNNER_TEMP']+'/er84.cnf', isolatedCI=True, mysqlContainer=os.environ['MYSQL_CONTAINER'])
+          config['recoverySocketAccount'] = 'root@localhost'
           for role in ('definer','api','review'):
               config[role+'User'] = name+'_'+role
               config[role+'Host'] = '%'
@@ -111,7 +112,12 @@ jobs:
           args = ['--fresh-only'] if os.environ['RUNTIME_MODE'] == 'fresh' else []
           command = ['python3','tools/mysql84_runtime.py',str(temp/'er84-config.json'),str(temp/'er84-evidence')]+args
           protocol = ['python3','tools/mysql84_protocol.py',str(temp/'er84-config.json'),str(temp/'protocol-result.json')]
-          (temp/'runtime-plan.json').write_text(json.dumps([dict(id='client-protocol',command=protocol,timeout=240),dict(id='runtime-execution',needs=['client-protocol'],command=command,timeout=1500)]))
+          restart = ['python3','tools/test_mysql84_restart.py','ci',str(temp/'er84-config.json'),str(temp/'restart-regression.json')]
+          plan = [dict(id='client-protocol',command=protocol,timeout=240)]
+          if os.environ['RUNTIME_MODE'] == 'upgrade':
+              plan.append(dict(id='restart-regression',needs=['client-protocol'],command=restart,timeout=180))
+          plan.append(dict(id='runtime-execution',needs=['restart-regression'] if os.environ['RUNTIME_MODE'] == 'upgrade' else ['client-protocol'],command=command,timeout=1500))
+          (temp/'runtime-plan.json').write_text(json.dumps(plan))
           PY
           python3 tools/ci_diagnostic.py --plan "$RUNNER_TEMP/runtime-plan.json" --output "$RUNNER_TEMP/runtime-check.json"
       - name: Actual embedded C# validation and MySqlConnector predicates
@@ -175,6 +181,9 @@ jobs:
             ${{ runner.temp }}/runtime-diagnostic.json
             ${{ runner.temp }}/predicates.out
             ${{ runner.temp }}/protocol-result.json
+            ${{ runner.temp }}/*restart-result.json
+            ${{ runner.temp }}/restart-regression.json
+            ${{ runner.temp }}/rejected-*-result.json
             ${{ runner.temp }}/er84-evidence/*result.json
             ${{ runner.temp }}/er84-evidence/*journal.json
             ${{ runner.temp }}/er84-evidence/runtime-phases.json

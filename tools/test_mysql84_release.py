@@ -29,7 +29,7 @@ class ReleaseTests(unittest.TestCase):
     def runner(self, tmp):
         db = mock.Mock()
         db.scalar.return_value = '1'
-        db.execute.return_value = 'GRANT ALL PRIVILEGES ON *.* TO migration'
+        db.execute.return_value = 'GRANT ALL PRIVILEGES ON *.* TO migration\nGRANT CONNECTION_ADMIN,SYSTEM_VARIABLES_ADMIN ON *.* TO migration'
         config = dict(database='er84_unit', serverUuid='synthetic-uuid', definerUser='owner', definerHost='%')
         runner = release.Runner(db, config, Path(tmp)/'journal.json')
         return db, runner

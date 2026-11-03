@@ -84,6 +84,10 @@ class Mysql:
         else:
             args += ['--host=' + config['host'], '--port=' + str(config['port']), '--protocol=TCP']
             args += (['--ssl-mode=REQUIRED'] if local else ['--ssl-mode=DISABLED', '--get-server-public-key'] if isolated else ['--ssl-mode=VERIFY_IDENTITY', '--ssl-ca=' + config['caFile']])
+        self.tcp_args = list(args)
+        if config.get('recoverySocket'):
+            from mysql84_recovery import socket_args
+            args = socket_args(config)
         self.args = args
         self.process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE, text=True, encoding='utf-8', errors='replace', bufsize=1)
@@ -126,6 +130,13 @@ class Mysql:
             return self._execute(sql, timeout, script_mode=True)
 
     def _execute(self, sql, timeout, script_mode=False):
+        if self.config.get('recoverySocket'):
+            from mysql84_recovery import check_binding
+            check_binding(self.config)
+            observed = subprocess.run(self.args, input='SELECT VERSION(),@@server_uuid,@@global.offline_mode,CURRENT_USER();\n', capture_output=True, text=True, timeout=10)
+            require(observed.returncode == 0 and observed.stdout.strip().split('\t') == [
+                '8.4.13', self.config['serverUuid'], '1', self.config['recoverySocketAccount']],
+                'Recovery server identity/account/barrier changed; mutation refused')
         if self.config.get('isolatedLocal'):
             # Independent observer before every statement/bundle, including DDL.
             observed = subprocess.run(self.args + ['-e', 'SELECT VERSION(),@@server_uuid,@@hostname,@@port,@@datadir'], capture_output=True, text=True, timeout=10)
@@ -271,7 +282,7 @@ def admin_identity(db):
     global_all = 'GRANT ALL PRIVILEGES ON *.*' in grants
     def has(privilege):
         return any(re.search(r'\b' + privilege + r'\b', line.split(' ON ')[0]) and ' ON *.*' in line for line in grants.splitlines())
-    require(global_all or (has('PROCESS') and has('SHOW DATABASES') and has('CONNECTION_ADMIN') and has('SYSTEM_VARIABLES_ADMIN')), 'Administrative migration identity requires PROCESS, SHOW DATABASES, CONNECTION_ADMIN and SYSTEM_VARIABLES_ADMIN; API identity is forbidden')
+    require((global_all or (has('PROCESS') and has('SHOW DATABASES'))) and has('CONNECTION_ADMIN') and has('SYSTEM_VARIABLES_ADMIN'), 'Administrative migration identity requires PROCESS, SHOW DATABASES, CONNECTION_ADMIN and SYSTEM_VARIABLES_ADMIN; API identity is forbidden')
 
 
 def trigger_rows(db):
