@@ -96,7 +96,7 @@ public partial class ElectronicRegisterContext
             e.Property(x => x.Category).HasColumnName("category").HasColumnType("varchar(16)").HasCharSet("ascii").UseCollation("ascii_bin").IsRequired();
             e.Property(x => x.PolicyRevision).HasColumnName("policy_revision").HasColumnType("bigint").IsRequired();
             e.Property(x => x.AssignmentId).HasColumnName("assignment_id").HasColumnType("char(36)").HasCharSet("ascii").UseCollation("ascii_general_ci");
-            e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("char(64)").HasCharSet("ascii").UseCollation("ascii_bin").IsRequired();
+            e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("varchar(65)").HasCharSet("ascii").UseCollation("ascii_bin").IsRequired();
             e.Property(x => x.BeforeJson).HasColumnName("before_json").HasColumnType("json");
             e.Property(x => x.AfterJson).HasColumnName("after_json").HasColumnType("json").IsRequired();
             e.Property(x => x.Reason).HasColumnName("reason").HasColumnType("varchar(500)").HasCharSet("utf8mb4").UseCollation("utf8mb4_unicode_ci").IsRequired();

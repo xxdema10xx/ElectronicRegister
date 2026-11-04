@@ -33,7 +33,7 @@ public partial class ElectronicRegisterContext
             e.Property(x => x.PreviousRoles).HasColumnName("previous_roles").HasColumnType("json");
             e.Property(x => x.NewRoles).HasColumnName("new_roles").HasColumnType("json");
             e.Property(x => x.Reason).HasColumnName("reason").HasMaxLength(500);
-            e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("char(64)").HasCharSet("ascii").UseCollation("ascii_bin");
+            e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("varchar(65)").HasCharSet("ascii").UseCollation("ascii_bin");
             e.Property(x => x.RevisionBefore).HasColumnName("revision_before");
             e.Property(x => x.RevisionAfter).HasColumnName("revision_after");
             e.Property(x => x.OccurredAtUtc).HasColumnName("occurred_at_utc").HasColumnType("datetime(6)");

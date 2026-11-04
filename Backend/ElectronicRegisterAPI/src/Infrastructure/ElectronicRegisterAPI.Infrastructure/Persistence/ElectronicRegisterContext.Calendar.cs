@@ -20,7 +20,7 @@ public partial class ElectronicRegisterContext
             e.Property(x => x.Operation).HasColumnName("operation").HasColumnType("varchar(48)").IsRequired();
             e.Property(x => x.RevisionBefore).HasColumnName("revision_before").HasColumnType("bigint(20)");
             e.Property(x => x.RevisionAfter).HasColumnName("revision_after").HasColumnType("bigint(20)").IsRequired();
-            e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("char(64)").IsRequired();
+            e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("varchar(65)").IsRequired();
             e.Property(x => x.BeforeJson).HasColumnName("before_json").HasColumnType("json");
             e.Property(x => x.StateJson).HasColumnName("state_json").HasColumnType("json").IsRequired();
             e.Property(x => x.ReceiptJson).HasColumnName("receipt_json").HasColumnType("json").IsRequired();
@@ -78,8 +78,8 @@ public partial class ElectronicRegisterContext
             e.Property(x => x.ActorMembershipId).HasColumnName("actor_membership_id").HasColumnType("char(36)").HasCharSet("ascii").UseCollation("ascii_general_ci").IsRequired();
             e.Property(x => x.Revision).HasColumnName("revision").HasColumnType("bigint(20)").IsRequired();
             e.Property(x => x.Status).HasColumnName("status").HasColumnType("enum('Preview','Confirmed')").IsRequired();
-            e.Property(x => x.FileSha256).HasColumnName("file_sha256").HasColumnType("char(64)").IsRequired();
-            e.Property(x => x.PreviewDigest).HasColumnName("preview_digest").HasColumnType("char(64)").IsRequired();
+            e.Property(x => x.FileSha256).HasColumnName("file_sha256").HasColumnType("varchar(65)").IsRequired();
+            e.Property(x => x.PreviewDigest).HasColumnName("preview_digest").HasColumnType("varchar(65)").IsRequired();
             e.Property(x => x.RawJson).HasColumnName("raw_json").HasColumnType("json").IsRequired();
             e.Property(x => x.SettingsJson).HasColumnName("settings_json").HasColumnType("json").IsRequired();
             e.Property(x => x.PreviewJson).HasColumnName("preview_json").HasColumnType("json").IsRequired();

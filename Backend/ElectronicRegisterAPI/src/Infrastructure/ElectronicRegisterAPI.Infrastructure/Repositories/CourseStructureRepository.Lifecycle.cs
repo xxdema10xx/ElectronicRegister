@@ -5,6 +5,8 @@ using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using MySqlConnector;
 using E = ElectronicRegisterAPI.Infrastructure.Persistence.Entities;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
@@ -127,10 +129,46 @@ internal sealed partial class CourseStructureRepository
         CancellationToken ct
     )
     {
-        await using var tx = await db.Database.BeginTransactionAsync(ct);
-        await LinkCampusAsync(t, edition, campus, ct);
-        await AppendEventAsync(t, Guid.NewGuid(), edition, null, campus, null, "campus.link", null, null, null, null, null, null, null, null, null, JsonSerializer.Serialize(new { CourseEditionId = edition, CampusId = campus }), ct);
-        await tx.CommitAsync(ct);
+        try
+        {
+            await using var tx = await db.Database.BeginTransactionAsync(ct);
+            // Match campus deletion's parent-first lock order, before inserting the link
+            // or acquiring any child/audit locks. A current read also detects a DELETE
+            // that committed while this request was waiting, without a stale RR snapshot.
+            await using (var command = db.Database.GetDbConnection().CreateCommand())
+            {
+                command.Transaction = tx.GetDbTransaction();
+                command.CommandText = "SELECT id FROM campus WHERE institution_id=@tenant AND id=@campus FOR UPDATE";
+                var owner = command.CreateParameter();
+                owner.ParameterName = "@tenant";
+                owner.Value = t.InstitutionId;
+                command.Parameters.Add(owner);
+                var resource = command.CreateParameter();
+                resource.ParameterName = "@campus";
+                resource.Value = campus;
+                command.Parameters.Add(resource);
+                if (await command.ExecuteScalarAsync(ct) is null)
+                    throw Missing();
+            }
+            await LinkCampusAsync(t, edition, campus, ct);
+            await AppendEventAsync(t, Guid.NewGuid(), edition, null, campus, null, "campus.link", null, null, null, null, null, null, null, null, null, JsonSerializer.Serialize(new { CourseEditionId = edition, CampusId = campus }), ct);
+            await tx.CommitAsync(ct);
+        }
+        catch (Exception error) when (IsCampusLinkLockConflict(error))
+        {
+            // The transaction has been disposed/rolled back before translation. Never
+            // replay this non-idempotent audited command after a deadlock or timeout.
+            throw new CourseConflictException(error);
+        }
+    }
+
+    private static bool IsCampusLinkLockConflict(Exception error)
+    {
+        // Pomelo's non-retrying execution strategy wraps transient SaveChanges failures
+        // in InvalidOperationException, outside EF's DbUpdateException.
+        while ((error is InvalidOperationException or DbUpdateException) && error.InnerException is { } inner)
+            error = inner;
+        return error is MySqlException { Number: 1213 or 1205 };
     }
 
     public async Task AssignClassAuditedAsync(

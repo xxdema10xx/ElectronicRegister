@@ -19,8 +19,8 @@ public partial class ElectronicRegisterContext
             e.Property(x => x.Category).HasColumnName("category").HasColumnType("varchar(7)").HasCharSet("ascii").UseCollation("ascii_bin").IsRequired();
             e.Property(x => x.State).HasColumnName("state").HasColumnType("enum('Preview','Completed','Expired')").IsRequired();
             e.Property(x => x.Revision).HasColumnName("revision").HasColumnType("bigint").IsRequired();
-            e.Property(x => x.FileSha256).HasColumnName("file_sha256").HasColumnType("char(64)").HasCharSet("ascii").UseCollation("ascii_bin").IsRequired();
-            e.Property(x => x.PreviewDigest).HasColumnName("preview_digest").HasColumnType("char(64)").HasCharSet("ascii").UseCollation("ascii_bin").IsRequired();
+            e.Property(x => x.FileSha256).HasColumnName("file_sha256").HasColumnType("varchar(65)").HasCharSet("ascii").UseCollation("ascii_bin").IsRequired();
+            e.Property(x => x.PreviewDigest).HasColumnName("preview_digest").HasColumnType("varchar(65)").HasCharSet("ascii").UseCollation("ascii_bin").IsRequired();
             e.Property(x => x.TotalRows).HasColumnName("total_rows").HasColumnType("int").IsRequired();
             e.Property(x => x.ValidRows).HasColumnName("valid_rows").HasColumnType("int").IsRequired();
             e.Property(x => x.InvalidRows).HasColumnName("invalid_rows").HasColumnType("int").IsRequired();
@@ -89,7 +89,7 @@ public partial class ElectronicRegisterContext
             e.Property(x => x.ActorKind).HasColumnName("actor_kind").HasColumnType("enum('User','Retention')").IsRequired();
             e.Property(x => x.ActorUserId).HasColumnName("actor_user_id").HasColumnType("char(36)").HasCharSet("ascii").UseCollation("ascii_general_ci");
             e.Property(x => x.ActorMembershipId).HasColumnName("actor_membership_id").HasColumnType("char(36)").HasCharSet("ascii").UseCollation("ascii_general_ci");
-            e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("char(64)").HasCharSet("ascii").UseCollation("ascii_bin").IsRequired();
+            e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("varchar(65)").HasCharSet("ascii").UseCollation("ascii_bin").IsRequired();
             e.Property(x => x.ResultJson).HasColumnName("result_json").HasColumnType("json").IsRequired();
             e.Property(x => x.Reason).HasColumnName("reason").HasColumnType("varchar(500)").HasCharSet("utf8mb4").UseCollation("utf8mb4_unicode_ci").IsRequired();
             e.Property(x => x.OccurredAtUtc).HasColumnName("occurred_at_utc").HasColumnType("datetime(6)").IsRequired();

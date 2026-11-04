@@ -32,7 +32,7 @@ public partial class ElectronicRegisterContext
         e.Property(x => x.RevisionBefore).HasColumnName("revision_before").HasColumnType("bigint(20)");
         e.Property(x => x.RevisionAfter).HasColumnName("revision_after").HasColumnType("bigint(20)");
         e.Property(x => x.Reason).HasColumnName("reason").HasMaxLength(1000);
-        e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("char(64)").HasCharSet("ascii").UseCollation("ascii_bin");
+        e.Property(x => x.RequestHash).HasColumnName("request_hash").HasColumnType("varchar(65)").HasCharSet("ascii").UseCollation("ascii_bin");
         e.Property(x => x.FromClassName).HasColumnName("from_class_name").HasMaxLength(200);
         e.Property(x => x.ToClassName).HasColumnName("to_class_name").HasMaxLength(200);
         e.Property(x => x.FromCourseName).HasColumnName("from_course_name").HasMaxLength(200);

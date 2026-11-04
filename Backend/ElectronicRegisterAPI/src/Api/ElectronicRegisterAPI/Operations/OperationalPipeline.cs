@@ -146,7 +146,9 @@ public static class OperationalPipeline
                 await sql.OpenAsync(timeout.Token);
                 // Require this gate revision independently of the stored routine:
                 // an older 004 routine must never certify a release missing 005.
-                await using var command = new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE(),EXISTS(SELECT 1 FROM er_schema_release WHERE version='er-quality-1-closure-1')", sql);
+                // The 8.4 application must not become ready against the unrepaired
+                // predecessor. Keep the certified 5.7 gate for the legacy variant.
+                await using var command = new MySqlCommand("SELECT VERSION(),@@hostname,@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE(),EXISTS(SELECT 1 FROM er_schema_release WHERE version='er-quality-1-closure-1') AND (VERSION() NOT LIKE '8.4.%' OR EXISTS(SELECT 1 FROM er_schema_release WHERE version='er-quality-2-mysql84'))", sql);
                 await using var reader = await command.ExecuteReaderAsync(timeout.Token);
                 if (!await reader.ReadAsync(timeout.Token))
                     return Results.StatusCode(503);
@@ -155,7 +157,8 @@ public static class OperationalPipeline
                 var datadir = reader.GetString(3).TrimEnd('/');
                 var expectedData = configuration["Readiness:ExpectedDataDir"]?.Replace('\\', '/').TrimEnd('/');
                 var validData = expectedData is not null ? datadir.Equals(expectedData, StringComparison.OrdinalIgnoreCase) : policy.Local && datadir.EndsWith("/migrations/mt4/private/mt5a-mamp-13306/data", StringComparison.OrdinalIgnoreCase);
-                var validIdentity = reader.GetString(0) == expectedVersion && reader.GetString(1).Equals(expectedHost, StringComparison.OrdinalIgnoreCase) && reader.GetInt32(2) == connection.Port && reader.GetString(4) == connection.Database && validData && reader.GetBoolean(5);
+                var expectedServerPort = configuration.GetValue<uint?>("Readiness:ExpectedServerPort") ?? connection.Port;
+                var validIdentity = reader.GetString(0) == expectedVersion && reader.GetString(1).Equals(expectedHost, StringComparison.OrdinalIgnoreCase) && reader.GetUInt32(2) == expectedServerPort && reader.GetString(4) == connection.Database && validData && reader.GetBoolean(5);
                 await reader.DisposeAsync();
                 if (!validIdentity)
                     return Results.StatusCode(503);
