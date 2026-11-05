@@ -6,7 +6,7 @@ Stato finale30ottobre2026: i paragrafi storici sotto descrivono le tappe precede
 
 | Area | Contratto canonico |
 |---|---|
-| Identita/account | `/api/Auth/identity/*`, Selection e selezione esplicita della membership; `/api/identity/accounts`, `/api/identity/account`, `/api/identity/account/password` |
+| Identita/account | `/api/Auth/identity/*`, Selection e selezione esplicita della membership; `/api/identity/account`, `/api/identity/account/password`. `/api/identity/accounts` rimosso il 2026-11-05 (D2): gli account si creano con `POST /api/institution/accounts` o con lo script del proprietario |
 | IAM/amministrazione/audit | Directory e mutazioni membership, inviti/onboarding, acquisizione esplicita dei profili e audit nei controller istituzionali esistenti; nessun controllo tenant delle credenziali globali |
 | Anagrafiche/catalogo | Student/Teacher/Subject/Class e catalogo nei controller istituzionali scoped; CourseEdition/Enrollment, piani e calendario restano workflow distinti |
 | Esami | `/api/institution/exams`: letture consentite, creazione/modifica draft, assegnazioni ed eligible-students, publish/close/cancel/delete, assigned e start |
@@ -50,7 +50,8 @@ Sono rimossi i controller globali Auth, Users, Student, Teacher, Subject e Bienn
 
 | Metodo e route | Autenticazione | Input | Risultato |
 |---|---|---|---|
-| POST `/api/identity/accounts` | Nessun token | Email, Password | 201 con nuovo UserId; 409 collisione; nessun profilo o membership |
+| ~~POST `/api/identity/accounts`~~ | — | — | **Rimosso (D2, 2026-11-05)**: 404. Vedi [INSTITUTION_ACCOUNTS.md](../operations/INSTITUTION_ACCOUNTS.md) |
+| POST `/api/institution/accounts` | Access token InstitutionAdmin o Staff | eventId, email, roles, reason, scheda esistente o nuova | 201 con id e password temporanea mostrata una volta; 200 replay senza password; 409 neutro per indirizzo non disponibile |
 | POST `/api/Auth/identity/login` | Password locale verificata | LoginDto | Selection ticket di 300 secondi |
 | POST `/api/Auth/identity/microsoft-login` | Provider/tenant/object binding esplicito | MicrosoftLoginDto | Selection ticket; mai collegamento per coincidenza email |
 | GET `/api/identity/account` | Selection corrente | Nessun target client | UserId, Email, DisplayName, HasLocalPassword |

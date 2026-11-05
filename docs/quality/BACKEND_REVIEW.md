@@ -8,13 +8,26 @@
 |---|---|
 | Branch / commit | Analisi statica su `refactor-database-entities` @ `f8c0425` ("checkpoint: lorenzo -> dema"). Aggiornamento del 2026-11-05 su `b53b10b` (revert di `f8c0425`). Il codice di `b53b10b` è identico a `03bb1be`; `f8c0425` differiva solo per una riga vuota in `EmailCategory.cs` |
 | Data | 2026-11-05 (prima stesura e aggiornamento) |
-| Stato decisioni | **D1 decisa** (MySQL 8.4 LTS, vedi [DATABASE_TARGET_MYSQL84.md](../architecture/DATABASE_TARGET_MYSQL84.md)). D2–D6 aperte |
+| Stato decisioni | **D1 decisa** (MySQL 8.4 LTS, vedi [DATABASE_TARGET_MYSQL84.md](../architecture/DATABASE_TARGET_MYSQL84.md)). **D2 decisa** (nessuna registrazione libera, modello account del proprietario, vedi §1.1). D3–D6 aperte |
 | Perimetro | `Backend/ElectronicRegisterAPI` (Api, Application, Business, Domain, Infrastructure, tools/Mt3*), `migrations/`, `infra/`, `global.json`, `Directory.Build.props`, `tools/` (DB, rilascio, PlatformAdmin) |
 | Problemi | **29** in tutto: 18 incompatibilità e 11 vulnerabilità (INC-017 e INC-018 approvati dopo la baseline) |
 | Per severità | **Critica 0 · Alta 4 · Media 8 · Bassa 17** (INC-006 riclassificato da Media a Bassa; INC-017 Alta, INC-018 Bassa) |
 | Verdetto | **NON PRONTO per la produzione** |
 
 **Isolamento multi-tenant.** Non ho trovato falle sfruttabili via HTTP. La conclusione nasce da analisi statica. La baseline su MySQL 8.4.13 ([BASELINE_MYSQL84.md](BASELINE_MYSQL84.md): 1566 casi superati, 16 falliti e 94 non eseguiti su 1676) la **conferma per i percorsi HTTP, i repository, le scritture applicative e il worker**. Dopo il Lotto 0B (INC-017) la conferma vale, **in locale su 8.4**, anche per la revoca dei token basata sulla security generation, le mutazioni di ruolo e l'isolamento delle mutazioni IAM: `Mt5bJwtTests` 23/23, `Mt5bSecurityStateTests` 39/40, `Mt5dMembershipMutationTests` 31/32. I 2 casi non superati osservano l'holding legacy assente dal bootstrap 8.4 (INC-012) e non riguardano revoca, escalation o isolamento. **La conferma in CI arriverà solo dopo la prima run verde** del nuovo dominio `iam-security`. Resta non verificata su 8.4 la CLI di piattaforma. L'isolamento IAM via HTTP è invece coperto in parte da `Mt5eIamHttpTests` (53/53) e `Mt5aMembershipAdminTests` (36/36). Per le aree non verificate resta un risultato da analisi statica. Il blocco viene da tre punti. La piattaforma dati esce dal supporto: EF Core 9 termina il 2026-11-10 e non esiste un provider Pomelo per EF Core 10. Il database target è deciso (D1: MySQL 8.4 LTS), ma il ramo 5.7 è ancora presente nel codice, nei gate e negli strumenti. Infine, in produzione non esiste un percorso per l'onboarding.
+
+### 1.1 Modello account definitivo (decisione del proprietario, 2026-11-05)
+
+- Non esiste registrazione libera: `POST /api/identity/accounts` è stato rimosso e risponde 404.
+- Il proprietario della piattaforma crea l'istituto e un solo InstitutionAdmin iniziale con lo script `tools/OwnerProvisioning`. Lo script resetta anche la password di qualsiasi account. Per ora sostituisce la CLI PlatformAdmin, che resta necessaria per la produzione (INC-008).
+- Poi l'istituto si gestisce da solo con `POST /api/institution/accounts`:
+  - InstitutionAdmin crea account di ogni ruolo, compresi altri InstitutionAdmin, senza limiti di numero;
+  - Staff crea solo account Student o Teacher;
+  - resta solo il blocco sulla rimozione dell'ultimo admin.
+- Un account appartiene a un istituto e l'istituto viene sempre dal token.
+- Email istituzionale nello spazio globale esistente: un'email già usata altrove produce un 409 unico, identico in ogni caso e con lo stesso costo BCrypt di una creazione riuscita. Rischio residuo accettato: si capisce che l'indirizzo è "occupato", non dove.
+- Password temporanea generata dal sistema e mostrata una sola volta. Il cambio al primo accesso è imposto dal server su ogni token. Il reset incrementa la generation e revoca tutti i token precedenti.
+- Procedure, flag e limiti: [INSTITUTION_ACCOUNTS.md](../operations/INSTITUTION_ACCOUNTS.md).
 
 **I 5 rischi principali**
 
@@ -72,7 +85,7 @@
 |---|---|---|---|---|---|---|
 | INC-001 | EF Core 9 / Pomelo 9 su net10: fine supporto 2026-11-10 e nessun percorso Pomelo 10 | Alta | CONFERMATO | Pacchetti | L | D1, INC-002 |
 | INC-002 | Target deciso (D1, 8.4 LTS) ma ramo 5.7.24 EOL ancora presente in codice, gate e strumenti | Alta | CONFERMATO | Database | L | D1 |
-| INC-008 | PlatformAdmin accetta solo il DB di test: nessun onboarding o governance in produzione | Alta | CONFERMATO | Rilascio/autorità | M | INC-002, D3 |
+| INC-008 | PlatformAdmin accetta solo il DB di test: nessun onboarding o governance in produzione | Alta | CONFERMATO; necessario prima della produzione (oggi script manuale del proprietario) | Rilascio/autorità | M | INC-002, D3 |
 | INC-017 | Test IAM, security generation e JWT (`Mt5bSecurityStateTests`, `Mt5dMembershipMutationTests`, `Mt5bJwtTests`: 94 casi) legati a MAMP 5.7 su 13306 tramite `TestMySqlTarget.Port`: non eseguiti sul target 8.4 né inclusi nei filtri della CI 8.4 | Alta | RISOLTO in locale (Lotto 0B); CI da confermare con la prima run verde | Test/copertura | M | D1 |
 | INC-003 | Versione MySQL esatta hard-coded (`8.4.13`, `5.7.24`) in validatori, health e CLI | Media | CONFERMATO | Database | S | INC-002 |
 | INC-004 | `sql_mode` strict imposto solo nei test, non in produzione né in readiness | Media | CONFERMATO | Database | S | INC-002 |
@@ -88,7 +101,7 @@
 | INC-015 | Il controllo di integrità della cancellazione classe scansiona tutti i tenant a runtime | Bassa | CONFERMATO | Robustezza | S | — |
 | INC-016 | Toolchain dei test deprecata (xunit 2.5.3 Legacy, FluentAssertions 6) | Bassa | CONFERMATO | Test | M | — |
 | INC-018 | L'esecuzione della suite di integrazione riscrive 6 file versionati in `tests/Integration/TestResults/` (osservazioni SQL) | Bassa | RISOLTO (Lotto 0B) | Test/igiene | S | VULN-007 |
-| VULN-001 | Enumerazione account: registrazione anonima con 409 e timing del login | Media | CONFERMATO | Autenticazione | S | D2 |
+| VULN-001 | Enumerazione account: registrazione anonima con 409 e timing del login | Media | RISOLTO (registrazione rimossa, login a costo uniforme); residuo accettato: spazio email globale | Autenticazione | S | D2 |
 | VULN-002 | Nessun limite per account sul login: solo 60 POST/min per IP condivisi | Media | CONFERMATO | Autenticazione | M | VULN-003 |
 | VULN-003 | Rate limit per IP collassato se `KnownProxies` non è configurato (consentito dalla policy) | Media | PROBABILE | Infra applicativa | S | INC-009 |
 | VULN-004 | Login Microsoft senza flag: con AzureAd non configurato produce 500 e chiamate esterne; validazione JWT lasca | Bassa | PROBABILE | Autenticazione | S | D5 |
@@ -97,7 +110,7 @@
 | VULN-007 | Evidenze versionate con percorsi utente, nomi macchina e dominio reale | Bassa | CONFERMATO | Dati personali | S | — |
 | VULN-008 | Immagini base Docker per tag e non per digest | Bassa | CONFERMATO | Deploy | S | — |
 | VULN-009 | Account migrator di staging con `CREATE USER`, `SET_ANY_DEFINER` e `GRANT OPTION` | Bassa | CONFERMATO | Deploy | S | — |
-| VULN-010 | Un singolo InstitutionAdmin può nominare altri admin o sospenderli senza doppio controllo | Bassa | CONFERMATO (deliberato) | Autorizzazione | M | D4 |
+| VULN-010 | Un singolo InstitutionAdmin può nominare altri admin o sospenderli senza doppio controllo | Bassa | ACCETTATO dal modello definitivo (admin senza limiti, solo blocco dell'ultimo admin) | Autorizzazione | M | D4 |
 | VULN-011 | Il gate MVC lascia passare senza controlli gli endpoint con marker Identity; nessuna FallbackPolicy | Bassa | CONFERMATO | Autorizzazione | S | — |
 
 Il conteggio di VULN-011 include anche l'osservazione sulla retention dei dati personali, riportata come "DA VERIFICARE" in §5 e non conteggiata a parte. Totale: 4 Alte + 8 Medie + 17 Basse = 29.
@@ -326,6 +339,10 @@ Non è una sostituzione di pacchetto. Il SQL raw è in gran parte portabile, ma 
 
 **Verifica.** Test di integrazione della CLI contro un target non di test con attestazione corretta ed errata. Oggi esistono solo i test sul target locale.
 
+**Stato (2026-11-05): necessario prima della produzione.**
+- Per l'uso iniziale il proprietario usa `tools/OwnerProvisioning`. Lo script si connette direttamente al DB e rifiuta un server con UUID diverso da quello atteso, un MySQL diverso da 8.4 e una release di schema diversa da `er-quality-2-mysql84`. Scrive l'audit `Operator` (`owner-script`).
+- Non ha doppia firma, nonce, attestazione TLS automatica né allowlist dei target. È una procedura manuale e non sostituisce questo fix.
+
 ### INC-009 · nginx di rilascio con body massimo di default (1 MB) (Media, CONFERMATO)
 
 **Severità.** Tutte le anteprime di import oltre 1 MB vengono rifiutate dal proxy con 413, prima ancora di arrivare all'API.
@@ -479,6 +496,14 @@ Non è una sostituzione di pacchetto. Il SQL raw è in gran parte portabile, ma 
 
 **Verifica.** Il test `IdentityAccountTests.RegistrationCreatesOnlyIdentityAndCollisionCannotAcquireHistoricalAccount` (`tests/Integration/IdentityAccountTests.cs:154`) oggi fissa il 409 e va aggiornato. Da aggiungere un test con risposta identica per account esistenti e inesistenti, e un test unitario che verifichi l'invocazione di `Verify` anche senza account.
 
+**Stato (2026-11-05): RISOLTO con D2.**
+- La registrazione anonima è rimossa: il vecchio test è sostituito da `PublicRegistrationIsGoneAndCannotCreateOrAcquireAnyAccount`, che verifica il 404.
+- Il login esegue esattamente un `Verify` BCrypt dello stesso work factor (11) per email presente, assente o solo esterna.
+  - `LoginIsUniformForExistingMissingAndExternalOnlyEmails` verifica stato, corpo e tempi. Il controllo negativo, senza hash fittizio, fallisce: 166 ms contro 24 ms.
+  - `AbsentCredentialUsesTheSameBcryptCostAsRealHashes` verifica il costo.
+- La creazione istituzionale risponde con un 409 unico per un indirizzo non disponibile, allo stesso costo BCrypt (`EmailUsedInAnotherInstitutionRevealsNothing`).
+- **Residuo accettato:** con lo spazio email globale si capisce che un indirizzo è "occupato da qualche parte". Resta aperto anche il limite per account sul login (VULN-002).
+
 ### VULN-002 · Brute force e credential stuffing sul login (Media, CONFERMATO)
 
 **Severità.** Il login non ha un limite per account. Il limite per IP è condiviso con tutte le POST, quindi una botnet resta di fatto senza limiti.
@@ -593,6 +618,14 @@ Non è una sostituzione di pacchetto. Il SQL raw è in gran parte portabile, ma 
 **Scenario.** Un admin compromesso aggiunge `InstitutionAdmin` a un complice e sospende gli altri admin tranne uno.
 
 **Fix (D4).** Richiedere una doppia approvazione per `AddRole InstitutionAdmin` e per la sospensione di un admin, oppure inviare una notifica agli altri admin. **Impegno:** M.
+
+**Rivalutazione (2026-11-05): ACCETTATO dal modello definitivo.**
+- Il proprietario ha deciso che gli InstitutionAdmin creano account di ogni ruolo, compresi altri admin, senza limiti di numero, e che resta solo il blocco sull'ultimo admin. La doppia approvazione quindi non si introduce.
+- Il rischio "un admin compromesso controlla l'istituto" resta, limitato a quell'istituto:
+  - le nuove creazioni lasciano audit (`institution_onboarding_event`, azione `AccountCreated`);
+  - il proprietario può resettare qualsiasi account con lo script;
+  - l'autoamministrazione resta vietata.
+- Una notifica agli altri admin sarebbe una mitigazione utile, ma richiede l'invio email, fuori da questa fase.
 
 ### VULN-011 · Il gate MVC lascia passare il marker Identity e non c'è FallbackPolicy (Bassa, CONFERMATO)
 
@@ -937,7 +970,7 @@ Nessuna modifica al codice di produzione in `Backend/ElectronicRegisterAPI/src`.
 **Test.** `Mt5bSecurityStateTests`, `Mt5dMembershipMutationTests` e `Mt5bJwtTests` eseguiti davvero (non bloccati in inizializzazione) su MySQL 8.4.13 usa e getta, in locale e nella CI 8.4. `git status` pulito dopo la suite, salvo le modifiche volute.
 
 ### Lotto 1: correzioni rapide di autenticazione e ingresso
-- [ ] VULN-001
+- [x] VULN-001 (D2: registrazione rimossa, login a costo uniforme; vedi §5)
 - [ ] VULN-011
 - [ ] VULN-004
 
@@ -967,9 +1000,9 @@ Nessuna modifica al codice di produzione in `Backend/ElectronicRegisterAPI/src`.
 **Test.** `dotnet restore --locked-mode` dopo aver rigenerato i lock, `dotnet list package --vulnerable/--outdated`, suite Unit e Integration completa. In particolare `Mysql84GuidMetadataTests`, `Mysql84ForeignKeyMetadataTests`, `Phase3_ConcurrencyTests` e `OpenScoreDoubleCountTests`.
 
 ### Lotto 5: autorità operative di produzione (dipende da D3)
-- [ ] INC-008
+- [ ] INC-008 (necessario prima della produzione; oggi script del proprietario)
 - [ ] INC-013
-- [ ] VULN-010
+- [x] VULN-010 (accettato dal modello definitivo, §1.1; nessuna doppia approvazione)
 - [ ] VULN-009
 
 **Test.** `Mt5cOnboardingTests`, i test di governance e `tools/test_windows_private_acl.py`. Nuovi test: CLI contro un target di produzione attestato e uno non attestato, doppia approvazione della nomina admin.
@@ -1000,7 +1033,7 @@ Nessuna modifica al codice di produzione in `Backend/ElectronicRegisterAPI/src`.
 | # | Decisione | Opzioni | Raccomandazione |
 |---|---|---|---|
 | D1 | Target DB e provider EF | **DECISA il 2026-11-05: MySQL 8.4 LTS è l'unico target di produzione** ([DATABASE_TARGET_MYSQL84.md](../architecture/DATABASE_TARGET_MYSQL84.md)). Il provider EF finale **non è deciso**: vedi i criteri in INC-001 e la proposta di accettazione del rischio qui sotto | — |
-| D2 | Registrazione anonima | (a) Solo tramite invito. (b) Anonima con risposta neutra e verifica email. (c) Lasciare com'è | **(a)**: l'onboarding con inviti esiste già; un registro scolastico non ha bisogno di account auto-creati |
+| D2 | Registrazione anonima | (a) Solo tramite invito. (b) Anonima con risposta neutra e verifica email. (c) Lasciare com'è | **DECISA (2026-11-05)**: nessuna registrazione libera. Il proprietario crea l'istituto e il primo admin; l'istituto crea i propri account (§1.1) |
 | D3 | Autorità di piattaforma in produzione | (a) CLI con target di produzione attestato (allowlist firmata, VerifyFull, server UUID). (b) Servizio interno dedicato. (c) Procedura SQL manuale con verbale | **(a)**: riusa firma, nonce e audit già implementati |
 | D4 | Doppio controllo sulle nomine admin | (a) Doppia approvazione obbligatoria. (b) Notifica agli altri admin più audit. (c) Nessuna modifica | **(b)** ora e **(a)** per gli istituti con più di un admin |
 | D5 | Login Microsoft | (a) Dietro flag con validazione all'avvio. (b) Rimuovere fino al bisogno reale. (c) Lasciare com'è | **(a)** se esiste un cliente Entra ID previsto, altrimenti **(b)** |
