@@ -37,6 +37,9 @@ jobs:
           SHARD: ${{ matrix.shard }}
           ER_TEST_MYSQL84: '1'
         run: python3 tools/ci_diagnostic.py --integration full --shard "$SHARD" --shards 14 --output ".diagnostics/full-$SHARD-diagnostic.json"
+      - name: Publish the sanitized failure summary as annotations
+        if: always()
+        run: python3 tools/ci_annotations.py ".diagnostics/full-${{ matrix.shard }}-diagnostic.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -57,7 +60,11 @@ jobs:
           pattern: integration-full-*
           path: .diagnostics/downloaded
       - name: Complete inventory, every non-excluded method PASS, exact case accounting
-        run: python3 tools/integration_full_gate.py .diagnostics/downloaded
+        run: |
+          python3 tools/integration_full_gate.py .diagnostics/downloaded || {
+            python3 -c "import json; r=json.load(open('.diagnostics/INTEGRATION_FULL_REPORT.json')); print('::error title=integration-full gate::'+'%0A'.join(r['problems'][:40]))"
+            exit 1
+          }
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
