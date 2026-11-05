@@ -264,7 +264,7 @@ def check_mysql_openssl(linkage):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--state',required=True)
-    p.add_argument('command',choices=['prepare','config','build','db','sql-check','provision','compatibility','seed','preflight','tls','start','verify','http','smoke','logs','diagnostics','stop','restart'])
+    p.add_argument('command',choices=['prepare','config','build','db','sql-check','provision','compatibility','release-preflight','seed','preflight','tls','start','verify','http','smoke','logs','diagnostics','stop','restart'])
     p.add_argument('--domain',default='staging.consoliprojects.dev')
     p.add_argument('--subnet',default='172.30.252.0/24')
     p.add_argument('--port',type=int,default=18080)
@@ -341,6 +341,8 @@ def main():
         return compose(folder,'run','--rm','--no-deps','ops','identity')
     if a.command in ('provision','compatibility','seed','preflight','tls','smoke'):
         return compose(folder,'run','--rm','--no-deps','ops',a.command)
+    if a.command=='release-preflight':
+        return release_preflight(folder,s)
     if a.command in ('start','restart'):
         if a.command=='restart':compose(folder,'up','-d','--wait','--wait-timeout','180','db')
         with socket.socket() as probe:
@@ -365,6 +367,30 @@ def main():
         smoke.run(s,folder/'ops',loopback=True,key_file=folder/'secrets/ops/jwt-key',class_deletion=True)
         compose(folder,'run','--rm','--no-deps','ops','class-delete-audit')
         return result
+
+def release_preflight(folder,s):
+    """Complete read-only verification of the corrective 8.4 release, including account
+    grants, with tools/mysql84_release.py. Root is used only through the socket of this
+    staging's own disposable DB container (docker exec), never over the network."""
+    cid=compose(folder,'ps','-q','db',capture=True)
+    require(cid,'Missing db')
+    full=output(['docker','inspect','--format','{{.Id}}',cid])
+    require(re.fullmatch(r'[a-f0-9]{64}',full),'Unexpected DB container identity')
+    labels=json.loads(output(['docker','inspect','--format','{{json .Config.Labels}}',full]))
+    require(labels.get('io.er.staging.id')==s['id'],'DB container is not owned by this staging')
+    prefix=['docker','exec','-i',full]
+    uuid_value=output(prefix+['mysql','--defaults-extra-file=/run/secrets/root.cnf','--protocol=SOCKET','--batch','--skip-column-names','-e',"SHOW GLOBAL VARIABLES LIKE 'server_uuid'"]).split(chr(9))[-1]
+    require(re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',uuid_value),'Unexpected server UUID')
+    config=dict(database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%',
+                apiUser='er_api',apiHost=s['sql_host'],reviewUser='er_review',reviewHost=s['sql_host'],
+                dedicatedServer=True,transport='socket',socketFile='/var/run/mysqld/mysqld.sock',mysqlPrefix=prefix,
+                defaultsFile='/run/secrets/root.cnf',serverUuid=uuid_value,serverPort=3306,stageId=s['id'])
+    path=folder/'ops'/'release-preflight-config.json'
+    path.unlink(missing_ok=True)
+    write(path,json.dumps(config,indent=2),mode=0o600)
+    result=output([sys.executable,ROOT/'tools/mysql84_release.py','preflight','--config',path])
+    require(json.loads(result.splitlines()[-1])==dict(release='er-quality-2-mysql84',action='preflight',verified=True),'Corrective release preflight did not verify')
+    print(result.splitlines()[-1])
 
 def verify(folder,s,readiness=True):
     for service,uid in [('api','1654'),('db','999')]:

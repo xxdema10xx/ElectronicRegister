@@ -1,0 +1,128 @@
+name: Staging package on current code (MySQL 8.4 corrective release)
+# Same Docker staging control as the historical workflow (infra/staging/host.py), but on the
+# commit under test instead of the immutable er-quality-1 SHA. The historical workflow
+# (staging-package.yml) and its SHA stay unchanged.
+on:
+  push:
+    branches: [refactor-database-entities, main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions: { contents: read }
+jobs:
+  current:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        compose: [runner, v5.6.1]
+    timeout-minutes: 45
+    env:
+      STAGE_STATE: /tmp/er-stage-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.compose }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Bind the run to the commit under test
+        run: |
+          [[ "$GITHUB_SHA" =~ ^[a-f0-9]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$GITHUB_SHA" != "8e7d9ecd42c001f1fa9b30e120535ce1bb0ef6e8"
+          echo "Testing $GITHUB_SHA"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: '10.0.x'
+      - name: Match EC2 Compose and record runner differences
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker version
+          if [ "${{ matrix.compose }}" = v5.6.1 ]; then
+            mkdir -p "$RUNNER_TEMP/compose-ec2"
+            cd "$RUNNER_TEMP/compose-ec2"
+            curl --fail --location --retry 3 -O https://github.com/docker/compose/releases/download/v5.6.1/docker-compose-linux-x86_64
+            curl --fail --location --retry 3 -O https://github.com/docker/compose/releases/download/v5.6.1/checksums.txt
+            grep -E ' [*]?docker-compose-linux-x86_64$' checksums.txt | sha256sum --check --strict
+            sudo mkdir -p /usr/local/lib/docker/cli-plugins
+            sudo install -m 0755 docker-compose-linux-x86_64 /usr/local/lib/docker/cli-plugins/docker-compose
+            test "$(sudo docker compose version --short | sed 's/^v//')" = 5.6.1
+          fi
+          sudo docker compose version
+      - name: Offline MVC routes, feature providers and real DTO contracts
+        run: |
+          dotnet restore Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --locked-mode
+          dotnet test tests/Integration/Integration.Tests.csproj --no-restore -c Release --filter FullyQualifiedName~StagingCalendarFeatureTests
+      - name: Verify the corrective release closure and prepare a new isolated namespace
+        run: |
+          node tools/mysql84-release.cjs
+          node tools/test-mysql84.cjs
+          python3 tools/test_staging.py
+          python3 tools/test_staging_http.py
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" prepare
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" config
+          test "$(sudo python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['revision'])" "$STAGE_STATE/state.json")" = "$GITHUB_SHA"
+          sudo docker compose --env-file "$STAGE_STATE/.env" -f infra/staging/compose.yaml --profile tools config --format json | python3 -c 'import json,sys; services=json.load(sys.stdin)["services"]; assert set(services)=={"api","ops","db","volume-init"}; assert all("build" not in s and s["pull_policy"]=="never" for s in services.values())'
+      - name: Docker build of infra/Dockerfile at github.sha, fresh corrective SQL, complete audits, driver TLS, non-root readiness
+        run: |
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" build
+          project=$(sudo python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['project'])" "$STAGE_STATE/state.json")
+          label=$(sudo docker image inspect "$project-api:$GITHUB_SHA" --format '{{index .Config.Labels "org.opencontainers.image.revision"}}')
+          echo "API image $project-api:$GITHUB_SHA revision label: $label"
+          test "$label" = "$GITHUB_SHA"
+          sudo cp "$STAGE_STATE/images.json" "$STAGE_STATE/images.before-runtime.json"
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" db
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" sql-check
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" provision
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" compatibility
+          # Complete corrective-release verification (schema, triggers, routine, account grants).
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" release-preflight
+          # A completed journal verifies and skips every DDL step; it must not replay SQL.
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" provision
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" tls
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" seed
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" preflight
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" start
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" verify
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" restart
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" verify
+          sudo cmp "$STAGE_STATE/images.before-runtime.json" "$STAGE_STATE/images.json"
+          sudo cat "$STAGE_STATE/images.json" "$STAGE_STATE/mysql-capabilities.json" "$STAGE_STATE/ops/database-identity.json" "$STAGE_STATE/ops/compatibility-result.json" "$STAGE_STATE/ops/preflight-result.json" "$STAGE_STATE/ops/transport-result.json"
+      - name: Real Docker HTTP audit on the current code (FAIL or BLOCKED fails gate)
+        run: |
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" http
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" verify
+          sudo cmp "$STAGE_STATE/images.before-runtime.json" "$STAGE_STATE/images.json"
+      - name: Collect sanitized HTTP evidence even when the audit fails
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/staging-http-evidence"
+          if sudo test -d "$STAGE_STATE/ops"; then
+            while IFS= read -r file; do
+              sudo cat "$file"
+              sudo cp "$file" "$RUNNER_TEMP/staging-http-evidence/"
+            done < <(sudo find "$STAGE_STATE/ops" -maxdepth 1 -type f -name 'http-smoke-*.json')
+            sudo chown -R "$(id -u):$(id -g)" "$RUNNER_TEMP/staging-http-evidence"
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: staging-current-http-audit-${{ matrix.compose }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/staging-http-evidence/*.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Sanitized Docker and MySQL failure diagnostics (before stop)
+        if: failure()
+        run: |
+          if sudo test -f "$STAGE_STATE/state.json"; then
+            sudo python3 infra/staging/host.py --state "$STAGE_STATE" diagnostics
+          fi
+      - name: Stop only this job's staging (keep volume/data; never touch host Nginx)
+        if: always()
+        run: |
+          if sudo test -f "$STAGE_STATE/state.json"; then
+            sudo python3 infra/staging/host.py --state "$STAGE_STATE" stop
+          fi

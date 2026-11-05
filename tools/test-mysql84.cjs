@@ -42,6 +42,8 @@ function simulate(mutant,audit=false){
  const currentConfig=audit?{...config,host:'er-stage-db',database:'electronic_register_staging',user:'er_review',expectedDataDir:'/var/lib/mysql'}:config;
  if(mutant?.config)Object.assign(currentConfig,mutant.config);
  function read(sql){
+  // These simulations are the er-quality-1 predecessor: no corrective release marker.
+  if(sql.includes("version='er-quality-2-mysql84'"))return '0';
   if(sql==='CALL er_schema_ready();')return mutant==='readiness'?'0':'1';
   if(sql===add.body.slice('BEGIN\n'.length,-'\nEND'.length).trim())return mutant==='readiness'?'0':'1';
   if(sql.startsWith('SELECT VERSION'))return audit?'8.4.13\t3306\t/var/lib/mysql/\telectronic_register_staging':'8.4.13\t3306\t/data/\tdb';
@@ -72,6 +74,42 @@ function simulate(mutant,audit=false){
 }
 simulate();
 simulate(null,true);
+// Corrective release branch: a database carrying er-quality-2-mysql84 is checked against the
+// derived contract (tools/mysql84-release.cjs contract), with each kind of drift detected.
+{
+ const corrective=require('./mysql84-release.cjs').contract(true);
+ const crlf=v=>v.replaceAll('\r\n','\n');
+ const bodyOf=t=>t.body?crlf(t.body):crlf(t.statement).replace(/^[\s\S]*? FOR EACH ROW\s+/,'').replace(/(REGEXP_LIKE\([^\n]*?)\\\\z(')/g,'$1\\z$2');
+ function modern(mutant){
+  const output=[];
+  const read=sql=>{
+   if(sql.includes("version='er-quality-2-mysql84'"))return '1';
+   if(sql.startsWith('SELECT VERSION'))return '8.4.13\t3306\t/data/\tdb';
+   if(sql.startsWith('SELECT TABLE_NAME'))return Object.keys(corrective.tables).sort().join('\n');
+   if(sql.startsWith('SELECT DEFAULT_COLLATION_NAME'))return 'utf8mb4_unicode_ci';
+   if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];let ddl=corrective.tables[name];if(mutant==='table'&&name==='identity_account_state')ddl=ddl.replace('NOT NULL','NULL');return name+'\t'+ddl;}
+   if(sql.includes('information_schema.TRIGGERS'))return JSON.stringify(Object.entries(corrective.triggers).map(([name,t])=>{const {statement,body,...meta}=t;return {name,...meta,body:mutant==='trigger'&&name==='mt5b_security_delete'?bodyOf(t)+' ':bodyOf(t),definer:config.schemaDefiner};}));
+   if(sql.includes('information_schema.ROUTINES'))return JSON.stringify([{name:'er_schema_ready',type:'PROCEDURE',body:crlf(corrective.routine.body)+(mutant==='routine'?' ':''),definer:config.schemaDefiner,mode:corrective.routine.mode,security:'DEFINER',access:'READS SQL DATA',charset:'utf8mb4',collation:'utf8mb4_unicode_ci',dbcollation:'utf8mb4_unicode_ci',deterministic:'NO',comment:''}]);
+   if(sql.includes('information_schema.PARAMETERS'))return '0';
+   for(const [section,table] of Object.entries({columns:'COLUMNS',indexes:'STATISTICS',foreignKeys:'REFERENTIAL_CONSTRAINTS',keyColumns:'KEY_COLUMN_USAGE'}))
+    if(sql.includes('FROM information_schema.'+table+' ')){const rows=structuredClone(corrective.metadata[section]);if(mutant==='metadata'&&section==='foreignKeys')rows[0].DELETE_RULE='CASCADE';return JSON.stringify(rows);}
+   if(sql.startsWith('SELECT COUNT(*) FROM mysql.user'))return '1';
+   if(sql==='CALL er_schema_ready();')return mutant==='readiness'?'0':'1';
+   throw Error('Unexpected corrective query: '+sql.slice(0,80));
+  };
+  const context={__dirname,require:id=>id==='fs'?{readFileSync:(file,...args)=>file==='config'?JSON.stringify(config):file==='password'?'secret-password':fs.readFileSync(file,...args)}:
+   id==='child_process'?{spawnSync:(client,args,options)=>({status:0,stdout:read(options.input)})}:require(id),console:{log:v=>output.push(v),error:v=>output.push(v)},process:{argv:['node',file,'config'],env:{},exitCode:undefined}};
+  vm.runInNewContext(fs.readFileSync(file,'utf8'),context);
+  return {exitCode:context.process.exitCode,output};
+ }
+ const passed=modern();
+ assert.equal(passed.exitCode,undefined);assert.equal(JSON.parse(passed.output[0]).Release,'er-quality-2-mysql84');
+ for(const [mutant,id] of [['table','corrective-table-ddl'],['trigger','corrective-trigger'],['routine','corrective-routine'],['metadata','corrective-metadata'],['readiness','corrective-readiness-probe']]){
+  const failed=modern(mutant);assert.equal(failed.exitCode,1,mutant);assert.equal(failed.output.length,1);
+  const check=JSON.parse(failed.output[0].replace('ER_PREFLIGHT_FAILURE ',''));assert(check.id===id||check.id==='corrective-'+mutant||(mutant==='metadata'&&check.id==='corrective-foreignKeys'),mutant+': '+check.id);
+  assert(!failed.output[0].includes('secret-password'));
+ }
+}
 assert.equal(simulate('readiness').id,'readiness-probe');
 assert.deepEqual(simulate('readiness',true).map(r=>r.id),['readiness-probe']);
 const incidentTriggers=Object.entries(base.triggers).filter(([,t])=>/\nFOR EACH ROW/.test(t.statement));

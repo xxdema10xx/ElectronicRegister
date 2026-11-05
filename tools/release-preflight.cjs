@@ -44,6 +44,61 @@ const contract=JSON.parse(fs.readFileSync(path.join(root,'migrations/bootstrap/s
 const mysql84=/^8\.4\./.test(version),adapter=require('./mysql84-contract.cjs');
 const additive=mysql84?require('./release-additive-contract.cjs').forMySql84():require('./release-additive-contract.cjs');
 const normalize=s=>s.replaceAll('\r\n','\n');
+// A database carrying the corrective release marker is checked against the derived
+// er-quality-2-mysql84 contract (reviewed trigger corrections, hash columns, strict gate),
+// with the same normalization as tools/mysql84_release.py verify_schema. Account grants
+// are verified separately by that tool with the administrative identity.
+identify('contract','release','corrective-release-marker');
+const modern=mysql84&&read("SELECT COUNT(*) FROM er_schema_release WHERE version='er-quality-2-mysql84'")==='1';
+if(modern){
+ const corrective=require('./mysql84-release.cjs').contract(true);
+ const crlf=v=>v.replaceAll('\r\n','\n');
+ const tableDdl=v=>crlf(v).replace(/ AUTO_INCREMENT=\d+/g,'')
+  .replace(/(^  `[^`]+` (?:(?:char|varchar)\(\d+\)|enum\('[^']*'(?:,'[^']*')*\)|tinytext|text|mediumtext|longtext)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci/gm,'$1 COLLATE utf8mb4_unicode_ci')
+  .replaceAll(' CHARACTER SET ascii COLLATE ascii_general_ci',' CHARACTER SET ascii');
+ const sorted=o=>JSON.stringify(Object.fromEntries(Object.entries(o).sort(([a],[b])=>a<b?-1:a>b?1:0)));
+ const inventory=(category,id,actual,expected)=>{identify(category,'inventory',id);equal(JSON.stringify([...actual].sort()),JSON.stringify([...expected].sort()),'inventory');};
+ inventory('table','corrective-table-inventory',read('SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() ORDER BY TABLE_NAME').split('\n'),Object.keys(corrective.tables));
+ identify('schema','database','corrective-database-collation');
+ equal(read('SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME=DATABASE()'),'utf8mb4_unicode_ci','collation');
+ for(const [table,ddl]of Object.entries(corrective.tables)){
+  identify('table',table,'corrective-table-ddl');
+  equal(tableDdl(read('SHOW CREATE TABLE `'+table+'`;').split('\t').slice(1).join('\t')),crlf(ddl),'ddl');
+ }
+ for(const [section,table,where] of [['columns','COLUMNS','TABLE_SCHEMA=DATABASE()'],['indexes','STATISTICS','TABLE_SCHEMA=DATABASE()'],
+  ['foreignKeys','REFERENTIAL_CONSTRAINTS','CONSTRAINT_SCHEMA=DATABASE()'],['keyColumns','KEY_COLUMN_USAGE','TABLE_SCHEMA=DATABASE() AND REFERENCED_TABLE_NAME IS NOT NULL']]){
+  identify('metadata','inventory','corrective-'+section);
+  const rows=corrective.metadata[section],keys=Object.keys(rows[0]),names=[...new Set(rows.map(r=>r.TABLE_NAME))].sort();
+  const actual=JSON.parse(read('SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT('+keys.map(k=>"'"+k+"',`"+k+"`").join(',')+')),JSON_ARRAY()) FROM information_schema.'+table+' WHERE '+where+" AND TABLE_NAME IN ("+names.map(n=>"'"+n+"'").join(',')+')'));
+  equal(JSON.stringify(actual.map(sorted).sort()),JSON.stringify(rows.map(sorted).sort()),section);
+ }
+ const triggers=JSON.parse(read("SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT('name',TRIGGER_NAME,'body',ACTION_STATEMENT,'mode',SQL_MODE,'definer',DEFINER,'charset',CHARACTER_SET_CLIENT,'collation',COLLATION_CONNECTION,'database_collation',DATABASE_COLLATION,'table',EVENT_OBJECT_TABLE,'event',EVENT_MANIPULATION,'timing',ACTION_TIMING,'order',ACTION_ORDER)),JSON_ARRAY()) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA=DATABASE()"));
+ inventory('trigger','corrective-trigger-inventory',triggers.map(t=>t.name),Object.keys(corrective.triggers));
+ for(const [name,t]of Object.entries(corrective.triggers)){
+  identify('trigger',name,'corrective-trigger');
+  // ACTION_STATEMENT exposes the parsed literal's single backslash before z.
+  const body=t.body?crlf(t.body):crlf(t.statement).replace(/^[\s\S]*? FOR EACH ROW\s+/,'').replace(/(REGEXP_LIKE\([^\n]*?)\\\\z(')/g,'$1\\z$2');
+  const {statement:_s,body:_b,...meta}=t;
+  const actual=triggers.find(row=>row.name===name)||{};
+  const {name:_n,...observed}=actual;
+  equal(sorted(observed),sorted({...meta,body,definer:config.schemaDefiner}),'trigger');
+ }
+ identify('routine','er_schema_ready','corrective-routine');
+ const routines=JSON.parse(read("SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT('name',ROUTINE_NAME,'type',ROUTINE_TYPE,'body',ROUTINE_DEFINITION,'definer',DEFINER,'mode',SQL_MODE,'security',SECURITY_TYPE,'access',SQL_DATA_ACCESS,'charset',CHARACTER_SET_CLIENT,'collation',COLLATION_CONNECTION,'dbcollation',DATABASE_COLLATION,'deterministic',IS_DETERMINISTIC,'comment',ROUTINE_COMMENT)),JSON_ARRAY()) FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA=DATABASE()"));
+ equal(JSON.stringify(routines.map(sorted)),JSON.stringify([sorted({name:'er_schema_ready',type:'PROCEDURE',body:crlf(corrective.routine.body),definer:config.schemaDefiner,mode:corrective.routine.mode,
+  security:'DEFINER',access:'READS SQL DATA',charset:'utf8mb4',collation:'utf8mb4_unicode_ci',dbcollation:'utf8mb4_unicode_ci',deterministic:'NO',comment:''})]),'routine');
+ identify('routine','er_schema_ready','corrective-routine-parameters');
+ equal(read('SELECT COUNT(*) FROM information_schema.PARAMETERS WHERE SPECIFIC_SCHEMA=DATABASE()'),'0','parameters');
+ identify('definer','schema-owner','corrective-definer-account');
+ const owner=config.schemaDefiner.split('@');
+ equal(read("SELECT COUNT(*) FROM mysql.user WHERE User='"+owner[0]+"' AND Host='"+owner[1]+"'"),'1','account');
+ identify('metadata','er_schema_ready','corrective-readiness-probe');
+ // Audit evaluates the versioned SELECT directly: never execute an untrusted routine body.
+ const gate=crlf(corrective.routine.body);
+ equal(read(audit?gate.slice('BEGIN\n'.length,-'\nEND'.length).trim():'CALL er_schema_ready();'),'1','ready');
+ if(audit){for(const item of mismatches)console.log(JSON.stringify(item));if(mismatches.length)process.exitCode=1;}
+ else console.log(JSON.stringify({ReadOnly:true,IdentityVerified:true,Release:'er-quality-2-mysql84',TablesVerified:Object.keys(corrective.tables).length,TriggersVerified:Object.keys(corrective.triggers).length,RoutineVerified:true,ReadinessVerified:true}));
+}else{
 for(const [table,ddl]of Object.entries(contract.tables)){
  identify('table',table,'base-table-ddl');
  const actual=read('SHOW CREATE TABLE `'+table+'`;').split('\t').slice(1).join('\t').replace(/ AUTO_INCREMENT=\d+/g,'').replaceAll('\r\n','\n');
@@ -125,6 +180,7 @@ equal(read(audit?additive.body.slice('BEGIN\n'.length,-'\nEND'.length).trim():'C
 if(audit){for(const item of mismatches)console.log(JSON.stringify(item));if(mismatches.length)process.exitCode=1;}
 if(!audit)console.log(JSON.stringify({ReadOnly:true,IdentityVerified:true,BaseTablesVerified:Object.keys(contract.tables).length,BaseTriggersVerified:Object.keys(contract.triggers).length,AdditiveTablesVerified:Object.keys(additive.contract.tables).length,AdditiveTriggersVerified:additive.contract.triggers.length,RoutineDefinitionVerified:true,DefinerVerified:!isolated||!!config.schemaDefiner,AdditiveProbeReady:true,Release:'er-quality-1'}));
 
+}
 }catch(error){
  if(audit){for(const item of mismatches)console.log(JSON.stringify(item));console.log(JSON.stringify({...check,difference:'unavailable',expectedHash:hash('verified'),actualHash:hash('unavailable')}));}
  else if(!error.sqlFailure)console.error('ER_PREFLIGHT_FAILURE '+JSON.stringify(check));

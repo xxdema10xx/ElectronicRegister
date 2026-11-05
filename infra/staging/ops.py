@@ -65,8 +65,12 @@ def saved(path,value):
     temporary.chmod(0o600)
     temporary.replace(path)
 
+# The read-only checkout belongs to another uid; trust exactly that path for git reads.
+GIT_TRUST=dict(GIT_CONFIG_COUNT='1',GIT_CONFIG_KEY_0='safe.directory',GIT_CONFIG_VALUE_0=str(ROOT))
+
 def process(args,input=None):
-    p=subprocess.run([str(a) for a in args],input=input,text=True,capture_output=True)
+    import os
+    p=subprocess.run([str(a) for a in args],input=input,text=True,capture_output=True,env={**os.environ,**GIT_TRUST})
     if p.returncode:
         record_failure(failure_data(p.returncode,p.stderr,Path(str(args[0])).name=='mysql'))
         with (STATE/'errors.log').open('a') as file:file.write(p.stderr+'\n')
@@ -97,7 +101,13 @@ def checkout(config):
     local=(ROOT/'migrations/release/manifest.json').read_bytes().replace(b'\r\n',b'\n')
     packaged=Path('/opt/release/migrations/release/manifest.json').read_bytes().replace(b'\r\n',b'\n')
     require(sha(local)==config['manifest'] and local==packaged,'Packaged SQL/source manifest mismatch')
-    process(['node',ROOT/'tools/release-artifacts.cjs'])
+    # Current code ships the corrective MySQL 8.4 release: verify its closure (which also
+    # re-verifies the immutable er-quality-1 predecessor) and the copy packaged in the image.
+    # tools/release-artifacts.cjs certifies only the historical er-quality-1 checkout.
+    corrective=(ROOT/'migrations/mysql84-remediation/manifest.json').read_bytes().replace(b'\r\n',b'\n')
+    shipped=Path('/opt/release/migrations/mysql84-remediation/manifest.json').read_bytes().replace(b'\r\n',b'\n')
+    require(corrective==shipped,'Packaged corrective release manifest mismatch')
+    process(['node',ROOT/'tools/mysql84-release.cjs'])
 
 class Journal:
     def __init__(self):
@@ -127,7 +137,9 @@ def provision(config):
     binding=json.loads((PUBLIC/'binding.json').read_text())
     bundle=STATE/'bundle'
     phase('bundle-generation')
-    if not bundle.exists():process(['node',ROOT/'tools/prepare-release-sql.cjs',PUBLIC/'binding.json',bundle])
+    # Derived 8.4 bundle: reviewed trigger corrections, hash columns and the
+    # er-quality-2-mysql84 marker, from the verified closure (never the historical SQL as-is).
+    if not bundle.exists():process(['node',ROOT/'tools/mysql84-release.cjs','bundle',PUBLIC/'binding.json',bundle])
     require((bundle/'binding.json').exists(),'Incomplete derived bundle: inspect it without deleting/replaying automatically')
     user_sql=[]
     phase('account-creation')
