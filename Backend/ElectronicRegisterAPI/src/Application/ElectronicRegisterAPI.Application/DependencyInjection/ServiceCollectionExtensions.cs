@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplicationManagers(this IServiceCollection services)
     {
         services.AddScoped<IIdentityAccountManager, IdentityAccountManager>();
+        services.AddScoped<IInstitutionAccountManager, InstitutionAccountManager>();
         services.AddScoped<ElectronicRegisterAPI.Application.Services.InstitutionSchoolAuthorization>();
         services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IInstitutionCalendarManager, InstitutionCalendarManager>();
         services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IInstitutionFormativePlanManager, InstitutionFormativePlanManager>();

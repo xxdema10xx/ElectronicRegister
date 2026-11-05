@@ -472,7 +472,7 @@ public sealed class Mt3cHttpTests(IntegrationFixture fixture) : IAsyncLifetime
         })).ToArray();
         Assert.Equal(rows.Length, rows.Select(r => r.method + " " + r.route).Distinct(StringComparer.OrdinalIgnoreCase).Count());
         var school = rows.Where(r => r.migrated).ToArray();
-        Assert.Equal(76, school.Length);
+        Assert.Equal(77, school.Length); // includes POST api/institution/accounts
         Assert.All(school, r =>
         {
             Assert.Equal(new[] { InstitutionSchoolEndpointAttribute.PolicyName }, r.policies);
