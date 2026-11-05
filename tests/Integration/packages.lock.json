@@ -434,6 +434,13 @@
           "MySqlConnector": "[2.6.1, )",
           "Pomelo.EntityFrameworkCore.MySql": "[9.0.0, )"
         }
+      },
+      "ownerprovisioning": {
+        "type": "Project",
+        "dependencies": {
+          "BCrypt.Net-Next": "[4.2.0, )",
+          "MySqlConnector": "[2.6.1, )"
+        }
       }
     }
   }

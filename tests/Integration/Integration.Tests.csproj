@@ -22,6 +22,7 @@
 	<ProjectReference Include="..\..\Backend\ElectronicRegisterAPI\src\Business\ElectronicRegisterAPI.Business\ElectronicRegisterAPI.Business.csproj" />
 	<ProjectReference Include="..\..\Backend\ElectronicRegisterAPI\src\Infrastructure\ElectronicRegisterAPI.Infrastructure\ElectronicRegisterAPI.Infrastructure.csproj" />
 	<ProjectReference Include="..\..\Backend\ElectronicRegisterAPI\src\Domain\ElectronicRegisterAPI.Domain\ElectronicRegisterAPI.Domain.csproj" />
+	<ProjectReference Include="..\..\tools\OwnerProvisioning\OwnerProvisioning.csproj" />
   </ItemGroup>
 
 </Project>

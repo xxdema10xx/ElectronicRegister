@@ -14,4 +14,5 @@
   <Project Path="../../tests/Unit/Unit.Tests.csproj" />
   <Project Path="src/Api/ElectronicRegisterAPI/ElectronicRegisterAPI.csproj" />
   <Project Path="../../tools/PlatformAdmin/PlatformAdmin.csproj" />
+  <Project Path="../../tools/OwnerProvisioning/OwnerProvisioning.csproj" />
 </Solution>
