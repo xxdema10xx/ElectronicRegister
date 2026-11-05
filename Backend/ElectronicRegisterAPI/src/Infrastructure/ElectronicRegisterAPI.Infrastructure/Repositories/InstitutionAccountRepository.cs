@@ -57,9 +57,21 @@ internal sealed class InstitutionAccountRepository(
         r.StudentId, r.TeacherId, r.FirstName, r.LastName, r.ClassId, r.Reason
     }))));
 
-    private sealed record Stored(Guid UserId, Guid MembershipId, string[] Roles, Guid? StudentId, Guid? TeacherId);
+    private sealed record Stored(
+        Guid UserId,
+        Guid MembershipId,
+        string[] Roles,
+        Guid? StudentId,
+        Guid? TeacherId
+    );
 
-    public async Task<InstitutionAccountCreated> CreateAsync(TenantContext actor, CreateInstitutionAccount r, string passwordHash, string temporaryPassword, CancellationToken ct = default)
+    public async Task<InstitutionAccountCreated> CreateAsync(
+        TenantContext actor,
+        CreateInstitutionAccount r,
+        string passwordHash,
+        string temporaryPassword,
+        CancellationToken ct = default
+    )
     {
         var hash = Intent(actor, r);
         await using var tx = await db.Database.BeginTransactionAsync(ct);
@@ -126,7 +138,12 @@ internal sealed class InstitutionAccountRepository(
         return new(r.EventId, user, membership, roles, student, teacher, false, temporaryPassword);
     }
 
-    private async Task RequireOwned(string table, Guid id, TenantContext actor, CancellationToken ct)
+    private async Task RequireOwned(
+        string table,
+        Guid id,
+        TenantContext actor,
+        CancellationToken ct
+    )
     {
         // Foreign and absent profiles are indistinguishable.
         await using var command = await Command($"SELECT id FROM {table} WHERE institution_id=@i AND id=@p FOR UPDATE", ct, ("@i", actor.InstitutionId), ("@p", id));

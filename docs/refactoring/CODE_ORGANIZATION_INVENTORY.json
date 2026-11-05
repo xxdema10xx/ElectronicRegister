@@ -1,6 +1,6 @@
 {
-  "filesAnalyzed": 664,
-  "typesClassified": 661,
+  "filesAnalyzed": 675,
+  "typesClassified": 672,
   "entries": [
     {
       "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs",
@@ -13,6 +13,22 @@
       "types": [
         {
           "name": "ExpiredExamSubmissionWorker",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Contracts/CreateInstitutionAccountRequest.cs",
+      "layer": "Api",
+      "project": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Api.Contracts",
+      "classification": "Contracts",
+      "types": [
+        {
+          "name": "CreateInstitutionAccountRequest",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -125,6 +141,22 @@
       "types": [
         {
           "name": "IdentityRegistrationController",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionAccountController.cs",
+      "layer": "Api",
+      "project": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Api.Controllers",
+      "classification": "Controllers",
+      "types": [
+        {
+          "name": "InstitutionAccountController",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -1137,6 +1169,22 @@
       "types": [
         {
           "name": "InstitutionAcademicCatalogManager",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionAccountManager.cs",
+      "layer": "Application",
+      "project": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Application.Managers",
+      "classification": "Managers",
+      "types": [
+        {
+          "name": "InstitutionAccountManager",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -5177,6 +5225,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Exceptions/AccountEmailUnavailableException.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Exceptions",
+      "classification": "Exceptions",
+      "types": [
+        {
+          "name": "AccountEmailUnavailableException",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Exceptions/BusinessRuleException.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -5363,6 +5427,22 @@
       "types": [
         {
           "name": "IInstitutionAcademicCatalogManager",
+          "kind": "InterfaceDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IInstitutionAccountManager.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Interfaces.Managers",
+      "classification": "Interfaces/Managers",
+      "types": [
+        {
+          "name": "IInstitutionAccountManager",
           "kind": "InterfaceDeclaration",
           "nestedTypes": []
         }
@@ -5811,6 +5891,22 @@
       "types": [
         {
           "name": "IInstitutionAcademicCatalogRepository",
+          "kind": "InterfaceDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionAccountRepository.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Interfaces.Repositories",
+      "classification": "Interfaces/Repositories",
+      "types": [
+        {
+          "name": "IInstitutionAccountRepository",
           "kind": "InterfaceDeclaration",
           "nestedTypes": []
         }
@@ -6985,6 +7081,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/CreateInstitutionAccount.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Models",
+      "classification": "Models",
+      "types": [
+        {
+          "name": "CreateInstitutionAccount",
+          "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/EmailTemplate.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -7220,6 +7332,22 @@
         {
           "name": "Institution",
           "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/InstitutionAccountCreated.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Models",
+      "classification": "Models",
+      "types": [
+        {
+          "name": "InstitutionAccountCreated",
+          "kind": "RecordDeclaration",
           "nestedTypes": []
         }
       ]
@@ -7625,6 +7753,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Policies/InstitutionAccountRules.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Policies",
+      "classification": "Policies",
+      "types": [
+        {
+          "name": "InstitutionAccountRules",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Policies/InstitutionCalendarRules.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -7715,6 +7859,22 @@
       "types": [
         {
           "name": "StudentClassTransferPolicy",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Policies/TemporaryPasswords.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Policies",
+      "classification": "Policies",
+      "types": [
+        {
+          "name": "TemporaryPasswords",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -9747,6 +9907,27 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionAccountRepository.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Repositories",
+      "classification": "Repositories",
+      "types": [
+        {
+          "name": "InstitutionAccountRepository",
+          "kind": "ClassDeclaration",
+          "nestedTypes": [
+            {
+              "name": "Stored",
+              "visibility": "\n    private sealed "
+            }
+          ]
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionAdministrationPersistence.cs",
       "layer": "Infrastructure",
       "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
@@ -10653,20 +10834,9 @@
   ],
   "dependencies": [
     {
-      "project": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/ElectronicRegisterAPI.csproj",
-      "layer": "Api",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj",
+      "layer": "Infrastructure",
       "references": [
-        "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj",
-        "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj",
-        "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/ElectronicRegisterAPI.Business.csproj",
-        "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/ElectronicRegisterAPI.Application.csproj"
-      ]
-    },
-    {
-      "project": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/ElectronicRegisterAPI.Application.csproj",
-      "layer": "Application",
-      "references": [
-        "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/ElectronicRegisterAPI.Business.csproj",
         "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj"
       ]
     },
@@ -10678,14 +10848,25 @@
       ]
     },
     {
+      "project": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/ElectronicRegisterAPI.csproj",
+      "layer": "Api",
+      "references": [
+        "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj",
+        "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj",
+        "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/ElectronicRegisterAPI.Business.csproj",
+        "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/ElectronicRegisterAPI.Application.csproj"
+      ]
+    },
+    {
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj",
       "layer": "Domain",
       "references": []
     },
     {
-      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj",
-      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/ElectronicRegisterAPI.Application.csproj",
+      "layer": "Application",
       "references": [
+        "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/ElectronicRegisterAPI.Business.csproj",
         "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj"
       ]
     }
