@@ -97,6 +97,12 @@ jobs:
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" http
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" verify
           sudo cmp "$STAGE_STATE/images.before-runtime.json" "$STAGE_STATE/images.json"
+      - name: Publish the owner provisioning tool (not part of the API image)
+        run: dotnet publish tools/OwnerProvisioning/OwnerProvisioning.csproj -c Release -o "$RUNNER_TEMP/owner-tool" --nologo /p:UseAppHost=false
+      - name: Production-like account flow - Production mode, RolloutApproved, MySQL VerifyFull, HTTPS via infra/nginx.release.conf
+        run: |
+          sudo python3 infra/staging/production_flow.py --state "$STAGE_STATE" --owner-tool "$RUNNER_TEMP/owner-tool"
+          sudo python3 -c "import json,sys; r=json.load(open(sys.argv[1])); assert r['revision']==sys.argv[2]; print(json.dumps(r,indent=2))" "$STAGE_STATE/production/production-flow.json" "$GITHUB_SHA"
       - name: Collect sanitized HTTP evidence even when the audit fails
         if: always()
         shell: bash
@@ -107,6 +113,7 @@ jobs:
               sudo cat "$file"
               sudo cp "$file" "$RUNNER_TEMP/staging-http-evidence/"
             done < <(sudo find "$STAGE_STATE/ops" -maxdepth 1 -type f -name 'http-smoke-*.json')
+            if sudo test -f "$STAGE_STATE/production/production-flow.json"; then sudo cp "$STAGE_STATE/production/production-flow.json" "$RUNNER_TEMP/staging-http-evidence/"; fi
             sudo chown -R "$(id -u):$(id -g)" "$RUNNER_TEMP/staging-http-evidence"
           fi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
