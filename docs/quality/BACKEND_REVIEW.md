@@ -14,7 +14,7 @@
 | Per severità | **Critica 0 · Alta 4 · Media 8 · Bassa 17** (INC-006 riclassificato da Media a Bassa; INC-017 Alta, INC-018 Bassa) |
 | Verdetto | **NON PRONTO per la produzione** |
 
-**Isolamento multi-tenant.** Non ho trovato falle sfruttabili via HTTP. La conclusione nasce da analisi statica. La baseline su MySQL 8.4.13 ([BASELINE_MYSQL84.md](BASELINE_MYSQL84.md): 1566 casi superati, 16 falliti e 94 non eseguiti su 1676) la **conferma per i percorsi HTTP, i repository, le scritture applicative e il worker**. **Non la verifica** per la revoca dei token basata sulla security generation, le mutazioni di ruolo e l'isolamento delle mutazioni IAM (`Mt5bJwtTests`, `Mt5bSecurityStateTests`, `Mt5dMembershipMutationTests`: 94 casi legati a MAMP 5.7 che si bloccano in inizializzazione su 8.4 e non vengono eseguiti, INC-017), né per la CLI di piattaforma. L'isolamento IAM via HTTP è invece coperto in parte da `Mt5eIamHttpTests` (53/53) e `Mt5aMembershipAdminTests` (36/36). Per le aree non verificate resta un risultato da analisi statica. Il blocco viene da tre punti. La piattaforma dati esce dal supporto: EF Core 9 termina il 2026-11-10 e non esiste un provider Pomelo per EF Core 10. Il database target è deciso (D1: MySQL 8.4 LTS), ma il ramo 5.7 è ancora presente nel codice, nei gate e negli strumenti. Infine, in produzione non esiste un percorso per l'onboarding.
+**Isolamento multi-tenant.** Non ho trovato falle sfruttabili via HTTP. La conclusione nasce da analisi statica. La baseline su MySQL 8.4.13 ([BASELINE_MYSQL84.md](BASELINE_MYSQL84.md): 1566 casi superati, 16 falliti e 94 non eseguiti su 1676) la **conferma per i percorsi HTTP, i repository, le scritture applicative e il worker**. Dopo il Lotto 0B (INC-017) la conferma vale, **in locale su 8.4**, anche per la revoca dei token basata sulla security generation, le mutazioni di ruolo e l'isolamento delle mutazioni IAM: `Mt5bJwtTests` 23/23, `Mt5bSecurityStateTests` 39/40, `Mt5dMembershipMutationTests` 31/32. I 2 casi non superati osservano l'holding legacy assente dal bootstrap 8.4 (INC-012) e non riguardano revoca, escalation o isolamento. **La conferma in CI arriverà solo dopo la prima run verde** del nuovo dominio `iam-security`. Resta non verificata su 8.4 la CLI di piattaforma. L'isolamento IAM via HTTP è invece coperto in parte da `Mt5eIamHttpTests` (53/53) e `Mt5aMembershipAdminTests` (36/36). Per le aree non verificate resta un risultato da analisi statica. Il blocco viene da tre punti. La piattaforma dati esce dal supporto: EF Core 9 termina il 2026-11-10 e non esiste un provider Pomelo per EF Core 10. Il database target è deciso (D1: MySQL 8.4 LTS), ma il ramo 5.7 è ancora presente nel codice, nei gate e negli strumenti. Infine, in produzione non esiste un percorso per l'onboarding.
 
 **I 5 rischi principali**
 
@@ -73,7 +73,7 @@
 | INC-001 | EF Core 9 / Pomelo 9 su net10: fine supporto 2026-11-10 e nessun percorso Pomelo 10 | Alta | CONFERMATO | Pacchetti | L | D1, INC-002 |
 | INC-002 | Target deciso (D1, 8.4 LTS) ma ramo 5.7.24 EOL ancora presente in codice, gate e strumenti | Alta | CONFERMATO | Database | L | D1 |
 | INC-008 | PlatformAdmin accetta solo il DB di test: nessun onboarding o governance in produzione | Alta | CONFERMATO | Rilascio/autorità | M | INC-002, D3 |
-| INC-017 | Test IAM, security generation e JWT (`Mt5bSecurityStateTests`, `Mt5dMembershipMutationTests`, `Mt5bJwtTests`: 94 casi) legati a MAMP 5.7 su 13306 tramite `TestMySqlTarget.Port`: non eseguiti sul target 8.4 né inclusi nei filtri della CI 8.4 | Alta | CONFERMATO (baseline) | Test/copertura | M | D1 |
+| INC-017 | Test IAM, security generation e JWT (`Mt5bSecurityStateTests`, `Mt5dMembershipMutationTests`, `Mt5bJwtTests`: 94 casi) legati a MAMP 5.7 su 13306 tramite `TestMySqlTarget.Port`: non eseguiti sul target 8.4 né inclusi nei filtri della CI 8.4 | Alta | RISOLTO in locale (Lotto 0B); CI da confermare con la prima run verde | Test/copertura | M | D1 |
 | INC-003 | Versione MySQL esatta hard-coded (`8.4.13`, `5.7.24`) in validatori, health e CLI | Media | CONFERMATO | Database | S | INC-002 |
 | INC-004 | `sql_mode` strict imposto solo nei test, non in produzione né in readiness | Media | CONFERMATO | Database | S | INC-002 |
 | INC-007 | `ServerVersion.AutoDetect` a ogni scope DbContext | Media | PROBABILE | Database/prestazioni | S | INC-002 |
@@ -87,7 +87,7 @@
 | INC-014 | `INSTITUTIONAL_API_SURFACE.json` disallineato (3 controller) e ritiro legacy da comunicare | Bassa | CONFERMATO | Contratti API | S | — |
 | INC-015 | Il controllo di integrità della cancellazione classe scansiona tutti i tenant a runtime | Bassa | CONFERMATO | Robustezza | S | — |
 | INC-016 | Toolchain dei test deprecata (xunit 2.5.3 Legacy, FluentAssertions 6) | Bassa | CONFERMATO | Test | M | — |
-| INC-018 | L'esecuzione della suite di integrazione riscrive 6 file versionati in `tests/Integration/TestResults/` (osservazioni SQL) | Bassa | CONFERMATO (baseline) | Test/igiene | S | VULN-007 |
+| INC-018 | L'esecuzione della suite di integrazione riscrive 6 file versionati in `tests/Integration/TestResults/` (osservazioni SQL) | Bassa | RISOLTO (Lotto 0B) | Test/igiene | S | VULN-007 |
 | VULN-001 | Enumerazione account: registrazione anonima con 409 e timing del login | Media | CONFERMATO | Autenticazione | S | D2 |
 | VULN-002 | Nessun limite per account sul login: solo 60 POST/min per IP condivisi | Media | CONFERMATO | Autenticazione | M | VULN-003 |
 | VULN-003 | Rate limit per IP collassato se `KnownProxies` non è configurato (consentito dalla policy) | Media | PROBABILE | Infra applicativa | S | INC-009 |
@@ -110,8 +110,14 @@ Questi due ID vengono dalla [baseline](BASELINE_MYSQL84.md), sono **approvati** 
 - **Severità.** La revoca dei token basata sulla security generation, le mutazioni di ruolo e l'isolamento delle mutazioni IAM (`Mt5bJwtTests`, `Mt5bSecurityStateTests`, `Mt5dMembershipMutationTests`) non hanno prove eseguite sul motore di produzione, né in locale né in CI. L'isolamento IAM via HTTP è invece coperto in parte da `Mt5eIamHttpTests`.
 - **Evidenza.** `tests/Integration/Mt5bJwtTests.cs:52`, `tests/Integration/Mt5dMembershipMutationTests.cs:61`, `tests/Integration/Mt5bSecurityStateTests.cs:64`, `tests/Integration/TestMySqlTarget.cs:13-16`, `tests/Integration/IntegrationFixture.cs:189` (`VERSION() = 5.7.24`).
 - **Scenario.** Una regressione 8.4 nella revoca della generation o nell'isolamento IAM passa inosservata, perché questi test girano solo contro MAMP 5.7.
-- **Fix.** Far usare a queste classi la fixture 8.4 usa e getta (`Mysql84FixtureTarget`) come le altre, senza indebolire i controlli d'identità, e aggiungerle ai domini `iam` e `tenants` di `tools/integration_partition.py`.
-- **Verifica.** I 94 casi verdi su 8.4 in locale e in CI.
+- **Fix.** Far usare a queste classi la fixture 8.4 usa e getta (`Mysql84FixtureTarget`) come le altre, senza indebolire i controlli d'identità, e aggiungerle alla CI 8.4.
+- **Verifica.** Tutti i casi eseguiti davvero su 8.4, in locale e in CI, con ogni fallimento spiegato.
+- **Stato (Lotto 0B).** Risolto in locale; CI da confermare.
+  - Sul ramo 8.4 `Open()` attesta il server (`Mysql84FixtureTarget.VerifyAsync`) e imposta la capability di sessione `@er_mt5b_fixture_capability` (`tests/Integration/Mysql84OwnedSession.cs`), che sostituisce il predicato d'identità 5.7 nei guard di purge. Il requisito `@er_mt5b_fixture_owners` è invariato. L'asserzione sulla porta 13306 vale solo sul ramo 5.7; sul ramo 8.4 porta, versione, host, datadir e container sono già attestati dalla fixture.
+  - `Mysql84CapabilityScopeTests` (2/2) dimostra che il reset del pool azzera la capability sulla stessa sessione fisica e che il percorso applicativo (`AddInfrastructure`) non la vede mai.
+  - Il test `Sql_FixtureGuardRequiresExplicitOwnerAndSyntheticCodeAndExcludesHolding` è stato diviso in due. `Sql_FixtureGuardRequiresExplicitOwnerAndSyntheticCode` conserva i due rifiuti 1644 e aggiunge un controllo positivo: con owner esplicito e codice sintetico la stessa sessione cancella. Questo prova che i rifiuti vengono dalle regole su owner e codice, non dalla mancanza di capability. `Sql_FixtureGuardExcludesRealLegacyHolding` contiene solo l'osservazione su `MT3A_LEGACY_TEST` ed è legato a INC-012.
+  - Risultati locali (container 8.4.13 usa e getta; stessi numeri con le classi eseguite separatamente e insieme): `Mt5bJwtTests` 23/23, `Mt5bSecurityStateTests` 39/40, `Mt5dMembershipMutationTests` 31/32, `Mysql84CapabilityScopeTests` 2/2. I 2 non superati sono le osservazioni dell'holding legacy (INC-012). Nessun nuovo ID.
+  - CI: nuovo dominio `iam-security` con 4 shard (`tools/integration_partition.py`, matrice di `.github/workflows/mysql84-remediation-candidate.yml`), famiglia di preflight `identity`. Ha 52 metodi; i 2 metodi legati a INC-012 sono nella lista esplicita `EXCLUDED_METHODS`, riportati come SKIPPED con ID e motivo. `tools/test_integration_partition.py` fallisce se la lista cambia.
 - **Collegati ma fuori da questo ID.** Le dipendenze dei test da regole FK 5.7 (`RESTRICT`, vedi INC-003) e dall'holding legacy MT3A (vedi INC-012).
 
 **INC-018 (Bassa)**
@@ -119,6 +125,7 @@ Questi due ID vengono dalla [baseline](BASELINE_MYSQL84.md), sono **approvati** 
 - **Scenario.** Uno sviluppatore committa evidenze rigenerate senza volerlo, oppure le evidenze diventano non deterministiche.
 - **Fix.** Scrivere le osservazioni in una cartella ignorata, oppure confrontarle senza riscriverle.
 - **Verifica.** `git status` pulito dopo l'esecuzione della suite.
+- **Stato (Lotto 0B).** Risolto. Le osservazioni vanno in `AppContext.BaseDirectory/test-evidence/<area>` (`tests/Integration/TestEvidence.cs`). La cartella è sotto `bin/`, quindi ignorata da git, esclusa dalla closure (`git ls-files --exclude-standard`) e assente dagli artifact CI, che caricano solo `.diagnostics/`. I file versionati in `tests/Integration/TestResults/` restano l'evidenza storica e non vengono più riscritti.
 
 ## 4. Dettaglio incompatibilità
 
@@ -391,6 +398,17 @@ Non è una sostituzione di pacchetto. Il SQL raw è in gran parte portabile, ma 
 **Fix.** Rendere lo scope obbligatorio nei costruttori ed eliminare i rami `_scope is null`. Spostare i migratori MT1/MT3 in un assembly di tooling non distribuito. Eliminare o archiviare `mt3*-staging`. Rimuovere le registrazioni "preparatory" non usate. **Impegno:** M. **Rischi:** i test che usano i migratori vanno spostati.
 
 **Verifica.** Un test di architettura (Roslyn o reflection) che fallisca se un repository esami ha un costruttore senza scope. Oggi esiste `tools/CodeOrganization`, che va esteso.
+
+**Test che dipendono dall'holding legacy `MT3A_LEGACY_TEST` (da decidere nel Lotto 6).** Il bootstrap 8.4 pulito non contiene l'holding: lo creano solo gli script di provisioning 5.7 (`tools/local_test_db.py:220`, `tools/formative_test_db.py:141`, `tools/windows_cli_certification.py:127`). Nessun seed è stato aggiunto alla fixture 8.4. Il Lotto 6 decide se l'holding diventa parte rivista della fixture 8.4, se i test vanno riscritti senza holding reale o se l'holding viene ritirato.
+
+| Test | Casi | Stato su 8.4 | CI 8.4 |
+|---|---|---|---|
+| `Mt5bSecurityStateTests.Sql_FixtureGuardExcludesRealLegacyHolding` (osservazione separata dal test di guard nel Lotto 0B) | 1 | Fallisce: holding assente (conteggio 0 invece di 1) | Esclusa, `EXCLUDED_METHODS` in `tools/integration_partition.py` |
+| `Mt5dMembershipMutationTests.OfflineGraphClassifiesValidatedIamLedgerWithoutChangingData` | 1 | Fallisce: id dell'holding assente, `ValidateGraphAsync` lo richiede | Esclusa, `EXCLUDED_METHODS` |
+| `Mt3dHttpTests.Release_WorkerDispatchRevalidatesTenantStateUnderLock(state: "holding-active", …)` | 2 | Fallisce: `mt3a_legacy_scope` vuota | Non nei filtri della CI 8.4 |
+| `HistoricalExpiryBoundaryTests.HistoricalOwnerRemainsTechnicalOnlyAndDeliveryIsIdempotent` | 1 | Fallisce: `mt3a_legacy_scope` vuota | Non nei filtri |
+| `Phase4_ExamLifecycleTests.Audit_IdentityProfileFaultIsAtomicAndCannotChangeDidacticProfile` | 2 | Fallisce: `MT3A explicit owner required` | Non nei filtri |
+| `Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph`, `…LegacyEfWritersStillReceiveTriggerDerivedOwners` | 2 | Dipende dall'ordine: passa se un test precedente nello stesso container ha creato l'holding (`Mt3aOwnershipTests.cs:39`, `InstitutionFormativePlanLifecycleTests.cs:132`) | Non nei filtri |
 
 ### INC-013 · Differenze Windows/Linux (Bassa, CONFERMATO)
 
@@ -911,8 +929,8 @@ La procedura è confermata in `tools/mysql84-release.cjs:107` (ramo `--write`, c
 **Test.** `dotnet test tests/Unit/Unit.Tests.csproj -c Release` e tutta la suite `tests/Integration` (1676 casi) su MySQL 8.4.13, comprese le classi che la CI 8.4 non esegue (la CI copre 817 casi su 1676).
 
 ### Lotto 0B: test di sicurezza su MySQL 8.4 (solo test harness e CI, prima del Lotto 1)
-- [ ] INC-017
-- [ ] INC-018
+- [x] INC-017 in locale: 93 casi superati su 95 nelle tre classi, più 2 su 2 in `Mysql84CapabilityScopeTests`; i 2 non superati sono legati a INC-012. [ ] conferma con la prima run verde della CI `iam-security`
+- [x] INC-018
 
 Nessuna modifica al codice di produzione in `Backend/ElectronicRegisterAPI/src`. Se un test riportato su 8.4 rivela un problema di produzione, si apre un nuovo ID invece di adattare il test. I file dell'harness e della CI sono nella closure: si applica la regola di processo qui sopra.
 
@@ -957,7 +975,7 @@ Nessuna modifica al codice di produzione in `Backend/ElectronicRegisterAPI/src`.
 **Test.** `Mt5cOnboardingTests`, i test di governance e `tools/test_windows_private_acl.py`. Nuovi test: CLI contro un target di produzione attestato e uno non attestato, doppia approvazione della nomina admin.
 
 ### Lotto 6: pulizia legacy e robustezza
-- [ ] INC-012
+- [ ] INC-012, compresi i 7 metodi (9 casi) che dipendono dall'holding legacy (§4, INC-012) e le 2 esclusioni della CI 8.4 legate a INC-012
 - [ ] INC-015
 - [ ] INC-011
 

@@ -7,6 +7,7 @@
 | Target | MySQL **8.4.13**, unico target di produzione secondo D1 ([DATABASE_TARGET_MYSQL84.md](../architecture/DATABASE_TARGET_MYSQL84.md)) |
 | Esito Unit | **598 / 598 superati** |
 | Esito Integration | **1676 casi: 1566 superati, 16 falliti durante l'esecuzione, 94 non eseguiti** perché bloccati in inizializzazione (`InitializeAsync` della classe, categoria A). Il report TRX conta questi 94 come "Failed", ma il corpo del test non è mai partito. Nella riesecuzione unica: 108 casi di nuovo non superati (94 non eseguiti + 14 falliti), 2 superati (dipendenza dall'ordine) |
+| Aggiornamento Lotto 0B (§8) | Stesso giorno, working tree con le modifiche di harness e CI del Lotto 0B: **1679 casi, 1664 superati, 15 falliti, 0 non eseguiti**. INC-017 risolto in locale, INC-018 risolto, nessun nuovo ID |
 | Bug reali del codice di produzione | **Nessuno tra i test arrivati a verificare il comportamento**: i 1566 superati e i 9 falliti per schema o versione (categorie B e C, causa identificata in §4). **Nessuna conclusione** per i 94 casi non eseguiti e per i 7 falliti per ambiente, che non hanno verificato il comportamento |
 
 ## 1. Ambiente e versioni
@@ -15,7 +16,7 @@
 |---|---|
 | .NET SDK / runtime | 10.0.401 (rispetta `global.json`) / 10.0.12 |
 | Node | 24.20.0 |
-| Python | **non installato** (motivo di 2 fallimenti, vedi §4) |
+| Python | **non installato** alla baseline (motivo di 2 fallimenti, vedi §4); 3.12.10 installato per il Lotto 0B (§8) |
 | Docker | Engine 29.9.2, linux/amd64 (Docker Desktop) |
 | Immagine DB | `mysql:8.4.13@sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b` |
 | Testcontainers.MySql / xunit | 4.15.0 / 2.5.3 |
@@ -105,7 +106,7 @@ Tra i test che sono arrivati a verificare il comportamento (B e C) nessun fallim
 
 ## 5. Isolamento multi-tenant: esito
 
-**Confermato su MySQL 8.4 per i percorsi HTTP (compreso, in parte, l'isolamento IAM via HTTP), i repository e le scritture applicative. Non verificato su 8.4 per la revoca dei token basata sulla security generation, le mutazioni di ruolo e l'isolamento delle mutazioni IAM (`Mt5bJwtTests`, `Mt5bSecurityStateTests`, `Mt5dMembershipMutationTests`), né per la CLI di piattaforma.**
+**Confermato su MySQL 8.4, in locale, per i percorsi HTTP, i repository, le scritture applicative, il worker e, dopo il Lotto 0B (§8), anche per la revoca dei token basata sulla security generation, le mutazioni di ruolo e l'isolamento delle mutazioni IAM.** La conferma in CI arriverà solo con la prima run verde del dominio `iam-security`. Resta non verificata su 8.4 la CLI di piattaforma.
 
 L'affermazione di `BACKEND_REVIEW.md` §1 ("nessuna falla sfruttabile via HTTP", da analisi statica) è coerente con questi test, **passati** su 8.4:
 
@@ -118,21 +119,81 @@ L'affermazione di `BACKEND_REVIEW.md` §1 ("nessuna falla sfruttabile via HTTP",
 | FK composite e owner nel DB | `Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate`, `Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant`, `Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences` |
 | Gate e policy | `Mt3cHttpTests.GateMetadataCannotBypassMissingContextOrWrongPolicy`, `Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata`, `Mt5eIamHttpTests.NonTenantAdminCannotWriteEvenWithGlobalAdminRole`, `…ForeignAndAbsentTargetsAreIndistinguishableAndLeaveBothTenantsUntouched` |
 | Import, email, calendario | `InstitutionClassCrudTests.BulkImport_DatabaseGuardsProtectHistoryAndCrossTenantLinks`, `…EmailPolicy_TenantsHaveIndependentConventionsAndForeignRecipientsAreNotFound`, `InstitutionFormativePlanTests.Calendar_TeacherInTwoInstitutionsCannotLeakLessonsAcrossSelectedContexts` |
+| **Revoca JWT per security generation** (Lotto 0B) | `Mt5bJwtTests` 23/23: `RestoringRolesOrStatusNeverRevivesOldTokenAndDoesNotRevokeB`, `SignedTenantMismatchAndStaleOrFutureGenerationAreForbidden`, `InvalidGenerationClaimsAreRejectedBeforeAuthorization` (13 casi), `RemovedMembershipAndGenerationBearingSelectionTicketFailClosed`, `MissingStateDeniesExistingTokenAndNewSelection`, `RealProgramIssuesPersistedGenerationAndNeverGlobalAdminPrivilege` |
+| **Security generation nel DB** (Lotto 0B) | `Mt5bSecurityStateTests` 39/40: `Sql_RoleAddRemoveRestoreNeverRestoresGeneration`, `Sql_ConcurrentChangesHaveNoLostOrDuplicateIncrements`, `Sql_RollbackPreservesGenerationAndBothTenants`, `Sql_CompositeForeignKeyRejectsWrongOwnerAndOrphanAfterPrivilegedFixturePurge`, `ScopedReaderUsesPersistedGenerationAndFailsClosedOutsideOwnerOrWhenAbsent`, `TechnicalWritersCannotMutateOperationalInstitutionsEvenForGlobalAdmin`, `Sql_FixtureGuardRequiresExplicitOwnerAndSyntheticCode` |
+| **Mutazioni IAM ed escalation** (Lotto 0B) | `Mt5dMembershipMutationTests` 31/32: `EventIdentityIsTenantScopedAndCannotAffectOtherTenant`, `RealJwtIsPermanentlyRevokedByIamAndOtherTenantRemainsValid`, `AuthorizationIsCurrentScopedAndNeverUsesGlobalUserAdmin` (5 casi), `ReplayReauthorizesRevokedActorUnderMutex`, `SoleAdminCannotRemoveTheirOwnAuthority`, `ForgedOrIncompleteInternalContextCannotAuthorizeWrite`, `OperationalIamCannotWriteIntoNonActiveInstitution` |
 
-L'isolamento IAM via HTTP è coperto in parte: `Mt5eIamHttpTests` 53/53 e `Mt5aMembershipAdminTests` 36/36 superati.
+L'isolamento IAM via HTTP è coperto da `Mt5eIamHttpTests` 53/53 e `Mt5aMembershipAdminTests` 36/36.
 
-**Non verificato su 8.4** (categoria A, non eseguita, più D4): isolamento e revoca delle mutazioni IAM (`Mt5dMembershipMutationTests.EventIdentityIsTenantScopedAndCannotAffectOtherTenant`, `…RealJwtIsPermanentlyRevokedByIamAndOtherTenantRemainsValid`, `…AuthorizationIsCurrentScopedAndNeverUsesGlobalUserAdmin`), security generation (`Mt5bSecurityStateTests`), validazione JWT della generation (`Mt5bJwtTests`) e CLI di piattaforma. Queste classi non sono nemmeno nei filtri della CI 8.4. Finché INC-017 non è risolto, l'affermazione sull'isolamento resta **da analisi statica** per queste aree.
+**IAM e revoca JWT: confermati su 8.4 in locale.** Nessun test su revoca dei token, escalation di privilegi o isolamento tra istituti fallisce, e non sono stati aperti nuovi ID. I 2 casi non superati delle classi del Lotto 0B (`Sql_FixtureGuardExcludesRealLegacyHolding`, `OfflineGraphClassifiesValidatedIamLedgerWithoutChangingData`) osservano l'holding legacy `MT3A_LEGACY_TEST`, assente nel bootstrap 8.4 pulito. Sono legati a INC-012 ed esclusi dalla CI con ID e motivo.
+
+**Non verificato su 8.4:**
+- la conferma in CI, che arriverà solo con la prima run verde di `iam-security`;
+- la CLI di piattaforma (D4);
+- i casi legati all'holding legacy (INC-012).
 
 ## 6. Effetti collaterali osservati
 
-- **L'esecuzione dei test riscrive 6 file versionati** in `tests/Integration/TestResults/` (`mt3c/http-query-observations.json`, `mt3d/http-query-observations.json`, `mt3d/write-statements.sql.txt`, `mt3e/worker-query-observations.json`, `mt4b/course-sql.json`, `mt5a/directory-sql.json`). Contengono solo osservazioni SQL, senza percorsi, host né password. Li ho **ripristinati a HEAD** dopo l'esecuzione e dopo la riesecuzione. ID: **INC-018**.
+- **(Risolto nel Lotto 0B, §8.)** **L'esecuzione dei test riscriveva 6 file versionati** in `tests/Integration/TestResults/` (`mt3c/http-query-observations.json`, `mt3d/http-query-observations.json`, `mt3d/write-statements.sql.txt`, `mt3e/worker-query-observations.json`, `mt4b/course-sql.json`, `mt5a/directory-sql.json`). Contengono solo osservazioni SQL, senza percorsi, host né password. Li ho **ripristinati a HEAD** dopo l'esecuzione e dopo la riesecuzione. ID: **INC-018**.
 - La build Debug di PlatformAdmin crea solo file in cartelle ignorate (`bin/`, `obj/`).
 - `node tools/mysql84-release.cjs` è verde prima e dopo l'esecuzione.
 
 ## 7. Cosa non è stato verificato
 
-- I 94 casi non eseguiti (IAM, JWT generation) e i 16 falliti, in particolare la CLI su 8.4.
-- La suite con un processo e un database per metodo, come fa la CI. Qui i test dello stesso gruppo condividono un container.
+- I 94 casi non eseguiti alla baseline sono ora eseguiti (§8). Restano i falliti elencati in §8, in particolare la CLI su 8.4.
+- La conferma in CI del dominio `iam-security`, che arriverà solo con la prima run verde.
+- La suite con un processo e un database per metodo, come fa la CI. Qui i test dello stesso gruppo condividono un container. Per `iam-security` è stato eseguito in locale lo shard 2 di 4 con l'orchestratore della CI (§8).
 - Il job `release` (`ER_MYSQL84_RELEASE_CONFIG`) e il job `windows-cli`, perché richiedono il runner Python e configurazioni CI.
 - Lo stato della CI su `b53b10b`: `gh` non è installato, quindi va controllato a mano.
 - Concorrenza e deadlock sotto carico reale, TLS `VerifyFull` e `caching_sha2_password` contro un server con TLS. Il container di test usa la configurazione di default della fixture.
+
+## 8. Aggiornamento Lotto 0B: INC-017 e INC-018
+
+Eseguito il 2026-11-05 sul working tree con le modifiche del Lotto 0B, su container MySQL 8.4.13 usa e getta creati dalla fixture. Il container `mysql84-local` non è stato toccato. Nessuna modifica al codice di produzione e nessun seed aggiunto.
+
+**Modifiche dell'harness**
+- Sul ramo 8.4, `Open()` delle tre classi attesta il server e imposta la capability di sessione (`tests/Integration/Mysql84OwnedSession.cs`). L'asserzione sulla porta 13306 resta sul ramo 5.7.
+- `Mysql84CapabilityScopeTests` dimostra due cose: il reset del pool azzera la capability sulla stessa sessione fisica, e il percorso applicativo non la vede mai.
+- Il test di guard è diviso in due:
+  - `Sql_FixtureGuardRequiresExplicitOwnerAndSyntheticCode` conserva i due rifiuti 1644 e aggiunge un controllo positivo: con owner e codice corretti, la cancellazione riesce;
+  - `Sql_FixtureGuardExcludesRealLegacyHolding` contiene solo l'osservazione sull'holding (INC-012). Sul ramo 8.4 usa per la regex l'espressione già rivista dalla release (`tools/mysql84-remediation.cjs`), perché 8.4 rifiuta `BINARY … REGEXP`.
+- **INC-018:** le evidenze vanno in `bin/…/test-evidence/<area>` (`tests/Integration/TestEvidence.cs`).
+
+**Classi del Lotto 0B (INC-017)**
+
+| Classe | Eseguite separatamente: eseguiti / superati / falliti | Insieme, stesso container: eseguiti / superati / falliti |
+|---|---|---|
+| `Mt5bJwtTests` | 23 / 23 / 0 | 23 / 23 / 0 |
+| `Mt5bSecurityStateTests` | 40 / 39 / 1 | 40 / 39 / 1 |
+| `Mt5dMembershipMutationTests` | 32 / 31 / 1 | 32 / 31 / 1 |
+| `Mysql84CapabilityScopeTests` | 2 / 2 / 0 | 2 / 2 / 0 |
+| **Totale** | **97 / 95 / 2** | **97 / 95 / 2** |
+
+I 2 falliti sono:
+- `Sql_FixtureGuardExcludesRealLegacyHolding`: `Expected: 1, Actual: 0`, perché l'holding è assente;
+- `OfflineGraphClassifiesValidatedIamLedgerWithoutChangingData`: `NullReferenceException` alla riga 286, perché manca l'id dell'holding.
+
+Entrambi sono legati a INC-012 ed esclusi dalla CI.
+
+**CI `iam-security`**
+- **Configurazione:** 4 shard, 52 metodi (13 per shard), più 2 esclusi con ID e motivo (`EXCLUDED_METHODS`).
+- **Durata stimata, shard peggiore:** 1775 s; 3385 s se scadono entrambi i suoi metodi con timeout da 900 s. `SUITE_TIMEOUT` è 3600 s.
+- **Prova locale con l'orchestratore della CI** (`ci_diagnostic.py --integration iam-security --shard 2 --shards 4`): PASS in 1014 s. Preflight `identity` superato, 13 metodi su 13, casi delle theory completi.
+
+**Suite completa (un solo processo)**
+- Integration: **1679 casi, 1664 superati, 15 falliti, 0 non eseguiti**. Rispetto alla baseline ci sono 3 casi in più: la divisione del test di guard (+1) e `Mysql84CapabilityScopeTests` (+2).
+- `git status` dopo la suite: solo le modifiche volute. `tests/Integration/TestResults/` resta invariata.
+
+| Falliti | Casi | Categoria | ID |
+|---|---|---|---|
+| B1, B2 (FK `RESTRICT` contro `NO ACTION`) | 2 | Schema o versione | INC-003 |
+| C1, C2, C3 (holding legacy assente) | 5 | Schema o versione | INC-012 |
+| `Sql_FixtureGuardExcludesRealLegacyHolding`, `OfflineGraphClassifiesValidatedIamLedgerWithoutChangingData` | 2 | Schema o versione (holding legacy) | INC-012 |
+| D2 (`ER_MYSQL84_RELEASE_CONFIG`), D3 (`mysqldump.exe`), D4 (CLI ×3) | 5 | Ambiente | INC-012, INC-008, INC-013 |
+| `Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: "status=")` | 1 | **Test instabile**: `HttpClient.Timeout` di 15 s sotto il carico della suite completa. Nella riesecuzione unica la theory è passata 12 casi su 12 | — |
+
+**Cambiamenti rispetto alla baseline**
+- C4 e C5 (`Mt4a`, dipendenza dall'ordine) sono passati.
+- D1 (`StagingCalendarFeatureTests`) è passato 2 su 2 con Python 3.12.10.
+
+**Unit.** In questa sessione non sono stati eseguiti. Il criterio di controllo delle applicazioni di Windows ha bloccato il caricamento di `Unit.Tests.dll` (`0x800711C7`), anche dopo una ricompilazione. Il Lotto 0B non modifica `tests/Unit` né il codice di produzione. Il dato di riferimento resta 598/598 (§1) e la CI esegue il check `unit`.
