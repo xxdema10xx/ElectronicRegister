@@ -151,23 +151,23 @@ public sealed partial class IdentityAccountTests(IntegrationFixture fixture) : I
     }
 
     [Fact]
-    public async Task RegistrationCreatesOnlyIdentityAndCollisionCannotAcquireHistoricalAccount()
+    public async Task PublicRegistrationIsGoneAndCannotCreateOrAcquireAnyAccount()
     {
+        // Replaces the registration test: there is no free registration any more. Accounts
+        // are created only by the owner script or POST /api/institution/accounts.
         var email = Guid.NewGuid().ToString("N") + "@new-account.example.test";
-        var input = new RegisterIdentityAccountDto(email, "RegisteredPassword!");
-        var response = await Send("/api/identity/accounts", body: input, method: "POST");
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var id = await response.Content.ReadFromJsonAsync<Guid>();
-        Assert.NotEqual(Guid.Empty, id);
-        Assert.Equal(HttpStatusCode.Conflict, (await Send("/api/identity/accounts", body: input, method: "POST")).StatusCode);
-        Assert.Equal(HttpStatusCode.Conflict, (await Send("/api/identity/accounts", body: input with { Email = Email }, method: "POST")).StatusCode);
+        var ticket = await Login();
+        foreach (var token in new string?[] { null, ticket })
+        {
+            Assert.Equal(HttpStatusCode.NotFound, (await Send("/api/identity/accounts", token, new { email, password = "RegisteredPassword!" }, "POST")).StatusCode);
+            // The historical account cannot be acquired or overwritten through the old route.
+            Assert.Equal(HttpStatusCode.NotFound, (await Send("/api/identity/accounts", token, new { email = Email, password = "RegisteredPassword!" }, "POST")).StatusCode);
+        }
         await Login();
+        Assert.Equal(HttpStatusCode.Unauthorized, (await Send("/api/Auth/identity/login", body: new LoginDto { Email = Email, Password = "RegisteredPassword!" }, method: "POST")).StatusCode);
         using var scope = fixture.ScopeFactory.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
-        var user = await db.Users.AsNoTracking().SingleAsync(u => u.Id == id);
-        Assert.Null(user.StudentId);
-        Assert.Null(user.TeacherId);
-        Assert.Empty(await db.InstitutionMemberships.Where(m => m.UserId == id).ToListAsync());
+        Assert.False(await db.Users.AnyAsync(u => u.Email == email));
     }
 
     [Fact]

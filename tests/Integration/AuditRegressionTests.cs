@@ -233,32 +233,37 @@ public partial class Phase4_ExamLifecycleTests
     }
 
     [Fact]
-    public async Task Audit_IdentityRegistrationFaultRollsBackUserWithoutInferringProfile()
+    public async Task Audit_AccountCreationFaultRollsBackUserMembershipAndProfile()
     {
+        // Successor of the registration fault test on the only account-creation path left:
+        // the fault hits the first EF save (the new student profile), after the user,
+        // identity state, membership and role rows were written in the same transaction.
         var marker = "audit_" + Guid.NewGuid().ToString("N");
         var email = "allievo_" + marker + "@itsumbria.it";
         var profileId = Guid.Empty;
         var userId = Guid.Empty;
-        // Probe after real SQL: baseline has no transaction. Do not use SaveProbe, which requires one.
         var probe = new AuditRegistrationProbe(async ctx =>
         {
             userId = await ctx.Users.Where(u => u.Email == email).Select(u => u.Id).SingleAsync();
-            Assert.False(await ctx.Students.AnyAsync(s => s.LastName == marker));
+            Assert.True(await ctx.InstitutionMemberships.AnyAsync(m => m.UserId == userId));
+            profileId = await ctx.Students.Where(s => s.LastName == marker).Select(s => s.Id).SingleAsync();
         });
         try
         {
             await using (var provider = Phase3.Provider(fixture, null, probe))
             using (var scope = provider.CreateScope())
             {
-                var accounts = scope.ServiceProvider.GetRequiredService<IIdentityAccountManager>();
-                await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => accounts.RegisterAsync(new(email, "AuditPassword!")));
+                var accounts = FixtureTenant.Bind<IInstitutionAccountManager>(scope.ServiceProvider, SeedData.AdminUserId);
+                await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => accounts.CreateAsync(new(Guid.NewGuid(), email, new[] { ElectronicRegisterAPI.Domain.Enums.InstitutionRole.Student }, null, null, "Audit", marker, null, "Audit fault")));
             }
-            Assert.Equal(Guid.Empty, profileId);
             Assert.NotEqual(Guid.Empty, userId);
+            Assert.NotEqual(Guid.Empty, profileId);
             using var verify = fixture.ScopeFactory.CreateScope();
             var db = verify.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
-            Assert.False(await db.Users.AnyAsync(u => u.Id == userId));
+            Assert.False(await db.Users.AnyAsync(u => u.Id == userId || u.Email == email));
+            Assert.False(await db.InstitutionMemberships.AnyAsync(m => m.UserId == userId));
             Assert.False(await db.Students.AnyAsync(s => s.Id == profileId));
+            Assert.False(await db.InstitutionStudentProfiles.AnyAsync(p => p.StudentId == profileId));
         }
         finally
         {

@@ -1,6 +1,6 @@
 {
-  "filesAnalyzed": 675,
-  "typesClassified": 672,
+  "filesAnalyzed": 673,
+  "typesClassified": 670,
   "entries": [
     {
       "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs",
@@ -125,22 +125,6 @@
       "types": [
         {
           "name": "IdentityAccountController",
-          "kind": "ClassDeclaration",
-          "nestedTypes": []
-        }
-      ]
-    },
-    {
-      "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/IdentityRegistrationController.cs",
-      "layer": "Api",
-      "project": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI",
-      "generated": false,
-      "exclusionReason": "",
-      "namespace": "ElectronicRegisterAPI.Api.Controllers",
-      "classification": "Controllers",
-      "types": [
-        {
-          "name": "IdentityRegistrationController",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -4180,22 +4164,6 @@
         {
           "name": "QuestionOptionInputDto",
           "kind": "ClassDeclaration",
-          "nestedTypes": []
-        }
-      ]
-    },
-    {
-      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/RegisterIdentityAccountDto.cs",
-      "layer": "Domain",
-      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
-      "generated": false,
-      "exclusionReason": "",
-      "namespace": "ElectronicRegisterAPI.Domain.DTOs",
-      "classification": "DTOs",
-      "types": [
-        {
-          "name": "RegisterIdentityAccountDto",
-          "kind": "RecordDeclaration",
           "nestedTypes": []
         }
       ]

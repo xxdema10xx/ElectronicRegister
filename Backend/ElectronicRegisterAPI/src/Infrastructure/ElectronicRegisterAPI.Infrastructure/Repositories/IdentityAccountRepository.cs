@@ -9,25 +9,6 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
 internal sealed class IdentityAccountRepository(ElectronicRegisterContext db) : IIdentityAccountRepository
 {
-    public async Task<Guid> CreateAsync(string email, string passwordHash, CancellationToken ct = default)
-    {
-        var id = Guid.NewGuid();
-        await using var tx = await db.Database.BeginTransactionAsync(ct);
-        try
-        {
-            // Historical required column, never an authorization decision or profile assignment.
-            db.Users.Add(new() { Id = id, Email = email, PasswordHash = passwordHash, Role = "student" });
-            await db.SaveChangesAsync(ct);
-            await AuditAsync(id, "account.registered", ct);
-            await tx.CommitAsync(ct);
-            return id;
-        }
-        catch (DbUpdateException ex)when (ex.InnerException is MySqlConnector.MySqlException { Number: 1062 })
-        {
-            throw new ElectronicRegisterAPI.Domain.Exceptions.BusinessRuleException("Account non disponibile.");
-        }
-    }
-
     private async Task<DbCommand> CommandAsync(
         string sql,
         Guid userId,

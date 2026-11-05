@@ -46,6 +46,12 @@ internal sealed class FixtureTenant : ICurrentTenant
         return services.GetRequiredService<IInstitutionExamManager>();
     }
 
+    internal static T Bind<T>(IServiceProvider services, Guid user) where T : notnull
+    {
+        services.GetRequiredService<FixtureTenant>()._value = Read(services, user);
+        return services.GetRequiredService<T>();
+    }
+
     internal static void Register(IServiceCollection services)
     {
         // Unbound repositories are available only to test data arrangement/inspection.

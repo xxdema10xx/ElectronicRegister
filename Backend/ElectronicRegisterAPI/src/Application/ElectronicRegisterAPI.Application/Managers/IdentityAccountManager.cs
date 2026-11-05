@@ -9,15 +9,6 @@ namespace ElectronicRegisterAPI.Application.Managers;
 
 internal sealed class IdentityAccountManager(IIdentityAccountRepository accounts, IPasswordHasher passwords) : IIdentityAccountManager
 {
-    public Task<Guid> RegisterAsync(RegisterIdentityAccountDto input, CancellationToken ct = default)
-    {
-        var email = input.Email?.Trim();
-        if (string.IsNullOrEmpty(email) || email.Length > 255 || !System.Net.Mail.MailAddress.TryCreate(email, out var address) || address.Address != email)
-            throw new ArgumentException("Email non valida.");
-        PasswordRules.Validate(input.Password);
-        return accounts.CreateAsync(email, passwords.Hash(input.Password), ct);
-    }
-
     public async Task<IdentityAccountDto> GetAsync(Guid userId, CancellationToken ct = default)
     {
         var account = await accounts.GetAsync(userId, ct) ?? throw new UnauthorizedAccessException();
