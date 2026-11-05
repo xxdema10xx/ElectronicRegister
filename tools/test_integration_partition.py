@@ -49,6 +49,15 @@ class PartitionTests(unittest.TestCase):
         with self.assertRaises(ValueError): exclusions(methods[:-1], 'iam-security')
         with self.assertRaises(ValueError): partition(methods, 'iam-security', 0, 3)
 
+    def test_iam_owns_identity_account_and_provisioning_classes_in_two_shards(self):
+        self.assertEqual(2, SHARDS['iam'])
+        classes = ['Mt5eIamHttpTests', 'IdentityAccountTests', 'OwnerProvisioningTests', 'InstitutionAccountProvisioningTests']
+        methods = [PREFIX+c+'.Case'+str(n) for c in classes for n in range(5)]
+        for method in methods: self.assertEqual('iam', owner(method))
+        shards = [partition(methods, 'iam', i, 2)[1] for i in range(2)]
+        self.assertEqual(sorted(m for s in shards for m in s), sorted(methods))
+        with self.assertRaises(ValueError): partition(methods, 'iam', 0, 1)
+
     def test_iam_security_uses_only_the_identity_fixture_family(self):
         from ci_diagnostic import integration_plan
         methods = [PREFIX+'Mt5bJwtTests.A', PREFIX+'Mysql84CapabilityScopeTests.B']

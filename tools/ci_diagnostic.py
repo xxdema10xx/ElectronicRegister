@@ -257,7 +257,7 @@ def main():
             'formative':'FullyQualifiedName~InstitutionFormativePlanTests&FullyQualifiedName!~Calendar_',
             'email':'FullyQualifiedName~EmailPolicy_',
             'imports':'FullyQualifiedName~BulkImport_',
-            'iam':'FullyQualifiedName~Mt5eIamHttpTests|FullyQualifiedName~IdentityAccountTests',
+            'iam':'FullyQualifiedName~Mt5eIamHttpTests|FullyQualifiedName~IdentityAccountTests|FullyQualifiedName~OwnerProvisioningTests|FullyQualifiedName~InstitutionAccountProvisioningTests',
             'iam-security':'FullyQualifiedName~Mt5bJwtTests|FullyQualifiedName~Mt5bSecurityStateTests|FullyQualifiedName~Mt5dMembershipMutationTests|FullyQualifiedName~Mysql84CapabilityScopeTests',
             'onboarding':'FullyQualifiedName~Mt5cOnboardingTests',
             'tenants':'FullyQualifiedName~Mt2IdentityTests|FullyQualifiedName~InstitutionClassCrudTests'}

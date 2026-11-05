@@ -1,6 +1,6 @@
 """Reviewed ownership and deterministic shards; no shared mutable fixtures."""
 SHARDS = {'calendar': 1, 'formative': 1, 'email': 1, 'imports': 1,
-          'iam': 1, 'iam-security': 4, 'onboarding': 1, 'tenants': 6}
+          'iam': 2, 'iam-security': 4, 'onboarding': 1, 'tenants': 6}
 WINDOWS_METHODS = {
     'ActualAdministrativeCliVerifiesSignedIntentAndUsesOnlyOwnerInstalledChannel',
     'Governance_ActualCliUsesTheDedicatedManagerWithoutRequiringNotificationDelivery',
@@ -27,7 +27,7 @@ def owner(method):
     if 'EmailPolicy_' in name: return 'email'
     if 'BulkImport_' in name: return 'imports'
     if cls.endswith('.InstitutionFormativePlanTests'): return 'formative'
-    if cls.endswith(('.Mt5eIamHttpTests', '.IdentityAccountTests')): return 'iam'
+    if cls.endswith(('.Mt5eIamHttpTests', '.IdentityAccountTests', '.OwnerProvisioningTests', '.InstitutionAccountProvisioningTests')): return 'iam'
     if cls.endswith(IAM_SECURITY_CLASSES): return 'iam-security'
     if cls.endswith(('.Mt2IdentityTests', '.InstitutionClassCrudTests')): return 'tenants'
     raise ValueError('Unassigned integration method: '+method)
