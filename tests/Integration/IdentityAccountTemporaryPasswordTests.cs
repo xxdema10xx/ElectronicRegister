@@ -73,6 +73,31 @@ public sealed partial class IdentityAccountTests
     }
 
     [Fact]
+    public async Task TemporaryPasswordCannotBeReusedAsTheNewPassword()
+    {
+        await MarkTemporary(_user);
+        var ticket = await Ticket();
+        Assert.True(ticket.PasswordChangeRequired);
+        string hash;
+        using (var scope = fixture.ScopeFactory.CreateScope())
+            hash = (await scope.ServiceProvider.GetRequiredService<ElectronicRegisterAPI.Domain.Interfaces.Repositories.IIdentityAccountRepository>().GetAsync(_user))!.PasswordHash;
+        // Same 400 validation error as the other password rules, decided by BCrypt.
+        Assert.Equal(HttpStatusCode.BadRequest, (await Send("/api/identity/account/password", ticket.Ticket, new ChangeIdentityPasswordDto(Password, Password), "PUT")).StatusCode);
+        // Nothing changed: same hash, same generation, obligation still active, same credential.
+        using (var scope = fixture.ScopeFactory.CreateScope())
+        {
+            var accounts = scope.ServiceProvider.GetRequiredService<ElectronicRegisterAPI.Domain.Interfaces.Repositories.IIdentityAccountRepository>();
+            Assert.Equal(hash, (await accounts.GetAsync(_user))!.PasswordHash);
+            Assert.Equal(0, await accounts.GenerationAsync(_user));
+            Assert.Empty(await scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().Database
+                .SqlQueryRaw<string>("SELECT action AS Value FROM identity_account_event WHERE user_id={0} AND action={1}", _user, IdentityAccountEvents.PasswordChanged).ToListAsync());
+        }
+        var again = await Ticket();
+        Assert.True(again.PasswordChangeRequired);
+        Assert.Equal(HttpStatusCode.Unauthorized, (await Send("/api/Auth/institutions", again.Ticket)).StatusCode);
+    }
+
+    [Fact]
     public async Task TemporaryCredentialAfterAChangeIsMandatoryAgain()
     {
         var first = await Ticket();
