@@ -31,6 +31,7 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
     {
         var c = new MySqlConnection(_connection);
         await c.OpenAsync();
+        if (await Mysql84OwnedSession.PrepareAsync(c)) return c;
         await using var cmd = c.CreateCommand();
         cmd.CommandText = "SELECT VERSION(),@@port,REPLACE(@@datadir,CHAR(92),'/'),DATABASE(),@@GLOBAL.sql_mode";
         await using var reader = await cmd.ExecuteReaderAsync();
@@ -61,7 +62,7 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
     {
         _connection = IntegrationFixture.ValidateLocalConnectionString(Environment.GetEnvironmentVariable("TEST_MYSQL_CONNECTION") ?? throw new InvalidOperationException("Explicit isolated target required"));
         var b = new MySqlConnectionStringBuilder(_connection);
-        Assert.Equal("127.0.0.1", b.Server); Assert.Equal(TestMySqlTarget.Port, b.Port);
+        Assert.Equal("127.0.0.1", b.Server); if (!Mysql84FixtureTarget.IsOwned(_connection)) Assert.Equal(TestMySqlTarget.Port, b.Port);
         b.AllowUserVariables = true; _connection = b.ConnectionString;
         await Exec("INSERT INTO institution(id,code,name,status) VALUES(@a,@ca,'Synthetic IAM A','active'),(@b,@cb,'Synthetic IAM B','active')",
             ("@a", _a), ("@b", _b), ("@ca", "MT5BP_" + _a.ToString("N")), ("@cb", "MT5BP_" + _b.ToString("N")));
@@ -320,7 +321,7 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Sql_FixtureGuardRequiresExplicitOwnerAndSyntheticCodeAndExcludesHolding()
+    public async Task Sql_FixtureGuardRequiresExplicitOwnerAndSyntheticCode()
     {
         await using var c = await Open(); await using var tx = await c.BeginTransactionAsync();
         await using (var owners = Cmd(c, "SET @er_mt5b_fixture_owners=@b", tx, ("@b", _b.ToString())))
@@ -331,12 +332,32 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
             await setup.ExecuteNonQueryAsync();
         await using (var remove = Cmd(c, $"DELETE FROM {State} WHERE membership_id=@m", tx, ("@m", _ma)))
             Assert.Equal(1644, (await Assert.ThrowsAsync<MySqlException>(async () => { await remove.ExecuteNonQueryAsync(); })).Number);
-        // Observe the real holding only. Never use its data as a mutation fixture.
-        await using (var holding = Cmd(c, "SELECT COUNT(*) FROM institution WHERE code='MT3A_LEGACY_TEST' AND NOT(BINARY code REGEXP '^MT(1|1_REHEARSAL|2|3|3_REHEARSAL|3A|3B|3C|3D|4|4B|5A|5BP)_[0-9a-fA-F]{32}$')", tx))
-            Assert.Equal(1L, Convert.ToInt64(await holding.ExecuteScalarAsync()));
+        // Positive control: same session, same capability, explicit owner and synthetic
+        // code restored. The guard now admits the purge, so both rejections above come
+        // from the owner and code rules, never from a missing server identity/capability.
+        await using (var restore = Cmd(c, "UPDATE institution SET code=@code WHERE id=@a", tx, ("@a", _a), ("@code", "MT5BP_" + _a.ToString("N"))))
+            await restore.ExecuteNonQueryAsync();
+        await using (var admitted = Cmd(c, $"DELETE FROM {State} WHERE membership_id=@m", tx, ("@m", _ma)))
+            Assert.Equal(1, await admitted.ExecuteNonQueryAsync());
         await tx.RollbackAsync();
         await using var clear = Cmd(c, "SET @er_mt5b_fixture_owners=NULL"); await clear.ExecuteNonQueryAsync();
         Assert.Equal(0, await Generation(_a, _ma));
+    }
+
+    // Observation of the real legacy holding only (INC-012): it must exist and must
+    // never carry a synthetic fixture code. Never use its data as a mutation fixture.
+    [Fact]
+    public async Task Sql_FixtureGuardExcludesRealLegacyHolding()
+    {
+        await using var c = await Open(); await using var tx = await c.BeginTransactionAsync();
+        // 8.4 rejects BINARY with REGEXP; the owned branch uses the expression the
+        // reviewed release derives for the same guard (tools/mysql84-remediation.cjs).
+        var synthetic = Mysql84FixtureTarget.IsOwned(_connection)
+            ? "REGEXP_LIKE(CONVERT(code USING utf8mb4) COLLATE utf8mb4_bin, '^MT(1|1_REHEARSAL|2|3|3_REHEARSAL|3A|3B|3C|3D|4|4B|5A|5BP)_[0-9a-fA-F]{32}\\\\z', 'c')"
+            : "BINARY code REGEXP '^MT(1|1_REHEARSAL|2|3|3_REHEARSAL|3A|3B|3C|3D|4|4B|5A|5BP)_[0-9a-fA-F]{32}$'";
+        await using (var holding = Cmd(c, "SELECT COUNT(*) FROM institution WHERE code='MT3A_LEGACY_TEST' AND NOT(" + synthetic + ")", tx))
+            Assert.Equal(1L, Convert.ToInt64(await holding.ExecuteScalarAsync()));
+        await tx.RollbackAsync();
     }
 
     private async Task Services(Func<IServiceProvider, Task> action)
