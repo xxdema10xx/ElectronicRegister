@@ -9,7 +9,8 @@ import traceback
 import time
 import os
 import signal
-from integration_partition import SHARDS, WINDOWS_METHODS, IAM_SECURITY_CLASSES, exclusions, partition
+from integration_partition import (SHARDS, WINDOWS_METHODS, IAM_SECURITY_CLASSES, FULL_CLASSES, FULL_IDENTITY_CLASSES,
+                                   exclusions, case_exclusions, case_filters, partition)
 from artifact_diagnostic import audit, issue
 
 
@@ -140,14 +141,17 @@ def batch_methods(check, invocation, root):
     return rows
 
 
-def integration_plan(methods, root, suite):
+def integration_plan(methods, root, suite, case_clauses=None):
     """Preflight the two distinct fixture families, once each. Never classify
     an assertion failure as infrastructure by matching arbitrary error text.
     Unknown/mutating methods remain individually isolated by default.
     """
     prefix = 'ElectronicRegisterAPI.Tests.Integration.'
     identity = (('Mt5cOnboardingTests',) if suite == 'onboarding' else
-                tuple(c[1:] for c in IAM_SECURITY_CLASSES) if suite.startswith('iam-security') else ('Mt5eIamHttpTests',))
+                tuple(c[1:] for c in IAM_SECURITY_CLASSES) if suite.startswith('iam-security') else
+                FULL_IDENTITY_CLASSES if suite.startswith('full') else ('Mt5eIamHttpTests',))
+    # Reviewed theory-case exclusions narrow the method filter; the other cases still run.
+    skip = case_clauses or {}
     families = {m: ('identity' if m.startswith(tuple(prefix+c+'.' for c in identity)) else 'functional') for m in methods}
     checks = []
     def command(selection, directory):
@@ -169,7 +173,7 @@ def integration_plan(methods, root, suite):
             continue
         checks.append(dict(id=method, needs=['preflight-'+families[method]], timeout=RECOVERY_TIMEOUT if long else TEST_TIMEOUT,
                            file='tests/Integration/Integration.Tests.csproj', trx=str(directory/'current.trx'),
-                           command=command('FullyQualifiedName='+method, directory)))
+                           command=command('&'.join(['FullyQualifiedName='+method, *skip.get(method, [])]), directory)))
     for index, ((family, cls), members) in enumerate(sorted(batches.items())):
         directory = Path(root)/'.diagnostics'/suite/('batch-'+str(index))
         checks.append(dict(id='batch-'+cls, members=members, needs=['preflight-'+family],
@@ -260,7 +264,8 @@ def main():
             'iam':'FullyQualifiedName~Mt5eIamHttpTests|FullyQualifiedName~IdentityAccountTests|FullyQualifiedName~OwnerProvisioningTests|FullyQualifiedName~InstitutionAccountProvisioningTests',
             'iam-security':'FullyQualifiedName~Mt5bJwtTests|FullyQualifiedName~Mt5bSecurityStateTests|FullyQualifiedName~Mt5dMembershipMutationTests|FullyQualifiedName~Mysql84CapabilityScopeTests',
             'onboarding':'FullyQualifiedName~Mt5cOnboardingTests',
-            'tenants':'FullyQualifiedName~Mt2IdentityTests|FullyQualifiedName~InstitutionClassCrudTests'}
+            'tenants':'FullyQualifiedName~Mt2IdentityTests|FullyQualifiedName~InstitutionClassCrudTests',
+            'full':'|'.join('FullyQualifiedName~ElectronicRegisterAPI.Tests.Integration'+c+'.' for c in FULL_CLASSES)}
         checks = [c for c in static_checks() if c['id'] in ('restore','build')]
         checks.append(dict(id='docker', command=['docker','info']))
         checks.append(dict(id='discovery',needs=['build'],command=[
@@ -291,9 +296,19 @@ def main():
                     # Visible once per domain: reported, not executed, never counted as PASS.
                     report['problems'] += [dict(issue('reviewed-exclusion', 'tests/Integration/Integration.Tests.csproj', r, test=m, status='SKIPPED'),
                         id='excluded-'+m.rsplit('.', 1)[1], justification=i+': '+r, cause='Reviewed CI exclusion '+i) for m, (i, r) in sorted(excluded.items())]
-                isolated = integration_plan(methods, a.root, report['suite'])
-                case_counts = {method: sum(line.strip().split('(', 1)[0] == method
-                    for line in discovery['error'].splitlines()) for method in methods}
+                cases = [line.strip() for line in discovery['error'].splitlines() if line.startswith('    ElectronicRegisterAPI.Tests.Integration.')]
+                skipped = case_exclusions(cases, a.integration)
+                report['assignment']['excludedCases'] = {c: dict(id=i, reason=r) for c, (i, r) in skipped.items()}
+                if a.shard == 0:
+                    report['problems'] += [dict(issue('reviewed-exclusion', 'tests/Integration/Integration.Tests.csproj', r, test=c, status='SKIPPED'),
+                        id='excluded-case-'+c.rsplit('.', 1)[1], justification=i+': '+r, cause='Reviewed CI case exclusion '+i) for c, (i, r) in sorted(skipped.items())]
+                clauses = {}
+                for method in methods:
+                    mine = {c for c in skipped if c.split('(', 1)[0] == method}
+                    if mine:
+                        clauses[method] = case_filters([c for c in cases if c.split('(', 1)[0] == method], mine)
+                isolated = integration_plan(methods, a.root, report['suite'], clauses)
+                case_counts = {method: sum(case.split('(', 1)[0] == method and case not in skipped for case in cases) for method in methods}
                 report['assignment']['expectedCases'] = case_counts
                 for check in isolated:
                     if check['id'] in methods:

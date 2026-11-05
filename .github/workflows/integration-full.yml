@@ -1,0 +1,68 @@
+name: Integration full (extended suite on MySQL 8.4)
+# Every integration class outside the main workflow's domains, one process and one disposable
+# MySQL 8.4.13 database per method (tools/integration_partition.py, domain "full").
+# Separate from the main workflow so its duration is unchanged; required before merging to main.
+on:
+  push:
+    branches: [refactor-database-entities, main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions: { contents: read }
+concurrency:
+  group: integration-full-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref == 'refs/heads/refactor-database-entities' }}
+jobs:
+  full:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - name: Fixture preflight and isolated tests of shard ${{ matrix.shard }} on pinned MySQL
+        timeout-minutes: 65
+        env:
+          SHARD: ${{ matrix.shard }}
+          ER_TEST_MYSQL84: '1'
+        run: python3 tools/ci_diagnostic.py --integration full --shard "$SHARD" --shards 14 --output ".diagnostics/full-$SHARD-diagnostic.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: integration-full-${{ matrix.shard }}
+          include-hidden-files: true
+          path: .diagnostics/
+
+  gate:
+    needs: [full]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: integration-full-*
+          path: .diagnostics/downloaded
+      - name: Complete inventory, every non-excluded method PASS, exact case accounting
+        run: python3 tools/integration_full_gate.py .diagnostics/downloaded
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: integration-full-report
+          include-hidden-files: true
+          path: |
+            .diagnostics/INTEGRATION_FULL_REPORT.json
+            .diagnostics/INTEGRATION_FULL_REPORT.md
