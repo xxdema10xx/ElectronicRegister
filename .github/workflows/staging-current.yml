@@ -23,6 +23,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+          # The corrective closure re-reads the immutable predecessor files from git history.
+          fetch-depth: 0
       - name: Bind the run to the commit under test
         run: |
           [[ "$GITHUB_SHA" =~ ^[a-f0-9]{40}$ ]]
