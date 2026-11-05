@@ -444,8 +444,7 @@ public sealed class Mt3cHttpTests(IntegrationFixture fixture) : IAsyncLifetime
 
     private static string EvidenceDirectory()
     {
-        var path = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../tests/Integration/TestResults/mt3c"));
-        Directory.CreateDirectory(path); return path;
+        return TestEvidence.Directory("mt3c");
     }
 
     [Theory]

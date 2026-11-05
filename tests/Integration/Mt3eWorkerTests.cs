@@ -405,7 +405,7 @@ public sealed partial class Mt3dHttpTests
         var locks=commands.Where(c=>c.Sql.Contains("FOR UPDATE")&&c.Sql.Contains("exam_submission")).ToArray();Assert.Equal(2,locks.Length);
         Assert.All(locks,c=>Assert.Contains("institution_id",c.Sql));Assert.DoesNotContain(commands,c=>c.Sql.Contains("FROM exam WHERE")&&c.Sql.Contains("FOR UPDATE"));
         Assert.All(commands.Where(c=>c.Sql.Contains("UPDATE `exam_submission`")),c=>Assert.Contains("institution_id",c.Sql));
-        var path=System.IO.Path.GetFullPath(System.IO.Path.Combine(AppContext.BaseDirectory,"../../../../../tests/Integration/TestResults/mt3e"));Directory.CreateDirectory(path);
+        var path=TestEvidence.Directory("mt3e");
         await File.WriteAllTextAsync(System.IO.Path.Combine(path,"worker-query-observations.json"),System.Text.Json.JsonSerializer.Serialize(new{batchSize=50,items=2,queries=commands.Length,milliseconds=timer.Elapsed.TotalMilliseconds,sql=commands.Select(c=>c.Sql)},new System.Text.Json.JsonSerializerOptions{WriteIndented=true}));
         await AssertTechnical(a.SubmissionId);await AssertTechnical(b.SubmissionId,true);
     }
@@ -476,7 +476,7 @@ public sealed partial class Mt3dHttpTests
                     rollout=onboarding?(membership?"MembershipAdminApi && MembershipWriteApi && Onboarding":"Onboarding"):membershipWrite?"MembershipAdminApi && MembershipWriteApi":membership?"MembershipAdminApi":course?"SchoolApi && CourseApi":exam?"SchoolApi && ExamApi":school?"SchoolApi":identity?"MT2 verified identity":"legacy allowlist or Development diagnostics",
                     authorizationTest=membershipWrite?"Mt5e real HTTP JWT/IAM/rollback/concurrency":membership?"Mt5a directory JWT/cross-tenant":course?"Mt4b all actions JWT/revocation/cross-tenant":exam?"Mt3d all actions JWT/revocation/cross-tenant":school?"Mt3c all actions JWT/cross-tenant":identity?"Mt2IdentityTests":"Mt2 legacy action matrix; Mt3e global account checks"});
         }
-        var path=System.IO.Path.GetFullPath(System.IO.Path.Combine(AppContext.BaseDirectory,"../../../../../tests/Integration/TestResults/mt3e"));Directory.CreateDirectory(path);
+        var path=TestEvidence.Directory("mt3e");
         await File.WriteAllTextAsync(System.IO.Path.Combine(path,"routes-"+environment+".json"),System.Text.Json.JsonSerializer.Serialize(rows,new System.Text.Json.JsonSerializerOptions{WriteIndented=true}));
         await Expect(await host.Client.GetAsync("/openapi/v1.json"),environment=="Development"?HttpStatusCode.OK:HttpStatusCode.NotFound);
         await Assert.Single(host.Host.Services.GetServices<Microsoft.Extensions.Hosting.IHostedService>().OfType<ExpiredExamSubmissionWorker>()).ProcessBatchAsync(default);

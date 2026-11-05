@@ -470,7 +470,7 @@ public sealed partial class Mt4bHttpTests(IntegrationFixture fixture) : IAsyncLi
         await gate.OnAuthorizationAsync(context);Assert.Equal(403,Assert.IsType<Microsoft.AspNetCore.Mvc.ObjectResult>(context.Result).StatusCode);
     }
     private static string EvidenceDirectory()
-    {var p=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../../tests/Integration/TestResults/mt4b"));Directory.CreateDirectory(p);return p;}
+    =>TestEvidence.Directory("mt4b");
     private sealed record CapturedCommand(string Sql, Guid[] Guids);
     private sealed class SqlObserver : IObserver<DiagnosticListener>, IObserver<KeyValuePair<string, object?>>, IDisposable
     {

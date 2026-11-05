@@ -48,7 +48,7 @@ public sealed class Mt5aMembershipAdminTests : IAsyncLifetime
     private Mt3cHosting.ProgramHost _host = null!;
     private Guid Member(string name, bool b = false) => _members[(name, b)];
     private static string Email(Guid id) => id.ToString("N") + "@mt5a.example.test";
-    private static string Evidence => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../tests/Integration/TestResults/mt5a"));
+    private static string Evidence => TestEvidence.Directory("mt5a");
 
     private async Task Db(Func<ElectronicRegisterContext, Task> action)
     {

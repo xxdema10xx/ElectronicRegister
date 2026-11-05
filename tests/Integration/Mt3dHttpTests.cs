@@ -716,8 +716,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
 
     private static string EvidenceDirectory()
     {
-        var path = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../tests/Integration/TestResults/mt3d"));
-        Directory.CreateDirectory(path); return path;
+        return TestEvidence.Directory("mt3d");
     }
     private sealed record CapturedCommand(string Sql, Guid[] Guids);
     private sealed class SqlObserver : IObserver<DiagnosticListener>, IObserver<KeyValuePair<string, object?>>, IDisposable
