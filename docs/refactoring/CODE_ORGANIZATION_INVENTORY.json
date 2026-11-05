@@ -1,6 +1,6 @@
 {
-  "filesAnalyzed": 661,
-  "typesClassified": 658,
+  "filesAnalyzed": 664,
+  "typesClassified": 661,
   "entries": [
     {
       "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs",
@@ -993,6 +993,22 @@
       "types": [
         {
           "name": "InstitutionSchoolEndpointAttribute",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/PasswordChangeEndpointAttribute.cs",
+      "layer": "Api",
+      "project": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Api.Security",
+      "classification": "Security",
+      "types": [
+        {
+          "name": "PasswordChangeEndpointAttribute",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -7155,6 +7171,38 @@
       "types": [
         {
           "name": "IdentityAccount",
+          "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/IdentityAccountEvents.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Models",
+      "classification": "Models",
+      "types": [
+        {
+          "name": "IdentityAccountEvents",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/IdentitySessionState.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Models",
+      "classification": "Models",
+      "types": [
+        {
+          "name": "IdentitySessionState",
           "kind": "RecordDeclaration",
           "nestedTypes": []
         }

@@ -8,6 +8,7 @@ public interface IIdentityAccountRepository
     Task<IdentityAccount?> GetAsync(Guid userId, CancellationToken ct = default);
     Task<IdentityAccount?> FindByEmailAsync(string email, CancellationToken ct = default);
     Task<long> GenerationAsync(Guid userId, CancellationToken ct = default);
+    Task<IdentitySessionState?> SessionStateAsync(Guid userId, CancellationToken ct = default);
     Task RequireGenerationAsync(Guid userId, long generation, CancellationToken ct = default);
     Task<Guid?> BeginPasswordAttemptAsync(Guid userId, CancellationToken ct = default);
     Task EndPasswordAttemptAsync(Guid userId, Guid lease, CancellationToken ct = default);

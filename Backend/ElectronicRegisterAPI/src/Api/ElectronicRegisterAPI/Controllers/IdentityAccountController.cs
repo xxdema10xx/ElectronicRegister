@@ -22,7 +22,7 @@ public sealed class IdentityAccountController(IIdentityAccountManager manager) :
         return NoContent();
     }
 
-    [HttpPut("password")]
+    [HttpPut("password"), PasswordChangeEndpoint]
     public async Task<IActionResult> ChangePassword(ChangeIdentityPasswordDto input, CancellationToken ct)
     {
         await manager.ChangePasswordAsync(UserId, InstitutionAuthentication.IdentityGeneration(User), input, ct);

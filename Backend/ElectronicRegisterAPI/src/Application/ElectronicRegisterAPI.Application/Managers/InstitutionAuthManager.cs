@@ -19,14 +19,23 @@ internal sealed class InstitutionAuthManager(
     public async Task<IdentityTicketDto?> LoginAsync(LoginDto input)
     {
         var account = await accounts.FindByEmailAsync(input.Email);
-        return account is not null && passwords.Verify(input.Password, account.PasswordHash) ? new(tokens.Selection(account.UserId, account.Generation), 300) : null;
+        // Exactly one BCrypt verification of the same cost whether the email is absent,
+        // external-only or present, so neither status, body nor timing reveals it.
+        var verified = account is { PasswordHash.Length: > 0 } ? passwords.Verify(input.Password, account.PasswordHash) : passwords.VerifyAbsent(input.Password);
+        return verified ? await TicketAsync(account!) : null;
+    }
+
+    private async Task<IdentityTicketDto?> TicketAsync(IdentityAccount account)
+    {
+        var state = await accounts.SessionStateAsync(account.UserId);
+        return state is null || state.Generation != account.Generation ? null : new(tokens.Selection(account.UserId, account.Generation), 300, state.PasswordChangeRequired);
     }
 
     public async Task<IdentityTicketDto?> MicrosoftLoginAsync(MicrosoftLoginDto input)
     {
         var userId = await microsoftLinks.AuthenticateAsync(input.AccessToken);
         var account = userId.HasValue ? await accounts.GetAsync(userId.Value) : null;
-        return account is not null ? new(tokens.Selection(account.UserId, account.Generation), 300) : null;
+        return account is not null ? await TicketAsync(account) : null;
     }
 
     public async Task<bool> IdentityExistsAsync(Guid userId) => await accounts.GenerationAsync(userId) >= 0;

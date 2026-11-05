@@ -72,6 +72,15 @@ internal sealed class IdentityAccountRepository(ElectronicRegisterContext db) : 
         return value is null ? -1 : Convert.ToInt64(value);
     }
 
+    public async Task<IdentitySessionState?> SessionStateAsync(Guid userId, CancellationToken ct = default)
+    {
+        // One statement: the generation and the credential state come from the same snapshot.
+        // The latest credential event wins; on an identical timestamp the temporary one wins (fail closed).
+        await using var command = await CommandAsync("SELECT COALESCE(s.generation,0),COALESCE((SELECT e.action=@temporary FROM identity_account_event e WHERE e.user_id=u.id AND e.action IN (@temporary,@changed) ORDER BY e.created_at DESC,e.action=@temporary DESC LIMIT 1),0) FROM `user` u LEFT JOIN identity_account_state s ON s.user_id=u.id WHERE u.id=@user", userId, ct, ("@temporary", IdentityAccountEvents.TemporaryPassword), ("@changed", IdentityAccountEvents.PasswordChanged));
+        await using var reader = await command.ExecuteReaderAsync(ct);
+        return await reader.ReadAsync(ct) ? new(reader.GetInt64(0), Convert.ToInt64(reader.GetValue(1)) != 0) : null;
+    }
+
     public async Task RequireGenerationAsync(Guid userId, long generation, CancellationToken ct = default)
     {
         // Recipient acceptance calls this after its IAM mutex and before commit.
@@ -149,7 +158,7 @@ internal sealed class IdentityAccountRepository(ElectronicRegisterContext db) : 
             throw new UnauthorizedAccessException("Credenziali modificate.");
         await using var revoke = await CommandAsync("UPDATE identity_account_state SET generation=generation+1 WHERE user_id=@user", userId, ct);
         await revoke.ExecuteNonQueryAsync(ct);
-        await AuditAsync(userId, "password.changed", ct);
+        await AuditAsync(userId, IdentityAccountEvents.PasswordChanged, ct);
         await tx.CommitAsync(ct);
     }
 

@@ -110,7 +110,11 @@ public static class InstitutionAuthentication
                         throw new SecurityTokenException();
                     var identityGeneration = InstitutionTokenContract.ReadIdentityGeneration(principal, payload.RootElement);
                     var accounts = context.HttpContext.RequestServices.GetRequiredService<IIdentityAccountRepository>();
-                    if (await accounts.GenerationAsync(GuidClaim(principal, "sub"), context.HttpContext.RequestAborted) != identityGeneration)
+                    var state = await accounts.SessionStateAsync(GuidClaim(principal, "sub"), context.HttpContext.RequestAborted);
+                    if (state is null || state.Generation != identityGeneration)
+                        throw new SecurityTokenException();
+                    // A temporary credential may only be replaced: selection ticket, password endpoint, nothing else.
+                    if (state.PasswordChangeRequired && !(selection && context.HttpContext.GetEndpoint()?.Metadata.GetMetadata<PasswordChangeEndpointAttribute>() is not null))
                         throw new SecurityTokenException();
                 }
                 catch (Exception ex)when (ex is ArgumentException or SecurityTokenException or JsonException or IndexOutOfRangeException)
