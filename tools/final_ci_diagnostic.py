@@ -37,6 +37,7 @@ def summarize(rows):
         elif any(s in error for s in ('Table DDL drift', 'Guid types/collations', 'Additive metadata drift')): category = 'migration-schema'
         elif 'MySQL timeout;' in error or 'queue.Empty' in error: category = 'sql-client-protocol'
         elif row['status'] == 'BLOCKED': category = 'not-executed'
+        elif row['status'] == 'SKIPPED' and row.get('justification'): category = 'reviewed-exclusion'
         else: category = 'failure-requiring-analysis'
         causes.setdefault(category, []).append(row['id'])
     return dict(methods=sorted(methods.values(), key=lambda m: m['method']), categories=causes)

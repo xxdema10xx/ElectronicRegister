@@ -223,6 +223,10 @@ jobs:
           - {domain: email, shard: 0, shards: 1}
           - {domain: imports, shard: 0, shards: 1}
           - {domain: iam, shard: 0, shards: 1}
+          - {domain: iam-security, shard: 0, shards: 4}
+          - {domain: iam-security, shard: 1, shards: 4}
+          - {domain: iam-security, shard: 2, shards: 4}
+          - {domain: iam-security, shard: 3, shards: 4}
           - {domain: onboarding, shard: 0, shards: 1}
           - {domain: tenants, shard: 0, shards: 6}
           - {domain: tenants, shard: 1, shards: 6}

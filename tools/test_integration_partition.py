@@ -1,7 +1,9 @@
 import unittest
 import tempfile
 from pathlib import Path
-from integration_partition import SHARDS, WINDOWS_METHODS, owner, partition
+from integration_partition import SHARDS, WINDOWS_METHODS, EXCLUDED_METHODS, exclusions, owner, partition
+
+PREFIX = 'ElectronicRegisterAPI.Tests.Integration.'
 
 
 class PartitionTests(unittest.TestCase):
@@ -25,6 +27,36 @@ class PartitionTests(unittest.TestCase):
             with self.assertRaises(ValueError): partition([], 'tenants', index, count)
         with self.assertRaises(ValueError): partition([], 'iam', 0, 1)
 
+    def test_reviewed_exclusions_are_exactly_two_inc012_methods(self):
+        # Changing the exclusion list requires changing this test in the same review.
+        self.assertEqual(EXCLUDED_METHODS, {
+            PREFIX+'Mt5bSecurityStateTests.Sql_FixtureGuardExcludesRealLegacyHolding':
+                ('INC-012', 'Observes the real legacy holding MT3A_LEGACY_TEST, absent from the fresh MySQL 8.4 bootstrap; decision in Lotto 6'),
+            PREFIX+'Mt5dMembershipMutationTests.OfflineGraphClassifiesValidatedIamLedgerWithoutChangingData':
+                ('INC-012', 'Validates the offline ownership graph of the legacy holding MT3A_LEGACY_TEST, absent from the fresh MySQL 8.4 bootstrap; decision in Lotto 6'),
+        })
+
+    def test_iam_security_owns_three_classes_and_capability_scope_with_exclusions_reported(self):
+        self.assertEqual(4, SHARDS['iam-security'])
+        classes = ['Mt5bJwtTests', 'Mt5bSecurityStateTests', 'Mt5dMembershipMutationTests', 'Mysql84CapabilityScopeTests']
+        methods = [PREFIX+c+'.Case'+str(n) for c in classes for n in range(5)] + list(EXCLUDED_METHODS)
+        for method in methods: self.assertEqual('iam-security', owner(method))
+        shards = [partition(methods, 'iam-security', i, 4)[1] for i in range(4)]
+        assigned = [m for shard in shards for m in shard]
+        self.assertEqual(sorted(assigned), sorted(set(methods) - set(EXCLUDED_METHODS)))
+        self.assertEqual(set(EXCLUDED_METHODS), set(exclusions(methods, 'iam-security')))
+        self.assertEqual({}, exclusions(methods, 'iam'))
+        with self.assertRaises(ValueError): exclusions(methods[:-1], 'iam-security')
+        with self.assertRaises(ValueError): partition(methods, 'iam-security', 0, 3)
+
+    def test_iam_security_uses_only_the_identity_fixture_family(self):
+        from ci_diagnostic import integration_plan
+        methods = [PREFIX+'Mt5bJwtTests.A', PREFIX+'Mysql84CapabilityScopeTests.B']
+        with tempfile.TemporaryDirectory() as directory:
+            checks = integration_plan(methods, directory, 'iam-security-0')
+        self.assertEqual(['preflight-identity'], [c['id'] for c in checks if c['id'].startswith('preflight-')])
+        self.assertTrue(all(c.get('needs') == ['preflight-identity'] for c in checks if c['id'] in methods))
+
     def test_partial_theory_cannot_certify_method(self):
         from ci_diagnostic import batch_methods
         method = 'ElectronicRegisterAPI.Tests.Integration.Fixture.Theory'
@@ -45,12 +77,14 @@ class PartitionTests(unittest.TestCase):
         rows = [dict(id='one', test=method, status='FAIL', error='original stack INNODB_LOCK_WAITS'),
                 dict(id='two', test=method, status='FAIL', error='original stack INNODB_LOCK_WAITS'),
                 dict(id='blocked', test=method+'2', status='BLOCKED', error='budget'),
-                dict(id='old', status='FAIL', required=False, error='historical')]
+                dict(id='old', status='FAIL', required=False, error='historical'),
+                dict(id='excluded', test=method+'3', status='SKIPPED', justification='INC-012: reason', error='reason')]
         result = summarize(rows)
         self.assertEqual(2, result['methods'][0]['occurrences'])
         self.assertEqual(['one','two'], result['categories']['lock-observer'])
         self.assertEqual(['blocked'], result['categories']['not-executed'])
         self.assertEqual(['old'], result['categories']['historical-non-certifiable'])
+        self.assertEqual(['excluded'], result['categories']['reviewed-exclusion'])
         self.assertEqual('original stack INNODB_LOCK_WAITS', rows[0]['error'])
 
 

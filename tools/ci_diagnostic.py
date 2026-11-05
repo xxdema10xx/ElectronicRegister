@@ -9,7 +9,7 @@ import traceback
 import time
 import os
 import signal
-from integration_partition import SHARDS, WINDOWS_METHODS, partition
+from integration_partition import SHARDS, WINDOWS_METHODS, IAM_SECURITY_CLASSES, exclusions, partition
 from artifact_diagnostic import audit, issue
 
 
@@ -146,7 +146,9 @@ def integration_plan(methods, root, suite):
     Unknown/mutating methods remain individually isolated by default.
     """
     prefix = 'ElectronicRegisterAPI.Tests.Integration.'
-    families = {m: ('identity' if m.startswith(prefix+('Mt5cOnboardingTests' if suite == 'onboarding' else 'Mt5eIamHttpTests')) else 'functional') for m in methods}
+    identity = (('Mt5cOnboardingTests',) if suite == 'onboarding' else
+                tuple(c[1:] for c in IAM_SECURITY_CLASSES) if suite.startswith('iam-security') else ('Mt5eIamHttpTests',))
+    families = {m: ('identity' if m.startswith(tuple(prefix+c+'.' for c in identity)) else 'functional') for m in methods}
     checks = []
     def command(selection, directory):
         return ['dotnet','test','tests/Integration/Integration.Tests.csproj','-c','Release','--no-build',
@@ -256,6 +258,7 @@ def main():
             'email':'FullyQualifiedName~EmailPolicy_',
             'imports':'FullyQualifiedName~BulkImport_',
             'iam':'FullyQualifiedName~Mt5eIamHttpTests|FullyQualifiedName~IdentityAccountTests',
+            'iam-security':'FullyQualifiedName~Mt5bJwtTests|FullyQualifiedName~Mt5bSecurityStateTests|FullyQualifiedName~Mt5dMembershipMutationTests|FullyQualifiedName~Mysql84CapabilityScopeTests',
             'onboarding':'FullyQualifiedName~Mt5cOnboardingTests',
             'tenants':'FullyQualifiedName~Mt2IdentityTests|FullyQualifiedName~InstitutionClassCrudTests'}
         checks = [c for c in static_checks() if c['id'] in ('restore','build')]
@@ -279,9 +282,15 @@ def main():
         else:
             try:
                 methods = discovered_methods(discovery['error'])
+                excluded = exclusions(methods, a.integration)
                 inventory, methods = partition(methods, a.integration, a.shard, a.shards)
                 report['assignment'] = dict(domain=a.integration, shard=a.shard, shards=a.shards,
-                    inventory=inventory, methods=methods, isolation='process and ephemeral database per method')
+                    inventory=inventory, methods=methods, isolation='process and ephemeral database per method',
+                    excluded={m: dict(id=i, reason=r) for m, (i, r) in excluded.items()})
+                if a.shard == 0:
+                    # Visible once per domain: reported, not executed, never counted as PASS.
+                    report['problems'] += [dict(issue('reviewed-exclusion', 'tests/Integration/Integration.Tests.csproj', r, test=m, status='SKIPPED'),
+                        id='excluded-'+m.rsplit('.', 1)[1], justification=i+': '+r, cause='Reviewed CI exclusion '+i) for m, (i, r) in sorted(excluded.items())]
                 isolated = integration_plan(methods, a.root, report['suite'])
                 case_counts = {method: sum(line.strip().split('(', 1)[0] == method
                     for line in discovery['error'].splitlines()) for method in methods}
