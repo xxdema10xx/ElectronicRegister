@@ -340,8 +340,16 @@ jobs:
           echo "Minimum MemAvailable during verify: $(( $(sort -n "$RUNNER_TEMP/mem-verify.txt" | head -1) / 1024 )) MiB"
           r verify
           # Neither demo credentials nor staging secrets in release logs or backups.
-          sudo "$PY" -c "import json,sys; [print(a['password']) for a in json.load(open(sys.argv[1]))['accounts'].values()]" "$demo/credentials.json" > "$RUNNER_TEMP/values.txt"
-          for file in secrets/db/root-password secrets/db/migrator-password secrets/api/jwt-key; do sudo cat "$NEW_STATE/$file"; echo; done >> "$RUNNER_TEMP/values.txt"
+          # One non-empty fixed string per line (an empty pattern would match everything).
+          sudo "$PY" - "$demo/credentials.json" "$NEW_STATE" > "$RUNNER_TEMP/values.txt" <<'PY'
+          import json, sys
+          from pathlib import Path
+          values = [a['password'] for a in json.load(open(sys.argv[1]))['accounts'].values()]
+          values += [(Path(sys.argv[2]) / f).read_text().strip() for f in ('secrets/db/root-password', 'secrets/db/migrator-password', 'secrets/api/jwt-key')]
+          assert all(len(v) >= 12 for v in values) and len(values) == 39, len(values)
+          for value in values:
+              print(value)
+          PY
           if sudo grep -R -q -F -f "$RUNNER_TEMP/values.txt" "$BASE/release-$GITHUB_SHA/logs" "$BASE/backups"; then echo "secret found in logs or backups"; exit 1; fi
           rm "$RUNNER_TEMP/values.txt"
       - name: Ubuntu 26.04 container - tools with its own Python and OpenSSL, real HTTPS to the runner
