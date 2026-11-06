@@ -135,3 +135,259 @@ jobs:
           if sudo test -f "$STAGE_STATE/state.json"; then
             sudo python3 infra/staging/host.py --state "$STAGE_STATE" stop
           fi
+  ec2-release:
+    # Rehearsal of infra/staging/release-ec2.sh on a host laid out like the EC2: the real old version
+    # (8e7d9ecd, installed with its own host.py on 127.0.0.1:18080), host nginx with sites-available/
+    # sites-enabled and the versioned certificate directory of the old namespace, then every phase of the
+    # release with Python 3.14: check, backup, deploy (old and new running together, RAM sampled),
+    # switch with an injected nginx -t failure (automatic restore), rollback from a half-switched state,
+    # switch, seed-demo (twice), verify, rollback. Tools also in an Ubuntu 26.04 container.
+    # Runs after the existing staging job of the same commit.
+    needs: current
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    env:
+      OLD_SHA: 8e7d9ecd42c001f1fa9b30e120535ce1bb0ef6e8
+      DOMAIN: staging.consoliprojects.dev
+      BASE: /srv/electronicregister-staging
+      ER_RELEASE_OLD_STATE: /srv/electronicregister-staging/state-8e7d9ecd42c001f1fa9b30e120535ce1bb0ef6e8-ci
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Bind the run to the commit under test
+        run: |
+          [[ "$GITHUB_SHA" =~ ^[a-f0-9]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$GITHUB_SHA" != "$OLD_SHA"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        id: python
+        with:
+          python-version: '3.14'
+      - name: Python 3.14, Compose v5.6.1 and host nginx as on the EC2
+        shell: bash
+        run: |
+          set -euo pipefail
+          py="${{ steps.python.outputs.python-path }}"
+          "$py" -c 'import sys,ssl; assert sys.version_info[:2]==(3,14), sys.version; print(sys.version, ssl.OPENSSL_VERSION)'
+          echo "PY=$py" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/compose-ec2"; cd "$RUNNER_TEMP/compose-ec2"
+          curl --fail --location --retry 3 -O https://github.com/docker/compose/releases/download/v5.6.1/docker-compose-linux-x86_64
+          curl --fail --location --retry 3 -O https://github.com/docker/compose/releases/download/v5.6.1/checksums.txt
+          grep -E ' [*]?docker-compose-linux-x86_64$' checksums.txt | sha256sum --check --strict
+          sudo mkdir -p /usr/local/lib/docker/cli-plugins
+          sudo install -m 0755 docker-compose-linux-x86_64 /usr/local/lib/docker/cli-plugins/docker-compose
+          test "$(sudo docker compose version --short | sed 's/^v//')" = 5.6.1
+          sudo docker version --format 'Engine {{.Server.Version}}'
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq nginx
+          sudo systemctl start nginx
+          sudo nginx -v
+          test -L /etc/nginx/sites-enabled/default
+          free -m
+      - name: Offline tests of the release tools (Python 3.14)
+        run: |
+          "$PY" -B tools/test_release_ec2.py
+          "$PY" -B tools/test_staging.py
+          "$PY" -B tools/test_staging_http.py
+          bash -n infra/staging/release-ec2.sh
+      - name: Old version 8e7d9ecd with its own host.py, as installed on the EC2
+        shell: bash
+        run: |
+          set -euo pipefail
+          old="$BASE/source-$OLD_SHA"
+          sudo install -d -m 0755 "$BASE"
+          sudo git -c safe.directory='*' clone --quiet --no-hardlinks --no-checkout "$GITHUB_WORKSPACE" "$old"
+          sudo git -c safe.directory='*' -c advice.detachedHead=false -C "$old" checkout --quiet --detach "$OLD_SHA"
+          cd "$old"
+          h() { sudo env PYTHONDONTWRITEBYTECODE=1 "$PY" infra/staging/host.py --state "$ER_RELEASE_OLD_STATE" "$@"; }
+          h prepare
+          for step in build db sql-check provision compatibility tls seed preflight start verify; do h "$step"; done
+          project=$(sudo "$PY" -c "import json,sys; print(json.load(open(sys.argv[1]))['project'])" "$ER_RELEASE_OLD_STATE/state.json")
+          echo "ER_RELEASE_OLD_PROJECT=$project" >> "$GITHUB_ENV"
+          echo "Old version $project on 127.0.0.1:18080"
+      - name: Old namespace nginx, versioned certificate and public name, as on the EC2
+        shell: bash
+        run: |
+          set -euo pipefail
+          p="$ER_RELEASE_OLD_PROJECT"; work="$RUNNER_TEMP/pki"; mkdir -p "$work"; cd "$work"
+          # Test-only CA trusted on this runner; the EC2 uses its Let's Encrypt certificate.
+          openssl req -x509 -newkey rsa:3072 -sha256 -nodes -keyout ca-key.pem -out ca.pem -days 30 -subj '/CN=ER CI staging CA' \
+            -addext 'basicConstraints=critical,CA:TRUE' -addext 'keyUsage=critical,keyCertSign,cRLSign' 2>/dev/null
+          openssl req -new -newkey rsa:3072 -sha256 -nodes -keyout privkey.pem -out leaf.csr -subj "/CN=$DOMAIN" 2>/dev/null
+          printf 'basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\nsubjectAltName=DNS:%s\n' "$DOMAIN" > leaf.ext
+          openssl x509 -req -in leaf.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out leaf.pem -days 85 -sha256 -extfile leaf.ext 2>/dev/null
+          cat leaf.pem ca.pem > fullchain.pem
+          name=$(sha256sum fullchain.pem | cut -c1-64)
+          d="/etc/nginx/$p"
+          sudo install -d -m 0700 "$d" "$d/versions" "$d/versions/$name"
+          sudo install -m 0644 fullchain.pem "$d/versions/$name/fullchain.pem"
+          sudo install -m 0600 privkey.pem "$d/versions/$name/privkey.pem"
+          rm privkey.pem ca-key.pem
+          sudo ln -s "versions/$name" "$d/active"
+          sudo ln -s active/fullchain.pem "$d/fullchain.pem"
+          sudo ln -s active/privkey.pem "$d/privkey.pem"
+          sudo install -d -m 0755 "/var/lib/er-stage-acme/$p"
+          sudo install -d -m 0750 -o www-data -g adm "/var/log/er-stage/$p"
+          for kind in http https; do
+            sudo cp "$ER_RELEASE_OLD_STATE/nginx-$kind.conf" "/etc/nginx/sites-available/$p-$kind.conf"
+            sudo chmod 0644 "/etc/nginx/sites-available/$p-$kind.conf"
+            sudo ln -s "/etc/nginx/sites-available/$p-$kind.conf" "/etc/nginx/sites-enabled/$p-$kind.conf"
+          done
+          sudo cp "$ER_RELEASE_OLD_STATE/nginx-logrotate.conf" "/etc/logrotate.d/$p"
+          sudo chmod 0644 "/etc/logrotate.d/$p"
+          echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts
+          sudo install -m 0644 ca.pem /usr/local/share/ca-certificates/er-ci-staging.crt
+          sudo update-ca-certificates >/dev/null
+          cp ca.pem "$RUNNER_TEMP/er-ci-staging-ca.pem"
+          sudo nginx -t
+          sudo systemctl reload nginx
+          curl --fail --silent --show-error "https://$DOMAIN/health/ready"; echo
+          sudo "$PY" -c "import urllib.request,sys; r=urllib.request.urlopen('https://$DOMAIN/health/ready'); print('python', sys.version.split()[0], r.status)"
+      - name: check, backup, rollback on an untouched host, deploy (twice) with RAM sampling
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/release-fn.sh" <<'FN'
+          r() {
+            sudo env ER_PYTHON="$PY" ER_RELEASE_OLD_STATE="$ER_RELEASE_OLD_STATE" ER_RELEASE_OLD_PROJECT="$ER_RELEASE_OLD_PROJECT" \
+              GITHUB_ACTIONS=true ER_RELEASE_CI_CHECK=report ER_RELEASE_SMOKE=loopback bash infra/staging/release-ec2.sh "$@"
+          }
+          json() { sudo "$PY" -c "import json,sys; print(json.load(open(sys.argv[1]))[sys.argv[2]])" "$1" "$2"; }
+          FN
+          source "$RUNNER_TEMP/release-fn.sh"
+          r check
+          r backup
+          sudo ls -l "$BASE"/backups/*/
+          if sudo grep -R -l -E 'BEGIN (RSA |EC )?PRIVATE KEY' "$BASE/backups"; then echo "private key in backup"; exit 1; fi
+          r rollback
+          (while true; do awk '/MemAvailable/{print $2}' /proc/meminfo; sleep 2; done) > "$RUNNER_TEMP/mem-deploy.txt" &
+          sampler=$!
+          before=$(awk '/MemAvailable/{print $2}' /proc/meminfo)
+          r deploy
+          kill "$sampler"
+          r deploy
+          min=$(sort -n "$RUNNER_TEMP/mem-deploy.txt" | head -1)
+          after=$(awk '/MemAvailable/{print $2}' /proc/meminfo)
+          peak=$(( (before - min) / 1024 )); steady=$(( (before - after) / 1024 ))
+          echo "MemAvailable before deploy $((before / 1024)) MiB, minimum during deploy $((min / 1024)) MiB, after $((after / 1024)) MiB"
+          echo "Deploy peak use ${peak} MiB, new version steady use ${steady} MiB; the EC2 has 5.9 GB available with the old version running"
+          sudo docker stats --no-stream --format '{{.Name}} {{.MemUsage}}'
+          test "$peak" -lt 4500
+          test "$steady" -lt 2500
+          deploy="$BASE/release-$GITHUB_SHA/deploy.json"
+          new=$(json "$deploy" project)
+          echo "NEW_PROJECT=$new" >> "$GITHUB_ENV"
+          echo "NEW_STATE=$(json "$deploy" state)" >> "$GITHUB_ENV"
+          test "$(sudo docker inspect --format '{{.State.Health.Status}}' "$(sudo docker ps -q --filter "label=com.docker.compose.project=$ER_RELEASE_OLD_PROJECT" --filter label=com.docker.compose.service=api)")" = healthy
+          sudo test -d "/etc/nginx/$new/versions"
+          test "$(sudo readlink "/etc/nginx/$new/active")" = "$(sudo readlink "/etc/nginx/$ER_RELEASE_OLD_PROJECT/active")"
+          sudo cmp "/etc/nginx/$new/privkey.pem" "/etc/nginx/$ER_RELEASE_OLD_PROJECT/privkey.pem"
+          test "$(sudo stat -c %a "/etc/nginx/$new/active/privkey.pem")" = 600
+      - name: switch with an injected nginx -t failure restores the old links by itself; rollback repairs a half switch
+        shell: bash
+        run: |
+          set -euo pipefail
+          source "$RUNNER_TEMP/release-fn.sh"
+          id=$(json "$NEW_STATE/state.json" id)
+          # Conflicts only once the new HTTPS vhost (log_format er_stage_<id>) is enabled.
+          echo "log_format er_stage_$id '\$remote_addr';" | sudo tee /etc/nginx/conf.d/zz-ci-duplicate-log-format.conf
+          sudo nginx -t
+          if r switch; then echo "switch should have failed"; exit 1; fi
+          for kind in http https; do
+            test -L "/etc/nginx/sites-enabled/$ER_RELEASE_OLD_PROJECT-$kind.conf"
+            test ! -e "/etc/nginx/sites-enabled/$NEW_PROJECT-$kind.conf"
+          done
+          sudo grep -q 'link vecchi ripristinati' "$BASE/release-$GITHUB_SHA/logs/latest-switch.log"
+          sudo rm /etc/nginx/conf.d/zz-ci-duplicate-log-format.conf
+          sudo nginx -t
+          log="/var/log/er-stage/$ER_RELEASE_OLD_PROJECT/access.log"
+          before=$(sudo stat -c %s "$log")
+          curl --fail --silent "https://$DOMAIN/health/ready" > /dev/null
+          sleep 1
+          test "$(sudo stat -c %s "$log")" -gt "$before"
+          # Half-switched links, as if the console session dropped in the middle of a switch.
+          sudo rm "/etc/nginx/sites-enabled/$ER_RELEASE_OLD_PROJECT-https.conf"
+          sudo ln -s "/etc/nginx/sites-available/$NEW_PROJECT-http.conf" "/etc/nginx/sites-enabled/$NEW_PROJECT-http.conf"
+          r rollback
+          for kind in http https; do
+            test -L "/etc/nginx/sites-enabled/$ER_RELEASE_OLD_PROJECT-$kind.conf"
+            test ! -e "/etc/nginx/sites-enabled/$NEW_PROJECT-$kind.conf"
+          done
+      - name: switch after rollback (restarts the new version; twice), seed-demo (twice, no duplicates), verify (twice)
+        shell: bash
+        run: |
+          set -euo pipefail
+          source "$RUNNER_TEMP/release-fn.sh"
+          r switch
+          r switch
+          test -z "$(sudo docker ps -q --filter "label=com.docker.compose.project=$ER_RELEASE_OLD_PROJECT")"
+          test -n "$(sudo docker ps -aq --filter "label=com.docker.compose.project=$ER_RELEASE_OLD_PROJECT")"
+          sudo docker volume inspect "${ER_RELEASE_OLD_PROJECT}_db-data" > /dev/null
+          r seed-demo
+          demo="$BASE/release-$GITHUB_SHA/demo"
+          sudo cp "$demo/demo-state.json" "$RUNNER_TEMP/demo-state.first.json"
+          r seed-demo
+          sudo cmp "$demo/demo-state.json" "$RUNNER_TEMP/demo-state.first.json"
+          test "$(sudo stat -c %a "$demo")" = 700
+          test "$(sudo stat -c %a "$demo/credentials.json")" = 600
+          test "$(sudo stat -c %a "$demo/credenziali-demo.txt")" = 600
+          (while true; do awk '/MemAvailable/{print $2}' /proc/meminfo; sleep 2; done) > "$RUNNER_TEMP/mem-verify.txt" &
+          sampler=$!
+          r verify
+          kill "$sampler"
+          echo "Minimum MemAvailable during verify: $(( $(sort -n "$RUNNER_TEMP/mem-verify.txt" | head -1) / 1024 )) MiB"
+          r verify
+          # Neither demo credentials nor staging secrets in release logs or backups.
+          sudo "$PY" -c "import json,sys; [print(a['password']) for a in json.load(open(sys.argv[1]))['accounts'].values()]" "$demo/credentials.json" > "$RUNNER_TEMP/values.txt"
+          for file in secrets/db/root-password secrets/db/migrator-password secrets/api/jwt-key; do sudo cat "$NEW_STATE/$file"; echo; done >> "$RUNNER_TEMP/values.txt"
+          if sudo grep -R -q -F -f "$RUNNER_TEMP/values.txt" "$BASE/release-$GITHUB_SHA/logs" "$BASE/backups"; then echo "secret found in logs or backups"; exit 1; fi
+          rm "$RUNNER_TEMP/values.txt"
+      - name: Ubuntu 26.04 container - tools with its own Python and OpenSSL, real HTTPS to the runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo docker pull -q ubuntu:26.04
+          echo "ubuntu:26.04 = $(sudo docker image inspect --format '{{index .RepoDigests 0}}' ubuntu:26.04)"
+          sudo docker run --rm --network host --add-host "$DOMAIN:127.0.0.1" -e DOMAIN -e DEBIAN_FRONTEND=noninteractive \
+            -v "$GITHUB_WORKSPACE:/src:ro" -v "$RUNNER_TEMP/er-ci-staging-ca.pem:/ca.pem:ro" -v "$BASE/release-$GITHUB_SHA/demo:/demo:ro" \
+            ubuntu:26.04 bash -ec '
+              . /etc/os-release; echo "$PRETTY_NAME"; test "$VERSION_ID" = 26.04
+              apt-get update -qq && apt-get install -y -qq python3 git openssl ca-certificates > /dev/null
+              python3 -c "import sys, ssl; print(sys.version, ssl.OPENSSL_VERSION); assert sys.version_info[:2] >= (3, 14)"
+              cp -r /src /work && cd /work && git config --global --add safe.directory /work
+              python3 -B tools/test_release_ec2.py
+              python3 -B tools/test_staging.py
+              python3 -B tools/test_staging_http.py
+              bash -n infra/staging/release-ec2.sh
+              python3 -B infra/staging/host.py --state /tmp/er-2604-state prepare --port 18099 --subnet 172.31.250.0/24 --enable-import
+              python3 -B infra/staging/demo_seed.py login-probe --out /demo --domain "$DOMAIN" --ca-file /ca.pem
+            '
+      - name: rollback from the switched state, then again (idempotent)
+        shell: bash
+        run: |
+          set -euo pipefail
+          source "$RUNNER_TEMP/release-fn.sh"
+          r rollback
+          r rollback
+          test -L "/etc/nginx/sites-enabled/$ER_RELEASE_OLD_PROJECT-https.conf"
+          test ! -e "/etc/nginx/sites-enabled/$NEW_PROJECT-https.conf"
+          test -z "$(sudo docker ps -q --filter "label=com.docker.compose.project=$NEW_PROJECT")"
+          test -n "$(sudo docker ps -q --filter "label=com.docker.compose.project=$ER_RELEASE_OLD_PROJECT" --filter label=com.docker.compose.service=api)"
+          curl --fail --silent --show-error "https://$DOMAIN/health/ready"; echo
+          sudo test -f "/etc/nginx/sites-available/$NEW_PROJECT-https.conf"
+          sudo test -d "/etc/nginx/$NEW_PROJECT/versions"
+      - name: Release logs (secret-free by design), also on failure
+        if: always()
+        run: |
+          logs="$BASE/release-$GITHUB_SHA/logs"
+          if sudo test -d "$logs"; then
+            for f in $(sudo ls "$logs" | grep -v latest); do echo "::group::$f"; sudo cat "$logs/$f"; echo "::endgroup::"; done
+          fi
+      - name: Sanitized diagnostics of the new staging (before the job ends)
+        if: failure()
+        run: |
+          if [ -n "${NEW_STATE:-}" ] && sudo test -f "$NEW_STATE/state.json"; then
+            sudo "$PY" "$BASE/source-$GITHUB_SHA/infra/staging/host.py" --state "$NEW_STATE" diagnostics
+          fi

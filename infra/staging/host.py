@@ -85,14 +85,20 @@ server {{
 }}
 '''
 
-def runtime_configuration(domain, gateway):
-    """Runtime for the isolated Docker staging only."""
-    return {'Deployment': {'Mode':'Staging','RolloutApproved':True}, 'urls':'http://0.0.0.0:8080', 'AllowedHosts':domain,
+def runtime_configuration(domain, gateway, institution_import=False):
+    """Runtime for the isolated Docker staging only.
+
+    InstitutionImport stays off unless the operator asks for it explicitly at prepare time
+    (the EC2 demo release needs the documented import with EmailMode=None)."""
+    runtime = {'Deployment': {'Mode':'Staging','RolloutApproved':True}, 'urls':'http://0.0.0.0:8080', 'AllowedHosts':domain,
                'Jwt':{'Issuer':'er-staging','Audience':'er-staging-client'},
                'Readiness':{'ExpectedVersion':MYSQL['version'],'ExpectedHost':'er-stage-db','ExpectedDataDir':'/var/lib/mysql'},
                'Transport':{'KnownProxies':[gateway,'127.0.0.1'], 'AllowedOrigins':['https://consoliprojects.dev'], 'HttpsPort':443},
                'Identity':{'Legacy':{'Enabled':False}},
                'Multitenancy':{k:{'Enabled':k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar')} for k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar','Onboarding','Governance','InstitutionWorker')}}
+    if institution_import:
+        runtime['Multitenancy']['InstitutionImport'] = {'Enabled': True}
+    return runtime
 
 def prepare(args):
     require(sys.platform.startswith('linux') and os.geteuid() == 0, 'Prepare on Linux as root to set real bind-secret ownership; no permission bypass')
@@ -144,7 +150,7 @@ def prepare(args):
         write(folder/f'secrets/{name}/jwt-key', jwt, uid, uid)
     connection = 'Server=er-stage-db;Port=3306;Database=electronic_register_staging;User ID=er_api;Password='+passwords['api']+';SslMode=VerifyFull;SslCa=/run/secrets/mysql-ca.pem;TlsVersion=TLS 1.2'
     write(folder/'secrets/api/connection', connection, 1654, 1654)
-    runtime = runtime_configuration(args.domain, state['gateway'])
+    runtime = runtime_configuration(args.domain, state['gateway'], getattr(args, 'enable_import', False))
     public = dict(state)
     write(folder/'public/staging.json', json.dumps(public, indent=2), mode=0o444)
     write(folder/'public/runtime.json', json.dumps(runtime, indent=2), mode=0o444)
@@ -271,6 +277,8 @@ def main():
     # Registry provenance in staging-evidence/mysql-8.4-registry.json.
     # Only this reviewed digest is allowed; runtime checks remain mandatory.
     p.add_argument('--mysql-image',default=MYSQL['image'])
+    # prepare only: also enable Multitenancy:InstitutionImport (off by default).
+    p.add_argument('--enable-import',action='store_true')
     a=p.parse_args()
     if a.command=='prepare':return prepare(a)
     folder,s=load(a.state)
