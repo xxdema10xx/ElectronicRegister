@@ -50,6 +50,7 @@ SUBNETS = [f'172.30.{n}.0/24' for n in range(253, 256)] + [f'172.31.{n}.0/24' fo
 MIN_DISK_GIB = 8
 MIN_MEM_BEFORE_MIB = 2048     # API build + new MySQL while the old version keeps running
 MIN_MEM_AFTER_MIB = 768
+MIN_NODE_VERSION = (18, 0)   # structuredClone/replaceAll/randomUUID in tools/mysql84-release.cjs
 HOST_STEPS = ['config', 'build', 'db', 'sql-check', 'provision', 'compatibility', 'release-preflight', 'tls', 'seed', 'preflight', 'start']
 PY = sys.executable
 
@@ -518,6 +519,10 @@ def phase_check():
     r.ok('Python', sys.version.split()[0])
     for tool in ('git', 'openssl', 'nginx', 'systemctl', 'ip'):
         r.check(f'{tool} disponibile', shutil.which(tool) is not None)
+    # tools/mysql84_release.py (fase release-preflight) gira sulla macchina host, non nel container ops: gli serve node.
+    node_version = out(['node', '--version']) if shutil.which('node') else ''
+    r.check(f'node >= {MIN_NODE_VERSION[0]}.{MIN_NODE_VERSION[1]} disponibile (richiesto da tools/mysql84_release.py sulla macchina host)',
+            version_tuple(node_version) >= MIN_NODE_VERSION, node_version or 'non trovato nel PATH')
     free = min(disk_free_gib(BASE), disk_free_gib(docker_root()))
     r.check(f'spazio libero >= {MIN_DISK_GIB} GiB', free >= MIN_DISK_GIB, f'{free:.1f} GiB')
     mem = mem_available_mib()

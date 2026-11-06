@@ -35,13 +35,32 @@ Deve stampare esattamente lo SHA. `~/ElectronicRegister` e `~/tmp` non vengono t
 sudo bash "$L/infra/staging/release-ec2.sh" check
 ```
 
-Atteso: righe `OK` per architettura, Docker 29.9.2, Compose 5.6.1, Python 3.14.4, spazio, RAM, vecchia
-versione healthy su 127.0.0.1:18080, nginx -t, vhost vecchie attive, HTTPS pubblico, certificato
-(SAN `staging.consoliprojects.dev`, scadenza 2027-01-28, chiave corrispondente, uguale a quello servito),
-porta prevista `18081`, subnet prevista `172.30.253.0/24`, le 5 CI del commit verdi. Poi `ESITO check: OK`.
+Atteso: righe `OK` per architettura, Docker 29.9.2, Compose 5.6.1, Python 3.14.4, node >= 18, git, openssl,
+nginx, systemctl, ip, spazio, RAM, vecchia versione healthy su 127.0.0.1:18080, nginx -t, vhost vecchie
+attive, HTTPS pubblico, certificato (SAN `staging.consoliprojects.dev`, scadenza 2027-01-28, chiave
+corrispondente, uguale a quello servito), porta prevista `18081`, subnet prevista `172.30.253.0/24`,
+le 5 CI del commit verdi. Poi `ESITO check: OK`.
 
 Fermarsi se c'è un `FAIL`. Un `WARN` sulla CI non raggiungibile si accetta solo dopo aver verificato a mano
 le run su GitHub.
+
+### Prerequisiti sull'host (fuori dai container)
+
+`check` verifica solo questi: Docker Engine, plugin Compose v5.6.1, Python 3.14, git, openssl, nginx,
+systemctl, ip, node (>= 18). Tutto il resto (mysql client, dotnet, ecc.) gira dentro l'immagine `ops` e
+non serve sull'host.
+
+Incidente del deploy sul commit precedente: `release-preflight` (fase `deploy`) lancia
+`tools/mysql84_release.py` **sull'host**, non dentro `ops`, perché deve usare `docker exec` con root
+sul socket del container db di questo staging, mai sulla rete; lo script a sua volta lancia `node` per
+verificare la chiusura della release (`tools/mysql84-release.cjs`). Node non era fra i prerequisiti
+controllati da `check` e sull'host non era installato: `FileNotFoundError` a metà deploy. La CI non lo ha
+visto perché i runner GitHub hanno node preinstallato "gratis"; il job `ec2-release` ora nasconde quel
+node e lo installa con `apt-get install nodejs`, come sull'EC2, così la CI nota un domani la stessa lacuna.
+
+Per qualsiasi nuova dipendenza eseguita sull'host (non dentro `ops`): aggiungerla ai controlli di
+`phase_check()` in `release_ec2.py` **e** farla installare esplicitamente dal job `ec2-release`
+(`.github/workflows/staging-current.yml`) via `apt`, mai dare per scontato che il runner ce l'abbia già.
 
 ## 2. backup (~1 minuto)
 

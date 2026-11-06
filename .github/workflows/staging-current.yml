@@ -189,7 +189,7 @@ jobs:
               offline() {
                 if ! as_user python3 -B "$1" > /tmp/test-out.txt 2>&1; then
                   cat /tmp/test-out.txt
-                  grep -E "^(FAIL|ERROR):|^[A-Za-z.]*(Error|Exception): " /tmp/test-out.txt | head -8 | cut -c1-300 | while IFS= read -r line; do echo "::error title=$1 on 26.04::$line"; done
+                  grep -E "^(FAIL|ERROR):|^[A-Za-z.]*(Error|Exception): " /tmp/test-out.txt | head -n 8 | cut -c1-300 | while IFS= read -r line; do echo "::error title=$1 on 26.04::$line"; done
                   failed=1
                   return 0
                 fi
@@ -236,13 +236,19 @@ jobs:
         id: python
         with:
           python-version: '3.14'
-      - name: Python 3.14, Compose v5.6.1 and host nginx as on the EC2
+      - name: Python 3.14, Compose v5.6.1, host nginx and node as on the EC2
         shell: bash
         run: |
           set -euo pipefail
           py="${{ steps.python.outputs.python-path }}"
           "$py" -c 'import sys,ssl; assert sys.version_info[:2]==(3,14), sys.version; print(sys.version, ssl.OPENSSL_VERSION)'
           echo "PY=$py" >> "$GITHUB_ENV"
+          # The runner preinstalls node for free; the EC2 does not. Hide it so release-preflight
+          # (tools/mysql84_release.py, on the host) only ever sees the one this job installs below,
+          # the same way the EC2 host does (apt) - otherwise this job cannot catch a missing node.
+          if runner_node=$(command -v node 2>/dev/null); then
+            sudo mv "$runner_node" "$runner_node.hidden-by-ci"
+          fi
           mkdir -p "$RUNNER_TEMP/compose-ec2"; cd "$RUNNER_TEMP/compose-ec2"
           curl --fail --location --retry 3 -O https://github.com/docker/compose/releases/download/v5.6.1/docker-compose-linux-x86_64
           curl --fail --location --retry 3 -O https://github.com/docker/compose/releases/download/v5.6.1/checksums.txt
@@ -252,10 +258,11 @@ jobs:
           test "$(sudo docker compose version --short | sed 's/^v//')" = 5.6.1
           sudo docker version --format 'Engine {{.Server.Version}}'
           sudo apt-get update -qq
-          sudo apt-get install -y -qq nginx
+          sudo apt-get install -y -qq nginx nodejs
           sudo systemctl start nginx
           sudo nginx -v
           test -L /etc/nginx/sites-enabled/default
+          node --version
           free -m
       - name: Old version 8e7d9ecd with its own host.py, as installed on the EC2
         shell: bash
@@ -335,7 +342,7 @@ jobs:
           r deploy
           kill "$sampler"
           r deploy
-          min=$(sort -n "$RUNNER_TEMP/mem-deploy.txt" | head -1)
+          min=$(sort -n "$RUNNER_TEMP/mem-deploy.txt" | head -n 1)
           after=$(awk '/MemAvailable/{print $2}' /proc/meminfo)
           peak=$(( (before - min) / 1024 )); steady=$(( (before - after) / 1024 ))
           echo "MemAvailable before deploy $((before / 1024)) MiB, minimum during deploy $((min / 1024)) MiB, after $((after / 1024)) MiB"
@@ -404,7 +411,7 @@ jobs:
           sampler=$!
           r verify
           kill "$sampler"
-          echo "Minimum MemAvailable during verify: $(( $(sort -n "$RUNNER_TEMP/mem-verify.txt" | head -1) / 1024 )) MiB"
+          echo "Minimum MemAvailable during verify: $(( $(sort -n "$RUNNER_TEMP/mem-verify.txt" | head -n 1) / 1024 )) MiB"
           r verify
           # Neither demo credentials nor staging secrets in release logs or backups.
           # One non-empty fixed string per line (an empty pattern would match everything).
@@ -440,7 +447,7 @@ jobs:
           if sudo test -d "$logs"; then
             for f in $(sudo ls "$logs" | grep -v latest); do echo "::group::$f"; sudo cat "$logs/$f"; echo "::endgroup::"; done
             # Tail of each failed phase as an annotation (release logs carry no secrets by design).
-            for f in $(sudo grep -l -r --include='*.log' 'ESITO .*: FAIL' "$logs" | grep -v latest | tail -5); do
+            for f in $(sudo grep -l -r --include='*.log' 'ESITO .*: FAIL' "$logs" | grep -v latest | tail -n 5); do
               body=$(sudo tail -n 25 "$f" | cut -c1-200 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
               echo "::warning title=$(basename "$f")::$body"
             done
@@ -456,7 +463,7 @@ jobs:
             sudo "$PY" "$BASE/source-$GITHUB_SHA/infra/staging/host.py" --state "$NEW_STATE" diagnostics || true
             # Exception lines of the operator job (fixed check messages of this disposable CI state).
             if sudo test -f "$NEW_STATE/ops/errors.log"; then
-              sudo grep -E '^[A-Za-z.]*(Error|Exception|Failure): ' "$NEW_STATE/ops/errors.log" | tail -3 | cut -c1-300 | while IFS= read -r line; do
+              sudo grep -E '^[A-Za-z.]*(Error|Exception|Failure): ' "$NEW_STATE/ops/errors.log" | tail -n 3 | cut -c1-300 | while IFS= read -r line; do
                 echo "::warning title=ops errors.log::$line"
               done
             fi
