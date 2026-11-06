@@ -365,7 +365,8 @@ jobs:
             ubuntu:26.04 bash -Eec '
               trap "echo \"::error title=ubuntu-26.04::exit \$? at: \$BASH_COMMAND\"" ERR
               . /etc/os-release; echo "$PRETTY_NAME"; test "$VERSION_ID" = 26.04
-              apt-get update -qq && apt-get install -y -qq python3 git openssl ca-certificates > /dev/null
+              apt-get update -qq && apt-get install -y -qq python3 git openssl ca-certificates nodejs > /dev/null
+              node --version  # only for tools/test_staging.py; on the EC2 node runs inside the ops image
               python3 -c "import sys, ssl; print(sys.version, ssl.OPENSSL_VERSION); assert sys.version_info[:2] >= (3, 14)"
               cp -r /src /work && cd /work && git config --global --add safe.directory /work
               # Offline tests as an unprivileged user, as in the other CI jobs.
