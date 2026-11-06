@@ -403,6 +403,16 @@ jobs:
       - name: Sanitized diagnostics of the new staging (before the job ends)
         if: failure()
         run: |
+          deploy="$BASE/release-$GITHUB_SHA/deploy.json"
+          if [ -z "${NEW_STATE:-}" ] && sudo test -f "$deploy"; then
+            NEW_STATE=$(sudo "$PY" -c "import json,sys; print(json.load(open(sys.argv[1]))['state'])" "$deploy")
+          fi
           if [ -n "${NEW_STATE:-}" ] && sudo test -f "$NEW_STATE/state.json"; then
-            sudo "$PY" "$BASE/source-$GITHUB_SHA/infra/staging/host.py" --state "$NEW_STATE" diagnostics
+            sudo "$PY" "$BASE/source-$GITHUB_SHA/infra/staging/host.py" --state "$NEW_STATE" diagnostics || true
+            # Exception lines of the operator job (fixed check messages of this disposable CI state).
+            if sudo test -f "$NEW_STATE/ops/errors.log"; then
+              sudo grep -E '^[A-Za-z.]*(Error|Exception|Failure): ' "$NEW_STATE/ops/errors.log" | tail -3 | cut -c1-300 | while IFS= read -r line; do
+                echo "::warning title=ops errors.log::$line"
+              done
+            fi
           fi
