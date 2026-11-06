@@ -8,6 +8,9 @@
 set -Eeuo pipefail
 umask 077
 export PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 LC_ALL=C.UTF-8
+# git status (here and in host.py) must not rewrite the index of the public checkout under umask 077:
+# the non-root ops container reads it.
+export GIT_OPTIONAL_LOCKS=0
 
 phase=${1:-}
 case "$phase" in

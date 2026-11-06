@@ -24,6 +24,7 @@ import urllib.error
 import urllib.request
 
 HERE = Path(__file__).resolve().parent
+os.environ['GIT_OPTIONAL_LOCKS'] = '0'  # never rewrite a checkout's index under the 077 umask
 ROOT = HERE.parents[1]
 ENV = os.environ.get
 BASE = Path(ENV('ER_RELEASE_BASE', '/srv/electronicregister-staging'))
@@ -680,7 +681,8 @@ def phase_deploy():
             run(['git', '-c', 'safe.directory=*', '-c', 'advice.detachedHead=false', '-C', source, 'checkout', '--quiet', '--detach', REV])
         finally:
             os.umask(previous)
-    unreadable = [str(p) for p in (source, source / 'infra/staging/ops.py', source / 'infra/staging/compose.yaml') if not os.stat(p).st_mode & 0o004]
+    unreadable = [str(p) for p in (source, source / '.git', source / '.git/index', source / 'infra/staging/ops.py', source / 'infra/staging/compose.yaml')
+                  if not os.stat(p).st_mode & 0o004]
     require(not unreadable, 'checkout non leggibile dal container ops (uid 10001): ' + ', '.join(unreadable))
     require(git(source, 'rev-parse', 'HEAD') == REV, f'{source} non e al commit {REV}')
     require(not git(source, 'status', '--porcelain', '--untracked-files=normal'), f'{source} non e pulito')
@@ -719,6 +721,7 @@ def phase_deploy():
         shutil.copyfile(state / 'nginx-logrotate.conf', rotate)
         os.chmod(rotate, 0o644)
         r.ok('logrotate del nuovo namespace', str(rotate))
+    require(os.stat(source / '.git/index').st_mode & 0o004, f'{source}/.git/index non leggibile dal container ops')
     for step in HOST_STEPS:
         if step in record['steps']:
             say(f'      host.py {step}: gia completato')
