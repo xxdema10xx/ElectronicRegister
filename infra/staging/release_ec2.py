@@ -672,8 +672,16 @@ def phase_deploy():
     require(min(disk_free_gib(BASE), disk_free_gib(docker_root())) >= MIN_DISK_GIB, 'spazio disco insufficiente')
     source = Path(record['source'])
     if not source.exists():
-        run(['git', '-c', 'safe.directory=*', 'clone', '--no-hardlinks', '--quiet', '--no-checkout', ROOT, source])
-        run(['git', '-c', 'safe.directory=*', '-c', 'advice.detachedHead=false', '-C', source, 'checkout', '--quiet', '--detach', REV])
+        # Public source, read by the non-root ops container (uid 10001): world-readable like the
+        # old checkout, unlike the 077 umask the release script keeps for its own private files.
+        previous = os.umask(0o022)
+        try:
+            run(['git', '-c', 'safe.directory=*', 'clone', '--no-hardlinks', '--quiet', '--no-checkout', ROOT, source])
+            run(['git', '-c', 'safe.directory=*', '-c', 'advice.detachedHead=false', '-C', source, 'checkout', '--quiet', '--detach', REV])
+        finally:
+            os.umask(previous)
+    unreadable = [str(p) for p in (source, source / 'infra/staging/ops.py', source / 'infra/staging/compose.yaml') if not os.stat(p).st_mode & 0o004]
+    require(not unreadable, 'checkout non leggibile dal container ops (uid 10001): ' + ', '.join(unreadable))
     require(git(source, 'rev-parse', 'HEAD') == REV, f'{source} non e al commit {REV}')
     require(not git(source, 'status', '--porcelain', '--untracked-files=normal'), f'{source} non e pulito')
     r.ok('checkout del commit esatto', f'{source} @ {REV}')
@@ -703,7 +711,8 @@ def phase_deploy():
             if reference.exists():
                 mkdir_like(target, reference)
             else:
-                target.mkdir(parents=True, mode=0o755)
+                target.mkdir(parents=True)
+                target.chmod(0o755)
         r.ok(f'cartella {label} del nuovo namespace', str(target))
     rotate = LOGROTATE / record['project']
     if (LOGROTATE / OLD_PROJECT).exists() and not rotate.exists():
