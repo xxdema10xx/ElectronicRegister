@@ -250,6 +250,8 @@ jobs:
         run: |
           set -euo pipefail
           cat > "$RUNNER_TEMP/release-fn.sh" <<'FN'
+          # Job logs need authentication: surface the failing command as a public annotation.
+          trap 'echo "::error title=ec2-release::exit $? at: ${BASH_COMMAND:0:300}"' ERR
           r() {
             sudo env ER_PYTHON="$PY" ER_RELEASE_OLD_STATE="$ER_RELEASE_OLD_STATE" ER_RELEASE_OLD_PROJECT="$ER_RELEASE_OLD_PROJECT" \
               GITHUB_ACTIONS=true ER_RELEASE_CI_CHECK=report ER_RELEASE_SMOKE=loopback bash infra/staging/release-ec2.sh "$@"
@@ -259,7 +261,7 @@ jobs:
           source "$RUNNER_TEMP/release-fn.sh"
           r check
           r backup
-          sudo ls -l "$BASE"/backups/*/
+          sudo find "$BASE/backups" -maxdepth 2 -ls
           if sudo grep -R -l -E 'BEGIN (RSA |EC )?PRIVATE KEY' "$BASE/backups"; then echo "private key in backup"; exit 1; fi
           r rollback
           (while true; do awk '/MemAvailable/{print $2}' /proc/meminfo; sleep 2; done) > "$RUNNER_TEMP/mem-deploy.txt" &
@@ -392,6 +394,11 @@ jobs:
           logs="$BASE/release-$GITHUB_SHA/logs"
           if sudo test -d "$logs"; then
             for f in $(sudo ls "$logs" | grep -v latest); do echo "::group::$f"; sudo cat "$logs/$f"; echo "::endgroup::"; done
+            # Tail of each failed phase as an annotation (release logs carry no secrets by design).
+            for f in $(sudo grep -l -r --include='*.log' 'ESITO .*: FAIL' "$logs" | grep -v latest | tail -5); do
+              body=$(sudo tail -n 25 "$f" | cut -c1-200 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+              echo "::warning title=$(basename "$f")::$body"
+            done
           fi
       - name: Sanitized diagnostics of the new staging (before the job ends)
         if: failure()
