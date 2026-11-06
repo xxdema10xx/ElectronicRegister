@@ -657,7 +657,7 @@ def phase_deploy():
         source = BASE / f'source-{REV}'
         require(not source.exists(), f'{source} esiste gia: non lo riuso')
         existing = list(BASE.glob(f'state-{REV}-*'))
-        require(not existing, f'stato gia presente per questo commit: {existing[0]}')
+        require(not existing, 'stato gia presente per questo commit: ' + ', '.join(map(str, existing)))
         record = dict(revision=REV, source=str(source), state=str(BASE / f'state-{REV}-{now_stamp()}'),
                       port=free_port(exclude=[old['port']]), subnet=free_subnet(), steps=[], abandoned=[])
         require(port_free(record['port']), f"porta {record['port']} occupata")
