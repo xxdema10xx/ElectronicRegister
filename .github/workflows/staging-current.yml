@@ -135,13 +135,84 @@ jobs:
           if sudo test -f "$STAGE_STATE/state.json"; then
             sudo python3 infra/staging/host.py --state "$STAGE_STATE" stop
           fi
+  ec2-tools:
+    # Checks for infra/staging/release-ec2.sh and its tools that need no live EC2-style staging:
+    # offline unit tests and an Ubuntu 26.04 container with its own Python/OpenSSL/toolchain.
+    # No needs: starts immediately, in parallel with current and ec2-release.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        id: python
+        with:
+          python-version: '3.14'
+      - name: Python 3.14 as on the EC2
+        shell: bash
+        run: |
+          set -euo pipefail
+          py="${{ steps.python.outputs.python-path }}"
+          "$py" -c 'import sys,ssl; assert sys.version_info[:2]==(3,14), sys.version; print(sys.version, ssl.OPENSSL_VERSION)'
+          echo "PY=$py" >> "$GITHUB_ENV"
+      - name: tools/test_release_ec2.py (Python 3.14)
+        run: '"$PY" -B tools/test_release_ec2.py'
+      - name: tools/test_staging.py (Python 3.14)
+        if: always()
+        run: '"$PY" -B tools/test_staging.py'
+      - name: tools/test_staging_http.py (Python 3.14)
+        if: always()
+        run: '"$PY" -B tools/test_staging_http.py'
+      - name: bash -n infra/staging/release-ec2.sh
+        if: always()
+        run: bash -n infra/staging/release-ec2.sh
+      - name: Ubuntu 26.04 container - tools with its own Python and OpenSSL
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo docker pull -q ubuntu:26.04
+          echo "ubuntu:26.04 = $(sudo docker image inspect --format '{{index .RepoDigests 0}}' ubuntu:26.04)"
+          sudo docker run --rm -e DEBIAN_FRONTEND=noninteractive -v "$GITHUB_WORKSPACE:/src:ro" \
+            ubuntu:26.04 bash -Eec '
+              trap "echo \"::error title=ubuntu-26.04::exit \$? at: \$BASH_COMMAND\"" ERR
+              . /etc/os-release; echo "$PRETTY_NAME"; test "$VERSION_ID" = 26.04
+              apt-get update -qq && apt-get install -y -qq python3 git openssl ca-certificates nodejs > /dev/null
+              node --version  # only for tools/test_staging.py; on the EC2 node runs inside the ops image
+              python3 -c "import sys, ssl; print(sys.version, ssl.OPENSSL_VERSION); assert sys.version_info[:2] >= (3, 14)"
+              cp -r /src /work && cd /work && git config --global --add safe.directory /work
+              # Offline tests as an unprivileged user, as in the other CI jobs.
+              chown -R 1000:1000 /work
+              as_user() { setpriv --reuid=1000 --regid=1000 --clear-groups env HOME=/tmp GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory GIT_CONFIG_VALUE_0=/work "$@"; }
+              failed=0
+              offline() {
+                if ! as_user python3 -B "$1" > /tmp/test-out.txt 2>&1; then
+                  cat /tmp/test-out.txt
+                  grep -E "^(FAIL|ERROR):|^[A-Za-z.]*(Error|Exception): " /tmp/test-out.txt | head -8 | cut -c1-300 | while IFS= read -r line; do echo "::error title=$1 on 26.04::$line"; done
+                  failed=1
+                  return 0
+                fi
+                tail -n 3 /tmp/test-out.txt
+              }
+              offline tools/test_release_ec2.py
+              offline tools/test_staging.py
+              offline tools/test_staging_http.py
+              bash -n infra/staging/release-ec2.sh || failed=1
+              # host.py prepare runs as root, as on the EC2. login-probe needs the live staging that
+              # only the ec2-release job builds, so here we only check that it starts and shows --help.
+              python3 -B infra/staging/host.py --state /tmp/er-2604-state prepare --port 18099 --subnet 172.31.250.0/24 --enable-import || failed=1
+              python3 -B infra/staging/demo_seed.py login-probe --help > /dev/null || failed=1
+              exit "$failed"
+            '
   ec2-release:
     # Rehearsal of infra/staging/release-ec2.sh on a host laid out like the EC2: the real old version
     # (8e7d9ecd, installed with its own host.py on 127.0.0.1:18080), host nginx with sites-available/
     # sites-enabled and the versioned certificate directory of the old namespace, then every phase of the
     # release with Python 3.14: check, backup, deploy (old and new running together, RAM sampled),
     # switch with an injected nginx -t failure (automatic restore), rollback from a half-switched state,
-    # switch, seed-demo (twice), verify, rollback. Tools also in an Ubuntu 26.04 container.
+    # switch, seed-demo (twice), verify, rollback. Offline tests and the Ubuntu 26.04 toolchain check
+    # run in the parallel ec2-tools job instead.
     # Runs after the existing staging job of the same commit.
     needs: current
     runs-on: ubuntu-24.04
@@ -186,12 +257,6 @@ jobs:
           sudo nginx -v
           test -L /etc/nginx/sites-enabled/default
           free -m
-      - name: Offline tests of the release tools (Python 3.14)
-        run: |
-          "$PY" -B tools/test_release_ec2.py
-          "$PY" -B tools/test_staging.py
-          "$PY" -B tools/test_staging_http.py
-          bash -n infra/staging/release-ec2.sh
       - name: Old version 8e7d9ecd with its own host.py, as installed on the EC2
         shell: bash
         run: |
@@ -354,40 +419,6 @@ jobs:
           PY
           if sudo grep -R -q -F -f "$RUNNER_TEMP/values.txt" "$BASE/release-$GITHUB_SHA/logs" "$BASE/backups"; then echo "secret found in logs or backups"; exit 1; fi
           rm "$RUNNER_TEMP/values.txt"
-      - name: Ubuntu 26.04 container - tools with its own Python and OpenSSL, real HTTPS to the runner
-        shell: bash
-        run: |
-          set -euo pipefail
-          sudo docker pull -q ubuntu:26.04
-          echo "ubuntu:26.04 = $(sudo docker image inspect --format '{{index .RepoDigests 0}}' ubuntu:26.04)"
-          sudo docker run --rm --network host --add-host "$DOMAIN:127.0.0.1" -e DOMAIN -e DEBIAN_FRONTEND=noninteractive \
-            -v "$GITHUB_WORKSPACE:/src:ro" -v "$RUNNER_TEMP/er-ci-staging-ca.pem:/ca.pem:ro" -v "$BASE/release-$GITHUB_SHA/demo:/demo:ro" \
-            ubuntu:26.04 bash -Eec '
-              trap "echo \"::error title=ubuntu-26.04::exit \$? at: \$BASH_COMMAND\"" ERR
-              . /etc/os-release; echo "$PRETTY_NAME"; test "$VERSION_ID" = 26.04
-              apt-get update -qq && apt-get install -y -qq python3 git openssl ca-certificates nodejs > /dev/null
-              node --version  # only for tools/test_staging.py; on the EC2 node runs inside the ops image
-              python3 -c "import sys, ssl; print(sys.version, ssl.OPENSSL_VERSION); assert sys.version_info[:2] >= (3, 14)"
-              cp -r /src /work && cd /work && git config --global --add safe.directory /work
-              # Offline tests as an unprivileged user, as in the other CI jobs.
-              chown -R 1000:1000 /work
-              as_user() { setpriv --reuid=1000 --regid=1000 --clear-groups env HOME=/tmp GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory GIT_CONFIG_VALUE_0=/work "$@"; }
-              offline() {
-                if ! as_user python3 -B "$1" > /tmp/test-out.txt 2>&1; then
-                  cat /tmp/test-out.txt
-                  grep -E "^(FAIL|ERROR):|^[A-Za-z.]*(Error|Exception): " /tmp/test-out.txt | head -8 | cut -c1-300 | while IFS= read -r line; do echo "::error title=$1 on 26.04::$line"; done
-                  return 1
-                fi
-                tail -n 3 /tmp/test-out.txt
-              }
-              offline tools/test_release_ec2.py
-              offline tools/test_staging.py
-              offline tools/test_staging_http.py
-              bash -n infra/staging/release-ec2.sh
-              # host.py prepare and the HTTPS probe run as root, as on the EC2.
-              python3 -B infra/staging/host.py --state /tmp/er-2604-state prepare --port 18099 --subnet 172.31.250.0/24 --enable-import
-              python3 -B infra/staging/demo_seed.py login-probe --out /demo --domain "$DOMAIN" --ca-file /ca.pem
-            '
       - name: rollback from the switched state, then again (idempotent)
         shell: bash
         run: |
