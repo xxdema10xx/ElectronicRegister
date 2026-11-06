@@ -371,9 +371,17 @@ jobs:
               # Offline tests as an unprivileged user, as in the other CI jobs.
               chown -R 1000:1000 /work
               as_user() { setpriv --reuid=1000 --regid=1000 --clear-groups env HOME=/tmp GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory GIT_CONFIG_VALUE_0=/work "$@"; }
-              as_user python3 -B tools/test_release_ec2.py
-              as_user python3 -B tools/test_staging.py
-              as_user python3 -B tools/test_staging_http.py
+              offline() {
+                if ! as_user python3 -B "$1" > /tmp/test-out.txt 2>&1; then
+                  cat /tmp/test-out.txt
+                  grep -E "^(FAIL|ERROR):|^[A-Za-z.]*(Error|Exception): " /tmp/test-out.txt | head -8 | cut -c1-300 | while IFS= read -r line; do echo "::error title=$1 on 26.04::$line"; done
+                  return 1
+                fi
+                tail -n 3 /tmp/test-out.txt
+              }
+              offline tools/test_release_ec2.py
+              offline tools/test_staging.py
+              offline tools/test_staging_http.py
               bash -n infra/staging/release-ec2.sh
               # host.py prepare and the HTTPS probe run as root, as on the EC2.
               python3 -B infra/staging/host.py --state /tmp/er-2604-state prepare --port 18099 --subnet 172.31.250.0/24 --enable-import
