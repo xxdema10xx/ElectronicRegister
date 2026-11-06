@@ -362,15 +362,20 @@ jobs:
           echo "ubuntu:26.04 = $(sudo docker image inspect --format '{{index .RepoDigests 0}}' ubuntu:26.04)"
           sudo docker run --rm --network host --add-host "$DOMAIN:127.0.0.1" -e DOMAIN -e DEBIAN_FRONTEND=noninteractive \
             -v "$GITHUB_WORKSPACE:/src:ro" -v "$RUNNER_TEMP/er-ci-staging-ca.pem:/ca.pem:ro" -v "$BASE/release-$GITHUB_SHA/demo:/demo:ro" \
-            ubuntu:26.04 bash -ec '
+            ubuntu:26.04 bash -Eec '
+              trap "echo \"::error title=ubuntu-26.04::exit \$? at: \$BASH_COMMAND\"" ERR
               . /etc/os-release; echo "$PRETTY_NAME"; test "$VERSION_ID" = 26.04
               apt-get update -qq && apt-get install -y -qq python3 git openssl ca-certificates > /dev/null
               python3 -c "import sys, ssl; print(sys.version, ssl.OPENSSL_VERSION); assert sys.version_info[:2] >= (3, 14)"
               cp -r /src /work && cd /work && git config --global --add safe.directory /work
-              python3 -B tools/test_release_ec2.py
-              python3 -B tools/test_staging.py
-              python3 -B tools/test_staging_http.py
+              # Offline tests as an unprivileged user, as in the other CI jobs.
+              chown -R 1000:1000 /work
+              as_user() { setpriv --reuid=1000 --regid=1000 --clear-groups env HOME=/tmp GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory GIT_CONFIG_VALUE_0=/work "$@"; }
+              as_user python3 -B tools/test_release_ec2.py
+              as_user python3 -B tools/test_staging.py
+              as_user python3 -B tools/test_staging_http.py
               bash -n infra/staging/release-ec2.sh
+              # host.py prepare and the HTTPS probe run as root, as on the EC2.
               python3 -B infra/staging/host.py --state /tmp/er-2604-state prepare --port 18099 --subnet 172.31.250.0/24 --enable-import
               python3 -B infra/staging/demo_seed.py login-probe --out /demo --domain "$DOMAIN" --ca-file /ca.pem
             '
