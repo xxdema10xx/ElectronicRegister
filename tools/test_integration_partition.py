@@ -51,6 +51,10 @@ class PartitionTests(unittest.TestCase):
                 ('INC-012', 'Legacy backfill tooling needs a local MySQL 8.0 mysqldump.exe (Windows), absent on the Linux runner'),
             PREFIX+'Mysql84ReleaseTests.PublishedReleaseAndEmbeddedOnboardingValidationRunOnExactServer':
                 ('INC-017', 'Runs in the release (upgrade) job of the main workflow with ER_MYSQL84_RELEASE_CONFIG on the released server'),
+            PREFIX+'PrivateTestFilesTests.EachFixtureHasItsOwnPrivateDirectoryOutsideDatabaseDatadirs':
+                ('INC-013', 'Windows-only ACL check of the private test-file infrastructure (PlatformNotSupportedException on the Linux runner)'),
+            PREFIX+'PrivateTestFilesTests.EveryoneReadIsActuallyAppliedAndCanBeRestoredOnTheNewFileOnly':
+                ('INC-013', 'Windows-only ACL check of the private test-file infrastructure (PlatformNotSupportedException on the Linux runner)'),
         })
 
     def test_reviewed_case_exclusions_are_exactly_the_locked_cases(self):

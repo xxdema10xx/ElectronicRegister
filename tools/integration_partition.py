@@ -52,6 +52,10 @@ EXCLUDED_METHODS = {
         ('INC-012', 'Legacy backfill tooling needs a local MySQL 8.0 mysqldump.exe (Windows), absent on the Linux runner'),
     'ElectronicRegisterAPI.Tests.Integration.Mysql84ReleaseTests.PublishedReleaseAndEmbeddedOnboardingValidationRunOnExactServer':
         ('INC-017', 'Runs in the release (upgrade) job of the main workflow with ER_MYSQL84_RELEASE_CONFIG on the released server'),
+    'ElectronicRegisterAPI.Tests.Integration.PrivateTestFilesTests.EachFixtureHasItsOwnPrivateDirectoryOutsideDatabaseDatadirs':
+        ('INC-013', 'Windows-only ACL check of the private test-file infrastructure (PlatformNotSupportedException on the Linux runner)'),
+    'ElectronicRegisterAPI.Tests.Integration.PrivateTestFilesTests.EveryoneReadIsActuallyAppliedAndCanBeRestoredOnTheNewFileOnly':
+        ('INC-013', 'Windows-only ACL check of the private test-file infrastructure (PlatformNotSupportedException on the Linux runner)'),
 }
 # Reviewed theory-case exclusions (display names as listed by dotnet test --list-tests); the
 # other cases of the same method still run. Any change must also update the locking test.
