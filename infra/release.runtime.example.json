@@ -1,5 +1,5 @@
 {
-  "Deployment": { "Mode": "Production", "RolloutApproved": false },
+  "Deployment": { "Mode": "Production", "RolloutApproved": true },
   "urls": "http://0.0.0.0:8080",
   "AllowedHosts": "api.example.test",
   "Jwt": { "Issuer": "electronic-register", "Audience": "electronic-register-client" },

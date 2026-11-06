@@ -10,8 +10,8 @@
 | Data | 2026-11-05 (prima stesura e aggiornamento) |
 | Stato decisioni | **D1 decisa** (MySQL 8.4 LTS, vedi [DATABASE_TARGET_MYSQL84.md](../architecture/DATABASE_TARGET_MYSQL84.md)). **D2 decisa** (nessuna registrazione libera, modello account del proprietario, vedi §1.1). D3–D6 aperte |
 | Perimetro | `Backend/ElectronicRegisterAPI` (Api, Application, Business, Domain, Infrastructure, tools/Mt3*), `migrations/`, `infra/`, `global.json`, `Directory.Build.props`, `tools/` (DB, rilascio, PlatformAdmin) |
-| Problemi | **29** in tutto: 18 incompatibilità e 11 vulnerabilità (INC-017 e INC-018 approvati dopo la baseline) |
-| Per severità | **Critica 0 · Alta 4 · Media 8 · Bassa 17** (INC-006 riclassificato da Media a Bassa; INC-017 Alta, INC-018 Bassa) |
+| Problemi | **30** in tutto: 19 incompatibilità e 11 vulnerabilità (INC-017 e INC-018 approvati dopo la baseline; INC-019 aperto il 2026-11-06) |
+| Per severità | **Critica 0 · Alta 4 · Media 8 · Bassa 18** (INC-006 riclassificato da Media a Bassa; INC-017 Alta, INC-018 e INC-019 Bassa) |
 | Verdetto | **NON PRONTO per la produzione** |
 
 **Isolamento multi-tenant.** Non ho trovato falle sfruttabili via HTTP. La conclusione nasce da analisi statica. La baseline su MySQL 8.4.13 ([BASELINE_MYSQL84.md](BASELINE_MYSQL84.md): 1566 casi superati, 16 falliti e 94 non eseguiti su 1676) la **conferma per i percorsi HTTP, i repository, le scritture applicative e il worker**. Dopo il Lotto 0B (INC-017) la conferma vale, **in locale su 8.4**, anche per la revoca dei token basata sulla security generation, le mutazioni di ruolo e l'isolamento delle mutazioni IAM: `Mt5bJwtTests` 23/23, `Mt5bSecurityStateTests` 39/40, `Mt5dMembershipMutationTests` 31/32. I 2 casi non superati osservano l'holding legacy assente dal bootstrap 8.4 (INC-012) e non riguardano revoca, escalation o isolamento. **La conferma in CI arriverà solo dopo la prima run verde** del nuovo dominio `iam-security`. Resta non verificata su 8.4 la CLI di piattaforma. L'isolamento IAM via HTTP è invece coperto in parte da `Mt5eIamHttpTests` (53/53) e `Mt5aMembershipAdminTests` (36/36). Per le aree non verificate resta un risultato da analisi statica. Il blocco viene da tre punti. La piattaforma dati esce dal supporto: EF Core 9 termina il 2026-11-10 e non esiste un provider Pomelo per EF Core 10. Il database target è deciso (D1: MySQL 8.4 LTS), ma il ramo 5.7 è ancora presente nel codice, nei gate e negli strumenti. Infine, in produzione non esiste un percorso per l'onboarding.
@@ -28,6 +28,23 @@
 - Email istituzionale nello spazio globale esistente: un'email già usata altrove produce un 409 unico, identico in ogni caso e con lo stesso costo BCrypt di una creazione riuscita. Rischio residuo accettato: si capisce che l'indirizzo è "occupato", non dove.
 - Password temporanea generata dal sistema e mostrata una sola volta. Il cambio al primo accesso è imposto dal server su ogni token. Il reset incrementa la generation e revoca tutti i token precedenti.
 - Procedure, flag e limiti: [INSTITUTION_ACCOUNTS.md](../operations/INSTITUTION_ACCOUNTS.md).
+
+### 1.2 Verifiche del 2026-11-06 (notte, autonome)
+
+Dettagli ed esiti in [NIGHT_RUN_REPORT.md](NIGHT_RUN_REPORT.md).
+- **Staging Docker sul codice attuale.** Il nuovo workflow `staging-current.yml` costruisce `infra/Dockerfile` su `github.sha` ed esegue l'intero controllo di staging:
+  - provisioning della release correttiva 8.4 e audit completo come root via socket del database usa e getta;
+  - TLS del driver, seed, avvio, restart e audit HTTP.
+
+  Prima `infra/staging` certificava solo lo SHA storico: `ops.py` verificava la closure er-quality-1 e applicava SQL senza le correzioni 8.4. Il workflow storico e il suo SHA sono invariati.
+- **Flusso account in configurazione di produzione.** `infra/staging/production_flow.py` gira con:
+  - Production, `RolloutApproved=true` e MySQL `VerifyFull` con CA generata, utenti non root;
+  - HTTPS tramite `infra/nginx.release.conf`.
+
+  Esito: 23 passi su 23 in CI, compresi i casi negativi TLS e di avvio.
+- **Copertura completa dei test di integrazione.** Il nuovo workflow separato `integration-full.yml` ha 14 shard e un gate:
+  - esegue tutte le 51 classi che la CI principale non copriva;
+  - le esclusioni sono esplicite, con ID, in `tools/integration_partition.py`.
 
 **I 5 rischi principali**
 
@@ -86,7 +103,7 @@
 | INC-001 | EF Core 9 / Pomelo 9 su net10: fine supporto 2026-11-10 e nessun percorso Pomelo 10 | Alta | CONFERMATO | Pacchetti | L | D1, INC-002 |
 | INC-002 | Target deciso (D1, 8.4 LTS) ma ramo 5.7.24 EOL ancora presente in codice, gate e strumenti | Alta | CONFERMATO | Database | L | D1 |
 | INC-008 | PlatformAdmin accetta solo il DB di test: nessun onboarding o governance in produzione | Alta | CONFERMATO; necessario prima della produzione (oggi script manuale del proprietario) | Rilascio/autorità | M | INC-002, D3 |
-| INC-017 | Test IAM, security generation e JWT (`Mt5bSecurityStateTests`, `Mt5dMembershipMutationTests`, `Mt5bJwtTests`: 94 casi) legati a MAMP 5.7 su 13306 tramite `TestMySqlTarget.Port`: non eseguiti sul target 8.4 né inclusi nei filtri della CI 8.4 | Alta | RISOLTO in locale (Lotto 0B); CI da confermare con la prima run verde | Test/copertura | M | D1 |
+| INC-017 | Test IAM, security generation e JWT (`Mt5bSecurityStateTests`, `Mt5dMembershipMutationTests`, `Mt5bJwtTests`: 94 casi) legati a MAMP 5.7 su 13306 tramite `TestMySqlTarget.Port`: non eseguiti sul target 8.4 né inclusi nei filtri della CI 8.4 | Alta | RISOLTO (Lotto 0B; CI `iam-security` verde da 81f10cb; dal 2026-11-06 l'intera suite gira in CI, §1.2) | Test/copertura | M | D1 |
 | INC-003 | Versione MySQL esatta hard-coded (`8.4.13`, `5.7.24`) in validatori, health e CLI | Media | CONFERMATO | Database | S | INC-002 |
 | INC-004 | `sql_mode` strict imposto solo nei test, non in produzione né in readiness | Media | CONFERMATO | Database | S | INC-002 |
 | INC-007 | `ServerVersion.AutoDetect` a ogni scope DbContext | Media | PROBABILE | Database/prestazioni | S | INC-002 |
@@ -94,13 +111,14 @@
 | INC-012 | Codice legacy compilato in produzione e repository con fallback senza tenant | Media | CONFERMATO | Legacy | M | — |
 | INC-005 | Bootstrap canonico non compatibile con 8.4 senza adattatore (DEFINER `er_test`, `row_number`, `NO_AUTO_CREATE_USER`) | Bassa | CONFERMATO (deliberato) | Schema | S | INC-002 |
 | INC-006 | Closure di rilascio 8.4 sensibile a ogni byte: nel piano mancava la procedura di rigenerazione | Bassa | CONFERMATO | Rilascio/processo | S | §8 (regola di processo) |
-| INC-010 | `release.runtime.example.json` incoerente: Production non avviabile e versione 5.7.24 | Bassa | CONFERMATO | Infra | S | INC-002 |
+| INC-010 | `release.runtime.example.json` incoerente: Production non avviabile e versione 5.7.24 | Bassa | PARZIALE: `RolloutApproved` esplicito (2026-11-06); `ExpectedVersion` 5.7.24 ancora aperto | Infra | S | INC-002 |
 | INC-011 | Dipendenze tra i flag `Multitenancy:*` implicite e non validate all'avvio | Bassa | CONFERMATO | Configurazione | S | — |
 | INC-013 | Differenze Windows/Linux: `/run/secrets`, PlatformAdmin solo Windows, test ACL | Bassa | CONFERMATO | Ambienti | S | INC-008 |
 | INC-014 | `INSTITUTIONAL_API_SURFACE.json` disallineato (3 controller) e ritiro legacy da comunicare | Bassa | CONFERMATO | Contratti API | S | — |
 | INC-015 | Il controllo di integrità della cancellazione classe scansiona tutti i tenant a runtime | Bassa | CONFERMATO | Robustezza | S | — |
 | INC-016 | Toolchain dei test deprecata (xunit 2.5.3 Legacy, FluentAssertions 6) | Bassa | CONFERMATO | Test | M | — |
 | INC-018 | L'esecuzione della suite di integrazione riscrive 6 file versionati in `tests/Integration/TestResults/` (osservazioni SQL) | Bassa | RISOLTO (Lotto 0B) | Test/igiene | S | VULN-007 |
+| INC-019 | In Production, un avvio rifiutato dalla `RuntimePolicy` termina con exit code 139 (SIGSEGV) invece di un errore pulito | Bassa | CONFERMATO (osservato, causa da verificare) | Operatività | S | INC-010 |
 | VULN-001 | Enumerazione account: registrazione anonima con 409 e timing del login | Media | RISOLTO (registrazione rimossa, login a costo uniforme); residuo accettato: spazio email globale | Autenticazione | S | D2 |
 | VULN-002 | Nessun limite per account sul login: solo 60 POST/min per IP condivisi | Media | CONFERMATO | Autenticazione | M | VULN-003 |
 | VULN-003 | Rate limit per IP collassato se `KnownProxies` non è configurato (consentito dalla policy) | Media | PROBABILE | Infra applicativa | S | INC-009 |
@@ -113,7 +131,7 @@
 | VULN-010 | Un singolo InstitutionAdmin può nominare altri admin o sospenderli senza doppio controllo | Bassa | ACCETTATO dal modello definitivo (admin senza limiti, solo blocco dell'ultimo admin) | Autorizzazione | M | D4 |
 | VULN-011 | Il gate MVC lascia passare senza controlli gli endpoint con marker Identity; nessuna FallbackPolicy | Bassa | CONFERMATO | Autorizzazione | S | — |
 
-Il conteggio di VULN-011 include anche l'osservazione sulla retention dei dati personali, riportata come "DA VERIFICARE" in §5 e non conteggiata a parte. Totale: 4 Alte + 8 Medie + 17 Basse = 29.
+Il conteggio di VULN-011 include anche l'osservazione sulla retention dei dati personali, riportata come "DA VERIFICARE" in §5 e non conteggiata a parte. Totale: 4 Alte + 8 Medie + 18 Basse = 30.
 
 ### Dettaglio degli ID approvati dalla baseline MySQL 8.4 (INC-017, INC-018)
 
@@ -374,6 +392,22 @@ Non è una sostituzione di pacchetto. Il SQL raw è in gran parte portabile, ma 
 
 **Verifica.** Test che carichi ogni `infra/*.example.json` in `RuntimePolicy.Read`. Oggi non esiste.
 
+**Stato (2026-11-06): PARZIALE.**
+- `RolloutApproved` è ora `true` nell'esempio, come scelta esplicita documentata in `docs/operations/INSTITUTION_ACCOUNTS.md`. Con `false` e i flag attivi l'API in Production non parte; lo prova `production_flow.py`.
+- `Readiness.ExpectedVersion` resta `5.7.24`, perché `tools/test_staging.py:222` lo fissa ed è legato al Lotto 3. La configurazione reale deve usare `8.4.13`.
+
+### INC-019 · L'avvio rifiutato termina con exit code 139 (Bassa, CONFERMATO, causa da verificare)
+
+**Severità.** Il rifiuto funziona: il messaggio della policy è nel log e l'API non serve richieste. Il codice di uscita però è quello di un crash (SIGSEGV), non di un errore di configurazione. Un orchestratore o un operatore può scambiarlo per un problema del runtime.
+
+**Evidenza.** `infra/staging/production_flow.py` avvia l'immagine API in Production con `RolloutApproved=false`. In due esecuzioni locali il container termina con 139, e il log contiene `Runtime security configuration is incomplete or unsafe.` (`RuntimePolicy.cs:62`). Il container gira read-only, con `/tmp` in tmpfs, utente non root e `cap_drop ALL`.
+
+**Scenario.** Una configurazione di rilascio incompleta produce un restart loop che sembra un crash del runtime .NET, e la diagnosi parte dalla direzione sbagliata.
+
+**Fix proposta (non applicata: codice di produzione).** Intercettare l'eccezione di policy in `Program.cs` e terminare con `Environment.Exit(2)` e un messaggio esplicito. In alternativa verificare se il 139 viene dall'unhandled exception handler o dal crash dump del runtime in un filesystem read-only (`DOTNET_DbgEnableMiniDump`). **Impegno:** S.
+
+**Verifica.** Il caso negativo di `production_flow.py` deve aspettarsi un codice di uscita esplicito, e lo stesso valore in Staging.
+
 ### INC-011 · Dipendenze tra flag `Multitenancy:*` non dichiarate (Bassa, CONFERMATO)
 
 **Severità.** Il sistema fallisce in modo chiuso, quindi non c'è un rischio di sicurezza, ma le combinazioni incoerenti non danno errori.
@@ -437,6 +471,7 @@ Non è una sostituzione di pacchetto. Il SQL raw è in gran parte portabile, ma 
 - `tools/PlatformAdmin/Program.cs:25,48`: solo Windows (store `CurrentUser\My` e ACL NTFS), mentre l'API gira in un container Linux (`infra/Dockerfile:19`).
 - Il build ha avvisi CA1416 nei test (§2).
 - Case sensitivity: nomi di tabelle e colonne sono tutti minuscoli nello schema e nel SQL raw letto, quindi `lower_case_table_names` non ha effetto (vedi §7).
+- **Test (2026-11-06).** `PrivateTestFilesTests.EachFixtureHasItsOwnPrivateDirectoryOutsideDatabaseDatadirs` e `…EveryoneReadIsActuallyAppliedAndCanBeRestoredOnTheNewFileOnly` richiedono un host Windows amministrativo e sul runner Linux lanciano `PlatformNotSupportedException`. Sono esclusi da `integration-full` con questo ID. Riguardano le ACL dei file privati dei test, non l'autorizzazione del prodotto, e oggi non girano in nessuna CI.
 
 **Fix.** Rendere il percorso dei secret configurabile, documentare la topologia operatore (firma su Windows, esecuzione dove sta il DB) e marcare i test ACL con `[SupportedOSPlatform]`. **Impegno:** S.
 
@@ -962,7 +997,7 @@ La procedura è confermata in `tools/mysql84-release.cjs:107` (ramo `--write`, c
 **Test.** `dotnet test tests/Unit/Unit.Tests.csproj -c Release` e tutta la suite `tests/Integration` (1676 casi) su MySQL 8.4.13, comprese le classi che la CI 8.4 non esegue (la CI copre 817 casi su 1676).
 
 ### Lotto 0B: test di sicurezza su MySQL 8.4 (solo test harness e CI, prima del Lotto 1)
-- [x] INC-017 in locale: 93 casi superati su 95 nelle tre classi, più 2 su 2 in `Mysql84CapabilityScopeTests`; i 2 non superati sono legati a INC-012. [ ] conferma con la prima run verde della CI `iam-security`
+- [x] INC-017 in locale: 93 casi superati su 95 nelle tre classi, più 2 su 2 in `Mysql84CapabilityScopeTests`; i 2 non superati sono legati a INC-012. [x] Confermato in CI: `iam-security` verde dalla prima run (81f10cb). Dal 2026-11-06 anche le altre 51 classi girano in `integration-full.yml`
 - [x] INC-018
 
 Nessuna modifica al codice di produzione in `Backend/ElectronicRegisterAPI/src`. Se un test riportato su 8.4 rivela un problema di produzione, si apre un nuovo ID invece di adattare il test. I file dell'harness e della CI sono nella closure: si applica la regola di processo qui sopra.

@@ -197,3 +197,45 @@ Entrambi sono legati a INC-012 ed esclusi dalla CI.
 - D1 (`StagingCalendarFeatureTests`) è passato 2 su 2 con Python 3.12.10.
 
 **Unit.** In questa sessione non sono stati eseguiti. Il criterio di controllo delle applicazioni di Windows ha bloccato il caricamento di `Unit.Tests.dll` (`0x800711C7`), anche dopo una ricompilazione. Il Lotto 0B non modifica `tests/Unit` né il codice di produzione. Il dato di riferimento resta 598/598 (§1) e la CI esegue il check `unit`.
+
+## 9. Copertura completa in CI (2026-11-06)
+
+**Inventario.** Calcolato con `dotnet test --list-tests` su 7e31414: **1702 casi di integrazione in 819 metodi**. Ogni metodo ha esattamente un proprietario in `tools/integration_partition.py`; una classe nuova fa fallire la partizione finché non viene assegnata.
+
+| Gruppo | Metodi | Casi | Dove gira |
+|---|---|---|---|
+| CI principale, eseguiti | 428 | 932 | `mysql84-release.yml`, domini storici + `iam-security` |
+| CI principale, esclusi | 2 | 2 | INC-012 (holding legacy) |
+| `windows-cli` | 3 | 3 | job Windows della CI principale |
+| `integration-full`, eseguiti | 376 | 752 | `integration-full.yml`, 14 shard |
+| `integration-full`, metodi esclusi | 10 | 11 | vedi sotto |
+| `integration-full`, casi esclusi | — | 2 | vedi sotto |
+| **Totale** | **819** | **1702** | 932 + 2 + 3 + 752 + 11 + 2 = 1702 |
+
+**Shard.** N = 14, calcolato sul caso peggiore: 27 metodi per shard × 45 s (misura CI 26–36 s per metodo, ×1,5), più due timeout da 900 s ≈ 3465 s < 3600 s. Nella run verde lo shard più lungo ha impiegato circa 15 minuti.
+
+**Esclusioni di `integration-full`.** Sono bloccate da `tools/test_integration_partition.py`: un'aggiunta o una rimozione fa fallire i test.
+
+| Metodo o caso | Casi | ID | Motivo |
+|---|---|---|---|
+| `Mt1IntegrityTests.CanonicalExpandIsRerunnableAndDoesNotChangeLegacyData` | 1 | INC-003 | Si aspetta `RESTRICT` (5.7); MySQL 8.4 riporta `NO ACTION` |
+| `Mt4aCourseStructureTests.InformationSchemaHasCompositeRestrictConstraints` | 1 | INC-003 | Come sopra |
+| `Phase4_ExamLifecycleTests.Audit_IdentityProfileFaultIsAtomicAndCannotChangeDidacticProfile` | 2 | INC-012 | Insert EF legacy che dipende dall'holding MT3A |
+| `HistoricalExpiryBoundaryTests.HistoricalOwnerRemainsTechnicalOnlyAndDeliveryIsIdempotent` | 1 | INC-012 | Legge `mt3a_legacy_scope` dell'holding legacy |
+| `Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph` | 1 | INC-012 | Holding legacy |
+| `Mt4aCourseStructureTests.LegacyEfWritersStillReceiveTriggerDerivedOwners` | 1 | INC-012 | Holding legacy |
+| `Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched` | 1 | INC-012 | Holding legacy e `mysqldump` |
+| `Mysql84ReleaseTests.PublishedReleaseAndEmbeddedOnboardingValidationRunOnExactServer` | 1 | INC-017 | Richiede `ER_MYSQL84_RELEASE_CONFIG`; coperto dal job di release della CI principale |
+| `PrivateTestFilesTests.EachFixtureHasItsOwnPrivateDirectoryOutsideDatabaseDatadirs` | 1 | INC-013 | ACL Windows: `PlatformNotSupportedException` su Linux |
+| `PrivateTestFilesTests.EveryoneReadIsActuallyAppliedAndCanBeRestoredOnTheNewFileOnly` | 1 | INC-013 | Come sopra |
+| `Mt3dHttpTests.Release_WorkerDispatchRevalidatesTenantStateUnderLock(state: "holding-active", workerFirst: True/False)` | 2 | INC-012 | Usano l'holding legacy; gli altri casi della theory girano |
+
+Nessuna esclusione riguarda autenticazione, permessi o isolamento tra tenant per motivi diversi dalla holding legacy assente sul bootstrap 8.4 (INC-012).
+
+**Esiti in CI**
+- 464635f, [run 42131545908](https://github.com/xxdema10xx/ElectronicRegister/actions/runs/42131545908): 12 shard su 14 PASS. Gli shard 2 e 3 sono falliti solo sui due metodi `PrivateTestFilesTests`, classificati come ambiente (INC-013) ed esclusi in b3a9030.
+- b3a9030, [run 42135535461](https://github.com/xxdema10xx/ElectronicRegister/actions/runs/42135535461): **14 shard su 14 PASS e gate PASS**. Il gate verifica che il conteggio torni: casi = eseguiti + casi dei metodi esclusi + casi esclusi.
+
+**Test instabile.** `Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: "status=")` è tracciato a parte e non è escluso. È passato in entrambe le run complete (12 casi su 12), con un processo per metodo. Non è stato rieseguito per farlo passare.
+
+La causa registrata in §8 è il timeout di 15 s di `HttpClient` sotto il carico della suite in un solo processo. L'isolamento per metodo della CI elimina quel carico. Se dovesse ripresentarsi, la correzione proposta è nel test: un timeout per richiesta configurabile, solo per la suite completa locale. Codice di produzione e fixture non vanno toccati.

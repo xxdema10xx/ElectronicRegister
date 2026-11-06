@@ -82,7 +82,16 @@ L'endpoint è **spento** se manca uno di questi valori:
 | `Multitenancy:MembershipWriteApi:Enabled` | `true` | Controllato esplicitamente dall'endpoint (altrimenti 404) |
 | `Deployment:RolloutApproved` | `true` | Obbligatorio in Staging e Production con qualsiasi flag `Multitenancy` attivo (`RuntimePolicy.cs:52`) |
 
-`infra/release.runtime.example.json` contiene i due flag a `true` ma `RolloutApproved: false`, una combinazione che fa fallire l'avvio (INC-010, Lotto 3). La configurazione di rilascio revisionata deve impostare `RolloutApproved: true`.
+**`RolloutApproved` è una scelta esplicita.** Dal 2026-11-06 `infra/release.runtime.example.json` riporta `"RolloutApproved": true`.
+- Con i flag `Multitenancy` attivi e `RolloutApproved: false`, l'API in Production **non si avvia**: `RuntimePolicy` termina con `Runtime security configuration is incomplete or unsafe.`. Lo dimostra il caso negativo del flusso di produzione (`infra/staging/production_flow.py`).
+- Chi prepara la configurazione revisionata deve decidere consapevolmente:
+  - `true` significa "rilascio approvato con questi flag";
+  - `false` impedisce l'avvio finché qualunque flag è attivo.
+- Nello stesso esempio `Readiness.ExpectedVersion` resta `5.7.24` (INC-010, Lotto 3). Va impostato a `8.4.13` nella configurazione reale, altrimenti `/health/ready` risponde 503.
+
+**Connessione dello script del proprietario con TLS.** Va usata solo la verifica completa: `SslMode=VerifyFull;SslCa=<ca del server MySQL>;TlsVersion=TLS 1.2`, con un utente non root abilitato alla DML sullo schema. È provata in CI con il migratore dello staging:
+- una CA sbagliata produce l'uscita 5 senza scritture;
+- `SslMode=None` viene rifiutato dal server (`require_secure_transport`).
 
 ## Procedura per caricare una classe
 
@@ -132,4 +141,21 @@ Ha superato **18 passi su 18**:
 
 Nessuna password è stata trovata nel log dell'API.
 
-**Configurazione usata per la prova Docker.** Ambiente `Production` con `Deployment:Mode=LocalTest`: listener e DB su loopback, senza TLS. La prova non sostituisce lo smoke di staging con TLS VerifyFull (`infra/staging`).
+**Configurazione usata per la prova Docker locale (2026-11-05).** Ambiente `Production` con `Deployment:Mode=LocalTest`: listener e DB su loopback, senza TLS.
+
+**Prova in configurazione di produzione (2026-11-06, CI).** Il workflow `staging-current.yml` esegue `infra/staging/production_flow.py` sull'immagine costruita da `github.sha`. La configurazione è:
+- `ASPNETCORE_ENVIRONMENT=Production`, `Deployment:Mode=Production` e `RolloutApproved=true`;
+- i flag di `release.runtime.example.json`;
+- MySQL 8.4.13 con TLS 1.2 e `SslMode=VerifyFull`, con la CA generata nella run, `er_api` per l'API ed `er_migrator` per lo script, mai root;
+- HTTPS tramite `infra/nginx.release.conf`, con una CA generata nella run.
+
+Esito: **23 passi su 23**.
+- **Flusso:** i 18 passi del flusso degli account.
+- **Casi negativi:**
+  - CA sbagliata e TLS disattivato verso MySQL;
+  - avvio rifiutato senza `RolloutApproved`;
+  - nessuna porta HTTP pubblicata dall'API;
+  - HTTP sul proxy solo con redirect 308;
+  - nessuna password nei log dell'API e del proxy.
+
+Non provato: certificati pubblici reali, DNS reale e il proxy sull'host EC2. Lo smoke HTTPS pubblico resta un gate separato su EC2.
