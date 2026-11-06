@@ -1,5 +1,5 @@
 """Offline tests for infra/staging/release_ec2.py, demo_seed.py and the host.py import flag.
-Linux only (symlinks, file modes); no Docker, nginx or network needed."""
+Symlink and file-mode cases run on Linux only; no Docker, nginx or network needed."""
 import argparse
 import io
 import json
@@ -18,13 +18,14 @@ import host  # noqa: E402
 import release_ec2 as rel  # noqa: E402
 
 OLD, NEW = 'er-stage-14d2fd709a09', 'er-stage-aaaaaaaaaaaa'
+linux_only = unittest.skipUnless(sys.platform.startswith('linux'), 'symlinks and POSIX modes: Linux (the EC2) only')
 
 
 class NginxTree:
     def __init__(self, root):
         self.root = Path(root)
         for d in ('sites-available', 'sites-enabled'):
-            (self.root / d).mkdir()
+            (self.root / d).mkdir(parents=True)
         for name in ('default', *rel.vhost_names(OLD), *rel.vhost_names(NEW)):
             (self.root / 'sites-available' / name).write_text('server {}\n')
         os.symlink(str(self.root / 'sites-available/default'), self.root / 'sites-enabled/default')
@@ -35,6 +36,7 @@ class NginxTree:
         return sorted(p.name for p in (self.root / 'sites-enabled').iterdir())
 
 
+@linux_only
 class LinkTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -73,6 +75,7 @@ class LinkTests(unittest.TestCase):
         self.assertTrue(rel.is_our_link(rel.vhost_names(NEW)[0]))
 
 
+@linux_only
 class SwitchRestoreTests(unittest.TestCase):
     """switch must put the old links back by itself when nginx -t or HTTPS fail."""
     def setUp(self):
@@ -90,7 +93,8 @@ class SwitchRestoreTests(unittest.TestCase):
                         mock.patch.object(rel, 'new_version', return_value=record), mock.patch.object(rel, 'host_py'),
                         mock.patch.object(rel, 'cert_layout', return_value=dict(version=base)), mock.patch.object(rel, 'cert_facts', return_value=facts),
                         mock.patch.object(rel, 'release_dir', return_value=base), mock.patch.object(rel, 'nginx_reload'),
-                        mock.patch.object(rel, 'compose'), mock.patch('sys.stdout', new_callable=io.StringIO)]
+                        mock.patch.object(rel, 'compose'), mock.patch('sys.stdout', new_callable=io.StringIO),
+                        mock.patch.object(rel, 'service_state', return_value='healthy')]
         for p in self.patches:
             p.start()
 
@@ -127,6 +131,7 @@ class SwitchRestoreTests(unittest.TestCase):
         self.assertEqual(rel.compose.call_args.args[2:], ('stop',))
 
 
+@linux_only
 class CertificateTests(unittest.TestCase):
     def test_copy_keeps_layout_hash_and_modes_and_never_writes_the_old_folder(self):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(rel, 'NGINX', Path(tmp)), mock.patch('sys.stdout', new_callable=io.StringIO):
@@ -211,6 +216,7 @@ class DemoTests(unittest.TestCase):
             value = demo_seed.new_password()
             self.assertTrue(8 <= len(value.encode()) <= 72 and any(c in '!@#$%^&*()_-+=<>?/[]{}' for c in value))
 
+    @linux_only
     def test_private_files_are_0600(self):
         with tempfile.TemporaryDirectory() as tmp:
             private = demo_seed.Private(Path(tmp) / 'demo')
