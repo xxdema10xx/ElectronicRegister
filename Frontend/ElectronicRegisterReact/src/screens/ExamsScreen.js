@@ -19,6 +19,7 @@ import StatusChip, { EXAM_TONE } from "../components/StatusChip";
 import TestBuilder, { newTestDraft, validateTestDraft } from "../components/TestBuilder";
 import TestViewer from "../components/TestViewer";
 import ExamSubmissions from "../components/ExamSubmissions";
+import FormModal from "../components/FormModal";
 import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
 import { resetMockExams } from "../api/mockExamBackend";
@@ -55,7 +56,8 @@ export default function ExamsScreen() {
   const [submissionsFor, setSubmissionsFor] = useState(null);
   const [tab, setTab] = useState("active"); // "active" | "history"
   const [retakes, setRetakes] = useState(null); // null: chiuso, altrimenti { loading, groups }
-  const [classId, setClassId] = useState(null); // classe scelta per prima: un docente insegna in più classi
+  const [classId, setClassId] = useState(null); // filtro facoltativo: null = tutte le classi
+  const [picking, setPicking] = useState(null); // scelta di classe e materia prima di creare: { classSubjectId }
 
   const csLabel = (id) => classSubjects?.find(c => c.id === id)?.label;
 
@@ -68,6 +70,8 @@ export default function ExamsScreen() {
     return [...byId.values()];
   })();
   const classSubjectsOfClass = (classSubjects || []).filter(cs => cs.classId === classId);
+  const ALL_CLASSES = "__all";
+  const classFilterOptions = [{ id: ALL_CLASSES, name: "Tutte le classi" }, ...classOptions];
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -94,9 +98,18 @@ export default function ExamsScreen() {
   }
 
   function updateDraft(d) { setDraft(d); d ? draftStore.set(d) : draftStore.clear(); }
+  // Classe e materia si scelgono una volta sola, qui, prima di aprire l'editor: nel form restano fisse.
+  // Se il server non offre l'elenco delle classi-materia, l'identificativo si inserisce nel form.
   function startNew() {
-    if (classOptions.length > 0 && !classId) return notify("Seleziona una classe", "Scegli prima la classe per cui creare l'esame.");
-    if (!draft) updateDraft(newTestDraft());
+    if (draft) return setEditing(true);
+    if (!Array.isArray(classSubjects)) { updateDraft(newTestDraft()); return setEditing(true); }
+    const options = classId ? classSubjectsOfClass : classSubjects;
+    setPicking({ classSubjectId: options.length === 1 ? options[0].id : "" });
+  }
+  function confirmPick() {
+    if (!picking?.classSubjectId) return notify("Attenzione", "Scegli la classe e la materia dell'esame.");
+    updateDraft({ ...newTestDraft(), classSubjectId: picking.classSubjectId });
+    setPicking(null);
     setEditing(true);
   }
   function discardDraft() {
@@ -158,24 +171,24 @@ export default function ExamsScreen() {
 
   const env = {
     classSubjects: classSubjects && classId ? classSubjectsOfClass : classSubjects,
+    classSubjectLabel: csLabel(draft?.classSubjectId),
     retakeOptions: exams.filter(inClass).map(e => ({ id: e.id, name: e.name, classSubjectId: e.classSubjectId })),
     getStudents: (classSubjectId) => api.getStudentsOfClassSubject(classSubjectId),
   };
 
-  const needsClassFirst = classOptions.length > 0 && !classId;
   const newBtn = canWrite && (
-    <Btn label="Crea esame" onPress={startNew} disabled={needsClassFirst}
+    <Btn label="Crea esame" onPress={startNew}
       style={isDesktop ? { height: 48, paddingHorizontal: 24 } : s.smBtn} textStyle={isDesktop ? undefined : s.smBtnText} />
   );
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
-        {classOptions.length > 0 && (
-          <SelectField label="Classe" value={classId} options={classOptions} getLabel={c => c.name}
-            onSelect={setClassId} placeholder="Seleziona la classe su cui lavorare" emptyMessage="Nessuna classe disponibile" />
+        {classOptions.length > 1 && (
+          <SelectField label="Classe" value={classId ?? ALL_CLASSES} options={classFilterOptions} getLabel={c => c.name}
+            onSelect={(id) => setClassId(id === ALL_CLASSES ? null : id)} placeholder="Tutte le classi" />
         )}
-        {!needsClassFirst && (isDesktop ? (
+        {isDesktop ? (
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginTop: 8, marginBottom: 12 }}>
             <TextInput style={[s.input, { flex: 1 }]} placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
             {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={s.retakeBtn} textStyle={s.smBtnText} />}
@@ -185,18 +198,16 @@ export default function ExamsScreen() {
           <SectionHeader title="Esami" action={newBtn} />
           <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
           {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={[s.retakeBtn, { marginBottom: 12, alignSelf: "flex-start" }]} textStyle={s.smBtnText} />}
-        </>))}
+        </>)}
 
-        {!needsClassFirst && (
-          <View style={{ flexDirection: "row", gap: 8, marginBottom: 12 }}>
-            {[["active", "Attivi"], ["history", "Storico"]].map(([key, label]) => (
-              <TouchableOpacity key={key} onPress={() => setTab(key)}
-                style={{ paddingVertical: 7, paddingHorizontal: 16, borderRadius: 18, borderWidth: 1, borderColor: tab === key ? C.primary : C.border, backgroundColor: tab === key ? C.primary : C.white }}>
-                <Text style={{ color: tab === key ? C.white : C.text, fontWeight: "600" }}>{label}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
+        <View style={{ flexDirection: "row", gap: 8, marginBottom: 12 }}>
+          {[["active", "Attivi"], ["history", "Storico"]].map(([key, label]) => (
+            <TouchableOpacity key={key} onPress={() => setTab(key)}
+              style={{ paddingVertical: 7, paddingHorizontal: 16, borderRadius: 18, borderWidth: 1, borderColor: tab === key ? C.primary : C.border, backgroundColor: tab === key ? C.primary : C.white }}>
+              <Text style={{ color: tab === key ? C.white : C.text, fontWeight: "600" }}>{label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
         {api.isMock() && (
           <View style={{ backgroundColor: "#FEF3C7", borderRadius: 10, padding: 10, marginBottom: 8, flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
@@ -213,8 +224,7 @@ export default function ExamsScreen() {
         )}
       </View>
 
-      {needsClassFirst ? <EmptyState message="Seleziona prima una classe per vedere o creare i suoi esami" /> :
-      loading ? <Loader /> : visible.length === 0 ? <EmptyState message={tab === "history" ? "Nessun esame nello storico" : "Nessun esame trovato"} /> : (
+      {loading ? <Loader /> : visible.length === 0 ? <EmptyState message={tab === "history" ? "Nessun esame nello storico" : "Nessun esame trovato"} /> : (
         <FlatList
           data={visible}
           keyExtractor={e => String(e.id)}
@@ -269,6 +279,22 @@ export default function ExamsScreen() {
             )}
           </View>
         </Modal>
+      )}
+      {picking && (
+        <FormModal visible title="Nuovo esame" onClose={() => setPicking(null)}>
+          <View style={{ padding: 16 }}>
+            <Text style={[s.itemSub, { marginTop: 0, marginBottom: 14 }]}>
+              Per quale classe e materia è l'esame? Non si potrà cambiare dopo: serve a scegliere gli studenti e l'esame da recuperare.
+            </Text>
+            <SelectField label="Classe e materia" value={picking.classSubjectId} options={classId ? classSubjectsOfClass : classSubjects}
+              getLabel={c => c.label} onSelect={(classSubjectId) => setPicking({ classSubjectId })}
+              placeholder="Es. SW-25A · Programmazione" emptyMessage="Nessuna classe-materia disponibile" />
+            <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: 8, marginTop: 4 }}>
+              <Btn label="Annulla" variant="ghost" onPress={() => setPicking(null)} style={s.smBtn} textStyle={s.smBtnText} />
+              <Btn label="Inizia →" onPress={confirmPick} style={[s.smBtn, { paddingHorizontal: 20, paddingVertical: 10 }]} textStyle={s.smBtnText} />
+            </View>
+          </View>
+        </FormModal>
       )}
       <TestBuilder visible={editing && !!draft} contextLabel={draft?.examId ? "Modifica della bozza" : "Nuovo esame"} draft={draft} env={env}
         onChange={updateDraft} onSave={save} saving={saving} onClose={() => setEditing(false)} onDiscard={draft?.examId ? () => { updateDraft(null); setEditing(false); } : discardDraft} />

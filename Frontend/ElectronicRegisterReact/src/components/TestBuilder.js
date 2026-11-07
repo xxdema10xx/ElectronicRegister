@@ -28,6 +28,8 @@ export const QUESTION_TYPES = [
 ];
 
 const uid = () => Math.random().toString(36).slice(2, 9);
+// Esempi nei segnaposto delle opzioni, coerenti con l'esempio del testo della domanda
+const OPTION_EXAMPLES = ["POST", "GET", "PUT", "DELETE"];
 const isClosed = (type) => QUESTION_TYPES.find(t => t.id === type)?.closed;
 
 export const newOption = () => ({ id: uid(), text: "" });
@@ -137,7 +139,7 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
       </Text>
 
       <Text style={s.label}>Testo della domanda</Text>
-      <TextInput style={[field, { fontSize: 18, minHeight: 80, textAlignVertical: "top" }]} placeholder="Scrivi la domanda…"
+      <TextInput style={[field, { fontSize: 18, minHeight: 80, textAlignVertical: "top" }]} placeholder="Es. Quale metodo HTTP si usa per creare una nuova risorsa?"
         placeholderTextColor={C.textLight} value={q.text} onChangeText={(text) => set({ text })} multiline />
 
       <Text style={[s.label, { marginTop: 18 }]}>Tipo di risposta</Text>
@@ -167,7 +169,7 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
                   <Ionicons name={correct ? (multi ? "checkbox" : "radio-button-on") : (multi ? "square-outline" : "radio-button-off")}
                     size={28} color={correct ? C.success : C.textLight} />
                 </TouchableOpacity>
-                <TextInput style={[field, { flex: 1 }, correct && { borderColor: C.success, backgroundColor: "#ECFDF5" }]} placeholder={`Opzione ${i + 1}`}
+                <TextInput style={[field, { flex: 1 }, correct && { borderColor: C.success, backgroundColor: "#ECFDF5" }]} placeholder={`Opzione ${i + 1} — es. ${OPTION_EXAMPLES[i] || "un'altra risposta"}`}
                   placeholderTextColor={C.textLight} value={o.text} onChangeText={(text) => setOption(o.id, text)}
                   autoFocus={o.id === focusId} onSubmitEditing={addOption} blurOnSubmit={false} />
                 {correct && <Text style={{ color: C.success, fontSize: 12, fontWeight: "700", width: 44 }}>GIUSTA</Text>}
@@ -188,7 +190,7 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
 
       <View style={{ flexDirection: "row", alignItems: "center", marginTop: 24, paddingTop: 16, borderTopWidth: 1, borderTopColor: C.border, gap: 16, flexWrap: "wrap" }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <TextInput style={[field, { width: 72, textAlign: "center" }]} keyboardType="number-pad" value={String(q.points)}
+          <TextInput style={[field, { width: 72, textAlign: "center" }]} keyboardType="number-pad" value={String(q.points)} placeholder="Es. 2" placeholderTextColor={C.textLight}
             onChangeText={(v) => set({ points: v.replace(/[^0-9]/g, "") })} />
           <Text style={{ color: C.text }}>punti</Text>
         </View>
@@ -252,22 +254,32 @@ function DetailsStep({ draft, onChange, onNext, onDiscard, env, isDesktop }) {
         <Text style={[s.itemSub, { marginTop: 4 }]}>Inizia dai dettagli: potrai modificarli finché l'esame è in bozza.</Text>
       </View>
 
-      <Input label="Titolo dell'esame" value={draft.title} onChangeText={(title) => set({ title })} placeholder="Es. Verifica di storia — Unità 3" autoFocus />
+      <Input label="Titolo dell'esame" value={draft.title} onChangeText={(title) => set({ title })} placeholder="Es. Programmazione Web – Verifica modulo 2" autoFocus />
       <View>
         <Text style={s.label}>Descrizione</Text>
-        <TextInput style={[field, { minHeight: 90, textAlignVertical: "top", marginBottom: 14 }]} placeholder="Istruzioni o note per gli studenti (facoltativa)" placeholderTextColor={C.textLight}
+        <TextInput style={[field, { minHeight: 90, textAlignVertical: "top", marginBottom: 14 }]} placeholder="Facoltativa. Es. Rispondi a tutte le domande; per le aperte bastano 3-4 righe. Non è consentito il materiale." placeholderTextColor={C.textLight}
           value={draft.description} onChangeText={(description) => set({ description })} multiline />
       </View>
 
-      {hasList ? (
+      {hasList && !draft.classSubjectId ? (
+        // Solo per bozze vecchie, create prima che la scelta avvenisse fuori dall'editor
         <SelectField label="Classe e materia" value={draft.classSubjectId} options={classSubjects} getLabel={(c) => c.label}
-          onSelect={(classSubjectId) => { if (!locked) set({ classSubjectId, students: [], retakeOfExamId: "" }); }}
-          placeholder="Seleziona classe e materia" emptyMessage="Nessuna classe disponibile" />
+          onSelect={(classSubjectId) => set({ classSubjectId, students: [], retakeOfExamId: "" })}
+          placeholder="Es. SW-25A · Programmazione" emptyMessage="Nessuna classe disponibile" />
+      ) : hasList ? (
+        // Scelta una sola volta prima di aprire l'editor (ExamsScreen): qui si mostra e basta.
+        <View style={{ marginBottom: 14 }}>
+          <Text style={s.label}>Classe e materia</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, backgroundColor: C.bg, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10 }}>
+            <Ionicons name="school-outline" size={18} color={C.textMuted} />
+            <Text style={{ color: C.text, fontSize: 15, fontWeight: "600", flex: 1 }} numberOfLines={1}>{env?.classSubjectLabel || "—"}</Text>
+          </View>
+        </View>
       ) : (
         <View>
           <Input label="ID classe-materia" value={draft.classSubjectId} editable={!locked} autoCapitalize="none"
             onChangeText={(classSubjectId) => set({ classSubjectId: classSubjectId.trim(), students: [] })}
-            placeholder="Identificativo (GUID) della materia nella classe" />
+            placeholder="Es. 3f2b8c1e-4a7d-4e9b-9c21-5d6f7a8b9c0d" />
           <Text style={[s.itemSub, { marginTop: -8, marginBottom: 14 }]}>
             Il server non offre ancora l'elenco delle classi-materia: inserisci l'identificativo a mano.
           </Text>
@@ -280,11 +292,11 @@ function DetailsStep({ draft, onChange, onNext, onDiscard, env, isDesktop }) {
       </View>
       <View style={twoCols(isDesktop)}>
         <View style={{ flex: 1 }}>
-          <Input label="Durata (minuti)" value={String(draft.durationMinutes)} keyboardType="number-pad"
+          <Input label="Durata (minuti)" value={String(draft.durationMinutes)} keyboardType="number-pad" placeholder="Es. 45"
             onChangeText={(v) => set({ durationMinutes: v.replace(/[^0-9]/g, "") })} />
         </View>
         <View style={{ flex: 1 }}>
-          <Input label="Soglia di sufficienza (%)" value={String(draft.passingPercent)} keyboardType="number-pad"
+          <Input label="Soglia di sufficienza (%)" value={String(draft.passingPercent)} keyboardType="number-pad" placeholder="Es. 60"
             onChangeText={(v) => set({ passingPercent: v.replace(/[^0-9]/g, "") })} />
         </View>
       </View>
