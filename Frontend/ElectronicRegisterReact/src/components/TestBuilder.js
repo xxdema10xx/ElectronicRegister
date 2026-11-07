@@ -53,16 +53,42 @@ export function summarize(draft) {
   };
 }
 
-// Problema di una domanda (testo da mostrare) oppure null se è a posto.
-function questionIssue(q, i) {
-  if (!q.text.trim()) return `La domanda ${i + 1} non ha il testo.`;
-  if (!(Number(q.points) > 0)) return `La domanda ${i + 1} deve avere un punteggio maggiore di zero.`;
+// Problemi di una domanda, un messaggio per campo (mostrati inline nell'editor):
+//   text    → manca il testo della domanda
+//   options → mancano le opzioni di risposta (servono almeno due con testo)
+//   correct → manca la risposta corretta (o quella segnata è vuota)
+//   points  → punteggio non valido
+// Restituisce {} se la domanda è a posto.
+export function questionIssues(q) {
+  const out = {};
+  if (!q.text.trim()) out.text = "Manca il testo della domanda.";
   if (isClosed(q.type)) {
     const filled = q.options.filter(o => o.text.trim());
-    if (filled.length < 2) return `La domanda ${i + 1} deve avere almeno due opzioni con testo.`;
-    if (!q.correct.some(id => filled.some(o => o.id === id))) return `Nella domanda ${i + 1} scegli la risposta giusta.`;
+    if (filled.length < 2) {
+      out.options = filled.length === 0 ? "Mancano le risposte: scrivi almeno due opzioni." : "Manca una risposta: servono almeno due opzioni con testo.";
+    }
+    if (!q.correct.some(id => filled.some(o => o.id === id))) {
+      out.correct = q.correct.length > 0 ? "L'opzione segnata come giusta è vuota: scrivi il testo o segnane un'altra."
+        : q.type === "multiple" ? "Manca la risposta corretta: spunta almeno un'opzione giusta." : "Manca la risposta corretta: tocca il cerchio accanto all'opzione giusta.";
+    }
   }
-  return null;
+  if (!(Number(q.points) > 0)) out.points = "Il punteggio deve essere maggiore di zero.";
+  return out;
+}
+
+const ISSUE_ORDER = ["text", "options", "correct", "points"];
+const ISSUE_SUMMARY = {
+  text: (n) => `Nella domanda ${n} manca il testo.`,
+  options: (n) => `Nella domanda ${n} mancano delle risposte: servono almeno due opzioni con testo.`,
+  correct: (n) => `Nella domanda ${n} manca la risposta corretta.`,
+  points: (n) => `Nella domanda ${n} il punteggio deve essere maggiore di zero.`,
+};
+
+// Primo problema di una domanda (testo da mostrare) oppure null se è a posto.
+function questionIssue(q, i) {
+  const issues = questionIssues(q);
+  const key = ISSUE_ORDER.find(k => issues[k]);
+  return key ? ISSUE_SUMMARY[key](i + 1) : null;
 }
 
 // Controlli del primo passo della procedura (dettagli dell'esame).
@@ -146,6 +172,14 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
   const closed = isClosed(q.type);
   const multi = q.type === "multiple";
   const [focusId, setFocusId] = useState(null); // opzione appena aggiunta: prende il cursore
+  // Gli errori compaiono su un campo dopo averlo lasciato; riaprendo una domanda già iniziata, subito.
+  // Una domanda appena aggiunta e ancora vuota non mostra errori.
+  const pristine = !q.text.trim() && q.options.every(o => !o.text.trim()) && q.correct.length === 0;
+  const [touched, setTouched] = useState(() => (pristine ? {} : { text: true, options: true, correct: true, points: true }));
+  const touch = (key) => setTouched(t => (t[key] ? t : { ...t, [key]: true }));
+  const issues = questionIssues(q);
+  // La risposta corretta si segnala appena le opzioni sono a posto, senza aspettare un tocco sul cerchio.
+  const err = (key) => (touched[key] || (key === "correct" && touched.options && !issues.options) ? issues[key] : null);
 
   // Passando a "singola" resta al massimo una risposta giusta; passando ad "aperta" si azzerano.
   function changeType(type) {
@@ -169,8 +203,9 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
       </Text>
 
       <Text style={s.label}>Testo della domanda</Text>
-      <TextInput style={[field, { fontSize: 18, minHeight: 80, textAlignVertical: "top" }]} placeholder="Es. Quale metodo HTTP si usa per creare una nuova risorsa?"
-        placeholderTextColor={C.textLight} value={q.text} onChangeText={(text) => set({ text })} multiline />
+      <TextInput style={[field, { fontSize: 18, minHeight: 80, textAlignVertical: "top" }, err("text") && s.inputError]} placeholder="Es. Quale metodo HTTP si usa per creare una nuova risorsa?"
+        placeholderTextColor={C.textLight} value={q.text} onChangeText={(text) => set({ text })} onBlur={() => touch("text")} multiline />
+      {!!err("text") && <Text style={s.errorText}>{err("text")}</Text>}
 
       <Text style={[s.label, { marginTop: 18 }]}>Tipo di risposta</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
@@ -191,16 +226,23 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
       {closed ? (
         <View style={{ marginTop: 20 }}>
           <Text style={s.label}>Opzioni — {multi ? "spunta tutte le risposte giuste" : "scegli la risposta giusta"}</Text>
+          {!!err("correct") && (
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 8 }}>
+              <Ionicons name="alert-circle" size={16} color={C.danger} />
+              <Text style={[s.errorText, { marginTop: 0, flex: 1 }]}>{err("correct")}</Text>
+            </View>
+          )}
           {q.options.map((o, i) => {
             const correct = q.correct.includes(o.id);
+            const emptyError = !!err("options") && !o.text.trim();
             return (
               <View key={o.id} style={{ flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                <TouchableOpacity onPress={() => toggleCorrect(o.id)} accessibilityLabel="Segna come giusta">
+                <TouchableOpacity onPress={() => { toggleCorrect(o.id); touch("correct"); }} accessibilityLabel="Segna come giusta">
                   <Ionicons name={correct ? (multi ? "checkbox" : "radio-button-on") : (multi ? "square-outline" : "radio-button-off")}
                     size={28} color={correct ? C.success : C.textLight} />
                 </TouchableOpacity>
-                <TextInput style={[field, { flex: 1 }, correct && { borderColor: C.success, backgroundColor: "#ECFDF5" }]} placeholder={`Opzione ${i + 1} — es. ${OPTION_EXAMPLES[i] || "un'altra risposta"}`}
-                  placeholderTextColor={C.textLight} value={o.text} onChangeText={(text) => setOption(o.id, text)}
+                <TextInput style={[field, { flex: 1 }, correct && { borderColor: C.success, backgroundColor: "#ECFDF5" }, emptyError && s.inputError]} placeholder={`Opzione ${i + 1} — es. ${OPTION_EXAMPLES[i] || "un'altra risposta"}`}
+                  placeholderTextColor={C.textLight} value={o.text} onChangeText={(text) => setOption(o.id, text)} onBlur={() => touch("options")}
                   autoFocus={o.id === focusId} onSubmitEditing={addOption} blurOnSubmit={false} />
                 {correct && <Text style={{ color: C.success, fontSize: 12, fontWeight: "700", width: 44 }}>GIUSTA</Text>}
                 <IconBtn name="close" onPress={() => removeOption(o.id)} disabled={q.options.length <= 2} label="Rimuovi opzione" />
@@ -211,6 +253,7 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
             <Ionicons name="add-circle-outline" size={24} color={C.primary} />
             <Text style={{ color: C.primary, fontWeight: "600" }}>Aggiungi opzione</Text>
           </TouchableOpacity>
+          {!!err("options") && <Text style={s.errorText}>{err("options")}</Text>}
         </View>
       ) : (
         <View style={{ marginTop: 20, padding: 16, borderRadius: 10, borderWidth: 1, borderStyle: "dashed", borderColor: C.border }}>
@@ -220,9 +263,10 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
 
       <View style={{ flexDirection: "row", alignItems: "center", marginTop: 24, paddingTop: 16, borderTopWidth: 1, borderTopColor: C.border, gap: 16, flexWrap: "wrap" }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <TextInput style={[field, { width: 72, textAlign: "center" }]} keyboardType="number-pad" value={String(q.points)} placeholder="Es. 2" placeholderTextColor={C.textLight}
-            onChangeText={(v) => set({ points: v.replace(/[^0-9]/g, "") })} />
+          <TextInput style={[field, { width: 72, textAlign: "center" }, err("points") && s.inputError]} keyboardType="number-pad" value={String(q.points)} placeholder="Es. 2" placeholderTextColor={C.textLight}
+            onChangeText={(v) => set({ points: v.replace(/[^0-9]/g, "") })} onBlur={() => touch("points")} />
           <Text style={{ color: C.text }}>punti</Text>
+          {!!err("points") && <Text style={[s.errorText, { marginTop: 0 }]}>{err("points")}</Text>}
         </View>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
           <Switch value={q.required} onValueChange={(required) => set({ required })} />
@@ -461,7 +505,7 @@ function StudentsStep({ draft, onChange, env }) {
   );
 }
 
-export default function TestBuilder({ visible, contextLabel, draft, onChange, onSave, onClose, onDiscard, saving, env }) {
+export default function TestBuilder({ visible, contextLabel, draft, onChange, onSave, onClose, onDiscard, saving, env, draftStatus }) {
   const { isDesktop } = useLayout();
   const [selectedId, setSelectedId] = useState(null);
   if (!draft) return null;
@@ -597,7 +641,17 @@ export default function TestBuilder({ visible, contextLabel, draft, onChange, on
             <TouchableOpacity onPress={onClose} accessibilityLabel="Chiudi"><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
             <View style={{ flex: 1 }}>
               <Text style={{ color: C.text, fontSize: 18, fontWeight: "800" }} numberOfLines={1}>{draft.title || "Nuovo esame"}</Text>
-              {!!contextLabel && <Text style={{ color: C.textMuted, fontSize: 12 }} numberOfLines={1}>{contextLabel} · bozza salvata automaticamente</Text>}
+              {/* Stato reale della bozza con accanto l'azione che lo cambia */}
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                <Text style={{ color: C.textMuted, fontSize: 12, flexShrink: 1 }} numberOfLines={1}>
+                  {[contextLabel, draftStatus].filter(Boolean).join(" · ")}
+                </Text>
+                <TouchableOpacity onPress={onSave} disabled={saving} accessibilityRole="button" accessibilityLabel="Salva bozza"
+                  style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 2, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: C.primary, opacity: saving ? 0.6 : 1 }}>
+                  <Ionicons name="cloud-upload-outline" size={14} color={C.primary} />
+                  <Text style={{ color: C.primary, fontSize: 12, fontWeight: "700" }}>{saving ? "Salvataggio…" : "Salva bozza"}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
           <Stepper step={step} onStep={goTo} compact={!isDesktop} />

@@ -97,7 +97,21 @@ export default function ExamsScreen() {
     catch (e) { notify("Errore", e.message); setRetakes(null); }
   }
 
-  function updateDraft(d) { setDraft(d); d ? draftStore.set(d) : draftStore.clear(); }
+  // dirty: la bozza ha modifiche non ancora inviate al server (false appena caricata da edit()).
+  // savedAt: ora dell'ultimo salvataggio locale; solo su web, dove esiste sessionStorage.
+  // Sull'app non c'è un archivio locale (AsyncStorage non è tra le dipendenze): lo stato lo dice.
+  const [dirty, setDirty] = useState(() => !!draftStore.get());
+  const [savedAt, setSavedAt] = useState(null);
+  function updateDraft(d, { fromServer = false } = {}) {
+    setDraft(d);
+    d ? draftStore.set(d) : draftStore.clear();
+    setDirty(!!d && !fromServer);
+    setSavedAt(d && Platform.OS === "web" ? new Date() : null);
+  }
+  const hhmm = (t) => `${String(t.getHours()).padStart(2, "0")}:${String(t.getMinutes()).padStart(2, "0")}`;
+  const localStatus = Platform.OS === "web" ? `conservata in questa scheda${savedAt ? ` alle ${hhmm(savedAt)}` : ""}` : "non salvata sul dispositivo";
+  const draftStatus = !draft ? "" : !draft.examId ? `Non ancora salvata sul server · ${localStatus}`
+    : dirty ? `Modifiche non salvate sul server · ${localStatus}` : "Salvata sul server";
   // Classe e materia si scelgono una volta sola, qui, prima di aprire l'editor: nel form restano fisse.
   // Se il server non offre l'elenco delle classi-materia, l'identificativo si inserisce nel form.
   function startNew() {
@@ -123,7 +137,7 @@ export default function ExamsScreen() {
     setBusy(exam.id);
     try {
       const detail = await api.getExam(exam.id);
-      updateDraft({ ...detailToDraft(detail), step: 1 });
+      updateDraft({ ...detailToDraft(detail), step: 1 }, { fromServer: true });
       setEditing(true);
     } catch (e) { notify("Errore", e.message); }
     finally { setBusy(null); }
@@ -219,9 +233,21 @@ export default function ExamsScreen() {
           </View>
         )}
         {draft && !editing && (
-          <TouchableOpacity onPress={() => setEditing(true)} style={{ marginBottom: 8 }}>
-            <Text style={{ color: C.danger }}>Esame in preparazione: “{draft.title || "senza titolo"}” — tocca per riprenderlo</Text>
-          </TouchableOpacity>
+          // Bozza in corso: sparisce quando viene salvata sul server o eliminata (updateDraft(null)).
+          <Card style={{ marginBottom: 12, flexDirection: "row", alignItems: "center", gap: 12, flexWrap: "wrap", borderLeftWidth: 5, borderLeftColor: C.warning }}>
+            <View style={{ width: 40, height: 40, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: "#FEF3C7" }}>
+              <Ionicons name="create-outline" size={20} color="#92400E" />
+            </View>
+            <View style={{ flex: 1, minWidth: 180 }}>
+              <Text style={s.itemTitle} numberOfLines={1}>
+                {draft.examId ? "Modifica in corso" : "Esame in preparazione"}: {draft.title.trim() || "senza titolo"}
+              </Text>
+              <Text style={s.itemSub} numberOfLines={2}>
+                {[csLabel(draft.classSubjectId), draftStatus].filter(Boolean).join(" · ")}
+              </Text>
+            </View>
+            <Btn label="Riprendi bozza" onPress={() => setEditing(true)} style={[s.smBtn, { paddingHorizontal: 16, paddingVertical: 10 }]} textStyle={s.smBtnText} />
+          </Card>
         )}
       </View>
 
@@ -297,7 +323,7 @@ export default function ExamsScreen() {
           </View>
         </FormModal>
       )}
-      <TestBuilder visible={editing && !!draft} contextLabel={draft?.examId ? "Modifica della bozza" : "Nuovo esame"} draft={draft} env={env}
+      <TestBuilder visible={editing && !!draft} contextLabel={draft?.examId ? "Modifica della bozza" : "Nuovo esame"} draft={draft} env={env} draftStatus={draftStatus}
         onChange={updateDraft} onSave={save} saving={saving} onClose={() => setEditing(false)} onDiscard={draft?.examId ? () => { updateDraft(null); setEditing(false); } : discardDraft} />
     </View>
   );
