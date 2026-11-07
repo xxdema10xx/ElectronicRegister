@@ -16,7 +16,7 @@ import EmptyState from "../components/EmptyState";
 import SectionHeader from "../components/SectionHeader";
 import SelectField from "../components/SelectField";
 import StatusChip, { EXAM_TONE } from "../components/StatusChip";
-import { draftHasContent, newTestDraft, validateTestDraft } from "../components/TestBuilder";
+import { draftHasContent, newTestDraft, serverIssue, validateTestDraft } from "../components/TestBuilder";
 import ExamEditorScreen from "./ExamEditorScreen";
 import { examHref, setPageHeader, useExamRoute } from "../navigation/examRoutes";
 import TestViewer from "../components/TestViewer";
@@ -25,7 +25,7 @@ import ClassFilter from "../components/ClassFilter";
 import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
 import { resetMockExams } from "../api/mockExamBackend";
-import { EXAM_STATUS, EXAM_STATUS_LABEL, draftToDto, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
+import { EXAM_STATUS, EXAM_STATUS_LABEL, detailToDraft, draftToDto, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
 import { getRetakeCandidates, getRetakeGroups } from "../api/examInsights";
 
 // La bozza in corso sopravvive al refresh (F5) su web grazie a sessionStorage.
@@ -102,6 +102,7 @@ export default function ExamsScreen() {
   const [dirty, setDirty] = useState(() => !!draft);
   const dirtyRef = useRef(dirty);
   const [savedAt, setSavedAt] = useState(null);
+  const [serverSavedAt, setServerSavedAt] = useState(null); // ultimo "Salva bozza" riuscito sul server
   const editing = canWrite && (route.name === "new" || route.name === "edit");
   const [saving, setSaving] = useState(false);
   const [viewing, setViewing] = useState(null);
@@ -171,10 +172,18 @@ export default function ExamsScreen() {
     setSavedAt(nextDirty && Platform.OS === "web" ? new Date() : null);
   }
   const hhmm = (t) => `${String(t.getHours()).padStart(2, "0")}:${String(t.getMinutes()).padStart(2, "0")}`;
-  const localStatus = Platform.OS === "web" ? `conservata in questa scheda${savedAt ? ` alle ${hhmm(savedAt)}` : ""}` : "non salvata sul dispositivo";
+  // Stato mostrato nell'editor (testo intero su schermi larghi, badge corto su quelli stretti)
+  const draftStatusShort = !draft ? null
+    : dirty ? (Platform.OS === "web" ? { label: "Solo nel browser", tone: "amber" } : { label: "Non salvata", tone: "amber" })
+    : draft.examId ? { label: "Salvata", tone: "green" } : { label: "Vuota", tone: "gray" };
+  // Su web la bozza con modifiche si conserva da sola in sessionStorage; sull'app no (AsyncStorage non c'è).
+  const unsavedText = Platform.OS === "web"
+    ? `Salvata solo in questo browser${savedAt ? ` (${hhmm(savedAt)})` : ""} · non ancora sul server`
+    : "Non salvata: le modifiche si perdono se esci";
   const draftStatus = !draft ? ""
-    : !draft.examId ? (dirty ? `Non ancora salvata sul server · ${localStatus}` : "Bozza vuota: si conserva appena scrivi qualcosa")
-    : dirty ? `Modifiche non salvate sul server · ${localStatus}` : "Salvata sul server";
+    : dirty ? unsavedText
+    : draft.examId ? (serverSavedAt ? `Salvata sul server alle ${hhmm(serverSavedAt)}` : "Salvata sul server")
+    : "Bozza vuota: si conserva appena scrivi qualcosa";
   // Classe e materia si scelgono una volta sola, qui, prima di aprire l'editor: nel form restano fisse.
   // Se il server non offre l'elenco delle classi-materia, l'identificativo si inserisce nel form.
   // Scheda: nello stato e, su web, nell'URL (/esami?tab=bozze). Indietro/avanti la ripristinano.
@@ -271,9 +280,28 @@ export default function ExamsScreen() {
       confirmAction("Cambiare classe e materia?", "Le domande restano; gli studenti assegnati e l'esame da recuperare verranno azzerati.", go, "Cambia");
     } else go();
   }
+  // "Elimina bozza" (esame nuovo con contenuto): conferma, poi la bozza sparisce e si torna alla lista
   function discardDraft() {
-    confirmAction("Conferma", "Eliminare la bozza dell'esame?", () => { updateDraft(null); backToList(); }, "Elimina");
+    confirmAction("Eliminare la bozza?", "La bozza di questo nuovo esame verrà eliminata. Non si può annullare.",
+      () => { updateDraft(null); backToList(); }, "Elimina bozza", { cancelLabel: "Continua a modificare" });
   }
+  // "Annulla modifiche" (esame già salvato con modifiche locali): torna alla versione del server e resta nell'editor
+  function revertDraft() {
+    const examId = draft.examId;
+    const step = draft.step;
+    confirmAction("Annullare le modifiche?", "Torni alla versione salvata sul server: le modifiche fatte da allora andranno perse.", async () => {
+      setSaving(true);
+      try {
+        const detail = await api.getExam(examId);
+        updateDraft({ ...detailToDraft(detail), step }, { fromServer: true });
+        setServerSavedAt(null);
+      } catch (e) { notify("Errore", e.message); }
+      finally { setSaving(false); }
+    }, "Annulla modifiche", { cancelLabel: "Continua a modificare", destructive: true });
+  }
+  const destroyAction = !draft || !dirty ? null
+    : draft.examId ? { label: "Annulla modifiche", icon: "arrow-undo-outline", onPress: revertDraft }
+    : { label: "Elimina bozza", icon: "trash-outline", onPress: discardDraft };
 
   // "Modifica" dal dettaglio: il dettaglio lascia il posto all'editor, così "indietro" torna alla lista
   function edit(exam) {
@@ -283,22 +311,54 @@ export default function ExamsScreen() {
     nav.replace({ name: "edit", id: exam.id });
   }
 
-  async function save() {
-    const err = validateTestDraft(draft);
-    if (err) return notify("Attenzione", err);
+  // Invia la bozza al server (crea o aggiorna). Restituisce l'id dell'esame.
+  async function sendToServer(d) {
+    const dto = draftToDto(d);
+    if (d.examId) {
+      await api.updateExam(d.examId, dto);
+      await api.updateExamStudents(d.examId, { students: dto.assignedStudents });
+      return d.examId;
+    }
+    const created = await api.createExam(dto); // il server restituisce l'id (Guid)
+    return typeof created === "object" && created ? created.id : created;
+  }
+
+  // "Salva bozza": non fallisce mai per un esame incompleto. Se passa i controlli del server lo salva lì e
+  // resta nell'editor sullo stesso step; altrimenti resta salvato solo nel browser (bozza locale).
+  async function saveDraft() {
+    if (!draft) return;
+    if (!draft.examId && !draftHasContent(draft)) {
+      return notify("Niente da salvare", "Scrivi almeno il titolo, una data o una domanda.");
+    }
+    const issue = serverIssue(draft);
+    if (issue) {
+      // TODO: il banner informativo con le voci cliccabili arriva con il punto 12
+      return notify(Platform.OS === "web" ? "Salvata solo in questo browser" : "Non salvata sul server",
+        `Per salvarla sul server serve ancora: ${issue}${Platform.OS === "web" ? "" : " Se esci, le modifiche si perdono."}`);
+    }
     setSaving(true);
     try {
-      const dto = draftToDto(draft);
-      if (draft.examId) {
-        await api.updateExam(draft.examId, dto);
-        await api.updateExamStudents(draft.examId, { students: dto.assignedStudents });
-      } else {
-        await api.createExam(dto);
-      }
+      const examId = await sendToServer(draft);
+      const isNew = !draft.examId;
+      updateDraft({ ...draft, examId }, { fromServer: true });
+      setServerSavedAt(new Date());
+      if (isNew) nav.replace({ name: "edit", id: examId, step: draft.step ?? 1 }); // ora l'esame esiste: /esami/{id}/modifica
+      load();
+    } catch (e) { notify("Salvataggio non riuscito", e.message); }
+    finally { setSaving(false); }
+  }
+
+  // "Salva e chiudi" (step 3): validazione completa, salvataggio sul server, ritorno alla lista
+  async function saveAndClose() {
+    const err = validateTestDraft(draft);
+    if (err) return notify("Attenzione", err); // TODO: banner con le voci cliccabili (punto 12)
+    setSaving(true);
+    try {
+      await sendToServer(draft);
       updateDraft(null); backToList();
       await load();
-      notify("Esame salvato", "È in bozza: pubblicalo dall'elenco quando è pronto.");
-    } catch (e) { notify("Errore", e.message); }
+      notify("Esame salvato", "È in bozza: pubblicalo dall'elenco o dal dettaglio quando è pronto.");
+    } catch (e) { notify("Salvataggio non riuscito", e.message); }
     finally { setSaving(false); }
   }
 
@@ -448,10 +508,9 @@ export default function ExamsScreen() {
     page = (
       <ExamEditorScreen key={`${route.name}:${route.id || ""}`} route={route} nav={nav} api={api}
         draft={draft} dirty={dirty} updateDraft={updateDraft} env={env} draftStatus={draftStatus}
-        draftStatusShort={dirty ? { label: "Non salvata", tone: "amber" } : draft?.examId ? { label: "Salvata", tone: "green" } : { label: "Vuota", tone: "gray" }}
+        draftStatusShort={draftStatusShort}
         contextLabel={draft?.examId ? "Modifica della bozza" : "Nuovo esame"}
-        onSave={save} saving={saving} onExit={exitEditor}
-        onDiscard={draft?.examId ? () => { updateDraft(null); backToList(); } : discardDraft} />
+        onSaveDraft={saveDraft} onSaveAndClose={saveAndClose} destroyAction={destroyAction} saving={saving} onExit={exitEditor} />
     );
   }
   if (page) {

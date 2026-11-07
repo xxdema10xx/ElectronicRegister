@@ -116,6 +116,21 @@ export function validateDetails(d) {
   return null;
 }
 
+// Controlli che il server fa già in creazione e modifica (ExamService: EnsureValidSchedule,
+// EnsureValidPassingPercent, EnsureValidQuestions): se non passano, "Salva bozza" salva solo nel browser.
+// Il titolo il server non lo controlla (lo richiede "Salva e chiudi").
+// TODO(API): quando il backend accetterà bozze incomplete, ridurre questi controlli a quelli che restano.
+export function serverIssue(d) {
+  const details = validateDetails({ ...d, title: d.title?.trim() ? d.title : "-" });
+  if (details) return details;
+  if (d.questions.length === 0) return "Aggiungi almeno una domanda.";
+  for (let i = 0; i < d.questions.length; i++) {
+    const issue = questionIssue(d.questions[i], i);
+    if (issue) return issue;
+  }
+  return null;
+}
+
 // Per pubblicare servono anche gli studenti assegnati
 export function validateForPublish(d) {
   return validateTestDraft(d) || (d.students.length === 0 ? "Assegna l'esame ad almeno uno studente." : null);
@@ -321,7 +336,7 @@ function Stepper({ step, onStep, compact }) {
 const twoCols = (isDesktop) => ({ flexDirection: isDesktop ? "row" : "column", gap: isDesktop ? 16 : 0 });
 
 // Passo 1: dettagli dell'esame
-function DetailsStep({ draft, onChange, onNext, onDiscard, env, isDesktop }) {
+function DetailsStep({ draft, onChange, env, isDesktop }) {
   const set = (patch) => onChange({ ...draft, ...patch });
   const locked = !!draft.examId; // la classe-materia di un esame esistente non si può cambiare
   const classSubjects = env?.classSubjects;
@@ -405,10 +420,6 @@ function DetailsStep({ draft, onChange, onNext, onDiscard, env, isDesktop }) {
         </View>
       )}
 
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 6, gap: 12 }}>
-        <Btn label="Elimina bozza" variant="ghost" onPress={onDiscard} style={[s.smBtn, { borderColor: C.danger, backgroundColor: "transparent" }]} textStyle={[s.smBtnText, { color: C.danger }]} />
-        <Btn label="Avanti: domande →" onPress={onNext} style={[s.smBtn, { paddingHorizontal: 20, paddingVertical: 10 }]} textStyle={s.smBtnText} />
-      </View>
     </Card>
   );
 }
@@ -519,11 +530,17 @@ function StudentsStep({ draft, onChange, env }) {
   );
 }
 
+// Azioni della barra (D1 = a: "Avanti" non salva sul server):
+//   onSaveDraft     "Salva bozza" (secondaria): salva e resta nell'editor
+//   onSaveAndClose  "Salva e chiudi" (principale allo step 3): validazione completa, poi torna alla lista
+//   destroyAction   { label, onPress } per "Elimina bozza" / "Annulla modifiche", oppure null se non c'è niente
+//                   da eliminare o annullare. Su schermi stretti sta nel menu "⋯".
 // draftStatusShort: { label, tone } dello stato per schermi stretti (es. "Non salvata").
 // onClose non è più usato dalla barra: il ritorno alla lista è nell'header di AppNav (resta per compatibilità).
-export default function TestBuilder({ visible = true, contextLabel, draft, onChange, onSave, onClose, onDiscard, saving, env, draftStatus, draftStatusShort }) {
+export default function TestBuilder({ visible = true, contextLabel, draft, onChange, onSaveDraft, onSaveAndClose, destroyAction, onClose, saving, env, draftStatus, draftStatusShort }) {
   const { isDesktop } = useLayout();
   const [selectedId, setSelectedId] = useState(null);
+  const [moreOpen, setMoreOpen] = useState(false); // menu "⋯" su schermi stretti
   if (!draft || !visible) return null;
 
   const step = draft.step ?? 1;
@@ -634,7 +651,6 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
         ))}
       </View>
 
-      <Btn label="Elimina bozza" variant="ghost" onPress={onDiscard} style={{ marginTop: 10, borderColor: C.danger }} textStyle={{ color: C.danger }} />
     </View>
   );
 
@@ -654,8 +670,8 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
       <View style={{ flex: 1 }}>
         {/* Barra superiore */}
         {/* Il titolo ("← Esami / Nuovo esame") è nell'header di AppNav: qui stato, Stepper e pulsanti */}
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: C.white, paddingHorizontal: isDesktop ? 28 : 16, paddingVertical: 10, minHeight: 64, borderBottomWidth: 1, borderBottomColor: C.border, gap: 12 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flex: 1, flexWrap: "wrap", minWidth: 0 }}>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", backgroundColor: C.white, paddingHorizontal: isDesktop ? 28 : 16, paddingVertical: 10, minHeight: 64, borderBottomWidth: 1, borderBottomColor: C.border, gap: 12, zIndex: 10 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap", minWidth: 0, flexGrow: 1, flexShrink: 1, flexBasis: isDesktop ? 0 : "100%" }}>
             {/* Stato reale della bozza con accanto l'azione che lo cambia. Su schermi larghi va a capo se serve,
                 su quelli stretti diventa un badge corto ("Non salvata") per non essere tagliato. */}
             {isDesktop ? (
@@ -665,36 +681,59 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
             ) : !!draftStatusShort && (
               <StatusChip label={draftStatusShort.label} tone={draftStatusShort.tone} style={{ alignSelf: "center" }} />
             )}
-            <TouchableOpacity onPress={onSave} disabled={saving} accessibilityRole="button" accessibilityLabel="Salva bozza"
-              style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: C.primary, opacity: saving ? 0.6 : 1 }}>
+            {/* Secondaria: salva e resta qui */}
+            <TouchableOpacity onPress={onSaveDraft} disabled={saving} accessibilityRole="button" accessibilityLabel="Salva bozza"
+              style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 6, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: C.primary, opacity: saving ? 0.6 : 1 }}>
               <Ionicons name="cloud-upload-outline" size={14} color={C.primary} />
-              <Text style={{ color: C.primary, fontSize: 12, fontWeight: "700" }}>{saving ? "Salvataggio…" : "Salva bozza"}</Text>
+              <Text style={{ color: C.primary, fontSize: 13, fontWeight: "700" }}>{saving ? "Salvataggio…" : "Salva bozza"}</Text>
             </TouchableOpacity>
-          </View>
-          <Stepper step={step} onStep={goTo} compact={!isDesktop} />
-          <View style={{ flex: isDesktop ? 1 : 0, alignItems: "flex-end" }}>
-            {step === 1 && <Btn label="Avanti" onPress={() => goTo(2)} {...actionBtn} />}
-            {step === 2 && (
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <Btn label="Salva" variant="ghost" onPress={onSave} loading={saving} {...actionBtn} />
-                <Btn label="Avanti" onPress={() => goTo(3)} {...actionBtn} />
+            {/* Distruttiva secondaria (testo rosso), sempre con conferma; su schermi stretti nel menu "⋯" */}
+            {!!destroyAction && (isDesktop ? (
+              <TouchableOpacity onPress={destroyAction.onPress} disabled={saving} accessibilityRole="button" accessibilityLabel={destroyAction.label}
+                style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 6, paddingHorizontal: 8 }}>
+                <Ionicons name={destroyAction.icon || "trash-outline"} size={14} color={C.danger} />
+                <Text style={{ color: C.danger, fontSize: 13, fontWeight: "700" }}>{destroyAction.label}</Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={{ marginLeft: "auto" }}>
+                <TouchableOpacity onPress={() => setMoreOpen(o => !o)} accessibilityRole="button" accessibilityLabel="Altre azioni"
+                  style={{ paddingVertical: 4, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: C.border }}>
+                  <Text style={{ color: C.text, fontSize: 16, fontWeight: "800", lineHeight: 18 }}>⋯</Text>
+                </TouchableOpacity>
+                {moreOpen && (
+                  <View accessibilityRole="menu" style={{ position: "absolute", top: 34, right: 0, zIndex: 20, minWidth: 190, backgroundColor: C.white, borderRadius: 10, borderWidth: 1, borderColor: C.border, paddingVertical: 4,
+                    shadowColor: "#000", shadowOpacity: 0.12, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 6 }}>
+                    <TouchableOpacity onPress={() => { setMoreOpen(false); destroyAction.onPress(); }} accessibilityRole="menuitem"
+                      style={{ flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 10, paddingHorizontal: 12 }}>
+                      <Ionicons name={destroyAction.icon || "trash-outline"} size={16} color={C.danger} />
+                      <Text style={{ color: C.danger, fontWeight: "700" }}>{destroyAction.label}</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
-            )}
-            {step === 3 && <Btn label="Salva" onPress={onSave} loading={saving} {...actionBtn} />}
+            ))}
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexGrow: isDesktop ? 0 : 1, justifyContent: "flex-end" }}>
+            {/* Indietro: secondario, a sinistra dell'azione principale */}
+            {step > 1 && <Btn label="← Indietro" variant="ghost" onPress={() => goTo(step - 1)} {...actionBtn} />}
+            <View style={{ flex: isDesktop ? 0 : 1, alignItems: "center" }}><Stepper step={step} onStep={goTo} compact={!isDesktop} /></View>
+            {/* Principale: Avanti convalida e passa allo step dopo, senza salvare sul server; allo step 3 "Salva e chiudi" */}
+            {step < 3
+              ? <Btn label="Avanti →" onPress={() => goTo(step + 1)} {...actionBtn} />
+              : <Btn label="Salva e chiudi" onPress={onSaveAndClose} loading={saving} {...actionBtn} />}
           </View>
         </View>
 
         {step === 1 ? (
           <ScrollView contentContainerStyle={{ padding: isDesktop ? 40 : 16, alignItems: "center" }} keyboardShouldPersistTaps="handled">
             <View style={{ width: "100%", maxWidth: 640 }}>
-              <DetailsStep draft={draft} onChange={onChange} onNext={() => goTo(2)} onDiscard={onDiscard} env={env} isDesktop={isDesktop} />
+              <DetailsStep draft={draft} onChange={onChange} env={env} isDesktop={isDesktop} />
             </View>
           </ScrollView>
         ) : step === 3 ? (
           <ScrollView contentContainerStyle={{ padding: isDesktop ? 40 : 16, alignItems: "center" }} keyboardShouldPersistTaps="handled">
             <View style={{ width: "100%", maxWidth: 720 }}>
               <StudentsStep draft={draft} onChange={onChange} env={env} />
-              <Btn label="Elimina bozza" variant="ghost" onPress={onDiscard} style={{ marginTop: 14, borderColor: C.danger }} textStyle={{ color: C.danger }} />
             </View>
           </ScrollView>
         ) : isDesktop ? (
