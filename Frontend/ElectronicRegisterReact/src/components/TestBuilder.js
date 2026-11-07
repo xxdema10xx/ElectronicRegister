@@ -129,7 +129,7 @@ export function validateAll(d, { level = "close" } = {}) {
     add(1, "durationMinutes", "La durata non può superare la finestra di disponibilità.");
   }
   const pass = Number(d.passingPercent);
-  if (!(pass > 0 && pass < 100)) add(1, "passingPercent", "La soglia di sufficienza deve essere tra 1 e 99%.");
+  if (!(pass > 0 && pass < 100)) add(2, "passingPercent", "La soglia di sufficienza deve essere tra 1 e 99%.");
   if (d.questions.length === 0) add(2, "questions", "Aggiungi almeno una domanda.");
   d.questions.forEach((q, i) => {
     const issues = questionIssues(q);
@@ -196,6 +196,14 @@ function useFocusField(focus, refs) {
     const target = refs[focus.field]?.current;
     if (target?.focus) setTimeout(() => target.focus(), 50);
   }, [focus?.n]);
+}
+
+export function passingPointsLabel(totalPoints, percent) {
+  const p = Number(percent);
+  if (!(totalPoints > 0) || !(p > 0 && p < 100)) return null;
+  const n = Math.round(totalPoints * p) / 100; // punti esatti
+  const shown = Math.round(n * 10) / 10;
+  return `= ${String(shown).replace(".", ",")} punti su ${String(totalPoints).replace(".", ",")}`;
 }
 
 const field = { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, color: C.text, fontSize: 15 };
@@ -396,7 +404,7 @@ const twoCols = (isDesktop) => ({ flexDirection: isDesktop ? "row" : "column", g
 function DetailsStep({ draft, onChange, env, isDesktop, reveal, focus }) {
   const errors = {};
   if (reveal) for (const e of validateAll(draft).filter(x => x.step === 1)) errors[e.field] = errors[e.field] || e.message;
-  const refs = { title: useRef(null), availableFrom: useRef(null), availableUntil: useRef(null), durationMinutes: useRef(null), passingPercent: useRef(null) };
+  const refs = { title: useRef(null), availableFrom: useRef(null), availableUntil: useRef(null), durationMinutes: useRef(null) };
   useFocusField(focus, refs);
   const set = (patch) => onChange({ ...draft, ...patch });
   const locked = !!draft.examId; // la classe-materia di un esame esistente non si può cambiare
@@ -465,9 +473,6 @@ function DetailsStep({ draft, onChange, env, isDesktop, reveal, focus }) {
         <Input ref={refs.durationMinutes} error={errors.durationMinutes} label="Durata (minuti)" value={String(draft.durationMinutes)} keyboardType="number-pad" placeholder="Es. 45"
           onChangeText={(v) => set({ durationMinutes: v.replace(/[^0-9]/g, "") })} />
       </FieldGroup>
-
-      <Input ref={refs.passingPercent} error={errors.passingPercent} label="Soglia di sufficienza (%)" value={String(draft.passingPercent)} keyboardType="number-pad" placeholder="Es. 60"
-        onChangeText={(v) => set({ passingPercent: v.replace(/[^0-9]/g, "") })} />
 
       <CheckboxField label="Esame di recupero" value={isRetake} onChange={(v) => set({ wantsRetake: v, retakeOfExamId: v ? draft.retakeOfExamId : "" })} />
       {isRetake && (
@@ -606,6 +611,8 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
   const [moreOpen, setMoreOpen] = useState(false); // menu "⋯" su schermi stretti
   const [stepNotice, setStepNotice] = useState(null); // "Avanti" dallo step 1 con dettagli da completare
   const [focus, setFocus] = useState(null); // { field, questionId?, n }: campo su cui mettere il focus
+  const passingRef = useRef(null);
+  useFocusField(focus && focus.field === "passingPercent" ? focus : null, { passingPercent: passingRef });
   if (!draft || !visible) return null;
 
   const step = draft.step ?? 1;
@@ -634,6 +641,7 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
     ? validateAll(draft, { level: activeNotice.level }).filter(e => !activeNotice.onlyStep || e.step === activeNotice.onlyStep)
     : [];
   const reveal = !!activeNotice;
+  const passingError = reveal ? validateAll(draft).find(e => e.field === "passingPercent")?.message : null;
   // Voce del banner → step giusto (l'URL diventa ?step=N), domanda selezionata, focus sul campo
   function pick(e) {
     if ((draft.step ?? 1) !== e.step) onChange({ ...draft, step: e.step });
@@ -692,6 +700,19 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
             <Text style={s.itemSub}>{l}</Text>
           </View>
         ))}
+      </View>
+
+      {/* Soglia di sufficienza: qui il docente conosce già il totale dei punti */}
+      <View style={{ borderRadius: 10, backgroundColor: C.bg, padding: 12, borderWidth: 1, borderColor: passingError ? C.danger : C.bg }}>
+        <Text style={[s.label, { marginBottom: 6 }]}>Soglia di sufficienza</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <TextInput ref={passingRef} style={[field, { width: 64, textAlign: "center", backgroundColor: C.white }, passingError && s.inputError]}
+            keyboardType="number-pad" value={String(draft.passingPercent)} placeholder="Es. 60" placeholderTextColor={C.textLight}
+            onChangeText={(v) => onChange({ ...draft, passingPercent: v.replace(/[^0-9]/g, "") })} accessibilityLabel="Soglia di sufficienza in percentuale" />
+          <Text style={{ color: C.text, fontWeight: "700" }}>%</Text>
+          <Text style={{ color: C.textMuted, flexShrink: 1 }}>{passingPointsLabel(totalPoints, draft.passingPercent) || (totalPoints > 0 ? "" : "assegna dei punti alle domande")}</Text>
+        </View>
+        {!!passingError && <Text style={s.errorText}>{passingError}</Text>}
       </View>
 
       <View>
