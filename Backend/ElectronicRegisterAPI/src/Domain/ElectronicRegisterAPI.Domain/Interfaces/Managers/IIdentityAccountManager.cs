@@ -4,7 +4,6 @@ namespace ElectronicRegisterAPI.Domain.Interfaces.Managers;
 
 public interface IIdentityAccountManager
 {
-    Task<Guid> RegisterAsync(RegisterIdentityAccountDto input, CancellationToken ct = default);
     Task<IdentityAccountDto> GetAsync(Guid userId, CancellationToken ct = default);
     Task UpdateAsync(
         Guid userId,

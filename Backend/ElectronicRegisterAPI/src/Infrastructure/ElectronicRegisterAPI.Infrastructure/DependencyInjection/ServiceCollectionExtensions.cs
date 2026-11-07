@@ -84,6 +84,7 @@ public static class ServiceCollectionExtensions
         var stsDiscoveryEndpoint = $"https://login.microsoftonline.com/{azureTenantId}/v2.0/.well-known/openid-configuration";
         services.AddSingleton(new ConfigurationManager<OpenIdConnectConfiguration>(stsDiscoveryEndpoint, new OpenIdConnectConfigurationRetriever()));
         services.AddScoped<IIdentityAccountRepository, IdentityAccountRepository>();
+        services.AddScoped<IInstitutionAccountRepository, InstitutionAccountRepository>();
         services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Services.ITimeProvider, ElectronicRegisterAPI.Infrastructure.Services.SystemTimeProvider>();
         services.AddScoped<ITransactionManager, TransactionManager>();
         // Preparatory MT-1 persistence. Not consumed by legacy auth/API/worker.

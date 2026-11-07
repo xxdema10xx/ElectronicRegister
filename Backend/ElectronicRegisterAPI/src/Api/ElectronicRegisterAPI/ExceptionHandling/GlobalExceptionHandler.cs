@@ -26,6 +26,7 @@ internal class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : 
             UnauthorizedAccessException => (httpContext.User.Identity?.IsAuthenticated == true ? StatusCodes.Status403Forbidden : StatusCodes.Status401Unauthorized, "Non autorizzato"),
             InvalidOperationException when SubmissionErrors.IsInvalidRequest(exception) => (StatusCodes.Status400BadRequest, "Richiesta non valida"),
             InvalidOperationException when SubmissionErrors.IsConflict(exception) => (StatusCodes.Status409Conflict, "Operazione non consentita"),
+            AccountEmailUnavailableException => (StatusCodes.Status409Conflict, "Indirizzo email non disponibile"),
             BusinessRuleException => (StatusCodes.Status409Conflict, "Operazione non consentita"),
             MembershipConflictException => (StatusCodes.Status409Conflict, "Conflitto sulla membership istituzionale"),
             _ => (StatusCodes.Status500InternalServerError, "Errore interno del server")};
