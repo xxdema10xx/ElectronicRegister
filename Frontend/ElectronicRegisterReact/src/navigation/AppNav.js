@@ -19,7 +19,7 @@ import NotificationDot from "../components/NotificationDot";
 import Badge from "../components/Badge";
 import { useStudentExams } from "../data/studentExams";
 import { CONTENT_MAX_WIDTH, useLayout } from "../hooks/useLayout";
-import { useScreenUrl } from "./examRoutes";
+import { guardedNavigate, isWeb, usePageHeader, useScreenUrl } from "./examRoutes";
 
 const TITLES = {
   dashboard: "Electronic Register", grades: "Voti", students: "Studenti", myClasses: "Classi", classes: "Classi", exams: "Esami",
@@ -58,9 +58,19 @@ export default function AppNav({ user, onLogout }) {
 
   // Su web l'URL segue la sezione e, all'avvio, la sceglie (es. ricarica su /esami/123/modifica)
   useScreenUrl(screen, setScreen, [...sideTabs, ...tabs].map(t => t.key), role);
+  // Cambio sezione ed "Esci": se una pagina ha modifiche non salvate (editor esami) chiede prima conferma
+  // Cliccando la sezione in cui si è già (es. "Esami" dall'editor) si torna alla sua pagina iniziale.
+  const [visit, setVisit] = useState(0);
+  const pageHeader = usePageHeader(); // titolo della pagina interna (es. "Nuovo esame"), se c'è
+  const go = (key) => guardedNavigate(() => {
+    if (key !== screen) return setScreen(key);
+    if (isWeb && key === "exams") window.history.replaceState(null, "", "/esami");
+    setVisit(v => v + 1);
+  });
+  const logout = () => guardedNavigate(onLogout);
 
   const SCREENS = {
-    dashboard: <DashboardScreen navigate={setScreen} />,
+    dashboard: <DashboardScreen navigate={go} />,
     grades: <GradesScreen />,
     students: <StudentsScreen />,
     myClasses: <MyClassesScreen />,
@@ -69,11 +79,14 @@ export default function AppNav({ user, onLogout }) {
     subjects: <SubjectsScreen />,
     exams: role === "student" ? <StudentExamsScreen /> : <ExamsScreen />,
     users: <UsersScreen />,
-    profile: <ProfileScreen onLogout={onLogout} />,
+    profile: <ProfileScreen onLogout={logout} />,
   };
 
-  const userName = user?.studentFirstName || user?.teacherFirstName || user?.displayName || user?.email?.split("@")[0] || "Utente";
-  const content = SCREENS[screen] || <DashboardScreen navigate={setScreen} />;
+  // Nome e cognome dell'utente loggato (profilo docente o studente), altrimenti nome dell'account
+  const fullName = (first, last) => [first, last].filter(Boolean).join(" ");
+  const userName = fullName(user?.studentFirstName, user?.studentLastName) || fullName(user?.teacherFirstName, user?.teacherLastName)
+    || user?.displayName || user?.email?.split("@")[0] || "Utente";
+  const content = <View key={`${screen}-${visit}`} style={{ flex: 1 }}>{SCREENS[screen] || <DashboardScreen navigate={go} />}</View>;
 
   if (isDesktop) {
     return (
@@ -87,7 +100,7 @@ export default function AppNav({ user, onLogout }) {
             {sideTabs.map(t => {
               const active = screen === t.key;
               return (
-                <TouchableOpacity key={t.key} onPress={() => setScreen(t.key)}
+                <TouchableOpacity key={t.key} onPress={() => go(t.key)}
                   style={{ flexDirection: "row", alignItems: "center", paddingVertical: 12, paddingHorizontal: 20, marginHorizontal: 10, marginBottom: 2, borderRadius: 10,
                     backgroundColor: active ? "rgba(255,255,255,0.18)" : "transparent" }}>
                   <View style={{ position: "relative", width: 28 }}>
@@ -102,7 +115,7 @@ export default function AppNav({ user, onLogout }) {
 
           {/* Utente e uscita in fondo alla sidebar */}
           <View style={{ borderTopWidth: 1, borderTopColor: "rgba(255,255,255,0.18)", marginHorizontal: 10, paddingTop: 12 }}>
-            <TouchableOpacity onPress={onLogout} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 10, paddingHorizontal: 10 }}>
+            <TouchableOpacity onPress={logout} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 10, paddingHorizontal: 10 }}>
               <Ionicons name="log-out-outline" size={22} color={C.white} />
               <Text style={{ color: C.white, fontSize: 15, marginLeft: 12, fontWeight: "500" }}>Esci</Text>
             </TouchableOpacity>
@@ -113,7 +126,20 @@ export default function AppNav({ user, onLogout }) {
         <View style={{ flex: 1 }}>
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 32, height: 64,
             backgroundColor: C.white, borderBottomWidth: 1, borderBottomColor: C.border }}>
-            <Text style={{ fontSize: 22, fontWeight: "800", color: C.text }}>{screen === "dashboard" ? "Dashboard" : TITLES[screen]}</Text>
+            {pageHeader ? (
+              // Pagina interna della sezione: un solo titolo, "← Esami / titolo della pagina"
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 10, flex: 1, minWidth: 0, marginRight: 16 }}>
+                <TouchableOpacity onPress={pageHeader.onBack} accessibilityRole="link" accessibilityLabel={`Torna a ${TITLES[screen]}`}
+                  style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+                  <Ionicons name="arrow-back" size={22} color={C.primary} />
+                  <Text style={{ fontSize: 22, fontWeight: "800", color: C.primary }}>{TITLES[screen]}</Text>
+                </TouchableOpacity>
+                <Text style={{ fontSize: 22, color: C.textLight }}>/</Text>
+                <Text style={{ fontSize: 22, fontWeight: "800", color: C.text, flexShrink: 1 }} numberOfLines={1}>{pageHeader.title}</Text>
+              </View>
+            ) : (
+              <Text style={{ fontSize: 22, fontWeight: "800", color: C.text }}>{screen === "dashboard" ? "Dashboard" : TITLES[screen]}</Text>
+            )}
             <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
               <Text style={{ color: C.textMuted, fontSize: 14, fontWeight: "600" }}>{userName}</Text>
               <Badge text={role} role={role} />
@@ -131,12 +157,14 @@ export default function AppNav({ user, onLogout }) {
     <View style={{ flex: 1 }}>
       {/* Top Bar */}
       <View style={[s.topBar, { paddingTop: insets.top, backgroundColor: C.primary }]}>
+        {/* Su una pagina interna (dettaglio, editor) ‹ torna alla lista della sezione, non alla Home */}
         {screen !== "dashboard" && (
-          <TouchableOpacity onPress={() => setScreen("dashboard")} style={{ marginRight: 12 }}>
+          <TouchableOpacity onPress={pageHeader ? pageHeader.onBack : () => go("dashboard")} style={{ marginRight: 12 }}
+            accessibilityRole="button" accessibilityLabel={pageHeader ? `Torna a ${TITLES[screen]}` : "Torna alla Home"}>
             <Text style={{ color: C.white, fontSize: 18 }}>‹</Text>
           </TouchableOpacity>
         )}
-        <Text style={s.topBarTitle}> {TITLES[screen]}</Text>
+        <Text style={[s.topBarTitle, { flexShrink: 1 }]} numberOfLines={1}> {pageHeader ? pageHeader.title : TITLES[screen]}</Text>
       </View>
 
       {/* Screen */}
@@ -145,7 +173,7 @@ export default function AppNav({ user, onLogout }) {
       {/* Bottom Tabs */}
       <View style={[s.tabBar, { paddingBottom: insets.bottom, backgroundColor: C.footer, borderTopWidth: 1, borderTopColor: C.border }]}>
         {tabs.map(t => (
-          <TouchableOpacity key={t.key} style={s.tab} onPress={() => setScreen(t.key)}>
+          <TouchableOpacity key={t.key} style={s.tab} onPress={() => go(t.key)}>
             <View style={{ position: "relative" }}>
               <Text style={{ fontSize: 20 }}>{icon(t.icon)}</Text>
               <NotificationDot visible={t.dot} style={{ top: -2, right: -2, borderColor: C.footer }} />

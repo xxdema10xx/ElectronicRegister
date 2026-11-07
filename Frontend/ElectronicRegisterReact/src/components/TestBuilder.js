@@ -6,7 +6,7 @@
 //   3. Studenti — chi deve svolgere l'esame, con eventuale tempo aggiuntivo.
 // Il passo corrente è salvato nella bozza (draft.step), così si riprende da dove si era rimasti.
 import { useEffect, useState } from "react";
-import { Modal, ScrollView, Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ScrollView, Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useLayout } from "../hooks/useLayout";
@@ -42,6 +42,14 @@ export const newTestDraft = () => ({
   step: 1, title: "", description: "", classSubjectId: "", availableFrom: "", availableUntil: "",
   durationMinutes: "30", passingPercent: "60", retakeOfExamId: "", students: [], questions: [newQuestion()],
 });
+
+// La bozza ha qualcosa da salvare o da riprendere? Classe e materia (scelte prima dell'editor), durata,
+// soglia e le due opzioni vuote predefinite non contano: solo ciò che il docente ha scritto o impostato.
+export function draftHasContent(d) {
+  if (!d) return false;
+  if (d.title?.trim() || d.description?.trim() || d.availableFrom || d.availableUntil) return true;
+  return (d.questions || []).some(q => q.text?.trim() || q.options?.some(o => o.text?.trim()));
+}
 
 // Conteggi da salvare insieme al test.
 export function summarize(draft) {
@@ -341,12 +349,18 @@ function DetailsStep({ draft, onChange, onNext, onDiscard, env, isDesktop }) {
           onSelect={(classSubjectId) => set({ classSubjectId, students: [], retakeOfExamId: "" })}
           placeholder="Es. SW-25A · Programmazione" emptyMessage="Nessuna classe disponibile" />
       ) : hasList ? (
-        // Scelta una sola volta prima di aprire l'editor (ExamsScreen): qui si mostra e basta.
+        // Scelta prima di aprire l'editor (ExamsScreen): qui un'etichetta fissa, con "Cambia" che riporta
+        // alla scelta (solo per un esame nuovo: per uno già salvato il server non permette di cambiarla).
         <View style={{ marginBottom: 14 }}>
           <Text style={s.label}>Classe e materia</Text>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 8, backgroundColor: C.bg, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10 }}>
             <Ionicons name="school-outline" size={18} color={C.textMuted} />
             <Text style={{ color: C.text, fontSize: 15, fontWeight: "600", flex: 1 }} numberOfLines={1}>{env?.classSubjectLabel || "—"}</Text>
+            {!locked && !!env?.onChangeClassSubject && (
+              <TouchableOpacity onPress={env.onChangeClassSubject} accessibilityRole="button" accessibilityLabel="Cambia classe e materia">
+                <Text style={{ color: C.primary, fontWeight: "700" }}>Cambia</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       ) : (
@@ -505,10 +519,12 @@ function StudentsStep({ draft, onChange, env }) {
   );
 }
 
-export default function TestBuilder({ visible, contextLabel, draft, onChange, onSave, onClose, onDiscard, saving, env, draftStatus }) {
+// draftStatusShort: { label, tone } dello stato per schermi stretti (es. "Non salvata").
+// onClose non è più usato dalla barra: il ritorno alla lista è nell'header di AppNav (resta per compatibilità).
+export default function TestBuilder({ visible = true, contextLabel, draft, onChange, onSave, onClose, onDiscard, saving, env, draftStatus, draftStatusShort }) {
   const { isDesktop } = useLayout();
   const [selectedId, setSelectedId] = useState(null);
-  if (!draft) return null;
+  if (!draft || !visible) return null;
 
   const step = draft.step ?? 1;
   const { totalPoints, totalQuestions, closedQuestions, openQuestions } = summarize(draft);
@@ -633,26 +649,27 @@ export default function TestBuilder({ visible, contextLabel, draft, onChange, on
   const actionBtn = { style: [s.smBtn, { paddingHorizontal: 20, paddingVertical: 10 }], textStyle: s.smBtnText };
 
   return (
-    <Modal visible={visible} animationType="fade" onRequestClose={onClose}>
-      <View style={{ flex: 1, backgroundColor: C.bg }}>
+    // Pagina dell'app (non più un Modal): sta nell'area dei contenuti, con la sidebar visibile.
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
+      <View style={{ flex: 1 }}>
         {/* Barra superiore */}
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: C.white, paddingHorizontal: isDesktop ? 28 : 16, height: 64, borderBottomWidth: 1, borderBottomColor: C.border, gap: 12 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 12, flex: 1 }}>
-            <TouchableOpacity onPress={onClose} accessibilityLabel="Chiudi"><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
-            <View style={{ flex: 1 }}>
-              <Text style={{ color: C.text, fontSize: 18, fontWeight: "800" }} numberOfLines={1}>{draft.title || "Nuovo esame"}</Text>
-              {/* Stato reale della bozza con accanto l'azione che lo cambia */}
-              <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                <Text style={{ color: C.textMuted, fontSize: 12, flexShrink: 1 }} numberOfLines={1}>
-                  {[contextLabel, draftStatus].filter(Boolean).join(" · ")}
-                </Text>
-                <TouchableOpacity onPress={onSave} disabled={saving} accessibilityRole="button" accessibilityLabel="Salva bozza"
-                  style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 2, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: C.primary, opacity: saving ? 0.6 : 1 }}>
-                  <Ionicons name="cloud-upload-outline" size={14} color={C.primary} />
-                  <Text style={{ color: C.primary, fontSize: 12, fontWeight: "700" }}>{saving ? "Salvataggio…" : "Salva bozza"}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+        {/* Il titolo ("← Esami / Nuovo esame") è nell'header di AppNav: qui stato, Stepper e pulsanti */}
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: C.white, paddingHorizontal: isDesktop ? 28 : 16, paddingVertical: 10, minHeight: 64, borderBottomWidth: 1, borderBottomColor: C.border, gap: 12 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flex: 1, flexWrap: "wrap", minWidth: 0 }}>
+            {/* Stato reale della bozza con accanto l'azione che lo cambia. Su schermi larghi va a capo se serve,
+                su quelli stretti diventa un badge corto ("Non salvata") per non essere tagliato. */}
+            {isDesktop ? (
+              <Text style={{ color: C.textMuted, fontSize: 13, flexShrink: 1 }} numberOfLines={2}>
+                {[contextLabel, draftStatus].filter(Boolean).join(" · ")}
+              </Text>
+            ) : !!draftStatusShort && (
+              <StatusChip label={draftStatusShort.label} tone={draftStatusShort.tone} style={{ alignSelf: "center" }} />
+            )}
+            <TouchableOpacity onPress={onSave} disabled={saving} accessibilityRole="button" accessibilityLabel="Salva bozza"
+              style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: C.primary, opacity: saving ? 0.6 : 1 }}>
+              <Ionicons name="cloud-upload-outline" size={14} color={C.primary} />
+              <Text style={{ color: C.primary, fontSize: 12, fontWeight: "700" }}>{saving ? "Salvataggio…" : "Salva bozza"}</Text>
+            </TouchableOpacity>
           </View>
           <Stepper step={step} onStep={goTo} compact={!isDesktop} />
           <View style={{ flex: isDesktop ? 1 : 0, alignItems: "flex-end" }}>
@@ -696,7 +713,7 @@ export default function TestBuilder({ visible, contextLabel, draft, onChange, on
           </ScrollView>
         )}
       </View>
-    </Modal>
+    </View>
   );
 }
 

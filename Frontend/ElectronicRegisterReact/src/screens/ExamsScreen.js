@@ -1,8 +1,8 @@
 // src/screens/ExamsScreen.js
 // Esami per docenti e amministratori: elenco, creazione/modifica con l'editor guidato, pubblicazione,
 // chiusura, annullamento, eliminazione, consegne e correzione. Dati: ExamController (src/api/examApi.js).
-import { useCallback, useEffect, useState } from "react";
-import { FlatList, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { BackHandler, FlatList, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
@@ -16,12 +16,11 @@ import EmptyState from "../components/EmptyState";
 import SectionHeader from "../components/SectionHeader";
 import SelectField from "../components/SelectField";
 import StatusChip, { EXAM_TONE } from "../components/StatusChip";
-import { newTestDraft, validateTestDraft } from "../components/TestBuilder";
+import { draftHasContent, newTestDraft, validateTestDraft } from "../components/TestBuilder";
 import ExamEditorScreen from "./ExamEditorScreen";
-import { useExamRoute } from "../navigation/examRoutes";
+import { examHref, setPageHeader, useExamRoute } from "../navigation/examRoutes";
 import TestViewer from "../components/TestViewer";
 import ExamSubmissions from "../components/ExamSubmissions";
-import FormModal from "../components/FormModal";
 import ClassFilter from "../components/ClassFilter";
 import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
@@ -67,6 +66,18 @@ const EMPTY = {
 };
 const BAR_H = 40; // altezza comune di filtri e pulsanti nella barra
 
+// Bozza salvata in sessionStorage, se è ancora da riprendere: un esame salvato con modifiche, o un nuovo esame
+// con contenuto. Le altre (lasciate dalle versioni precedenti, che salvavano anche le bozze vuote) si scartano.
+function storedDraft() {
+  const d = draftStore.get();
+  if (d && (d.examId || draftHasContent(d))) return d;
+  draftStore.clear();
+  return null;
+}
+
+// Nome della materia di una classe-materia (il server lo dà a parte; nei dati di prova è nell'etichetta)
+const subjectNameOf = (cs) => cs?.subjectName || cs?.label?.split(" · ").slice(1).join(" · ") || cs?.label || "";
+
 export default function ExamsScreen() {
   const { user } = useAuth();
   const role = user?.role?.toLowerCase();
@@ -86,7 +97,11 @@ export default function ExamsScreen() {
   // Editor e dettaglio sono aperti finché la rotta li indica: chiuderli = tornare indietro.
   const nav = useExamRoute();
   const route = nav.route;
-  const [draft, setDraft] = useState(() => draftStore.get());
+  const [draft, setDraft] = useState(storedDraft);
+  // dirty: c'è qualcosa da salvare sul server (regole in updateDraft); in locale si conserva solo allora
+  const [dirty, setDirty] = useState(() => !!draft);
+  const dirtyRef = useRef(dirty);
+  const [savedAt, setSavedAt] = useState(null);
   const editing = canWrite && (route.name === "new" || route.name === "edit");
   const [saving, setSaving] = useState(false);
   const [viewing, setViewing] = useState(null);
@@ -123,14 +138,14 @@ export default function ExamsScreen() {
   // Filtro classe e ricerca valgono per tutte e tre le schede: i contatori dicono cosa si vedrebbe aprendole.
   const filtered = filterBySearch(exams.filter(inClass), search, e => [e.name, e.description, csLabel(e.classSubjectId)]);
 
-  // Bozza locale da riprendere: la card sta in cima alla scheda Bozze. Se riguarda un esame già salvato,
-  // quella voce non si ripete in lista: la card ne è la versione più aggiornata (con le modifiche locali).
-  const showResume = !!draft && !editing && inClass(draft);
-  const resumedId = showResume ? draft.examId : null;
-  const listed = filtered.filter(e => e.id !== resumedId);
-  const countByTab = { drafts: showResume ? 1 : 0, active: 0, history: 0 };
-  for (const e of listed) countByTab[tabOf(e)]++;
-  const visible = sortExams(listed.filter(e => tabOf(e) === tab), tab);
+  // Bozza locale da riprendere: la card sta in cima alla scheda Bozze solo se c'è davvero qualcosa da
+  // riprendere (dirty: un nuovo esame con contenuto, o un esame salvato con modifiche locali). Se riguarda un
+  // esame già in lista, la voce resta ed è evidenziata ("Modifiche non salvate"), ma si conta una volta sola.
+  const showResume = !!draft && !editing && dirty && inClass(draft);
+  const resumeInList = showResume && !!draft.examId && filtered.some(e => e.id === draft.examId);
+  const countByTab = { drafts: showResume && !resumeInList ? 1 : 0, active: 0, history: 0 };
+  for (const e of filtered) countByTab[tabOf(e)]++;
+  const visible = sortExams(filtered.filter(e => tabOf(e) === tab), tab);
 
   // Elenco di chi deve recuperare: raggruppa per studente le consegne non superate (bocciate o "non superabile")
   // su tutti gli esami pubblicati/chiusi della classe scelta. Richiede una chiamata per esame: va bene per i volumi di un registro di classe.
@@ -144,18 +159,21 @@ export default function ExamsScreen() {
   // savedAt: ora dell'ultimo salvataggio locale; solo su web, dove esiste sessionStorage.
   // Sull'app non c'è un archivio locale (AsyncStorage non è tra le dipendenze): lo stato lo dice.
   // keepDirty: la modifica non cambia lo stato rispetto al server (es. solo cambio di step).
-  const [dirty, setDirty] = useState(() => !!draftStore.get());
-  const [savedAt, setSavedAt] = useState(null);
+  // Regole: un nuovo esame è "da salvare" solo se ha contenuto (draftHasContent: la sola scelta di classe e
+  // materia non conta); un esame già salvato solo se è stato modificato. Si conserva in locale (e compare in
+  // "Riprendi bozza") solo ciò che è da salvare: una bozza vuota o non modificata non lascia tracce.
   function updateDraft(d, { fromServer = false, keepDirty = false } = {}) {
+    const nextDirty = !d ? false : !d.examId ? draftHasContent(d) : fromServer ? false : keepDirty ? dirtyRef.current : true;
+    dirtyRef.current = nextDirty;
     setDraft(d);
-    d ? draftStore.set(d) : draftStore.clear();
-    if (!keepDirty) setDirty(!!d && !fromServer);
-    else if (!d) setDirty(false);
-    setSavedAt(d && Platform.OS === "web" ? new Date() : null);
+    setDirty(nextDirty);
+    nextDirty ? draftStore.set(d) : draftStore.clear();
+    setSavedAt(nextDirty && Platform.OS === "web" ? new Date() : null);
   }
   const hhmm = (t) => `${String(t.getHours()).padStart(2, "0")}:${String(t.getMinutes()).padStart(2, "0")}`;
   const localStatus = Platform.OS === "web" ? `conservata in questa scheda${savedAt ? ` alle ${hhmm(savedAt)}` : ""}` : "non salvata sul dispositivo";
-  const draftStatus = !draft ? "" : !draft.examId ? `Non ancora salvata sul server · ${localStatus}`
+  const draftStatus = !draft ? ""
+    : !draft.examId ? (dirty ? `Non ancora salvata sul server · ${localStatus}` : "Bozza vuota: si conserva appena scrivi qualcosa")
     : dirty ? `Modifiche non salvate sul server · ${localStatus}` : "Salvata sul server";
   // Classe e materia si scelgono una volta sola, qui, prima di aprire l'editor: nel form restano fisse.
   // Se il server non offre l'elenco delle classi-materia, l'identificativo si inserisce nel form.
@@ -167,14 +185,24 @@ export default function ExamsScreen() {
     else if (!route.tab) nav.replace({ name: "list", tab });
   }, [route]);
   const backToList = () => nav.back({ name: "list", tab });
+  // Uscita dall'editor: se non c'è niente da salvare la bozza locale si scarta (niente "Riprendi bozza")
+  const exitEditor = () => { if (draft && !dirtyRef.current) updateDraft(null); backToList(); };
+  const routeRef = useRef(route);
+  routeRef.current = route;
 
   // "Crea esame" → /esami/nuovo. Classe e materia si scelgono una volta sola, prima dell'editor
   // (finestra sopra la lista); nel form restano fisse. Se il server non offre l'elenco delle
   // classi-materia, l'identificativo si inserisce nel form.
   function startNew() {
-    if (draft) return resume();
+    if (draft && dirtyRef.current) return resume();
+    if (draft) updateDraft(null);
     nav.push({ name: "new" });
   }
+  // Uscendo dall'editor in qualsiasi modo (anche con l'indietro del browser) una bozza senza niente da
+  // salvare non resta in memoria: niente card, e "Crea esame" ripropone la scelta di classe e materia.
+  useEffect(() => {
+    if (!editing && draft && !dirtyRef.current) updateDraft(null);
+  }, [editing]);
   function resume() { nav.push(draft.examId ? { name: "edit", id: draft.examId } : { name: "new" }); }
 
   // Rotte che chiedono qualcosa a questa schermata: permessi, nuovo esame, dettaglio
@@ -189,10 +217,7 @@ export default function ExamsScreen() {
         nav.replace({ name: "edit", id: draft.examId });
       } else if (!draft && !loading) {
         if (!Array.isArray(classSubjects)) updateDraft(newTestDraft());
-        else {
-          const options = classId ? classSubjectsOfClass : classSubjects;
-          setPicking({ classSubjectId: options.length === 1 ? options[0].id : "" });
-        }
+        else openPicker(classId);
       }
       return;
     }
@@ -212,12 +237,40 @@ export default function ExamsScreen() {
     }
   }, [route, loading]);
 
+  // picking: { classId, classSubjectId, changing } — changing: si arriva da "Cambia" nel form
+  const subjectsOf = (cid) => (classSubjects || []).filter(cs => cs.classId === cid);
+  function openPicker(cid, { classSubjectId = "", changing = false } = {}) {
+    const subjects = cid ? subjectsOf(cid) : [];
+    setPicking({ classId: cid || null, classSubjectId: classSubjectId || (subjects.length === 1 ? subjects[0].id : ""), changing });
+  }
+  function pickClass(cid) {
+    const subjects = subjectsOf(cid);
+    setPicking(p => ({ ...p, classId: cid, classSubjectId: subjects.length === 1 ? subjects[0].id : "" }));
+  }
   function confirmPick() {
-    if (!picking?.classSubjectId) return notify("Attenzione", "Scegli la classe e la materia dell'esame.");
-    updateDraft({ ...newTestDraft(), classSubjectId: picking.classSubjectId });
+    if (!picking?.classId || !picking?.classSubjectId) return;
+    if (picking.changing && draft) {
+      // Classe e materia nuove: studenti ed esame da recuperare dipendono da loro e si azzerano
+      updateDraft({ ...draft, classSubjectId: picking.classSubjectId, students: [], retakeOfExamId: "", wantsRetake: false, retakeSeededFor: undefined });
+    } else {
+      updateDraft({ ...newTestDraft(), classSubjectId: picking.classSubjectId });
+    }
     setPicking(null);
   }
-  function cancelPick() { setPicking(null); backToList(); }
+  function cancelPick() {
+    if (picking?.changing) return setPicking(null); // si torna al form
+    setPicking(null);
+    backToList();
+  }
+  // "Cambia" accanto a classe e materia nel form (solo esami nuovi): con domande già scritte chiede conferma
+  function changeClassSubject() {
+    const current = classSubjects?.find(c => c.id === draft?.classSubjectId);
+    const go = () => openPicker(current?.classId || classId, { classSubjectId: draft?.classSubjectId, changing: true });
+    const hasQuestions = (draft?.questions || []).some(q => q.text?.trim() || q.options?.some(o => o.text?.trim()));
+    if (hasQuestions) {
+      confirmAction("Cambiare classe e materia?", "Le domande restano; gli studenti assegnati e l'esame da recuperare verranno azzerati.", go, "Cambia");
+    } else go();
+  }
   function discardDraft() {
     confirmAction("Conferma", "Eliminare la bozza dell'esame?", () => { updateDraft(null); backToList(); }, "Elimina");
   }
@@ -254,10 +307,19 @@ export default function ExamsScreen() {
   const viewed = route.name === "view" && viewing?.id === route.id ? viewing : null;
 
   // Azioni di stato: pubblica, chiudi, annulla, elimina
+  // Dal dettaglio: dopo Elimina si torna alla lista, dopo gli altri cambi di stato il dettaglio si ricarica.
   function act(exam, label, message, run, okLabel) {
     confirmAction(label, message, async () => {
       setBusy(exam.id);
-      try { await run(); await load(); }
+      try {
+        await run();
+        await load();
+        const r = routeRef.current;
+        if (r.name === "view" && r.id === exam.id) {
+          if (label === "Elimina") backToList();
+          else setViewing(await api.getExam(exam.id));
+        }
+      }
       catch (e) { notify("Errore", e.message); }
       finally { setBusy(null); }
     }, okLabel);
@@ -267,16 +329,139 @@ export default function ExamsScreen() {
   const cancel = (e) => act(e, "Annulla", `Annullare “${e.name}”? È possibile solo se nessuno lo ha ancora iniziato.`, () => api.cancelExam(e.id), "Annulla esame");
   const remove = (e) => act(e, "Elimina", `Eliminare “${e.name}”? Si può eliminare solo una bozza.`, () => api.deleteExam(e.id), "Elimina");
 
+  // Azioni consentite su un esame, uguali per la card e per il dettaglio (che ha anche "Modifica")
+  function actionsFor(exam, { detail = false } = {}) {
+    const status = fromEnum(exam.status, EXAM_STATUS);
+    return {
+      edit: detail && canWrite && status === "draft" ? () => edit(exam) : null,
+      submissions: canWrite && (status === "published" || status === "closed") ? () => setSubmissionsFor(exam) : null,
+      close: canWrite && status === "published" ? () => close(exam) : null,
+      publish: canWrite && status === "draft" ? () => publish(exam) : null,
+      cancel: canDestroy && status === "published" ? () => cancel(exam) : null,
+      remove: canDestroy && status === "draft" ? () => remove(exam) : null,
+    };
+  }
+
+  // Titolo nell'header di AppNav ("← Esami / …") per dettaglio e scelta di classe e materia
+  useEffect(() => {
+    if (route.name === "view") setPageHeader({ title: viewing?.id === route.id ? viewing.name : "Esame", onBack: backToList });
+    else if (route.name === "new" && picking) setPageHeader({ title: picking.changing ? "Cambia classe e materia" : "Nuovo esame", onBack: cancelPick });
+    else if (!editing) setPageHeader(null);
+  }, [route, picking, viewing, tab]);
+  useEffect(() => () => setPageHeader(null), []);
+
+  // Tasto indietro di Android sulle pagine della sezione (non più Modal): come "← Esami".
+  // L'editor registra il suo (con la conferma) e viene chiamato prima di questo.
+  useEffect(() => {
+    if (Platform.OS !== "android" || route.name === "list") return;
+    const sub = BackHandler.addEventListener("hardwareBackPress", () => {
+      if (route.name === "new" && picking) { cancelPick(); return true; }
+      if (route.name === "view") { backToList(); return true; }
+      return false;
+    });
+    return () => sub.remove();
+  }, [route, picking]);
+
   const env = {
     classSubjects: classSubjects && classId ? classSubjectsOfClass : classSubjects,
     classSubjectLabel: csLabel(draft?.classSubjectId),
+    onChangeClassSubject: Array.isArray(classSubjects) && draft && !draft.examId ? changeClassSubject : null,
     retakeOptions: exams.filter(inClass).map(e => ({ id: e.id, name: e.name, classSubjectId: e.classSubjectId })),
     getStudents: (classSubjectId) => api.getStudentsOfClassSubject(classSubjectId),
     getRetakeCandidates: (examId) => getRetakeCandidates(api, examId),
   };
 
+  function renderRetakes() {
+    return (
+        <Modal visible animationType="slide" onRequestClose={() => setRetakes(null)}>
+          <View style={{ flex: 1, backgroundColor: C.bg }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 10, backgroundColor: C.white, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: C.border }}>
+              <TouchableOpacity onPress={() => setRetakes(null)}><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: C.text, fontSize: 16, fontWeight: "700" }}>Chi deve recuperare</Text>
+                <Text style={{ color: C.textMuted, fontSize: 12 }}>Studenti non in regola su almeno un esame pubblicato o chiuso</Text>
+              </View>
+            </View>
+            {retakes.loading ? <Loader /> : retakes.groups.length === 0 ? <EmptyState message="Nessuno studente da recuperare" /> : (
+              <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }}>
+                <View style={{ width: "100%", maxWidth: 760 }}>
+                  {retakes.groups.map(g => (
+                    <Card key={g.studentId} style={{ marginBottom: 10 }}>
+                      <Text style={s.itemTitle}>{g.lastName} {g.firstName}</Text>
+                      {g.exams.map(e => (
+                        <View key={e.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 6 }}>
+                          <Text style={{ color: C.text, flex: 1 }} numberOfLines={1}>{e.name}{csLabel(e.classSubjectId) ? ` · ${csLabel(e.classSubjectId)}` : ""}</Text>
+                          <StatusChip label={EXAM_STATUS_LABEL[e.status] || e.status} tone={EXAM_TONE[e.status]} />
+                        </View>
+                      ))}
+                    </Card>
+                  ))}
+                </View>
+              </ScrollView>
+            )}
+          </View>
+        </Modal>
+      
+    );
+  }
+
   const barBtn = { height: BAR_H, paddingVertical: 0, paddingHorizontal: 18 };
   const newBtn = canWrite && <Btn label="Crea esame" onPress={startNew} style={barBtn} textStyle={s.smBtnText} />;
+
+  // Finestre che restano tali (consegne, chi deve recuperare): valgono per lista e pagine
+  const overlays = (<>
+    {submissionsFor && <ExamSubmissions exam={submissionsFor} api={api} onClose={() => setSubmissionsFor(null)} />}
+    {retakes && renderRetakes()}
+  </>);
+
+  // Pagine della sezione, al posto della lista (sidebar e header di AppNav restano visibili)
+  let page = null;
+  if (route.name === "view") {
+    page = viewed ? (
+      <TestViewer exam={viewed} contextLabel={csLabel(viewed.classSubjectId)} onClose={backToList}
+        busy={busy === viewed.id} actions={actionsFor(viewed, { detail: true })} />
+    ) : <Loader />;
+  } else if (route.name === "new" && picking) {
+    page = (
+      <ScrollView contentContainerStyle={{ padding: isDesktop ? 40 : 16, alignItems: "center" }} keyboardShouldPersistTaps="handled">
+        <Card style={{ width: "100%", maxWidth: 640, padding: 24 }}>
+          <Text style={{ color: C.text, fontSize: 20, fontWeight: "800" }}>Per quale classe e materia è l'esame?</Text>
+          <Text style={[s.itemSub, { marginTop: 4, marginBottom: 16 }]}>
+            Servono a scegliere gli studenti e l'esame da recuperare. Dopo il salvataggio non si potranno più cambiare.
+          </Text>
+          <SelectField label="Classe" value={picking.classId} options={classOptions} getLabel={c => c.name}
+            onSelect={pickClass} placeholder="Es. SW-25A" emptyMessage="Nessuna classe disponibile" />
+          <SelectField key={picking.classId || "no-class"} label="Materia" value={picking.classSubjectId}
+            options={picking.classId ? subjectsOf(picking.classId) : []} getLabel={subjectNameOf}
+            onSelect={(classSubjectId) => setPicking(p => ({ ...p, classSubjectId }))}
+            placeholder={picking.classId ? "Es. Programmazione" : "Scegli prima la classe"}
+            emptyMessage={picking.classId ? "Nessuna materia per questa classe" : "Scegli prima la classe"} />
+          <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: 8, marginTop: 4 }}>
+            <Btn label="Annulla" variant="ghost" onPress={cancelPick} style={s.smBtn} textStyle={s.smBtnText} />
+            <Btn label="Continua →" onPress={confirmPick} disabled={!picking.classId || !picking.classSubjectId}
+              style={[s.smBtn, { paddingHorizontal: 20, paddingVertical: 10 }]} textStyle={s.smBtnText} />
+          </View>
+        </Card>
+      </ScrollView>
+    );
+  } else if (editing) {
+    page = (
+      <ExamEditorScreen key={`${route.name}:${route.id || ""}`} route={route} nav={nav} api={api}
+        draft={draft} dirty={dirty} updateDraft={updateDraft} env={env} draftStatus={draftStatus}
+        draftStatusShort={dirty ? { label: "Non salvata", tone: "amber" } : draft?.examId ? { label: "Salvata", tone: "green" } : { label: "Vuota", tone: "gray" }}
+        contextLabel={draft?.examId ? "Modifica della bozza" : "Nuovo esame"}
+        onSave={save} saving={saving} onExit={exitEditor}
+        onDiscard={draft?.examId ? () => { updateDraft(null); backToList(); } : discardDraft} />
+    );
+  }
+  if (page) {
+    return (
+      <View style={{ flex: 1, backgroundColor: C.bg }}>
+        {page}
+        {overlays}
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
@@ -328,7 +513,7 @@ export default function ExamsScreen() {
             </View>
             <View style={{ flex: 1, minWidth: 180 }}>
               <Text style={s.itemTitle} numberOfLines={1}>
-                {draft.examId ? "Modifica in corso" : "Esame in preparazione"}: {draft.title.trim() || "senza titolo"}
+                {draft.examId ? "Modifica in corso" : "Esame in preparazione"}: {draft.title.trim() || "Senza titolo"}
               </Text>
               <Text style={s.itemSub} numberOfLines={2}>
                 {[csLabel(draft.classSubjectId), draftStatus].filter(Boolean).join(" · ")}
@@ -351,77 +536,14 @@ export default function ExamsScreen() {
             const status = fromEnum(exam.status, EXAM_STATUS);
             return (
               <ExamCard exam={exam} status={status} contextLabel={csLabel(exam.classSubjectId)} busy={busy === exam.id}
-                onPress={() => view(exam)}
-                actions={{
-                  submissions: canWrite && (status === "published" || status === "closed") ? () => setSubmissionsFor(exam) : null,
-                  close: canWrite && status === "published" ? () => close(exam) : null,
-                  publish: canWrite && status === "draft" ? () => publish(exam) : null,
-                  cancel: canDestroy && status === "published" ? () => cancel(exam) : null,
-                  remove: canDestroy && status === "draft" ? () => remove(exam) : null,
-                }} />
+                onPress={() => view(exam)} href={examHref({ name: "view", id: exam.id })}
+                unsaved={showResume && draft.examId === exam.id} actions={actionsFor(exam)} />
             );
           }}
         />
       )}
 
-      {/* "Modifica" solo per le bozze: un esame pubblicato non si può più cambiare (lo verifica comunque il server) */}
-      <TestViewer exam={viewed} contextLabel={csLabel(viewed?.classSubjectId)} onClose={backToList}
-        onEdit={viewed && canWrite && fromEnum(viewed.status, EXAM_STATUS) === "draft" ? () => edit(viewed) : null} />
-      {submissionsFor && <ExamSubmissions exam={submissionsFor} api={api} onClose={() => setSubmissionsFor(null)} />}
-
-      {retakes && (
-        <Modal visible animationType="slide" onRequestClose={() => setRetakes(null)}>
-          <View style={{ flex: 1, backgroundColor: C.bg }}>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 10, backgroundColor: C.white, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: C.border }}>
-              <TouchableOpacity onPress={() => setRetakes(null)}><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
-              <View style={{ flex: 1 }}>
-                <Text style={{ color: C.text, fontSize: 16, fontWeight: "700" }}>Chi deve recuperare</Text>
-                <Text style={{ color: C.textMuted, fontSize: 12 }}>Studenti non in regola su almeno un esame pubblicato o chiuso</Text>
-              </View>
-            </View>
-            {retakes.loading ? <Loader /> : retakes.groups.length === 0 ? <EmptyState message="Nessuno studente da recuperare" /> : (
-              <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }}>
-                <View style={{ width: "100%", maxWidth: 760 }}>
-                  {retakes.groups.map(g => (
-                    <Card key={g.studentId} style={{ marginBottom: 10 }}>
-                      <Text style={s.itemTitle}>{g.lastName} {g.firstName}</Text>
-                      {g.exams.map(e => (
-                        <View key={e.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 6 }}>
-                          <Text style={{ color: C.text, flex: 1 }} numberOfLines={1}>{e.name}{csLabel(e.classSubjectId) ? ` · ${csLabel(e.classSubjectId)}` : ""}</Text>
-                          <StatusChip label={EXAM_STATUS_LABEL[e.status] || e.status} tone={EXAM_TONE[e.status]} />
-                        </View>
-                      ))}
-                    </Card>
-                  ))}
-                </View>
-              </ScrollView>
-            )}
-          </View>
-        </Modal>
-      )}
-      {picking && (
-        <FormModal visible title="Nuovo esame" onClose={cancelPick}>
-          <View style={{ padding: 16 }}>
-            <Text style={[s.itemSub, { marginTop: 0, marginBottom: 14 }]}>
-              Per quale classe e materia è l'esame? Non si potrà cambiare dopo: serve a scegliere gli studenti e l'esame da recuperare.
-            </Text>
-            <SelectField label="Classe e materia" value={picking.classSubjectId} options={classId ? classSubjectsOfClass : classSubjects}
-              getLabel={c => c.label} onSelect={(classSubjectId) => setPicking({ classSubjectId })}
-              placeholder="Es. SW-25A · Programmazione" emptyMessage="Nessuna classe-materia disponibile" />
-            <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: 8, marginTop: 4 }}>
-              <Btn label="Annulla" variant="ghost" onPress={cancelPick} style={s.smBtn} textStyle={s.smBtnText} />
-              <Btn label="Inizia →" onPress={confirmPick} style={[s.smBtn, { paddingHorizontal: 20, paddingVertical: 10 }]} textStyle={s.smBtnText} />
-            </View>
-          </View>
-        </FormModal>
-      )}
-      {editing && (
-        <ExamEditorScreen key={`${route.name}:${route.id || ""}`} route={route} nav={nav} api={api}
-          draft={draft} dirty={dirty} updateDraft={updateDraft} env={env} draftStatus={draftStatus}
-          contextLabel={draft?.examId ? "Modifica della bozza" : "Nuovo esame"}
-          onSave={save} saving={saving} onExit={backToList}
-          onDiscard={draft?.examId ? () => { updateDraft(null); backToList(); } : discardDraft} />
-      )}
+      {overlays}
     </View>
   );
 }

@@ -1,30 +1,35 @@
 // src/screens/ExamEditorScreen.js
-// Schermata dell'editor esami per le rotte /esami/nuovo e /esami/{id}/modifica. Avvolge TestBuilder
-// passandogli le stesse props di prima e aggiunge ciò che serve a una schermata con il suo URL:
+// Pagina dell'editor esami per le rotte /esami/nuovo e /esami/{id}/modifica, nell'area dei contenuti
+// (sidebar visibile). Avvolge TestBuilder passandogli le stesse props di prima e aggiunge ciò che serve a
+// una pagina con il suo URL:
 //  - ricarica su /esami/{id}/modifica: riusa la bozza locale di quell'esame, altrimenti la carica;
 //    id inesistente → messaggio e lista; esame non più in bozza → dettaglio;
 //  - step nell'URL (?step=2), letto all'apertura e aggiornato quando si cambia step;
-//  - uscita con modifiche non salvate sul server: conferma (freccia, Esc, tasto indietro di Android,
-//    indietro/avanti del browser) e avviso del browser alla chiusura o ricarica del tab.
+//  - uscita con modifiche non salvate sul server: dialog dell'app ("Esci senza salvare" / "Continua a
+//    modificare") per "← Esami", indietro/avanti del browser, sidebar, "Esci" e tasto indietro di Android
+//    (BackHandler: non è più un Modal); avviso del browser alla chiusura o ricarica del tab.
 // La bozza e il salvataggio restano in ExamsScreen, come prima.
 import { useEffect, useRef, useState } from "react";
-import { Modal, Platform, View } from "react-native";
-import { C } from "../constants/theme";
+import { BackHandler, Platform } from "react-native";
 import Loader from "../components/Loader";
 import TestBuilder, { validateDetails } from "../components/TestBuilder";
-import { notify, confirmAction } from "../utils/dialogs";
+import { notify, confirmLeave } from "../utils/dialogs";
 import { EXAM_STATUS, detailToDraft, fromEnum } from "../api/examContract";
-import { useBeforeUnload } from "../navigation/examRoutes";
+import { setLeaveGuard, setPageHeader, useBeforeUnload } from "../navigation/examRoutes";
 
-const LEAVE_TITLE = "Modifiche non salvate";
-const LEAVE_MESSAGE = Platform.OS === "web"
-  ? "Le modifiche non sono ancora sul server. Uscire? La bozza resta in “Riprendi bozza” finché questa scheda è aperta."
-  : "Le modifiche non sono ancora sul server. Uscire? La bozza resta in “Riprendi bozza” finché non cambi sezione o chiudi l'app.";
+// La frase su "Riprendi bozza" solo quando la bozza resta davvero:
+//  - tornando alla lista ("← Esami", indietro del browser, tasto indietro di Android) resta sempre;
+//  - cambiando sezione o con "Esci" resta su web (sessionStorage), sull'app no (la schermata si chiude).
+const KEPT_MESSAGE = Platform.OS === "web"
+  ? "Le modifiche non sono ancora sul server. Restano in “Riprendi bozza” finché questa scheda è aperta."
+  : "Le modifiche non sono ancora sul server. Restano in “Riprendi bozza” finché non cambi sezione o chiudi l'app.";
+const LOST_MESSAGE = "Le modifiche non sono ancora sul server e andranno perse.";
+const GUARD_MESSAGE = Platform.OS === "web" ? KEPT_MESSAGE : LOST_MESSAGE;
 
 // Uguali a parte lo step? (cambiare step non è una modifica da salvare)
 const sameButStep = (a, b) => !!a && !!b && JSON.stringify({ ...a, step: 0 }) === JSON.stringify({ ...b, step: 0 });
 
-export default function ExamEditorScreen({ route, nav, api, draft, dirty, updateDraft, env, contextLabel, draftStatus, onSave, saving, onDiscard, onExit }) {
+export default function ExamEditorScreen({ route, nav, api, draft, dirty, updateDraft, env, contextLabel, draftStatus, draftStatusShort, onSave, saving, onDiscard, onExit }) {
   const [loadingExam, setLoadingExam] = useState(false);
   const ready = route.name === "edit" ? draft?.examId === route.id : !!draft && !draft.examId;
 
@@ -76,27 +81,40 @@ export default function ExamEditorScreen({ route, nav, api, draft, dirty, update
   // Cambiare step non rende la bozza "da salvare"
   const onChange = (next) => updateDraft(next, { keepDirty: sameButStep(next, draft) });
 
-  // Uscita: conferma se ci sono modifiche non salvate sul server
+  // Uscita: conferma solo se ci sono davvero modifiche non salvate sul server
+  // Ref: il tasto indietro di Android è registrato una volta sola e deve vedere i valori attuali
+  const latest = useRef({ dirty, onExit });
+  latest.current = { dirty, onExit };
   function requestExit() {
-    if (dirty) confirmAction(LEAVE_TITLE, LEAVE_MESSAGE, onExit, "Esci");
-    else onExit();
+    const { dirty: isDirty, onExit: exit } = latest.current;
+    if (isDirty) confirmLeave(exit, { message: KEPT_MESSAGE });
+    else exit();
   }
+  // La stessa conferma per indietro/avanti del browser, sidebar, tab ed "Esci"
   useEffect(() => {
-    nav.setLeaveGuard(dirty ? () => window.confirm(`${LEAVE_TITLE}\n\n${LEAVE_MESSAGE}`) : null);
-    return () => nav.setLeaveGuard(null);
+    setLeaveGuard(dirty ? (proceed) => confirmLeave(proceed, { message: GUARD_MESSAGE }) : null);
+    return () => setLeaveGuard(null);
   }, [dirty]);
   useBeforeUnload(dirty);
 
-  if (!ready) {
-    return loadingExam ? (
-      <Modal visible animationType="fade" onRequestClose={onExit}>
-        <View style={{ flex: 1, backgroundColor: C.bg }}><Loader /></View>
-      </Modal>
-    ) : null;
-  }
+  // Tasto indietro di Android: come "← Esami". Registrato dopo quello della lista, quindi chiamato per primo.
+  useEffect(() => {
+    if (Platform.OS !== "android") return;
+    const sub = BackHandler.addEventListener("hardwareBackPress", () => { requestExit(); return true; });
+    return () => sub.remove();
+  }, []);
+
+  // Titolo nell'header di AppNav: "← Esami / titolo dell'esame" (o "Nuovo esame")
+  const title = draft?.title?.trim() || (route.name === "new" ? "Nuovo esame" : "Modifica esame");
+  useEffect(() => {
+    setPageHeader({ title, onBack: requestExit });
+    return () => setPageHeader(null);
+  }, [title]);
+
+  if (!ready) return loadingExam ? <Loader /> : null;
 
   return (
-    <TestBuilder visible contextLabel={contextLabel} draft={draft} env={env} draftStatus={draftStatus}
+    <TestBuilder contextLabel={contextLabel} draft={draft} env={env} draftStatus={draftStatus} draftStatusShort={draftStatusShort}
       onChange={onChange} onSave={onSave} saving={saving} onClose={requestExit} onDiscard={onDiscard} />
   );
 }

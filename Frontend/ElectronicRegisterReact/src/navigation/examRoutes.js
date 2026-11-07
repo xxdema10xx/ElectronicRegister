@@ -85,13 +85,12 @@ const initialRoute = () => (isWeb && parseExamUrl(window.location.pathname, wind
 //   push(r)     apre una schermata sopra la corrente (web: nuova voce di cronologia)
 //   replace(r)  sostituisce la corrente (web: replaceState)
 //   back(f)     torna alla precedente; se non c'è (es. dopo una ricarica su /esami/nuovo) va a f
-//   setLeaveGuard(fn)  solo web: fn(nextRoute) → false blocca l'indietro/avanti del browser (popstate)
+// Con modifiche non salvate (guardia d'uscita, vedi sotto) l'indietro/avanti del browser chiede conferma.
 export function useExamRoute() {
   const [stack, setStack] = useState(() => [initialRoute()]);
   const route = stack[stack.length - 1];
   const routeRef = useRef(route);
   routeRef.current = route;
-  const guardRef = useRef(null);
   const skipGuardRef = useRef(false); // "indietro" chiesto dall'app dopo la sua conferma: niente seconda domanda
 
   useEffect(() => {
@@ -103,9 +102,11 @@ export function useExamRoute() {
       const skip = skipGuardRef.current;
       skipGuardRef.current = false;
       if (!next) return; // si è usciti dagli esami: la sezione la decide AppNav
-      if (!skip && guardRef.current && !guardRef.current(next)) {
-        // Il browser non permette di annullare "indietro": si rimette l'URL dell'editor
+      if (!skip && leaveGuard) {
+        // Il browser non permette di annullare "indietro": si rimette subito l'URL dell'editor e si chiede;
+        // scegliendo di uscire si torna di nuovo indietro, stavolta senza domande.
         window.history.pushState({ exam: true, pushed: true }, "", examUrl(routeRef.current));
+        leaveGuard(() => { skipGuardRef.current = true; window.history.back(); });
         return;
       }
       setStack([next]);
@@ -133,10 +134,41 @@ export function useExamRoute() {
     setStack(s => (s.length > 1 ? s.slice(0, -1) : [fallback]));
   }, [replace]);
 
-  const setLeaveGuard = useCallback((fn) => { guardRef.current = fn; }, []);
-
-  return { route, push, replace, back, setLeaveGuard };
+  return { route, push, replace, back };
 }
+
+// ── Guardia d'uscita (tutta l'app) ───────────────────────────────────────────────────────────
+// Una pagina con modifiche non salvate registra guard(proceed): mostra la conferma e, se si esce, chiama
+// proceed(). La usano indietro/avanti del browser (qui sopra), sidebar, tab, Home ed "Esci" (AppNav).
+let leaveGuard = null;
+export function setLeaveGuard(fn) { leaveGuard = fn || null; }
+export function guardedNavigate(proceed) {
+  if (leaveGuard) leaveGuard(proceed);
+  else proceed();
+}
+
+// ── Titolo delle pagine interne ─────────────────────────────────────────────────────────────
+// Dettaglio, scelta della classe ed editor non hanno una barra con il loro breadcrumb: lo mostra l'header
+// di AppNav, al posto del titolo della sezione ("← Esami / Nuovo esame"). onBack è il ritorno alla lista
+// (con la conferma, se serve). null = header normale della sezione.
+let pageHeader = null;
+const headerListeners = new Set();
+export function setPageHeader(header) {
+  pageHeader = header || null;
+  headerListeners.forEach(fn => fn(pageHeader));
+}
+export function usePageHeader() {
+  const [header, setHeader] = useState(pageHeader);
+  useEffect(() => {
+    headerListeners.add(setHeader);
+    setHeader(pageHeader);
+    return () => headerListeners.delete(setHeader);
+  }, []);
+  return header;
+}
+
+// href di una rotta per i link veri (solo web; sull'app non serve)
+export const examHref = (route) => (isWeb ? examUrl(route) : undefined);
 
 // Avviso del browser alla chiusura o ricarica del tab (solo web) finché `active` è vero
 export function useBeforeUnload(active) {

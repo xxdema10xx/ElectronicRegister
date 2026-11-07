@@ -2,7 +2,7 @@
 // Riquadro di un esame nell'elenco docente/admin. Gerarchia: stato a colpo d'occhio (barra laterale e
 // chip), dettagli come pillole con icona, azioni nel piè di pagina: quelle di consultazione a sinistra,
 // quelle che cambiano lo stato dell'esame (Pubblica, Elimina, Annulla) in basso a destra.
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Platform, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import StatusChip, { EXAM_TONE } from "./StatusChip";
@@ -32,7 +32,7 @@ function Pill({ icon, text }) {
 }
 
 // tone: "neutral" (contorno discreto), "danger" (contorno rosso), "success" (pieno verde)
-function Action({ label, icon, onPress, tone = "neutral", disabled, loading }) {
+export function ExamAction({ label, icon, onPress, tone = "neutral", disabled, loading }) {
   const filled = tone === "success";
   const color = filled ? C.white : tone === "danger" ? C.danger : C.primary;
   const border = filled ? C.success : tone === "danger" ? "#FCA5A5" : C.border;
@@ -47,23 +47,33 @@ function Action({ label, icon, onPress, tone = "neutral", disabled, loading }) {
 }
 
 // onPress: tocco sulla card → dettaglio dell'esame (da lì, se è una bozza, "Modifica").
+// href (solo web): la card è un link vero (<a href>). Ctrl/Cmd/Maiusc+clic, rotella e "Apri in nuova scheda"
+// li gestisce il browser; il clic normale resta nella stessa scheda (onPress, senza ricaricare la pagina).
+// unsaved: la voce ha modifiche locali non salvate (card "Riprendi bozza" in cima): si evidenzia.
 // actions: { submissions, close, publish, cancel, remove } → funzione o null se non consentita
-export default function ExamCard({ exam, status, contextLabel, busy, onPress, actions }) {
+export default function ExamCard({ exam, status, contextLabel, busy, onPress, href, unsaved, actions }) {
+  const press = (e) => {
+    const ne = e?.nativeEvent || e;
+    if (href && (ne?.metaKey || ne?.ctrlKey || ne?.shiftKey)) return; // nuova scheda o finestra: ci pensa il browser
+    e?.preventDefault?.();
+    onPress?.();
+  };
   const secondary = [
-    actions.submissions && <Action key="subs" label="Consegne" icon="people-outline" onPress={actions.submissions} disabled={busy} />,
-    actions.close && <Action key="close" label="Chiudi" icon="lock-closed-outline" onPress={actions.close} disabled={busy} />,
+    actions.submissions && <ExamAction key="subs" label="Consegne" icon="people-outline" onPress={actions.submissions} disabled={busy} />,
+    actions.close && <ExamAction key="close" label="Chiudi" icon="lock-closed-outline" onPress={actions.close} disabled={busy} />,
   ].filter(Boolean);
   const primary = [
-    actions.remove && <Action key="remove" label="Elimina" icon="trash-outline" tone="danger" onPress={actions.remove} disabled={busy} />,
-    actions.cancel && <Action key="cancel" label="Annulla esame" icon="close-circle-outline" tone="danger" onPress={actions.cancel} disabled={busy} />,
-    actions.publish && <Action key="publish" label="Pubblica" icon="paper-plane-outline" tone="success" onPress={actions.publish} disabled={busy} loading={busy} />,
+    actions.remove && <ExamAction key="remove" label="Elimina" icon="trash-outline" tone="danger" onPress={actions.remove} disabled={busy} />,
+    actions.cancel && <ExamAction key="cancel" label="Annulla esame" icon="close-circle-outline" tone="danger" onPress={actions.cancel} disabled={busy} />,
+    actions.publish && <ExamAction key="publish" label="Pubblica" icon="paper-plane-outline" tone="success" onPress={actions.publish} disabled={busy} loading={busy} />,
   ].filter(Boolean);
 
   return (
-    <View style={[s.card, { marginBottom: 12, padding: 0, overflow: "hidden", flexDirection: "row" }]}>
+    <View style={[s.card, { marginBottom: 12, padding: 0, overflow: "hidden", flexDirection: "row" }, unsaved && { borderWidth: 1, borderColor: C.warning }]}>
       <View style={{ width: 5, backgroundColor: ACCENT[status] || C.border }} />
       <View style={{ flex: 1, padding: 16 }}>
-        <TouchableOpacity onPress={onPress} disabled={!onPress || busy} activeOpacity={0.7} accessibilityRole="button"
+        <TouchableOpacity onPress={press} disabled={!onPress || busy} activeOpacity={0.7} accessibilityRole={href && Platform.OS === "web" ? "link" : "button"}
+          {...(href && Platform.OS === "web" ? { href } : null)}
           accessibilityLabel={`Apri ${exam.name}`} accessibilityHint="Mostra il dettaglio dell'esame">
         {/* Intestazione: icona, titolo e contesto; stato in alto a destra */}
         <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
@@ -78,6 +88,7 @@ export default function ExamCard({ exam, status, contextLabel, busy, onPress, ac
           <View style={{ alignItems: "flex-end", gap: 6 }}>
             <StatusChip label={EXAM_STATUS_LABEL[status] || status} tone={EXAM_TONE[status]} />
             {exam.isRetake && <StatusChip label="Recupero" tone="amber" />}
+            {unsaved && <StatusChip label="Modifiche non salvate" tone="amber" />}
           </View>
         </View>
 
