@@ -19,6 +19,7 @@ import NotificationDot from "../components/NotificationDot";
 import Badge from "../components/Badge";
 import { useStudentExams } from "../data/studentExams";
 import { CONTENT_MAX_WIDTH, useLayout } from "../hooks/useLayout";
+import { useScreenUrl } from "./examRoutes";
 
 const TITLES = {
   dashboard: "Electronic Register", grades: "Voti", students: "Studenti", myClasses: "Classi", classes: "Classi", exams: "Esami",
@@ -54,6 +55,9 @@ export default function AppNav({ user, onLogout }) {
     ...(role === "admin" ? [{ key: "users", icon: "people-circle-outline", label: "Membri" }] : []),
     { key: "profile", icon: "person-circle-outline", label: "Profilo" },
   ];
+
+  // Su web l'URL segue la sezione e, all'avvio, la sceglie (es. ricarica su /esami/123/modifica)
+  useScreenUrl(screen, setScreen, [...sideTabs, ...tabs].map(t => t.key), role);
 
   const SCREENS = {
     dashboard: <DashboardScreen navigate={setScreen} />,

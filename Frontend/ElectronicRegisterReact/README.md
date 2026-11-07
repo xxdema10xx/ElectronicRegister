@@ -49,3 +49,16 @@ Join our community of developers creating universal apps.
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
 # ElectronicRegisterReact
+
+## Pubblicazione web: rimandare ogni percorso a index.html
+
+Sul web l'app usa URL veri (History API, senza librerie di routing): per esempio `/esami`, `/esami?tab=bozze`,
+`/esami/nuovo`, `/esami/{id}`, `/esami/{id}/modifica?step=2`, `/classi`, `/profilo`. Sono percorsi gestiti
+dall'app nel browser, non file sul server.
+
+Il server web che pubblica la build (`npx expo export --platform web`, cartella `dist/`) deve quindi rispondere
+con `index.html` a ogni percorso che non corrisponde a un file esistente (JS, immagini, font). Senza questa regola,
+ricaricando la pagina o aprendo un link su `/esami/123` si ottiene un 404. Nella configurazione del server
+(nginx, Apache, IIS, hosting statico) cerca "SPA fallback" o "rewrite to index.html".
+
+In sviluppo (`npx expo start --web`) il server di Metro lo fa già.
