@@ -15,7 +15,8 @@ import StatusChip from "../components/StatusChip";
 import ExamTaker, { MAX_VIOLATIONS, enterFullscreen, exitFullscreen } from "../components/ExamTaker";
 import { useStudentExams, markSeen, getRun, saveRun, clearRun, notifyStudentExamsChanged, resetStudentDemo } from "../data/studentExams";
 import { devDiscardAttempt } from "../api/mockExamBackend";
-import { notify, confirmAction } from "../utils/dialogs";
+// Svolgimento: avvisi del browser come prima (non il dialog dell'app), per non cambiare focus, schermo intero e violazioni
+import { notifyBrowser as notify, confirmBrowser as confirmAction } from "../utils/dialogs";
 import {
   EXAM_STATUS, SUBMISSION_STATUS, fromEnum, formatDateTime, parseUtc, resultView, studentQuestionFromDto, isAnswered,
 } from "../api/examContract";
