@@ -182,6 +182,8 @@ function examSummary(e) {
     availableFrom: e.availableFrom, availableUntil: e.availableUntil, durationMinutes: e.durationMinutes, passingPercent: e.passingPercent,
     totalPoints: e.totalPoints, status: statusInt(e.status), assignedStudentsCount: e.assignedStudents.length,
     publishedAt: e.publishedAt, closedAt: e.closedAt, cancelledAt: e.cancelledAt, isRetake: !!e.retakeOfExamId,
+    // Campi in più proposti al backend: assenti (null) negli esami salvati prima che esistessero
+    createdAt: e.createdAt ?? null, updatedAt: e.updatedAt ?? null,
   };
 }
 const examDetail = (e) => ({ ...examSummary(e), questions: e.questions, assignedStudents: e.assignedStudents });
@@ -289,6 +291,9 @@ function seed() {
       durationMinutes: m.duration, passingPercent: m.passing, totalPoints: totalPoints(questions), status: m.status,
       publishedAt: m.status === "draft" ? null : new Date(t - 12 * DAY).toISOString(),
       closedAt: m.status === "closed" ? new Date(t - DAY).toISOString() : null, cancelledAt: null, questions,
+      // Stessi nomi del contratto proposto per ExamSummaryDto (CreatedAt/UpdatedAt): ore diverse per avere un ordine stabile
+      createdAt: new Date(t - 14 * DAY - MOCK_EXAMS.indexOf(m) * 3600000).toISOString(),
+      updatedAt: new Date(t - (MOCK_EXAMS.indexOf(m) + 1) * 3600000).toISOString(),
       assignedStudents: studentsOfClass(cl).map((s, i) => ({
         studentId: s.id, firstName: s.firstName, lastName: s.lastName, extraTimeMinutes: i === 2 ? 10 : 0, assignedAt: new Date(t - 13 * DAY).toISOString(),
       })),
@@ -371,6 +376,7 @@ export function createMockExamApi(user) {
         availableFrom: dto.availableFrom, availableUntil: dto.availableUntil, durationMinutes: dto.durationMinutes, passingPercent: dto.passingPercent,
         totalPoints: totalPoints(questions), status: "draft", publishedAt: null, closedAt: null, cancelledAt: null, questions,
         assignedStudents: buildAssigned(dto.assignedStudents || [], classId),
+        createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
       };
       persist();
       return id;
@@ -389,6 +395,7 @@ export function createMockExamApi(user) {
       Object.assign(e, {
         retakeOfExamId: dto.retakeOfExamId || null, name: dto.name.trim(), description: dto.description || null, availableFrom: dto.availableFrom,
         availableUntil: dto.availableUntil, durationMinutes: dto.durationMinutes, passingPercent: dto.passingPercent, questions, totalPoints: totalPoints(questions),
+        updatedAt: new Date().toISOString(),
       });
       persist();
     }),
@@ -398,6 +405,7 @@ export function createMockExamApi(user) {
       const e = exam(id);
       if (e.status !== "draft") throw conflict("La struttura dell'esame può essere modificata solo quando l'esame è in bozza.");
       e.assignedStudents = buildAssigned(dto.students || [], classOf(e.classSubjectId));
+      e.updatedAt = new Date().toISOString();
       persist();
     }),
 
@@ -410,7 +418,7 @@ export function createMockExamApi(user) {
       if (new Date(e.availableUntil) <= new Date()) throw conflict("Non è possibile pubblicare un esame la cui disponibilità è già terminata.");
       if (!e.assignedStudents.length) throw conflict("L'esame deve essere assegnato ad almeno uno studente.");
       e.status = "published";
-      e.publishedAt = new Date().toISOString();
+      e.publishedAt = e.updatedAt = new Date().toISOString();
       persist();
     }),
     closeExam: wrap(async (id) => {
@@ -418,7 +426,7 @@ export function createMockExamApi(user) {
       const e = exam(id);
       if (e.status !== "published") throw conflict("È possibile chiudere solo un esame pubblicato.");
       e.status = "closed";
-      e.closedAt = new Date().toISOString();
+      e.closedAt = e.updatedAt = new Date().toISOString();
       persist();
     }),
     cancelExam: wrap(async (id) => {
@@ -427,7 +435,7 @@ export function createMockExamApi(user) {
       if (e.status !== "published") throw conflict("È possibile annullare solo un esame pubblicato.");
       if (hasSubmissions(id)) throw conflict("Non è possibile annullare un esame già iniziato da almeno uno studente.");
       e.status = "cancelled";
-      e.cancelledAt = new Date().toISOString();
+      e.cancelledAt = e.updatedAt = new Date().toISOString();
       persist();
     }),
     deleteExam: wrap(async (id) => {

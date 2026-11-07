@@ -2,7 +2,7 @@
 // Esami per docenti e amministratori: elenco, creazione/modifica con l'editor guidato, pubblicazione,
 // chiusura, annullamento, eliminazione, consegne e correzione. Dati: ExamController (src/api/examApi.js).
 import { useCallback, useEffect, useState } from "react";
-import { Modal, Platform, ScrollView, SectionList, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
@@ -20,6 +20,7 @@ import TestBuilder, { newTestDraft, validateTestDraft } from "../components/Test
 import TestViewer from "../components/TestViewer";
 import ExamSubmissions from "../components/ExamSubmissions";
 import FormModal from "../components/FormModal";
+import ClassFilter from "../components/ClassFilter";
 import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
 import { resetMockExams } from "../api/mockExamBackend";
@@ -33,6 +34,36 @@ const draftStore = {
   set(d) { try { if (Platform.OS === "web") window.sessionStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } catch {} },
   clear() { try { if (Platform.OS === "web") window.sessionStorage.removeItem(DRAFT_KEY); } catch {} },
 };
+
+// Scheda di un esame: bozze (non ancora pubblicati), attivi (pubblicati), storico (chiusi o annullati)
+function tabOf(exam) {
+  const st = fromEnum(exam.status, EXAM_STATUS);
+  return st === "draft" ? "drafts" : st === "published" ? "active" : "history";
+}
+
+// Ordine dal più recente al più vecchio, per scheda: il primo campo presente decide.
+// TODO(API): unico punto da cambiare quando ExamSummaryDto esporrà CreatedAt/UpdatedAt. Oggi li dà solo
+// la modalità prova; con il server vero le bozze ripiegano sulla data di inizio disponibilità.
+const SORT_FIELDS = {
+  drafts: ["updatedAt", "createdAt", "availableFrom"],
+  active: ["publishedAt", "availableFrom"],
+  history: ["closedAt", "cancelledAt", "availableUntil"],
+};
+function sortExams(list, tab) {
+  const time = (e) => {
+    const field = SORT_FIELDS[tab].find(f => e[f]);
+    return field ? parseUtc(e[field])?.getTime() || 0 : 0;
+  };
+  return [...list].sort((a, b) => time(b) - time(a));
+}
+
+const TABS = [["drafts", "Bozze", "gray"], ["active", "Attivi", "green"], ["history", "Storico", "blue"]];
+const EMPTY = {
+  drafts: "Nessuna bozza: usa “Crea esame” per prepararne una.",
+  active: "Nessun esame pubblicato.",
+  history: "Nessun esame nello storico.",
+};
+const BAR_H = 40; // altezza comune di filtri e pulsanti nella barra
 
 export default function ExamsScreen() {
   const { user } = useAuth();
@@ -54,7 +85,7 @@ export default function ExamsScreen() {
   const [saving, setSaving] = useState(false);
   const [viewing, setViewing] = useState(null);
   const [submissionsFor, setSubmissionsFor] = useState(null);
-  const [tab, setTab] = useState("active"); // "active" | "history"
+  const [tab, setTab] = useState("active"); // "drafts" | "active" | "history"
   const [retakes, setRetakes] = useState(null); // null: chiuso, altrimenti { loading, groups }
   const [classId, setClassId] = useState(null); // filtro facoltativo: null = tutte le classi
   const [picking, setPicking] = useState(null); // scelta di classe e materia prima di creare: { classSubjectId }
@@ -70,8 +101,6 @@ export default function ExamsScreen() {
     return [...byId.values()];
   })();
   const classSubjectsOfClass = (classSubjects || []).filter(cs => cs.classId === classId);
-  const ALL_CLASSES = "__all";
-  const classFilterOptions = [{ id: ALL_CLASSES, name: "Tutte le classi" }, ...classOptions];
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -84,22 +113,18 @@ export default function ExamsScreen() {
   }, [api]);
   useEffect(() => { load(); }, [load]);
 
-  const inHistory = (e) => { const st = fromEnum(e.status, EXAM_STATUS); return st === "closed" || st === "cancelled"; };
   const inClass = (e) => !classId || classSubjects?.find(c => c.id === e.classSubjectId)?.classId === classId;
-  const scoped = exams.filter(e => (tab === "history") === inHistory(e) && inClass(e));
-  const visible = filterBySearch(scoped, search, e => [e.name, e.description, csLabel(e.classSubjectId)]);
+  // Filtro classe e ricerca valgono per tutte e tre le schede: i contatori dicono cosa si vedrebbe aprendole.
+  const filtered = filterBySearch(exams.filter(inClass), search, e => [e.name, e.description, csLabel(e.classSubjectId)]);
 
-  // Sezioni per stato, i più recenti in cima dentro ogni gruppo. Le bozze si ordinano per data di
-  // disponibilità perché l'elenco non espone ancora quando sono state create o modificate.
-  // TODO(API): ordinare le bozze per updatedAt quando ExamSummaryDto lo include.
-  const when = (e, field) => parseUtc(e[field] || e.availableFrom)?.getTime() || 0;
-  const SECTION_DEFS = tab === "history"
-    ? [{ key: "closed", title: "Chiusi", sortBy: "closedAt" }, { key: "cancelled", title: "Annullati", sortBy: "cancelledAt" }]
-    : [{ key: "draft", title: "Da pubblicare", sortBy: "availableFrom" }, { key: "published", title: "Pubblicati", sortBy: "publishedAt" }];
-  const sections = SECTION_DEFS.map(d => ({
-    ...d,
-    data: visible.filter(e => fromEnum(e.status, EXAM_STATUS) === d.key).sort((a, b) => when(b, d.sortBy) - when(a, d.sortBy)),
-  })).filter(sec => sec.data.length > 0);
+  // Bozza locale da riprendere: la card sta in cima alla scheda Bozze. Se riguarda un esame già salvato,
+  // quella voce non si ripete in lista: la card ne è la versione più aggiornata (con le modifiche locali).
+  const showResume = !!draft && !editing && inClass(draft);
+  const resumedId = showResume ? draft.examId : null;
+  const listed = filtered.filter(e => e.id !== resumedId);
+  const countByTab = { drafts: showResume ? 1 : 0, active: 0, history: 0 };
+  for (const e of listed) countByTab[tabOf(e)]++;
+  const visible = sortExams(listed.filter(e => tabOf(e) === tab), tab);
 
   // Elenco di chi deve recuperare: raggruppa per studente le consegne non superate (bocciate o "non superabile")
   // su tutti gli esami pubblicati/chiusi della classe scelta. Richiede una chiamata per esame: va bene per i volumi di un registro di classe.
@@ -203,37 +228,41 @@ export default function ExamsScreen() {
     getRetakeCandidates: (examId) => getRetakeCandidates(api, examId),
   };
 
-  const newBtn = canWrite && (
-    <Btn label="Crea esame" onPress={startNew}
-      style={isDesktop ? { height: 48, paddingHorizontal: 24 } : s.smBtn} textStyle={isDesktop ? undefined : s.smBtnText} />
-  );
+  const barBtn = { height: BAR_H, paddingVertical: 0, paddingHorizontal: 18 };
+  const newBtn = canWrite && <Btn label="Crea esame" onPress={startNew} style={barBtn} textStyle={s.smBtnText} />;
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
-        {classOptions.length > 1 && (
-          <SelectField label="Classe" value={classId ?? ALL_CLASSES} options={classFilterOptions} getLabel={c => c.name}
-            onSelect={(id) => setClassId(id === ALL_CLASSES ? null : id)} placeholder="Tutte le classi" />
-        )}
-        {isDesktop ? (
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginTop: 8, marginBottom: 12 }}>
-            <TextInput style={[s.input, { flex: 1 }]} placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
-            {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={s.retakeBtn} textStyle={s.smBtnText} />}
+        {/* Barra dei filtri: una riga su schermi larghi; su quelli stretti filtri sopra e pulsanti sotto.
+            Il titolo "Esami" lo mostra già la barra in alto (AppNav), anche su mobile. */}
+        <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          <View style={{ flexDirection: "row", gap: 8, flexBasis: isDesktop ? "auto" : "100%", flexShrink: 1 }}>
+            {classOptions.length > 1 && (
+              <ClassFilter value={classId} options={classOptions} onChange={setClassId} height={BAR_H}
+                style={isDesktop ? { width: 220 } : { flex: 1, minWidth: 0 }} />
+            )}
+            <TextInput style={[s.input, { height: BAR_H, paddingVertical: 0, fontSize: 14 }, isDesktop ? { width: 300 } : { flex: 1, minWidth: 0 }]}
+              placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
+          </View>
+          <View style={{ flexDirection: "row", gap: 8, marginLeft: isDesktop ? "auto" : 0 }}>
+            {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={barBtn} textStyle={s.smBtnText} />}
             {newBtn}
           </View>
-        ) : (<>
-          <SectionHeader title="Esami" action={newBtn} />
-          <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
-          {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={[s.retakeBtn, { marginBottom: 12, alignSelf: "flex-start" }]} textStyle={s.smBtnText} />}
-        </>)}
+        </View>
 
-        <View style={{ flexDirection: "row", gap: 8, marginBottom: 12 }}>
-          {[["active", "Attivi"], ["history", "Storico"]].map(([key, label]) => (
-            <TouchableOpacity key={key} onPress={() => setTab(key)}
-              style={{ paddingVertical: 7, paddingHorizontal: 16, borderRadius: 18, borderWidth: 1, borderColor: tab === key ? C.primary : C.border, backgroundColor: tab === key ? C.primary : C.white }}>
-              <Text style={{ color: tab === key ? C.white : C.text, fontWeight: "600" }}>{label}</Text>
-            </TouchableOpacity>
-          ))}
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 12 }} accessibilityRole="tablist">
+          {TABS.map(([key, label, tone]) => {
+            const on = tab === key;
+            return (
+              <TouchableOpacity key={key} onPress={() => setTab(key)} accessibilityRole="tab" accessibilityState={{ selected: on }}
+                accessibilityLabel={`${label}, ${countByTab[key]}`}
+                style={{ flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 7, paddingHorizontal: 16, borderRadius: 18, borderWidth: 1, borderColor: on ? C.primary : C.border, backgroundColor: on ? C.primary : C.white }}>
+                <Text style={{ color: on ? C.white : C.text, fontWeight: "600" }}>{label}</Text>
+                <StatusChip label={String(countByTab[key])} tone={tone} style={{ alignSelf: "center", paddingVertical: 1, paddingHorizontal: 8 }} />
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {api.isMock() && (
@@ -244,8 +273,8 @@ export default function ExamsScreen() {
             <TouchableOpacity onPress={() => { resetMockExams(); load(); }}><Text style={{ color: "#92400E", fontWeight: "700" }}>Ripristina dati</Text></TouchableOpacity>
           </View>
         )}
-        {draft && !editing && (
-          // Bozza in corso: sparisce quando viene salvata sul server o eliminata (updateDraft(null)).
+        {showResume && tab === "drafts" && (
+          // Bozza in corso, in cima alla scheda Bozze: sparisce quando viene salvata sul server o eliminata (updateDraft(null)).
           <Card style={{ marginBottom: 12, flexDirection: "row", alignItems: "center", gap: 12, flexWrap: "wrap", borderLeftWidth: 5, borderLeftColor: C.warning }}>
             <View style={{ width: 40, height: 40, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: "#FEF3C7" }}>
               <Ionicons name="create-outline" size={20} color="#92400E" />
@@ -263,18 +292,14 @@ export default function ExamsScreen() {
         )}
       </View>
 
-      {loading ? <Loader /> : visible.length === 0 ? <EmptyState message={tab === "history" ? "Nessun esame nello storico" : "Nessun esame trovato"} /> : (
-        <SectionList
-          sections={sections}
+      {loading ? <Loader /> : visible.length === 0 ? (
+        // Con la card "Riprendi bozza" in cima la scheda Bozze non è vuota: niente messaggio
+        showResume && tab === "drafts" ? null : <EmptyState message={search.trim() ? `Nessun esame trovato per “${search.trim()}”.` : EMPTY[tab]} />
+      ) : (
+        <FlatList
+          data={visible}
           keyExtractor={e => String(e.id)}
-          stickySectionHeadersEnabled={false}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
-          renderSectionHeader={({ section }) => (
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginTop: 8, marginBottom: 10 }}>
-              <Text style={{ color: C.text, fontSize: 16, fontWeight: "800" }}>{section.title}</Text>
-              <StatusChip label={String(section.data.length)} tone={EXAM_TONE[section.key]} />
-            </View>
-          )}
           renderItem={({ item: exam }) => {
             const status = fromEnum(exam.status, EXAM_STATUS);
             return (
