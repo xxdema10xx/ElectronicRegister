@@ -62,3 +62,14 @@ ricaricando la pagina o aprendo un link su `/esami/123` si ottiene un 404. Nella
 (nginx, Apache, IIS, hosting statico) cerca "SPA fallback" o "rewrite to index.html".
 
 In sviluppo (`npx expo start --web`) il server di Metro lo fa già.
+
+## Bozze degli esami salvate nel browser
+
+Su web la bozza di un esame in preparazione si conserva in `sessionStorage` (chiave `examDraft4`) e compare
+in "Riprendi bozza". Viene salvata solo se c'è qualcosa da riprendere: un nuovo esame con contenuto (titolo,
+descrizione, date o una domanda; la sola scelta di classe e materia non conta) oppure un esame già salvato
+con modifiche non ancora inviate al server.
+
+Le versioni precedenti salvavano anche le bozze vuote. Al caricamento della sezione Esami una bozza di quel
+tipo, cioè un nuovo esame senza contenuto, viene scartata: non riapre l'editor con una classe vecchia, non
+chiede conferma all'uscita e non crea la card "Riprendi bozza".
