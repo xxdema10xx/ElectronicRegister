@@ -96,9 +96,14 @@ function withDetails(lesson) {
 
 export const getClassSchedule = (classId) => load().lessons.filter(l => l.classId === classId).map(withDetails)
   .sort((a, b) => a.day - b.day || toMinutes(a.start) - toMinutes(b.start));
-export const getTeacherSchedule = (teacherId) => {
-  const key = mockTeacherKey(teacherId);
+// `teacher`: il docente autenticato ({ id, firstName, lastName }). Le lezioni sono ancora quelle di prova
+// del docente fittizio collegato, ma id e nome mostrati sono quelli veri: il calendario non deve
+// mostrare un altro docente al posto di chi ha fatto login.
+// TODO(API): sostituire con GET /api/institution/lessons?teacherId={id} quando il backend lo espone.
+export const getTeacherSchedule = (teacher) => {
+  const key = mockTeacherKey(teacher?.id);
   return load().lessons.map(withDetails).filter(l => l.teacherId === key)
+    .map(l => teacher?.id ? { ...l, teacherId: teacher.id, teacherFirstName: teacher.firstName, teacherLastName: teacher.lastName } : l)
     .sort((a, b) => a.day - b.day || toMinutes(a.start) - toMinutes(b.start));
 };
 export const getStudentSchedule = (studentId) => {

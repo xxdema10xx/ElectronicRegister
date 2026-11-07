@@ -117,7 +117,7 @@ export default function DashboardScreen({ navigate }) {
 
   function reloadLessons() {
     if (role === "admin") setLessons(calClassId ? getClassSchedule(calClassId) : []);
-    else if (role === "teacher") setLessons(getTeacherSchedule(user?.teacherId));
+    else if (role === "teacher") setLessons(getTeacherSchedule(user?.teacherId ? { id: user.teacherId, firstName: user.teacherFirstName, lastName: user.teacherLastName } : null));
     else if (role === "student") setLessons(getStudentSchedule(user?.studentId));
   }
   useEffect(reloadLessons, [role, calClassId, user]);
