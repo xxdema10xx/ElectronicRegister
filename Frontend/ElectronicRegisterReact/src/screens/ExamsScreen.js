@@ -103,6 +103,7 @@ export default function ExamsScreen() {
   const dirtyRef = useRef(dirty);
   const [savedAt, setSavedAt] = useState(null);
   const [serverSavedAt, setServerSavedAt] = useState(null); // ultimo "Salva bozza" riuscito sul server
+  const [editorNotice, setEditorNotice] = useState(null); // banner dell'editor dopo un salvataggio non completo
   const editing = canWrite && (route.name === "new" || route.name === "edit");
   const [saving, setSaving] = useState(false);
   const [viewing, setViewing] = useState(null);
@@ -195,7 +196,7 @@ export default function ExamsScreen() {
   }, [route]);
   const backToList = () => nav.back({ name: "list", tab });
   // Uscita dall'editor: se non c'è niente da salvare la bozza locale si scarta (niente "Riprendi bozza")
-  const exitEditor = () => { if (draft && !dirtyRef.current) updateDraft(null); backToList(); };
+  const exitEditor = () => { setEditorNotice(null); if (draft && !dirtyRef.current) updateDraft(null); backToList(); };
   const routeRef = useRef(route);
   routeRef.current = route;
 
@@ -295,6 +296,7 @@ export default function ExamsScreen() {
         const detail = await api.getExam(examId);
         updateDraft({ ...detailToDraft(detail), step }, { fromServer: true });
         setServerSavedAt(null);
+        setEditorNotice(null); // tornati alla versione del server: niente da segnalare
       } catch (e) { notify("Errore", e.message); }
       finally { setSaving(false); }
     }, "Annulla modifiche", { cancelLabel: "Continua a modificare", destructive: true });
@@ -330,11 +332,11 @@ export default function ExamsScreen() {
     if (!draft.examId && !draftHasContent(draft)) {
       return notify("Niente da salvare", "Scrivi almeno il titolo, una data o una domanda.");
     }
-    const issue = serverIssue(draft);
-    if (issue) {
-      // TODO: il banner informativo con le voci cliccabili arriva con il punto 12
-      return notify(Platform.OS === "web" ? "Salvata solo in questo browser" : "Non salvata sul server",
-        `Per salvarla sul server serve ancora: ${issue}${Platform.OS === "web" ? "" : " Se esci, le modifiche si perdono."}`);
+    if (serverIssue(draft)) {
+      // Non passa i controlli del server: resta salvata solo nel browser. Banner informativo (non di errore)
+      return setEditorNotice(Platform.OS === "web"
+        ? { kind: "info", level: "server", title: "Salvata solo in questo browser. Per salvarla sul server servono ancora" }
+        : { kind: "info", level: "server", title: "Non salvata: se esci, le modifiche si perdono. Per salvarla sul server servono ancora" });
     }
     setSaving(true);
     try {
@@ -342,6 +344,7 @@ export default function ExamsScreen() {
       const isNew = !draft.examId;
       updateDraft({ ...draft, examId }, { fromServer: true });
       setServerSavedAt(new Date());
+      setEditorNotice(null);
       if (isNew) nav.replace({ name: "edit", id: examId, step: draft.step ?? 1 }); // ora l'esame esiste: /esami/{id}/modifica
       load();
     } catch (e) { notify("Salvataggio non riuscito", e.message); }
@@ -350,8 +353,9 @@ export default function ExamsScreen() {
 
   // "Salva e chiudi" (step 3): validazione completa, salvataggio sul server, ritorno alla lista
   async function saveAndClose() {
-    const err = validateTestDraft(draft);
-    if (err) return notify("Attenzione", err); // TODO: banner con le voci cliccabili (punto 12)
+    if (validateTestDraft(draft)) {
+      return setEditorNotice({ kind: "error", level: "close", title: "Da sistemare prima di salvare e chiudere" });
+    }
     setSaving(true);
     try {
       await sendToServer(draft);
@@ -510,7 +514,8 @@ export default function ExamsScreen() {
         draft={draft} dirty={dirty} updateDraft={updateDraft} env={env} draftStatus={draftStatus}
         draftStatusShort={draftStatusShort}
         contextLabel={draft?.examId ? "Modifica della bozza" : "Nuovo esame"}
-        onSaveDraft={saveDraft} onSaveAndClose={saveAndClose} destroyAction={destroyAction} saving={saving} onExit={exitEditor} />
+        onSaveDraft={saveDraft} onSaveAndClose={saveAndClose} destroyAction={destroyAction} saving={saving} onExit={exitEditor}
+        notice={editorNotice} onDismissNotice={() => setEditorNotice(null)} />
     );
   }
   if (page) {

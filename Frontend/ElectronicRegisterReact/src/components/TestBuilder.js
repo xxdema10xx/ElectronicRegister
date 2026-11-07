@@ -5,7 +5,7 @@
 //      a destra l'editor ampio della domanda scelta. Su schermi stretti i due pannelli si impilano;
 //   3. Studenti — chi deve svolgere l'esame, con eventuale tempo aggiuntivo.
 // Il passo corrente è salvato nella bozza (draft.step), così si riprende da dove si era rimasti.
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ScrollView, Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
@@ -67,84 +67,135 @@ export function summarize(draft) {
 //   correct → manca la risposta corretta (o quella segnata è vuota)
 //   points  → punteggio non valido
 // Restituisce {} se la domanda è a posto.
+// Multipla: il server vuole almeno 2 risposte corrette (ExamService, "almeno due risposte corrette").
+// TODO(API): in attesa di conferma dal backend che la regola sia voluta.
+export const MULTIPLE_MIN_CORRECT = 2;
+
 export function questionIssues(q) {
   const out = {};
   if (!q.text.trim()) out.text = "Manca il testo della domanda.";
   if (isClosed(q.type)) {
     const filled = q.options.filter(o => o.text.trim());
-    if (filled.length < 2) {
-      out.options = filled.length === 0 ? "Mancano le risposte: scrivi almeno due opzioni." : "Manca una risposta: servono almeno due opzioni con testo.";
-    }
-    if (!q.correct.some(id => filled.some(o => o.id === id))) {
-      out.correct = q.correct.length > 0 ? "L'opzione segnata come giusta è vuota: scrivi il testo o segnane un'altra."
-        : q.type === "multiple" ? "Manca la risposta corretta: spunta almeno un'opzione giusta." : "Manca la risposta corretta: tocca il cerchio accanto all'opzione giusta.";
+    if (filled.length < 2) out.options = "Manca un'opzione: servono almeno due opzioni con testo.";
+    const correctFilled = q.correct.filter(id => filled.some(o => o.id === id)).length;
+    if (q.type === "multiple" && correctFilled < MULTIPLE_MIN_CORRECT) {
+      out.correct = "Una domanda a risposta multipla deve avere almeno 2 risposte corrette. Se ne serve una sola, usa 'Singola'.";
+    } else if (q.type !== "multiple" && correctFilled === 0) {
+      out.correct = q.correct.length > 0 ? "Manca la risposta corretta: l'opzione segnata come giusta è vuota."
+        : "Manca la risposta corretta: tocca il cerchio accanto all'opzione giusta.";
     }
   }
-  if (!(Number(q.points) > 0)) out.points = "Il punteggio deve essere maggiore di zero.";
+  if (!(Number(q.points) > 0)) out.points = "Punti mancanti: assegna almeno 1 punto alla domanda.";
   return out;
 }
 
 const ISSUE_ORDER = ["text", "options", "correct", "points"];
-const ISSUE_SUMMARY = {
-  text: (n) => `Nella domanda ${n} manca il testo.`,
-  options: (n) => `Nella domanda ${n} mancano delle risposte: servono almeno due opzioni con testo.`,
-  correct: (n) => `Nella domanda ${n} manca la risposta corretta.`,
-  points: (n) => `Nella domanda ${n} il punteggio deve essere maggiore di zero.`,
-};
 
 // Primo problema di una domanda (testo da mostrare) oppure null se è a posto.
 function questionIssue(q, i) {
   const issues = questionIssues(q);
   const key = ISSUE_ORDER.find(k => issues[k]);
-  return key ? ISSUE_SUMMARY[key](i + 1) : null;
+  return key ? `Domanda ${i + 1}: ${issues[key]}` : null;
 }
 
-// Controlli del primo passo della procedura (dettagli dell'esame).
-export function validateDetails(d) {
-  if (!d.title.trim()) return "Inserisci il titolo dell'esame.";
-  if (!d.classSubjectId) return "Seleziona la classe e la materia.";
+// ── Validazione ─────────────────────────────────────────────────────────────────────────────
+// Un errore per voce: { step, field, message, questionIndex?, questionId? }. I livelli:
+//   "server"  ciò che il server controlla già in creazione e modifica: senza, "Salva bozza" salva solo nel browser
+//   "close"   "Salva e chiudi": tutto quello sopra più il titolo
+//   "publish" pubblicazione: in più almeno uno studente assegnato
+// Campi che il server richiede (ExamService: EnsureValidSchedule, EnsureValidPassingPercent, EnsureValidQuestions
+// e le regole delle opzioni). TODO(API): quando il backend accetterà bozze incomplete, basterà svuotare o
+// ridurre questo elenco.
+export const SERVER_REQUIRED = new Set([
+  "classSubjectId", "availableFrom", "availableUntil", "durationMinutes", "passingPercent",
+  "questions", "text", "options", "correct", "points",
+]);
+
+export function validateAll(d, { level = "close" } = {}) {
+  const out = [];
+  const add = (step, field, message, extra) => out.push({ step, field, message, ...extra });
+  if (!d.title?.trim()) add(1, "title", "Manca il titolo dell'esame.");
+  if (!d.classSubjectId) add(1, "classSubjectId", "Mancano la classe e la materia.");
   const from = new Date(d.availableFrom);
   const until = new Date(d.availableUntil);
-  if (!d.availableFrom || isNaN(from)) return "Imposta l'inizio della disponibilità.";
-  if (!d.availableUntil || isNaN(until)) return "Imposta la fine della disponibilità.";
-  if (!(from < until)) return "L'inizio della disponibilità deve precedere la fine.";
+  const fromOk = !!d.availableFrom && !isNaN(from);
+  const untilOk = !!d.availableUntil && !isNaN(until);
+  if (!fromOk) add(1, "availableFrom", "Manca l'inizio della disponibilità.");
+  if (!untilOk) add(1, "availableUntil", "Manca la fine della disponibilità.");
+  if (fromOk && untilOk && !(from < until)) add(1, "availableUntil", "La fine della disponibilità deve venire dopo l'inizio.");
   const duration = Number(d.durationMinutes);
-  if (!(duration > 5)) return "La durata deve essere maggiore di 5 minuti.";
-  if (duration * 60000 > until - from) return "La durata non può superare la finestra di disponibilità.";
+  if (!(duration > 5)) add(1, "durationMinutes", "La durata deve essere maggiore di 5 minuti.");
+  else if (fromOk && untilOk && from < until && duration * 60000 > until - from) {
+    add(1, "durationMinutes", "La durata non può superare la finestra di disponibilità.");
+  }
   const pass = Number(d.passingPercent);
-  if (!(pass > 0 && pass < 100)) return "La soglia di sufficienza deve essere maggiore di 0 e minore di 100.";
-  return null;
+  if (!(pass > 0 && pass < 100)) add(1, "passingPercent", "La soglia di sufficienza deve essere tra 1 e 99%.");
+  if (d.questions.length === 0) add(2, "questions", "Aggiungi almeno una domanda.");
+  d.questions.forEach((q, i) => {
+    const issues = questionIssues(q);
+    for (const key of ISSUE_ORDER) {
+      if (issues[key]) add(2, key, `Domanda ${i + 1}: ${issues[key]}`, { questionIndex: i, questionId: q.id });
+    }
+  });
+  if (level === "publish" && d.students.length === 0) add(3, "students", "Assegna l'esame ad almeno uno studente.");
+  return level === "server" ? out.filter(e => SERVER_REQUIRED.has(e.field)) : out;
 }
 
-// Controlli che il server fa già in creazione e modifica (ExamService: EnsureValidSchedule,
-// EnsureValidPassingPercent, EnsureValidQuestions): se non passano, "Salva bozza" salva solo nel browser.
-// Il titolo il server non lo controlla (lo richiede "Salva e chiudi").
-// TODO(API): quando il backend accetterà bozze incomplete, ridurre questi controlli a quelli che restano.
-export function serverIssue(d) {
-  const details = validateDetails({ ...d, title: d.title?.trim() ? d.title : "-" });
-  if (details) return details;
-  if (d.questions.length === 0) return "Aggiungi almeno una domanda.";
-  for (let i = 0; i < d.questions.length; i++) {
-    const issue = questionIssue(d.questions[i], i);
-    if (issue) return issue;
-  }
-  return null;
+const firstMessage = (list) => list[0]?.message || null;
+// Funzioni di prima (primo messaggio o null), ora basate su validateAll
+export const validateDetails = (d) => firstMessage(validateAll(d).filter(e => e.step === 1));
+export const validateTestDraft = (d) => firstMessage(validateAll(d));
+export const validateForPublish = (d) => firstMessage(validateAll(d, { level: "publish" }));
+export const serverIssue = (d) => firstMessage(validateAll(d, { level: "server" }));
+
+// Banner in cima all'editor. kind "error" (rosso, blocca l'azione) o "info" (giallo, "Salva bozza" riuscito
+// solo nel browser). Le voci si ricalcolano mentre si corregge; il banner sparisce quando non ne restano.
+// Si distinguono le voci che bloccano anche il server da quelle che servono solo per "Salva e chiudi".
+function ErrorBanner({ notice, items, onPick, onDismiss }) {
+  if (!notice || items.length === 0) return null;
+  const info = notice.kind === "info";
+  const [bg, border, fg] = info ? ["#FEF3C7", "#FCD34D", "#92400E"] : ["#FEE2E2", "#FCA5A5", "#991B1B"];
+  const serverItems = items.filter(e => SERVER_REQUIRED.has(e.field));
+  const otherItems = items.filter(e => !SERVER_REQUIRED.has(e.field));
+  const groups = info || otherItems.length === 0 || serverItems.length === 0
+    ? [{ key: "all", title: null, list: items }]
+    : [{ key: "server", title: "Bloccano anche il salvataggio sul server", list: serverItems }, { key: "close", title: "Servono per salvare e chiudere", list: otherItems }];
+  return (
+    <View testID="editor-banner" accessibilityRole={info ? undefined : "alert"} accessibilityLiveRegion="polite" style={{ backgroundColor: bg, borderBottomWidth: 1, borderBottomColor: border, paddingHorizontal: 16, paddingVertical: 12 }}>
+      <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}>
+        <Ionicons name={info ? "information-circle-outline" : "alert-circle-outline"} size={20} color={fg} />
+        <View style={{ flex: 1 }}>
+          <Text style={{ color: fg, fontWeight: "800" }}>{notice.title} ({items.length})</Text>
+          {!!notice.subtitle && <Text style={{ color: fg, marginTop: 2 }}>{notice.subtitle}</Text>}
+          {groups.map(g => (
+            <View key={g.key} style={{ marginTop: 6 }}>
+              {!!g.title && <Text style={{ color: fg, fontSize: 12, fontWeight: "700", textTransform: "uppercase", marginTop: 4 }}>{g.title}</Text>}
+              {g.list.map((e, i) => (
+                <TouchableOpacity key={`${e.field}-${e.questionId || ""}-${i}`} onPress={() => onPick(e)} accessibilityRole="link"
+                  accessibilityLabel={`${e.message} Vai al campo`} style={{ flexDirection: "row", alignItems: "center", gap: 6, paddingVertical: 3 }}>
+                  <Text style={{ color: fg }}>•</Text>
+                  <Text style={{ color: fg, textDecorationLine: "underline", flexShrink: 1 }}>{e.message}</Text>
+                  <Text style={{ color: fg, fontSize: 12 }}>{`(step ${e.step})`}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ))}
+        </View>
+        <TouchableOpacity onPress={onDismiss} accessibilityRole="button" accessibilityLabel="Chiudi l'avviso" style={{ padding: 2 }}>
+          <Ionicons name="close" size={18} color={fg} />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
 
-// Per pubblicare servono anche gli studenti assegnati
-export function validateForPublish(d) {
-  return validateTestDraft(d) || (d.students.length === 0 ? "Assegna l'esame ad almeno uno studente." : null);
-}
-
-export function validateTestDraft(d) {
-  const detailsIssue = validateDetails(d);
-  if (detailsIssue) return detailsIssue;
-  if (d.questions.length === 0) return "Aggiungi almeno una domanda.";
-  for (let i = 0; i < d.questions.length; i++) {
-    const issue = questionIssue(d.questions[i], i);
-    if (issue) return issue;
-  }
-  return null;
+// Mette il focus sul campo indicato (focus = { field, n }) quando cambia n: usato dal banner
+function useFocusField(focus, refs) {
+  useEffect(() => {
+    if (!focus) return;
+    const target = refs[focus.field]?.current;
+    if (target?.focus) setTimeout(() => target.focus(), 50);
+  }, [focus?.n]);
 }
 
 const field = { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, color: C.text, fontSize: 15 };
@@ -190,7 +241,8 @@ function IconBtn({ name, onPress, disabled, color = C.textMuted, label, caption 
 }
 
 // Editor ampio della domanda selezionata
-function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMove, canDelete }) {
+// reveal: mostra subito tutti gli errori (c'è il banner); focus: { field, n } dal banner
+function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMove, canDelete, reveal, focus }) {
   const set = (patch) => onChange({ ...q, ...patch });
   const closed = isClosed(q.type);
   const multi = q.type === "multiple";
@@ -202,7 +254,11 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
   const touch = (key) => setTouched(t => (t[key] ? t : { ...t, [key]: true }));
   const issues = questionIssues(q);
   // La risposta corretta si segnala appena le opzioni sono a posto, senza aspettare un tocco sul cerchio.
-  const err = (key) => (touched[key] || (key === "correct" && touched.options && !issues.options) ? issues[key] : null);
+  const err = (key) => (reveal || touched[key] || (key === "correct" && touched.options && !issues.options) ? issues[key] : null);
+  const refs = { text: useRef(null), options: useRef(null), correct: useRef(null), points: useRef(null) };
+  useFocusField(focus, refs);
+  // Per "manca un'opzione" il focus va sulla prima opzione vuota
+  const firstEmptyOptionId = q.options.find(o => !o.text.trim())?.id ?? q.options[0]?.id;
 
   // Passando a "singola" resta al massimo una risposta giusta; passando ad "aperta" si azzerano.
   function changeType(type) {
@@ -226,7 +282,7 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
       </Text>
 
       <Text style={s.label}>Testo della domanda</Text>
-      <TextInput style={[field, { fontSize: 18, minHeight: 80, textAlignVertical: "top" }, err("text") && s.inputError]} placeholder="Es. Quale metodo HTTP si usa per creare una nuova risorsa?"
+      <TextInput ref={refs.text} style={[field, { fontSize: 18, minHeight: 80, textAlignVertical: "top" }, err("text") && s.inputError]} placeholder="Es. Quale metodo HTTP si usa per creare una nuova risorsa?"
         placeholderTextColor={C.textLight} value={q.text} onChangeText={(text) => set({ text })} onBlur={() => touch("text")} multiline />
       {!!err("text") && <Text style={s.errorText}>{err("text")}</Text>}
 
@@ -260,11 +316,11 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
             const emptyError = !!err("options") && !o.text.trim();
             return (
               <View key={o.id} style={{ flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                <TouchableOpacity onPress={() => { toggleCorrect(o.id); touch("correct"); }} accessibilityLabel="Segna come giusta">
+                <TouchableOpacity ref={i === 0 ? refs.correct : undefined} onPress={() => { toggleCorrect(o.id); touch("correct"); }} accessibilityLabel="Segna come giusta">
                   <Ionicons name={correct ? (multi ? "checkbox" : "radio-button-on") : (multi ? "square-outline" : "radio-button-off")}
                     size={28} color={correct ? C.success : C.textLight} />
                 </TouchableOpacity>
-                <TextInput style={[field, { flex: 1 }, correct && { borderColor: C.success, backgroundColor: "#ECFDF5" }, emptyError && s.inputError]} placeholder={`Opzione ${i + 1} — es. ${OPTION_EXAMPLES[i] || "un'altra risposta"}`}
+                <TextInput ref={o.id === firstEmptyOptionId ? refs.options : undefined} style={[field, { flex: 1 }, correct && { borderColor: C.success, backgroundColor: "#ECFDF5" }, emptyError && s.inputError]} placeholder={`Opzione ${i + 1} — es. ${OPTION_EXAMPLES[i] || "un'altra risposta"}`}
                   placeholderTextColor={C.textLight} value={o.text} onChangeText={(text) => setOption(o.id, text)} onBlur={() => touch("options")}
                   autoFocus={o.id === focusId} onSubmitEditing={addOption} blurOnSubmit={false} />
                 {correct && <Text style={{ color: C.success, fontSize: 12, fontWeight: "700", width: 44 }}>GIUSTA</Text>}
@@ -286,7 +342,7 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
 
       <View style={{ flexDirection: "row", alignItems: "center", marginTop: 24, paddingTop: 16, borderTopWidth: 1, borderTopColor: C.border, gap: 16, flexWrap: "wrap" }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <TextInput style={[field, { width: 72, textAlign: "center" }, err("points") && s.inputError]} keyboardType="number-pad" value={String(q.points)} placeholder="Es. 2" placeholderTextColor={C.textLight}
+          <TextInput ref={refs.points} style={[field, { width: 72, textAlign: "center" }, err("points") && s.inputError]} keyboardType="number-pad" value={String(q.points)} placeholder="Es. 2" placeholderTextColor={C.textLight}
             onChangeText={(v) => set({ points: v.replace(/[^0-9]/g, "") })} onBlur={() => touch("points")} />
           <Text style={{ color: C.text }}>punti</Text>
           {!!err("points") && <Text style={[s.errorText, { marginTop: 0 }]}>{err("points")}</Text>}
@@ -336,7 +392,12 @@ function Stepper({ step, onStep, compact }) {
 const twoCols = (isDesktop) => ({ flexDirection: isDesktop ? "row" : "column", gap: isDesktop ? 16 : 0 });
 
 // Passo 1: dettagli dell'esame
-function DetailsStep({ draft, onChange, env, isDesktop }) {
+// reveal: mostra gli errori dei dettagli sotto i campi (c'è il banner); focus: { field, n } dal banner
+function DetailsStep({ draft, onChange, env, isDesktop, reveal, focus }) {
+  const errors = {};
+  if (reveal) for (const e of validateAll(draft).filter(x => x.step === 1)) errors[e.field] = errors[e.field] || e.message;
+  const refs = { title: useRef(null), availableFrom: useRef(null), availableUntil: useRef(null), durationMinutes: useRef(null), passingPercent: useRef(null) };
+  useFocusField(focus, refs);
   const set = (patch) => onChange({ ...draft, ...patch });
   const locked = !!draft.examId; // la classe-materia di un esame esistente non si può cambiare
   const classSubjects = env?.classSubjects;
@@ -351,7 +412,7 @@ function DetailsStep({ draft, onChange, env, isDesktop }) {
         <Text style={[s.itemSub, { marginTop: 4 }]}>Inizia dai dettagli: potrai modificarli finché l'esame è in bozza.</Text>
       </View>
 
-      <Input label="Titolo dell'esame" value={draft.title} onChangeText={(title) => set({ title })} placeholder="Es. Programmazione Web – Verifica modulo 2" autoFocus />
+      <Input ref={refs.title} label="Titolo dell'esame" value={draft.title} onChangeText={(title) => set({ title })} placeholder="Es. Programmazione Web – Verifica modulo 2" autoFocus error={errors.title} />
       <View>
         <Text style={s.label}>Descrizione</Text>
         <TextInput style={[field, { minHeight: 90, textAlignVertical: "top", marginBottom: 14 }]} placeholder="Facoltativa. Es. Rispondi a tutte le domande; per le aperte bastano 3-4 righe. Non è consentito il materiale." placeholderTextColor={C.textLight}
@@ -392,8 +453,8 @@ function DetailsStep({ draft, onChange, env, isDesktop }) {
       <FieldGroup icon="calendar-outline" title="Disponibilità"
         hint="Quando lo studente può aprire l'esame. Fuori da questa finestra non può iniziarlo.">
       <View style={twoCols(isDesktop)}>
-        <View style={{ flex: 1 }}><DateTimeField label="Disponibile da" value={draft.availableFrom} onChange={(availableFrom) => set({ availableFrom })} /></View>
-        <View style={{ flex: 1 }}><DateTimeField label="Disponibile fino a" value={draft.availableUntil} onChange={(availableUntil) => set({ availableUntil })} /></View>
+        <View style={{ flex: 1 }}><DateTimeField ref={refs.availableFrom} label="Disponibile da" value={draft.availableFrom} onChange={(availableFrom) => set({ availableFrom })} error={errors.availableFrom} /></View>
+        <View style={{ flex: 1 }}><DateTimeField ref={refs.availableUntil} label="Disponibile fino a" value={draft.availableUntil} onChange={(availableUntil) => set({ availableUntil })} error={errors.availableUntil} /></View>
       </View>
       </FieldGroup>
 
@@ -401,11 +462,11 @@ function DetailsStep({ draft, onChange, env, isDesktop }) {
         hint={`Minuti a disposizione dello studente da quando apre l'esame: allo scadere viene consegnato in automatico.${
           windowMinutes(draft.availableFrom, draft.availableUntil) ? ` Deve stare nella finestra di disponibilità (${formatMinutes(windowMinutes(draft.availableFrom, draft.availableUntil))}).` : ""
         } Il tempo aggiuntivo per singolo studente si imposta nel passo Studenti.`}>
-        <Input label="Durata (minuti)" value={String(draft.durationMinutes)} keyboardType="number-pad" placeholder="Es. 45"
+        <Input ref={refs.durationMinutes} error={errors.durationMinutes} label="Durata (minuti)" value={String(draft.durationMinutes)} keyboardType="number-pad" placeholder="Es. 45"
           onChangeText={(v) => set({ durationMinutes: v.replace(/[^0-9]/g, "") })} />
       </FieldGroup>
 
-      <Input label="Soglia di sufficienza (%)" value={String(draft.passingPercent)} keyboardType="number-pad" placeholder="Es. 60"
+      <Input ref={refs.passingPercent} error={errors.passingPercent} label="Soglia di sufficienza (%)" value={String(draft.passingPercent)} keyboardType="number-pad" placeholder="Es. 60"
         onChangeText={(v) => set({ passingPercent: v.replace(/[^0-9]/g, "") })} />
 
       <CheckboxField label="Esame di recupero" value={isRetake} onChange={(v) => set({ wantsRetake: v, retakeOfExamId: v ? draft.retakeOfExamId : "" })} />
@@ -537,10 +598,14 @@ function StudentsStep({ draft, onChange, env }) {
 //                   da eliminare o annullare. Su schermi stretti sta nel menu "⋯".
 // draftStatusShort: { label, tone } dello stato per schermi stretti (es. "Non salvata").
 // onClose non è più usato dalla barra: il ritorno alla lista è nell'header di AppNav (resta per compatibilità).
-export default function TestBuilder({ visible = true, contextLabel, draft, onChange, onSaveDraft, onSaveAndClose, destroyAction, onClose, saving, env, draftStatus, draftStatusShort }) {
+// notice: { kind: "error" | "info", level, title, subtitle? } per il banner (da ExamsScreen, dopo un salvataggio);
+// onDismissNotice lo chiude. Le voci del banner si calcolano qui con validateAll(draft, { level }).
+export default function TestBuilder({ visible = true, contextLabel, draft, onChange, onSaveDraft, onSaveAndClose, destroyAction, onClose, saving, env, draftStatus, draftStatusShort, notice, onDismissNotice }) {
   const { isDesktop } = useLayout();
   const [selectedId, setSelectedId] = useState(null);
   const [moreOpen, setMoreOpen] = useState(false); // menu "⋯" su schermi stretti
+  const [stepNotice, setStepNotice] = useState(null); // "Avanti" dallo step 1 con dettagli da completare
+  const [focus, setFocus] = useState(null); // { field, questionId?, n }: campo su cui mettere il focus
   if (!draft || !visible) return null;
 
   const step = draft.step ?? 1;
@@ -550,13 +615,32 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
   const selected = questions[selectedIndex];
 
   // Si passa alle domande solo con i dettagli a posto; tornare indietro è sempre possibile.
+  // Con dettagli da completare: banner (solo voci dello step 1), errori sotto i campi, focus sul primo.
   function goTo(n) {
     if (n > 1) {
-      const err = validateDetails(draft);
-      if (err) return notify("Attenzione", err);
+      const errs = validateAll(draft).filter(e => e.step === 1);
+      if (errs.length) {
+        setStepNotice({ kind: "error", level: "close", onlyStep: 1, title: "Completa i dettagli per andare avanti" });
+        return pick(errs[0]);
+      }
     }
+    setStepNotice(null);
     onChange({ ...draft, step: n });
   }
+
+  // Banner attivo: quello di ExamsScreen (salvataggio) o quello di "Avanti"; voci ricalcolate dalla bozza
+  const activeNotice = notice || stepNotice;
+  const noticeItems = activeNotice
+    ? validateAll(draft, { level: activeNotice.level }).filter(e => !activeNotice.onlyStep || e.step === activeNotice.onlyStep)
+    : [];
+  const reveal = !!activeNotice;
+  // Voce del banner → step giusto (l'URL diventa ?step=N), domanda selezionata, focus sul campo
+  function pick(e) {
+    if ((draft.step ?? 1) !== e.step) onChange({ ...draft, step: e.step });
+    if (e.questionId) setSelectedId(e.questionId);
+    setFocus(f => ({ field: e.field, questionId: e.questionId, n: (f?.n || 0) + 1 }));
+  }
+  function dismissNotice() { setStepNotice(null); onDismissNotice?.(); }
 
   const setQuestion = (id, next) => onChange({ ...draft, questions: questions.map(q => q.id === id ? next : q) });
   const addQuestion = (type = "single") => {
@@ -656,6 +740,7 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
 
   const editor = selected ? (
     <QuestionEditor key={selected.id} q={selected} index={selectedIndex} total={questions.length} canDelete={questions.length > 1}
+      reveal={reveal} focus={focus?.questionId === selected.id ? focus : null}
       onChange={(next) => setQuestion(selected.id, next)}
       onDuplicate={() => duplicate(selected)}
       onDelete={() => remove(selected.id)}
@@ -723,11 +808,12 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
               : <Btn label="Salva e chiudi" onPress={onSaveAndClose} loading={saving} {...actionBtn} />}
           </View>
         </View>
+        <ErrorBanner notice={activeNotice} items={noticeItems} onPick={pick} onDismiss={dismissNotice} />
 
         {step === 1 ? (
           <ScrollView contentContainerStyle={{ padding: isDesktop ? 40 : 16, alignItems: "center" }} keyboardShouldPersistTaps="handled">
             <View style={{ width: "100%", maxWidth: 640 }}>
-              <DetailsStep draft={draft} onChange={onChange} env={env} isDesktop={isDesktop} />
+              <DetailsStep draft={draft} onChange={onChange} env={env} isDesktop={isDesktop} reveal={reveal} focus={focus && !focus.questionId ? focus : null} />
             </View>
           </ScrollView>
         ) : step === 3 ? (

@@ -29,7 +29,7 @@ const GUARD_MESSAGE = Platform.OS === "web" ? KEPT_MESSAGE : LOST_MESSAGE;
 // Uguali a parte lo step? (cambiare step non è una modifica da salvare)
 const sameButStep = (a, b) => !!a && !!b && JSON.stringify({ ...a, step: 0 }) === JSON.stringify({ ...b, step: 0 });
 
-export default function ExamEditorScreen({ route, nav, api, draft, dirty, updateDraft, env, contextLabel, draftStatus, draftStatusShort, onSaveDraft, onSaveAndClose, destroyAction, saving, onExit }) {
+export default function ExamEditorScreen({ route, nav, api, draft, dirty, updateDraft, env, contextLabel, draftStatus, draftStatusShort, onSaveDraft, onSaveAndClose, destroyAction, saving, onExit, notice, onDismissNotice }) {
   const [loadingExam, setLoadingExam] = useState(false);
   const ready = route.name === "edit" ? draft?.examId === route.id : !!draft && !draft.examId;
 
@@ -116,6 +116,6 @@ export default function ExamEditorScreen({ route, nav, api, draft, dirty, update
   return (
     <TestBuilder contextLabel={contextLabel} draft={draft} env={env} draftStatus={draftStatus} draftStatusShort={draftStatusShort}
       onChange={onChange} onSaveDraft={onSaveDraft} onSaveAndClose={onSaveAndClose} destroyAction={destroyAction}
-      saving={saving} onClose={requestExit} />
+      saving={saving} onClose={requestExit} notice={notice} onDismissNotice={onDismissNotice} />
   );
 }

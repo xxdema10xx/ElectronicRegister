@@ -79,7 +79,8 @@ function validateQuestions(questions) {
     } else {
       if ((q.options || []).length < 2) throw bad("Le domande chiuse devono avere almeno due opzioni.");
       if (type === "single" && correct !== 1) throw bad("Una domanda a risposta singola deve avere esattamente una risposta corretta.");
-      if (type === "multiple" && correct < 1) throw bad("Una domanda a risposta multipla deve avere almeno una risposta corretta.");
+      // Come il server (ExamService): almeno 2 risposte corrette. TODO(API): in attesa di conferma che sia voluto.
+      if (type === "multiple" && correct < 2) throw bad("Una domanda a risposta multipla deve avere almeno due risposte corrette.");
     }
   }
 }
