@@ -2,13 +2,15 @@
 // Vista in sola lettura di un esame (ExamDetailDto): dati, domande, opzioni con le risposte giuste, punti.
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { C } from "../constants/theme";
+import { C, s } from "../constants/theme";
+import Btn from "./Btn";
 import Card from "./Card";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, fromEnum, formatDateTime, questionFromDto } from "../api/examContract";
 
 const TYPE_LABEL = { single: "Singola", multiple: "Multipla", open: "Aperta" };
 
-export default function TestViewer({ exam, contextLabel, onClose }) {
+// onEdit: se presente (solo per le bozze modificabili) compare il pulsante "Modifica"
+export default function TestViewer({ exam, contextLabel, onClose, onEdit }) {
   if (!exam) return null;
   const questions = [...(exam.questions || [])].sort((a, b) => a.position - b.position).map(questionFromDto);
   const status = fromEnum(exam.status, EXAM_STATUS);
@@ -23,6 +25,9 @@ export default function TestViewer({ exam, contextLabel, onClose }) {
             <Text style={{ color: C.text, fontSize: 16, fontWeight: "600" }} numberOfLines={1}>{exam.name}</Text>
             {!!contextLabel && <Text style={{ color: C.textMuted, fontSize: 12 }} numberOfLines={1}>{contextLabel}</Text>}
           </View>
+          {!!onEdit && (
+            <Btn label="Modifica" onPress={onEdit} style={[s.smBtn, { paddingHorizontal: 16, paddingVertical: 10 }]} textStyle={s.smBtnText} />
+          )}
         </View>
 
         <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }}>

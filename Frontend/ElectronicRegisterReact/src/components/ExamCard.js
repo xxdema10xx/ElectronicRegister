@@ -46,11 +46,10 @@ function Action({ label, icon, onPress, tone = "neutral", disabled, loading }) {
   );
 }
 
-// actions: { view, edit, submissions, close, publish, cancel, remove } → funzione o null se non consentita
-export default function ExamCard({ exam, status, contextLabel, busy, actions }) {
+// onPress: tocco sulla card → dettaglio dell'esame (da lì, se è una bozza, "Modifica").
+// actions: { submissions, close, publish, cancel, remove } → funzione o null se non consentita
+export default function ExamCard({ exam, status, contextLabel, busy, onPress, actions }) {
   const secondary = [
-    actions.view && <Action key="view" label="Vedi" icon="eye-outline" onPress={actions.view} disabled={busy} />,
-    actions.edit && <Action key="edit" label="Modifica" icon="create-outline" onPress={actions.edit} disabled={busy} />,
     actions.submissions && <Action key="subs" label="Consegne" icon="people-outline" onPress={actions.submissions} disabled={busy} />,
     actions.close && <Action key="close" label="Chiudi" icon="lock-closed-outline" onPress={actions.close} disabled={busy} />,
   ].filter(Boolean);
@@ -64,6 +63,8 @@ export default function ExamCard({ exam, status, contextLabel, busy, actions }) 
     <View style={[s.card, { marginBottom: 12, padding: 0, overflow: "hidden", flexDirection: "row" }]}>
       <View style={{ width: 5, backgroundColor: ACCENT[status] || C.border }} />
       <View style={{ flex: 1, padding: 16 }}>
+        <TouchableOpacity onPress={onPress} disabled={!onPress || busy} activeOpacity={0.7} accessibilityRole="button"
+          accessibilityLabel={`Apri ${exam.name}`} accessibilityHint="Mostra il dettaglio dell'esame">
         {/* Intestazione: icona, titolo e contesto; stato in alto a destra */}
         <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
           <View style={{ width: 44, height: 44, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: ICON_BG[status] || "#F1F5F9" }}>
@@ -88,6 +89,7 @@ export default function ExamCard({ exam, status, contextLabel, busy, actions }) 
           <Pill icon="star-outline" text={`${exam.totalPoints} punti`} />
           <Pill icon="people-outline" text={`${exam.assignedStudentsCount} ${exam.assignedStudentsCount === 1 ? "studente" : "studenti"}`} />
         </View>
+        </TouchableOpacity>
 
         {/* Azioni: consultazione a sinistra, cambi di stato in basso a destra */}
         {(secondary.length > 0 || primary.length > 0) && (

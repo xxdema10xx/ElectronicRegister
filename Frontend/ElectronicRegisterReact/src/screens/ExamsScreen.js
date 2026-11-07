@@ -2,7 +2,7 @@
 // Esami per docenti e amministratori: elenco, creazione/modifica con l'editor guidato, pubblicazione,
 // chiusura, annullamento, eliminazione, consegne e correzione. Dati: ExamController (src/api/examApi.js).
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Modal, Platform, ScrollView, SectionList, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
@@ -23,7 +23,7 @@ import FormModal from "../components/FormModal";
 import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
 import { resetMockExams } from "../api/mockExamBackend";
-import { EXAM_STATUS, EXAM_STATUS_LABEL, detailToDraft, draftToDto, fromEnum, formatDateTime } from "../api/examContract";
+import { EXAM_STATUS, EXAM_STATUS_LABEL, detailToDraft, draftToDto, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
 import { getRetakeCandidates, getRetakeGroups } from "../api/examInsights";
 
 // La bozza in corso sopravvive al refresh (F5) su web grazie a sessionStorage.
@@ -88,6 +88,18 @@ export default function ExamsScreen() {
   const inClass = (e) => !classId || classSubjects?.find(c => c.id === e.classSubjectId)?.classId === classId;
   const scoped = exams.filter(e => (tab === "history") === inHistory(e) && inClass(e));
   const visible = filterBySearch(scoped, search, e => [e.name, e.description, csLabel(e.classSubjectId)]);
+
+  // Sezioni per stato, i più recenti in cima dentro ogni gruppo. Le bozze si ordinano per data di
+  // disponibilità perché l'elenco non espone ancora quando sono state create o modificate.
+  // TODO(API): ordinare le bozze per updatedAt quando ExamSummaryDto lo include.
+  const when = (e, field) => parseUtc(e[field] || e.availableFrom)?.getTime() || 0;
+  const SECTION_DEFS = tab === "history"
+    ? [{ key: "closed", title: "Chiusi", sortBy: "closedAt" }, { key: "cancelled", title: "Annullati", sortBy: "cancelledAt" }]
+    : [{ key: "draft", title: "Da pubblicare", sortBy: "availableFrom" }, { key: "published", title: "Pubblicati", sortBy: "publishedAt" }];
+  const sections = SECTION_DEFS.map(d => ({
+    ...d,
+    data: visible.filter(e => fromEnum(e.status, EXAM_STATUS) === d.key).sort((a, b) => when(b, d.sortBy) - when(a, d.sortBy)),
+  })).filter(sec => sec.data.length > 0);
 
   // Elenco di chi deve recuperare: raggruppa per studente le consegne non superate (bocciate o "non superabile")
   // su tutti gli esami pubblicati/chiusi della classe scelta. Richiede una chiamata per esame: va bene per i volumi di un registro di classe.
@@ -252,17 +264,23 @@ export default function ExamsScreen() {
       </View>
 
       {loading ? <Loader /> : visible.length === 0 ? <EmptyState message={tab === "history" ? "Nessun esame nello storico" : "Nessun esame trovato"} /> : (
-        <FlatList
-          data={visible}
+        <SectionList
+          sections={sections}
           keyExtractor={e => String(e.id)}
+          stickySectionHeadersEnabled={false}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          renderSectionHeader={({ section }) => (
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginTop: 8, marginBottom: 10 }}>
+              <Text style={{ color: C.text, fontSize: 16, fontWeight: "800" }}>{section.title}</Text>
+              <StatusChip label={String(section.data.length)} tone={EXAM_TONE[section.key]} />
+            </View>
+          )}
           renderItem={({ item: exam }) => {
             const status = fromEnum(exam.status, EXAM_STATUS);
             return (
               <ExamCard exam={exam} status={status} contextLabel={csLabel(exam.classSubjectId)} busy={busy === exam.id}
+                onPress={() => view(exam)}
                 actions={{
-                  view: () => view(exam),
-                  edit: canWrite && status === "draft" ? () => edit(exam) : null,
                   submissions: canWrite && (status === "published" || status === "closed") ? () => setSubmissionsFor(exam) : null,
                   close: canWrite && status === "published" ? () => close(exam) : null,
                   publish: canWrite && status === "draft" ? () => publish(exam) : null,
@@ -274,7 +292,9 @@ export default function ExamsScreen() {
         />
       )}
 
-      <TestViewer exam={viewing} contextLabel={csLabel(viewing?.classSubjectId)} onClose={() => setViewing(null)} />
+      {/* "Modifica" solo per le bozze: un esame pubblicato non si può più cambiare (lo verifica comunque il server) */}
+      <TestViewer exam={viewing} contextLabel={csLabel(viewing?.classSubjectId)} onClose={() => setViewing(null)}
+        onEdit={viewing && canWrite && fromEnum(viewing.status, EXAM_STATUS) === "draft" ? () => { const ex = viewing; setViewing(null); edit(ex); } : null} />
       {submissionsFor && <ExamSubmissions exam={submissionsFor} api={api} onClose={() => setSubmissionsFor(null)} />}
 
       {retakes && (
