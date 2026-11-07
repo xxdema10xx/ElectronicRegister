@@ -100,7 +100,11 @@ export function createExamApi(token, user) {
   const real = realApi(token);
   const mock = createMockExamApi(user);
 
-  const api = { ready: () => resolveMode(token, role), isMock: () => mode === "mock" };
+  const api = {
+    ready: () => resolveMode(token, role), isMock: () => mode === "mock",
+    // Chiave della cache di examInsights: le schermate hanno oggetti api diversi ma la stessa sessione
+    cacheKey: () => `${token || "anon"}:${mode || "?"}`,
+  };
   for (const name of Object.keys(real)) {
     if (name === "mock") continue;
     api[name] = async (...args) => {

@@ -10,6 +10,7 @@ import Loader from "./Loader";
 import EmptyState from "./EmptyState";
 import StatusChip, { SUBMISSION_TONE } from "./StatusChip";
 import { notify } from "../utils/dialogs";
+import { invalidateExamInsights } from "../api/examInsights";
 import { QUESTION_TYPE, SUBMISSION_STATUS, SUBMISSION_STATUS_LABEL, SUBMIT_REASON, fromEnum, formatDateTime } from "../api/examContract";
 
 const num = (v) => Number(String(v).replace(",", "."));
@@ -222,7 +223,7 @@ export default function ExamSubmissions({ exam, api, onClose }) {
   return (
     <Modal visible animationType="slide" onRequestClose={openId ? () => setOpenId(null) : onClose}>
       {openId ? (
-        <SubmissionReview submissionId={openId} api={api} onClose={() => setOpenId(null)} onChanged={load} />
+        <SubmissionReview submissionId={openId} api={api} onClose={() => setOpenId(null)} onChanged={() => { invalidateExamInsights(exam.id); load(); }} />
       ) : (
         <View style={{ flex: 1, backgroundColor: C.bg }}>
           <Header title="Consegne" subtitle={exam.name} onClose={onClose} />

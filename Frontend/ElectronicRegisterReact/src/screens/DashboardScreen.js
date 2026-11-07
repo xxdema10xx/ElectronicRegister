@@ -16,7 +16,7 @@ import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
 import { getUsers } from "../api/userService";
 import { getMyClasses } from "../api/classService";
-import { getExamInsights, buildStudentBooklet } from "../api/examInsights";
+import { getExamInsights, buildStudentBooklet, retakeSummary } from "../api/examInsights";
 import { getClassesForPicker, getClassSchedule, getTeacherSchedule, getStudentSchedule, addLesson, updateLesson, deleteLesson } from "../api/lessonService";
 import LessonCalendar from "../components/LessonCalendar";
 import SelectField from "../components/SelectField";
@@ -250,7 +250,7 @@ export default function DashboardScreen({ navigate }) {
           {role === "teacher" && <>
             <StatTile icon="document-text-outline" label="Esami in programma" hint="Pubblicati, ancora aperti agli studenti" value={exams ? upcomingExams.length : null} onPress={() => navigate("exams")} />
             <StatTile icon="create-outline" label="Da correggere" hint="Domande aperte in attesa di valutazione" value={pendingReview} onPress={() => navigate("exams")} />
-            <StatTile icon="alert-circle-outline" label="Studenti da recuperare" hint="Non in regola su almeno un esame" value={retakeGroups ? retakeGroups.length : null} onPress={() => navigate("exams")} />
+            <StatTile icon="alert-circle-outline" label="Studenti da recuperare" hint={retakeGroups ? `${retakeSummary(retakeGroups)} · non in regola su almeno un esame` : "Non in regola su almeno un esame"} value={retakeGroups ? retakeGroups.length : null} onPress={() => navigate("exams")} />
           </>}
           {role === "admin" && <>
             <StatTile icon="school-outline" label="Studenti" value={counts.students} onPress={() => navigate("students")} />

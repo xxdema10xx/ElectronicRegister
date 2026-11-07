@@ -26,7 +26,7 @@ import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
 import { resetMockExams } from "../api/mockExamBackend";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, detailToDraft, draftToDto, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
-import { getRetakeCandidates, getRetakeGroups } from "../api/examInsights";
+import { RETAKE_LABEL, RETAKE_TONE, getRetakeCandidates, getRetakeGroups, invalidateExamInsights, retakeSummary } from "../api/examInsights";
 
 // La bozza in corso sopravvive al refresh (F5) su web grazie a sessionStorage.
 const DRAFT_KEY = "examDraft4";
@@ -377,6 +377,7 @@ export default function ExamsScreen() {
       setBusy(exam.id);
       try {
         await run();
+        invalidateExamInsights(exam.id);
         await load();
         const r = routeRef.current;
         if (r.name === "view" && r.id === exam.id) {
@@ -443,7 +444,9 @@ export default function ExamsScreen() {
               <TouchableOpacity onPress={() => setRetakes(null)}><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: C.text, fontSize: 16, fontWeight: "700" }}>Chi deve recuperare</Text>
-                <Text style={{ color: C.textMuted, fontSize: 12 }}>Studenti non in regola su almeno un esame pubblicato o chiuso</Text>
+                <Text style={{ color: C.textMuted, fontSize: 12 }}>
+                  {retakes.loading ? "Studenti non in regola su almeno un esame pubblicato o chiuso" : `${retakeSummary(retakes.groups)} · non in regola su almeno un esame pubblicato o chiuso`}
+                </Text>
               </View>
             </View>
             {retakes.loading ? <Loader /> : retakes.groups.length === 0 ? <EmptyState message="Nessuno studente da recuperare" /> : (
@@ -455,7 +458,7 @@ export default function ExamsScreen() {
                       {g.exams.map(e => (
                         <View key={e.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 6 }}>
                           <Text style={{ color: C.text, flex: 1 }} numberOfLines={1}>{e.name}{csLabel(e.classSubjectId) ? ` · ${csLabel(e.classSubjectId)}` : ""}</Text>
-                          <StatusChip label={EXAM_STATUS_LABEL[e.status] || e.status} tone={EXAM_TONE[e.status]} />
+                          <StatusChip label={RETAKE_LABEL[e.reason] || e.reason} tone={RETAKE_TONE[e.reason]} />
                         </View>
                       ))}
                     </Card>
@@ -474,7 +477,7 @@ export default function ExamsScreen() {
 
   // Finestre che restano tali (consegne, chi deve recuperare): valgono per lista e pagine
   const overlays = (<>
-    {submissionsFor && <ExamSubmissions exam={submissionsFor} api={api} onClose={() => setSubmissionsFor(null)} />}
+    {submissionsFor && <ExamSubmissions exam={submissionsFor} api={api} onClose={() => { invalidateExamInsights(submissionsFor.id); setSubmissionsFor(null); }} />}
     {retakes && renderRetakes()}
   </>);
 
@@ -566,7 +569,7 @@ export default function ExamsScreen() {
             <Text style={{ color: "#92400E", flex: 1, minWidth: 200 }}>
               Modalità prova: il server non espone ancora gli esami (/Exam), i dati sono locali a questo browser.
             </Text>
-            <TouchableOpacity onPress={() => { resetMockExams(); load(); }}><Text style={{ color: "#92400E", fontWeight: "700" }}>Ripristina dati</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => { resetMockExams(); invalidateExamInsights(); load(); }}><Text style={{ color: "#92400E", fontWeight: "700" }}>Ripristina dati</Text></TouchableOpacity>
           </View>
         )}
         {showResume && tab === "drafts" && (

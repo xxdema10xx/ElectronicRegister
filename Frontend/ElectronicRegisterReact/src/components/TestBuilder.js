@@ -21,6 +21,7 @@ import DateTimeField from "./DateTimeField";
 import Loader from "./Loader";
 import StatusChip from "./StatusChip";
 import { filterBySearch } from "../utils/search";
+import { RETAKE_LABEL, RETAKE_TONE } from "../api/examInsights";
 
 export const QUESTION_TYPES = [
   { id: "single", label: "Singola", closed: true, icon: "radio-button-on-outline", hint: "Una sola risposta giusta" },
@@ -229,13 +230,8 @@ function windowMinutes(from, until) {
 }
 const formatMinutes = (m) => m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ` ${m % 60} min` : ""}` : `${m} min`;
 
-// Motivo per cui uno studente è (o non è) proposto per il recupero
-const RETAKE_REASON = {
-  failed: { label: "Non superato", tone: "red" },
-  missing: { label: "Non consegnato", tone: "amber" },
-  pending: { label: "In correzione", tone: "gray" },
-  open: { label: "Può ancora consegnare", tone: "gray" },
-};
+// Esito di uno studente nell'esame originale: stesse etichette di "Chi deve recuperare" e della Home
+const RETAKE_REASON = Object.fromEntries(Object.keys(RETAKE_LABEL).map(k => [k, { label: RETAKE_LABEL[k], tone: RETAKE_TONE[k] }]));
 
 // Bottone a icona; con caption mostra sotto l'icona una piccola etichetta
 function IconBtn({ name, onPress, disabled, color = C.textMuted, label, caption }) {
@@ -480,9 +476,11 @@ function DetailsStep({ draft, onChange, env, isDesktop, reveal, focus }) {
           <SelectField label="Recupero di" value={draft.retakeOfExamId} options={retakeOptions} getLabel={(e) => e.name}
             onSelect={(retakeOfExamId) => set({ retakeOfExamId })} placeholder="Seleziona l'esame originale"
             emptyMessage="Nessun esame della stessa classe e materia" />
-          <Text style={[s.itemSub, { marginTop: -8, marginBottom: 14 }]}>
-            Nel passo Studenti ti proporremo già spuntati gli studenti che non hanno superato o non hanno consegnato l'esame originale. Potrai togliere o aggiungere chi vuoi.
-          </Text>
+          {!!draft.retakeOfExamId && (
+            <Text style={[s.itemSub, { marginTop: -8, marginBottom: 14 }]}>
+              Nello step Studenti trovi già selezionati gli studenti che devono recuperare. Potrai togliere o aggiungere chi vuoi.
+            </Text>
+          )}
         </View>
       )}
 
@@ -508,10 +506,12 @@ function StudentsStep({ draft, onChange, env }) {
     return () => { cancelled = true; };
   }, [draft.classSubjectId]);
 
-  // Recupero: chi non ha superato o non ha consegnato l'originale. Alla prima apertura del passo, se
-  // nessuno è ancora assegnato, i candidati vengono spuntati; restano comunque modificabili a mano.
+  // Recupero: esiti dell'esame originale (examInsights.getRetakeCandidates, con cache). Si preselezionano
+  // "Deve recuperare" e "Non ha consegnato" solo se l'originale è chiuso e ha consegne, una volta sola e solo
+  // se nessuno è ancora assegnato; poi la scelta è del docente. retakeKnownIds: chi era già noto (proposto o
+  // assegnato) quando si è aperto lo step, per proporre in seguito solo i NUOVI da recuperare.
   const retakeOf = draft.retakeOfExamId;
-  const [candidates, setCandidates] = useState(null); // Map studentId → { reason, proposed }
+  const [candidates, setCandidates] = useState(null); // { closed, hasSubmissions, byStudent: Map }
   const [candidatesError, setCandidatesError] = useState(null);
   useEffect(() => {
     let cancelled = false;
@@ -519,25 +519,41 @@ function StudentsStep({ draft, onChange, env }) {
     setCandidatesError(null);
     if (!retakeOf || !env.getRetakeCandidates) return;
     env.getRetakeCandidates(retakeOf)
-      .then((map) => { if (!cancelled) setCandidates(map); })
+      .then((res) => { if (!cancelled) setCandidates(res); })
       .catch((e) => { if (!cancelled) setCandidatesError(e.message); });
     return () => { cancelled = true; };
   }, [retakeOf]);
 
-  const proposedIds = candidates ? [...candidates].filter(([, c]) => c.proposed).map(([id]) => id) : [];
+  const byStudent = candidates?.byStudent || new Map();
+  const proposedIds = [...byStudent].filter(([, c]) => c.proposed).map(([id]) => id);
   useEffect(() => {
     if (!candidates || loading || draft.retakeSeededFor === retakeOf) return;
-    const students = draft.students.length > 0 ? draft.students
-      : list.filter(st => proposedIds.includes(st.id)).map(st => ({ studentId: st.id, firstName: st.firstName, lastName: st.lastName, extraTimeMinutes: 0 }));
-    onChange({ ...draft, students, retakeSeededFor: retakeOf });
+    const fresh = draft.students.length === 0;
+    const students = fresh
+      ? list.filter(st => proposedIds.includes(st.id)).map(st => ({ studentId: st.id, firstName: st.firstName, lastName: st.lastName, extraTimeMinutes: 0 }))
+      : draft.students;
+    const known = fresh ? proposedIds : draft.students.map(x => x.studentId);
+    onChange({ ...draft, students, retakeSeededFor: retakeOf, retakeKnownIds: known });
   }, [candidates, loading]);
-
   const selected = new Map(draft.students.map(st => [st.studentId, st]));
   const visible = filterBySearch(list, search, st => [st.firstName, st.lastName]);
   const setStudents = (students) => onChange({ ...draft, students });
   const asEntry = (st) => selected.get(st.id) || { studentId: st.id, firstName: st.firstName, lastName: st.lastName, extraTimeMinutes: 0 };
   const toggle = (st) => setStudents(selected.has(st.id) ? draft.students.filter(x => x.studentId !== st.id) : [...draft.students, asEntry(st)]);
   const setExtra = (id, v) => setStudents(draft.students.map(x => x.studentId === id ? { ...x, extraTimeMinutes: v.replace(/[^0-9]/g, "") } : x));
+
+  // Riepilogo: "5 selezionati: 3 da recuperare, 2 assenti" (+ altri aggiunti a mano)
+  const reasonOf = (id) => byStudent.get(id)?.reason;
+  const selectedIds = draft.students.map(x => x.studentId);
+  const nFailed = selectedIds.filter(id => reasonOf(id) === "failed").length;
+  const nMissing = selectedIds.filter(id => reasonOf(id) === "missing").length;
+  const nOthers = selectedIds.length - nFailed - nMissing;
+  const nPending = [...byStudent.values()].filter(c => c.reason === "pending").length;
+  // Nuovi da recuperare (es. correzioni finite dopo): proposti, non assegnati e non già noti. Si propongono, non si applicano.
+  const known = new Set(draft.retakeKnownIds || []);
+  const newIds = draft.retakeSeededFor === retakeOf ? proposedIds.filter(id => !selected.has(id) && !known.has(id)) : [];
+  const addNew = () => onChange({ ...draft, students: [...draft.students, ...list.filter(st => newIds.includes(st.id)).map(asEntry)],
+    retakeKnownIds: [...known, ...newIds] });
 
   return (
     <Card style={{ padding: 28, gap: 12 }}>
@@ -549,22 +565,41 @@ function StudentsStep({ draft, onChange, env }) {
       </View>
       <View style={{ flexDirection: "row", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
         <TextInput style={[s.input, { flex: 1, minWidth: 180 }]} placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
-        <Btn label="Seleziona tutti" variant="ghost" onPress={() => setStudents(list.map(asEntry))} style={s.smBtn} textStyle={s.smBtnText} />
-        <Btn label="Nessuno" variant="ghost" onPress={() => setStudents([])} style={s.smBtn} textStyle={s.smBtnText} />
-        {proposedIds.length > 0 && (
-          <Btn label={`Solo chi deve recuperare (${proposedIds.length})`} variant="ghost" style={s.smBtn} textStyle={s.smBtnText}
+        {retakeOf && proposedIds.length > 0 && (
+          <Btn label="Solo chi deve recuperare" variant="ghost" style={s.smBtn} textStyle={s.smBtnText}
             onPress={() => setStudents(list.filter(st => proposedIds.includes(st.id)).map(asEntry))} />
         )}
+        <Btn label="Nessuno" variant="ghost" onPress={() => setStudents([])} style={s.smBtn} textStyle={s.smBtnText} />
+        <Btn label="Seleziona tutti" variant="ghost" onPress={() => setStudents(list.map(asEntry))} style={s.smBtn} textStyle={s.smBtnText} />
       </View>
 
       {!!retakeOf && (
-        <View style={{ backgroundColor: "#FEF3C7", borderRadius: 10, padding: 12 }}>
-          <Text style={{ color: "#92400E" }}>
-            {candidatesError ? `Non è stato possibile leggere gli esiti dell'esame originale: ${candidatesError}. Seleziona gli studenti a mano.`
-              : !candidates ? "Sto leggendo gli esiti dell'esame originale…"
-              : proposedIds.length === 0 ? "Esame di recupero: nessuno studente risulta da recuperare. Puoi comunque scegliere chi deve svolgerlo."
-              : `Esame di recupero: ${proposedIds.length} ${proposedIds.length === 1 ? "studente non ha" : "studenti non hanno"} superato o consegnato l'esame originale e ${proposedIds.length === 1 ? "è proposto" : "sono proposti"} qui sotto. Puoi togliere o aggiungere chiunque della classe.`}
-          </Text>
+        <View testID="retake-summary" style={{ backgroundColor: "#FEF3C7", borderRadius: 10, padding: 12, gap: 4 }}>
+          {candidatesError ? (
+            <Text style={{ color: "#92400E" }}>Non è stato possibile leggere gli esiti dell'esame originale: {candidatesError}. Seleziona gli studenti a mano.</Text>
+          ) : !candidates ? (
+            <Text style={{ color: "#92400E" }}>Sto leggendo gli esiti dell'esame originale…</Text>
+          ) : !candidates.closed ? (
+            <Text style={{ color: "#92400E" }}>L'esame originale non è ancora chiuso: chi deve recuperare si saprà dopo la chiusura. Per ora nessuno è preselezionato; puoi scegliere gli studenti a mano.</Text>
+          ) : !candidates.hasSubmissions ? (
+            <Text style={{ color: "#92400E" }}>L'esame originale non ha consegne: nessuno è preselezionato. Puoi scegliere gli studenti a mano.</Text>
+          ) : (<>
+            <Text style={{ color: "#92400E", fontWeight: "700" }}>
+              {selectedIds.length} {selectedIds.length === 1 ? "selezionato" : "selezionati"}: {nFailed} da recuperare, {nMissing} {nMissing === 1 ? "assente" : "assenti"}{nOthers ? `, ${nOthers} ${nOthers === 1 ? "altro" : "altri"}` : ""}
+            </Text>
+            {nPending > 0 && (
+              <Text style={{ color: "#92400E" }}>{nPending} in correzione: dopo la correzione {nPending === 1 ? "potrebbe" : "potrebbero"} dover recuperare.</Text>
+            )}
+            {newIds.length > 0 && (
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <Text style={{ color: "#92400E" }}>
+                  {newIds.length === 1 ? "C'è 1 nuovo studente da recuperare" : `Ci sono ${newIds.length} nuovi studenti da recuperare`}:
+                </Text>
+                <Btn label={newIds.length === 1 ? "Aggiungi" : "Aggiungili"} variant="ghost" onPress={addNew} style={s.smBtn} textStyle={s.smBtnText} />
+              </View>
+            )}
+            <Text style={{ color: "#92400E", fontSize: 12 }}>Puoi togliere o aggiungere chiunque della classe.</Text>
+          </>)}
         </View>
       )}
 
@@ -577,8 +612,8 @@ function StudentsStep({ draft, onChange, env }) {
             <TouchableOpacity onPress={() => toggle(st)} style={{ flexDirection: "row", alignItems: "center", gap: 10, flex: 1 }}>
               <Ionicons name={on ? "checkbox" : "square-outline"} size={26} color={on ? C.primary : C.textLight} />
               <Text style={{ color: C.text, fontSize: 15 }}>{st.lastName} {st.firstName}</Text>
-              {!!candidates?.get(st.id) && (
-                <StatusChip label={RETAKE_REASON[candidates.get(st.id).reason].label} tone={RETAKE_REASON[candidates.get(st.id).reason].tone} style={{ alignSelf: "center" }} />
+              {!!byStudent.get(st.id) && (
+                <StatusChip label={RETAKE_REASON[byStudent.get(st.id).reason].label} tone={RETAKE_REASON[byStudent.get(st.id).reason].tone} style={{ alignSelf: "center" }} />
               )}
             </TouchableOpacity>
             {on && (

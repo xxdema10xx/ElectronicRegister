@@ -26,8 +26,10 @@ const KEPT_MESSAGE = Platform.OS === "web"
 const LOST_MESSAGE = "Le modifiche non sono ancora sul server e andranno perse.";
 const GUARD_MESSAGE = Platform.OS === "web" ? KEPT_MESSAGE : LOST_MESSAGE;
 
-// Uguali a parte lo step? (cambiare step non è una modifica da salvare)
-const sameButStep = (a, b) => !!a && !!b && JSON.stringify({ ...a, step: 0 }) === JSON.stringify({ ...b, step: 0 });
+// Uguali a parte lo step e i campi di servizio del recupero? (non sono modifiche da salvare: aprire lo step
+// Studenti di un esame salvato non deve chiedere conferma all'uscita)
+const SERVICE_FIELDS = { step: 0, retakeSeededFor: 0, retakeKnownIds: 0 };
+const sameButStep = (a, b) => !!a && !!b && JSON.stringify({ ...a, ...SERVICE_FIELDS }) === JSON.stringify({ ...b, ...SERVICE_FIELDS });
 
 export default function ExamEditorScreen({ route, nav, api, draft, dirty, updateDraft, env, contextLabel, draftStatus, draftStatusShort, onSaveDraft, onSaveAndClose, destroyAction, saving, onExit, notice, onDismissNotice }) {
   const [loadingExam, setLoadingExam] = useState(false);
