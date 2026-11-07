@@ -19,6 +19,7 @@ import SelectField from "./SelectField";
 import CheckboxField from "./CheckboxField";
 import DateTimeField from "./DateTimeField";
 import Loader from "./Loader";
+import StatusChip from "./StatusChip";
 import { filterBySearch } from "../utils/search";
 
 export const QUESTION_TYPES = [
@@ -98,6 +99,35 @@ export function validateTestDraft(d) {
 }
 
 const field = { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, color: C.text, fontSize: 15 };
+
+// Gruppo di campi con titolo e testo d'aiuto: separa concetti diversi (es. disponibilità e durata)
+function FieldGroup({ icon, title, hint, children }) {
+  return (
+    <View style={{ borderWidth: 1, borderColor: C.border, borderRadius: 12, padding: 14, paddingBottom: 0, marginBottom: 14 }}>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+        <Ionicons name={icon} size={18} color={C.primary} />
+        <Text style={{ color: C.text, fontWeight: "700", fontSize: 15 }}>{title}</Text>
+      </View>
+      {!!hint && <Text style={[s.itemSub, { marginTop: 4, marginBottom: 12 }]}>{hint}</Text>}
+      {children}
+    </View>
+  );
+}
+
+// Minuti tra due valori "AAAA-MM-GGTHH:mm" (null se non validi)
+function windowMinutes(from, until) {
+  const a = new Date(from), b = new Date(until);
+  return from && until && !isNaN(a) && !isNaN(b) && b > a ? Math.round((b - a) / 60000) : null;
+}
+const formatMinutes = (m) => m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ` ${m % 60} min` : ""}` : `${m} min`;
+
+// Motivo per cui uno studente è (o non è) proposto per il recupero
+const RETAKE_REASON = {
+  failed: { label: "Non superato", tone: "red" },
+  missing: { label: "Non consegnato", tone: "amber" },
+  pending: { label: "In correzione", tone: "gray" },
+  open: { label: "Può ancora consegnare", tone: "gray" },
+};
 
 // Bottone a icona; con caption mostra sotto l'icona una piccola etichetta
 function IconBtn({ name, onPress, disabled, color = C.textMuted, label, caption }) {
@@ -286,26 +316,35 @@ function DetailsStep({ draft, onChange, onNext, onDiscard, env, isDesktop }) {
         </View>
       )}
 
+      <FieldGroup icon="calendar-outline" title="Disponibilità"
+        hint="Quando lo studente può aprire l'esame. Fuori da questa finestra non può iniziarlo.">
       <View style={twoCols(isDesktop)}>
         <View style={{ flex: 1 }}><DateTimeField label="Disponibile da" value={draft.availableFrom} onChange={(availableFrom) => set({ availableFrom })} /></View>
         <View style={{ flex: 1 }}><DateTimeField label="Disponibile fino a" value={draft.availableUntil} onChange={(availableUntil) => set({ availableUntil })} /></View>
       </View>
-      <View style={twoCols(isDesktop)}>
-        <View style={{ flex: 1 }}>
-          <Input label="Durata (minuti)" value={String(draft.durationMinutes)} keyboardType="number-pad" placeholder="Es. 45"
-            onChangeText={(v) => set({ durationMinutes: v.replace(/[^0-9]/g, "") })} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Input label="Soglia di sufficienza (%)" value={String(draft.passingPercent)} keyboardType="number-pad" placeholder="Es. 60"
-            onChangeText={(v) => set({ passingPercent: v.replace(/[^0-9]/g, "") })} />
-        </View>
-      </View>
+      </FieldGroup>
+
+      <FieldGroup icon="time-outline" title="Durata"
+        hint={`Minuti a disposizione dello studente da quando apre l'esame: allo scadere viene consegnato in automatico.${
+          windowMinutes(draft.availableFrom, draft.availableUntil) ? ` Deve stare nella finestra di disponibilità (${formatMinutes(windowMinutes(draft.availableFrom, draft.availableUntil))}).` : ""
+        } Il tempo aggiuntivo per singolo studente si imposta nel passo Studenti.`}>
+        <Input label="Durata (minuti)" value={String(draft.durationMinutes)} keyboardType="number-pad" placeholder="Es. 45"
+          onChangeText={(v) => set({ durationMinutes: v.replace(/[^0-9]/g, "") })} />
+      </FieldGroup>
+
+      <Input label="Soglia di sufficienza (%)" value={String(draft.passingPercent)} keyboardType="number-pad" placeholder="Es. 60"
+        onChangeText={(v) => set({ passingPercent: v.replace(/[^0-9]/g, "") })} />
 
       <CheckboxField label="Esame di recupero" value={isRetake} onChange={(v) => set({ wantsRetake: v, retakeOfExamId: v ? draft.retakeOfExamId : "" })} />
       {isRetake && (
-        <SelectField label="Recupero di" value={draft.retakeOfExamId} options={retakeOptions} getLabel={(e) => e.name}
-          onSelect={(retakeOfExamId) => set({ retakeOfExamId })} placeholder="Seleziona l'esame originale"
-          emptyMessage="Nessun esame della stessa classe e materia" />
+        <View>
+          <SelectField label="Recupero di" value={draft.retakeOfExamId} options={retakeOptions} getLabel={(e) => e.name}
+            onSelect={(retakeOfExamId) => set({ retakeOfExamId })} placeholder="Seleziona l'esame originale"
+            emptyMessage="Nessun esame della stessa classe e materia" />
+          <Text style={[s.itemSub, { marginTop: -8, marginBottom: 14 }]}>
+            Nel passo Studenti ti proporremo già spuntati gli studenti che non hanno superato o non hanno consegnato l'esame originale. Potrai togliere o aggiungere chi vuoi.
+          </Text>
+        </View>
       )}
 
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 6, gap: 12 }}>
@@ -334,6 +373,30 @@ function StudentsStep({ draft, onChange, env }) {
     return () => { cancelled = true; };
   }, [draft.classSubjectId]);
 
+  // Recupero: chi non ha superato o non ha consegnato l'originale. Alla prima apertura del passo, se
+  // nessuno è ancora assegnato, i candidati vengono spuntati; restano comunque modificabili a mano.
+  const retakeOf = draft.retakeOfExamId;
+  const [candidates, setCandidates] = useState(null); // Map studentId → { reason, proposed }
+  const [candidatesError, setCandidatesError] = useState(null);
+  useEffect(() => {
+    let cancelled = false;
+    setCandidates(null);
+    setCandidatesError(null);
+    if (!retakeOf || !env.getRetakeCandidates) return;
+    env.getRetakeCandidates(retakeOf)
+      .then((map) => { if (!cancelled) setCandidates(map); })
+      .catch((e) => { if (!cancelled) setCandidatesError(e.message); });
+    return () => { cancelled = true; };
+  }, [retakeOf]);
+
+  const proposedIds = candidates ? [...candidates].filter(([, c]) => c.proposed).map(([id]) => id) : [];
+  useEffect(() => {
+    if (!candidates || loading || draft.retakeSeededFor === retakeOf) return;
+    const students = draft.students.length > 0 ? draft.students
+      : list.filter(st => proposedIds.includes(st.id)).map(st => ({ studentId: st.id, firstName: st.firstName, lastName: st.lastName, extraTimeMinutes: 0 }));
+    onChange({ ...draft, students, retakeSeededFor: retakeOf });
+  }, [candidates, loading]);
+
   const selected = new Map(draft.students.map(st => [st.studentId, st]));
   const visible = filterBySearch(list, search, st => [st.firstName, st.lastName]);
   const setStudents = (students) => onChange({ ...draft, students });
@@ -353,7 +416,22 @@ function StudentsStep({ draft, onChange, env }) {
         <TextInput style={[s.input, { flex: 1, minWidth: 180 }]} placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
         <Btn label="Seleziona tutti" variant="ghost" onPress={() => setStudents(list.map(asEntry))} style={s.smBtn} textStyle={s.smBtnText} />
         <Btn label="Nessuno" variant="ghost" onPress={() => setStudents([])} style={s.smBtn} textStyle={s.smBtnText} />
+        {proposedIds.length > 0 && (
+          <Btn label={`Solo chi deve recuperare (${proposedIds.length})`} variant="ghost" style={s.smBtn} textStyle={s.smBtnText}
+            onPress={() => setStudents(list.filter(st => proposedIds.includes(st.id)).map(asEntry))} />
+        )}
       </View>
+
+      {!!retakeOf && (
+        <View style={{ backgroundColor: "#FEF3C7", borderRadius: 10, padding: 12 }}>
+          <Text style={{ color: "#92400E" }}>
+            {candidatesError ? `Non è stato possibile leggere gli esiti dell'esame originale: ${candidatesError}. Seleziona gli studenti a mano.`
+              : !candidates ? "Sto leggendo gli esiti dell'esame originale…"
+              : proposedIds.length === 0 ? "Esame di recupero: nessuno studente risulta da recuperare. Puoi comunque scegliere chi deve svolgerlo."
+              : `Esame di recupero: ${proposedIds.length} ${proposedIds.length === 1 ? "studente non ha" : "studenti non hanno"} superato o consegnato l'esame originale e ${proposedIds.length === 1 ? "è proposto" : "sono proposti"} qui sotto. Puoi togliere o aggiungere chiunque della classe.`}
+          </Text>
+        </View>
+      )}
 
       {loading ? <Loader /> : error ? <Text style={{ color: C.danger }}>{error}</Text> : visible.length === 0 ? (
         <Text style={{ color: C.textMuted }}>Nessuno studente trovato.</Text>
@@ -364,6 +442,9 @@ function StudentsStep({ draft, onChange, env }) {
             <TouchableOpacity onPress={() => toggle(st)} style={{ flexDirection: "row", alignItems: "center", gap: 10, flex: 1 }}>
               <Ionicons name={on ? "checkbox" : "square-outline"} size={26} color={on ? C.primary : C.textLight} />
               <Text style={{ color: C.text, fontSize: 15 }}>{st.lastName} {st.firstName}</Text>
+              {!!candidates?.get(st.id) && (
+                <StatusChip label={RETAKE_REASON[candidates.get(st.id).reason].label} tone={RETAKE_REASON[candidates.get(st.id).reason].tone} style={{ alignSelf: "center" }} />
+              )}
             </TouchableOpacity>
             {on && (
               <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>

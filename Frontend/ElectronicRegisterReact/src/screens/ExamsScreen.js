@@ -24,7 +24,7 @@ import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
 import { resetMockExams } from "../api/mockExamBackend";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, detailToDraft, draftToDto, fromEnum, formatDateTime } from "../api/examContract";
-import { getRetakeGroups } from "../api/examInsights";
+import { getRetakeCandidates, getRetakeGroups } from "../api/examInsights";
 
 // La bozza in corso sopravvive al refresh (F5) su web grazie a sessionStorage.
 const DRAFT_KEY = "examDraft4";
@@ -174,6 +174,7 @@ export default function ExamsScreen() {
     classSubjectLabel: csLabel(draft?.classSubjectId),
     retakeOptions: exams.filter(inClass).map(e => ({ id: e.id, name: e.name, classSubjectId: e.classSubjectId })),
     getStudents: (classSubjectId) => api.getStudentsOfClassSubject(classSubjectId),
+    getRetakeCandidates: (examId) => getRetakeCandidates(api, examId),
   };
 
   const newBtn = canWrite && (

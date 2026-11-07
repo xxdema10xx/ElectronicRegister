@@ -1,7 +1,7 @@
 // src/api/examInsights.js
 // Aggregazioni sugli esami che richiedono una chiamata per esame (elenco consegne): isolate qui per
 // essere riusate sia dalla home che dall'elenco esami, senza duplicare la logica.
-import { EXAM_STATUS, SUBMISSION_STATUS, fromEnum, resultView } from "./examContract";
+import { EXAM_STATUS, SUBMISSION_STATUS, fromEnum, parseUtc, resultView } from "./examContract";
 import { getRun } from "../data/studentExams";
 
 // Libretto dello studente: un esame (appello) per riga, con l'esito calcolato come lo vede lui
@@ -57,6 +57,33 @@ export async function getRetakeGroups(api, exams) {
 // Consegne con domande aperte ancora da correggere: lavoro concreto che aspetta il docente.
 export async function getPendingReviewCount(api, exams) {
   return countPendingReview(await fetchSubmissionLists(api, exams));
+}
+
+// Candidati al recupero di un esame: per ogni studente assegnato all'originale, il motivo.
+//   "failed"  non superato (bocciato o "non superabile")            → proposto
+//   "missing" non ha consegnato, a finestra chiusa (anche se iniziato) → proposto
+//   "pending" consegna ancora in correzione                         → non proposto, solo segnalato
+//   "open"    non ha consegnato ma l'esame è ancora aperto          → non proposto, solo segnalato
+// Restituisce Map studentId → { reason, proposed }. Gli studenti promossi non compaiono.
+// TODO(API): sostituire con GET /api/institution/exams/{id}/retake-candidates (due chiamate in meno
+// e regole decise dal server).
+export async function getRetakeCandidates(api, originalExamId) {
+  const [detail, items] = await Promise.all([api.getExam(originalExamId), api.listSubmissions(originalExamId)]);
+  const status = fromEnum(detail?.status, EXAM_STATUS);
+  const until = parseUtc(detail?.availableUntil);
+  const ended = status === "closed" || status === "cancelled" || (until && until < new Date());
+  const byStudent = new Map((items || []).map(it => [it.studentId, it]));
+  const out = new Map();
+  for (const st of detail?.assignedStudents || []) {
+    const sub = byStudent.get(st.studentId);
+    const s = sub ? fromEnum(sub.status, SUBMISSION_STATUS) : null;
+    let reason = null;
+    if (s === "failed_auto" || ((s === "graded" || s === "finalized") && sub.passed === false)) reason = "failed";
+    else if (s === "pending_review") reason = "pending";
+    else if (!s || s === "in_progress") reason = ended ? "missing" : "open";
+    if (reason) out.set(st.studentId, { reason, proposed: reason === "failed" || reason === "missing" });
+  }
+  return out;
 }
 
 // Le due aggregazioni insieme, con una sola serie di chiamate (utile per la dashboard).
