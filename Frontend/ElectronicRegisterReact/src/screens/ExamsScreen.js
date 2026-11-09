@@ -25,6 +25,7 @@ import ClassFilter from "../components/ClassFilter";
 import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
 import { isGuid, readUser, removeUser, writeUser } from "../utils/userStorage";
+import { examErrorMessage } from "../utils/examErrors";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, detailToDraft, draftToDto, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
 import { RETAKE_LABEL, RETAKE_TONE, getRetakeCandidates, getRetakeGroups, invalidateExamInsights, retakeSummary } from "../api/examInsights";
 
@@ -79,6 +80,7 @@ function storedDraft() {
 }
 
 const subjectNameOf = (cs) => cs?.subjectName || "";
+const ACTION_OF = { Pubblica: "publish", Chiudi: "close", Annulla: "cancel", Elimina: "remove" };
 
 export default function ExamsScreen() {
   const { user } = useAuth();
@@ -240,7 +242,7 @@ export default function ExamsScreen() {
         .then((detail) => { if (!cancelled) setViewing(detail); })
         .catch((e) => {
           if (cancelled) return;
-          notify("Esame non trovato", e.status === 404 || /404/.test(e.message) ? "L'esame non esiste o è stato eliminato." : e.message);
+          notify(e.status === 404 ? "Esame non trovato" : "Errore", examErrorMessage("load", e));
           nav.replace({ name: "list", tab });
         })
         .finally(() => { if (!cancelled) setBusy(null); });
@@ -298,7 +300,7 @@ export default function ExamsScreen() {
         updateDraft({ ...detailToDraft(detail), step }, { fromServer: true });
         setServerSavedAt(null);
         setEditorNotice(null); // tornati alla versione del server: niente da segnalare
-      } catch (e) { notify("Errore", e.message); }
+      } catch (e) { notify("Errore", examErrorMessage("load", e)); }
       finally { setSaving(false); }
     }, "Annulla modifiche", { cancelLabel: "Continua a modificare", destructive: true });
   }
@@ -348,7 +350,7 @@ export default function ExamsScreen() {
       setEditorNotice(null);
       if (isNew) nav.replace({ name: "edit", id: examId, step: draft.step ?? 1 }); // ora l'esame esiste: /esami/{id}/modifica
       load();
-    } catch (e) { notify("Salvataggio non riuscito", e.message); }
+    } catch (e) { notify("Salvataggio non riuscito", examErrorMessage("save", e)); }
     finally { setSaving(false); }
   }
 
@@ -363,7 +365,7 @@ export default function ExamsScreen() {
       updateDraft(null); backToList();
       await load();
       notify("Esame salvato", "È in bozza: pubblicalo dall'elenco o dal dettaglio quando è pronto.");
-    } catch (e) { notify("Salvataggio non riuscito", e.message); }
+    } catch (e) { notify("Salvataggio non riuscito", examErrorMessage("save", e)); }
     finally { setSaving(false); }
   }
 
@@ -386,7 +388,15 @@ export default function ExamsScreen() {
           else setViewing(await api.getExam(exam.id));
         }
       }
-      catch (e) { notify("Errore", e.message); }
+      catch (e) {
+        notify("Errore", examErrorMessage(ACTION_OF[label], e));
+        // L'esame è cambiato o sparito nel frattempo: si riallinea quello che si vede
+        if (e.status === 404 || e.status === 409) {
+          invalidateExamInsights(exam.id);
+          await load();
+          if (e.status === 404 && routeRef.current.name === "view") backToList();
+        }
+      }
       finally { setBusy(null); }
     }, okLabel);
   }

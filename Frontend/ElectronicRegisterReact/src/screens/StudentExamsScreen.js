@@ -15,6 +15,7 @@ import ExamTaker, { MAX_VIOLATIONS, enterFullscreen, exitFullscreen } from "../c
 import { useStudentExams, markSeen, getRun, saveRun, notifyStudentExamsChanged } from "../data/studentExams";
 // Svolgimento: avvisi del browser come prima (non il dialog dell'app), per non cambiare focus, schermo intero e violazioni
 import { notifyBrowser as notify } from "../utils/dialogs";
+import { examErrorMessage } from "../utils/examErrors";
 import {
   EXAM_STATUS, SUBMISSION_STATUS, fromEnum, formatDateTime, parseUtc, resultView, studentQuestionFromDto, isAnswered,
 } from "../api/examContract";
@@ -73,7 +74,7 @@ export default function StudentExamsScreen() {
       notifyStudentExamsChanged();
     } catch (e) {
       exitFullscreen();
-      notify("Impossibile iniziare", e.message);
+      notify("Impossibile iniziare", examErrorMessage("start", e));
       reload();
     } finally { setStarting(false); }
   }
@@ -102,7 +103,7 @@ export default function StudentExamsScreen() {
       setTaking(run);
     } catch (e) {
       exitFullscreen();
-      notify("Impossibile riprendere", e.message);
+      notify("Impossibile riprendere", examErrorMessage("load", e));
     } finally { setStarting(false); }
   }
 

@@ -5,6 +5,7 @@ import { session } from "./session";
 
 const axiosClient = axios.create({
   baseURL: API_BASE,
+  timeout: 15000,
   headers: { "Content-Type": "application/json" },
 });
 
@@ -24,6 +25,11 @@ const STATUS_MESSAGES = {
   500: "Errore interno del server.",
 };
 const GENERIC_TITLES = ["Operazione non consentita", "Richiesta non valida", "Non autorizzato", "Non autenticato", "Errore interno del server", "La risorsa non esiste"];
+const TIMEOUT_MESSAGE = "Il server non risponde, riprova";
+const NETWORK_MESSAGE = "Impossibile contattare il server. Controlla la connessione e riprova.";
+const GATEWAY_MESSAGE = "Il server non è disponibile in questo momento, riprova tra poco.";
+const NOT_FOUND_MESSAGE = "Elemento non trovato: potrebbe essere stato eliminato.";
+const isHtml = (text) => /<\s*(!doctype|html|head|body)\b/i.test(text);
 
 // Normalizza gli errori di rete/HTTP in un semplice Error con un messaggio
 // leggibile, così tutte le schermate possono continuare a fare
@@ -38,9 +44,15 @@ axiosClient.interceptors.response.use(
     let problem = data && typeof data === "object" ? (data.detail || data.title || null) : null;
     if (problem && GENERIC_TITLES.includes(problem)) problem = null;
     if (data?.errors && typeof data.errors === "object") problem = "Dati non validi: controlla i campi.";
-    // I 404 restano "Request failed with status code 404": le schermate li riconoscono da quel testo
+    const timedOut = error.code === "ECONNABORTED" || error.code === "ETIMEDOUT";
+    // Mai testo grezzo: errori di rete e risposte del gateway diventano un messaggio comprensibile.
+    // Per i casi 404 e 409 degli esami le schermate usano utils/examErrors.js.
     const message =
-      status === 404 ? error.message :
+      timedOut ? TIMEOUT_MESSAGE :
+      !error.response ? NETWORK_MESSAGE :
+      status >= 502 && status <= 504 ? GATEWAY_MESSAGE :
+      (typeof data === "string" && isHtml(data)) ? GATEWAY_MESSAGE :
+      status === 404 ? NOT_FOUND_MESSAGE :
       (typeof data === "string" && data) ? data :
       problem ? problem :
       code ? `Errore: ${code}` :

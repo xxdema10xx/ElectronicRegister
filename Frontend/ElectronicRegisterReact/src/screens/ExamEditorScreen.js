@@ -14,6 +14,7 @@ import { BackHandler, Platform } from "react-native";
 import Loader from "../components/Loader";
 import TestBuilder, { validateDetails } from "../components/TestBuilder";
 import { notify, confirmLeave } from "../utils/dialogs";
+import { examErrorMessage } from "../utils/examErrors";
 import { EXAM_STATUS, detailToDraft, fromEnum } from "../api/examContract";
 import { setLeaveGuard, setPageHeader, useBeforeUnload } from "../navigation/examRoutes";
 
@@ -59,7 +60,7 @@ export default function ExamEditorScreen({ route, nav, api, draft, dirty, update
       })
       .catch((e) => {
         if (cancelled) return;
-        notify("Esame non trovato", e.status === 404 || /404/.test(e.message) ? "L'esame non esiste o è stato eliminato." : e.message);
+        notify(e.status === 404 ? "Esame non trovato" : "Errore", examErrorMessage("load", e));
         nav.replace({ name: "list", tab: "drafts" });
       })
       .finally(() => { if (!cancelled) setLoadingExam(false); });
