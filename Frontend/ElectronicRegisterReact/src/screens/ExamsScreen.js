@@ -20,7 +20,7 @@ import { draftHasContent, newTestDraft, serverIssue, validateTestDraft } from ".
 import ExamEditorScreen from "./ExamEditorScreen";
 import { examHref, setPageHeader, useExamRoute } from "../navigation/examRoutes";
 import TestViewer from "../components/TestViewer";
-import ExamSubmissions from "../components/ExamSubmissions";
+import ExamSubmissions, { SubmissionReview } from "../components/ExamSubmissions";
 import ExamRetakes from "../components/ExamRetakes";
 import ClassFilter from "../components/ClassFilter";
 import { filterBySearch } from "../utils/search";
@@ -112,7 +112,6 @@ export default function ExamsScreen() {
   const editing = canWrite && (route.name === "new" || route.name === "edit");
   const [saving, setSaving] = useState(false);
   const [viewing, setViewing] = useState(null);
-  const [submissionsFor, setSubmissionsFor] = useState(null);
   const [tab, setTabState] = useState(() => (route.name === "list" && route.tab) || "active"); // "drafts" | "active" | "history"
   const [retakes, setRetakes] = useState(null); // dati della pagina /esami/recuperi: { loading, groups, failed }
   const [classId, setClassId] = useState(() => (route.name === "retakes" ? route.classId : null)); // filtro facoltativo: null = tutte le classi
@@ -130,13 +129,15 @@ export default function ExamsScreen() {
   })();
   const classSubjectsOfClass = (classSubjects || []).filter(cs => cs.classId === classId);
 
+  const loadFailed = useRef(false); // senza elenco non si può dire che un esame non esiste
   const load = useCallback(async () => {
     setLoading(true);
+    loadFailed.current = false;
     try {
       const [list, cs] = await Promise.all([api.listExams(), api.getClassSubjects().catch(() => null)]);
       setExams(Array.isArray(list) ? list : []);
       setClassSubjects(cs);
-    } catch (e) { notify("Errore", e.message); setExams([]); }
+    } catch (e) { loadFailed.current = true; notify("Errore", e.message); setExams([]); }
     finally { setLoading(false); }
   }, [api]);
   useEffect(() => { load(); }, [load]);
@@ -206,6 +207,7 @@ export default function ExamsScreen() {
     else if (!route.tab) nav.replace({ name: "list", tab });
   }, [route]);
   const backToList = () => nav.back({ name: "list", tab });
+  const backToExam = () => nav.back({ name: "view", id: route.id });
   // Uscita dall'editor: se non c'è niente da salvare la bozza locale si scarta (niente "Riprendi bozza")
   const exitEditor = () => { setEditorNotice(null); if (draft && !dirtyRef.current) updateDraft(null); backToList(); };
   const routeRef = useRef(route);
@@ -240,6 +242,11 @@ export default function ExamsScreen() {
         if (!Array.isArray(classSubjects)) updateDraft(newTestDraft());
         else openPicker(classId);
       }
+      return;
+    }
+    if (route.name === "submissions" && !loading && !loadFailed.current && !exams.some(e => e.id === route.id)) {
+      notify("Esame non trovato", examErrorMessage("load", { status: 404 }));
+      nav.replace({ name: "list", tab });
       return;
     }
     if (route.name === "view" && viewing?.id !== route.id) {
@@ -417,7 +424,7 @@ export default function ExamsScreen() {
     const status = fromEnum(exam.status, EXAM_STATUS);
     return {
       edit: detail && canWrite && status === "draft" ? () => edit(exam) : null,
-      submissions: canWrite && (status === "published" || status === "closed") ? () => setSubmissionsFor(exam) : null,
+      submissions: canWrite && (status === "published" || status === "closed") ? () => nav.push({ name: "submissions", id: exam.id }) : null,
       close: canWrite && status === "published" ? () => close(exam) : null,
       publish: canWrite && status === "draft" ? () => publish(exam) : null,
       cancel: canDestroy && status === "published" ? () => cancel(exam) : null,
@@ -429,8 +436,9 @@ export default function ExamsScreen() {
   useEffect(() => {
     if (route.name === "view") setPageHeader({ title: viewing?.id === route.id ? viewing.name : "Esame", onBack: backToList });
     else if (route.name === "retakes") setPageHeader({ title: "Chi deve recuperare", onBack: backToList });
+    else if (route.name === "submissions") setPageHeader({ title: "Consegne", onBack: backToExam });
     else if (route.name === "new" && picking) setPageHeader({ title: picking.changing ? "Cambia classe e materia" : "Nuovo esame", onBack: cancelPick });
-    else if (!editing) setPageHeader(null);
+    else if (!editing && route.name !== "review") setPageHeader(null); // editor e correzione gestiscono il proprio
   }, [route, picking, viewing, tab]);
   useEffect(() => () => setPageHeader(null), []);
 
@@ -441,6 +449,7 @@ export default function ExamsScreen() {
     const sub = BackHandler.addEventListener("hardwareBackPress", () => {
       if (route.name === "new" && picking) { cancelPick(); return true; }
       if (route.name === "view" || route.name === "retakes") { backToList(); return true; }
+      if (route.name === "submissions") { backToExam(); return true; }
       return false;
     });
     return () => sub.remove();
@@ -458,9 +467,6 @@ export default function ExamsScreen() {
   const barBtn = { height: BAR_H, paddingVertical: 0, paddingHorizontal: 18 };
   const newBtn = canWrite && <Btn label="Crea esame" onPress={startNew} style={barBtn} textStyle={s.smBtnText} />;
 
-  // Finestra che resta tale (consegne): vale per lista e pagine
-  const overlays = submissionsFor && <ExamSubmissions exam={submissionsFor} api={api} onClose={() => { invalidateExamInsights(submissionsFor.id); setSubmissionsFor(null); }} />;
-
   // Pagine della sezione, al posto della lista (sidebar e header di AppNav restano visibili)
   let page = null;
   if (route.name === "view") {
@@ -473,6 +479,18 @@ export default function ExamsScreen() {
       <ExamRetakes loading={retakes?.loading !== false} groups={retakes?.groups || []} failed={retakes?.failed || 0}
         labelOf={(e) => csLabel(e.classSubjectId) || e.name} hrefOf={(id) => examHref({ name: "view", id })}
         onOpenExam={(id) => nav.push({ name: "view", id })} />
+    );
+  } else if (route.name === "submissions") {
+    const exam = exams.find(e => e.id === route.id);
+    page = exam ? (
+      <ExamSubmissions key={exam.id} exam={exam} subtitle={csLabel(exam.classSubjectId) || exam.name} api={api}
+        hrefOf={(submissionId) => examHref({ name: "review", id: exam.id, submissionId })}
+        onOpen={(submissionId) => nav.push({ name: "review", id: exam.id, submissionId })} />
+    ) : <Loader />;
+  } else if (route.name === "review") {
+    page = (
+      <SubmissionReview key={route.submissionId} submissionId={route.submissionId} api={api}
+        onClose={() => nav.back({ name: "submissions", id: route.id })} onChanged={() => invalidateExamInsights(route.id)} />
     );
   } else if (route.name === "new" && picking) {
     page = (
@@ -511,7 +529,6 @@ export default function ExamsScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: C.bg }}>
         {page}
-        {overlays}
       </View>
     );
   }
@@ -587,8 +604,6 @@ export default function ExamsScreen() {
           }}
         />
       )}
-
-      {overlays}
     </View>
   );
 }

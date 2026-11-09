@@ -1,16 +1,19 @@
 // src/components/ExamSubmissions.js
-// Consegne di un esame per il docente: elenco con filtri e correzione (punti sulle risposte aperte, voto finale).
-import { useCallback, useEffect, useState } from "react";
-import { Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+// Pagine delle consegne di un esame per il docente: elenco con filtri (/esami/{id}/consegne) e correzione
+// di una consegna (/esami/{id}/consegne/{idConsegna}): punti sulle risposte aperte, voto finale.
+import { useCallback, useEffect, useRef, useState } from "react";
+import { BackHandler, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import Btn from "./Btn";
 import Card from "./Card";
 import Loader from "./Loader";
 import EmptyState from "./EmptyState";
+import RouteLink from "./RouteLink";
 import StatusChip, { SUBMISSION_TONE } from "./StatusChip";
-import { notify } from "../utils/dialogs";
+import { confirmLeave, notify } from "../utils/dialogs";
 import { invalidateExamInsights } from "../api/examInsights";
+import { setLeaveGuard, setPageHeader, useBeforeUnload } from "../navigation/examRoutes";
 import { QUESTION_TYPE, SUBMISSION_STATUS, SUBMISSION_STATUS_LABEL, SUBMIT_REASON, fromEnum, formatDateTime } from "../api/examContract";
 
 const num = (v) => Number(String(v).replace(",", "."));
@@ -25,20 +28,10 @@ const FILTERS = [
 ];
 const REASON_LABEL = { manual: "consegna volontaria", time_expired: "tempo scaduto", violations: "troppe uscite dal test" };
 
-function Header({ title, subtitle, onClose }) {
-  return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 10, backgroundColor: C.white, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: C.border }}>
-      <TouchableOpacity onPress={onClose}><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
-      <View style={{ flex: 1 }}>
-        <Text style={{ color: C.text, fontSize: 16, fontWeight: "700" }} numberOfLines={1}>{title}</Text>
-        {!!subtitle && <Text style={{ color: C.textMuted, fontSize: 12 }} numberOfLines={1}>{subtitle}</Text>}
-      </View>
-    </View>
-  );
-}
+const LEAVE_MESSAGE = "Le correzioni non salvate andranno perse.";
 
 // ── Correzione di una consegna ──────────────────────────────────────────────────────────────
-function SubmissionReview({ submissionId, api, onClose, onChanged }) {
+export function SubmissionReview({ submissionId, api, onClose, onChanged }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -46,22 +39,53 @@ function SubmissionReview({ submissionId, api, onClose, onChanged }) {
   const [comments, setComments] = useState({});
   const [grade, setGrade] = useState("");
   const [reason, setReason] = useState("");
+  const saved = useRef(""); // correzioni come sono sul server, per sapere se ci sono modifiche da salvare
+  const snapshot = (p, c, g, r) => JSON.stringify({ p, c, g, r });
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
       const d = await api.getReview(submissionId);
-      setData(d);
-      setPoints(Object.fromEntries(d.answers.map(a => [a.answerId, a.awardedPoints === null || a.awardedPoints === undefined ? "" : String(a.awardedPoints)])));
-      setComments(Object.fromEntries(d.answers.map(a => [a.answerId, a.teacherComment || ""])));
+      const nextPoints = Object.fromEntries(d.answers.map(a => [a.answerId, a.awardedPoints === null || a.awardedPoints === undefined ? "" : String(a.awardedPoints)]));
+      const nextComments = Object.fromEntries(d.answers.map(a => [a.answerId, a.teacherComment || ""]));
       const g = d.finalGrade ?? d.suggestedGrade;
-      setGrade(g === null || g === undefined ? "" : String(g));
+      const nextGrade = g === null || g === undefined ? "" : String(g);
+      setData(d);
+      setPoints(nextPoints);
+      setComments(nextComments);
+      setGrade(nextGrade);
+      setReason("");
+      saved.current = snapshot(nextPoints, nextComments, nextGrade, "");
     } catch (e) { notify("Errore", e.message); onClose(); }
     finally { setLoading(false); }
   }, [submissionId, api]);
   useEffect(() => { load(); }, [load]);
 
-  if (loading || !data) return <View style={{ flex: 1, backgroundColor: C.bg }}><Header title="Correzione" onClose={onClose} /><Loader /></View>;
+  // Uscita: conferma solo se ci sono correzioni non salvate (come nell'editor degli esami)
+  const dirty = !!data && !loading && snapshot(points, comments, grade, reason) !== saved.current;
+  const latest = useRef({ dirty, onClose });
+  latest.current = { dirty, onClose };
+  function requestExit() {
+    if (latest.current.dirty) confirmLeave(latest.current.onClose, { message: LEAVE_MESSAGE });
+    else latest.current.onClose();
+  }
+  useEffect(() => {
+    setLeaveGuard(dirty ? (proceed) => confirmLeave(proceed, { message: LEAVE_MESSAGE }) : null);
+    return () => setLeaveGuard(null);
+  }, [dirty]);
+  useBeforeUnload(dirty);
+  useEffect(() => {
+    if (Platform.OS !== "android") return;
+    const sub = BackHandler.addEventListener("hardwareBackPress", () => { requestExit(); return true; });
+    return () => sub.remove();
+  }, []);
+  const headerTitle = data ? `${data.studentLastName} ${data.studentFirstName}` : "Correzione";
+  useEffect(() => {
+    setPageHeader({ title: headerTitle, onBack: requestExit });
+    return () => setPageHeader(null);
+  }, [headerTitle]);
+
+  if (loading || !data) return <Loader />;
 
   const status = fromEnum(data.status, SUBMISSION_STATUS);
   const editable = status === "pending_review" || status === "failed_auto" || status === "graded";
@@ -99,10 +123,10 @@ function SubmissionReview({ submissionId, api, onClose, onChanged }) {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#EEEBF9" }}>
-      <Header title={`${data.studentLastName} ${data.studentFirstName}`} subtitle={data.examName} onClose={onClose} />
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
       <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }} keyboardShouldPersistTaps="handled">
         <View style={{ width: "100%", maxWidth: 760 }}>
+          <Text style={[s.itemSub, { marginBottom: 10 }]}>{data.examName}</Text>
           <Card style={{ marginBottom: 12 }}>
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
               <StatusChip label={SUBMISSION_STATUS_LABEL[status]} tone={SUBMISSION_TONE[status]} />
@@ -201,11 +225,12 @@ function SubmissionReview({ submissionId, api, onClose, onChanged }) {
 }
 
 // ── Elenco delle consegne ───────────────────────────────────────────────────────────────────
-export default function ExamSubmissions({ exam, api, onClose }) {
+// subtitle: esame di cui sono le consegne. hrefOf(id) e onOpen(id) portano alla correzione.
+export default function ExamSubmissions({ exam, subtitle, api, hrefOf, onOpen }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
-  const [openId, setOpenId] = useState(null);
+  useEffect(() => () => invalidateExamInsights(exam.id), [exam.id]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -221,48 +246,42 @@ export default function ExamSubmissions({ exam, api, onClose }) {
   const count = (x) => items.filter(it => x.key === "all" || (x.match ? x.match.includes(statusOf(it)) : statusOf(it) === x.key)).length;
 
   return (
-    <Modal visible animationType="slide" onRequestClose={openId ? () => setOpenId(null) : onClose}>
-      {openId ? (
-        <SubmissionReview submissionId={openId} api={api} onClose={() => setOpenId(null)} onChanged={() => { invalidateExamInsights(exam.id); load(); }} />
-      ) : (
-        <View style={{ flex: 1, backgroundColor: C.bg }}>
-          <Header title="Consegne" subtitle={exam.name} onClose={onClose} />
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }} contentContainerStyle={{ padding: 12, gap: 8 }}>
-            {FILTERS.map(x => (
-              <TouchableOpacity key={x.key} onPress={() => setFilter(x.key)}
-                style={{ paddingVertical: 7, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, borderColor: filter === x.key ? C.primary : C.border, backgroundColor: filter === x.key ? C.primary : C.white }}>
-                <Text style={{ color: filter === x.key ? C.white : C.text, fontWeight: "600" }}>{x.label} ({count(x)})</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
+      {!!subtitle && <Text style={[s.itemSub, { paddingHorizontal: 16, paddingTop: 12 }]} numberOfLines={1}>{subtitle}</Text>}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }} contentContainerStyle={{ padding: 12, gap: 8 }}>
+        {FILTERS.map(x => (
+          <TouchableOpacity key={x.key} onPress={() => setFilter(x.key)}
+            style={{ paddingVertical: 7, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, borderColor: filter === x.key ? C.primary : C.border, backgroundColor: filter === x.key ? C.primary : C.white }}>
+            <Text style={{ color: filter === x.key ? C.white : C.text, fontWeight: "600" }}>{x.label} ({count(x)})</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
 
-          {loading ? <Loader /> : visible.length === 0 ? <EmptyState message="Nessuna consegna" /> : (
-            <ScrollView contentContainerStyle={{ padding: 16, paddingTop: 4, alignItems: "center" }}>
-              <View style={{ width: "100%", maxWidth: 760 }}>
-                {visible.map(it => {
-                  const st = statusOf(it);
-                  return (
-                    <TouchableOpacity key={it.id} activeOpacity={0.7} onPress={() => setOpenId(it.id)}>
-                      <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
-                        <View style={{ flex: 1 }}>
-                          <Text style={s.itemTitle}>{it.studentLastName} {it.studentFirstName}</Text>
-                          <Text style={s.itemSub}>
-                            {it.submittedAt ? `Consegnato il ${formatDateTime(it.submittedAt)}` : "Non ancora consegnato"}
-                            {it.totalScore !== null && it.totalScore !== undefined ? ` · ${fmt(it.totalScore)}/${fmt(it.maxScore)}` : ""}
-                            {it.violationCount > 0 ? ` · ${it.violationCount} uscite` : ""}
-                          </Text>
-                        </View>
-                        <StatusChip label={SUBMISSION_STATUS_LABEL[st]} tone={SUBMISSION_TONE[st]} />
-                        <Ionicons name="chevron-forward" size={20} color={C.textLight} style={{ marginLeft: 8 }} />
-                      </Card>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </ScrollView>
-          )}
-        </View>
+      {loading ? <Loader /> : visible.length === 0 ? <EmptyState message="Nessuna consegna" /> : (
+        <ScrollView contentContainerStyle={{ padding: 16, paddingTop: 4, alignItems: "center" }}>
+          <View style={{ width: "100%", maxWidth: 760 }}>
+            {visible.map(it => {
+              const st = statusOf(it);
+              return (
+                <RouteLink key={it.id} href={hrefOf(it.id)} onPress={() => onOpen(it.id)} accessibilityLabel={`Correggi ${it.studentLastName} ${it.studentFirstName}`}>
+                  <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={s.itemTitle}>{it.studentLastName} {it.studentFirstName}</Text>
+                      <Text style={s.itemSub}>
+                        {it.submittedAt ? `Consegnato il ${formatDateTime(it.submittedAt)}` : "Non ancora consegnato"}
+                        {it.totalScore !== null && it.totalScore !== undefined ? ` · ${fmt(it.totalScore)}/${fmt(it.maxScore)}` : ""}
+                        {it.violationCount > 0 ? ` · ${it.violationCount} uscite` : ""}
+                      </Text>
+                    </View>
+                    <StatusChip label={SUBMISSION_STATUS_LABEL[st]} tone={SUBMISSION_TONE[st]} />
+                    <Ionicons name="chevron-forward" size={20} color={C.textLight} style={{ marginLeft: 8 }} />
+                  </Card>
+                </RouteLink>
+              );
+            })}
+          </View>
+        </ScrollView>
       )}
-    </Modal>
+    </View>
   );
 }
