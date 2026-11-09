@@ -156,7 +156,8 @@ export default function StudentExamsScreen() {
     const r = resultView(view.result);
     const done = r.status === "graded" || r.status === "finalized";
     const bad = r.status === "failed_auto" || (done && r.passed === false);
-    const icon = r.status === "pending_review" ? ["hourglass-outline", "#D97706"] : bad ? ["close-circle", C.danger] : ["checkmark-circle", C.success];
+    const icon = r.status === "pending_review" ? ["hourglass-outline", "#D97706"] : bad ? ["close-circle", C.danger]
+      : done && r.passed === null ? ["help-circle-outline", C.textMuted] : ["checkmark-circle", C.success];
     return (
       <View style={{ flex: 1, backgroundColor: C.bg, alignItems: "center", justifyContent: "center", padding: 24 }}>
         <Ionicons name={icon[0]} size={88} color={icon[1]} />

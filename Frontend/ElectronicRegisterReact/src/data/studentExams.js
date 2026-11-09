@@ -2,10 +2,12 @@
 // Esami dello studente: elenco dal backend (GET /Exam/assigned) più due piccoli stati locali al browser:
 //  - le notifiche già viste (per il pallino "nuovo esame");
 //  - la consegna in corso o appena conclusa di ogni esame: serve a riprendere dopo un refresh, perché il
-//    server restituisce le domande solo all'avvio, e a ritrovare l'esito (il server non elenca gli id delle consegne).
+//    server restituisce le domande solo all'avvio.
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { useExamApi } from "../hooks/useExamApi";
 import { createExamApi } from "../api/examApi";
+import { getStudentBooklet } from "../api/examInsights";
 import { readUser, writeUser } from "../utils/userStorage";
 
 const SEEN_KEY = "studentExamSeen2";
@@ -65,4 +67,17 @@ export function useStudentExams() {
   const seen = readSeen();
   const unseenCount = assigned.filter(a => a.canStart && !seen.includes(a.id)).length;
   return { assigned, loaded, error, unseenCount, reload, isSeen: (id) => seen.includes(id) };
+}
+
+// Libretto calcolato con gli esiti del server: null finché non è pronto
+export function useStudentBooklet(assigned, loaded) {
+  const api = useExamApi();
+  const [booklet, setBooklet] = useState(null);
+  useEffect(() => {
+    if (!loaded) return;
+    let alive = true;
+    getStudentBooklet(api, assigned).then((rows) => { if (alive) setBooklet(rows); });
+    return () => { alive = false; };
+  }, [api, assigned, loaded]);
+  return booklet;
 }

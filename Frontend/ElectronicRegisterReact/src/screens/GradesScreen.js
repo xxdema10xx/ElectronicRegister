@@ -19,9 +19,8 @@ import { getGradesPage, getGradeFilters, createGrade, updateGrade, deleteGrade }
 import { getSubjects } from "../api/subjectService";
 import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
-import { useStudentExams } from "../data/studentExams";
+import { useStudentBooklet, useStudentExams } from "../data/studentExams";
 import { formatDateTime } from "../api/examContract";
-import { buildStudentBooklet } from "../api/examInsights";
 
 const GRADES_PAGE_SIZE = 20;
 const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n * 100) / 100));
@@ -31,7 +30,7 @@ const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n 
 function StudentBooklet() {
   const { assigned, loaded, error } = useStudentExams();
 
-  const booklet = buildStudentBooklet(assigned);
+  const booklet = useStudentBooklet(assigned, loaded);
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
@@ -39,7 +38,7 @@ function StudentBooklet() {
         <SectionHeader title="Libretto" />
         {!!error && <Text style={{ color: C.danger, marginBottom: 8 }}>{error}</Text>}
       </View>
-      {!loaded ? <Loader /> : booklet.length === 0 ? <EmptyState message="Nessun esame svolto" /> : (
+      {!booklet ? <Loader /> : booklet.length === 0 ? <EmptyState message="Nessun esame svolto" /> : (
         <FlatList
           data={booklet}
           keyExtractor={x => String(x.item.id)}

@@ -151,7 +151,9 @@ export function resultView(result) {
   if (status === "pending_review") return { ...base, title: "In correzione", detail: "L'insegnante sta correggendo le risposte aperte.", showGrade: false };
   if (status === "failed_auto") return { ...base, title: "Esame non superato", detail: "Il punteggio massimo raggiungibile è inferiore alla soglia di sufficienza. L'insegnante definirà la valutazione.", showGrade: false };
   if (status === "graded" || status === "finalized") {
-    return { ...base, title: base.passed === false ? "Esame non superato" : "Esame superato", detail: null, showGrade: base.grade !== null };
+    // Senza l'esito del server non si afferma nulla: mai "superato" per mancanza di dati
+    if (base.passed === null) return { ...base, title: "Esito non disponibile", detail: null, showGrade: false };
+    return { ...base, title: base.passed ? "Esame superato" : "Esame non superato", detail: null, showGrade: base.grade !== null };
   }
   return { ...base, title: "Consegnato", detail: null, showGrade: false };
 }

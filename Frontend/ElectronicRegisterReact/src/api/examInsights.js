@@ -1,32 +1,33 @@
 // src/api/examInsights.js
 // Aggregazioni sugli esami che richiedono una chiamata per esame (elenco consegne): isolate qui per
 // essere riusate sia dalla home che dall'elenco esami, senza duplicare la logica.
-import { EXAM_STATUS, SUBMISSION_STATUS, fromEnum, resultView } from "./examContract";
-import { getRun } from "../data/studentExams";
+import { EXAM_STATUS, SUBMISSION_STATUS, fromEnum, parseUtc, resultView } from "./examContract";
 
-// Libretto dello studente: un esame (appello) per riga, con l'esito calcolato come lo vede lui
-// (voto mascherato finché la correzione non è conclusa). Usato sia dalla schermata "Voti" sia dalla
-// home, così i due restano sempre coerenti tra loro.
-export function buildStudentBooklet(assigned) {
-  return assigned
-    .filter(a => !!a.submissionStatus)
-    .map(a => {
-      const run = getRun(a.id);
-      const r = resultView(run?.result || { status: a.submissionStatus, totalScore: a.totalScore, maxScore: a.maxScore, grade: a.grade, passed: a.passed });
-      return { item: a, r, when: a.submittedAt || a.availableFrom };
-    })
-    .sort((x, y) => new Date(y.when) - new Date(x.when));
+// Libretto dello studente: un esame (appello) per riga, con l'esito come lo vede lui (voto mascherato finché
+// la correzione non è conclusa). Usato sia dalla schermata "Voti" sia dalla home, così restano coerenti.
+// TODO(API): AssignedExamDto non ha esito e voto, quindi serve una chiamata per ogni esame corretto.
+export async function getStudentBooklet(api, assigned) {
+  const rows = await Promise.all(assigned.filter(a => !!a.submissionStatus).map(async (a) => {
+    const status = fromEnum(a.submissionStatus, SUBMISSION_STATUS);
+    const corrected = (status === "graded" || status === "finalized") && a.submissionId;
+    // Nella chiave c'è anche lo stato: quando la correzione si conclude l'esito si rilegge
+    const result = corrected
+      ? await cached(cacheFor(api).results, `${a.submissionId}:${status}`, () => api.getResult(a.submissionId)).catch(() => null)
+      : null;
+    return { item: a, r: resultView(result || { status: a.submissionStatus }), when: a.submittedAt || a.availableFrom };
+  }));
+  return rows.sort((x, y) => parseUtc(y.when) - parseUtc(x.when));
 }
 
 // ── Cache in memoria ─────────────────────────────────────────────────────────────────────────
 // Elenco consegne e dettaglio (assegnati) per esame, condivisi tra Home, "Chi deve recuperare" della lista
-// e step Studenti del recupero, per sessione (api.cacheKey). Si invalida quando un esame cambia stato o
-// quando si correggono consegne (invalidateExamInsights).
+// e step Studenti del recupero, ed esiti del libretto, per sessione (api.cacheKey). Si invalida quando un
+// esame cambia stato o quando si correggono consegne (invalidateExamInsights).
 // TODO(API): con GET /api/institution/exams/{id}/retake-candidates queste chiamate non servirebbero più.
-const caches = new Map(); // cacheKey → { subs: Map(examId → Promise), details: Map(examId → Promise) }
+const caches = new Map(); // cacheKey → { subs: Map(examId → Promise), details: Map(examId → Promise), results }
 function cacheFor(api) {
   const key = api.cacheKey?.() || "default";
-  if (!caches.has(key)) caches.set(key, { subs: new Map(), details: new Map() });
+  if (!caches.has(key)) caches.set(key, { subs: new Map(), details: new Map(), results: new Map() });
   return caches.get(key);
 }
 function cached(map, id, load) {
@@ -40,7 +41,7 @@ const detailOf = (api, examId) => cached(cacheFor(api).details, examId, () => ap
 export function invalidateExamInsights(examId) {
   for (const c of caches.values()) {
     if (examId) { c.subs.delete(examId); c.details.delete(examId); }
-    else { c.subs.clear(); c.details.clear(); }
+    else { c.subs.clear(); c.details.clear(); c.results.clear(); }
   }
 }
 

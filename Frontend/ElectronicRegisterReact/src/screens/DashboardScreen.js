@@ -7,7 +7,7 @@ import Badge from "../components/Badge";
 import Card from "../components/Card";
 import { useAuth } from "../hooks/useAuth";
 import NotificationDot from "../components/NotificationDot";
-import { useStudentExams } from "../data/studentExams";
+import { useStudentBooklet, useStudentExams } from "../data/studentExams";
 import { useExamApi } from "../hooks/useExamApi";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
 import { useLayout } from "../hooks/useLayout";
@@ -16,7 +16,7 @@ import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
 import { getUsers } from "../api/userService";
 import { getMyClasses } from "../api/classService";
-import { getExamInsights, buildStudentBooklet, retakeSummary } from "../api/examInsights";
+import { getExamInsights, retakeSummary } from "../api/examInsights";
 import { getClassesForPicker, getClassSchedule, getTeacherSchedule, getStudentSchedule } from "../api/lessonService";
 import LessonCalendar from "../components/LessonCalendar";
 import SelectField from "../components/SelectField";
@@ -124,10 +124,10 @@ export default function DashboardScreen({ navigate }) {
 
   // Media voti e "da recuperare": dal libretto (esiti degli esami), non dai voti del registro — è la
   // stessa fonte che lo studente vede in "Voti", niente numeri che non tornano tra le due schermate.
-  const studentBooklet = buildStudentBooklet(assigned);
-  const bookletGraded = studentBooklet.filter(b => b.r.showGrade);
+  const studentBooklet = useStudentBooklet(assigned, examsLoaded);
+  const bookletGraded = (studentBooklet || []).filter(b => b.r.showGrade);
   const average = bookletGraded.length ? (bookletGraded.reduce((sum, b) => sum + Number(b.r.grade), 0) / bookletGraded.length).toFixed(1) : "—";
-  const myRetakes = studentBooklet.filter(b => b.r.status === "failed_auto" || (b.r.showGrade && b.r.passed === false));
+  const myRetakes = (studentBooklet || []).filter(b => b.r.status === "failed_auto" || (b.r.showGrade && b.r.passed === false));
 
   const now = Date.now();
   const upcomingExams = (exams || [])
@@ -239,8 +239,8 @@ export default function DashboardScreen({ navigate }) {
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
           {role === "student" && <>
             <StatTile icon="document-text-outline" label="Esami da svolgere" hint="Pubblicati, da completare entro la scadenza" value={pendingTests.length} onPress={() => navigate("exams")} />
-            <StatTile icon="alert-circle-outline" label="Da recuperare" hint="Esami non superati, in attesa di recupero" value={examsLoaded ? myRetakes.length : null} onPress={() => navigate("exams")} />
-            <StatTile icon="stats-chart-outline" label="Media voti" hint="Calcolata sugli esami già valutati" value={examsLoaded ? average : null} onPress={() => navigate("grades")} />
+            <StatTile icon="alert-circle-outline" label="Da recuperare" hint="Esami non superati, in attesa di recupero" value={studentBooklet ? myRetakes.length : null} onPress={() => navigate("exams")} />
+            <StatTile icon="stats-chart-outline" label="Media voti" hint="Calcolata sugli esami già valutati" value={studentBooklet ? average : null} onPress={() => navigate("grades")} />
           </>}
           {role === "teacher" && <>
             <StatTile icon="document-text-outline" label="Esami in programma" hint="Pubblicati, ancora aperti agli studenti" value={exams ? upcomingExams.length : null} onPress={() => navigate("exams")} />
