@@ -6,7 +6,8 @@
 //    arriva come onRequestClose (con un Modal aperto BackHandler non riceve eventi, docs RN 0.81), e su
 //    web lo stesso callback scatta con Esc (react-native-web 0.21). BackHandler su web non va usato.
 //
-// Rotte degli esami:  /esami?tab=bozze|attivi|storico · /esami/nuovo · /esami/{id} · /esami/{id}/modifica
+// Rotte degli esami:  /esami?tab=bozze|attivi|storico · /esami/nuovo · /esami/recuperi?classe=… · /esami/{id} ·
+//                     /esami/{id}/modifica
 // Nell'editor lo step è nell'URL (?step=2) con replaceState: "indietro" torna alla lista, non allo step prima.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
@@ -61,6 +62,7 @@ export function parseExamUrl(pathname, search) {
   const step = n === 1 || n === 2 || n === 3 ? n : null;
   if (parts.length === 1) return { name: "list", tab: TAB_FROM_SLUG[q.get("tab")] || null };
   if (parts.length === 2 && parts[1] === "nuovo") return { name: "new", step };
+  if (parts.length === 2 && parts[1] === "recuperi") return { name: "retakes", classId: q.get("classe") || null };
   if (parts.length === 2) return { name: "view", id: parts[1] };
   if (parts.length === 3 && parts[2] === "modifica") return { name: "edit", id: parts[1], step };
   return { name: "list", tab: null };
@@ -72,6 +74,7 @@ export function examUrl(route) {
   let path = "/esami";
   if (route.name === "list") { if (route.tab) q.set("tab", TAB_SLUGS[route.tab]); }
   else if (route.name === "new") path += "/nuovo";
+  else if (route.name === "retakes") { path += "/recuperi"; if (route.classId) q.set("classe", route.classId); }
   else if (route.name === "view") path += `/${encodeURIComponent(route.id)}`;
   else if (route.name === "edit") path += `/${encodeURIComponent(route.id)}/modifica`;
   if ((route.name === "new" || route.name === "edit") && route.step && route.step > 1) q.set("step", String(route.step));

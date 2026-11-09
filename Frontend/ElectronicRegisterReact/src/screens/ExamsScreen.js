@@ -2,7 +2,7 @@
 // Esami per docenti e amministratori: elenco, creazione/modifica con l'editor guidato, pubblicazione,
 // chiusura, annullamento, eliminazione, consegne e correzione. Dati: ExamController (src/api/examApi.js).
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BackHandler, FlatList, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { BackHandler, FlatList, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
@@ -21,13 +21,14 @@ import ExamEditorScreen from "./ExamEditorScreen";
 import { examHref, setPageHeader, useExamRoute } from "../navigation/examRoutes";
 import TestViewer from "../components/TestViewer";
 import ExamSubmissions from "../components/ExamSubmissions";
+import ExamRetakes from "../components/ExamRetakes";
 import ClassFilter from "../components/ClassFilter";
 import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
 import { isGuid, readUser, removeUser, writeUser } from "../utils/userStorage";
 import { examErrorMessage } from "../utils/examErrors";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, detailToDraft, draftToDto, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
-import { RETAKE_LABEL, RETAKE_TONE, getRetakeCandidates, getRetakeGroups, invalidateExamInsights, retakeSummary } from "../api/examInsights";
+import { getRetakeCandidates, getRetakeGroups, invalidateExamInsights } from "../api/examInsights";
 
 // La bozza in corso sopravvive al refresh (F5) su web grazie a sessionStorage.
 const DRAFT_KEY = "examDraft4";
@@ -113,8 +114,8 @@ export default function ExamsScreen() {
   const [viewing, setViewing] = useState(null);
   const [submissionsFor, setSubmissionsFor] = useState(null);
   const [tab, setTabState] = useState(() => (route.name === "list" && route.tab) || "active"); // "drafts" | "active" | "history"
-  const [retakes, setRetakes] = useState(null); // null: chiuso, altrimenti { loading, groups }
-  const [classId, setClassId] = useState(null); // filtro facoltativo: null = tutte le classi
+  const [retakes, setRetakes] = useState(null); // dati della pagina /esami/recuperi: { loading, groups, failed }
+  const [classId, setClassId] = useState(() => (route.name === "retakes" ? route.classId : null)); // filtro facoltativo: null = tutte le classi
   const [picking, setPicking] = useState(null); // scelta di classe e materia prima di creare: { classSubjectId }
 
   const csLabel = (id) => classSubjects?.find(c => c.id === id)?.label;
@@ -155,11 +156,17 @@ export default function ExamsScreen() {
 
   // Elenco di chi deve recuperare: raggruppa per studente le consegne non superate (bocciate o "non superabile")
   // su tutti gli esami pubblicati/chiusi della classe scelta. Richiede una chiamata per esame: va bene per i volumi di un registro di classe.
-  async function openRetakes() {
-    setRetakes({ loading: true, groups: [] });
-    try { setRetakes({ loading: false, ...await getRetakeGroups(api, exams.filter(inClass)) }); }
-    catch (e) { notify("Errore", e.message); setRetakes(null); }
-  }
+  function openRetakes() { nav.push({ name: "retakes", classId }); }
+  useEffect(() => {
+    if (route.name !== "retakes" || loading) return;
+    let cancelled = false;
+    const inRouteClass = (e) => !route.classId || classSubjects?.find(c => c.id === e.classSubjectId)?.classId === route.classId;
+    setRetakes({ loading: true, groups: [], failed: 0 });
+    getRetakeGroups(api, exams.filter(inRouteClass))
+      .then((result) => { if (!cancelled) setRetakes({ loading: false, ...result }); })
+      .catch(() => { if (!cancelled) setRetakes({ loading: false, groups: [], failed: 1 }); });
+    return () => { cancelled = true; };
+  }, [route.name, route.classId, loading, exams, classSubjects]);
 
   // dirty: la bozza ha modifiche non ancora inviate al server (false appena caricata da edit()).
   // savedAt: ora dell'ultimo salvataggio locale; solo su web, dove esiste sessionStorage.
@@ -421,6 +428,7 @@ export default function ExamsScreen() {
   // Titolo nell'header di AppNav ("← Esami / …") per dettaglio e scelta di classe e materia
   useEffect(() => {
     if (route.name === "view") setPageHeader({ title: viewing?.id === route.id ? viewing.name : "Esame", onBack: backToList });
+    else if (route.name === "retakes") setPageHeader({ title: "Chi deve recuperare", onBack: backToList });
     else if (route.name === "new" && picking) setPageHeader({ title: picking.changing ? "Cambia classe e materia" : "Nuovo esame", onBack: cancelPick });
     else if (!editing) setPageHeader(null);
   }, [route, picking, viewing, tab]);
@@ -432,7 +440,7 @@ export default function ExamsScreen() {
     if (Platform.OS !== "android" || route.name === "list") return;
     const sub = BackHandler.addEventListener("hardwareBackPress", () => {
       if (route.name === "new" && picking) { cancelPick(); return true; }
-      if (route.name === "view") { backToList(); return true; }
+      if (route.name === "view" || route.name === "retakes") { backToList(); return true; }
       return false;
     });
     return () => sub.remove();
@@ -447,55 +455,11 @@ export default function ExamsScreen() {
     getRetakeCandidates: (examId) => getRetakeCandidates(api, examId),
   };
 
-  function renderRetakes() {
-    return (
-        <Modal visible animationType="slide" onRequestClose={() => setRetakes(null)}>
-          <View style={{ flex: 1, backgroundColor: C.bg }}>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 10, backgroundColor: C.white, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: C.border }}>
-              <TouchableOpacity onPress={() => setRetakes(null)}><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
-              <View style={{ flex: 1 }}>
-                <Text style={{ color: C.text, fontSize: 16, fontWeight: "700" }}>Chi deve recuperare</Text>
-                <Text style={{ color: C.textMuted, fontSize: 12 }}>
-                  {retakes.loading || retakes.failed ? "Studenti non in regola su almeno un esame pubblicato o chiuso" : `${retakeSummary(retakes.groups)} · non in regola su almeno un esame pubblicato o chiuso`}
-                </Text>
-              </View>
-            </View>
-            {retakes.loading ? <Loader /> : retakes.groups.length === 0 ? <EmptyState message={retakes.failed ? "Impossibile caricare le consegne" : "Nessuno studente da recuperare"} /> : (
-              <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }}>
-                <View style={{ width: "100%", maxWidth: 760 }}>
-                  {retakes.failed > 0 && (
-                    <View style={{ backgroundColor: "#FEF3C7", borderRadius: 10, padding: 12, marginBottom: 10 }}>
-                      <Text style={{ color: "#92400E" }}>Impossibile caricare le consegne di {retakes.failed === 1 ? "un esame" : `${retakes.failed} esami`}: l'elenco potrebbe essere incompleto.</Text>
-                    </View>
-                  )}
-                  {retakes.groups.map(g => (
-                    <Card key={g.studentId} style={{ marginBottom: 10 }}>
-                      <Text style={s.itemTitle}>{g.lastName} {g.firstName}</Text>
-                      {g.exams.map(e => (
-                        <View key={e.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 6 }}>
-                          <Text style={{ color: C.text, flex: 1 }} numberOfLines={1}>{csLabel(e.classSubjectId) || e.name}</Text>
-                          <StatusChip label={RETAKE_LABEL[e.reason] || e.reason} tone={RETAKE_TONE[e.reason]} />
-                        </View>
-                      ))}
-                    </Card>
-                  ))}
-                </View>
-              </ScrollView>
-            )}
-          </View>
-        </Modal>
-      
-    );
-  }
-
   const barBtn = { height: BAR_H, paddingVertical: 0, paddingHorizontal: 18 };
   const newBtn = canWrite && <Btn label="Crea esame" onPress={startNew} style={barBtn} textStyle={s.smBtnText} />;
 
-  // Finestre che restano tali (consegne, chi deve recuperare): valgono per lista e pagine
-  const overlays = (<>
-    {submissionsFor && <ExamSubmissions exam={submissionsFor} api={api} onClose={() => { invalidateExamInsights(submissionsFor.id); setSubmissionsFor(null); }} />}
-    {retakes && renderRetakes()}
-  </>);
+  // Finestra che resta tale (consegne): vale per lista e pagine
+  const overlays = submissionsFor && <ExamSubmissions exam={submissionsFor} api={api} onClose={() => { invalidateExamInsights(submissionsFor.id); setSubmissionsFor(null); }} />;
 
   // Pagine della sezione, al posto della lista (sidebar e header di AppNav restano visibili)
   let page = null;
@@ -504,6 +468,12 @@ export default function ExamsScreen() {
       <TestViewer exam={viewed} contextLabel={csLabel(viewed.classSubjectId)} onClose={backToList}
         busy={busy === viewed.id} actions={actionsFor(viewed, { detail: true })} />
     ) : <Loader />;
+  } else if (route.name === "retakes") {
+    page = (
+      <ExamRetakes loading={retakes?.loading !== false} groups={retakes?.groups || []} failed={retakes?.failed || 0}
+        labelOf={(e) => csLabel(e.classSubjectId) || e.name} hrefOf={(id) => examHref({ name: "view", id })}
+        onOpenExam={(id) => nav.push({ name: "view", id })} />
+    );
   } else if (route.name === "new" && picking) {
     page = (
       <ScrollView contentContainerStyle={{ padding: isDesktop ? 40 : 16, alignItems: "center" }} keyboardShouldPersistTaps="handled">
