@@ -6,7 +6,7 @@ import { ActivityIndicator, Platform, Text, TouchableOpacity, View } from "react
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import StatusChip, { EXAM_TONE } from "./StatusChip";
-import { EXAM_STATUS_LABEL, parseUtc } from "../api/examContract";
+import { EXAM_STATUS_LABEL, availableFromLabel, parseUtc } from "../api/examContract";
 
 const ACCENT = { draft: "#94A3B8", published: C.success, closed: "#3B82F6", cancelled: C.danger };
 const ICON_BG = { draft: "#F1F5F9", published: "#D1FAE5", closed: "#DBEAFE", cancelled: "#FEE2E2" };
@@ -51,7 +51,8 @@ export function ExamAction({ label, icon, onPress, tone = "neutral", disabled, l
 // li gestisce il browser; il clic normale resta nella stessa scheda (onPress, senza ricaricare la pagina).
 // unsaved: la voce ha modifiche locali non salvate (card "Riprendi bozza" in cima): si evidenzia.
 // actions: { submissions, close, publish, cancel, remove } → funzione o null se non consentita
-export default function ExamCard({ exam, status, contextLabel, busy, onPress, href, unsaved, actions }) {
+// displayName: "Materia · Classe" (examDisplayName); sotto si mostra sempre la data, per distinguere esami omonimi.
+export default function ExamCard({ exam, status, displayName, busy, onPress, href, unsaved, actions }) {
   const press = (e) => {
     const ne = e?.nativeEvent || e;
     if (href && (ne?.metaKey || ne?.ctrlKey || ne?.shiftKey)) return; // nuova scheda o finestra: ci pensa il browser
@@ -74,15 +75,15 @@ export default function ExamCard({ exam, status, contextLabel, busy, onPress, hr
       <View style={{ flex: 1, padding: 16 }}>
         <TouchableOpacity onPress={press} disabled={!onPress || busy} activeOpacity={0.7} accessibilityRole={href && Platform.OS === "web" ? "link" : "button"}
           {...(href && Platform.OS === "web" ? { href } : null)}
-          accessibilityLabel={`Apri ${exam.name}`} accessibilityHint="Mostra il dettaglio dell'esame">
+          accessibilityLabel={`Apri ${displayName}`} accessibilityHint="Mostra il dettaglio dell'esame">
         {/* Intestazione: icona, titolo e contesto; stato in alto a destra */}
         <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
           <View style={{ width: 44, height: 44, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: ICON_BG[status] || "#F1F5F9" }}>
             <Ionicons name="document-text-outline" size={22} color={ACCENT[status] || C.textMuted} />
           </View>
           <View style={{ flex: 1, minWidth: 0 }}>
-            <Text style={{ color: C.text, fontSize: 16, fontWeight: "800" }} numberOfLines={2}>{exam.name}</Text>
-            {!!contextLabel && <Text style={{ color: C.textMuted, fontSize: 13, marginTop: 2 }} numberOfLines={1}>{contextLabel}</Text>}
+            <Text style={{ color: C.text, fontSize: 16, fontWeight: "800" }} numberOfLines={2}>{displayName}</Text>
+            {!!availableFromLabel(exam) && <Text style={{ color: C.textMuted, fontSize: 13, marginTop: 2 }} numberOfLines={1}>{availableFromLabel(exam)}</Text>}
             {!!exam.description && <Text style={{ color: C.textMuted, fontSize: 13, marginTop: 4 }} numberOfLines={2}>{exam.description}</Text>}
           </View>
           <View style={{ alignItems: "flex-end", gap: 6 }}>

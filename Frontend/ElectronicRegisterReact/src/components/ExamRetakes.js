@@ -31,6 +31,7 @@ export default function ExamRetakes({ loading, groups, failed, labelOf, hrefOf, 
                 <RouteLink href={hrefOf(e.id)} onPress={() => onOpenExam(e.id)} style={{ flex: 1, minWidth: 0 }} accessibilityLabel={`Apri ${labelOf(e)}`}>
                   <Text style={{ color: C.primary, textDecorationLine: "underline" }} numberOfLines={1}>{labelOf(e)}</Text>
                 </RouteLink>
+                {e.isRetake && <StatusChip label="Recupero" tone="amber" />}
                 <StatusChip label={RETAKE_LABEL[e.reason] || e.reason} tone={RETAKE_TONE[e.reason]} />
               </View>
             ))}

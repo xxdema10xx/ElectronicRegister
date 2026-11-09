@@ -12,7 +12,7 @@ import { C, s } from "../constants/theme";
 import Btn from "./Btn";
 import Card from "./Card";
 import * as Crypto from "expo-crypto";
-import { answersToDto, isAnswered, parseUtc } from "../api/examContract";
+import { answersToDto, examDisplayName, isAnswered, parseUtc } from "../api/examContract";
 import { saveRun } from "../data/studentExams";
 
 export const MAX_VIOLATIONS = 3;
@@ -205,7 +205,7 @@ export default function ExamTaker({ run, api, onFinish }) {
       <View style={{ flex: 1, backgroundColor: "#EEEBF9" }}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: C.primary, paddingHorizontal: 16, paddingVertical: 12 }}>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: C.white, fontSize: 16, fontWeight: "700" }} numberOfLines={1}>{exam.name}</Text>
+            <Text style={{ color: C.white, fontSize: 16, fontWeight: "700" }} numberOfLines={1}>{examDisplayName(exam)}</Text>
             <Text style={{ color: "#CBD5E1", fontSize: 12 }} numberOfLines={1}>
               {saveState === "saving" ? "Salvataggio…" : saveState === "saved" ? "Risposte salvate" : saveState === "error" ? "Salvataggio non riuscito: riproverò" : " "}
             </Text>

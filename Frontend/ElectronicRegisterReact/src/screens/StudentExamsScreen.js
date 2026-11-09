@@ -17,7 +17,7 @@ import { useStudentExams, markSeen, getRun, saveRun, notifyStudentExamsChanged }
 import { notifyBrowser as notify } from "../utils/dialogs";
 import { examErrorMessage } from "../utils/examErrors";
 import {
-  EXAM_STATUS, SUBMISSION_STATUS, fromEnum, formatDateTime, parseUtc, resultView, studentQuestionFromDto, isAnswered,
+  EXAM_STATUS, SUBMISSION_STATUS, examDisplayName, fromEnum, formatDate, formatDateTime, parseUtc, resultView, studentQuestionFromDto, isAnswered,
 } from "../api/examContract";
 
 const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n * 100) / 100));
@@ -165,7 +165,7 @@ export default function StudentExamsScreen() {
         <Text style={{ fontSize: 24, fontWeight: "700", color: C.text, marginTop: 12, textAlign: "center" }}>
           {view.meta ? "Esame consegnato" : r.title}
         </Text>
-        <Text style={{ color: C.textMuted, marginTop: 4, textAlign: "center" }}>{view.item?.name}</Text>
+        <Text style={{ color: C.textMuted, marginTop: 4, textAlign: "center" }}>{examDisplayName(view.item)}</Text>
         {view.loading && <Loader />}
         <Card style={{ marginTop: 20, width: "100%", maxWidth: 420 }}>
           {view.meta && <Text style={[s.itemTitle, { marginBottom: 6 }]}>{r.title}</Text>}
@@ -191,10 +191,10 @@ export default function StudentExamsScreen() {
             <Ionicons name="arrow-back" size={22} color={C.text} /><Text style={{ color: C.text }}>Indietro</Text>
           </TouchableOpacity>
           <Card>
-            <Text style={{ fontSize: 22, fontWeight: "700", color: C.text }}>{intro.name}</Text>
+            <Text style={{ fontSize: 22, fontWeight: "700", color: C.text }}>{examDisplayName(intro)}</Text>
             {!!intro.description && <Text style={{ color: C.text, marginTop: 10 }}>{intro.description}</Text>}
             <Text style={{ color: C.text, marginTop: 10 }}>
-              {intro.durationMinutes} minuti{intro.extraTimeMinutes ? ` (+${intro.extraTimeMinutes} di tempo aggiuntivo)` : ""} · disponibile fino al {formatDateTime(intro.availableUntil)}
+              {intro.durationMinutes} minuti{intro.extraTimeMinutes ? ` (+${intro.extraTimeMinutes} di tempo aggiuntivo)` : ""} · disponibile dal {formatDate(intro.availableFrom)} fino al {formatDateTime(intro.availableUntil)}
             </Text>
 
             <View style={{ marginTop: 16, backgroundColor: "#FEF3C7", borderRadius: 10, padding: 12 }}>
@@ -237,8 +237,8 @@ export default function StudentExamsScreen() {
                       <Ionicons name={st.tone === "green" ? "checkmark" : "document-text-outline"} size={24} color={st.tone === "green" ? "#065F46" : "#92400E"} />
                     </View>
                     <View style={{ flex: 1, marginLeft: 12 }}>
-                      <Text style={s.itemTitle}>{item.name}{item.isRetake ? " · Recupero" : ""}</Text>
-                      <Text style={s.itemSub}>Fino al {formatDateTime(item.availableUntil)}</Text>
+                      <Text style={s.itemTitle}>{examDisplayName(item)}{item.isRetake ? " · Recupero" : ""}</Text>
+                      <Text style={s.itemSub}>Dal {formatDate(item.availableFrom)} · fino al {formatDateTime(item.availableUntil)}</Text>
                       <Text style={s.itemSub}>{item.durationMinutes}{item.extraTimeMinutes ? ` +${item.extraTimeMinutes}` : ""} min</Text>
                     </View>
                     {st.action === "resume" ? (

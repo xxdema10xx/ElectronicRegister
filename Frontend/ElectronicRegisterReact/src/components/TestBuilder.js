@@ -1,6 +1,6 @@
 // src/components/TestBuilder.js
 // Creazione guidata di un esame, a schermo intero:
-//   1. Dettagli — titolo, descrizione, classe e materia, finestra di disponibilità, durata, soglia, recupero;
+//   1. Dettagli — descrizione, classe e materia, finestra di disponibilità, durata, soglia, recupero;
 //   2. Domande — a sinistra l'indice delle domande (si selezionano e si riordinano trascinandole),
 //      a destra l'editor ampio della domanda scelta. Su schermi stretti i due pannelli si impilano;
 //   3. Studenti — chi deve svolgere l'esame, con eventuale tempo aggiuntivo.
@@ -41,7 +41,7 @@ export const newQuestion = () => ({
   correct: [], points: "1", required: false,
 });
 export const newTestDraft = () => ({
-  step: 1, title: "", description: "", classSubjectId: "", availableFrom: "", availableUntil: "",
+  step: 1, description: "", classSubjectId: "", availableFrom: "", availableUntil: "",
   durationMinutes: "30", passingPercent: "60", retakeOfExamId: "", students: [], questions: [newQuestion()],
 });
 
@@ -49,7 +49,7 @@ export const newTestDraft = () => ({
 // soglia e le due opzioni vuote predefinite non contano: solo ciò che il docente ha scritto o impostato.
 export function draftHasContent(d) {
   if (!d) return false;
-  if (d.title?.trim() || d.description?.trim() || d.availableFrom || d.availableUntil) return true;
+  if (d.description?.trim() || d.availableFrom || d.availableUntil) return true;
   return (d.questions || []).some(q => q.text?.trim() || q.options?.some(o => o.text?.trim()));
 }
 
@@ -103,7 +103,7 @@ function questionIssue(q, i) {
 // ── Validazione ─────────────────────────────────────────────────────────────────────────────
 // Un errore per voce: { step, field, message, questionIndex?, questionId? }. I livelli:
 //   "server"  ciò che il server controlla già in creazione e modifica: senza, "Salva bozza" salva solo nel browser
-//   "close"   "Salva e chiudi": tutto quello sopra più il titolo
+//   "close"   "Salva e chiudi": oggi le stesse voci di "server"
 //   "publish" pubblicazione: in più almeno uno studente assegnato
 // Campi che il server richiede (ExamService: EnsureValidSchedule, EnsureValidPassingPercent, EnsureValidQuestions
 // e le regole delle opzioni). TODO(API): quando il backend accetterà bozze incomplete, basterà svuotare o
@@ -116,7 +116,6 @@ export const SERVER_REQUIRED = new Set([
 export function validateAll(d, { level = "close" } = {}) {
   const out = [];
   const add = (step, field, message, extra) => out.push({ step, field, message, ...extra });
-  if (!d.title?.trim()) add(1, "title", "Manca il titolo dell'esame.");
   if (!d.classSubjectId) add(1, "classSubjectId", "Mancano la classe e la materia.");
   const from = new Date(d.availableFrom);
   const until = new Date(d.availableUntil);
@@ -403,7 +402,7 @@ const twoCols = (isDesktop) => ({ flexDirection: isDesktop ? "row" : "column", g
 function DetailsStep({ draft, onChange, env, isDesktop, reveal, focus }) {
   const errors = {};
   if (reveal) for (const e of validateAll(draft).filter(x => x.step === 1)) errors[e.field] = errors[e.field] || e.message;
-  const refs = { title: useRef(null), availableFrom: useRef(null), availableUntil: useRef(null), durationMinutes: useRef(null) };
+  const refs = { availableFrom: useRef(null), availableUntil: useRef(null), durationMinutes: useRef(null) };
   useFocusField(focus, refs);
   const set = (patch) => onChange({ ...draft, ...patch });
   const locked = !!draft.examId; // la classe-materia di un esame esistente non si può cambiare
@@ -419,7 +418,6 @@ function DetailsStep({ draft, onChange, env, isDesktop, reveal, focus }) {
         <Text style={[s.itemSub, { marginTop: 4 }]}>Inizia dai dettagli: potrai modificarli finché l'esame è in bozza.</Text>
       </View>
 
-      <Input ref={refs.title} label="Titolo dell'esame" value={draft.title} onChangeText={(title) => set({ title })} placeholder="Es. Programmazione Web – Verifica modulo 2" autoFocus error={errors.title} />
       <View>
         <Text style={s.label}>Descrizione</Text>
         <TextInput style={[field, { minHeight: 90, textAlignVertical: "top", marginBottom: 14 }]} placeholder="Facoltativa. Es. Rispondi a tutte le domande; per le aperte bastano 3-4 righe. Non è consentito il materiale." placeholderTextColor={C.textLight}
@@ -736,7 +734,7 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
       <TouchableOpacity onPress={() => goTo(1)} accessibilityLabel="Modifica dettagli"
         style={{ padding: 12, borderRadius: 10, backgroundColor: C.bg, flexDirection: "row", alignItems: "flex-start", gap: 10 }}>
         <View style={{ flex: 1 }}>
-          <Text style={{ color: C.text, fontWeight: "800", fontSize: 16 }} numberOfLines={2}>{draft.title}</Text>
+          <Text style={{ color: C.text, fontWeight: "800", fontSize: 16 }} numberOfLines={2}>{env?.draftName}</Text>
           {!!draft.description.trim() && <Text style={[s.itemSub, { marginTop: 2 }]} numberOfLines={2}>{draft.description}</Text>}
           <Text style={[s.itemSub, { marginTop: 2 }]}>{draft.students.length} studenti assegnati · {draft.durationMinutes} min</Text>
         </View>

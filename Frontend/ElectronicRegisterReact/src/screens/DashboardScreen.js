@@ -9,7 +9,7 @@ import { useAuth } from "../hooks/useAuth";
 import NotificationDot from "../components/NotificationDot";
 import { useStudentBooklet, useStudentExams } from "../data/studentExams";
 import { useExamApi } from "../hooks/useExamApi";
-import { EXAM_STATUS, EXAM_STATUS_LABEL, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
+import { EXAM_STATUS, EXAM_STATUS_LABEL, examDisplayName, fromEnum, formatDate, formatDateTime, parseUtc } from "../api/examContract";
 import { useLayout } from "../hooks/useLayout";
 import { userDisplayName } from "../utils/userName";
 import { getSubjects } from "../api/subjectService";
@@ -68,6 +68,7 @@ export default function DashboardScreen({ navigate }) {
 
   const [subjects, setSubjects] = useState([]);
   const [exams, setExams] = useState(null);
+  const [classSubjects, setClassSubjects] = useState(null); // se non arrivano, degli esami si mostra solo la materia
   const [counts, setCounts] = useState({});
   const [myClasses, setMyClasses] = useState(null);
   const [retakeGroups, setRetakeGroups] = useState(null);
@@ -84,6 +85,7 @@ export default function DashboardScreen({ navigate }) {
     getSubjects(undefined, token).then(d => set(() => { setSubjects(toList(d)); setCounts(c => ({ ...c, subjects: toList(d).length })); })).catch(() => {});
     if (role !== "student") {
       examApi.listExams().then(d => set(() => setExams(toList(d)))).catch(() => set(() => setExams([])));
+      examApi.getClassSubjects().then(d => set(() => setClassSubjects(d))).catch(() => {});
       getStudents(undefined, token).then(d => set(() => setCounts(c => ({ ...c, students: toList(d).length })))).catch(() => {});
     }
     if (role === "admin" || role === "staff") {
@@ -188,8 +190,8 @@ export default function DashboardScreen({ navigate }) {
       {pendingTests.length === 0 ? <Empty text="Nessun esame da svolgere" /> : pendingTests.map(a => (
         <TouchableOpacity key={a.id} onPress={() => navigate("exams")} style={[s.profileRow, { alignItems: "center" }]}>
           <View style={{ flex: 1 }}>
-            <Text style={s.itemTitle}>{a.name}</Text>
-            <Text style={s.itemSub}>{a.durationMinutes} min · fino al {formatDateTime(a.availableUntil)}</Text>
+            <Text style={s.itemTitle}>{examDisplayName(a)}</Text>
+            <Text style={s.itemSub}>{a.durationMinutes} min · dal {formatDate(a.availableFrom)} · fino al {formatDateTime(a.availableUntil)}</Text>
           </View>
           {!isSeen(a.id) && <View style={{ position: "relative", width: 14, height: 14 }}><NotificationDot visible style={{ top: 0, right: 0 }} /></View>}
         </TouchableOpacity>
@@ -200,7 +202,7 @@ export default function DashboardScreen({ navigate }) {
       {exams === null ? <Empty text="Caricamento…" /> : upcomingExams.length === 0 ? <Empty text="Nessun esame in programma" /> : upcomingExams.map(e => (
         <TouchableOpacity key={e.id} onPress={() => navigate("exams")} style={[s.profileRow, { alignItems: "center" }]}>
           <View style={{ flex: 1 }}>
-            <Text style={s.itemTitle}>{e.name}</Text>
+            <Text style={s.itemTitle}>{examDisplayName(e, classSubjects)}</Text>
             <Text style={s.itemSub}>{EXAM_STATUS_LABEL[fromEnum(e.status, EXAM_STATUS)]}{e.isRetake ? " · recupero" : ""}</Text>
           </View>
           <Text style={{ color: C.textMuted, fontWeight: "600" }}>{formatDateTime(e.availableFrom)}</Text>

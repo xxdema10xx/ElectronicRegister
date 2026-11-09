@@ -20,7 +20,7 @@ import { getSubjects } from "../api/subjectService";
 import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
 import { useStudentBooklet, useStudentExams } from "../data/studentExams";
-import { formatDateTime } from "../api/examContract";
+import { examDisplayName, formatDateTime } from "../api/examContract";
 
 const GRADES_PAGE_SIZE = 20;
 const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n * 100) / 100));
@@ -46,7 +46,7 @@ function StudentBooklet() {
           renderItem={({ item: { item, r } }) => (
             <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
               <View style={{ flex: 1 }}>
-                <Text style={s.itemTitle}>{item.name}{item.isRetake ? " · Recupero" : ""}</Text>
+                <Text style={s.itemTitle}>{examDisplayName(item)}{item.isRetake ? " · Recupero" : ""}</Text>
                 <Text style={s.itemSub}>{formatDateTime(item.submittedAt) || formatDateTime(item.availableFrom)}</Text>
               </View>
               {r.showGrade ? (

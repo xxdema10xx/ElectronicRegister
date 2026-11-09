@@ -49,6 +49,40 @@ export function formatDateTime(value) {
   if (!d || isNaN(d)) return "";
   return d.toLocaleString("it-IT", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
 }
+// "GG/MM/AAAA" ("" se la data manca)
+export function formatDate(value) {
+  const d = value instanceof Date ? value : parseUtc(value);
+  if (!d || isNaN(d)) return "";
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+}
+
+// ── Nome dell'esame ─────────────────────────────────────────────────────────────────────────
+// Gli esami non hanno un titolo: si riconoscono da materia e classe. classSubjects è l'elenco delle
+// classi-materia (docenti e amministratori); senza, resta la materia, che il server manda in exam.name.
+// TODO(API): AssignedExamDto ed ExamForStudentDto non hanno className, quindi allo studente solo la materia.
+export function examNameParts(exam, classSubjects) {
+  const cs = classSubjects?.find(c => c.id === exam?.classSubjectId);
+  return { subject: (cs?.subjectName || exam?.name || "").trim(), className: (cs?.className || "").trim() };
+}
+// "Programmazione · SW-25A"; senza classe "Programmazione"; senza materia "Esame del 09/11/2026". Mai vuoto.
+export function examDisplayName(exam, classSubjects) {
+  const { subject, className } = examNameParts(exam, classSubjects);
+  if (subject) return className ? `${subject} · ${className}` : subject;
+  const date = formatDate(exam?.availableFrom);
+  return date ? `Esame del ${date}` : "Esame";
+}
+// "Programmazione · SW-25A — 09/11/2026": per distinguere più esami della stessa classe e materia
+export function examNameWithDate(exam, classSubjects) {
+  const name = examDisplayName(exam, classSubjects);
+  const date = formatDate(exam?.availableFrom);
+  return date && !name.endsWith(date) ? `${name} — ${date}` : name;
+}
+export function availableFromLabel(exam) {
+  const date = formatDate(exam?.availableFrom);
+  return date ? `Disponibile dal ${date}` : "";
+}
+// Una bozza ha le date in formato locale: la si porta alla forma di un esame per le funzioni qui sopra
+export const draftAsExam = (d) => ({ classSubjectId: d.classSubjectId, availableFrom: fromLocalInput(d.availableFrom) });
 
 // ── Domande: forma dell'editor ⇄ forma del server ───────────────────────────────────────────
 // Editor: { id, text, type: "single"|"multiple"|"open", options: [{id, text}], correct: [optionId], points, required }
@@ -93,13 +127,13 @@ export function studentQuestionFromDto(q) {
 }
 
 // ── Esame: bozza dell'editor ⇄ DTO ──────────────────────────────────────────────────────────
-// Bozza: { examId?, step, title, description, classSubjectId, availableFrom, availableUntil (locali),
+// Bozza: { examId?, step, description, classSubjectId, availableFrom, availableUntil (locali),
 //          durationMinutes, passingPercent, retakeOfExamId, students: [{studentId, extraTimeMinutes}], questions }
 export function draftToDto(d) {
   return {
     classSubjectId: d.classSubjectId,
     retakeOfExamId: d.retakeOfExamId || null,
-    name: d.title.trim(),
+    // Niente "name": il server lo ignora ([JsonIgnore]) e usa il nome della materia
     description: d.description?.trim() || null,
     availableFrom: fromLocalInput(d.availableFrom),
     availableUntil: fromLocalInput(d.availableUntil),
@@ -114,7 +148,6 @@ export function detailToDraft(detail) {
   return {
     examId: detail.id,
     step: 1,
-    title: detail.name,
     description: detail.description || "",
     classSubjectId: detail.classSubjectId,
     availableFrom: toLocalInput(detail.availableFrom),

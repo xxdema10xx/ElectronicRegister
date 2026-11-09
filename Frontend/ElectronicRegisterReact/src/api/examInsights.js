@@ -115,7 +115,7 @@ function buildRetakeGroups(results) {
     for (const [studentId, info] of classify(items, { closed, assigned })) {
       if (info.reason !== "failed" && info.reason !== "missing") continue;
       if (!byStudent.has(studentId)) byStudent.set(studentId, { studentId, firstName: info.firstName, lastName: info.lastName, exams: [] });
-      byStudent.get(studentId).exams.push({ id: exam.id, name: exam.name, classSubjectId: exam.classSubjectId, reason: info.reason });
+      byStudent.get(studentId).exams.push({ id: exam.id, name: exam.name, classSubjectId: exam.classSubjectId, availableFrom: exam.availableFrom, isRetake: !!exam.isRetake, reason: info.reason });
     }
   }
   const groups = [...byStudent.values()].map(g => ({ ...g, absentOnly: g.exams.every(e => e.reason === "missing") }));

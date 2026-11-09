@@ -14,7 +14,7 @@ const TYPE_LABEL = { single: "Singola", multiple: "Multipla", open: "Aperta" };
 // onClose non è più usato dalla barra: il ritorno alla lista è nell'header di AppNav (resta per compatibilità).
 // actions: { edit, publish, remove, submissions, close, cancel } → funzione o null se non consentita
 // (le stesse della card della lista, decise da chi la usa in base a stato e ruolo).
-export default function TestViewer({ exam, contextLabel, onClose, actions = {}, busy }) {
+export default function TestViewer({ exam, displayName, contextLabel, onClose, actions = {}, busy }) {
   if (!exam) return null;
   const questions = [...(exam.questions || [])].sort((a, b) => a.position - b.position).map(questionFromDto);
   const status = fromEnum(exam.status, EXAM_STATUS);
@@ -48,7 +48,7 @@ export default function TestViewer({ exam, contextLabel, onClose, actions = {}, 
         <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }}>
           <View style={{ width: "100%", maxWidth: 760 }}>
             <Card style={{ marginBottom: 12, borderTopWidth: 8, borderTopColor: C.primary }}>
-              <Text style={{ fontSize: 24, fontWeight: "600", color: C.text }}>{exam.name}</Text>
+              <Text style={{ fontSize: 24, fontWeight: "600", color: C.text }}>{displayName}</Text>
               {!!exam.description && <Text style={{ color: C.textMuted, marginTop: 6 }}>{exam.description}</Text>}
               <Text style={{ color: C.text, marginTop: 12 }}>
                 {EXAM_STATUS_LABEL[status]} · {formatDateTime(exam.availableFrom)} → {formatDateTime(exam.availableUntil)}

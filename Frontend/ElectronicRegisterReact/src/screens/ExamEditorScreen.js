@@ -106,8 +106,8 @@ export default function ExamEditorScreen({ route, nav, api, draft, dirty, update
     return () => sub.remove();
   }, []);
 
-  // Titolo nell'header di AppNav: "← Esami / titolo dell'esame" (o "Nuovo esame")
-  const title = draft?.title?.trim() || (route.name === "new" ? "Nuovo esame" : "Modifica esame");
+  // Titolo nell'header di AppNav: "← Esami / Materia · Classe" ("Nuovo esame" finché non sono scelte)
+  const title = draft?.classSubjectId ? env.draftName : (route.name === "new" ? "Nuovo esame" : "Modifica esame");
   useEffect(() => {
     setPageHeader({ title, onBack: requestExit });
     return () => setPageHeader(null);

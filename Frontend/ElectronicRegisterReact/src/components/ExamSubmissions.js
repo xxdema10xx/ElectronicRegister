@@ -31,7 +31,7 @@ const REASON_LABEL = { manual: "consegna volontaria", time_expired: "tempo scadu
 const LEAVE_MESSAGE = "Le correzioni non salvate andranno perse.";
 
 // ── Correzione di una consegna ──────────────────────────────────────────────────────────────
-export function SubmissionReview({ submissionId, api, onClose, onChanged }) {
+export function SubmissionReview({ submissionId, displayName, api, onClose, onChanged }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -126,7 +126,7 @@ export function SubmissionReview({ submissionId, api, onClose, onChanged }) {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }} keyboardShouldPersistTaps="handled">
         <View style={{ width: "100%", maxWidth: 760 }}>
-          <Text style={[s.itemSub, { marginBottom: 10 }]}>{data.examName}</Text>
+          <Text style={[s.itemSub, { marginBottom: 10 }]}>{displayName || data.examName}</Text>
           <Card style={{ marginBottom: 12 }}>
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
               <StatusChip label={SUBMISSION_STATUS_LABEL[status]} tone={SUBMISSION_TONE[status]} />

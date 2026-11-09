@@ -27,7 +27,7 @@ import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
 import { isGuid, readUser, removeUser, writeUser } from "../utils/userStorage";
 import { examErrorMessage } from "../utils/examErrors";
-import { EXAM_STATUS, EXAM_STATUS_LABEL, detailToDraft, draftToDto, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
+import { EXAM_STATUS, EXAM_STATUS_LABEL, availableFromLabel, detailToDraft, draftAsExam, draftToDto, examDisplayName, examNameParts, examNameWithDate, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
 import { getRetakeCandidates, getRetakeGroups, invalidateExamInsights } from "../api/examInsights";
 
 // La bozza in corso sopravvive al refresh (F5) su web grazie a sessionStorage.
@@ -118,6 +118,7 @@ export default function ExamsScreen() {
   const [picking, setPicking] = useState(null); // scelta di classe e materia prima di creare: { classSubjectId }
 
   const csLabel = (id) => classSubjects?.find(c => c.id === id)?.label;
+  const nameOf = (exam) => examDisplayName(exam, classSubjects);
 
   // Classi disponibili, derivate dalle classi-materia (un docente insegna in più classi: va scelta subito).
   const classOptions = (() => {
@@ -144,7 +145,10 @@ export default function ExamsScreen() {
 
   const inClass = (e) => !classId || classSubjects?.find(c => c.id === e.classSubjectId)?.classId === classId;
   // Filtro classe e ricerca valgono per tutte e tre le schede: i contatori dicono cosa si vedrebbe aprendole.
-  const filtered = filterBySearch(exams.filter(inClass), search, e => [e.name, e.description, csLabel(e.classSubjectId)]);
+  const filtered = filterBySearch(exams.filter(inClass), search, e => {
+    const { subject, className } = examNameParts(e, classSubjects);
+    return [subject, className, e.description];
+  });
 
   // Bozza locale da riprendere: la card sta in cima alla scheda Bozze solo se c'è davvero qualcosa da
   // riprendere (dirty: un nuovo esame con contenuto, o un esame salvato con modifiche locali). Se riguarda un
@@ -347,7 +351,7 @@ export default function ExamsScreen() {
   async function saveDraft() {
     if (!draft) return;
     if (!draft.examId && !draftHasContent(draft)) {
-      return notify("Niente da salvare", "Scrivi almeno il titolo, una data o una domanda.");
+      return notify("Niente da salvare", "Scrivi almeno una descrizione, una data o una domanda.");
     }
     if (serverIssue(draft)) {
       // Non passa i controlli del server: resta salvata solo nel browser. Banner informativo (non di errore)
@@ -414,10 +418,10 @@ export default function ExamsScreen() {
       finally { setBusy(null); }
     }, okLabel);
   }
-  const publish = (e) => act(e, "Pubblica", `Pubblicare “${e.name}”? Gli studenti assegnati potranno svolgerlo e la struttura non sarà più modificabile.`, () => api.publishExam(e.id), "Pubblica");
-  const close = (e) => act(e, "Chiudi", `Chiudere “${e.name}”? Nessuno studente potrà più iniziarlo.`, () => api.closeExam(e.id), "Chiudi");
-  const cancel = (e) => act(e, "Annulla", `Annullare “${e.name}”? È possibile solo se nessuno lo ha ancora iniziato.`, () => api.cancelExam(e.id), "Annulla esame");
-  const remove = (e) => act(e, "Elimina", `Eliminare “${e.name}”? Si può eliminare solo una bozza.`, () => api.deleteExam(e.id), "Elimina");
+  const publish = (e) => act(e, "Pubblica", `Pubblicare “${nameOf(e)}”? Gli studenti assegnati potranno svolgerlo e la struttura non sarà più modificabile.`, () => api.publishExam(e.id), "Pubblica");
+  const close = (e) => act(e, "Chiudi", `Chiudere “${nameOf(e)}”? Nessuno studente potrà più iniziarlo.`, () => api.closeExam(e.id), "Chiudi");
+  const cancel = (e) => act(e, "Annulla", `Annullare “${nameOf(e)}”? È possibile solo se nessuno lo ha ancora iniziato.`, () => api.cancelExam(e.id), "Annulla esame");
+  const remove = (e) => act(e, "Elimina", `Eliminare “${nameOf(e)}”? Si può eliminare solo una bozza.`, () => api.deleteExam(e.id), "Elimina");
 
   // Azioni consentite su un esame, uguali per la card e per il dettaglio (che ha anche "Modifica")
   function actionsFor(exam, { detail = false } = {}) {
@@ -434,12 +438,12 @@ export default function ExamsScreen() {
 
   // Titolo nell'header di AppNav ("← Esami / …") per dettaglio e scelta di classe e materia
   useEffect(() => {
-    if (route.name === "view") setPageHeader({ title: viewing?.id === route.id ? viewing.name : "Esame", onBack: backToList });
+    if (route.name === "view") setPageHeader({ title: viewing?.id === route.id ? nameOf(viewing) : "Esame", onBack: backToList });
     else if (route.name === "retakes") setPageHeader({ title: "Chi deve recuperare", onBack: backToList });
     else if (route.name === "submissions") setPageHeader({ title: "Consegne", onBack: backToExam });
     else if (route.name === "new" && picking) setPageHeader({ title: picking.changing ? "Cambia classe e materia" : "Nuovo esame", onBack: cancelPick });
     else if (!editing && route.name !== "review") setPageHeader(null); // editor e correzione gestiscono il proprio
-  }, [route, picking, viewing, tab]);
+  }, [route, picking, viewing, tab, classSubjects]);
   useEffect(() => () => setPageHeader(null), []);
 
   // Tasto indietro di Android sulle pagine della sezione (non più Modal): come "← Esami".
@@ -459,7 +463,8 @@ export default function ExamsScreen() {
     classSubjects: classSubjects && classId ? classSubjectsOfClass : classSubjects,
     classSubjectLabel: csLabel(draft?.classSubjectId),
     onChangeClassSubject: Array.isArray(classSubjects) && draft && !draft.examId ? changeClassSubject : null,
-    retakeOptions: exams.filter(inClass).map(e => ({ id: e.id, name: e.name, classSubjectId: e.classSubjectId })),
+    draftName: draft ? nameOf(draftAsExam(draft)) : "",
+    retakeOptions: exams.filter(inClass).map(e => ({ id: e.id, name: examNameWithDate(e, classSubjects), classSubjectId: e.classSubjectId })),
     getStudents: (classSubjectId) => api.getStudentsOfClassSubject(classSubjectId),
     getRetakeCandidates: (examId) => getRetakeCandidates(api, examId),
   };
@@ -471,25 +476,27 @@ export default function ExamsScreen() {
   let page = null;
   if (route.name === "view") {
     page = viewed ? (
-      <TestViewer exam={viewed} contextLabel={csLabel(viewed.classSubjectId)} onClose={backToList}
+      <TestViewer exam={viewed} displayName={nameOf(viewed)} contextLabel={availableFromLabel(viewed)} onClose={backToList}
         busy={busy === viewed.id} actions={actionsFor(viewed, { detail: true })} />
     ) : <Loader />;
   } else if (route.name === "retakes") {
     page = (
       <ExamRetakes loading={retakes?.loading !== false} groups={retakes?.groups || []} failed={retakes?.failed || 0}
-        labelOf={(e) => csLabel(e.classSubjectId) || e.name} hrefOf={(id) => examHref({ name: "view", id })}
+        labelOf={(e) => examNameWithDate(e, classSubjects)} hrefOf={(id) => examHref({ name: "view", id })}
         onOpenExam={(id) => nav.push({ name: "view", id })} />
     );
   } else if (route.name === "submissions") {
     const exam = exams.find(e => e.id === route.id);
     page = exam ? (
-      <ExamSubmissions key={exam.id} exam={exam} subtitle={csLabel(exam.classSubjectId) || exam.name} api={api}
+      <ExamSubmissions key={exam.id} exam={exam} subtitle={examNameWithDate(exam, classSubjects)} api={api}
         hrefOf={(submissionId) => examHref({ name: "review", id: exam.id, submissionId })}
         onOpen={(submissionId) => nav.push({ name: "review", id: exam.id, submissionId })} />
     ) : loading ? <Loader /> : <EmptyState message="Impossibile caricare l'esame" />;
   } else if (route.name === "review") {
+    const exam = exams.find(e => e.id === route.id);
     page = (
       <SubmissionReview key={route.submissionId} submissionId={route.submissionId} api={api}
+        displayName={exam ? examNameWithDate(exam, classSubjects) : ""}
         onClose={() => nav.back({ name: "submissions", id: route.id })} onChanged={() => invalidateExamInsights(route.id)} />
     );
   } else if (route.name === "new" && picking) {
@@ -545,7 +552,7 @@ export default function ExamsScreen() {
                 style={isDesktop ? { width: 220 } : { flex: 1, minWidth: 0 }} />
             )}
             <TextInput style={[s.input, { height: BAR_H, paddingVertical: 0, fontSize: 14 }, isDesktop ? { width: 300 } : { flex: 1, minWidth: 0 }]}
-              placeholder="Cerca per nome…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
+              placeholder="Cerca per materia o classe…" placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
           </View>
           <View style={{ flexDirection: "row", gap: 8, marginLeft: isDesktop ? "auto" : 0 }}>
             {canWrite && <Btn label="Chi deve recuperare" variant="ghost" onPress={openRetakes} style={barBtn} textStyle={s.smBtnText} />}
@@ -575,10 +582,10 @@ export default function ExamsScreen() {
             </View>
             <View style={{ flex: 1, minWidth: 180 }}>
               <Text style={s.itemTitle} numberOfLines={1}>
-                {draft.examId ? "Modifica in corso" : "Esame in preparazione"}: {draft.title.trim() || "Senza titolo"}
+                {draft.examId ? "Modifica in corso" : "Esame in preparazione"}: {draft.classSubjectId ? env.draftName : "classe e materia da scegliere"}
               </Text>
               <Text style={s.itemSub} numberOfLines={2}>
-                {[csLabel(draft.classSubjectId), draftStatus].filter(Boolean).join(" · ")}
+                {[availableFromLabel(draftAsExam(draft)), draftStatus].filter(Boolean).join(" · ")}
               </Text>
             </View>
             <Btn label="Riprendi bozza" onPress={resume} style={[s.smBtn, { paddingHorizontal: 16, paddingVertical: 10 }]} textStyle={s.smBtnText} />
@@ -597,7 +604,7 @@ export default function ExamsScreen() {
           renderItem={({ item: exam }) => {
             const status = fromEnum(exam.status, EXAM_STATUS);
             return (
-              <ExamCard exam={exam} status={status} contextLabel={csLabel(exam.classSubjectId)} busy={busy === exam.id}
+              <ExamCard exam={exam} status={status} displayName={nameOf(exam)} busy={busy === exam.id}
                 onPress={() => view(exam)} href={examHref({ name: "view", id: exam.id })}
                 unsaved={showResume && draft.examId === exam.id} actions={actionsFor(exam)} />
             );
