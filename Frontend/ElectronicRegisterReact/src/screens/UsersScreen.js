@@ -38,7 +38,7 @@ export default function UsersScreen() {
   const load = useCallback(async () => {
     setLoading(true);
     try { setMembers(await getMembers(token)); }
-    catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setMembers([]); }
+    catch (e) { if (e.status !== 404) Alert.alert("Errore", e.message); setMembers([]); }
     finally { setLoading(false); }
   }, [token]);
 

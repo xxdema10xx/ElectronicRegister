@@ -38,7 +38,7 @@ export default function StudentsScreen() {
     try {
       const data = await getStudents("", token);
       setStudents(Array.isArray(data) ? data : []);
-    } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setStudents([]); }
+    } catch (e) { if (e.status !== 404) Alert.alert("Errore", e.message); setStudents([]); }
     finally { setLoading(false); }
   }, [token]);
 

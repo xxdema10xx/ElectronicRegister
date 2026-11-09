@@ -32,7 +32,7 @@ export default function SubjectsScreen() {
     try {
       const data = await getSubjects("", token);
       setSubjects(Array.isArray(data) ? data : data ? [data] : []);
-    } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setSubjects([]); }
+    } catch (e) { if (e.status !== 404) Alert.alert("Errore", e.message); setSubjects([]); }
     finally { setLoading(false); }
   }, [token]);
 

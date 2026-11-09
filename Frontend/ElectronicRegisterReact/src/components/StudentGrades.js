@@ -38,7 +38,7 @@ export default function StudentGrades({ student, token, onClose, canDelete = tru
       setGrades(items.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))));
       setSubjects(Array.isArray(subs) ? subs : []);
     } catch (e) {
-      if (!String(e.message).includes("404")) notify("Errore", e.message);
+      if (e.status !== 404) notify("Errore", e.message);
       setGrades([]);
     } finally { setLoading(false); }
   }, [student, token]);

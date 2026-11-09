@@ -33,7 +33,7 @@ export default function TeachersScreen() {
     try {
       const data = await getTeachers(token);
       setTeachers(Array.isArray(data) ? data : []);
-    } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setTeachers([]); }
+    } catch (e) { if (e.status !== 404) Alert.alert("Errore", e.message); setTeachers([]); }
     finally { setLoading(false); }
   }, [token]);
 

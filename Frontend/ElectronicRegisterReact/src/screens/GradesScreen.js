@@ -142,7 +142,7 @@ function TeacherAdminGrades() {
       pageRef.current = 1;
       totalRef.current = result.totalCount;
       setGrades(result.items);
-    } catch (e) { if (!e.message.includes("404")) Alert.alert("Errore", e.message); setGrades([]); }
+    } catch (e) { if (e.status !== 404) Alert.alert("Errore", e.message); setGrades([]); }
     finally { isRefresh ? setRefreshing(false) : setLoading(false); }
   }, [fetchGradesPage]);
 
