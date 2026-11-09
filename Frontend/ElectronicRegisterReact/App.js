@@ -25,7 +25,7 @@ const sessionStore = {
 };
 
 export default function App() {
-  const [token, setToken] = useState(null);
+  const [token, setToken] =  useState(null);
   const [user, setUser] = useState(null);
   const [authScreen, setAuthScreen] = useState("login");
   const [booting, setBooting] = useState(true);
