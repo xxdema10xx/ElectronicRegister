@@ -24,7 +24,6 @@ import ExamSubmissions from "../components/ExamSubmissions";
 import ClassFilter from "../components/ClassFilter";
 import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
-import { resetMockExams } from "../api/mockExamBackend";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, detailToDraft, draftToDto, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
 import { RETAKE_LABEL, RETAKE_TONE, getRetakeCandidates, getRetakeGroups, invalidateExamInsights, retakeSummary } from "../api/examInsights";
 
@@ -43,8 +42,8 @@ function tabOf(exam) {
 }
 
 // Ordine dal più recente al più vecchio, per scheda: il primo campo presente decide.
-// TODO(API): unico punto da cambiare quando ExamSummaryDto esporrà CreatedAt/UpdatedAt. Oggi li dà solo
-// la modalità prova; con il server vero le bozze ripiegano sulla data di inizio disponibilità.
+// TODO(API): unico punto da cambiare quando ExamSummaryDto esporrà CreatedAt/UpdatedAt. Oggi le bozze
+// ripiegano sulla data di inizio disponibilità.
 const SORT_FIELDS = {
   drafts: ["updatedAt", "createdAt", "availableFrom"],
   active: ["publishedAt", "availableFrom"],
@@ -75,8 +74,7 @@ function storedDraft() {
   return null;
 }
 
-// Nome della materia di una classe-materia (il server lo dà a parte; nei dati di prova è nell'etichetta)
-const subjectNameOf = (cs) => cs?.subjectName || cs?.label?.split(" · ").slice(1).join(" · ") || cs?.label || "";
+const subjectNameOf = (cs) => cs?.subjectName || "";
 
 export default function ExamsScreen() {
   const { user } = useAuth();
@@ -234,7 +232,6 @@ export default function ExamsScreen() {
     if (route.name === "view" && viewing?.id !== route.id) {
       let cancelled = false;
       setBusy(route.id);
-      // TODO(API): in modalità prova risponde il mock; con il server vero è GET /institution/exams/{id}
       api.getExam(route.id)
         .then((detail) => { if (!cancelled) setViewing(detail); })
         .catch((e) => {
@@ -564,14 +561,6 @@ export default function ExamsScreen() {
           })}
         </View>
 
-        {api.isMock() && (
-          <View style={{ backgroundColor: "#FEF3C7", borderRadius: 10, padding: 10, marginBottom: 8, flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-            <Text style={{ color: "#92400E", flex: 1, minWidth: 200 }}>
-              Modalità prova: il server non espone ancora gli esami (/Exam), i dati sono locali a questo browser.
-            </Text>
-            <TouchableOpacity onPress={() => { resetMockExams(); invalidateExamInsights(); load(); }}><Text style={{ color: "#92400E", fontWeight: "700" }}>Ripristina dati</Text></TouchableOpacity>
-          </View>
-        )}
         {showResume && tab === "drafts" && (
           // Bozza in corso, in cima alla scheda Bozze: sparisce quando viene salvata sul server o eliminata (updateDraft(null)).
           <Card style={{ marginBottom: 12, flexDirection: "row", alignItems: "center", gap: 12, flexWrap: "wrap", borderLeftWidth: 5, borderLeftColor: C.warning }}>

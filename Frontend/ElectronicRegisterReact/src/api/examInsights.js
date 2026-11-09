@@ -36,7 +36,7 @@ function cached(map, id, load) {
 const submissionsOf = (api, examId) => cached(cacheFor(api).subs, examId, () => api.listSubmissions(examId));
 const detailOf = (api, examId) => cached(cacheFor(api).details, examId, () => api.getExam(examId));
 
-// examId: solo quell'esame; senza argomenti: tutto (es. "Ripristina dati" della modalità prova)
+// examId: solo quell'esame; senza argomenti: tutto
 export function invalidateExamInsights(examId) {
   for (const c of caches.values()) {
     if (examId) { c.subs.delete(examId); c.details.delete(examId); }

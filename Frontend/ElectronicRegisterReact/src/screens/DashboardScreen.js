@@ -17,7 +17,7 @@ import { getTeachers } from "../api/teacherService";
 import { getUsers } from "../api/userService";
 import { getMyClasses } from "../api/classService";
 import { getExamInsights, buildStudentBooklet, retakeSummary } from "../api/examInsights";
-import { getClassesForPicker, getClassSchedule, getTeacherSchedule, getStudentSchedule, addLesson, updateLesson, deleteLesson } from "../api/lessonService";
+import { getClassesForPicker, getClassSchedule, getTeacherSchedule, getStudentSchedule } from "../api/lessonService";
 import LessonCalendar from "../components/LessonCalendar";
 import SelectField from "../components/SelectField";
 
@@ -122,10 +122,6 @@ export default function DashboardScreen({ navigate }) {
   }
   useEffect(reloadLessons, [role, calClassId, user]);
 
-  function addSlot(input) { addLesson(input); reloadLessons(); }
-  function editSlot(id, patch) { updateLesson(id, patch); reloadLessons(); }
-  function removeSlot(id) { deleteLesson(id); reloadLessons(); }
-
   // Media voti e "da recuperare": dal libretto (esiti degli esami), non dai voti del registro — è la
   // stessa fonte che lo studente vede in "Voti", niente numeri che non tornano tra le due schermate.
   const studentBooklet = buildStudentBooklet(assigned);
@@ -174,8 +170,7 @@ export default function DashboardScreen({ navigate }) {
             getLabel={c => c.name} placeholder="Seleziona classe" emptyMessage="Nessuna classe" />
         )}
         {role === "admin" && !calClassId ? <Empty text="Nessuna classe disponibile" /> : (
-          <LessonCalendar lessons={lessons} editable={role === "admin"} classId={calClassId}
-            onAdd={addSlot} onEdit={editSlot} onDelete={removeSlot} />
+          <LessonCalendar lessons={lessons} />
         )}
       </Card>
     </View>

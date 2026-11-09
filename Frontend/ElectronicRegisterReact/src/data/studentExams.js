@@ -7,7 +7,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Platform } from "react-native";
 import { useAuth } from "../hooks/useAuth";
 import { createExamApi } from "../api/examApi";
-import { resetMockExams } from "../api/mockExamBackend";
 
 const SEEN_KEY = "studentExamSeen2";
 const RUNS_KEY = "studentExamRuns2";
@@ -47,16 +46,6 @@ export function clearRun(examId) {
 }
 export function notifyStudentExamsChanged() { emit(); }
 
-// Solo per la prova: riporta tutto allo stato iniziale
-export function resetStudentDemo() {
-  seen = [];
-  runs = {};
-  write(SEEN_KEY, seen);
-  write(RUNS_KEY, runs);
-  resetMockExams();
-  emit();
-}
-
 // Esami assegnati allo studente + numero di notifiche non ancora viste; si aggiorna da solo
 export function useStudentExams() {
   const { token, user } = useAuth();
@@ -68,7 +57,7 @@ export function useStudentExams() {
 
   const reload = useCallback(async () => {
     if (role !== "student") return;
-    try { setAssigned(await createExamApi(token, user).getAssigned()); setError(null); }
+    try { setAssigned(await createExamApi(token).getAssigned()); setError(null); }
     catch (e) { setError(e.message); /* resta l'ultimo elenco noto */ }
     finally { setLoaded(true); }
   }, [token, user, role]);

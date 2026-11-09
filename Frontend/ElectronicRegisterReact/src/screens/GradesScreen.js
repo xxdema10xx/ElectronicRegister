@@ -19,8 +19,7 @@ import { getGradesPage, getGradeFilters, createGrade, updateGrade, deleteGrade }
 import { getSubjects } from "../api/subjectService";
 import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
-import { useExamApi } from "../hooks/useExamApi";
-import { useStudentExams, resetStudentDemo } from "../data/studentExams";
+import { useStudentExams } from "../data/studentExams";
 import { formatDateTime } from "../api/examContract";
 import { buildStudentBooklet } from "../api/examInsights";
 
@@ -30,8 +29,7 @@ const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n 
 // Libretto dello studente: un esame (appello) per riga, voto o esito a destra, più recenti in alto.
 // Sostituisce l'elenco voti del registro, che per lo studente è meno significativo degli esiti d'esame.
 function StudentBooklet() {
-  const api = useExamApi();
-  const { assigned, loaded, error, reload } = useStudentExams();
+  const { assigned, loaded, error } = useStudentExams();
 
   const booklet = buildStudentBooklet(assigned);
 
@@ -39,16 +37,6 @@ function StudentBooklet() {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
         <SectionHeader title="Libretto" />
-        {api.isMock() && (
-          <View style={{ backgroundColor: "#FEF3C7", borderRadius: 10, padding: 10, marginBottom: 8, flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-            <Text style={{ color: "#92400E", flex: 1, minWidth: 200 }}>
-              Modalità prova: il server non espone ancora gli esami (/Exam), i dati sono locali a questo browser.
-            </Text>
-            <TouchableOpacity onPress={() => { resetStudentDemo(); reload(); }}>
-              <Text style={{ color: "#92400E", fontWeight: "700" }}>Rigenera esempi</Text>
-            </TouchableOpacity>
-          </View>
-        )}
         {!!error && <Text style={{ color: C.danger, marginBottom: 8 }}>{error}</Text>}
       </View>
       {!loaded ? <Loader /> : booklet.length === 0 ? <EmptyState message="Nessun esame svolto" /> : (

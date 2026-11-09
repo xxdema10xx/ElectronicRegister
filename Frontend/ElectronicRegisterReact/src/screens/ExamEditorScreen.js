@@ -47,7 +47,6 @@ export default function ExamEditorScreen({ route, nav, api, draft, dirty, update
     }
     let cancelled = false;
     setLoadingExam(true);
-    // TODO(API): in modalità prova risponde il mock; con il server vero è GET /institution/exams/{id}
     api.getExam(route.id)
       .then((detail) => {
         if (cancelled) return;
