@@ -11,6 +11,7 @@ import { useStudentBooklet, useStudentExams } from "../data/studentExams";
 import { useExamApi } from "../hooks/useExamApi";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
 import { useLayout } from "../hooks/useLayout";
+import { userDisplayName } from "../utils/userName";
 import { getSubjects } from "../api/subjectService";
 import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
@@ -163,7 +164,7 @@ export default function DashboardScreen({ navigate }) {
     ] : []),
   ];
 
-  const name = user?.studentFirstName || user?.teacherFirstName || user?.displayName || user?.email?.split(".")[0] || "Utente";
+  const name = user?.studentFirstName || user?.teacherFirstName || userDisplayName(user);
 
   const lessonsPanel = (
     <View style={{ flexGrow: 1, flexBasis: 420 }}>

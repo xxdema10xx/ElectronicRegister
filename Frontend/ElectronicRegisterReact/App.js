@@ -42,6 +42,8 @@ export default function App() {
     accessToken: session.accessToken, accessExpiresAt: session.accessExpiresAt, institution: session.institution, user: u,
   });
 
+  const updateUser = (patch) => { const next = { ...user, ...patch }; persist(next); setUser(next); };
+
   // Con "message" la sessione è scaduta da sola: i dati restano, separati per utente, così chi rientra ritrova
   // la propria bozza non salvata. Con l'uscita volontaria si cancellano.
   const logout = useCallback((message) => {
@@ -134,7 +136,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <AuthContext.Provider value={{ token, user, logout }}>
+      <AuthContext.Provider value={{ token, user, logout, updateUser }}>
         <AppNav user={user} onLogout={() => logout()} />
       </AuthContext.Provider>
     </SafeAreaProvider>

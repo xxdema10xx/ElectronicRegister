@@ -16,7 +16,7 @@ import { changePassword, freshTicket, login, updateDisplayName } from "../api/au
 const ROLE_LABEL = { InstitutionAdmin: "Amministratore", Staff: "Segreteria", Teacher: "Docente", Student: "Studente" };
 
 export default function ProfileScreen({ onLogout }) {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const [modal, setModal] = useState(null); // "name" | "password"
   const [displayName, setDisplayName] = useState(user?.displayName || "");
   const [shownName, setShownName] = useState(user?.displayName || "");
@@ -48,6 +48,7 @@ export default function ProfileScreen({ onLogout }) {
     try {
       await updateDisplayName(await freshTicket(), displayName);
       setShownName(displayName.trim());
+      updateUser({ displayName: displayName.trim() }); // così l'intestazione si aggiorna subito
       close();
     } catch (e) { Alert.alert("Errore", e.message); }
     finally { setSaving(false); }

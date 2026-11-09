@@ -19,6 +19,7 @@ import NotificationDot from "../components/NotificationDot";
 import Badge from "../components/Badge";
 import { useStudentExams } from "../data/studentExams";
 import { CONTENT_MAX_WIDTH, useLayout } from "../hooks/useLayout";
+import { userDisplayName } from "../utils/userName";
 import { guardedNavigate, isWeb, usePageHeader, useScreenUrl } from "./examRoutes";
 
 const TITLES = {
@@ -87,10 +88,7 @@ export default function AppNav({ user, onLogout }) {
     profile: <ProfileScreen onLogout={logout} />,
   };
 
-  // Nome e cognome dell'utente loggato (profilo docente o studente), altrimenti nome dell'account
-  const fullName = (first, last) => [first, last].filter(Boolean).join(" ");
-  const userName = fullName(user?.studentFirstName, user?.studentLastName) || fullName(user?.teacherFirstName, user?.teacherLastName)
-    || user?.displayName || user?.email?.split("@")[0] || "Utente";
+  const userName = userDisplayName(user);
   const content = <View key={`${screen}-${visit}`} style={{ flex: 1 }}>{SCREENS[screen] || <DashboardScreen navigate={go} />}</View>;
 
   if (isDesktop) {
