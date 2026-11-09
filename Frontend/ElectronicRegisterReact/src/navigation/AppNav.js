@@ -69,6 +69,7 @@ export default function AppNav({ user, onLogout }) {
   const go = (key) => guardedNavigate(() => {
     if (key !== screen) return setScreen(key);
     if (isWeb && key === "exams") window.history.replaceState(null, "", "/esami");
+    if (isWeb && key === "students") window.history.replaceState(null, "", "/studenti");
     setVisit(v => v + 1);
   });
   const logout = () => guardedNavigate(onLogout);

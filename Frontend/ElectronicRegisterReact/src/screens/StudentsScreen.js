@@ -1,7 +1,7 @@
 // src/screens/StudentsScreen.js
 // Anagrafica studenti. Admin e Staff creano e modificano; solo l'admin elimina (docs/AUTH.md §4).
-import { useCallback, useEffect, useState } from "react";
-import { Alert, FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Alert, BackHandler, FlatList, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
@@ -15,6 +15,8 @@ import FormModal from "../components/FormModal";
 import StudentGrades from "../components/StudentGrades";
 import { filterBySearch } from "../utils/search";
 import { getStudents, createStudent, updateStudent, deleteStudent } from "../api/studentService";
+import { setPageHeader, useStudentRoute } from "../navigation/examRoutes";
+import { notify } from "../utils/dialogs";
 
 const emptyForm = { firstName: "", lastName: "" };
 
@@ -31,18 +33,39 @@ export default function StudentsScreen() {
   const [form, setForm] = useState(emptyForm);
   const [showEdit, setShowEdit] = useState(null);
   const [saving, setSaving] = useState(false);
-  const [gradesOf, setGradesOf] = useState(null); // studente di cui si vedono i voti (admin e staff)
+  const nav = useStudentRoute(); // /studenti oppure /studenti/{id}/voti
+  const route = nav.route;
+  const loadFailed = useRef(false); // senza elenco non si può dire che uno studente non esiste
 
   const load = useCallback(async () => {
     setLoading(true);
+    loadFailed.current = false;
     try {
       const data = await getStudents("", token);
       setStudents(Array.isArray(data) ? data : []);
-    } catch (e) { if (e.status !== 404) Alert.alert("Errore", e.message); setStudents([]); }
+    } catch (e) { loadFailed.current = true; if (e.status !== 404) Alert.alert("Errore", e.message); setStudents([]); }
     finally { setLoading(false); }
   }, [token]);
 
   useEffect(() => { load(); }, [load]);
+
+  // Pagina dei voti: solo per chi gestisce gli studenti, e solo se lo studente esiste
+  const gradesOf = route.name === "grades" ? students.find(st => st.id === route.id) : null;
+  const backToList = () => nav.back({ name: "list" });
+  useEffect(() => {
+    if (route.name !== "grades" || loading) return;
+    if (!canEdit) { nav.replace({ name: "list" }); return; }
+    if (!gradesOf && !loadFailed.current) { notify("Studente non trovato", "Lo studente non esiste più."); nav.replace({ name: "list" }); }
+  }, [route, loading, gradesOf]);
+  useEffect(() => {
+    setPageHeader(route.name === "grades" ? { title: gradesOf ? `${gradesOf.lastName} ${gradesOf.firstName}` : "Voti", onBack: backToList } : null);
+  }, [route, gradesOf]);
+  useEffect(() => () => setPageHeader(null), []);
+  useEffect(() => {
+    if (Platform.OS !== "android" || route.name !== "grades") return;
+    const sub = BackHandler.addEventListener("hardwareBackPress", () => { backToList(); return true; });
+    return () => sub.remove();
+  }, [route]);
 
   async function add() {
     if (!form.firstName.trim() || !form.lastName.trim()) { Alert.alert("Attenzione", "Inserisci nome e cognome"); return; }
@@ -74,6 +97,11 @@ export default function StudentsScreen() {
     ]);
   }
 
+  if (route.name === "grades") {
+    if (gradesOf) return <StudentGrades key={gradesOf.id} student={gradesOf} token={token} canDelete={canDelete} />;
+    return loading ? <Loader /> : <EmptyState message="Impossibile caricare lo studente" />;
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
@@ -89,7 +117,7 @@ export default function StudentsScreen() {
           keyExtractor={st => st.id}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
           renderItem={({ item: st }) => (
-            <TouchableOpacity activeOpacity={canEdit ? 0.7 : 1} onPress={() => canEdit && setGradesOf(st)}>
+            <TouchableOpacity activeOpacity={canEdit ? 0.7 : 1} onPress={() => canEdit && nav.push({ name: "grades", id: st.id })}>
             <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
               <View style={s.avatar}><Text style={s.avatarText}>{st.firstName[0]}{st.lastName[0]}</Text></View>
               <View style={{ flex: 1, marginLeft: 12 }}>
@@ -107,7 +135,6 @@ export default function StudentsScreen() {
           )}
         />
       }
-      <StudentGrades student={gradesOf} token={token} canDelete={canDelete} onClose={() => setGradesOf(null)} />
       <FormModal visible={showAdd} title="Nuovo studente" onClose={() => setShowAdd(false)}>
         <Input label="Nome" value={form.firstName} onChangeText={v => setForm(f => ({ ...f, firstName: v }))} />
         <Input label="Cognome" value={form.lastName} onChangeText={v => setForm(f => ({ ...f, lastName: v }))} />

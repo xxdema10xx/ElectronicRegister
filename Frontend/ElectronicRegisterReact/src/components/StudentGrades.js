@@ -1,9 +1,10 @@
 // src/components/StudentGrades.js
-// Voti di un singolo studente (vista admin): elenco, aggiunta, modifica ed eliminazione.
+// Pagina dei voti di un singolo studente (/studenti/{id}/voti): elenco, aggiunta, modifica ed eliminazione.
 import { useCallback, useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
+import Card from "./Card";
 import FormModal from "./FormModal";
 import GradeCircle from "./GradeCircle";
 import Input from "./Input";
@@ -18,7 +19,7 @@ import { notify, confirmAction } from "../utils/dialogs";
 const emptyForm = () => ({ id: null, subjectId: "", value: "", date: toISODate(new Date()) });
 
 // canDelete: solo l'admin può eliminare un voto (lo Staff può inserirlo e modificarlo)
-export default function StudentGrades({ student, token, onClose, canDelete = true }) {
+export default function StudentGrades({ student, token, canDelete = true }) {
   const [grades, setGrades] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,6 @@ export default function StudentGrades({ student, token, onClose, canDelete = tru
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
-    if (!student) return;
     setLoading(true);
     try {
       const [page, subs] = await Promise.all([
@@ -69,29 +69,10 @@ export default function StudentGrades({ student, token, onClose, canDelete = tru
     });
   }
 
-  const title = student ? `Voti di ${student.firstName} ${student.lastName}` : "";
-
   return (
-    <FormModal wide visible={!!student} title={form ? (form.id ? "Modifica voto" : "Nuovo voto") : title} onClose={onClose}>
-      {form ? (
-        <View>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
-            <View style={{ flex: 1, minWidth: 200 }}>
-              <SelectField label="Materia" value={form.subjectId} options={subjects} getLabel={(sub) => sub.name}
-                onSelect={(subjectId) => setForm(f => ({ ...f, subjectId }))} placeholder="Seleziona materia…" emptyMessage="Nessuna materia disponibile" />
-            </View>
-            <View style={{ flex: 1, minWidth: 200 }}>
-              <DateField label="Data" value={form.date} onChange={(date) => setForm(f => ({ ...f, date }))} />
-            </View>
-          </View>
-          <Input label="Voto (1-10)" value={String(form.value)} onChangeText={(value) => setForm(f => ({ ...f, value }))} keyboardType="decimal-pad" />
-          <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: 10 }}>
-            <Btn label="Annulla" variant="ghost" onPress={() => setForm(null)} style={{ paddingHorizontal: 22 }} />
-            <Btn label={form.id ? "Aggiorna" : "Salva"} onPress={save} loading={saving} style={{ paddingHorizontal: 28 }} />
-          </View>
-        </View>
-      ) : (
-        <View>
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
+      <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }}>
+        <Card style={{ width: "100%", maxWidth: 760 }}>
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
             <Text style={s.itemSub}>{loading ? "Caricamento…" : `${grades.length} ${grades.length === 1 ? "voto" : "voti"}`}</Text>
             <Btn label="Aggiungi voto" onPress={() => setForm(emptyForm())} style={s.smBtn} textStyle={s.smBtnText} />
@@ -114,8 +95,29 @@ export default function StudentGrades({ student, token, onClose, canDelete = tru
               )}
             </View>
           ))}
-        </View>
-      )}
-    </FormModal>
+        </Card>
+      </ScrollView>
+
+      <FormModal wide visible={!!form} title={form?.id ? "Modifica voto" : "Nuovo voto"} onClose={() => setForm(null)}>
+        {!!form && (
+          <View>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
+              <View style={{ flex: 1, minWidth: 200 }}>
+                <SelectField label="Materia" value={form.subjectId} options={subjects} getLabel={(sub) => sub.name}
+                  onSelect={(subjectId) => setForm(f => ({ ...f, subjectId }))} placeholder="Seleziona materia…" emptyMessage="Nessuna materia disponibile" />
+              </View>
+              <View style={{ flex: 1, minWidth: 200 }}>
+                <DateField label="Data" value={form.date} onChange={(date) => setForm(f => ({ ...f, date }))} />
+              </View>
+            </View>
+            <Input label="Voto (1-10)" value={String(form.value)} onChangeText={(value) => setForm(f => ({ ...f, value }))} keyboardType="decimal-pad" />
+            <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: 10 }}>
+              <Btn label="Annulla" variant="ghost" onPress={() => setForm(null)} style={{ paddingHorizontal: 22 }} />
+              <Btn label={form.id ? "Aggiorna" : "Salva"} onPress={save} loading={saving} style={{ paddingHorizontal: 28 }} />
+            </View>
+          </View>
+        )}
+      </FormModal>
+    </View>
   );
 }

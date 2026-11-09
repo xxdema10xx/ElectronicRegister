@@ -486,7 +486,7 @@ export default function ExamsScreen() {
       <ExamSubmissions key={exam.id} exam={exam} subtitle={csLabel(exam.classSubjectId) || exam.name} api={api}
         hrefOf={(submissionId) => examHref({ name: "review", id: exam.id, submissionId })}
         onOpen={(submissionId) => nav.push({ name: "review", id: exam.id, submissionId })} />
-    ) : <Loader />;
+    ) : loading ? <Loader /> : <EmptyState message="Impossibile caricare l'esame" />;
   } else if (route.name === "review") {
     page = (
       <SubmissionReview key={route.submissionId} submissionId={route.submissionId} api={api}

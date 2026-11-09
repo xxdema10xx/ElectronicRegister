@@ -44,6 +44,7 @@ export function useScreenUrl(screen, setScreen, allowedKeys, role) {
       else if (!pathname.startsWith("/esami")) window.history.replaceState(null, "", "/esami");
       return; // il resto dell'URL lo gestisce useExamRoute (ExamsScreen)
     }
+    if (screen === "students" && pathname.startsWith("/studenti")) return; // il resto lo gestisce useStudentRoute
     const target = SCREEN_PATHS[screen] || "/";
     if (pathname !== target || search) window.history.replaceState(null, "", target);
   }, [screen]);
@@ -86,15 +87,14 @@ export function examUrl(route) {
   return qs ? `${path}?${qs}` : path;
 }
 
-const initialRoute = () => (isWeb && parseExamUrl(window.location.pathname, window.location.search)) || { name: "list", tab: null };
 
-// Rotta corrente degli esami e funzioni per muoversi.
+// Rotta corrente di una sezione e funzioni per muoversi.
 //   push(r)     apre una schermata sopra la corrente (web: nuova voce di cronologia)
 //   replace(r)  sostituisce la corrente (web: replaceState)
 //   back(f)     torna alla precedente; se non c'è (es. dopo una ricarica su /esami/nuovo) va a f
 // Con modifiche non salvate (guardia d'uscita, vedi sotto) l'indietro/avanti del browser chiede conferma.
-export function useExamRoute() {
-  const [stack, setStack] = useState(() => [initialRoute()]);
+function useRouteStack(parse, format, listRoute) {
+  const [stack, setStack] = useState(() => [(isWeb && parse(window.location.pathname, window.location.search)) || listRoute]);
   const route = stack[stack.length - 1];
   const routeRef = useRef(route);
   routeRef.current = route;
@@ -103,16 +103,16 @@ export function useExamRoute() {
   useEffect(() => {
     if (!isWeb) return;
     // Arrivando dalla sidebar l'URL è "/": si allinea alla lista
-    if (!parseExamUrl(window.location.pathname)) window.history.replaceState({ exam: true }, "", examUrl(routeRef.current));
+    if (!parse(window.location.pathname)) window.history.replaceState({ exam: true }, "", format(routeRef.current));
     const onPop = () => {
-      const next = parseExamUrl(window.location.pathname, window.location.search);
+      const next = parse(window.location.pathname, window.location.search);
       const skip = skipGuardRef.current;
       skipGuardRef.current = false;
       if (!next) return; // si è usciti dagli esami: la sezione la decide AppNav
       if (!skip && leaveGuard) {
         // Il browser non permette di annullare "indietro": si rimette subito l'URL dell'editor e si chiede;
         // scegliendo di uscire si torna di nuovo indietro, stavolta senza domande.
-        window.history.pushState({ exam: true, pushed: true }, "", examUrl(routeRef.current));
+        window.history.pushState({ exam: true, pushed: true }, "", format(routeRef.current));
         leaveGuard(() => { skipGuardRef.current = true; window.history.back(); });
         return;
       }
@@ -123,16 +123,16 @@ export function useExamRoute() {
   }, []);
 
   const push = useCallback((r) => {
-    if (isWeb) { window.history.pushState({ exam: true, pushed: true }, "", examUrl(r)); setStack([r]); }
+    if (isWeb) { window.history.pushState({ exam: true, pushed: true }, "", format(r)); setStack([r]); }
     else setStack(s => [...s, r]);
   }, []);
 
   const replace = useCallback((r) => {
-    if (isWeb) { window.history.replaceState({ exam: true, pushed: !!window.history.state?.pushed }, "", examUrl(r)); setStack([r]); }
+    if (isWeb) { window.history.replaceState({ exam: true, pushed: !!window.history.state?.pushed }, "", format(r)); setStack([r]); }
     else setStack(s => [...s.slice(0, -1), r]);
   }, []);
 
-  const back = useCallback((fallback = { name: "list", tab: null }) => {
+  const back = useCallback((fallback = listRoute) => {
     if (isWeb) {
       if (window.history.state?.pushed) { skipGuardRef.current = true; window.history.back(); }
       else replace(fallback);
@@ -143,6 +143,17 @@ export function useExamRoute() {
 
   return { route, push, replace, back };
 }
+
+export const useExamRoute = () => useRouteStack(parseExamUrl, examUrl, { name: "list", tab: null });
+
+// ── Rotte degli studenti: /studenti · /studenti/{id}/voti ───────────────────────────────────
+function parseStudentUrl(pathname) {
+  const parts = (pathname || "").split("/").filter(Boolean);
+  if (parts[0] !== "studenti") return null;
+  return parts.length === 3 && parts[2] === "voti" ? { name: "grades", id: decodeURIComponent(parts[1]) } : { name: "list" };
+}
+const studentUrl = (route) => (route.name === "grades" ? `/studenti/${encodeURIComponent(route.id)}/voti` : "/studenti");
+export const useStudentRoute = () => useRouteStack(parseStudentUrl, studentUrl, { name: "list" });
 
 // ── Guardia d'uscita (tutta l'app) ───────────────────────────────────────────────────────────
 // Una pagina con modifiche non salvate registra guard(proceed): mostra la conferma e, se si esce, chiama
