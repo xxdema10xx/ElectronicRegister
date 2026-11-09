@@ -20,6 +20,7 @@ import CheckboxField from "./CheckboxField";
 import DateTimeField from "./DateTimeField";
 import Loader from "./Loader";
 import StatusChip from "./StatusChip";
+import InfoTip from "./InfoTip";
 import { filterBySearch } from "../utils/search";
 import { RETAKE_LABEL, RETAKE_TONE } from "../api/examInsights";
 
@@ -490,6 +491,9 @@ function DetailsStep({ draft, onChange, env, isDesktop, reveal, focus }) {
   );
 }
 
+// Vero anche rispetto al server: la scadenza è inizio + durata + minuti aggiuntivi (ExamManager.StartAsync)
+const EXTRA_TIME_INFO = "Il tempo aggiuntivo (in minuti) si somma alla durata dell'esame solo per gli studenti che ne hanno diritto. Esempio: durata 30 min + 10 aggiuntivi = 40 minuti per quello studente.";
+
 // Passo 3: studenti assegnati, con tempo aggiuntivo facoltativo
 function StudentsStep({ draft, onChange, env }) {
   const [list, setList] = useState([]);
@@ -562,7 +566,7 @@ function StudentsStep({ draft, onChange, env }) {
       <View>
         <Text style={{ color: C.text, fontSize: 22, fontWeight: "800" }}>Studenti</Text>
         <Text style={[s.itemSub, { marginTop: 4 }]}>
-          {draft.students.length} assegnati. Il tempo aggiuntivo (in minuti) si somma alla durata per chi ne ha diritto.
+          {draft.students.length} assegnati.
         </Text>
       </View>
       <View style={{ flexDirection: "row", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
@@ -602,6 +606,13 @@ function StudentsStep({ draft, onChange, env }) {
             )}
             <Text style={{ color: "#92400E", fontSize: 12 }}>Puoi togliere o aggiungere chiunque della classe.</Text>
           </>)}
+        </View>
+      )}
+
+      {!loading && !error && visible.length > 0 && (
+        <View style={{ flexDirection: "row", justifyContent: "flex-end", alignItems: "center", gap: 4 }}>
+          <Text style={[s.label, { marginBottom: 0 }]}>Tempo aggiuntivo</Text>
+          <InfoTip text={EXTRA_TIME_INFO} />
         </View>
       )}
 
