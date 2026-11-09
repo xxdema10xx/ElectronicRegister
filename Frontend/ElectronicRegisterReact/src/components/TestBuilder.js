@@ -367,10 +367,11 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
 }
 
 const STEPS = ["Dettagli", "Domande", "Studenti"];
+const BAR_BTN_WIDTH = 150; // pulsanti della barra dell'editor su desktop
 
 function Stepper({ step, onStep, compact }) {
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+    <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: 8, maxWidth: "100%" }}>
       {STEPS.map((label, i) => {
         const n = i + 1;
         const active = n === step;
@@ -384,7 +385,7 @@ function Stepper({ step, onStep, compact }) {
                 {done ? <Ionicons name="checkmark" size={16} color={C.white} />
                   : <Text style={{ color: active ? C.white : C.textMuted, fontWeight: "700", fontSize: 12 }}>{n}</Text>}
               </View>
-              {!compact && <Text style={{ color: active ? C.text : C.textMuted, fontWeight: active ? "700" : "500" }}>{label}</Text>}
+              {(!compact || active) && <Text style={{ color: active ? C.text : C.textMuted, fontWeight: active ? "700" : "500" }}>{label}</Text>}
             </TouchableOpacity>
           </View>
         );
@@ -635,13 +636,14 @@ function StudentsStep({ draft, onChange, env }) {
 //   onSaveDraft     "Salva bozza" (secondaria): salva e resta nell'editor
 //   onSaveAndClose  "Salva e chiudi" (principale allo step 3): validazione completa, poi torna alla lista
 //   destroyAction   { label, onPress } per "Elimina bozza" / "Annulla modifiche", oppure null se non c'è niente
-//                   da eliminare o annullare. Su schermi stretti sta nel menu "⋯".
+//                   da eliminare o annullare. Sempre con conferma; su schermi larghi sta in riga con Indietro e
+//                   Avanti, su quelli stretti nel menu "⋯".
 // draftStatusShort: { label, tone } dello stato per schermi stretti (es. "Non salvata").
 // onClose non è più usato dalla barra: il ritorno alla lista è nell'header di AppNav (resta per compatibilità).
 // notice: { kind: "error" | "info", level, title, subtitle? } per il banner (da ExamsScreen, dopo un salvataggio);
 // onDismissNotice lo chiude. Le voci del banner si calcolano qui con validateAll(draft, { level }).
 export default function TestBuilder({ visible = true, contextLabel, draft, onChange, onSaveDraft, onSaveAndClose, destroyAction, onClose, saving, env, draftStatus, draftStatusShort, notice, onDismissNotice }) {
-  const { isDesktop } = useLayout();
+  const { isDesktop, isWide } = useLayout();
   const [selectedId, setSelectedId] = useState(null);
   const [moreOpen, setMoreOpen] = useState(false); // menu "⋯" su schermi stretti
   const [stepNotice, setStepNotice] = useState(null); // "Avanti" dallo step 1 con dettagli da completare
@@ -803,7 +805,11 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
       onMove={(dir) => move(selected.id, dir)} />
   ) : null;
 
-  const actionBtn = { style: [s.smBtn, { paddingHorizontal: 20, paddingVertical: 10 }], textStyle: s.smBtnText };
+  const actionBtn = {
+    style: [s.smBtn, { flex: 1, height: 40, paddingVertical: 0, paddingHorizontal: 8, alignItems: "center", justifyContent: "center" }],
+    textStyle: [s.smBtnText, { textAlign: "center" }],
+  };
+  const barButtons = (destroyAction ? 1 : 0) + (step > 1 ? 1 : 0) + 1;
 
   return (
     // Pagina dell'app (non più un Modal): sta nell'area dei contenuti, con la sidebar visibile.
@@ -811,8 +817,9 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
       <View style={{ flex: 1 }}>
         {/* Barra superiore */}
         {/* Il titolo ("← Esami / Nuovo esame") è nell'header di AppNav: qui stato, Stepper e pulsanti */}
-        <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", backgroundColor: C.white, paddingHorizontal: isDesktop ? 28 : 16, paddingVertical: 10, minHeight: 64, borderBottomWidth: 1, borderBottomColor: C.border, gap: 12, zIndex: 10 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap", minWidth: 0, flexGrow: 1, flexShrink: 1, flexBasis: isDesktop ? 0 : "100%" }}>
+        <View style={{ backgroundColor: C.white, paddingHorizontal: isDesktop ? 28 : 16, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: C.border, gap: 10, zIndex: 10 }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap", minWidth: isDesktop ? 200 : 0, flexGrow: 1, flexShrink: 1, flexBasis: isDesktop ? 0 : "100%" }}>
             {/* Stato reale della bozza con accanto l'azione che lo cambia. Su schermi larghi va a capo se serve,
                 su quelli stretti diventa un badge corto ("Non salvata") per non essere tagliato. */}
             {isDesktop ? (
@@ -828,41 +835,32 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
               <Ionicons name="cloud-upload-outline" size={14} color={C.primary} />
               <Text style={{ color: C.primary, fontSize: 13, fontWeight: "700" }}>{saving ? "Salvataggio…" : "Salva bozza"}</Text>
             </TouchableOpacity>
-            {/* Distruttiva secondaria (testo rosso), sempre con conferma; su schermi stretti nel menu "⋯" */}
-            {!!destroyAction && (isDesktop ? (
-              <TouchableOpacity onPress={destroyAction.onPress} disabled={saving} accessibilityRole="button" accessibilityLabel={destroyAction.label}
-                style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 6, paddingHorizontal: 8 }}>
-                <Ionicons name={destroyAction.icon || "trash-outline"} size={14} color={C.danger} />
-                <Text style={{ color: C.danger, fontSize: 13, fontWeight: "700" }}>{destroyAction.label}</Text>
+            {!isDesktop && !!destroyAction && (
+              <TouchableOpacity onPress={() => setMoreOpen(o => !o)} accessibilityRole="button" accessibilityLabel="Altre azioni" accessibilityState={{ expanded: moreOpen }}
+                style={{ marginLeft: "auto", paddingVertical: 4, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: C.border }}>
+                <Text style={{ color: C.text, fontSize: 16, fontWeight: "800", lineHeight: 18 }}>⋯</Text>
               </TouchableOpacity>
-            ) : (
-              <View style={{ marginLeft: "auto" }}>
-                <TouchableOpacity onPress={() => setMoreOpen(o => !o)} accessibilityRole="button" accessibilityLabel="Altre azioni"
-                  style={{ paddingVertical: 4, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: C.border }}>
-                  <Text style={{ color: C.text, fontSize: 16, fontWeight: "800", lineHeight: 18 }}>⋯</Text>
-                </TouchableOpacity>
-                {moreOpen && (
-                  <View accessibilityRole="menu" style={{ position: "absolute", top: 34, right: 0, zIndex: 20, minWidth: 190, backgroundColor: C.white, borderRadius: 10, borderWidth: 1, borderColor: C.border, paddingVertical: 4,
-                    shadowColor: "#000", shadowOpacity: 0.12, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 6 }}>
-                    <TouchableOpacity onPress={() => { setMoreOpen(false); destroyAction.onPress(); }} accessibilityRole="menuitem"
-                      style={{ flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 10, paddingHorizontal: 12 }}>
-                      <Ionicons name={destroyAction.icon || "trash-outline"} size={16} color={C.danger} />
-                      <Text style={{ color: C.danger, fontWeight: "700" }}>{destroyAction.label}</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-            ))}
+            )}
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexGrow: isDesktop ? 0 : 1, justifyContent: "flex-end" }}>
+          {/* Stessa larghezza, altezza e carattere per tutti: la riga ha larghezza fissa su desktop e i pulsanti se la dividono */}
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginLeft: "auto", maxWidth: "100%", width: isDesktop ? barButtons * BAR_BTN_WIDTH + (barButtons - 1) * 8 : "100%" }}>
+            {isDesktop && !!destroyAction && <Btn label={destroyAction.label} variant="ghost" onPress={destroyAction.onPress} disabled={saving}
+              style={[actionBtn.style, { borderColor: C.danger }]} textStyle={[actionBtn.textStyle, { color: C.danger }]} />}
             {/* Indietro: secondario, a sinistra dell'azione principale */}
             {step > 1 && <Btn label="← Indietro" variant="ghost" onPress={() => goTo(step - 1)} {...actionBtn} />}
-            <View style={{ flex: isDesktop ? 0 : 1, alignItems: "center" }}><Stepper step={step} onStep={goTo} compact={!isDesktop} /></View>
             {/* Principale: Avanti convalida e passa allo step dopo, senza salvare sul server; allo step 3 "Salva e chiudi" */}
             {step < 3
               ? <Btn label="Avanti →" onPress={() => goTo(step + 1)} {...actionBtn} />
               : <Btn label="Salva e chiudi" onPress={onSaveAndClose} loading={saving} {...actionBtn} />}
           </View>
+          </View>
+          {/* Menu "⋯": una riga normale della barra, così non copre mai gli altri pulsanti */}
+          {!isDesktop && moreOpen && !!destroyAction && (
+            <Btn label={destroyAction.label} variant="ghost" disabled={saving} onPress={() => { setMoreOpen(false); destroyAction.onPress(); }}
+              style={[s.smBtn, { height: 40, paddingVertical: 0, borderColor: C.danger }]} textStyle={[s.smBtnText, { color: C.danger }]} />
+          )}
+          {/* Riga a parte per Dettagli / Domande / Studenti */}
+          <View style={{ alignItems: "center" }}><Stepper step={step} onStep={goTo} compact={!isDesktop} /></View>
         </View>
         <ErrorBanner notice={activeNotice} items={noticeItems} onPick={pick} onDismiss={dismissNotice} />
 
@@ -878,7 +876,7 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
               <StudentsStep draft={draft} onChange={onChange} env={env} />
             </View>
           </ScrollView>
-        ) : isDesktop ? (
+        ) : isWide ? (
           <View style={{ flex: 1, flexDirection: "row" }}>
             <ScrollView style={{ width: 380, flexGrow: 0, backgroundColor: C.white, borderRightWidth: 1, borderRightColor: C.border }} keyboardShouldPersistTaps="handled">
               {questionsPanel}

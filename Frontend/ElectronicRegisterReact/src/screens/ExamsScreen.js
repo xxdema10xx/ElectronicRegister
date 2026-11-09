@@ -305,8 +305,8 @@ export default function ExamsScreen() {
     }, "Annulla modifiche", { cancelLabel: "Continua a modificare", destructive: true });
   }
   const destroyAction = !draft || !dirty ? null
-    : draft.examId ? { label: "Annulla modifiche", icon: "arrow-undo-outline", onPress: revertDraft }
-    : { label: "Elimina bozza", icon: "trash-outline", onPress: discardDraft };
+    : draft.examId ? { label: "Annulla modifiche", onPress: revertDraft }
+    : { label: "Elimina bozza", onPress: discardDraft };
 
   // "Modifica" dal dettaglio: il dettaglio lascia il posto all'editor, così "indietro" torna alla lista
   function edit(exam) {
