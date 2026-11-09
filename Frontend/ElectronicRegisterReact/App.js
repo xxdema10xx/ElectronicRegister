@@ -8,6 +8,7 @@ import { AuthContext } from "./src/hooks/useAuth";
 import { buildUser, getAccount, getContext, getInstitutions, login, selectInstitution } from "./src/api/authService";
 import { session } from "./src/api/session";
 import { setUnauthorizedHandler } from "./src/api/axiosClient";
+import { clearUserStorage, purgeLegacyStorage, setStorageUser } from "./src/utils/userStorage";
 import LoginScreen from "./src/screens/LoginScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import InstitutionPickerScreen from "./src/screens/InstitutionPickerScreen";
@@ -24,6 +25,8 @@ const sessionStore = {
   clear() { try { if (Platform.OS === "web") window.sessionStorage.removeItem(SESSION_KEY); } catch {} },
 };
 
+purgeLegacyStorage();
+
 export default function App() {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
@@ -32,11 +35,17 @@ export default function App() {
   const [choices, setChoices] = useState(null); // istituti tra cui scegliere dopo il login
   const pendingAccount = useRef(null);
 
+  // Durante il render e non in un effetto: le schermate leggono i dati dell'utente già al primo render
+  setStorageUser(user?.id);
+
   const persist = (u) => sessionStore.set({
     accessToken: session.accessToken, accessExpiresAt: session.accessExpiresAt, institution: session.institution, user: u,
   });
 
+  // Con "message" la sessione è scaduta da sola: i dati restano, separati per utente, così chi rientra ritrova
+  // la propria bozza non salvata. Con l'uscita volontaria si cancellano.
   const logout = useCallback((message) => {
+    if (!message) clearUserStorage();
     session.clear();
     sessionStore.clear();
     setToken(null); setUser(null); setChoices(null); setAuthScreen("login");

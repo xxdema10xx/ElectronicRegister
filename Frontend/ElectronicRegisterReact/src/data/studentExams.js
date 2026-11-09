@@ -4,45 +4,33 @@
 //  - la consegna in corso o appena conclusa di ogni esame: serve a riprendere dopo un refresh, perché il
 //    server restituisce le domande solo all'avvio, e a ritrovare l'esito (il server non elenca gli id delle consegne).
 import { useCallback, useEffect, useState } from "react";
-import { Platform } from "react-native";
 import { useAuth } from "../hooks/useAuth";
 import { createExamApi } from "../api/examApi";
+import { readUser, writeUser } from "../utils/userStorage";
 
 const SEEN_KEY = "studentExamSeen2";
 const RUNS_KEY = "studentExamRuns2";
 
-function read(key, fallback) {
-  try { return Platform.OS === "web" ? JSON.parse(window.localStorage.getItem(key)) ?? fallback : fallback; }
-  catch { return fallback; }
-}
-function write(key, value) {
-  try { if (Platform.OS === "web") window.localStorage.setItem(key, JSON.stringify(value)); } catch {}
-}
-
-let seen = read(SEEN_KEY, []);
-let runs = read(RUNS_KEY, {});
+// Sempre riletti dall'archivio dell'utente collegato: niente copie in memoria che sopravvivano al cambio di utente
+const readSeen = () => readUser("local", SEEN_KEY, []);
+const readRuns = () => readUser("local", RUNS_KEY, {});
 const listeners = new Set();
 const emit = () => listeners.forEach(l => l());
 
 // Segna come viste le notifiche degli esami (fa sparire il pallino)
 export function markSeen(examIds) {
+  const seen = readSeen();
   const missing = examIds.filter(id => !seen.includes(id));
   if (!missing.length) return;
-  seen = [...seen, ...missing];
-  write(SEEN_KEY, seen);
+  writeUser("local", SEEN_KEY, [...seen, ...missing]);
   emit();
 }
 
 // Consegna di un esame: { submissionId, startedAt, deadlineAt, exam, answers, revision, finished, result }
-export const getRun = (examId) => runs[examId] || null;
+export const getRun = (examId) => readRuns()[examId] || null;
 export function saveRun(examId, patch) {
-  runs = { ...runs, [examId]: { ...(runs[examId] || {}), ...patch } };
-  write(RUNS_KEY, runs);
-}
-export function clearRun(examId) {
-  const { [examId]: _removed, ...rest } = runs;
-  runs = rest;
-  write(RUNS_KEY, runs);
+  const runs = readRuns();
+  writeUser("local", RUNS_KEY, { ...runs, [examId]: { ...(runs[examId] || {}), ...patch } });
 }
 export function notifyStudentExamsChanged() { emit(); }
 
@@ -74,6 +62,7 @@ export function useStudentExams() {
     return () => { listeners.delete(l); };
   }, [reload]);
 
+  const seen = readSeen();
   const unseenCount = assigned.filter(a => a.canStart && !seen.includes(a.id)).length;
   return { assigned, loaded, error, unseenCount, reload, isSeen: (id) => seen.includes(id) };
 }

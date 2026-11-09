@@ -24,16 +24,20 @@ import ExamSubmissions from "../components/ExamSubmissions";
 import ClassFilter from "../components/ClassFilter";
 import { filterBySearch } from "../utils/search";
 import { notify, confirmAction } from "../utils/dialogs";
+import { isGuid, readUser, removeUser, writeUser } from "../utils/userStorage";
 import { EXAM_STATUS, EXAM_STATUS_LABEL, detailToDraft, draftToDto, fromEnum, formatDateTime, parseUtc } from "../api/examContract";
 import { RETAKE_LABEL, RETAKE_TONE, getRetakeCandidates, getRetakeGroups, invalidateExamInsights, retakeSummary } from "../api/examInsights";
 
 // La bozza in corso sopravvive al refresh (F5) su web grazie a sessionStorage.
 const DRAFT_KEY = "examDraft4";
 const draftStore = {
-  get() { try { return Platform.OS === "web" ? JSON.parse(window.sessionStorage.getItem(DRAFT_KEY)) : null; } catch { return null; } },
-  set(d) { try { if (Platform.OS === "web") window.sessionStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } catch {} },
-  clear() { try { if (Platform.OS === "web") window.sessionStorage.removeItem(DRAFT_KEY); } catch {} },
+  get: () => readUser("session", DRAFT_KEY, null),
+  set: (d) => writeUser("session", DRAFT_KEY, d),
+  clear: () => removeUser("session", DRAFT_KEY),
 };
+// Una bozza con id che il server non può riconoscere non si riprende (es. creata con i vecchi dati di prova)
+const draftIdsValid = (d) => [d.examId, d.classSubjectId, d.retakeOfExamId, ...(d.students || []).map(st => st.studentId)]
+  .every(id => !id || isGuid(id));
 
 // Scheda di un esame: bozze (non ancora pubblicati), attivi (pubblicati), storico (chiusi o annullati)
 function tabOf(exam) {
@@ -69,7 +73,7 @@ const BAR_H = 40; // altezza comune di filtri e pulsanti nella barra
 // con contenuto. Le altre (lasciate dalle versioni precedenti, che salvavano anche le bozze vuote) si scartano.
 function storedDraft() {
   const d = draftStore.get();
-  if (d && (d.examId || draftHasContent(d))) return d;
+  if (d && draftIdsValid(d) && (d.examId || draftHasContent(d))) return d;
   draftStore.clear();
   return null;
 }
