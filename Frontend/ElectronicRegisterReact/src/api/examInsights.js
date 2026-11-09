@@ -94,16 +94,18 @@ export function relevantForSubmissions(exams) {
 
 // Consegne di ogni esame pubblicato o chiuso, in parallelo; per i soli esami CHIUSI anche il dettaglio
 // (assegnati), per trovare chi non ha consegnato. Tutto passa dalla cache.
+// failed: la lettura non è riuscita, quindi per quell'esame non si sa chi deve recuperare (non è "nessuno").
 async function fetchExamResults(api, exams, { withAssigned }) {
   return Promise.all(relevantForSubmissions(exams).map(async (exam) => {
     const closed = statusOf(exam) === "closed";
     const [items, detail] = await Promise.all([
-      submissionsOf(api, exam.id).catch(() => []),
-      withAssigned && closed ? detailOf(api, exam.id).catch(() => null) : Promise.resolve(null),
+      submissionsOf(api, exam.id).catch(() => null),
+      withAssigned && closed ? detailOf(api, exam.id).catch(() => null) : Promise.resolve(undefined),
     ]);
-    return { exam, items: Array.isArray(items) ? items : [], closed, assigned: detail?.assignedStudents || [] };
+    return { exam, items: Array.isArray(items) ? items : [], closed, assigned: detail?.assignedStudents || [], failed: items === null || detail === null };
   }));
 }
+const failedCount = (results) => results.filter(r => r.failed).length;
 
 // Per ogni studente da recuperare, gli esami e il motivo. Uno studente è "assente" se in nessun esame
 // è insufficiente ma non ha consegnato almeno un esame chiuso.
@@ -124,9 +126,10 @@ export const retakeSummary = (groups) => formatRetakeCount(groups.length, groups
 const countPendingReview = (results) => results.reduce((n, { items }) =>
   n + items.filter(it => fromEnum(it.status, SUBMISSION_STATUS) === "pending_review").length, 0);
 
-// "Chi deve recuperare" della lista: si calcola quando si apre
+// "Chi deve recuperare" della lista: si calcola quando si apre. failed: esami di cui non si sono lette le consegne
 export async function getRetakeGroups(api, exams) {
-  return buildRetakeGroups(await fetchExamResults(api, exams, { withAssigned: true }));
+  const results = await fetchExamResults(api, exams, { withAssigned: true });
+  return { groups: buildRetakeGroups(results), failed: failedCount(results) };
 }
 
 // Consegne con domande aperte ancora da correggere: lavoro concreto che aspetta il docente.
@@ -158,5 +161,5 @@ export async function getRetakeCandidates(api, originalExamId) {
 export async function getExamInsights(api, exams) {
   const results = await fetchExamResults(api, exams, { withAssigned: true });
   const retakeGroups = buildRetakeGroups(results);
-  return { retakeGroups, retakeSummary: retakeSummary(retakeGroups), pendingReviewCount: countPendingReview(results) };
+  return { retakeGroups, retakeSummary: retakeSummary(retakeGroups), pendingReviewCount: countPendingReview(results), failed: failedCount(results) };
 }

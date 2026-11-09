@@ -71,6 +71,7 @@ export default function DashboardScreen({ navigate }) {
   const [myClasses, setMyClasses] = useState(null);
   const [retakeGroups, setRetakeGroups] = useState(null);
   const [pendingReview, setPendingReview] = useState(null);
+  const [submissionsFailed, setSubmissionsFailed] = useState(false); // i numeri qui sotto sarebbero incompleti
   const [classOptions, setClassOptions] = useState([]);
   const [calClassId, setCalClassId] = useState(null);
   const [lessons, setLessons] = useState(null);
@@ -101,8 +102,8 @@ export default function DashboardScreen({ navigate }) {
     if (!exams) return;
     let alive = true;
     getExamInsights(examApi, exams)
-      .then(({ retakeGroups, pendingReviewCount }) => { if (alive) { setRetakeGroups(retakeGroups); setPendingReview(pendingReviewCount); } })
-      .catch(() => { if (alive) { setRetakeGroups([]); setPendingReview(0); } });
+      .then(({ retakeGroups, pendingReviewCount, failed }) => { if (alive) { setRetakeGroups(retakeGroups); setPendingReview(pendingReviewCount); setSubmissionsFailed(failed > 0); } })
+      .catch(() => { if (alive) setSubmissionsFailed(true); });
     return () => { alive = false; };
   }, [role, exams, examApi]);
 
@@ -249,8 +250,8 @@ export default function DashboardScreen({ navigate }) {
           </>}
           {role === "teacher" && <>
             <StatTile icon="document-text-outline" label="Esami in programma" hint="Pubblicati, ancora aperti agli studenti" value={exams ? upcomingExams.length : null} onPress={() => navigate("exams")} />
-            <StatTile icon="create-outline" label="Da correggere" hint="Domande aperte in attesa di valutazione" value={pendingReview} onPress={() => navigate("exams")} />
-            <StatTile icon="alert-circle-outline" label="Studenti da recuperare" hint={retakeGroups ? `${retakeSummary(retakeGroups)} · non in regola su almeno un esame` : "Non in regola su almeno un esame"} value={retakeGroups ? retakeGroups.length : null} onPress={() => navigate("exams")} />
+            <StatTile icon="create-outline" label="Da correggere" hint={submissionsFailed ? "Impossibile caricare le consegne" : "Domande aperte in attesa di valutazione"} value={submissionsFailed ? "—" : pendingReview} onPress={() => navigate("exams")} />
+            <StatTile icon="alert-circle-outline" label="Studenti da recuperare" hint={submissionsFailed ? "Impossibile caricare le consegne" : retakeGroups ? `${retakeSummary(retakeGroups)} · non in regola su almeno un esame` : "Non in regola su almeno un esame"} value={submissionsFailed ? "—" : retakeGroups ? retakeGroups.length : null} onPress={() => navigate("exams")} />
           </>}
           {role === "admin" && <>
             <StatTile icon="school-outline" label="Studenti" value={counts.students} onPress={() => navigate("students")} />

@@ -2,6 +2,8 @@
 // Esami e consegne (docs/API.md §22–23). Nelle schermate si usa sempre l'oggetto restituito da createExamApi().
 import axiosClient, { authHeader } from "./axiosClient";
 
+const PAGE_SIZE = 100;
+
 export function createExamApi(token) {
   const cfg = (params) => ({ headers: authHeader(token), params });
   const get = async (path, params) => (await axiosClient.get(path, cfg(params))).data;
@@ -13,8 +15,14 @@ export function createExamApi(token) {
   let classSubjectsCache = null;
   async function classSubjects() {
     if (!classSubjectsCache) {
-      const list = await get("/institution/class-subjects", { pageNumber: 1, pageSize: 100 });
-      classSubjectsCache = (Array.isArray(list) ? list : []).map(c => ({ ...c, label: [c.className, c.subjectName].filter(Boolean).join(" · ") }));
+      const all = [];
+      for (let pageNumber = 1; ; pageNumber++) {
+        const page = await get("/institution/class-subjects", { pageNumber, pageSize: PAGE_SIZE });
+        const items = Array.isArray(page) ? page : [];
+        all.push(...items);
+        if (items.length < PAGE_SIZE) break;
+      }
+      classSubjectsCache = all.map(c => ({ ...c, label: [c.className, c.subjectName].filter(Boolean).join(" · ") }));
     }
     return classSubjectsCache;
   }
@@ -23,7 +31,9 @@ export function createExamApi(token) {
     // Chiave della cache di examInsights: le schermate hanno oggetti api diversi ma la stessa sessione
     cacheKey: () => token || "anon",
 
-    // Elenco classi-materia [{ id, classId, className, subjectName, label, ... }]; null = non disponibile per il ruolo
+    // Elenco classi-materia [{ id, classId, className, subjectName, label, ... }]
+    // null = non disponibile per il ruolo (lo Staff riceve 403): dell'esame resta la materia, senza errori a schermo
+    // TODO(API): lo Staff gestisce gli esami ma non può leggere classe e materia
     getClassSubjects: async () => {
       try { return await classSubjects(); }
       catch (e) { if (e.status === 404 || e.status === 403) return null; throw e; }

@@ -157,7 +157,7 @@ export default function ExamsScreen() {
   // su tutti gli esami pubblicati/chiusi della classe scelta. Richiede una chiamata per esame: va bene per i volumi di un registro di classe.
   async function openRetakes() {
     setRetakes({ loading: true, groups: [] });
-    try { setRetakes({ loading: false, groups: await getRetakeGroups(api, exams.filter(inClass)) }); }
+    try { setRetakes({ loading: false, ...await getRetakeGroups(api, exams.filter(inClass)) }); }
     catch (e) { notify("Errore", e.message); setRetakes(null); }
   }
 
@@ -456,19 +456,24 @@ export default function ExamsScreen() {
               <View style={{ flex: 1 }}>
                 <Text style={{ color: C.text, fontSize: 16, fontWeight: "700" }}>Chi deve recuperare</Text>
                 <Text style={{ color: C.textMuted, fontSize: 12 }}>
-                  {retakes.loading ? "Studenti non in regola su almeno un esame pubblicato o chiuso" : `${retakeSummary(retakes.groups)} · non in regola su almeno un esame pubblicato o chiuso`}
+                  {retakes.loading || retakes.failed ? "Studenti non in regola su almeno un esame pubblicato o chiuso" : `${retakeSummary(retakes.groups)} · non in regola su almeno un esame pubblicato o chiuso`}
                 </Text>
               </View>
             </View>
-            {retakes.loading ? <Loader /> : retakes.groups.length === 0 ? <EmptyState message="Nessuno studente da recuperare" /> : (
+            {retakes.loading ? <Loader /> : retakes.groups.length === 0 ? <EmptyState message={retakes.failed ? "Impossibile caricare le consegne" : "Nessuno studente da recuperare"} /> : (
               <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }}>
                 <View style={{ width: "100%", maxWidth: 760 }}>
+                  {retakes.failed > 0 && (
+                    <View style={{ backgroundColor: "#FEF3C7", borderRadius: 10, padding: 12, marginBottom: 10 }}>
+                      <Text style={{ color: "#92400E" }}>Impossibile caricare le consegne di {retakes.failed === 1 ? "un esame" : `${retakes.failed} esami`}: l'elenco potrebbe essere incompleto.</Text>
+                    </View>
+                  )}
                   {retakes.groups.map(g => (
                     <Card key={g.studentId} style={{ marginBottom: 10 }}>
                       <Text style={s.itemTitle}>{g.lastName} {g.firstName}</Text>
                       {g.exams.map(e => (
                         <View key={e.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 6 }}>
-                          <Text style={{ color: C.text, flex: 1 }} numberOfLines={1}>{e.name}{csLabel(e.classSubjectId) ? ` · ${csLabel(e.classSubjectId)}` : ""}</Text>
+                          <Text style={{ color: C.text, flex: 1 }} numberOfLines={1}>{csLabel(e.classSubjectId) || e.name}</Text>
                           <StatusChip label={RETAKE_LABEL[e.reason] || e.reason} tone={RETAKE_TONE[e.reason]} />
                         </View>
                       ))}

@@ -576,7 +576,7 @@ function StudentsStep({ draft, onChange, env }) {
       {!!retakeOf && (
         <View testID="retake-summary" style={{ backgroundColor: "#FEF3C7", borderRadius: 10, padding: 12, gap: 4 }}>
           {candidatesError ? (
-            <Text style={{ color: "#92400E" }}>Non è stato possibile leggere gli esiti dell'esame originale: {candidatesError}. Seleziona gli studenti a mano.</Text>
+            <Text style={{ color: "#92400E" }}>Impossibile caricare le consegne dell'esame originale: {candidatesError} Seleziona gli studenti a mano.</Text>
           ) : !candidates ? (
             <Text style={{ color: "#92400E" }}>Sto leggendo gli esiti dell'esame originale…</Text>
           ) : !candidates.closed ? (
