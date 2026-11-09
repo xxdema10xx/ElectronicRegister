@@ -17,7 +17,7 @@ import { getTeachers } from "../api/teacherService";
 import { getUsers } from "../api/userService";
 import { getMyClasses } from "../api/classService";
 import { getExamInsights, retakeSummary } from "../api/examInsights";
-import { getClassesForPicker, getClassSchedule, getTeacherSchedule, getStudentSchedule } from "../api/lessonService";
+import { getClassesForPicker, getSchedule } from "../api/lessonService";
 import LessonCalendar from "../components/LessonCalendar";
 import SelectField from "../components/SelectField";
 
@@ -73,7 +73,7 @@ export default function DashboardScreen({ navigate }) {
   const [pendingReview, setPendingReview] = useState(null);
   const [classOptions, setClassOptions] = useState([]);
   const [calClassId, setCalClassId] = useState(null);
-  const [lessons, setLessons] = useState([]);
+  const [lessons, setLessons] = useState(null);
 
   // Ogni richiesta è indipendente: se una fallisce il riquadro resta vuoto, la home si apre comunque.
   useEffect(() => {
@@ -106,21 +106,26 @@ export default function DashboardScreen({ navigate }) {
     return () => { alive = false; };
   }, [role, exams, examApi]);
 
-  // Orario delle lezioni: admin sceglie la classe da vedere/modificare; docente e studente vedono il proprio.
+  // Orario delle lezioni: l'admin sceglie la classe da vedere; docente e studente vedono il proprio.
   useEffect(() => {
-    if (role === "admin") {
-      const opts = getClassesForPicker();
-      setClassOptions(opts);
-      setCalClassId(prev => prev || opts[0]?.id || null);
-    }
-  }, [role]);
+    if (role !== "admin") return;
+    let alive = true;
+    getClassesForPicker(token)
+      .then((opts) => { if (alive) { setClassOptions(opts); setCalClassId(prev => prev || opts[0]?.id || null); } })
+      .catch(() => { if (alive) setClassOptions([]); });
+    return () => { alive = false; };
+  }, [role, token]);
 
-  function reloadLessons() {
-    if (role === "admin") setLessons(calClassId ? getClassSchedule(calClassId) : []);
-    else if (role === "teacher") setLessons(getTeacherSchedule(user?.teacherId ? { id: user.teacherId, firstName: user.teacherFirstName, lastName: user.teacherLastName } : null));
-    else if (role === "student") setLessons(getStudentSchedule(user?.studentId));
-  }
-  useEffect(reloadLessons, [role, calClassId, user]);
+  // Se il calendario non risponde si mostra "Orario non ancora disponibile", senza errori a schermo
+  useEffect(() => {
+    let alive = true;
+    setLessons(null);
+    const teacherName = role === "teacher" ? [user?.teacherFirstName, user?.teacherLastName].filter(Boolean).join(" ") : "";
+    getSchedule({ role, classId: calClassId, teacherName }, token)
+      .then((list) => { if (alive) setLessons(list); })
+      .catch(() => { if (alive) setLessons([]); });
+    return () => { alive = false; };
+  }, [role, calClassId, token, user]);
 
   // Media voti e "da recuperare": dal libretto (esiti degli esami), non dai voti del registro — è la
   // stessa fonte che lo studente vede in "Voti", niente numeri che non tornano tra le due schermate.

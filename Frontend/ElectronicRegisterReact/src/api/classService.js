@@ -45,6 +45,9 @@ export async function getStudyPaths(bienniumStudyAreaId, token) {
   });
 }
 
+// Tutte le classi dell'istituto: id, name
+export const getAllClasses = (token) => getAll("/institution/classes", token);
+
 // Classi del corso: id, name
 export const getClasses = (bienniumStudyPathId, token) => getAll("/institution/classes", token, { bienniumStudyPathId });
 
