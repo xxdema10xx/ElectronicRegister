@@ -368,6 +368,7 @@ function QuestionEditor({ q, index, total, onChange, onDuplicate, onDelete, onMo
 
 const STEPS = ["Dettagli", "Domande", "Studenti"];
 const BAR_BTN_WIDTH = 150; // pulsanti della barra dell'editor su desktop
+const BAR_WIDE_MIN = 720;
 
 function Stepper({ step, onStep, compact }) {
   return (
@@ -643,7 +644,8 @@ function StudentsStep({ draft, onChange, env }) {
 // notice: { kind: "error" | "info", level, title, subtitle? } per il banner (da ExamsScreen, dopo un salvataggio);
 // onDismissNotice lo chiude. Le voci del banner si calcolano qui con validateAll(draft, { level }).
 export default function TestBuilder({ visible = true, contextLabel, draft, onChange, onSaveDraft, onSaveAndClose, destroyAction, onClose, saving, env, draftStatus, draftStatusShort, notice, onDismissNotice }) {
-  const { isDesktop, isWide } = useLayout();
+  const { isDesktop, isWide, width } = useLayout();
+  const wideBar = isDesktop && width >= BAR_WIDE_MIN; // sotto questa larghezza, con la sidebar, la barra usa la forma compatta
   const [selectedId, setSelectedId] = useState(null);
   const [moreOpen, setMoreOpen] = useState(false); // menu "⋯" su schermi stretti
   const [stepNotice, setStepNotice] = useState(null); // "Avanti" dallo step 1 con dettagli da completare
@@ -817,12 +819,12 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
       <View style={{ flex: 1 }}>
         {/* Barra superiore */}
         {/* Il titolo ("← Esami / Nuovo esame") è nell'header di AppNav: qui stato, Stepper e pulsanti */}
-        <View style={{ backgroundColor: C.white, paddingHorizontal: isDesktop ? 28 : 16, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: C.border, gap: 10, zIndex: 10 }}>
+        <View style={{ backgroundColor: C.white, paddingHorizontal: wideBar ? 28 : 16, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: C.border, gap: 10, zIndex: 10 }}>
           <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap", minWidth: isDesktop ? 200 : 0, flexGrow: 1, flexShrink: 1, flexBasis: isDesktop ? 0 : "100%" }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap", minWidth: wideBar ? 200 : 0, flexGrow: 1, flexShrink: 1, flexBasis: wideBar ? 0 : "100%" }}>
             {/* Stato reale della bozza con accanto l'azione che lo cambia. Su schermi larghi va a capo se serve,
                 su quelli stretti diventa un badge corto ("Non salvata") per non essere tagliato. */}
-            {isDesktop ? (
+            {wideBar ? (
               <Text style={{ color: C.textMuted, fontSize: 13, flexShrink: 1 }} numberOfLines={2}>
                 {[contextLabel, draftStatus].filter(Boolean).join(" · ")}
               </Text>
@@ -835,7 +837,7 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
               <Ionicons name="cloud-upload-outline" size={14} color={C.primary} />
               <Text style={{ color: C.primary, fontSize: 13, fontWeight: "700" }}>{saving ? "Salvataggio…" : "Salva bozza"}</Text>
             </TouchableOpacity>
-            {!isDesktop && !!destroyAction && (
+            {!wideBar && !!destroyAction && (
               <TouchableOpacity onPress={() => setMoreOpen(o => !o)} accessibilityRole="button" accessibilityLabel="Altre azioni" accessibilityState={{ expanded: moreOpen }}
                 style={{ marginLeft: "auto", paddingVertical: 4, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: C.border }}>
                 <Text style={{ color: C.text, fontSize: 16, fontWeight: "800", lineHeight: 18 }}>⋯</Text>
@@ -843,8 +845,8 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
             )}
           </View>
           {/* Stessa larghezza, altezza e carattere per tutti: la riga ha larghezza fissa su desktop e i pulsanti se la dividono */}
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginLeft: "auto", maxWidth: "100%", width: isDesktop ? barButtons * BAR_BTN_WIDTH + (barButtons - 1) * 8 : "100%" }}>
-            {isDesktop && !!destroyAction && <Btn label={destroyAction.label} variant="ghost" onPress={destroyAction.onPress} disabled={saving}
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginLeft: "auto", maxWidth: "100%", width: wideBar ? barButtons * BAR_BTN_WIDTH + (barButtons - 1) * 8 : "100%" }}>
+            {wideBar && !!destroyAction && <Btn label={destroyAction.label} variant="ghost" onPress={destroyAction.onPress} disabled={saving}
               style={[actionBtn.style, { borderColor: C.danger }]} textStyle={[actionBtn.textStyle, { color: C.danger }]} />}
             {/* Indietro: secondario, a sinistra dell'azione principale */}
             {step > 1 && <Btn label="← Indietro" variant="ghost" onPress={() => goTo(step - 1)} {...actionBtn} />}
@@ -855,12 +857,12 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
           </View>
           </View>
           {/* Menu "⋯": una riga normale della barra, così non copre mai gli altri pulsanti */}
-          {!isDesktop && moreOpen && !!destroyAction && (
+          {!wideBar && moreOpen && !!destroyAction && (
             <Btn label={destroyAction.label} variant="ghost" disabled={saving} onPress={() => { setMoreOpen(false); destroyAction.onPress(); }}
               style={[s.smBtn, { height: 40, paddingVertical: 0, borderColor: C.danger }]} textStyle={[s.smBtnText, { color: C.danger }]} />
           )}
           {/* Riga a parte per Dettagli / Domande / Studenti */}
-          <View style={{ alignItems: "center" }}><Stepper step={step} onStep={goTo} compact={!isDesktop} /></View>
+          <View style={{ alignItems: "center" }}><Stepper step={step} onStep={goTo} compact={!wideBar} /></View>
         </View>
         <ErrorBanner notice={activeNotice} items={noticeItems} onPick={pick} onDismiss={dismissNotice} />
 

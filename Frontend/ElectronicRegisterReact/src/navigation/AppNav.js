@@ -26,13 +26,17 @@ const TITLES = {
   teachers: "Professori", subjects: "Materie", users: "Membri", profile: "Profilo",
 };
 
+// Testo completo nel tooltip del browser, per i titoli che possono essere troncati con "…"
+const fullTextTip = (text) => (isWeb ? (node) => node?.setAttribute?.("title", text || "") : undefined);
+
 const icon = name => <Ionicons name={name} size={32} color={C.white} />;
 const sideIcon = name => <Ionicons name={name} size={22} color={C.white} />;
 
 export default function AppNav({ user, onLogout }) {
   const [screen, setScreen] = useState("dashboard");
   const insets = useSafeAreaInsets();
-  const { isDesktop } = useLayout();
+  const { isDesktop, width } = useLayout();
+  const headerSize = width < 720 ? 18 : 22; // con la sidebar lo spazio per il titolo è poco
   const role = user?.role?.toLowerCase();
   const { unseenCount } = useStudentExams();
 
@@ -132,16 +136,17 @@ export default function AppNav({ user, onLogout }) {
                 <TouchableOpacity onPress={pageHeader.onBack} accessibilityRole="link" accessibilityLabel={`Torna a ${TITLES[screen]}`}
                   style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
                   <Ionicons name="arrow-back" size={22} color={C.primary} />
-                  <Text style={{ fontSize: 22, fontWeight: "800", color: C.primary }}>{TITLES[screen]}</Text>
+                  <Text style={{ fontSize: headerSize, fontWeight: "800", color: C.primary }}>{TITLES[screen]}</Text>
                 </TouchableOpacity>
-                <Text style={{ fontSize: 22, color: C.textLight }}>/</Text>
-                <Text style={{ fontSize: 22, fontWeight: "800", color: C.text, flexShrink: 1 }} numberOfLines={1}>{pageHeader.title}</Text>
+                <Text style={{ fontSize: headerSize, color: C.textLight }}>/</Text>
+                <Text ref={fullTextTip(pageHeader.title)} style={{ fontSize: headerSize, fontWeight: "800", color: C.text, flexShrink: 1, minWidth: 0 }} numberOfLines={1}>{pageHeader.title}</Text>
               </View>
             ) : (
-              <Text style={{ fontSize: 22, fontWeight: "800", color: C.text }}>{screen === "dashboard" ? "Dashboard" : TITLES[screen]}</Text>
+              <Text style={{ fontSize: headerSize, fontWeight: "800", color: C.text }}>{screen === "dashboard" ? "Dashboard" : TITLES[screen]}</Text>
             )}
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-              <Text style={{ color: C.textMuted, fontSize: 14, fontWeight: "600" }}>{userName}</Text>
+            {/* Il nome cede spazio al titolo della pagina: si tronca con "…" anch'esso */}
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 12, flexShrink: 1, maxWidth: "40%" }}>
+              <Text ref={fullTextTip(userName)} style={{ color: C.textMuted, fontSize: 14, fontWeight: "600", flexShrink: 1, minWidth: 0 }} numberOfLines={1}>{userName}</Text>
               <Badge text={role} role={role} />
             </View>
           </View>
@@ -164,7 +169,7 @@ export default function AppNav({ user, onLogout }) {
             <Text style={{ color: C.white, fontSize: 18 }}>‹</Text>
           </TouchableOpacity>
         )}
-        <Text style={[s.topBarTitle, { flexShrink: 1 }]} numberOfLines={1}> {pageHeader ? pageHeader.title : TITLES[screen]}</Text>
+        <Text ref={fullTextTip(pageHeader ? pageHeader.title : TITLES[screen])} style={[s.topBarTitle, { flexShrink: 1 }]} numberOfLines={1}> {pageHeader ? pageHeader.title : TITLES[screen]}</Text>
       </View>
 
       {/* Screen */}
