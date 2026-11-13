@@ -196,7 +196,7 @@ internal sealed class PlatformImportAccounts(
         PlatformEmailPlan plan
     )
     {
-        const string head = "INSERT INTO `user`(id,email,password_hash,role,fiscal_code_hmac,fiscal_code_hmac_key_id,fiscal_code_enc,fiscal_code_enc_key_id)";
+        const string head = "INSERT INTO `user`(id,email,password_hash,role,fiscal_code_hmac,fiscal_code_hmac_key_version,fiscal_code_enc,fiscal_code_enc_key_version)";
         object?[] Values(int i) => [accounts[i].User, accounts[i].Email, people[i].PasswordHash, "student", people[i].FiscalCode.Hmac, people[i].FiscalCode.HmacKeyId, people[i].FiscalCode.Cipher, people[i].FiscalCode.CipherKeyId];
         foreach (var chunk in fresh.Chunk(Chunk))
         {

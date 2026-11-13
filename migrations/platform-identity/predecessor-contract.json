@@ -60,7 +60,7 @@
       "indexes": 308
     },
     "tables": {
-      "user": "CREATE TABLE `user` (\n  `id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,\n  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,\n  `password_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,\n  `role` enum('admin','teacher','student') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,\n  `student_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL,\n  `teacher_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL,\n  `fiscal_code_hmac` char(64) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,\n  `fiscal_code_hmac_key_id` varchar(32) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,\n  `fiscal_code_enc` varbinary(64) DEFAULT NULL,\n  `fiscal_code_enc_key_id` varchar(32) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,\n  `lifecycle_state` enum('Active','Closed') CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'Active',\n  `closed_at_utc` datetime(6) DEFAULT NULL,\n  `reactivated_at_utc` datetime(6) DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `uq_user_email` (`email`),\n  UNIQUE KEY `idx_user_student` (`student_id`),\n  UNIQUE KEY `idx_user_teacher` (`teacher_id`),\n  UNIQUE KEY `uq_user_fiscal_code_hmac` (`fiscal_code_hmac`),\n  KEY `idx_user_lifecycle` (`lifecycle_state`,`id`),\n  CONSTRAINT `fk_user_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE SET NULL,\n  CONSTRAINT `fk_user_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE SET NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+      "user": "CREATE TABLE `user` (\n  `id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,\n  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,\n  `password_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,\n  `role` enum('admin','teacher','student') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,\n  `student_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL,\n  `teacher_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL,\n  `fiscal_code_hmac` char(64) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,\n  `fiscal_code_hmac_key_version` varchar(32) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,\n  `fiscal_code_enc` varbinary(64) DEFAULT NULL,\n  `fiscal_code_enc_key_version` varchar(32) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,\n  `lifecycle_state` enum('Active','Closed') CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'Active',\n  `closed_at_utc` datetime(6) DEFAULT NULL,\n  `reactivated_at_utc` datetime(6) DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `uq_user_email` (`email`),\n  UNIQUE KEY `idx_user_student` (`student_id`),\n  UNIQUE KEY `idx_user_teacher` (`teacher_id`),\n  UNIQUE KEY `uq_user_fiscal_code_hmac` (`fiscal_code_hmac`),\n  KEY `idx_user_lifecycle` (`lifecycle_state`,`id`),\n  CONSTRAINT `fk_user_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE SET NULL,\n  CONSTRAINT `fk_user_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE SET NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
       "identity_lifecycle_event": "CREATE TABLE `identity_lifecycle_event` (\n  `id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,\n  `user_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,\n  `transition` varchar(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,\n  `rule_code` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,\n  `rule_version` int NOT NULL,\n  `security_generation` bigint NOT NULL,\n  `occurred_at_utc` datetime(6) NOT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `uq_lifecycle_transition` (`user_id`,`transition`,`security_generation`),\n  KEY `idx_lifecycle_user_time` (`user_id`,`occurred_at_utc`),\n  CONSTRAINT `fk_lifecycle_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
     },
     "triggers": {
@@ -73,7 +73,7 @@
         "charset": "utf8mb4",
         "collation": "utf8mb4_unicode_ci",
         "database_collation": "utf8mb4_unicode_ci",
-        "unboundStatementSha256": "C07791718D1D16530F884E2119EFFC13E7C5EADB6421CAB272F93455533620B1",
+        "unboundStatementSha256": "420604446E40DA29F38DC6894968A0361168B539A2DCB95CFFDEA303B81CD9FF",
         "boundToFixture": false
       },
       "platform_user_update": {
@@ -85,7 +85,7 @@
         "charset": "utf8mb4",
         "collation": "utf8mb4_unicode_ci",
         "database_collation": "utf8mb4_unicode_ci",
-        "unboundStatementSha256": "CB34505B22330C4CA1A894FDA4EDC7545965A75D554C8238A009EB745A99A85A",
+        "unboundStatementSha256": "E855075BD04B5FB0848E975CEE8BB3EA333EE8D7CD078E7B1BA3DF66D4738374",
         "boundToFixture": true
       },
       "platform_user_delete": {

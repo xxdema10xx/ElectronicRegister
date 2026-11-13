@@ -138,15 +138,15 @@ public sealed class PlatformIdentitySchemaTests(IntegrationFixture fixture)
         await using var c = await Plain();
         var hmac = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));
         var cipher = System.Security.Cryptography.RandomNumberGenerator.GetBytes(44);
-        const string insert = "INSERT INTO `user`(id,email,password_hash,role,fiscal_code_hmac,fiscal_code_hmac_key_id,fiscal_code_enc,fiscal_code_enc_key_id) VALUES(@u,@e,'x','student',@h,@hk,@c,@ck)";
+        const string insert = "INSERT INTO `user`(id,email,password_hash,role,fiscal_code_hmac,fiscal_code_hmac_key_version,fiscal_code_enc,fiscal_code_enc_key_version) VALUES(@u,@e,'x','student',@h,@hk,@c,@ck)";
         Assert.Equal(1644, await Rejected(() => Execute(c, insert, ("@u", Guid.NewGuid()), ("@e", Guid.NewGuid().ToString("N") + "@its.example"), ("@h", hmac), ("@hk", "h1"), ("@c", null), ("@ck", "e1"))));
         Assert.Equal(1644, await Rejected(() => Execute(c, insert, ("@u", Guid.NewGuid()), ("@e", Guid.NewGuid().ToString("N") + "@its.example"), ("@h", hmac.ToLowerInvariant()), ("@hk", "h1"), ("@c", cipher), ("@ck", "e1"))));
         var user = Guid.NewGuid();
         await Execute(c, insert, ("@u", user), ("@e", Guid.NewGuid().ToString("N") + "@its.example"), ("@h", hmac), ("@hk", "h1"), ("@c", cipher), ("@ck", "e1"));
         Assert.Equal(1062, await Rejected(() => Execute(c, insert, ("@u", Guid.NewGuid()), ("@e", Guid.NewGuid().ToString("N") + "@its.example"), ("@h", hmac), ("@hk", "h1"), ("@c", cipher), ("@ck", "e1"))));
-        Assert.Equal(1644, await Rejected(() => Execute(c, "UPDATE `user` SET fiscal_code_enc_key_id='e2' WHERE id=@u", ("@u", user))));
+        Assert.Equal(1644, await Rejected(() => Execute(c, "UPDATE `user` SET fiscal_code_enc_key_version='e2' WHERE id=@u", ("@u", user))));
         var legacy = await NewUser(c, Guid.NewGuid().ToString("N") + "@its.example");
-        Assert.Equal(1644, await Rejected(() => Execute(c, "UPDATE `user` SET fiscal_code_hmac=@h,fiscal_code_hmac_key_id='h1',fiscal_code_enc=@c,fiscal_code_enc_key_id='e1' WHERE id=@u",
+        Assert.Equal(1644, await Rejected(() => Execute(c, "UPDATE `user` SET fiscal_code_hmac=@h,fiscal_code_hmac_key_version='h1',fiscal_code_enc=@c,fiscal_code_enc_key_version='e1' WHERE id=@u",
             ("@h", Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32))), ("@c", cipher), ("@u", legacy))));
     }
 }

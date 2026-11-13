@@ -8,9 +8,9 @@ SET SESSION sql_mode='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_
 
 ALTER TABLE `user`
  ADD COLUMN fiscal_code_hmac char(64) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
- ADD COLUMN fiscal_code_hmac_key_id varchar(32) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
+ ADD COLUMN fiscal_code_hmac_key_version varchar(32) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
  ADD COLUMN fiscal_code_enc varbinary(64) DEFAULT NULL,
- ADD COLUMN fiscal_code_enc_key_id varchar(32) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
+ ADD COLUMN fiscal_code_enc_key_version varchar(32) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
  ADD COLUMN lifecycle_state enum('Active','Closed') CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'Active',
  ADD COLUMN closed_at_utc datetime(6) DEFAULT NULL,
  ADD COLUMN reactivated_at_utc datetime(6) DEFAULT NULL,
@@ -35,10 +35,10 @@ CREATE TABLE identity_lifecycle_event (
 DELIMITER $$
 CREATE TRIGGER platform_user_insert BEFORE INSERT ON `user` FOR EACH ROW BEGIN
  IF NEW.lifecycle_state<>'Active' OR NEW.closed_at_utc IS NOT NULL OR NEW.reactivated_at_utc IS NOT NULL OR
-  NOT((NEW.fiscal_code_hmac IS NULL AND NEW.fiscal_code_hmac_key_id IS NULL AND NEW.fiscal_code_enc IS NULL AND NEW.fiscal_code_enc_key_id IS NULL) OR
-   (NEW.fiscal_code_hmac IS NOT NULL AND NEW.fiscal_code_hmac_key_id IS NOT NULL AND NEW.fiscal_code_enc IS NOT NULL AND NEW.fiscal_code_enc_key_id IS NOT NULL AND
-    REGEXP_LIKE(NEW.fiscal_code_hmac,'^[0-9A-F]{64}$','c') AND REGEXP_LIKE(NEW.fiscal_code_hmac_key_id,'^[A-Za-z0-9._-]{1,32}$','c') AND
-    REGEXP_LIKE(NEW.fiscal_code_enc_key_id,'^[A-Za-z0-9._-]{1,32}$','c') AND LENGTH(NEW.fiscal_code_enc) BETWEEN 29 AND 64)) THEN
+  NOT((NEW.fiscal_code_hmac IS NULL AND NEW.fiscal_code_hmac_key_version IS NULL AND NEW.fiscal_code_enc IS NULL AND NEW.fiscal_code_enc_key_version IS NULL) OR
+   (NEW.fiscal_code_hmac IS NOT NULL AND NEW.fiscal_code_hmac_key_version IS NOT NULL AND NEW.fiscal_code_enc IS NOT NULL AND NEW.fiscal_code_enc_key_version IS NOT NULL AND
+    REGEXP_LIKE(NEW.fiscal_code_hmac,'^[0-9A-F]{64}$','c') AND REGEXP_LIKE(NEW.fiscal_code_hmac_key_version,'^[A-Za-z0-9._-]{1,32}$','c') AND
+    REGEXP_LIKE(NEW.fiscal_code_enc_key_version,'^[A-Za-z0-9._-]{1,32}$','c') AND LENGTH(NEW.fiscal_code_enc) BETWEEN 29 AND 64)) THEN
   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Platform identity shape invalid';
  END IF;
 END$$
@@ -56,8 +56,8 @@ CREATE TRIGGER platform_user_update BEFORE UPDATE ON `user` FOR EACH ROW BEGIN
   AND LOWER(OLD.email) LIKE '%example.test' AND LOWER(NEW.email) LIKE '%example.test'),0)) THEN
   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='User email immutable';
  END IF;
- IF NOT(NEW.fiscal_code_hmac <=> OLD.fiscal_code_hmac) OR NOT(NEW.fiscal_code_hmac_key_id <=> OLD.fiscal_code_hmac_key_id) OR
-  NOT(NEW.fiscal_code_enc <=> OLD.fiscal_code_enc) OR NOT(NEW.fiscal_code_enc_key_id <=> OLD.fiscal_code_enc_key_id) THEN
+ IF NOT(NEW.fiscal_code_hmac <=> OLD.fiscal_code_hmac) OR NOT(NEW.fiscal_code_hmac_key_version <=> OLD.fiscal_code_hmac_key_version) OR
+  NOT(NEW.fiscal_code_enc <=> OLD.fiscal_code_enc) OR NOT(NEW.fiscal_code_enc_key_version <=> OLD.fiscal_code_enc_key_version) THEN
   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='User fiscal code immutable';
  END IF;
  IF (NEW.lifecycle_state=OLD.lifecycle_state AND (NOT(NEW.closed_at_utc <=> OLD.closed_at_utc) OR NOT(NEW.reactivated_at_utc <=> OLD.reactivated_at_utc))) OR

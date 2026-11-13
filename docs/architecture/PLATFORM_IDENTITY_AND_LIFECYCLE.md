@@ -40,9 +40,9 @@ La migrazione `migrations/platform-identity/001_expand.sql` è additiva e si app
 | Colonna | Tipo | Significato |
 |---|---|---|
 | `fiscal_code_hmac` | `char(64) ascii_bin NULL`, `UNIQUE` | HMAC-SHA256 esadecimale maiuscolo del CF normalizzato. `NULL` per gli account senza CF (primo admin D-D, dati precedenti). |
-| `fiscal_code_hmac_key_id` | `varchar(32) ascii_bin NULL` | Versione della chiave HMAC che ha prodotto il valore. |
+| `fiscal_code_hmac_key_version` | `varchar(32) ascii_bin NULL` | Versione della chiave HMAC che ha prodotto il valore. |
 | `fiscal_code_enc` | `varbinary(64) NULL` | Nonce (12 byte) ‖ testo cifrato ‖ tag (16 byte), AES-256-GCM. |
-| `fiscal_code_enc_key_id` | `varchar(32) ascii_bin NULL` | Versione della chiave di cifratura. |
+| `fiscal_code_enc_key_version` | `varchar(32) ascii_bin NULL` | Versione della chiave di cifratura. |
 | `lifecycle_state` | `enum('Active','Closed') ascii_bin NOT NULL DEFAULT 'Active'` | Stato del ciclo di vita. |
 | `closed_at_utc` | `datetime(6) NULL` | Ultima chiusura (UTC). |
 | `reactivated_at_utc` | `datetime(6) NULL` | Ultima riattivazione (UTC). |
@@ -165,7 +165,7 @@ esattamente di 32 byte (AES-256), se le due chiavi coincidono o se un identifica
 **Rotazione** (documentata, non implementata):
 
 - *Cifratura*: aggiungere una nuova coppia id/chiave, cifrare i nuovi valori con la nuova chiave e
-  ricifrare i vecchi con una migrazione dedicata che legge `fiscal_code_enc_key_id`. Il trigger rende oggi
+  ricifrare i vecchi con una migrazione dedicata che legge `fiscal_code_enc_key_version`. Il trigger rende oggi
   immutabili le colonne CF: la ricifratura richiede una migrazione rivista che lo consenta.
 - *HMAC*: cambiare la chiave invalida la ricerca. Serve ricalcolare tutti gli HMAC dai valori decifrati,
   in manutenzione, con verifica di unicità prima del commit. Fino ad allora la chiave HMAC non va cambiata.

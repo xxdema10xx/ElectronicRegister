@@ -356,8 +356,8 @@ internal sealed class InstitutionImportManager(
         var hash = Intent(actor, new { Op = "Confirm", Id = id, Request = request });
         // CreatePlatformAccounts: BCrypt hashes for every row are computed before the batch
         // transaction, so neither the tenant lock nor the global email mutex is held meanwhile.
-        var peek = await repository.ExecuteAsync(actor, s => s.GetAsync(id), ct);
-        var credentials = peek.Payload?.Settings.EmailMode == ImportEmailMode.CreatePlatformAccounts ? Credentials(peek.Payload.Rows.Count, ct) : null;
+        var peek = platform.Enabled ? await repository.ExecuteAsync(actor, s => s.GetAsync(id), ct) : null;
+        var credentials = peek?.Payload?.Settings.EmailMode == ImportEmailMode.CreatePlatformAccounts ? Credentials(peek.Payload.Rows.Count, ct) : null;
         return await repository.ExecuteAsync(actor, async session =>
         {
             var stored = await session.GetAsync(id);

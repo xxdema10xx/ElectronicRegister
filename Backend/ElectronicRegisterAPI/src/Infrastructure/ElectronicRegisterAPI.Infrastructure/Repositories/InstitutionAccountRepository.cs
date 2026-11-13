@@ -207,7 +207,7 @@ internal sealed class InstitutionAccountRepository(
             try
             {
                 // Historical required column, never an authorization decision.
-                await Execute("INSERT INTO `user`(id,email,password_hash,role,fiscal_code_hmac,fiscal_code_hmac_key_id,fiscal_code_enc,fiscal_code_enc_key_id) VALUES(@u,@email,@hash,'student',@fh,@fhk,@fe,@fek)", ct,
+                await Execute("INSERT INTO `user`(id,email,password_hash,role,fiscal_code_hmac,fiscal_code_hmac_key_version,fiscal_code_enc,fiscal_code_enc_key_version) VALUES(@u,@email,@hash,'student',@fh,@fhk,@fe,@fek)", ct,
                     ("@u", user), ("@email", email), ("@hash", passwordHash), ("@fh", fiscalCode.Hmac), ("@fhk", fiscalCode.HmacKeyId), ("@fe", fiscalCode.Cipher), ("@fek", fiscalCode.CipherKeyId));
             }
             catch (MySqlException e) when (e.Number == 1062 && !e.Message.Contains("uq_user_fiscal_code_hmac", StringComparison.Ordinal))

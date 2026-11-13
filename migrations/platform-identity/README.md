@@ -6,7 +6,7 @@ Target: **MySQL 8.4.13** only. Predecessor: release `er-quality-2-mysql84` (71 t
 
 ## What it adds
 
-- `user`: `fiscal_code_hmac` (UNIQUE), `fiscal_code_hmac_key_id`, `fiscal_code_enc`, `fiscal_code_enc_key_id`,
+- `user`: `fiscal_code_hmac` (UNIQUE), `fiscal_code_hmac_key_version`, `fiscal_code_enc`, `fiscal_code_enc_key_version`,
   `lifecycle_state` (`Active` default / `Closed`), `closed_at_utc`, `reactivated_at_utc`. All nullable except the
   state; no column is removed or rewritten and no fiscal code, event or actor is backfilled.
 - `identity_lifecycle_event`: append-only ledger (IDs, transition, rule code/version, security generation, UTC).
