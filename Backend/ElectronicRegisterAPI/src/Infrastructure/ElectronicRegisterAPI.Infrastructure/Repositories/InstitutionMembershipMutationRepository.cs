@@ -14,7 +14,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
-internal sealed partial class InstitutionMembershipMutationRepository(ElectronicRegisterContext db, IMembershipAuthorizationRepository authorization, IIdentityAccountRepository accounts) : IInstitutionMembershipMutationRepository
+internal sealed partial class InstitutionMembershipMutationRepository(
+    ElectronicRegisterContext db,
+    IMembershipAuthorizationRepository authorization,
+    IIdentityAccountRepository accounts,
+    PlatformLifecycleWriter lifecycle
+) : IInstitutionMembershipMutationRepository
 {
     public async Task<MembershipMutationResult> MutateAsync(TenantContext actor, MembershipMutation request, CancellationToken ct = default)
     {
@@ -79,6 +84,10 @@ internal sealed partial class InstitutionMembershipMutationRepository(Electronic
 
         if (affected != 1)
             throw new MembershipConflictException();
+        // D-C: a membership active again reopens its Closed account in this transaction
+        // (password unchanged, identity generation advanced once, lifecycle event appended).
+        if (request.Action == MembershipMutationAction.Reactivate)
+            await lifecycle.ReactivateMemberAsync(actor.InstitutionId, request.MembershipId, ct);
         var after = await db.InstitutionMembershipSecurityStates.AsNoTracking().Where(s => s.InstitutionId == actor.InstitutionId && s.MembershipId == request.MembershipId).Select(s => s.SecurityGeneration).SingleAsync(ct);
         if (after != revision + 1)
             throw new InvalidOperationException("Avanzamento della generation non valido.");

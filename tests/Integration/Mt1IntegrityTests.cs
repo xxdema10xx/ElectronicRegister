@@ -52,7 +52,7 @@ public sealed class Mt1IntegrityTests(IntegrationFixture fixture, ITestOutputHel
         await db.InstitutionMemberships.Where(m => _institutions.Contains(m.InstitutionId)).ExecuteDeleteAsync();
         await db.Campuses.Where(c => _institutions.Contains(c.InstitutionId)).ExecuteDeleteAsync();
         await db.Institutions.Where(i => _institutions.Contains(i.Id)).ExecuteDeleteAsync();
-        await db.Users.Where(u => u.Id == _user).ExecuteDeleteAsync();
+        await FixtureIdentityExemption.DeleteUsersAsync(db, [_user]);
     }
 
     private async Task InScope(Func<IServiceProvider, Task> action)
@@ -213,7 +213,8 @@ public sealed class Mt1IntegrityTests(IntegrationFixture fixture, ITestOutputHel
             else if (parent == "user") await db.Users.Where(u => u.Id == _user).ExecuteDeleteAsync();
             else await db.InstitutionMemberships.Where(m => m.Id == membership).ExecuteDeleteAsync();
         }));
-        Assert.Equal(1451, error.Number);
+        // er-platform-identity-1: deleting a User is refused by platform_user_delete before the FK check.
+        Assert.Equal(parent == "user" ? 1644 : 1451, error.Number);
         await InScope(async sp => Assert.NotNull(await sp.GetRequiredService<IInstitutionMembershipRepository>().GetAsync(institution, _user)));
     }
 

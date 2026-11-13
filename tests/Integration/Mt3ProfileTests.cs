@@ -217,7 +217,7 @@ public sealed class Mt3ProfileTests(IntegrationFixture fixture) : IAsyncLifetime
             var memberships=await db.InstitutionMemberships.Where(m=>institutions.Contains(m.InstitutionId)).Select(m=>m.Id).ToListAsync();
             await db.InstitutionMembershipRoles.Where(r=>memberships.Contains(r.MembershipId)).ExecuteDeleteAsync();
             await db.InstitutionMemberships.Where(m=>institutions.Contains(m.InstitutionId)).ExecuteDeleteAsync();
-            await db.Users.Where(u=>u.Id==_user||u.Id==_legacyUser).ExecuteDeleteAsync();
+            await FixtureIdentityExemption.DeleteUsersAsync(db, [_user, _legacyUser]);
             await db.Teachers.Where(t=>t.Id==_legacyTeacher).ExecuteDeleteAsync();
             await db.Teachers.Where(t=>t.Id==_ta||t.Id==_tb).ExecuteDeleteAsync();
             await db.Students.Where(s=>s.Id==_sa||s.Id==_sb).ExecuteDeleteAsync();

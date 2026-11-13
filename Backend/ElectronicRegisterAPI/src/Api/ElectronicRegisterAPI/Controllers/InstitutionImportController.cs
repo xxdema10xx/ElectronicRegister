@@ -18,7 +18,14 @@ public sealed class InstitutionImportController(IInstitutionImportManager manage
         MaxDepth = 16
     };
     [HttpGet("templates/students.csv")]
-    public async Task<IActionResult> StudentTemplate(CancellationToken ct) => File(await manager.TemplateAsync(ImportCategory.Student, ct), "text/csv; charset=utf-8", "students.csv");
+    // ?emailMode=CreatePlatformAccounts returns the Student accounts template (E4).
+    public async Task<IActionResult> StudentTemplate(CancellationToken ct, [FromQuery] string? emailMode = null)
+    {
+        if (emailMode is not (null or nameof(ImportEmailMode.CreatePlatformAccounts)))
+            return BadRequest();
+        var accounts = emailMode is not null;
+        return File(await manager.TemplateAsync(ImportCategory.Student, ct, accounts), "text/csv; charset=utf-8", accounts ? "student-accounts.csv" : "students.csv");
+    }
     [HttpGet("templates/teachers.csv")]
     public async Task<IActionResult> TeacherTemplate(CancellationToken ct) => File(await manager.TemplateAsync(ImportCategory.Teacher, ct), "text/csv; charset=utf-8", "teachers.csv");
     [HttpPost("preview"), Consumes("multipart/form-data"), RequestSizeLimit(64 * 1024 * 1024 + 262144), RequestFormLimits(MultipartBodyLengthLimit = 64 * 1024 * 1024 + 262144), EnableRateLimiting("InstitutionImportUpload")]

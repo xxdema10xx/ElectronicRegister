@@ -18,6 +18,7 @@ public static class OperationalPipeline
     {
         builder.Services.AddSingleton(policy);
         builder.Services.AddHostedService<InstitutionImportRetentionWorker>();
+        builder.Services.AddHostedService<PlatformLifecycleWorker>();
         builder.Logging.AddFilter("Microsoft.AspNetCore.Hosting.Diagnostics", LogLevel.Warning);
         builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.None);
         builder.Logging.AddFilter("Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware", LogLevel.None);
@@ -126,6 +127,7 @@ public static class OperationalPipeline
         app.MapGet("/health/ready", async (
         IConfiguration configuration,
         RuntimePolicy policy,
+        ElectronicRegisterAPI.Domain.Configuration.PlatformIdentitySettings platform,
         IHostApplicationLifetime lifetime,
         ILoggerFactory loggerFactory,
         CancellationToken ct
@@ -162,6 +164,16 @@ public static class OperationalPipeline
                 await reader.DisposeAsync();
                 if (!validIdentity)
                     return Results.StatusCode(503);
+                // With platform identity enabled the er-platform-identity-1 successor is required.
+                if (platform.Enabled)
+                {
+                    await using var successor = new MySqlCommand("SELECT COUNT(*) FROM er_schema_release WHERE version='er-platform-identity-1'", sql);
+                    if (Convert.ToInt64(await successor.ExecuteScalarAsync(timeout.Token)) != 1)
+                    {
+                        loggerFactory.CreateLogger("Readiness").LogWarning("Readiness failed {ErrorCode}", "PLATFORM_IDENTITY_SCHEMA");
+                        return Results.StatusCode(503);
+                    }
+                }
                 await using var schema = new MySqlCommand("CALL er_schema_ready()", sql);
                 if (Convert.ToInt32(await schema.ExecuteScalarAsync(timeout.Token)) != 1)
                 {

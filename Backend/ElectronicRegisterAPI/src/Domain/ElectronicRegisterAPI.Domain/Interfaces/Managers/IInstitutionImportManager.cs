@@ -25,5 +25,5 @@ public interface IInstitutionImportManager
     Task<ImportBatch> RemapAsync(Guid id, ImportRemap request, CancellationToken ct);
     Task<ImportResult> ConfirmAsync(Guid id, ImportConfirmation request, CancellationToken ct);
     Task<ImportResult> ResultAsync(Guid id, CancellationToken ct);
-    Task<byte[]> TemplateAsync(ImportCategory category, CancellationToken ct);
+    Task<byte[]> TemplateAsync(ImportCategory category, CancellationToken ct, bool platformAccounts = false);
 }

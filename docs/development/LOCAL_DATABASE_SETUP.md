@@ -165,3 +165,11 @@ These are application-wide administrative policy, not a claim of a statutory lim
 ## Schema account del cutover istituzionale
 
 Dopo il bootstrap, il codice corrente richiede anche le due evoluzioni additive ordinate in migrations/identity-account: stato/generation e audit delle credenziali, poi ledger di acquisizione dei profili. Il runner autonomo New-InstitutionStaffTestInstance.ps1 le applica una sola volta alla datadir nuova. Le DDL MySQL5.7 non sono trattate come transazionali; nessun replay su uno schema parzialmente installato e nessuna applicazione implicita a istanze esistenti. Per il contratto corrente vedere il [report finale](../refactoring/RESPONSIBILITY_REFACTORING_REPORT.md).
+
+## Identita di piattaforma (er-platform-identity-1)
+
+Su MySQL 8.4 il codice corrente usa anche il successore additivo `migrations/platform-identity`, applicato dopo
+`er-quality-2-mysql84`. La fixture di integrazione lo installa automaticamente nel container usa-e-getta; per un
+container 8.4 gia installato usare `tools/Invoke-PlatformIdentityMigration.ps1` (vedi il README della migrazione).
+Senza il successore l'API funziona come prima ma la creazione di account di piattaforma non e disponibile e, con
+`Multitenancy:PlatformIdentity:Enabled=true`, `/health/ready` risponde 503. Nessun replay, nessuna applicazione a 3306, 3307 o 13306.

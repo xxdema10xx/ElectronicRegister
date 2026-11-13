@@ -149,7 +149,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
             if (host is not null && !run.IsCompleted) { await host.StopAsync(); await run.WaitAsync(TimeSpan.FromSeconds(30)); }
             observer.Dispose();
             using var cleanup = fixture.ScopeFactory.CreateScope();
-            await cleanup.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().Users.Where(u => u.Id == id).ExecuteDeleteAsync();
+            await FixtureIdentityExemption.DeleteUsersAsync(cleanup.ServiceProvider.GetRequiredService<ElectronicRegisterContext>(), [id]);
         }
     }
 

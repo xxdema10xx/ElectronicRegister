@@ -55,22 +55,28 @@ In caso contrario lo script esce con codice 3 senza modificare nulla.
 | Campo | Significato |
 |---|---|
 | `eventId` | Obbligatorio, chiave di idempotenza. Con lo stesso `eventId` e la stessa richiesta si ottiene `200` con gli stessi id e senza password. Con lo stesso `eventId` e una richiesta diversa si ottiene `409` |
-| `email` | Obbligatorio |
+| `firstName`, `lastName` | Obbligatori per ogni ruolo. Con una scheda collegata devono coincidere con la scheda (altrimenti `422`) |
+| `fiscalCode` | Obbligatorio (deduplica tra istituti). L'indirizzo **non** si invia: lo genera la piattaforma (`nome.cognome[N]@<dominio>`) |
 | `roles` | Obbligatorio. Per lo Staff solo `["Student"]` o `["Teacher"]` |
 | `reason` | Obbligatorio |
 | `studentId` / `teacherId` | Facoltativi: collegano una scheda esistente dello stesso istituto |
-| `firstName`, `lastName`, `classId` | Creano una scheda nuova. `classId` è facoltativo e vale solo per gli studenti |
+| `classId` | Facoltativo, solo per una nuova scheda Student |
+
+> Aggiornamento identità di piattaforma: contratto completo, deduplica e ciclo di vita in
+> [PLATFORM_IDENTITY_ACCOUNTS.md](../api/PLATFORM_IDENTITY_ACCOUNTS.md). Lo script del proprietario non cambia
+> (decisione D-D): il primo InstitutionAdmin si crea ancora con `--admin-email` e senza codice fiscale.
 
 **Risposte:**
 
 | Codice | Quando |
 |---|---|
-| `201` | Account creato: `userId`, `membershipId`, `roles`, `studentId`/`teacherId`, `temporaryPassword`, con `Cache-Control: no-store` |
+| `201` | Account creato o collegato: `userId`, `membershipId`, `email`, `roles`, `studentId`/`teacherId`, `temporaryPassword` (`null` se la persona è già attiva in un altro istituto), con `Cache-Control: no-store` |
 | `400` | Campi sconosciuti (per esempio `institutionId` o un `role` fuori dall'array), o richiesta non valida |
 | `403` | Ruolo dell'attore non autorizzato, compreso lo Staff che chiede Staff o InstitutionAdmin |
 | `404` | Scheda di un altro istituto o inesistente, oppure endpoint spento |
-| `409 "Indirizzo email non disponibile"` | Risposta unica se l'indirizzo è già un account (qui o in un altro istituto) o è riservato. Il costo BCrypt è identico a quello di una creazione |
-| `409` | La scheda è già collegata a un account |
+| `409 "Indirizzo email non disponibile"` | Esauriti i candidati dell'indirizzo generato |
+| `409` | La persona è già nell'istituto, la scheda è già collegata a un account o l'`eventId` è riusato con un'altra intenzione |
+| `422` | Nome e cognome diversi dalla scheda collegata |
 
 ## Configurazione necessaria
 
@@ -80,6 +86,7 @@ L'endpoint è **spento** se manca uno di questi valori:
 |---|---|---|
 | `Multitenancy:SchoolApi:Enabled` | `true` | Marker della superficie scuola, controllato dal gate |
 | `Multitenancy:MembershipWriteApi:Enabled` | `true` | Controllato esplicitamente dall'endpoint (altrimenti 404) |
+| `Multitenancy:PlatformIdentity:Enabled` | `true` | Con dominio, chiavi e durate validi; altrimenti 404 (flag spento) o avvio rifiutato (configurazione incompleta) |
 | `Deployment:RolloutApproved` | `true` | Obbligatorio in Staging e Production con qualsiasi flag `Multitenancy` attivo (`RuntimePolicy.cs:52`) |
 
 **`RolloutApproved` è una scelta esplicita.** Dal 2026-11-06 `infra/release.runtime.example.json` riporta `"RolloutApproved": true`.
@@ -94,6 +101,8 @@ L'endpoint è **spento** se manca uno di questi valori:
 - `SslMode=None` viene rifiutato dal server (`require_secure_transport`).
 
 ## Procedura per caricare una classe
+
+> Con l'identita di piattaforma attiva la procedura consigliata e l'import con `emailMode=CreatePlatformAccounts` (file con Nome, Cognome e CodiceFiscale): crea in una sola transazione schede, account, membership e indirizzi, e restituisce le password temporanee una sola volta. Vedi [INSTITUTION_BULK_IMPORT.md](../api/INSTITUTION_BULK_IMPORT.md#account-di-piattaforma-createplatformaccounts). La procedura seguente resta valida senza il flag.
 
 1. **Importare le schede senza riservare l'indirizzo.** Usare `POST /api/institution/imports/preview` con `EmailMode=None` e poi la conferma. L'import crea solo le schede: nessun utente, membership o indirizzo. Gli id delle schede sono in `GET /api/institution/imports/{id}/result` (campo `studentId` di ogni riga).
 2. **Creare un account per ogni studente.** Chiamare `POST /api/institution/accounts` con `roles: ["Student"]`, `studentId` della riga e l'indirizzo istituzionale dello studente, con un `eventId` diverso per ogni studente. Lo può fare un InstitutionAdmin o uno Staff.

@@ -7,5 +7,6 @@ public sealed record ImportResult(
     Guid ImportId,
     long Revision,
     int CreatedCount,
-    IReadOnlyList<ImportCreatedRow> Rows
+    IReadOnlyList<ImportCreatedRow> Rows,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<ImportAccountRow>? Accounts = null
 );

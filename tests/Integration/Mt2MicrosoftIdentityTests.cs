@@ -118,7 +118,7 @@ public sealed class Mt2MicrosoftIdentityTests(IntegrationFixture fixture)
         finally
         {
             using var cleanup = fixture.ScopeFactory.CreateScope();
-            await cleanup.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().Users.Where(u => u.Id == id).ExecuteDeleteAsync();
+            await FixtureIdentityExemption.DeleteUsersAsync(cleanup.ServiceProvider.GetRequiredService<ElectronicRegisterContext>(), [id]);
         }
     }
 

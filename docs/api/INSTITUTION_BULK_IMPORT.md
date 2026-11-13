@@ -210,6 +210,49 @@ Page inizia da1, size1–100, default20. Non sono presenti DELETE, update di per
 
 400 JSON/mapping/template/celle/file malformati;401 autenticazione assente/token incompatibile;403 permessi, generation, membership, Fondazione o rollout;404 batch estraneo/inesistente;409 digest/revisione obsoleti, warning non riconosciuti, quota preview, file ripetuto non autorizzato, collisioni o concorrenza;413 limiti;415 formato/codifica non supportati;422 righe invalide.429 segnala rate/concurrency limit;405 un metodo inesistente. ProblemDetails delle anomalie import include `code` stabile senza dettagli SQL o dati di altri tenant. Esempi409: StalePreview, PreviewContextChanged, PreviewExpired, AlreadyCompleted, EventIdConflict, WarningsNotAcknowledged, RepeatedFileNotAuthorized, EmailAvailabilityChanged, PreviewQuotaExceeded, DatabaseConflict.
 
+## Account di piattaforma (CreatePlatformAccounts)
+
+Con `Multitenancy:PlatformIdentity:Enabled=true` l'import crea **account Student** completi, come la creazione
+singola ([PLATFORM_IDENTITY_ACCOUNTS.md](PLATFORM_IDENTITY_ACCOUNTS.md)): scheda Student, User di piattaforma con
+indirizzo generato, membership attiva con ruolo Student e profilo collegato. `settings.emailMode` vale
+`CreatePlatformAccounts`; solo la categoria `Student`. Le modalità `None` e (senza il flag) `ReserveInstitutionalAddress`
+non cambiano; con il flag attivo `ReserveInstitutionalAddress` è rifiutata (`400 EmailPolicyModeRetired`).
+
+Template: `GET /api/institution/imports/templates/students.csv?emailMode=CreatePlatformAccounts`.
+
+```csv
+Nome;Cognome;CodiceFiscale;Classe;RiferimentoEsterno
+Mario;Rossi;RSSMRA80A01H501U;;STU-001
+```
+
+- Colonne: `Nome`, `Cognome` e `CodiceFiscale` (alias `Codice Fiscale`, `CF`, `FiscalCode`, `Fiscal Code`; destinazione
+  `FiscalCode`) obbligatorie; `Classe` e `RiferimentoEsterno` facoltative.
+- Il file **non** deve contenere una colonna email (`Email`, `E-mail`, `Mail`, `Indirizzo email`, …): `400 EmailColumnNotAllowed`.
+- Il codice fiscale viene cifrato (AES-256-GCM) prima di salvare la preview: lo staging non lo contiene mai in chiaro.
+  La colonna non può essere spostata con un remap (`400 FiscalCodeColumnNotProtected`).
+- Errori di riga, tutti riportati: `RequiredFieldMissing` (FiscalCode), `InvalidFiscalCode`, `DuplicateFiscalCodeWithinFile`
+  (su ogni riga coinvolta), `FiscalCodeExistsInInstitution` (persona già presente in questa Fondazione),
+  `NameNotRepresentable`. La conferma con righe invalide risponde `422 RowsInvalid` con `rows`: l'elenco completo
+  `{rowNumber, codes}` delle righe errate.
+- Codici fiscali presenti in altri istituti: la persona viene collegata (password `null`, indirizzo esistente);
+  account chiusi: riattivati con una nuova password. La preview non rivela se un codice esiste altrove.
+- Omonimi nel file: suffissi deterministici nell'ordine delle righe (`nome.cognome`, `nome.cognome2`, …), dopo gli
+  indirizzi già emessi sulla piattaforma. `emailPreview` resta `null`: l'indirizzo definitivo è assegnato alla conferma.
+
+La conferma è una sola transazione per l'intero file. Le password BCrypt sono calcolate in parallelo prima della
+transazione; poi lock del tenant, mutex email globale, lettura in blocco delle riserve e dei codici fiscali,
+INSERT multi-riga a blocchi da 200. La risposta della prima conferma contiene `accounts`:
+
+```json
+{"importId":"…","revision":2,"createdCount":1,"rows":[{"rowNumber":2,"studentId":"…"}],
+ "accounts":[{"rowNumber":2,"userId":"…","membershipId":"…","email":"mario.rossi@its.example","temporaryPassword":"…"}]}
+```
+
+Risultato durevole, `GET /{id}/result` e replay restituiscono gli stessi id e gli indirizzi correnti, con
+`temporaryPassword` sempre `null`: le password non sono mai salvate. Misura su 600 righe (Docker, MySQL 8.4.13,
+16 core): preview 0,8 s, conferma 7,8 s, di cui circa 4,4 s di BCrypt fuori dalla transazione. Su 2 core il solo
+BCrypt di 600 password richiede circa 26 s: dimensionare timeout del proxy e dei client di conseguenza.
+
 ## Futuro frontend React Native
 
 Mostrare categoria e modalità email prima dell'upload. Visualizzare colonne/mapping e pagine di righe/errori; non trattare Valid come già importato. Richiedere disambiguazione e riconoscimento dei warning. Conservare EventId soltanto per il retry della medesima intenzione, con revision/digest ricevuti dal server. Dopo409 ricaricare metadati/righe o modificare mapping/candidato e ottenere nuova conferma; non riscrivere silenziosamente il body di una richiesta con EventId già usato. Dopo Completed mostrare gli ID e gli indirizzi attraverso le API email autorizzate; distinguere sempre riserva da mailbox/account. Non inviare inviti sensibili agli indirizzi soltanto riservati.

@@ -72,7 +72,7 @@ public partial class Phase4_ExamLifecycleTests
         {
             using var cleanup = fixture.ScopeFactory.CreateScope();
             var db = cleanup.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
-            await db.Users.Where(u => u.Id == id).ExecuteDeleteAsync();
+            await FixtureIdentityExemption.DeleteUsersAsync(db, [id]);
             if (teacherProfile) await db.Teachers.Where(t => t.Id == profile).ExecuteDeleteAsync();
             else await db.Students.Where(s => s.Id == profile).ExecuteDeleteAsync();
         }
@@ -269,7 +269,7 @@ public partial class Phase4_ExamLifecycleTests
         {
             using var cleanup = fixture.ScopeFactory.CreateScope();
             var db = cleanup.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
-            await db.Users.Where(u => u.Email == email).ExecuteDeleteAsync();
+            await FixtureIdentityExemption.DeleteUsersByEmailAsync(db, email);
             await db.Students.Where(s => s.LastName == marker).ExecuteDeleteAsync();
         }
     }

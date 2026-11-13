@@ -25,7 +25,8 @@ internal sealed partial class InstitutionOnboardingRepository(
     IInvitationChannel channel,
     IMembershipAuthorizationRepository authorization,
     IOnboardingFaultObserver faults,
-    IConfiguration config
+    IConfiguration config,
+    PlatformLifecycleWriter lifecycle
 ) : IOnboardingRepository
 {
     private sealed record Invite(

@@ -1,6 +1,6 @@
 {
-  "filesAnalyzed": 705,
-  "typesClassified": 702,
+  "filesAnalyzed": 711,
+  "typesClassified": 708,
   "entries": [
     {
       "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs",
@@ -749,6 +749,22 @@
       "types": [
         {
           "name": "OperationalPipeline",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Operations/PlatformLifecycleWorker.cs",
+      "layer": "Api",
+      "project": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Api.Operations",
+      "classification": "Operations",
+      "types": [
+        {
+          "name": "PlatformLifecycleWorker",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -3385,6 +3401,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/Import/ImportAccountRow.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.DTOs.Import",
+      "classification": "DTOs/Import",
+      "types": [
+        {
+          "name": "ImportAccountRow",
+          "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/Import/ImportBatch.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -3619,6 +3651,22 @@
       "types": [
         {
           "name": "ImportResult",
+          "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/Import/ImportRowError.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.DTOs.Import",
+      "classification": "DTOs/Import",
+      "types": [
+        {
+          "name": "ImportRowError",
           "kind": "RecordDeclaration",
           "nestedTypes": []
         }
@@ -7817,6 +7865,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Persistence/Import/ImportAccountRequest.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Persistence.Import",
+      "classification": "Persistence/Import",
+      "types": [
+        {
+          "name": "ImportAccountRequest",
+          "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Persistence/Import/ImportClassMatch.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -7827,6 +7891,22 @@
       "types": [
         {
           "name": "ImportClassMatch",
+          "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Persistence/Import/ImportCreatedAccount.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Persistence.Import",
+      "classification": "Persistence/Import",
+      "types": [
+        {
+          "name": "ImportCreatedAccount",
           "kind": "RecordDeclaration",
           "nestedTypes": []
         }
@@ -10823,6 +10903,27 @@
           "name": "MembershipAuthorizationRepository",
           "kind": "ClassDeclaration",
           "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/PlatformImportAccounts.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Repositories",
+      "classification": "Repositories",
+      "types": [
+        {
+          "name": "PlatformImportAccounts",
+          "kind": "ClassDeclaration",
+          "nestedTypes": [
+            {
+              "name": "RawSql",
+              "visibility": "\n    private sealed "
+            }
+          ]
         }
       ]
     },

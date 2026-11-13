@@ -33,6 +33,18 @@ public interface IInstitutionImportSession
         ImportCreatedRow row,
         string? externalReference
     );
+    // Platform identity (E4): fiscal-code HMACs that already belong to a member of this
+    // institution (tenant-own data only), the accounts of a validated batch, and the current
+    // platform addresses of accounts created or linked by this institution's batches.
+    Task<IReadOnlySet<string>> FiscalCodesInInstitutionAsync(IReadOnlyCollection<string> hmacs);
+    Task<IReadOnlyList<ImportCreatedAccount>> CreatePlatformAccountsAsync(IReadOnlyList<ImportAccountRequest> people);
+    Task<IReadOnlyDictionary<Guid, string>> EmailsAsync(IReadOnlyCollection<Guid> users);
+    Task AddCreatedManyAsync(
+        Guid batch,
+        ImportCategory category,
+        IReadOnlyList<ImportCreatedRow> rows,
+        IReadOnlyList<string?> externalReferences
+    );
     Task CompleteAsync(
         Guid batch,
         long revision,

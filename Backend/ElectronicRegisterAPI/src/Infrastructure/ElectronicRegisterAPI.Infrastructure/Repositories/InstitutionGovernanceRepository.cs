@@ -58,6 +58,9 @@ internal sealed partial class InstitutionOnboardingRepository : IInstitutionGove
                 if (next == "active")
                     await RequireValidAdmin(p.InstitutionId, ct);
                 await Execute("UPDATE institution SET status=@p0 WHERE id=@p1", ct, next, p.InstitutionId);
+                // D-C: reactivating the institution reopens Closed accounts whose membership here is active.
+                if (next == "active")
+                    await lifecycle.ReactivateInstitutionAsync(p.InstitutionId, ct);
                 result = new(p.InstitutionId, null, next);
                 await Append(p.InstitutionId, op.EventId, "Operator", op.OperatorId, op.KeyId, null, null, "Institution" + op.Action, null, hash, p.Reason, p.EvidenceReference, new { result.InstitutionId, result.InvitationId, result.Status, PreviousStatus = status }, ct);
             // Additional audit context preserves the public result fields for retries.

@@ -1,5 +1,11 @@
 # Email istituzionali — Fase 2
 
+> **Non più operativo con l'identità di piattaforma.** Con `Multitenancy:PlatformIdentity:Enabled=true` gli indirizzi
+> sono generati dalla piattaforma con un dominio unico ([PLATFORM_IDENTITY_ACCOUNTS.md](PLATFORM_IDENTITY_ACCOUNTS.md)).
+> Le scritture di questo modulo (policy POST/PUT, `email-assignments` POST, `create-person`, `override`, `retire`) e la
+> modalità di import `ReserveInstitutionalAddress` sono rifiutate come con il modulo disabilitato. Letture, storico,
+> tabelle e audit restano; gli indirizzi già assegnati restano riservati e non vengono mai rilasciati.
+
 Il modulo assegna **indirizzi applicativi riservati**, separati dall'identità globale `User.Email`. Non crea caselle, User, password, membership, ruoli, alias di login o collegamenti Microsoft. La pubblicazione di una policy approva una convenzione locale: non verifica la titolarità del dominio. `DomainVerificationState` vale `ConfiguredUnverified`; `MailboxVerified`, `DomainVerified` e `LoginEnabled` sono falsi. Non esiste in questa fase un endpoint per dichiararli veri.
 
 L'abilitazione richiede sia il rollout istituzionale esistente sia `Multitenancy:InstitutionEmail:Enabled=true`, disabilitato per default. Applicare e verificare lo schema prima di abilitare il modulo. Il software non applica migrazioni all'avvio.

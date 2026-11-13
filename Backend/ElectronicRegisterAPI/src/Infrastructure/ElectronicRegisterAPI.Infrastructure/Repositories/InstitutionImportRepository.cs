@@ -23,7 +23,10 @@ internal sealed class InstitutionImportRepository(
     ElectronicRegisterContext db,
     IMembershipAuthorizationRepository memberships,
     IInstitutionWriteAuthorization writes,
-    IInstitutionImportFeature feature
+    IInstitutionImportFeature feature,
+    IPlatformEmailAllocator allocator,
+    PlatformLifecycleWriter lifecycle,
+    IMailboxProvisioner mailbox
 ) : IInstitutionImportRepository
 {
     private async Task Access(TenantContext actor, CancellationToken ct)
@@ -47,7 +50,7 @@ internal sealed class InstitutionImportRepository(
             await db.Database.ExecuteSqlInterpolatedAsync($"SELECT id FROM institution WHERE id={actor.InstitutionId} FOR UPDATE", ct);
             await writes.LockAsync(actor, ct);
             await Access(actor, ct);
-            var result = await action(new Session(db, writes, actor, feature, ct));
+            var result = await action(new Session(db, writes, actor, feature, new PlatformImportAccounts(db, actor, allocator, lifecycle, mailbox, ct), ct));
             if (!feature.IsEnabled)
                 throw new UnauthorizedAccessException();
             await tx.CommitAsync(ct);
@@ -68,9 +71,40 @@ internal sealed class InstitutionImportRepository(
         IInstitutionWriteAuthorization writes,
         TenantContext actor,
         IInstitutionImportFeature feature,
+        PlatformImportAccounts accounts,
         CancellationToken ct
     ) : IInstitutionImportSession
     {
+        public async Task<IReadOnlySet<string>> FiscalCodesInInstitutionAsync(IReadOnlyCollection<string> hmacs)
+        {
+            writes.RequireLocked(actor);
+            return await accounts.MembersAsync(hmacs);
+        }
+
+        public async Task<IReadOnlyList<ImportCreatedAccount>> CreatePlatformAccountsAsync(IReadOnlyList<ImportAccountRequest> people)
+        {
+            writes.RequireLocked(actor);
+            return await accounts.CreateAsync(people);
+        }
+
+        public async Task<IReadOnlyDictionary<Guid, string>> EmailsAsync(IReadOnlyCollection<Guid> users)
+        {
+            writes.RequireLocked(actor);
+            return await accounts.EmailsAsync(users);
+        }
+
+        // Same rows as AddCreatedAsync, written with multi-row INSERTs for large batches.
+        public async Task AddCreatedManyAsync(
+            Guid batch,
+            ImportCategory category,
+            IReadOnlyList<ImportCreatedRow> rows,
+            IReadOnlyList<string?> externalReferences
+        )
+        {
+            writes.RequireLocked(actor);
+            await accounts.AddItemsAsync(batch, category, rows, externalReferences);
+        }
+
         private static string Json(object value) => JsonSerializer.Serialize(value);
         private async Task<DbCommand> Command(string sql, params (string Key, object? Value)[] args)
         {

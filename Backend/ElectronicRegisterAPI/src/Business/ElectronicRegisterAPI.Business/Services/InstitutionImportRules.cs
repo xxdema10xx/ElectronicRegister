@@ -25,7 +25,12 @@ public sealed class InstitutionImportRules(IInstitutionEmailGenerator emails) : 
         ["RiferimentoEsterno"] = ImportField.ExternalReference,
         ["Riferimento Esterno"] = ImportField.ExternalReference,
         ["ExternalReference"] = ImportField.ExternalReference,
-        ["External Reference"] = ImportField.ExternalReference
+        ["External Reference"] = ImportField.ExternalReference,
+        ["CodiceFiscale"] = ImportField.FiscalCode,
+        ["Codice Fiscale"] = ImportField.FiscalCode,
+        ["CF"] = ImportField.FiscalCode,
+        ["FiscalCode"] = ImportField.FiscalCode,
+        ["Fiscal Code"] = ImportField.FiscalCode
     };
     public ImportMappingResult Map(IReadOnlyList<string> headers, ImportCategory category, IReadOnlyList<ImportColumnMapping>? explicitMapping = null)
     {

@@ -1,6 +1,7 @@
 using System.Data.Common;
 using System.Security.Cryptography;
 using System.Text;
+using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Models;
 using ElectronicRegisterAPI.Domain.Policies;
 using ElectronicRegisterAPI.Infrastructure.Persistence;
@@ -13,7 +14,7 @@ namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 // Every transition is guarded by the current state (UPDATE ... WHERE lifecycle_state=...),
 // advances the identity generation exactly once (revoking every earlier token) and appends
 // one ledger event whose id is derived from user, transition and reached generation.
-internal sealed class PlatformLifecycleWriter(ElectronicRegisterContext db, PlatformIdentitySchema schema)
+internal sealed class PlatformLifecycleWriter(ElectronicRegisterContext db, PlatformIdentitySchema schema, IMailboxProvisioner mailbox)
 {
     public Task<bool> InstalledAsync(CancellationToken ct) => schema.InstalledAsync(db, ct);
 
@@ -103,9 +104,21 @@ internal sealed class PlatformLifecycleWriter(ElectronicRegisterContext db, Plat
     {
         if (!await InstalledAsync(ct))
             return false;
-        await using var read = Command("SELECT u.id FROM institution_membership m JOIN institution i ON i.id=m.institution_id JOIN `user` u ON u.id=m.user_id WHERE m.institution_id=@i AND m.id=@m AND m.status='active' AND i.status='active' AND u.lifecycle_state='Closed' FOR UPDATE",
-            ("@i", institutionId), ("@m", membershipId));
-        return await read.ExecuteScalarAsync(ct) is { } value && await ReactivateAsync(Guid.Parse(Convert.ToString(value)!), LifecycleRuleCodes.MembershipReactivated, null, ct);
+        Guid user;
+        string email;
+        await using (var read = Command("SELECT u.id,u.email FROM institution_membership m JOIN institution i ON i.id=m.institution_id JOIN `user` u ON u.id=m.user_id WHERE m.institution_id=@i AND m.id=@m AND m.status='active' AND i.status='active' AND u.lifecycle_state='Closed' FOR UPDATE",
+            ("@i", institutionId), ("@m", membershipId)))
+        await using (var reader = await read.ExecuteReaderAsync(ct))
+        {
+            if (!await reader.ReadAsync(ct))
+                return false;
+            user = reader.GetGuid(0);
+            email = reader.GetString(1);
+        }
+        if (!await ReactivateAsync(user, LifecycleRuleCodes.MembershipReactivated, null, ct))
+            return false;
+        await mailbox.CreateAsync(user, email, ct);
+        return true;
     }
 
     // D-C: an institution that became active again reopens every Closed account that now
@@ -114,15 +127,18 @@ internal sealed class PlatformLifecycleWriter(ElectronicRegisterContext db, Plat
     {
         if (!await InstalledAsync(ct))
             return 0;
-        var users = new List<Guid>();
-        await using (var read = Command("SELECT u.id FROM institution_membership m JOIN institution i ON i.id=m.institution_id JOIN `user` u ON u.id=m.user_id WHERE m.institution_id=@i AND m.status='active' AND i.status='active' AND u.lifecycle_state='Closed' ORDER BY u.id FOR UPDATE", ("@i", institutionId)))
+        var users = new List<(Guid Id, string Email)>();
+        await using (var read = Command("SELECT u.id,u.email FROM institution_membership m JOIN institution i ON i.id=m.institution_id JOIN `user` u ON u.id=m.user_id WHERE m.institution_id=@i AND m.status='active' AND i.status='active' AND u.lifecycle_state='Closed' ORDER BY u.id FOR UPDATE", ("@i", institutionId)))
         await using (var reader = await read.ExecuteReaderAsync(ct))
             while (await reader.ReadAsync(ct))
-                users.Add(reader.GetGuid(0));
+                users.Add((reader.GetGuid(0), reader.GetString(1)));
         var count = 0;
-        foreach (var user in users)
+        foreach (var (user, email) in users)
             if (await ReactivateAsync(user, LifecycleRuleCodes.InstitutionReactivated, null, ct))
+            {
+                await mailbox.CreateAsync(user, email, ct);
                 count++;
+            }
         return count;
     }
 }

@@ -9,5 +9,7 @@ namespace ElectronicRegisterAPI.Domain.Enums;
 public enum ImportEmailMode
 {
     None,
-    ReserveInstitutionalAddress
+    ReserveInstitutionalAddress,
+    // Platform identity (E4): Student accounts with server-generated platform addresses.
+    CreatePlatformAccounts
 }

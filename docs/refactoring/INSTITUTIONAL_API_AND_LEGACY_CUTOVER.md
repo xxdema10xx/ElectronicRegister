@@ -51,7 +51,7 @@ Sono rimossi i controller globali Auth, Users, Student, Teacher, Subject e Bienn
 | Metodo e route | Autenticazione | Input | Risultato |
 |---|---|---|---|
 | ~~POST `/api/identity/accounts`~~ | — | — | **Rimosso (D2, 2026-11-05)**: 404. Vedi [INSTITUTION_ACCOUNTS.md](../operations/INSTITUTION_ACCOUNTS.md) |
-| POST `/api/institution/accounts` | Access token InstitutionAdmin o Staff | eventId, email, roles, reason, scheda esistente o nuova | 201 con id e password temporanea mostrata una volta; 200 replay senza password; 409 neutro per indirizzo non disponibile |
+| POST `/api/institution/accounts` | Access token InstitutionAdmin o Staff; flag `Multitenancy:PlatformIdentity` | eventId, firstName, lastName, fiscalCode, roles, reason, scheda esistente o nuova; **nessun campo email** (generato dal server) | 201 con id, indirizzo di piattaforma e password temporanea (`null` se la persona è già attiva altrove); 200 replay senza password; 409 persona già nell'istituto o EventId in conflitto; 422 nomi diversi dalla scheda. Vedi [PLATFORM_IDENTITY_ACCOUNTS.md](../api/PLATFORM_IDENTITY_ACCOUNTS.md) |
 | POST `/api/Auth/identity/login` | Password locale verificata | LoginDto | Selection ticket di 300 secondi |
 | POST `/api/Auth/identity/microsoft-login` | Provider/tenant/object binding esplicito | MicrosoftLoginDto | Selection ticket; mai collegamento per coincidenza email |
 | GET `/api/identity/account` | Selection corrente | Nessun target client | UserId, Email, DisplayName, HasLocalPassword |

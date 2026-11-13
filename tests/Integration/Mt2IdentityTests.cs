@@ -161,7 +161,7 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
                 await db.InstitutionMembershipRoles.Where(r => ids.Contains(r.MembershipId)).ExecuteDeleteAsync();
                 await using var purge = await MembershipFixturePurge.AllowAsync(db, new[]{_a,_b});
                 await db.InstitutionMemberships.Where(m => ids.Contains(m.Id)).ExecuteDeleteAsync();
-                if (change == "user-deleted") await db.Users.Where(u => u.Id == _user).ExecuteDeleteAsync();
+                if (change == "user-deleted") await FixtureIdentityExemption.DeleteUsersAsync(db, [_user]);
             }
             else await db.InstitutionMemberships.Where(m => m.Id == membership).ExecuteUpdateAsync(s => s.SetProperty(m => m.Status, change));
         });
@@ -477,7 +477,7 @@ public sealed class Mt2IdentityTests(IntegrationFixture fixture) : IAsyncLifetim
             await using var purge = await MembershipFixturePurge.AllowAsync(db, new[]{_a,_b});
                 await db.InstitutionMemberships.Where(m => ids.Contains(m.Id)).ExecuteDeleteAsync();
             await db.Institutions.Where(i => i.Id == _a || i.Id == _b).ExecuteDeleteAsync();
-            await db.Users.Where(u => u.Id == _user || u.Id == _other || u.Id == _legacy).ExecuteDeleteAsync();
+            await FixtureIdentityExemption.DeleteUsersAsync(db, [_user, _other, _legacy]);
         }); }
     }
 

@@ -12,5 +12,6 @@ public enum ImportField
     FirstName,
     LastName,
     Class,
-    ExternalReference
+    ExternalReference,
+    FiscalCode
 }

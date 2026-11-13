@@ -513,7 +513,7 @@ public sealed partial class Mt4bHttpTests(IntegrationFixture fixture) : IAsyncLi
             var memberships=await db.InstitutionMemberships.Where(m=>users.Contains(m.UserId)).Select(m=>m.Id).ToListAsync();
             await db.InstitutionMembershipRoles.Where(r=>memberships.Contains(r.MembershipId)).ExecuteDeleteAsync();
             await db.InstitutionMemberships.Where(m=>users.Contains(m.UserId)).ExecuteDeleteAsync();
-            await db.Users.Where(u=>users.Contains(u.Id)).ExecuteDeleteAsync();
+            await FixtureIdentityExemption.DeleteUsersAsync(db, users);
             await db.Institutions.Where(i=>i.Id==_a||i.Id==_b).ExecuteDeleteAsync();
         });
 

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using ElectronicRegisterAPI.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 
 namespace ElectronicRegisterAPI.Tests.Integration;
@@ -20,5 +23,20 @@ internal static class FixtureIdentityExemption
         foreach (var (name, value) in values)
             command.Parameters.AddWithValue(name, value);
         await command.ExecuteNonQueryAsync();
+    }
+
+    // EF teardowns: a nested exemption for the listed users only; the enclosing purge scope
+    // (institution owners) is restored when the exemption is disposed.
+    internal static async Task DeleteUsersAsync(ElectronicRegisterContext db, IReadOnlyCollection<Guid> users)
+    {
+        await using var exemption = await MembershipFixturePurge.AllowAsync(db, users);
+        await db.Users.Where(u => users.Contains(u.Id)).ExecuteDeleteAsync();
+    }
+
+    internal static async Task DeleteUsersByEmailAsync(ElectronicRegisterContext db, string email)
+    {
+        var users = await db.Users.Where(u => u.Email == email).Select(u => u.Id).ToListAsync();
+        if (users.Count > 0)
+            await DeleteUsersAsync(db, users);
     }
 }

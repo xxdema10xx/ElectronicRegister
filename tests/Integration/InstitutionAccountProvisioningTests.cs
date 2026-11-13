@@ -28,7 +28,7 @@ namespace ElectronicRegisterAPI.Tests.Integration;
 // cross-institution disclosure, temporary password shown once, platform address generated
 // by the server, fiscal-code deduplication (D-A, E1, E2).
 [Collection(IntegrationCollection.Name)]
-public sealed class InstitutionAccountProvisioningTests(IntegrationFixture fixture) : IAsyncLifetime
+public sealed partial class InstitutionAccountProvisioningTests(IntegrationFixture fixture) : IAsyncLifetime
 {
     private const string Accounts = "/api/institution/accounts";
     private readonly string _suffix = Guid.NewGuid().ToString("N");

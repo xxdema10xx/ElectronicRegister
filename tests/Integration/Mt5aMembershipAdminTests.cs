@@ -111,7 +111,7 @@ public sealed class Mt5aMembershipAdminTests : IAsyncLifetime
                 await using var purge = await MembershipFixturePurge.AllowAsync(db, new[]{_a,_b});
                 await db.InstitutionMembershipRoles.Where(r => ids.Contains(r.MembershipId)).ExecuteDeleteAsync();
                 await db.InstitutionMemberships.Where(m => (m.InstitutionId == _a || m.InstitutionId == _b) && ids.Contains(m.Id)).ExecuteDeleteAsync();
-                await db.Users.Where(u => users.Contains(u.Id) && u.Email.EndsWith("@mt5a.example.test")).ExecuteDeleteAsync();
+                await FixtureIdentityExemption.DeleteUsersAsync(db, users);
                 await db.Institutions.Where(i => (i.Id == _a || i.Id == _b) && i.Code.StartsWith("MT5A_")).ExecuteDeleteAsync();
             });
         }
