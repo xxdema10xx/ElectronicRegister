@@ -320,7 +320,7 @@ public sealed class Mt3aOwnershipTests(IntegrationFixture fixture) : IAsyncLifet
     public async Task DisposeAsync()
     {
         await using var c=await Open();
-        await using var purge = await MembershipFixturePurge.AllowAsync(c, new[]{_a,_b});
+        await using var purge = await MembershipFixturePurge.AllowAsync(c, new[]{_a,_b,_user});
         foreach(var table in new[]{"institution_student_profile","institution_teacher_profile","audit_event","submission_answer_option","submission_answer","exam_violation","exam_submission","grade","exam_student","question_option","question","exam","student","class_subject","class","biennium_study_path","biennium_study_area","subject","teacher","study_path","study_area","biennium"})
         { await using var cmd=new MySqlCommand($"DELETE FROM `{table}` WHERE institution_id IN (@a,@b)",c);cmd.Parameters.AddWithValue("@a",_a);cmd.Parameters.AddWithValue("@b",_b);await cmd.ExecuteNonQueryAsync(); }
         await using var cleanup=new MySqlCommand("DELETE r FROM institution_membership_role r JOIN institution_membership m ON m.id=r.membership_id WHERE m.user_id=@u; DELETE FROM institution_membership WHERE user_id=@u; DELETE FROM user WHERE id=@u; DELETE FROM institution WHERE id IN (@a,@b)",c);

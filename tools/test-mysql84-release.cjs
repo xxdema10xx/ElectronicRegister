@@ -77,3 +77,31 @@ try{
  assert(path.basename(actual).startsWith('er84-release-bundle-'));
  fs.rmSync(actual,{recursive:true});
 }
+// er-platform-identity-1 successor: DEFINER binding, unbound fixture predicate in
+// ordinary bundles, fixture-only binding and rejection of unsafe configurations.
+{
+ const os=require('os');
+ const base={database:'electronic_register_test',definerUser:'er_definer',definerHost:'localhost'};
+ const plain=release.successorSql(base);
+ assert(plain.startsWith('USE `electronic_register_test`;\n'));
+ assert.equal((plain.match(/CREATE DEFINER='er_definer'@'localhost' TRIGGER /g)||[]).length,6);
+ assert(!/CREATE TRIGGER /.test(plain));
+ assert.equal((plain.match(/VERSION\(\)='5\.7\.24' AND @@port=13306/g)||[]).length,2,'ordinary successor keeps the unsatisfiable 8.4 predicate');
+ assert(plain.trimEnd().endsWith("INSERT INTO er_schema_release(version) VALUES('er-platform-identity-1');"),'marker written last');
+ const uuid='11111111-2222-3333-4444-555555555555',host='a1b2c3d4e5f6',capability='A'.repeat(64);
+ const bound=release.successorSql({...base,host:'127.0.0.1',port:23456,ownedFixture:{uuid,host,capability}});
+ assert(!bound.includes("VERSION()='5.7.24'"));
+ assert.equal((bound.match(new RegExp(`BINARY @er_mt5b_fixture_capability='${capability}'`,'g'))||[]).length,2);
+ for(const bad of [{...base,definerUser:'root'},{...base,definerHost:"x'y"},{...base,database:''}])
+  assert.throws(()=>release.successorSql(bad),undefined,JSON.stringify(bad));
+ assert.throws(()=>release.successorSql({...base,host:'127.0.0.1',port:3307,ownedFixture:{uuid,host,capability}}),/Owned fixture binding rejected/);
+ const out=path.join(fs.mkdtempSync(path.join(os.tmpdir(),'er84-successor-')),'bundle');
+ try{
+  release.successor(base,out);
+  const binding=JSON.parse(fs.readFileSync(path.join(out,'binding.json')));
+  assert.equal(binding.release,'er-platform-identity-1');assert.equal(binding.predecessor,'er-quality-2-mysql84');
+  assert.equal(binding.files['01-platform-identity.sql'],release.sha(fs.readFileSync(path.join(out,'01-platform-identity.sql'))));
+  assert.throws(()=>release.successor(base,out),/NEW output directory required/);
+ }finally{fs.rmSync(path.dirname(out),{recursive:true});}
+ console.log('platform identity successor binding verified');
+}

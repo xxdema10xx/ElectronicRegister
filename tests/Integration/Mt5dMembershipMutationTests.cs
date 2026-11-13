@@ -70,7 +70,7 @@ public sealed class Mt5dMembershipMutationTests : IAsyncLifetime
     {
         if(_host is not null)await _host.DisposeAsync();if(_connection is null)return;
         await Exec("SET @er_mt5b_fixture_owners=@owners; DELETE FROM institution_membership_event WHERE institution_id IN (@a,@b); DELETE r FROM institution_membership_role r JOIN institution_membership m ON m.id=r.membership_id WHERE m.institution_id IN (@a,@b); DELETE FROM institution_membership WHERE institution_id IN (@a,@b); DELETE FROM institution WHERE id IN (@a,@b); DELETE FROM user WHERE id IN (@u0,@u1,@u2,@u3); SET @er_mt5b_fixture_owners=NULL",
-            ("@owners",_a+","+_b),("@a",_a),("@b",_b),("@u0",_users[0]),("@u1",_users[1]),("@u2",_users[2]),("@u3",_users[3]));
+            ("@owners",string.Join(",",new[]{_a,_b}.Concat(_users.Take(4)))),("@a",_a),("@b",_b),("@u0",_users[0]),("@u1",_users[1]),("@u2",_users[2]),("@u3",_users[3]));
     }
     private async Task<TenantContext> Context(int index=0)
     {

@@ -103,7 +103,7 @@ internal static class Mysql84FixtureTarget
         var privateWork = OperatingSystem.IsWindows() ? PrivateTestFiles.CreateDirectory("mysql84-binding") : work;
         var config = Path.Combine(privateWork, "binding.json"); var bundle = Path.Combine(privateWork, "bundle");
         await File.WriteAllTextAsync(config, JsonSerializer.Serialize(new { database = b.Database,host=b.Server,port=(int)b.Port,
-            ownedFixture=new { uuid=identity.Uuid,host=identity.Host,capability=identity.Capability },
+            ownedFixture=new { uuid=identity.Uuid,host=identity.Host,capability=identity.Capability }, successor=true,
             definerUser = "fixture_definer", definerHost = "%", apiUser = "fixture_api", apiHost = "%", reviewUser = "fixture_review", reviewHost = "%" }));
         var start = new ProcessStartInfo("node") { WorkingDirectory = root.FullName, RedirectStandardOutput = true, RedirectStandardError = true };
         foreach (var arg in new[] { "tools/mysql84-release.cjs", "bundle", config, bundle }) start.ArgumentList.Add(arg);

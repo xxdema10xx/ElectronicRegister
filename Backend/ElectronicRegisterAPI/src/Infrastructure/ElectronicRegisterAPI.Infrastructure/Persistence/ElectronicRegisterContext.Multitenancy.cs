@@ -78,5 +78,6 @@ public partial class ElectronicRegisterContext
         ConfigureInstitutionImports(modelBuilder);
         ConfigureFormativePlans(modelBuilder);
         ConfigureInstitutionCalendar(modelBuilder);
+        ConfigurePlatformIdentity(modelBuilder);
     }
 }

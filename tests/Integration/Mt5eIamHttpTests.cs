@@ -68,7 +68,7 @@ public sealed class Mt5eIamHttpTests : IAsyncLifetime
         if(_host is not null)await _host.DisposeAsync();if(_connection is null)return;
         if(Mysql84FixtureTarget.IsOwned(_connection))return; // Retain immutable audits until owned container disposal.
         await Exec("SET @er_mt5b_fixture_owners=@owners; DELETE FROM institution_membership_event WHERE institution_id IN (@a,@b); DELETE r FROM institution_membership_role r JOIN institution_membership m ON m.id=r.membership_id WHERE m.institution_id IN (@a,@b); DELETE FROM institution_membership WHERE institution_id IN (@a,@b); DELETE FROM institution WHERE id IN (@a,@b); DELETE FROM user WHERE id IN (@u0,@u1,@u2,@u3,@u4); SET @er_mt5b_fixture_owners=NULL",
-            ("@owners",_a+","+_b),("@a",_a),("@b",_b),("@u0",_users[0]),("@u1",_users[1]),("@u2",_users[2]),("@u3",_users[3]),("@u4",_users[4]));
+            ("@owners",string.Join(",",new[]{_a,_b}.Concat(_users.Take(5)))),("@a",_a),("@b",_b),("@u0",_users[0]),("@u1",_users[1]),("@u2",_users[2]),("@u3",_users[3]),("@u4",_users[4]));
     }
     private async Task<HttpResponseMessage> Send(string path,string? token=null,object? body=null,string method="GET",Mt3cHosting.ProgramHost? host=null)
     {

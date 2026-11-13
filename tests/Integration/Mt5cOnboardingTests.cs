@@ -154,7 +154,7 @@ public sealed partial class Mt5cOnboardingTests : IAsyncLifetime
         await Expect(await Http(path,body:body),HttpStatusCode.Unauthorized);
         await Expect(await Http(path,await Ticket(1),body),HttpStatusCode.Forbidden);
         await Expect(await Http(path,await Ticket(),new{InstitutionId=Guid.NewGuid(),EventId=Guid.NewGuid(),d.Challenge}),HttpStatusCode.Forbidden);
-        await Exec("UPDATE user SET email=@p0 WHERE id=@p1","changed@mt5c.example.test",users[0]);
+        await FixtureIdentityExemption.ExecuteAsync(connection,new[]{users[0]},"UPDATE user SET email=@p0 WHERE id=@p1",("@p0","changed@mt5c.example.test"),("@p1",users[0]));
         await Expect(await Http(path,await TicketAfterEmailChange(),body),HttpStatusCode.Forbidden);
         Assert.Equal(0,await Count("SELECT COUNT(*) FROM institution_membership WHERE institution_id=@p0",p.InstitutionId));
     }

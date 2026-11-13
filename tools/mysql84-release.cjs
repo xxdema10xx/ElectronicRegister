@@ -53,7 +53,7 @@ function records(){
   'tests/Integration/IntegrationFixture.cs','tests/Integration/Mysql84ReleaseTests.cs','tests/Integration/Mysql84ReleaseHttp.cs','infra/release.mysql84.example.json'];
  const bootstrap=Object.keys(require('../migrations/bootstrap/manifest.json').files);
  const calendar=require('../tests/Integration/INSTITUTION_CALENDAR_VERIFICATION.json').artifacts.map(a=>a.path);
- const roots=['Backend/ElectronicRegisterAPI/src','tests/Unit','tests/Integration','tools','infra','migrations/mt1','migrations/mt3','migrations/identity-account'];
+ const roots=['Backend/ElectronicRegisterAPI/src','tests/Unit','tests/Integration','tools','infra','migrations/mt1','migrations/mt3','migrations/identity-account','migrations/platform-identity'];
  const active=[...publishable].filter(f=>roots.some(r=>f.startsWith(r+'/'))&&!f.split('/').includes('TestResults'))
   .filter(f=>/\.(cs|csproj|cjs|py|ps1|sql|json|config|ya?ml|sh|conf)$/.test(f)&&(!f.includes('appsettings')||f.endsWith('appsettings.example.json')));
  return Object.fromEntries([...new Set([...Object.keys(old.files),...bootstrap,...calendar,...extra,...active])].filter(f=>publishable.has(f)&&fs.existsSync(path.join(root,f))).sort().map(f=>[f,sha(fs.readFileSync(path.join(root,f)))]));
@@ -79,6 +79,28 @@ function verify(){
  if(!embedded.includes(legacy)||forbidden.test(embedded.replace(legacy,''))||!embedded.includes('REGEXP_LIKE'))throw Error('Embedded SQL not remediated');
  return actual;
 }
+// Successor er-platform-identity-1: applied after er-quality-2-mysql84 and never part of
+// its contract. Same DEFINER binding and fixture-only identity binding as the bundle.
+const successorRelease='er-platform-identity-1',successorSource='migrations/platform-identity/001_expand.sql';
+function successorSql(config){
+ for(const key of ['database','definerUser','definerHost'])if(!/^[A-Za-z0-9_.%-]+$/.test(config[key]||''))throw Error('Explicit safe principal/database required: '+key);
+ if(config.definerUser==='root')throw Error('Separate non-root definer required');
+ const owner="'"+config.definerUser+"'@'"+config.definerHost+"'";
+ const source=fs.readFileSync(path.join(root,successorSource),'utf8').replaceAll('\r\n','\n');
+ if(/CREATE DEFINER|DROP |TRUNCATE |SET GLOBAL|FOREIGN_KEY_CHECKS|NO_AUTO_CREATE_USER/i.test(source))throw Error('Successor source not additive');
+ let sql='USE `'+config.database+'`;\n'+source.replace(/CREATE TRIGGER /g,'CREATE DEFINER='+owner+' TRIGGER ');
+ sql=require('./mysql84-fixture.cjs').bind(sql,config);
+ if(forbidden.test(sql))throw Error('Forbidden successor SQL');
+ return sql;
+}
+function successor(config,out){
+ if(fs.existsSync(out))throw Error('NEW output directory required');
+ const sql=successorSql(config);fs.mkdirSync(out,{recursive:true});
+ fs.writeFileSync(path.join(out,'01-platform-identity.sql'),sql);
+ fs.writeFileSync(path.join(out,'binding.json'),JSON.stringify({format:1,release:successorRelease,predecessor:'er-quality-2-mysql84',
+  source:successorSource,sourceHash:sha(fs.readFileSync(path.join(root,successorSource))),database:config.database,
+  definer:config.definerUser+'@'+config.definerHost,files:{'01-platform-identity.sql':sha(sql)}},null,2)+'\n');
+}
 function bundle(config,out,modern=true){
  if(fs.existsSync(out))throw Error('NEW output directory required');
  // The immutable generator validates all historical SQL before adapting it.
@@ -97,6 +119,8 @@ function bundle(config,out,modern=true){
    fs.writeFileSync(file,sql);r.artifactHash=sha(sql);
   }
   fs.writeFileSync(path.join(out,'98-new-release.sql'),`USE \`${config.database}\`;\nINSERT INTO er_schema_release(version) VALUES('er-quality-2-mysql84');\n`);
+  // Owned test fixtures only: the successor runs before the predecessor marker file.
+  if(config.successor===true){if(!config.ownedFixture)throw Error('Successor bundling is fixture-only');fs.writeFileSync(path.join(out,'97-platform-identity.sql'),successorSql(config));}
   binding.release='er-quality-2-mysql84';
  }
  binding.files=Object.fromEntries(fs.readdirSync(out).filter(f=>f.endsWith('.sql')).sort().map(f=>[f,sha(fs.readFileSync(path.join(out,f)))]));
@@ -108,7 +132,8 @@ if(require.main===module){
   fs.writeFileSync(path.join(root,dir,'contract.json'),JSON.stringify(contract(),null,2)+'\n');
   fs.writeFileSync(path.join(root,dir,'manifest.json'),JSON.stringify(manifest(),null,2)+'\n');
  }else if(action==='contract')process.stdout.write(JSON.stringify(contract(process.argv[3]!=='old')));
+ else if(action==='successor'){verify();successor(JSON.parse(fs.readFileSync(process.argv[3])),path.resolve(process.argv[4]));console.log(successorRelease+': bound successor SQL generated for review; no SQL executed');}
  else if(action==='bundle'){verify();bundle(JSON.parse(fs.readFileSync(process.argv[3])),path.resolve(process.argv[4]),process.argv[5]!=='old');}
  else {const m=verify();console.log(m.release+': new closure and immutable predecessor verified; runtime certification separate');}
 }
-module.exports={contract,manifest,verify,bundle,sha};
+module.exports={contract,manifest,verify,bundle,successor,successorSql,sha};

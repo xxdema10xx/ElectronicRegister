@@ -1,6 +1,6 @@
 {
-  "filesAnalyzed": 673,
-  "typesClassified": 670,
+  "filesAnalyzed": 675,
+  "typesClassified": 672,
   "entries": [
     {
       "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs",
@@ -1305,7 +1305,7 @@
             },
             {
               "name": "Work",
-              "visibility": "\r\n    private sealed "
+              "visibility": "\n    private sealed "
             },
             {
               "name": "AuthorizedTransaction",
@@ -8451,6 +8451,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.PlatformIdentity.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Persistence",
+      "classification": "Persistence",
+      "types": [
+        {
+          "name": "ElectronicRegisterContext",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.StudentTransfers.cs",
       "layer": "Infrastructure",
       "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
@@ -8829,6 +8845,22 @@
       "types": [
         {
           "name": "Grade",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/IdentityLifecycleEvent.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": true,
+      "exclusionReason": "Database First scaffold allowlist or explicit auto-generated header; regeneration is authoritative",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Persistence.Entities",
+      "classification": "Persistence/Entities",
+      "types": [
+        {
+          "name": "IdentityLifecycleEvent",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -9889,7 +9921,7 @@
           "nestedTypes": [
             {
               "name": "Stored",
-              "visibility": "\n    private sealed "
+              "visibility": "\r\n    private sealed "
             }
           ]
         }
@@ -10054,7 +10086,7 @@
           "nestedTypes": [
             {
               "name": "BoundRepositories",
-              "visibility": "\r\n    private sealed "
+              "visibility": "\n    private sealed "
             }
           ]
         }
@@ -10107,7 +10139,7 @@
           "nestedTypes": [
             {
               "name": "Session",
-              "visibility": "\r\n    private sealed "
+              "visibility": "\n    private sealed "
             }
           ]
         }
@@ -10802,9 +10834,20 @@
   ],
   "dependencies": [
     {
-      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj",
-      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/ElectronicRegisterAPI.csproj",
+      "layer": "Api",
       "references": [
+        "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj",
+        "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj",
+        "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/ElectronicRegisterAPI.Business.csproj",
+        "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/ElectronicRegisterAPI.Application.csproj"
+      ]
+    },
+    {
+      "project": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/ElectronicRegisterAPI.Application.csproj",
+      "layer": "Application",
+      "references": [
+        "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/ElectronicRegisterAPI.Business.csproj",
         "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj"
       ]
     },
@@ -10816,25 +10859,14 @@
       ]
     },
     {
-      "project": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/ElectronicRegisterAPI.csproj",
-      "layer": "Api",
-      "references": [
-        "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj",
-        "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj",
-        "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/ElectronicRegisterAPI.Business.csproj",
-        "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/ElectronicRegisterAPI.Application.csproj"
-      ]
-    },
-    {
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj",
       "layer": "Domain",
       "references": []
     },
     {
-      "project": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/ElectronicRegisterAPI.Application.csproj",
-      "layer": "Application",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj",
+      "layer": "Infrastructure",
       "references": [
-        "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/ElectronicRegisterAPI.Business.csproj",
         "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/ElectronicRegisterAPI.Domain.csproj"
       ]
     }

@@ -75,7 +75,7 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
         if (_connection is null) return;
         await using var c = await Open();
         await using var cmd = Cmd(c, $"SET @er_mt5b_fixture_owners=@owners; DELETE r FROM {Roles} r JOIN {Members} m ON m.id=r.membership_id WHERE m.institution_id IN (@a,@b); DELETE FROM {Members} WHERE institution_id IN (@a,@b); DELETE FROM institution WHERE id IN (@a,@b) AND code LIKE 'MT5BP_%'; DELETE FROM user WHERE id=@u AND email=@e; SET @er_mt5b_fixture_owners=NULL;", null,
-            ("@owners", _a + "," + _b), ("@a", _a), ("@b", _b), ("@u", _user), ("@e", _user.ToString("N") + "@mt5bp.example.test"));
+            ("@owners", string.Join(",", new[] { _a, _b, _user }.Concat(_extraUsers))), ("@a", _a), ("@b", _b), ("@u", _user), ("@e", _user.ToString("N") + "@mt5bp.example.test"));
         try
         {
             await cmd.ExecuteNonQueryAsync();

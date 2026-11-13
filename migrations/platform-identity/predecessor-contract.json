@@ -1,0 +1,167 @@
+{
+  "format": 1,
+  "migration": "er-platform-identity-1",
+  "mysql": "8.4.13",
+  "database": "electronic_register_test",
+  "charset": "utf8mb4",
+  "collation": "utf8mb4_unicode_ci",
+  "predecessor": {
+    "release": "er-quality-2-mysql84",
+    "contract": "migrations/mysql84-remediation/contract.json",
+    "contractSha256": "10282167D0A069789E958DDB9936DEA024AF253E70266AE8FC2F645E43CC6B00",
+    "markers": [
+      "er-quality-1",
+      "er-quality-1-closure-1",
+      "er-quality-2-mysql84"
+    ],
+    "absentMarkers": [
+      "er-platform-identity-1"
+    ],
+    "inventory": {
+      "tables": 71,
+      "triggers": 180,
+      "fks": 200,
+      "indexes": 303
+    },
+    "tables": {
+      "user": "CREATE TABLE `user` (\n  `id` char(36) CHARACTER SET ascii NOT NULL,\n  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,\n  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,\n  `role` enum('admin','teacher','student') COLLATE utf8mb4_unicode_ci NOT NULL,\n  `student_id` char(36) CHARACTER SET ascii DEFAULT NULL,\n  `teacher_id` char(36) CHARACTER SET ascii DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `uq_user_email` (`email`),\n  UNIQUE KEY `idx_user_student` (`student_id`),\n  UNIQUE KEY `idx_user_teacher` (`teacher_id`),\n  CONSTRAINT `fk_user_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE SET NULL,\n  CONSTRAINT `fk_user_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE SET NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+    },
+    "absentTables": [
+      "identity_lifecycle_event"
+    ],
+    "absentTriggers": [
+      "lifecycle_event_delete",
+      "lifecycle_event_insert",
+      "lifecycle_event_update",
+      "platform_user_delete",
+      "platform_user_insert",
+      "platform_user_update"
+    ],
+    "userColumns": [
+      "id",
+      "email",
+      "password_hash",
+      "role",
+      "student_id",
+      "teacher_id"
+    ]
+  },
+  "target": {
+    "markers": [
+      "er-platform-identity-1",
+      "er-quality-1",
+      "er-quality-1-closure-1",
+      "er-quality-2-mysql84"
+    ],
+    "inventory": {
+      "tables": 72,
+      "triggers": 186,
+      "fks": 201,
+      "indexes": 308
+    },
+    "tables": {
+      "user": "CREATE TABLE `user` (\n  `id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,\n  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,\n  `password_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,\n  `role` enum('admin','teacher','student') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,\n  `student_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL,\n  `teacher_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL,\n  `fiscal_code_hmac` char(64) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,\n  `fiscal_code_hmac_key_id` varchar(32) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,\n  `fiscal_code_enc` varbinary(64) DEFAULT NULL,\n  `fiscal_code_enc_key_id` varchar(32) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,\n  `lifecycle_state` enum('Active','Closed') CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'Active',\n  `closed_at_utc` datetime(6) DEFAULT NULL,\n  `reactivated_at_utc` datetime(6) DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `uq_user_email` (`email`),\n  UNIQUE KEY `idx_user_student` (`student_id`),\n  UNIQUE KEY `idx_user_teacher` (`teacher_id`),\n  UNIQUE KEY `uq_user_fiscal_code_hmac` (`fiscal_code_hmac`),\n  KEY `idx_user_lifecycle` (`lifecycle_state`,`id`),\n  CONSTRAINT `fk_user_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE SET NULL,\n  CONSTRAINT `fk_user_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE SET NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+      "identity_lifecycle_event": "CREATE TABLE `identity_lifecycle_event` (\n  `id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,\n  `user_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,\n  `transition` varchar(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,\n  `rule_code` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,\n  `rule_version` int NOT NULL,\n  `security_generation` bigint NOT NULL,\n  `occurred_at_utc` datetime(6) NOT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `uq_lifecycle_transition` (`user_id`,`transition`,`security_generation`),\n  KEY `idx_lifecycle_user_time` (`user_id`,`occurred_at_utc`),\n  CONSTRAINT `fk_lifecycle_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+    },
+    "triggers": {
+      "platform_user_insert": {
+        "mode": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+        "event": "INSERT",
+        "order": 1,
+        "table": "user",
+        "timing": "BEFORE",
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci",
+        "database_collation": "utf8mb4_unicode_ci",
+        "unboundStatementSha256": "C07791718D1D16530F884E2119EFFC13E7C5EADB6421CAB272F93455533620B1",
+        "boundToFixture": false
+      },
+      "platform_user_update": {
+        "mode": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+        "event": "UPDATE",
+        "order": 1,
+        "table": "user",
+        "timing": "BEFORE",
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci",
+        "database_collation": "utf8mb4_unicode_ci",
+        "unboundStatementSha256": "CB34505B22330C4CA1A894FDA4EDC7545965A75D554C8238A009EB745A99A85A",
+        "boundToFixture": true
+      },
+      "platform_user_delete": {
+        "mode": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+        "event": "DELETE",
+        "order": 1,
+        "table": "user",
+        "timing": "BEFORE",
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci",
+        "database_collation": "utf8mb4_unicode_ci",
+        "unboundStatementSha256": "E667F8A8E3B2BE89867AC3E13C7CA7BAC942A4FD57FD2F38428FC7531CF93D61",
+        "boundToFixture": true
+      },
+      "lifecycle_event_insert": {
+        "mode": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+        "event": "INSERT",
+        "order": 1,
+        "table": "identity_lifecycle_event",
+        "timing": "BEFORE",
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci",
+        "database_collation": "utf8mb4_unicode_ci",
+        "unboundStatementSha256": "6E0A8BC5A522A263FED83B14A9BD6085729F6012E00D589C55E754F9277B600A",
+        "boundToFixture": false
+      },
+      "lifecycle_event_update": {
+        "mode": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+        "event": "UPDATE",
+        "order": 1,
+        "table": "identity_lifecycle_event",
+        "timing": "BEFORE",
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci",
+        "database_collation": "utf8mb4_unicode_ci",
+        "unboundStatementSha256": "1FAF6ED971BE9052F12105AF2FDFBC673D95008F0D06742C57DEE90EA95A9F3E",
+        "boundToFixture": false
+      },
+      "lifecycle_event_delete": {
+        "mode": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+        "event": "DELETE",
+        "order": 1,
+        "table": "identity_lifecycle_event",
+        "timing": "BEFORE",
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci",
+        "database_collation": "utf8mb4_unicode_ci",
+        "unboundStatementSha256": "426BF4E2E9E2EF633E93AF07A2539172871CCAEE60EF5DA24D462C5A94017545",
+        "boundToFixture": false
+      }
+    },
+    "preservedTriggers": [
+      "email_user_insert",
+      "email_user_update",
+      "email_reservation_insert",
+      "email_reservation_update",
+      "email_reservation_delete"
+    ],
+    "validation": {
+      "file": "migrations/platform-identity/002_validate.sql",
+      "checks": 13
+    },
+    "userColumns": [
+      "id",
+      "email",
+      "password_hash",
+      "role",
+      "student_id",
+      "teacher_id",
+      "fiscal_code_hmac",
+      "fiscal_code_hmac_key_id",
+      "fiscal_code_enc",
+      "fiscal_code_enc_key_id",
+      "lifecycle_state",
+      "closed_at_utc",
+      "reactivated_at_utc"
+    ]
+  }
+}

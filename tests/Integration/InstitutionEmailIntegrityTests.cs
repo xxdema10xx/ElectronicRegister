@@ -43,11 +43,11 @@ public sealed partial class InstitutionClassCrudTests
     public async Task EmailPolicy_ExistingGlobalEmailConflictsAndGlobalWritersCannotClaimInstitutionalReservations()
     {
         await using var host=await EmailHost();var admin=await Access();var domain=EmailConfig().Domain;
-        await Execute("UPDATE user SET email=@email WHERE id=@id",("@email","occupied@"+domain),("@id",_teacherUser));
+        await FixtureIdentityExemption.ExecuteAsync(fixture.ConnectionString,new[]{_teacherUser},"UPDATE user SET email=@email WHERE id=@id",("@email","occupied@"+domain),("@id",_teacherUser));
         await PublishEmail(host,admin,EmailConfig("occupied"));
         await Expect(await Request(EmailAssignments,admin,new EmailReserve(Guid.NewGuid(),EmailCategory.Student,1,new(Id("student"),null,null)),"POST",host),HttpStatusCode.Conflict);
         await PublishEmail(host,admin,EmailConfig("reserved"),1);var address=await ReserveEmail(host,admin,Id("student"),2);
-        var update=await Assert.ThrowsAsync<MySqlException>(()=>Execute("UPDATE user SET email=@email WHERE id=@id",("@email",address.Email),("@id",_teacherUser)));Assert.Equal(1062,update.Number);
+        var update=await Assert.ThrowsAsync<MySqlException>(()=>FixtureIdentityExemption.ExecuteAsync(fixture.ConnectionString,new[]{_teacherUser},"UPDATE user SET email=@email WHERE id=@id",("@email",address.Email),("@id",_teacherUser)));Assert.Equal(1062,update.Number);
         await Db(async db=>Assert.Equal("occupied@"+domain,(await db.Users.AsNoTracking().SingleAsync(u=>u.Id==_teacherUser)).Email));
         var insert=await Assert.ThrowsAsync<MySqlException>(()=>Execute("INSERT INTO user(id,email,password_hash,role) VALUES(@id,@email,'not-a-password','student')",("@id",Guid.NewGuid()),("@email",address.Email)));Assert.Equal(1062,insert.Number);
     }

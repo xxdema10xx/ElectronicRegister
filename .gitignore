@@ -159,6 +159,9 @@ __pycache__/
 !/migrations/identity-account/003_password_attempt.sql
 !/migrations/identity-account/004_release_schema.sql
 !/migrations/identity-account/005_release_gate.sql
+# Platform identity successor er-platform-identity-1 (reviewed public SQL only).
+!/migrations/platform-identity/001_expand.sql
+!/migrations/platform-identity/002_validate.sql
 /infra/staging/__pycache__/
 
 /.migration-tools/

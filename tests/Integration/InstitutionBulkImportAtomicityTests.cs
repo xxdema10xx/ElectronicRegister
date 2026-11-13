@@ -34,7 +34,7 @@ public sealed partial class InstitutionClassCrudTests
     public async Task BulkImport_GlobalCollisionCannotSilentlyChangeConfirmedEmailsAndRollsBackEarlierRows(EmailCollisionStrategy collision)
     {
         await using var host=await ImportHost();var token=await Access();var config=EmailConfig("{nome}.{cognome}",collision:collision);await PublishEmail(host,token,config);
-        await Execute("UPDATE user SET email=@email WHERE id=@id",("@email","marco.rossi@"+config.Domain),("@id",_teacherUser));
+        await FixtureIdentityExemption.ExecuteAsync(fixture.ConnectionString,new[]{_teacherUser},"UPDATE user SET email=@email WHERE id=@id",("@email","marco.rossi@"+config.Domain),("@id",_teacherUser));
         var b=await PreviewImport(host,token,"Nome;Cognome\nMario;Rossi\nMarco;Rossi",new(ImportCategory.Student,ImportEmailMode.ReserveInstitutionalAddress));var before=await Digest(false);
         var response=await ConfirmImport(host,token,b);await Expect(response,HttpStatusCode.Conflict);Assert.DoesNotContain(config.Domain,await response.Content.ReadAsStringAsync());Assert.Equal(before,await Digest(false));
         await Db(async db=>{Assert.False(await db.Set<InstitutionEmailAssignment>().AnyAsync(a=>a.InstitutionId==_a));Assert.False(await db.Set<InstitutionImportItem>().AnyAsync(i=>i.BatchId==b.Id));Assert.False(await db.Set<InstitutionEmailEvent>().AnyAsync(e=>e.InstitutionId==_a&&e.AssignmentId!=null));});

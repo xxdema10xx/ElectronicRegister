@@ -60,7 +60,7 @@ public sealed partial class Mt5bJwtTests : IAsyncLifetime
         if(_host is not null)await _host.DisposeAsync();
         if(_connection is null)return;
         await Exec("SET @er_mt5b_fixture_owners=@owners; DELETE r FROM institution_membership_role r JOIN institution_membership m ON m.id=r.membership_id WHERE m.institution_id IN (@a,@b); DELETE FROM institution_membership WHERE institution_id IN (@a,@b); DELETE FROM institution WHERE id IN (@a,@b); DELETE FROM user WHERE id=@u; SET @er_mt5b_fixture_owners=NULL",
-            ("@owners",_a+","+_b),("@a",_a),("@b",_b),("@u",_user));
+            ("@owners",_a+","+_b+","+_user),("@a",_a),("@b",_b),("@u",_user));
     }
     private async Task<HttpResponseMessage> Request(string route,string? token=null,object? body=null)
     {
