@@ -65,6 +65,13 @@ public static class ServiceCollectionExtensions
         services.AddScoped<InstitutionSchoolQueries>();
         services.AddSingleton(new ElectronicRegisterAPI.Domain.Configuration.InstitutionEmailFeature(bool.TryParse(configuration["Multitenancy:InstitutionEmail:Enabled"], out var emailEnabled) && emailEnabled));
         services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Repositories.IInstitutionEmailRepository, InstitutionEmailRepository>();
+        // Platform identity (er-platform-identity-1): validated at startup, flag false by default.
+        services.AddSingleton(PlatformIdentityOptions.Read(configuration));
+        services.AddSingleton<PlatformIdentitySchema>();
+        services.AddScoped<PlatformLifecycleWriter>();
+        services.AddScoped<IPlatformEmailAllocator, PlatformEmailAllocator>();
+        services.TryAddSingleton<IMailboxProvisioner, NoOpMailboxProvisioner>();
+        services.AddScoped<IPlatformLifecycleRepository, PlatformLifecycleRepository>();
         services.AddScoped<IInstitutionWriteAuthorization, InstitutionWriteAuthorization>();
         services.AddScoped<ICourseStructureRepository, CourseStructureRepository>();
         services.AddScoped<IInstitutionStudentRepository, InstitutionStudentRepository>();

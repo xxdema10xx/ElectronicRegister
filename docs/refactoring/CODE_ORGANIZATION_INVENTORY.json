@@ -1,6 +1,6 @@
 {
-  "filesAnalyzed": 675,
-  "typesClassified": 672,
+  "filesAnalyzed": 705,
+  "typesClassified": 702,
   "entries": [
     {
       "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs",
@@ -1476,6 +1476,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/PlatformLifecycleManager.cs",
+      "layer": "Application",
+      "project": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Application.Managers",
+      "classification": "Managers",
+      "types": [
+        {
+          "name": "PlatformLifecycleManager",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Mappers/ExamCreationMapper.cs",
       "layer": "Application",
       "project": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application",
@@ -1588,6 +1604,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Services/FiscalCodeProtector.cs",
+      "layer": "Application",
+      "project": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Application.Services",
+      "classification": "Services",
+      "types": [
+        {
+          "name": "FiscalCodeProtector",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Services/InstitutionExpiryService.cs",
       "layer": "Application",
       "project": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application",
@@ -1630,6 +1662,22 @@
       "types": [
         {
           "name": "InstitutionSchoolAuthorization",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Services/PlatformLifecycleEvaluator.cs",
+      "layer": "Application",
+      "project": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Application.Services",
+      "classification": "Services",
+      "types": [
+        {
+          "name": "PlatformLifecycleEvaluator",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -1908,6 +1956,22 @@
         {
           "name": "InstitutionImportFeature",
           "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Configuration/PlatformIdentitySettings.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Configuration",
+      "classification": "Configuration",
+      "types": [
+        {
+          "name": "PlatformIdentitySettings",
+          "kind": "ClassDeclaration",
           "nestedTypes": []
         }
       ]
@@ -4777,6 +4841,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Enums/AccountLifecycleState.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Enums",
+      "classification": "Enums",
+      "types": [
+        {
+          "name": "AccountLifecycleState",
+          "kind": "EnumDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Enums/CalendarCapability.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -5097,6 +5177,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Enums/LifecycleAction.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Enums",
+      "classification": "Enums",
+      "types": [
+        {
+          "name": "LifecycleAction",
+          "kind": "EnumDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Enums/MembershipMutationAction.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -5203,6 +5299,22 @@
       "types": [
         {
           "name": "AccountEmailUnavailableException",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Exceptions/AccountProfileMismatchException.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Exceptions",
+      "classification": "Exceptions",
+      "types": [
+        {
+          "name": "AccountProfileMismatchException",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -5699,6 +5811,22 @@
       "types": [
         {
           "name": "IMembershipAuditManager",
+          "kind": "InterfaceDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IPlatformLifecycleManager.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Interfaces.Managers",
+      "classification": "Interfaces/Managers",
+      "types": [
+        {
+          "name": "IPlatformLifecycleManager",
           "kind": "InterfaceDeclaration",
           "nestedTypes": []
         }
@@ -6281,6 +6409,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IPlatformLifecycleRepository.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Interfaces.Repositories",
+      "classification": "Interfaces/Repositories",
+      "types": [
+        {
+          "name": "IPlatformLifecycleRepository",
+          "kind": "InterfaceDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IStudentRepository.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -6387,6 +6531,22 @@
       "types": [
         {
           "name": "ICurrentTenant",
+          "kind": "InterfaceDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Security/IFiscalCodeProtector.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Interfaces.Security",
+      "classification": "Interfaces/Security",
+      "types": [
+        {
+          "name": "IFiscalCodeProtector",
           "kind": "InterfaceDeclaration",
           "nestedTypes": []
         }
@@ -6777,6 +6937,38 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Services/ILifecycleEvaluator.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Interfaces.Services",
+      "classification": "Interfaces/Services",
+      "types": [
+        {
+          "name": "ILifecycleEvaluator",
+          "kind": "InterfaceDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Services/IMailboxProvisioner.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Interfaces.Services",
+      "classification": "Interfaces/Services",
+      "types": [
+        {
+          "name": "IMailboxProvisioner",
+          "kind": "InterfaceDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Services/IOnboardingFaultObserver.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -6787,6 +6979,22 @@
       "types": [
         {
           "name": "IOnboardingFaultObserver",
+          "kind": "InterfaceDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Services/IPlatformEmailAllocator.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Interfaces.Services",
+      "classification": "Interfaces/Services",
+      "types": [
+        {
+          "name": "IPlatformEmailAllocator",
           "kind": "InterfaceDeclaration",
           "nestedTypes": []
         }
@@ -7337,6 +7545,70 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/LifecycleDecision.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Models",
+      "classification": "Models",
+      "types": [
+        {
+          "name": "LifecycleDecision",
+          "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/LifecycleMembership.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Models",
+      "classification": "Models",
+      "types": [
+        {
+          "name": "LifecycleMembership",
+          "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/LifecyclePassResult.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Models",
+      "classification": "Models",
+      "types": [
+        {
+          "name": "LifecyclePassResult",
+          "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/LifecycleSnapshot.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Models",
+      "classification": "Models",
+      "types": [
+        {
+          "name": "LifecycleSnapshot",
+          "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/MembershipMigrationAssignment.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -7347,6 +7619,38 @@
       "types": [
         {
           "name": "MembershipMigrationAssignment",
+          "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/PlatformEmailPlan.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Models",
+      "classification": "Models",
+      "types": [
+        {
+          "name": "PlatformEmailPlan",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/ProtectedFiscalCode.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Models",
+      "classification": "Models",
+      "types": [
+        {
+          "name": "ProtectedFiscalCode",
           "kind": "RecordDeclaration",
           "nestedTypes": []
         }
@@ -7673,6 +7977,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Policies/FiscalCodeRules.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Policies",
+      "classification": "Policies",
+      "types": [
+        {
+          "name": "FiscalCodeRules",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Policies/FormativePlanRules.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -7785,6 +8105,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Policies/LifecycleRuleCodes.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Policies",
+      "classification": "Policies",
+      "types": [
+        {
+          "name": "LifecycleRuleCodes",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Policies/MembershipMutationRules.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -7811,6 +8147,54 @@
       "types": [
         {
           "name": "PasswordRules",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Policies/PersonNameComparison.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Policies",
+      "classification": "Policies",
+      "types": [
+        {
+          "name": "PersonNameComparison",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Policies/PlatformEmailRules.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Policies",
+      "classification": "Policies",
+      "types": [
+        {
+          "name": "PlatformEmailRules",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Policies/PlatformLifecycleRules.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Policies",
+      "classification": "Policies",
+      "types": [
+        {
+          "name": "PlatformLifecycleRules",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -8189,6 +8573,22 @@
       "types": [
         {
           "name": "PlatformAuthorityOptions",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Options/PlatformIdentityOptions.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Options",
+      "classification": "Options",
+      "types": [
+        {
+          "name": "PlatformIdentityOptions",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -9699,6 +10099,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/PlatformIdentitySchema.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Persistence",
+      "classification": "Persistence",
+      "types": [
+        {
+          "name": "PlatformIdentitySchema",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/TestDatabaseSession.cs",
       "layer": "Infrastructure",
       "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
@@ -9921,7 +10337,7 @@
           "nestedTypes": [
             {
               "name": "Stored",
-              "visibility": "\r\n    private sealed "
+              "visibility": "\n    private sealed "
             }
           ]
         }
@@ -10411,6 +10827,38 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/PlatformLifecycleRepository.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Repositories",
+      "classification": "Repositories",
+      "types": [
+        {
+          "name": "PlatformLifecycleRepository",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/PlatformLifecycleWriter.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Repositories",
+      "classification": "Repositories",
+      "types": [
+        {
+          "name": "PlatformLifecycleWriter",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/StudentRepository.cs",
       "layer": "Infrastructure",
       "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
@@ -10794,6 +11242,38 @@
       "types": [
         {
           "name": "NoFormativePlanFault",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Services/NoOpMailboxProvisioner.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Services",
+      "classification": "Services",
+      "types": [
+        {
+          "name": "NoOpMailboxProvisioner",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Services/PlatformEmailAllocator.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Services",
+      "classification": "Services",
+      "types": [
+        {
+          "name": "PlatformEmailAllocator",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }

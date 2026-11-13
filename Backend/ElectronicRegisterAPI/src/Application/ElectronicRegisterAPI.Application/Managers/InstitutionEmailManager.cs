@@ -13,9 +13,20 @@ internal sealed class InstitutionEmailManager(
     InstitutionSchoolAuthorization access,
     IInstitutionEmailRepository repository,
     IInstitutionEmailGenerator generator,
-    InstitutionEmailFeature feature
+    InstitutionEmailFeature feature,
+    PlatformIdentitySettings platform
 ) : IInstitutionEmailManager
 {
+    // With platform identity enabled, per-institution policies and assignments are no longer
+    // operative: writes answer like the disabled module, reads and history remain available,
+    // and already issued addresses are never released.
+    private async Task<TenantContext> Writer(CancellationToken ct)
+    {
+        if (platform.Enabled)
+            throw new UnauthorizedAccessException("Modulo email non abilitato.");
+        return await Actor(ct);
+    }
+
     private async Task<TenantContext> Actor(CancellationToken ct)
     {
         if (!feature.Enabled)
@@ -25,7 +36,7 @@ internal sealed class InstitutionEmailManager(
 
     public async Task<IReadOnlyList<EmailPolicyVersion>> PoliciesAsync(CancellationToken ct) => await repository.PoliciesAsync(await Actor(ct), ct);
     public async Task<EmailPolicyVersion> PolicyAsync(EmailCategory category, long? revision, CancellationToken ct) => await repository.PolicyAsync(await Actor(ct), category, revision, ct);
-    public async Task<EmailPolicyVersion> WritePolicyAsync(EmailCategory category, EmailPolicyWrite r, CancellationToken ct) => await repository.WritePolicyAsync(await Actor(ct), category, r, ct);
+    public async Task<EmailPolicyVersion> WritePolicyAsync(EmailCategory category, EmailPolicyWrite r, CancellationToken ct) => await repository.WritePolicyAsync(await Writer(ct), category, r, ct);
     public async Task<GeneratedInstitutionEmail> PreviewAsync(EmailPreviewRequest r, CancellationToken ct)
     {
         var actor = await Actor(ct);
@@ -50,7 +61,7 @@ internal sealed class InstitutionEmailManager(
         return generator.Preview(template, new(r.FirstName, r.LastName));
     }
 
-    public async Task<EmailAssignment> ReserveAsync(EmailReserve r, CancellationToken ct) => await repository.ReserveAsync(await Actor(ct), r, ct);
+    public async Task<EmailAssignment> ReserveAsync(EmailReserve r, CancellationToken ct) => await repository.ReserveAsync(await Writer(ct), r, ct);
     public async Task<EmailAssignment> CreatePersonAsync(EmailCreatePerson r, CancellationToken ct)
     {
         r = r with
@@ -58,11 +69,11 @@ internal sealed class InstitutionEmailManager(
             FirstName = InstitutionSchoolAuthorization.Name(r.FirstName),
             LastName = InstitutionSchoolAuthorization.Name(r.LastName)
         };
-        return await repository.CreatePersonAsync(await Actor(ct), r, ct);
+        return await repository.CreatePersonAsync(await Writer(ct), r, ct);
     }
 
-    public async Task<EmailAssignment> OverrideAsync(Guid id, EmailOverride r, CancellationToken ct) => await repository.OverrideAsync(await Actor(ct), id, r, ct);
-    public async Task<EmailAssignment> RetireAsync(Guid id, EmailRetire r, CancellationToken ct) => await repository.RetireAsync(await Actor(ct), id, r, ct);
+    public async Task<EmailAssignment> OverrideAsync(Guid id, EmailOverride r, CancellationToken ct) => await repository.OverrideAsync(await Writer(ct), id, r, ct);
+    public async Task<EmailAssignment> RetireAsync(Guid id, EmailRetire r, CancellationToken ct) => await repository.RetireAsync(await Writer(ct), id, r, ct);
     public async Task<EmailAssignment> AssignmentAsync(Guid id, CancellationToken ct) => await repository.AssignmentAsync(await Actor(ct), id, ct);
     public async Task<EmailPage<EmailAssignment>> AssignmentsAsync(int page, int size, CancellationToken ct) => await repository.AssignmentsAsync(await Actor(ct), page, size, ct);
     public async Task<IReadOnlyList<EmailHistory>> HistoryAsync(

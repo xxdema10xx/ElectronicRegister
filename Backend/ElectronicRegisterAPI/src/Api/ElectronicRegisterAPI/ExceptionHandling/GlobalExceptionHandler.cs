@@ -27,6 +27,7 @@ internal class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : 
             InvalidOperationException when SubmissionErrors.IsInvalidRequest(exception) => (StatusCodes.Status400BadRequest, "Richiesta non valida"),
             InvalidOperationException when SubmissionErrors.IsConflict(exception) => (StatusCodes.Status409Conflict, "Operazione non consentita"),
             AccountEmailUnavailableException => (StatusCodes.Status409Conflict, "Indirizzo email non disponibile"),
+            AccountProfileMismatchException => (StatusCodes.Status422UnprocessableEntity, "Nome e cognome non coincidono con la scheda collegata"),
             BusinessRuleException => (StatusCodes.Status409Conflict, "Operazione non consentita"),
             MembershipConflictException => (StatusCodes.Status409Conflict, "Conflitto sulla membership istituzionale"),
             _ => (StatusCodes.Status500InternalServerError, "Errore interno del server")};

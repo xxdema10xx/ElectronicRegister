@@ -45,7 +45,7 @@ internal static class Phase3
         var config = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
         {
             ["ConnectionStrings:DefaultConnection"] = fixture.ConnectionString
-        }).Build();
+        }.Concat(PlatformIdentityTestConfig.Values())).Build();
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddInfrastructure(config);

@@ -12,6 +12,10 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IIdentityAccountManager, IdentityAccountManager>();
         services.AddScoped<IInstitutionAccountManager, InstitutionAccountManager>();
+        services.AddSingleton<ElectronicRegisterAPI.Domain.Interfaces.Security.IFiscalCodeProtector, ElectronicRegisterAPI.Application.Services.FiscalCodeProtector>();
+        services.AddSingleton<ILifecycleEvaluator, ElectronicRegisterAPI.Application.Services.PlatformLifecycleEvaluator>();
+        services.AddScoped<IPlatformLifecycleManager, PlatformLifecycleManager>();
+        Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions.TryAddSingleton(services, PlatformIdentitySettings.Disabled);
         services.AddScoped<ElectronicRegisterAPI.Application.Services.InstitutionSchoolAuthorization>();
         services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IInstitutionCalendarManager, InstitutionCalendarManager>();
         services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IInstitutionFormativePlanManager, InstitutionFormativePlanManager>();

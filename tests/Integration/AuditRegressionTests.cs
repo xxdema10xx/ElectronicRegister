@@ -239,7 +239,7 @@ public partial class Phase4_ExamLifecycleTests
         // the fault hits the first EF save (the new student profile), after the user,
         // identity state, membership and role rows were written in the same transaction.
         var marker = "audit_" + Guid.NewGuid().ToString("N");
-        var email = "allievo_" + marker + "@itsumbria.it";
+        var email = PlatformIdentityTestConfig.Address("Audit", marker);
         var profileId = Guid.Empty;
         var userId = Guid.Empty;
         var probe = new AuditRegistrationProbe(async ctx =>
@@ -254,7 +254,7 @@ public partial class Phase4_ExamLifecycleTests
             using (var scope = provider.CreateScope())
             {
                 var accounts = FixtureTenant.Bind<IInstitutionAccountManager>(scope.ServiceProvider, SeedData.AdminUserId);
-                await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => accounts.CreateAsync(new(Guid.NewGuid(), email, new[] { ElectronicRegisterAPI.Domain.Enums.InstitutionRole.Student }, null, null, "Audit", marker, null, "Audit fault")));
+                await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => accounts.CreateAsync(new(Guid.NewGuid(), "Audit", marker, PlatformIdentityTestConfig.NewFiscalCode(), new[] { ElectronicRegisterAPI.Domain.Enums.InstitutionRole.Student }, null, null, null, "Audit fault")));
             }
             Assert.NotEqual(Guid.Empty, userId);
             Assert.NotEqual(Guid.Empty, profileId);

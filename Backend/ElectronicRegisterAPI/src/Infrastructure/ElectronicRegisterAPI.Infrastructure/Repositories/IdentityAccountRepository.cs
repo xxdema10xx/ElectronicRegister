@@ -7,8 +7,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ElectronicRegisterAPI.Infrastructure.Repositories;
 
-internal sealed class IdentityAccountRepository(ElectronicRegisterContext db) : IIdentityAccountRepository
+internal sealed class IdentityAccountRepository(ElectronicRegisterContext db, PlatformIdentitySchema schema) : IIdentityAccountRepository
 {
+    // A Closed account (er-platform-identity-1) is indistinguishable from an absent one for
+    // login, tickets, sessions, selection and every self-service identity operation.
+    private async Task<string> ActiveAsync(CancellationToken ct) => await schema.InstalledAsync(db, ct) ? " AND u.lifecycle_state='Active'" : "";
+
     private async Task<DbCommand> CommandAsync(
         string sql,
         Guid userId,
@@ -34,21 +38,21 @@ internal sealed class IdentityAccountRepository(ElectronicRegisterContext db) : 
     public async Task<IdentityAccount?> GetAsync(Guid userId, CancellationToken ct = default)
     {
         // One statement: credentials and generation must come from the same snapshot.
-        await using var command = await CommandAsync("SELECT u.id,u.email,u.password_hash,s.display_name,COALESCE(s.generation,0) FROM `user` u LEFT JOIN identity_account_state s ON s.user_id=u.id WHERE u.id=@user", userId, ct);
+        await using var command = await CommandAsync("SELECT u.id,u.email,u.password_hash,s.display_name,COALESCE(s.generation,0) FROM `user` u LEFT JOIN identity_account_state s ON s.user_id=u.id WHERE u.id=@user" + await ActiveAsync(ct), userId, ct);
         await using var reader = await command.ExecuteReaderAsync(ct);
         return await reader.ReadAsync(ct) ? new(reader.GetGuid(0), reader.GetString(1), reader.GetString(2), reader.IsDBNull(3) ? null : reader.GetString(3), reader.GetInt64(4)) : null;
     }
 
     public async Task<IdentityAccount?> FindByEmailAsync(string email, CancellationToken ct = default)
     {
-        await using var command = await CommandAsync("SELECT u.id,u.email,u.password_hash,s.display_name,COALESCE(s.generation,0) FROM `user` u LEFT JOIN identity_account_state s ON s.user_id=u.id WHERE u.email=@email", Guid.Empty, ct, ("@email", email));
+        await using var command = await CommandAsync("SELECT u.id,u.email,u.password_hash,s.display_name,COALESCE(s.generation,0) FROM `user` u LEFT JOIN identity_account_state s ON s.user_id=u.id WHERE u.email=@email" + await ActiveAsync(ct), Guid.Empty, ct, ("@email", email));
         await using var reader = await command.ExecuteReaderAsync(ct);
         return await reader.ReadAsync(ct) ? new(reader.GetGuid(0), reader.GetString(1), reader.GetString(2), reader.IsDBNull(3) ? null : reader.GetString(3), reader.GetInt64(4)) : null;
     }
 
     public async Task<long> GenerationAsync(Guid userId, CancellationToken ct = default)
     {
-        await using var command = await CommandAsync("SELECT COALESCE(s.generation,0) FROM `user` u LEFT JOIN identity_account_state s ON s.user_id=u.id WHERE u.id=@user", userId, ct);
+        await using var command = await CommandAsync("SELECT COALESCE(s.generation,0) FROM `user` u LEFT JOIN identity_account_state s ON s.user_id=u.id WHERE u.id=@user" + await ActiveAsync(ct), userId, ct);
         var value = await command.ExecuteScalarAsync(ct);
         return value is null ? -1 : Convert.ToInt64(value);
     }
@@ -57,7 +61,7 @@ internal sealed class IdentityAccountRepository(ElectronicRegisterContext db) : 
     {
         // One statement: the generation and the credential state come from the same snapshot.
         // The latest credential event wins; on an identical timestamp the temporary one wins (fail closed).
-        await using var command = await CommandAsync("SELECT COALESCE(s.generation,0),COALESCE((SELECT e.action=@temporary FROM identity_account_event e WHERE e.user_id=u.id AND e.action IN (@temporary,@changed) ORDER BY e.created_at DESC,e.action=@temporary DESC LIMIT 1),0) FROM `user` u LEFT JOIN identity_account_state s ON s.user_id=u.id WHERE u.id=@user", userId, ct, ("@temporary", IdentityAccountEvents.TemporaryPassword), ("@changed", IdentityAccountEvents.PasswordChanged));
+        await using var command = await CommandAsync("SELECT COALESCE(s.generation,0),COALESCE((SELECT e.action=@temporary FROM identity_account_event e WHERE e.user_id=u.id AND e.action IN (@temporary,@changed) ORDER BY e.created_at DESC,e.action=@temporary DESC LIMIT 1),0) FROM `user` u LEFT JOIN identity_account_state s ON s.user_id=u.id WHERE u.id=@user" + await ActiveAsync(ct), userId, ct, ("@temporary", IdentityAccountEvents.TemporaryPassword), ("@changed", IdentityAccountEvents.PasswordChanged));
         await using var reader = await command.ExecuteReaderAsync(ct);
         return await reader.ReadAsync(ct) ? new(reader.GetInt64(0), Convert.ToInt64(reader.GetValue(1)) != 0) : null;
     }
@@ -67,7 +71,7 @@ internal sealed class IdentityAccountRepository(ElectronicRegisterContext db) : 
         // Recipient acceptance calls this after its IAM mutex and before commit.
         // Holding the global identity row prevents password rotation racing acceptance.
         var locking = db.Database.CurrentTransaction is null ? "" : " FOR UPDATE";
-        await using var command = await CommandAsync("SELECT COALESCE(s.generation,0) FROM `user` u LEFT JOIN identity_account_state s ON s.user_id=u.id WHERE u.id=@user" + locking, userId, ct);
+        await using var command = await CommandAsync("SELECT COALESCE(s.generation,0) FROM `user` u LEFT JOIN identity_account_state s ON s.user_id=u.id WHERE u.id=@user" + await ActiveAsync(ct) + locking, userId, ct);
         var value = await command.ExecuteScalarAsync(ct);
         if (value is null || generation < 0 || Convert.ToInt64(value) != generation)
             throw new UnauthorizedAccessException("Sessione revocata.");
@@ -76,7 +80,7 @@ internal sealed class IdentityAccountRepository(ElectronicRegisterContext db) : 
     private async Task LockAsync(Guid userId, long generation, CancellationToken ct)
     {
         // Global identity operation: no tenant authority is inferred or consulted.
-        await using var user = await CommandAsync("SELECT id FROM `user` WHERE id=@user FOR UPDATE", userId, ct);
+        await using var user = await CommandAsync("SELECT u.id FROM `user` u WHERE u.id=@user" + await ActiveAsync(ct) + " FOR UPDATE", userId, ct);
         if (await user.ExecuteScalarAsync(ct)is null)
             throw new UnauthorizedAccessException();
         await using var insert = await CommandAsync("INSERT INTO identity_account_state(user_id,generation) VALUES(@user,0) ON DUPLICATE KEY UPDATE user_id=user_id", userId, ct);

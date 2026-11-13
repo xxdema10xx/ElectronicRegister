@@ -6,28 +6,33 @@ namespace ElectronicRegisterAPI.Domain.Policies;
 // Decision 3: InstitutionAdmin creates accounts of every role of its institution.
 // Staff creates only Student or Teacher accounts (one role, never Staff or
 // InstitutionAdmin), the same people for whom it already creates profiles.
+// Platform identity: first name, last name and fiscal code are always required (E2, P4).
 public static class InstitutionAccountRules
 {
     public static void Validate(CreateInstitutionAccount r)
     {
-        var profileFields = r.FirstName is not null || r.LastName is not null || r.ClassId.HasValue;
-        var student = r.Roles.Contains(InstitutionRole.Student);
-        var teacher = r.Roles.Contains(InstitutionRole.Teacher);
-        if (r.EventId == Guid.Empty || r.Roles.Length is < 1 or > 4 || r.Roles.Any(x => !Enum.IsDefined(x)) || r.Roles.Distinct().Count() != r.Roles.Length
-            || string.IsNullOrWhiteSpace(r.Reason) || r.Reason.Length > 500 || r.Reason.Any(char.IsControl)
-            || student && teacher
-            || (r.StudentId.HasValue && (!student || r.StudentId == Guid.Empty || profileFields))
-            || (r.TeacherId.HasValue && (!teacher || r.TeacherId == Guid.Empty || profileFields))
-            || (student && !r.StudentId.HasValue && !Person(r, requireClass: false))
-            || (teacher && !r.TeacherId.HasValue && (!Person(r, requireClass: false) || r.ClassId.HasValue))
-            || (!student && !teacher && profileFields))
-            throw new ArgumentException("Richiesta di creazione account non valida.");
+        ArgumentNullException.ThrowIfNull(r);
+        var student = r.Roles?.Contains(InstitutionRole.Student) == true;
+        var teacher = r.Roles?.Contains(InstitutionRole.Teacher) == true;
+        Require(r.EventId != Guid.Empty, "EventId obbligatorio.");
+        Require(r.Roles is { Length: >= 1 and <= 4 } && r.Roles.All(Enum.IsDefined) && r.Roles.Distinct().Count() == r.Roles.Length, "Ruoli non validi: da uno a quattro ruoli distinti.");
+        Require(!string.IsNullOrWhiteSpace(r.Reason) && r.Reason.Length <= 500 && !r.Reason.Any(char.IsControl), "Motivazione obbligatoria, massimo 500 caratteri, senza caratteri di controllo.");
+        Require(Name(r.FirstName), "Nome obbligatorio, massimo 100 caratteri, senza caratteri di controllo.");
+        Require(Name(r.LastName), "Cognome obbligatorio, massimo 100 caratteri, senza caratteri di controllo.");
+        Require(FiscalCodeRules.IsValid(FiscalCodeRules.Normalize(r.FiscalCode)), "Codice fiscale non valido.");
+        Require(!(student && teacher), "Un account non può avere insieme i ruoli Student e Teacher.");
+        Require(!r.StudentId.HasValue || student && r.StudentId != Guid.Empty, "StudentId richiede il ruolo Student e un identificativo valido.");
+        Require(!r.TeacherId.HasValue || teacher && r.TeacherId != Guid.Empty, "TeacherId richiede il ruolo Teacher e un identificativo valido.");
+        Require(!r.ClassId.HasValue || student && !r.StudentId.HasValue && r.ClassId != Guid.Empty, "ClassId è ammesso solo per una nuova scheda Student.");
     }
 
-    private static bool Person(CreateInstitutionAccount r, bool requireClass) =>
-        Name(r.FirstName) && Name(r.LastName) && (!requireClass || r.ClassId.HasValue) && r.ClassId != Guid.Empty;
+    private static void Require(bool condition, string message)
+    {
+        if (!condition)
+            throw new ArgumentException(message);
+    }
 
-    private static bool Name(string? value) => !string.IsNullOrWhiteSpace(value) && value.Length <= 100 && !value.Any(char.IsControl);
+    private static bool Name(string? value) => !string.IsNullOrWhiteSpace(value) && value.Trim().Length <= 100 && !value.Any(char.IsControl);
 
     public static void RequireAllowed(TenantContext actor, IReadOnlyCollection<InstitutionRole> requested)
     {
