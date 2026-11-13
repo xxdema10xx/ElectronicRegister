@@ -1,0 +1,14 @@
+[
+    {
+        "File":  "001_security_state_expand.sql",
+        "SHA256":  "56726FA7C20AE488FDFF1A49610E599C18637A86ACC0761A14F783EB0B622AA9"
+    },
+    {
+        "File":  "002_security_state_backfill.sql",
+        "SHA256":  "1F6482453EC2BDDE8F6C3248BC6319B19A05DF1734EE88CC40896E8FEFC8EDA7"
+    },
+    {
+        "File":  "003_security_state_validate.sql",
+        "SHA256":  "3E0198F5D54C782A16F9225B546FB8A43BF807C8B95B58D737AF97C952450F72"
+    }
+]

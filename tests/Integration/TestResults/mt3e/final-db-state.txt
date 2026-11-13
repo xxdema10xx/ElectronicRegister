@@ -1,0 +1,38 @@
+db	version	global_mode	session_mode
+electronic_register_test	10.4.32-MariaDB	NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION	NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION
+code	status
+MT3A_LEGACY_TEST	provisioning
+memberships
+0
+student_profiles
+0
+teacher_profiles
+0
+mt3a_composite_fk
+27
+triggers_count
+40
+temporary_users
+0
+table_name	non_holding_rows
+exam	0
+table_name	non_holding_rows
+exam_submission	0
+table_name	non_holding_rows
+grade	0
+table_name	non_holding_rows
+question	0
+table_name	non_holding_rows
+question_option	0
+table_name	non_holding_rows
+student	0
+table_name	non_holding_rows
+teacher	0
+table_name	non_holding_rows
+subject	0
+table_name	non_holding_rows
+exam_violation	0
+table_name	non_holding_rows
+submission_answer	0
+table_name	non_holding_rows
+audit_event	0

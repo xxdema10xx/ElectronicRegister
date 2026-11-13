@@ -1,0 +1,446 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="c7e79dda-16ed-4fd2-9109-c952267f76ee" name="Lorenzo@DESKTOP-QUOAG32 2026-10-17 12:52:52" runUser="DESKTOP-QUOAG32\CodexSandboxOffline" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-17T12:52:52.4367895+02:00" queuing="2026-10-17T12:52:52.4367896+02:00" start="2026-10-17T12:52:52.0709497+02:00" finish="2026-10-17T12:52:52.5092542+02:00" />
+  <TestSettings name="default" id="a1b0fb02-f121-47cf-8992-8df211b3d0fc">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-17_12_52_52" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="135f99ad-4801-4f54-8a64-fbfdcb821100" testId="4f574eb9-4ac7-de44-e297-62a53ad94eba" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenAnswersEmpty_TreatedAsZeroPoints" computerName="DESKTOP-QUOAG32" duration="00:00:00.0051268" startTime="2026-10-17T12:52:52.4583662+02:00" endTime="2026-10-17T12:52:52.4583663+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="135f99ad-4801-4f54-8a64-fbfdcb821100">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Graded&#xD;
+Actual:   InProgress</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenAnswersEmpty_TreatedAsZeroPoints() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 230&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="705a019f-1947-49c7-8a54-8806fbcbc132" testId="374655e2-0472-704c-68c7-fcdf030c1883" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenQuestions_PendingReview_NoGradeCreated" computerName="DESKTOP-QUOAG32" duration="00:00:00.0530078" startTime="2026-10-17T12:52:52.4558480+02:00" endTime="2026-10-17T12:52:52.4558481+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="705a019f-1947-49c7-8a54-8806fbcbc132">
+      <Output>
+        <ErrorInfo>
+          <Message>System.NullReferenceException : Object reference not set to an instance of an object.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 104&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 26&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 45&#xD;
+   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenQuestions_PendingReview_NoGradeCreated() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 74&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="e7e6b6b3-7a4d-47c4-871e-cfdc7528c2cc" testId="62015273-7d53-2cb7-d1d6-ec5e74446862" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.ClosedOnly_GradedAndGradeCreated" computerName="DESKTOP-QUOAG32" duration="00:00:00.0018353" startTime="2026-10-17T12:52:52.4781973+02:00" endTime="2026-10-17T12:52:52.4781974+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e7e6b6b3-7a4d-47c4-871e-cfdc7528c2cc">
+      <Output>
+        <ErrorInfo>
+          <Message>System.NullReferenceException : Object reference not set to an instance of an object.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 104&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 26&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 45&#xD;
+   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.ClosedOnly_GradedAndGradeCreated() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 54&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="acda7d6a-96da-4be9-ab49-09dc93d5cdc5" testId="e200ee3b-5962-6bbc-5a7c-da8ef6c52893" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_ExactThreshold_IsSix" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000583" startTime="2026-10-17T12:52:52.4210754+02:00" endTime="2026-10-17T12:52:52.4210754+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="acda7d6a-96da-4be9-ab49-09dc93d5cdc5" />
+    <UnitTestResult executionId="6eca87a5-74ac-4f5a-8735-0c0d942e6fb2" testId="75daae38-2adb-a7a8-27bc-52de0169b6ec" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DeadlineReached_NoNewAnswersButExistingProcessed" computerName="DESKTOP-QUOAG32" duration="00:00:00.0018160" startTime="2026-10-17T12:52:52.4602572+02:00" endTime="2026-10-17T12:52:52.4602573+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6eca87a5-74ac-4f5a-8735-0c0d942e6fb2">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Graded&#xD;
+Actual:   InProgress</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DeadlineReached_NoNewAnswersButExistingProcessed() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 213&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="da66e86b-221d-4fa4-b902-9d8951a4db2e" testId="bb6eebf8-1c1b-4fe8-db70-c06a99422b29" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_12of20_with60pct_IsSix" computerName="DESKTOP-QUOAG32" duration="00:00:00.0001415" startTime="2026-10-17T12:52:52.4210662+02:00" endTime="2026-10-17T12:52:52.4210663+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="da66e86b-221d-4fa4-b902-9d8951a4db2e" />
+    <UnitTestResult executionId="4b5238bc-91bf-475b-a12b-6f251ccb8bb1" testId="2048677e-3593-5acd-19d1-3c9be4e5687e" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.SubmitWithDifferentReason_NoReprocess" computerName="DESKTOP-QUOAG32" duration="00:00:00.0026304" startTime="2026-10-17T12:52:52.4703081+02:00" endTime="2026-10-17T12:52:52.4703082+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4b5238bc-91bf-475b-a12b-6f251ccb8bb1" />
+    <UnitTestResult executionId="55b6b590-8398-40df-8e5c-5ac07ce78450" testId="4d58d7ec-d666-8900-112b-a91c65383bdc" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 100, max: 100, passingPercent: 60, expected: 10)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000012" startTime="2026-10-17T12:52:52.4046047+02:00" endTime="2026-10-17T12:52:52.4046047+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="55b6b590-8398-40df-8e5c-5ac07ce78450" />
+    <UnitTestResult executionId="ae9d3612-6fbf-4d88-849b-e31725a5e3aa" testId="4f021d3f-8775-7a3c-3121-1e8b6e77fbf0" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 40, max: 100, passingPercent: 60, expected: 4,33)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000046" startTime="2026-10-17T12:52:52.4046244+02:00" endTime="2026-10-17T12:52:52.4046244+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ae9d3612-6fbf-4d88-849b-e31725a5e3aa" />
+    <UnitTestResult executionId="0278aa2b-3c46-46d3-a26d-31fafa0a1a30" testId="e3433ff1-3abe-631a-0cd4-e27d7771e127" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_ManualRejected" computerName="DESKTOP-QUOAG32" duration="00:00:00.0015524" startTime="2026-10-17T12:52:52.4740061+02:00" endTime="2026-10-17T12:52:52.4740062+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0278aa2b-3c46-46d3-a26d-31fafa0a1a30">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match&#xD;
+Expected: typeof(System.InvalidOperationException)&#xD;
+Actual:   typeof(System.NullReferenceException)&#xD;
+---- System.NullReferenceException : Object reference not set to an instance of an object.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_ManualRejected() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 142&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 104&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 26&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 45</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="d72819a6-7de1-42f8-ba21-a3224dc0c584" testId="726b03fb-c2a4-7427-4448-bf04cc0f894a" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.FailedAuto_NoGradeCreated" computerName="DESKTOP-QUOAG32" duration="00:00:00.0019287" startTime="2026-10-17T12:52:52.4678879+02:00" endTime="2026-10-17T12:52:52.4678880+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d72819a6-7de1-42f8-ba21-a3224dc0c584">
+      <Output>
+        <ErrorInfo>
+          <Message>System.NullReferenceException : Object reference not set to an instance of an object.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 104&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 26&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 45&#xD;
+   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.FailedAuto_NoGradeCreated() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 92&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ec5fc69e-d329-477b-8097-8ee5597bb7b0" testId="6b8183ad-b425-9b43-2844-0d99c4530773" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.AutoSubmit_NoDto_NoCaller_UsesPersistedAnswers" computerName="DESKTOP-QUOAG32" duration="00:00:00.0022118" startTime="2026-10-17T12:52:52.4761308+02:00" endTime="2026-10-17T12:52:52.4761309+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ec5fc69e-d329-477b-8097-8ee5597bb7b0">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Graded&#xD;
+Actual:   InProgress</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.AutoSubmit_NoDto_NoCaller_UsesPersistedAnswers() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 181&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="9b46141d-6ab5-4229-b2ef-a5a8cc7c5f20" testId="655229a8-13dc-c8fb-73eb-59370c41c2f8" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: -1, max: 100, passingPercent: 60)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0001849" startTime="2026-10-17T12:52:52.4210928+02:00" endTime="2026-10-17T12:52:52.4210929+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9b46141d-6ab5-4229-b2ef-a5a8cc7c5f20" />
+    <UnitTestResult executionId="0b22fb1a-4164-4095-a913-6c76c340cb21" testId="3dde5da1-b46a-eadb-aa63-686a6eb6b3a0" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 1, max: 0, passingPercent: 60)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000026" startTime="2026-10-17T12:52:52.4211073+02:00" endTime="2026-10-17T12:52:52.4211073+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0b22fb1a-4164-4095-a913-6c76c340cb21" />
+    <UnitTestResult executionId="c41e997b-47b3-4877-a391-7e788ea2ea17" testId="c5f5b4ee-fe64-bbd1-4c4a-5733025c1340" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 90, max: 100, passingPercent: 60, expected: 9)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0034359" startTime="2026-10-17T12:52:52.4022566+02:00" endTime="2026-10-17T12:52:52.4022713+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c41e997b-47b3-4877-a391-7e788ea2ea17" />
+    <UnitTestResult executionId="6015651b-7bd4-4d69-b689-58086baa423c" testId="5a92073d-9899-216e-e2f2-f12a99cf252d" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 101, max: 100, passingPercent: 60)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000052" startTime="2026-10-17T12:52:52.4211011+02:00" endTime="2026-10-17T12:52:52.4211012+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6015651b-7bd4-4d69-b689-58086baa423c" />
+    <UnitTestResult executionId="7a012fc0-0984-489e-a613-fde30a847eed" testId="2fee8650-8b58-b6b8-6507-d32d512d7dbf" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 0, max: 100, passingPercent: 60, expected: 1)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000009" startTime="2026-10-17T12:52:52.4046109+02:00" endTime="2026-10-17T12:52:52.4046109+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7a012fc0-0984-489e-a613-fde30a847eed" />
+    <UnitTestResult executionId="1fe2135c-6cec-427f-895c-3cd6571c7ac0" testId="0163d4bc-0a67-5191-1199-26cde7e7d382" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_14of20_with60pct_IsSeven" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000920" startTime="2026-10-17T12:52:52.4211252+02:00" endTime="2026-10-17T12:52:52.4211252+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1fe2135c-6cec-427f-895c-3cd6571c7ac0" />
+    <UnitTestResult executionId="46183117-dd6f-457a-870c-9b2473848d1b" testId="b35ab12c-b7e3-8a8a-b7cf-f0e4ecacc38a" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 50, max: 100, passingPercent: 0)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0003229" startTime="2026-10-17T12:52:52.4210865+02:00" endTime="2026-10-17T12:52:52.4210866+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="46183117-dd6f-457a-870c-9b2473848d1b" />
+    <UnitTestResult executionId="7bd2ab5f-3a57-4606-8160-6e6d9603d3af" testId="db4921d7-3446-7be5-5e0a-0af79fa97bdd" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 70, max: 100, passingPercent: 60, expected: 7)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000010" startTime="2026-10-17T12:52:52.4046307+02:00" endTime="2026-10-17T12:52:52.4046308+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7bd2ab5f-3a57-4606-8160-6e6d9603d3af" />
+    <UnitTestResult executionId="fcaaee7a-d15b-4576-a0fb-664b9e1d846a" testId="6b7a55e8-9b80-81cf-24ff-89131b937b09" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 60, max: 100, passingPercent: 60, expected: 6)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000008" startTime="2026-10-17T12:52:52.4209370+02:00" endTime="2026-10-17T12:52:52.4209370+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fcaaee7a-d15b-4576-a0fb-664b9e1d846a" />
+    <UnitTestResult executionId="fa1334f8-7c44-4df3-8459-7494aac7b183" testId="0684d20a-9888-24dc-e3fa-a91c24be9487" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 50, max: 100, passingPercent: 60, expected: 5,17)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0002365" startTime="2026-10-17T12:52:52.4043197+02:00" endTime="2026-10-17T12:52:52.4043197+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fa1334f8-7c44-4df3-8459-7494aac7b183" />
+    <UnitTestResult executionId="ed483a59-8ee2-4b03-9836-9f87181ddd9c" testId="e9028ac3-5659-486b-8a3e-c933d79ff6aa" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_AutoAllowed" computerName="DESKTOP-QUOAG32" duration="00:00:00.0020005" startTime="2026-10-17T12:52:52.4657784+02:00" endTime="2026-10-17T12:52:52.4657785+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ed483a59-8ee2-4b03-9836-9f87181ddd9c">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Graded&#xD;
+Actual:   InProgress</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_AutoAllowed() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 163&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="594058f6-8621-4482-92f3-724fb9808907" testId="f47e3514-3865-12b7-c169-07a10e1375d9" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 80, max: 100, passingPercent: 60, expected: 8)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000059" startTime="2026-10-17T12:52:52.4046367+02:00" endTime="2026-10-17T12:52:52.4046368+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="594058f6-8621-4482-92f3-724fb9808907" />
+    <UnitTestResult executionId="07583c9f-451c-4dc0-bcc7-245648816724" testId="684e64e1-cbd0-5ab5-50f6-5d044f82175d" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 20, max: 100, passingPercent: 60, expected: 2,67)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000040" startTime="2026-10-17T12:52:52.4045955+02:00" endTime="2026-10-17T12:52:52.4045955+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="07583c9f-451c-4dc0-bcc7-245648816724" />
+    <UnitTestResult executionId="feb7db78-5113-4483-ae02-8203588ce7f4" testId="03716a18-e5a2-5d4a-58ab-3b7240df4e2d" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 50, max: 100, passingPercent: 100)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000025" startTime="2026-10-17T12:52:52.4211169+02:00" endTime="2026-10-17T12:52:52.4211169+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="feb7db78-5113-4483-ae02-8203588ce7f4" />
+    <UnitTestResult executionId="100db16b-f274-45c5-8b4c-ef7d3416d184" testId="93a6b732-6206-3c3b-5046-112ec6ca0779" testName="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BelowThreshold_StaysBelowSix" computerName="DESKTOP-QUOAG32" duration="00:00:00.0001372" startTime="2026-10-17T12:52:52.4219014+02:00" endTime="2026-10-17T12:52:52.4219014+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="100db16b-f274-45c5-8b4c-ef7d3416d184" />
+    <UnitTestResult executionId="d7459007-8b84-42f9-9f6a-5ac4cc264a2b" testId="194af7fb-e5a2-7f38-6398-1250bc0d2d37" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.PersistenceError_RollsBack_AndThrows" computerName="DESKTOP-QUOAG32" duration="00:00:00.0030175" startTime="2026-10-17T12:52:52.4638815+02:00" endTime="2026-10-17T12:52:52.4638816+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d7459007-8b84-42f9-9f6a-5ac4cc264a2b">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match&#xD;
+Expected: typeof(System.InvalidOperationException)&#xD;
+Actual:   typeof(ElectronicRegisterAPI.Domain.Exceptions.BusinessRuleException)&#xD;
+---- ElectronicRegisterAPI.Domain.Exceptions.BusinessRuleException : La submission è scaduta; le ultime risposte non possono essere accettate. Attendere la consegna automatica.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.PersistenceError_RollsBack_AndThrows() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 196&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 81&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 26&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 45</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="31f5d634-169b-405d-b362-7380b50d028f" testId="b132e377-e1e0-3bfb-4afd-88d3b226659d" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DoubleSubmit_NoDuplicateGradeCreated" computerName="DESKTOP-QUOAG32" duration="00:00:00.0014226" startTime="2026-10-17T12:52:52.4720963+02:00" endTime="2026-10-17T12:52:52.4720964+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="31f5d634-169b-405d-b362-7380b50d028f">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Stato incoerente: GradeId presente ma Grade non trovato.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 61&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 26&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller) in C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:line 45&#xD;
+   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DoubleSubmit_NoDuplicateGradeCreated() in C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 108&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 70, max: 100, passingPercent: 60, expected: 7)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="db4921d7-3446-7be5-5e0a-0af79fa97bdd">
+      <Execution id="7bd2ab5f-3a57-4606-8160-6e6d9603d3af" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_BasicExamples" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DoubleSubmit_NoDuplicateGradeCreated" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="b132e377-e1e0-3bfb-4afd-88d3b226659d">
+      <Execution id="31f5d634-169b-405d-b362-7380b50d028f" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="DoubleSubmit_NoDuplicateGradeCreated" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DeadlineReached_NoNewAnswersButExistingProcessed" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="75daae38-2adb-a7a8-27bc-52de0169b6ec">
+      <Execution id="6eca87a5-74ac-4f5a-8735-0c0d942e6fb2" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="DeadlineReached_NoNewAnswersButExistingProcessed" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_AutoAllowed" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="e9028ac3-5659-486b-8a3e-c933d79ff6aa">
+      <Execution id="ed483a59-8ee2-4b03-9836-9f87181ddd9c" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="RequiredMissing_AutoAllowed" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.ClosedOnly_GradedAndGradeCreated" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="62015273-7d53-2cb7-d1d6-ec5e74446862">
+      <Execution id="e7e6b6b3-7a4d-47c4-871e-cfdc7528c2cc" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="ClosedOnly_GradedAndGradeCreated" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.AutoSubmit_NoDto_NoCaller_UsesPersistedAnswers" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="6b8183ad-b425-9b43-2844-0d99c4530773">
+      <Execution id="ec5fc69e-d329-477b-8097-8ee5597bb7b0" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="AutoSubmit_NoDto_NoCaller_UsesPersistedAnswers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 40, max: 100, passingPercent: 60, expected: 4,33)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="4f021d3f-8775-7a3c-3121-1e8b6e77fbf0">
+      <Execution id="ae9d3612-6fbf-4d88-849b-e31725a5e3aa" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_BasicExamples" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 60, max: 100, passingPercent: 60, expected: 6)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="6b7a55e8-9b80-81cf-24ff-89131b937b09">
+      <Execution id="fcaaee7a-d15b-4576-a0fb-664b9e1d846a" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_BasicExamples" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 101, max: 100, passingPercent: 60)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="5a92073d-9899-216e-e2f2-f12a99cf252d">
+      <Execution id="6015651b-7bd4-4d69-b689-58086baa423c" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_InvalidInputs_Throw" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 100, max: 100, passingPercent: 60, expected: 10)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="4d58d7ec-d666-8900-112b-a91c65383bdc">
+      <Execution id="55b6b590-8398-40df-8e5c-5ac07ce78450" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_BasicExamples" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 0, max: 100, passingPercent: 60, expected: 1)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="2fee8650-8b58-b6b8-6507-d32d512d7dbf">
+      <Execution id="7a012fc0-0984-489e-a613-fde30a847eed" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_BasicExamples" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.PersistenceError_RollsBack_AndThrows" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="194af7fb-e5a2-7f38-6398-1250bc0d2d37">
+      <Execution id="d7459007-8b84-42f9-9f6a-5ac4cc264a2b" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="PersistenceError_RollsBack_AndThrows" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenQuestions_PendingReview_NoGradeCreated" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="374655e2-0472-704c-68c7-fcdf030c1883">
+      <Execution id="705a019f-1947-49c7-8a54-8806fbcbc132" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="OpenQuestions_PendingReview_NoGradeCreated" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_14of20_with60pct_IsSeven" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="0163d4bc-0a67-5191-1199-26cde7e7d382">
+      <Execution id="1fe2135c-6cec-427f-895c-3cd6571c7ac0" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_14of20_with60pct_IsSeven" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 50, max: 100, passingPercent: 60, expected: 5,17)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="0684d20a-9888-24dc-e3fa-a91c24be9487">
+      <Execution id="fa1334f8-7c44-4df3-8459-7494aac7b183" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_BasicExamples" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: -1, max: 100, passingPercent: 60)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="655229a8-13dc-c8fb-73eb-59370c41c2f8">
+      <Execution id="9b46141d-6ab5-4229-b2ef-a5a8cc7c5f20" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_InvalidInputs_Throw" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 50, max: 100, passingPercent: 0)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="b35ab12c-b7e3-8a8a-b7cf-f0e4ecacc38a">
+      <Execution id="46183117-dd6f-457a-870c-9b2473848d1b" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_InvalidInputs_Throw" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_ExactThreshold_IsSix" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="e200ee3b-5962-6bbc-5a7c-da8ef6c52893">
+      <Execution id="acda7d6a-96da-4be9-ab49-09dc93d5cdc5" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_ExactThreshold_IsSix" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenAnswersEmpty_TreatedAsZeroPoints" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="4f574eb9-4ac7-de44-e297-62a53ad94eba">
+      <Execution id="135f99ad-4801-4f54-8a64-fbfdcb821100" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="OpenAnswersEmpty_TreatedAsZeroPoints" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 80, max: 100, passingPercent: 60, expected: 8)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="f47e3514-3865-12b7-c169-07a10e1375d9">
+      <Execution id="594058f6-8621-4482-92f3-724fb9808907" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_BasicExamples" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.SubmitWithDifferentReason_NoReprocess" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="2048677e-3593-5acd-19d1-3c9be4e5687e">
+      <Execution id="4b5238bc-91bf-475b-a12b-6f251ccb8bb1" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="SubmitWithDifferentReason_NoReprocess" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 1, max: 0, passingPercent: 60)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="3dde5da1-b46a-eadb-aa63-686a6eb6b3a0">
+      <Execution id="0b22fb1a-4164-4095-a913-6c76c340cb21" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_InvalidInputs_Throw" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_12of20_with60pct_IsSix" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="bb6eebf8-1c1b-4fe8-db70-c06a99422b29">
+      <Execution id="da66e86b-221d-4fa4-b902-9d8951a4db2e" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_12of20_with60pct_IsSix" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_InvalidInputs_Throw(total: 50, max: 100, passingPercent: 100)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="03716a18-e5a2-5d4a-58ab-3b7240df4e2d">
+      <Execution id="feb7db78-5113-4483-ae02-8203588ce7f4" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_InvalidInputs_Throw" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 20, max: 100, passingPercent: 60, expected: 2,67)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="684e64e1-cbd0-5ab5-50f6-5d044f82175d">
+      <Execution id="07583c9f-451c-4dc0-bcc7-245648816724" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_BasicExamples" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BasicExamples(total: 90, max: 100, passingPercent: 60, expected: 9)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="c5f5b4ee-fe64-bbd1-4c4a-5733025c1340">
+      <Execution id="c41e997b-47b3-4877-a391-7e788ea2ea17" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_BasicExamples" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests.ConvertToGrade_BelowThreshold_StaysBelowSix" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="93a6b732-6206-3c3b-5046-112ec6ca0779">
+      <Execution id="100db16b-f274-45c5-8b4c-ef7d3416d184" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.SubmissionGradingServiceTests" name="ConvertToGrade_BelowThreshold_StaysBelowSix" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.FailedAuto_NoGradeCreated" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="726b03fb-c2a4-7427-4448-bf04cc0f894a">
+      <Execution id="d72819a6-7de1-42f8-ba21-a3224dc0c584" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="FailedAuto_NoGradeCreated" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_ManualRejected" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="e3433ff1-3abe-631a-0cd4-e27d7771e127">
+      <Execution id="0278aa2b-3c46-46d3-a26d-31fafa0a1a30" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="RequiredMissing_ManualRejected" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="4f574eb9-4ac7-de44-e297-62a53ad94eba" executionId="135f99ad-4801-4f54-8a64-fbfdcb821100" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="374655e2-0472-704c-68c7-fcdf030c1883" executionId="705a019f-1947-49c7-8a54-8806fbcbc132" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="62015273-7d53-2cb7-d1d6-ec5e74446862" executionId="e7e6b6b3-7a4d-47c4-871e-cfdc7528c2cc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e200ee3b-5962-6bbc-5a7c-da8ef6c52893" executionId="acda7d6a-96da-4be9-ab49-09dc93d5cdc5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="75daae38-2adb-a7a8-27bc-52de0169b6ec" executionId="6eca87a5-74ac-4f5a-8735-0c0d942e6fb2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bb6eebf8-1c1b-4fe8-db70-c06a99422b29" executionId="da66e86b-221d-4fa4-b902-9d8951a4db2e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2048677e-3593-5acd-19d1-3c9be4e5687e" executionId="4b5238bc-91bf-475b-a12b-6f251ccb8bb1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4d58d7ec-d666-8900-112b-a91c65383bdc" executionId="55b6b590-8398-40df-8e5c-5ac07ce78450" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4f021d3f-8775-7a3c-3121-1e8b6e77fbf0" executionId="ae9d3612-6fbf-4d88-849b-e31725a5e3aa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e3433ff1-3abe-631a-0cd4-e27d7771e127" executionId="0278aa2b-3c46-46d3-a26d-31fafa0a1a30" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="726b03fb-c2a4-7427-4448-bf04cc0f894a" executionId="d72819a6-7de1-42f8-ba21-a3224dc0c584" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6b8183ad-b425-9b43-2844-0d99c4530773" executionId="ec5fc69e-d329-477b-8097-8ee5597bb7b0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="655229a8-13dc-c8fb-73eb-59370c41c2f8" executionId="9b46141d-6ab5-4229-b2ef-a5a8cc7c5f20" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3dde5da1-b46a-eadb-aa63-686a6eb6b3a0" executionId="0b22fb1a-4164-4095-a913-6c76c340cb21" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c5f5b4ee-fe64-bbd1-4c4a-5733025c1340" executionId="c41e997b-47b3-4877-a391-7e788ea2ea17" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5a92073d-9899-216e-e2f2-f12a99cf252d" executionId="6015651b-7bd4-4d69-b689-58086baa423c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2fee8650-8b58-b6b8-6507-d32d512d7dbf" executionId="7a012fc0-0984-489e-a613-fde30a847eed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0163d4bc-0a67-5191-1199-26cde7e7d382" executionId="1fe2135c-6cec-427f-895c-3cd6571c7ac0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b35ab12c-b7e3-8a8a-b7cf-f0e4ecacc38a" executionId="46183117-dd6f-457a-870c-9b2473848d1b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="db4921d7-3446-7be5-5e0a-0af79fa97bdd" executionId="7bd2ab5f-3a57-4606-8160-6e6d9603d3af" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6b7a55e8-9b80-81cf-24ff-89131b937b09" executionId="fcaaee7a-d15b-4576-a0fb-664b9e1d846a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0684d20a-9888-24dc-e3fa-a91c24be9487" executionId="fa1334f8-7c44-4df3-8459-7494aac7b183" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e9028ac3-5659-486b-8a3e-c933d79ff6aa" executionId="ed483a59-8ee2-4b03-9836-9f87181ddd9c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f47e3514-3865-12b7-c169-07a10e1375d9" executionId="594058f6-8621-4482-92f3-724fb9808907" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="684e64e1-cbd0-5ab5-50f6-5d044f82175d" executionId="07583c9f-451c-4dc0-bcc7-245648816724" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="03716a18-e5a2-5d4a-58ab-3b7240df4e2d" executionId="feb7db78-5113-4483-ae02-8203588ce7f4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="93a6b732-6206-3c3b-5046-112ec6ca0779" executionId="100db16b-f274-45c5-8b4c-ef7d3416d184" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="194af7fb-e5a2-7f38-6398-1250bc0d2d37" executionId="d7459007-8b84-42f9-9f6a-5ac4cc264a2b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b132e377-e1e0-3bfb-4afd-88d3b226659d" executionId="31f5d634-169b-405d-b362-7380b50d028f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="29" executed="29" passed="19" failed="10" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.04]   Discovering: Unit.Tests&#xD;
+[xUnit.net 00:00:00.06]   Discovered:  Unit.Tests&#xD;
+[xUnit.net 00:00:00.07]   Starting:    Unit.Tests&#xD;
+[xUnit.net 00:00:00.15]       System.NullReferenceException : Object reference not set to an instance of an object.&#xD;
+[xUnit.net 00:00:00.15]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.15]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(104,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.15]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.15]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(26,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.15]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.15]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(45,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller)&#xD;
+[xUnit.net 00:00:00.15]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(74,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenQuestions_PendingReview_NoGradeCreated()&#xD;
+[xUnit.net 00:00:00.15]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.15]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.15]       Expected: Graded&#xD;
+[xUnit.net 00:00:00.15]       Actual:   InProgress&#xD;
+[xUnit.net 00:00:00.15]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.15]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(230,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenAnswersEmpty_TreatedAsZeroPoints()&#xD;
+[xUnit.net 00:00:00.15]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.15]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.15]       Expected: Graded&#xD;
+[xUnit.net 00:00:00.15]       Actual:   InProgress&#xD;
+[xUnit.net 00:00:00.15]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.15]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(213,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DeadlineReached_NoNewAnswersButExistingProcessed()&#xD;
+[xUnit.net 00:00:00.15]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.16]       Assert.Throws() Failure: Exception type was not an exact match&#xD;
+[xUnit.net 00:00:00.16]       Expected: typeof(System.InvalidOperationException)&#xD;
+[xUnit.net 00:00:00.16]       Actual:   typeof(ElectronicRegisterAPI.Domain.Exceptions.BusinessRuleException)&#xD;
+[xUnit.net 00:00:00.16]       ---- ElectronicRegisterAPI.Domain.Exceptions.BusinessRuleException : La submission è scaduta; le ultime risposte non possono essere accettate. Attendere la consegna automatica.&#xD;
+[xUnit.net 00:00:00.16]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.16]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(196,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.PersistenceError_RollsBack_AndThrows()&#xD;
+[xUnit.net 00:00:00.16]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.16]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:00.16]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(81,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.16]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.16]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(26,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.16]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.16]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(45,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller)&#xD;
+[xUnit.net 00:00:00.16]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.16]       Expected: Graded&#xD;
+[xUnit.net 00:00:00.16]       Actual:   InProgress&#xD;
+[xUnit.net 00:00:00.16]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.16]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(163,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_AutoAllowed()&#xD;
+[xUnit.net 00:00:00.16]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.16]       System.NullReferenceException : Object reference not set to an instance of an object.&#xD;
+[xUnit.net 00:00:00.16]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.16]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(104,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.16]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.16]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(26,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.16]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.16]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(45,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller)&#xD;
+[xUnit.net 00:00:00.16]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(92,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.FailedAuto_NoGradeCreated()&#xD;
+[xUnit.net 00:00:00.16]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.17]       System.InvalidOperationException : Stato incoerente: GradeId presente ma Grade non trovato.&#xD;
+[xUnit.net 00:00:00.17]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(61,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.17]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(26,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.17]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(45,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller)&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(108,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DoubleSubmit_NoDuplicateGradeCreated()&#xD;
+[xUnit.net 00:00:00.17]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.17]       Assert.Throws() Failure: Exception type was not an exact match&#xD;
+[xUnit.net 00:00:00.17]       Expected: typeof(System.InvalidOperationException)&#xD;
+[xUnit.net 00:00:00.17]       Actual:   typeof(System.NullReferenceException)&#xD;
+[xUnit.net 00:00:00.17]       ---- System.NullReferenceException : Object reference not set to an instance of an object.&#xD;
+[xUnit.net 00:00:00.17]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(142,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_ManualRejected()&#xD;
+[xUnit.net 00:00:00.17]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.17]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(104,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.17]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(26,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.17]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(45,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller)&#xD;
+[xUnit.net 00:00:00.17]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.17]       Expected: Graded&#xD;
+[xUnit.net 00:00:00.17]       Actual:   InProgress&#xD;
+[xUnit.net 00:00:00.17]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(181,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.AutoSubmit_NoDto_NoCaller_UsesPersistedAnswers()&#xD;
+[xUnit.net 00:00:00.17]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.17]       System.NullReferenceException : Object reference not set to an instance of an object.&#xD;
+[xUnit.net 00:00:00.17]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(104,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.&lt;&gt;c__DisplayClass8_0.&lt;&lt;ProcessSubmitAsync&gt;b__0&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.17]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(26,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.&lt;&gt;c.&lt;&lt;CreateProcessor&gt;b__6_1&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:00.17]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs(45,0): at ElectronicRegisterAPI.Application.Services.ExamSubmissionProcessor.ProcessSubmitAsync(Guid submissionId, SubmitExamDto dto, SubmitReason reason, ClaimsContext caller)&#xD;
+[xUnit.net 00:00:00.17]         C:\Users\Lorenzo\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(54,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.ClosedOnly_GradedAndGradeCreated()&#xD;
+[xUnit.net 00:00:00.17]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.17]   Finished:    Unit.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-17T12:52:52.4543380+02:00">
+        <Text>[xUnit.net 00:00:00.15]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenQuestions_PendingReview_NoGradeCreated [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-17T12:52:52.4583136+02:00">
+        <Text>[xUnit.net 00:00:00.15]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.OpenAnswersEmpty_TreatedAsZeroPoints [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-17T12:52:52.4602114+02:00">
+        <Text>[xUnit.net 00:00:00.15]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DeadlineReached_NoNewAnswersButExistingProcessed [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-17T12:52:52.4637057+02:00">
+        <Text>[xUnit.net 00:00:00.16]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.PersistenceError_RollsBack_AndThrows [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-17T12:52:52.4657357+02:00">
+        <Text>[xUnit.net 00:00:00.16]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_AutoAllowed [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-17T12:52:52.4677635+02:00">
+        <Text>[xUnit.net 00:00:00.16]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.FailedAuto_NoGradeCreated [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-17T12:52:52.4719895+02:00">
+        <Text>[xUnit.net 00:00:00.17]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.DoubleSubmit_NoDuplicateGradeCreated [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-17T12:52:52.4737744+02:00">
+        <Text>[xUnit.net 00:00:00.17]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.RequiredMissing_ManualRejected [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-17T12:52:52.4760931+02:00">
+        <Text>[xUnit.net 00:00:00.17]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.AutoSubmit_NoDto_NoCaller_UsesPersistedAnswers [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-17T12:52:52.4780316+02:00">
+        <Text>[xUnit.net 00:00:00.17]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.ClosedOnly_GradedAndGradeCreated [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

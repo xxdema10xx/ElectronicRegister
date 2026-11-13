@@ -1,0 +1,455 @@
+{
+    "format":  1,
+    "verifiedAtUtc":  "2026-10-27T22:56:31.1482430Z",
+    "status":  "IMPLEMENTED_AND_VERIFIED",
+    "phaseCompleted":  true,
+    "initialGit":  {
+                       "branch":  "refactor-database-entities",
+                       "sourceSnapshot":  "C:\\Users\\Lorenzo\\ElectronicRegister\\.staff-private\\import-phase3-25cd3f200a354080b094f62d14066126/source-baseline.json",
+                       "preexistingStaffAndEmailChangesPreserved":  true,
+                       "head":  "d5bf774d57eb143252a3659a29e653e4a0ce19a9",
+                       "workingTreeClean":  false
+                   },
+    "git":  {
+                "pushPerformed":  false,
+                "newGeneratedEvidenceKeptPrivately":  true,
+                "commitPerformed":  false,
+                "generatedHistoricalFilesRestoredToInitialHashes":  15,
+                "headUnchanged":  true,
+                "destructiveResetCleanCheckoutRestorePerformed":  false,
+                "productionDataModified":  false
+            },
+    "baseline":  {
+                     "phase1":  {
+                                    "total":  1368,
+                                    "integration":  1137,
+                                    "unit":  231
+                                },
+                     "phase2HostPythonTests":  11,
+                     "phase2ReportsUpdatedWithHostEvidence":  true,
+                     "phase2":  {
+                                    "total":  1493,
+                                    "integration":  1176,
+                                    "unit":  317
+                                },
+                     "phase2ReportActualNames":  "INSTITUTION_EMAIL_POLICY_REPORT.md / INSTITUTION_EMAIL_POLICY_VERIFICATION.json",
+                     "phase2HostEvidenceNotReusedForPhase3":  true,
+                     "phase2HostHashes":  159
+                 },
+    "implemented":  {
+                        "persistentPreview":  true,
+                        "boundedNumericCandidateReconfirmation":  true,
+                        "currentMembershipAndGeneration":  true,
+                        "runtimeRolloutRevalidation":  true,
+                        "downloadStudentTeacherCsvTemplates":  true,
+                        "privatePersistentPreview":  true,
+                        "databaseFirstSidecars":  true,
+                        "rowAndColumnErrors":  true,
+                        "tenantClassResolutionAndDisambiguation":  true,
+                        "allOrNothing":  true,
+                        "iamFirstLocks":  true,
+                        "retentionWorker":  true,
+                        "noImplicitEnrollmentsTransfersClassSubjects":  true,
+                        "explicitClosedMapping":  true,
+                        "noGlobalAccountsPasswordsMembershipsMailbox":  true,
+                        "emailGeneratorReused":  true,
+                        "oneCategoryPerFile":  true,
+                        "previewPagination":  true,
+                        "exactConfirmedEmailMatch":  true,
+                        "emailReservationOptional":  true,
+                        "externalReferencesTenantCategoryScoped":  true,
+                        "durableReplay":  true,
+                        "csv":  true,
+                        "atomicConfirmation":  true,
+                        "createOnly":  true,
+                        "xlsx":  true,
+                        "appendOnlyAudit":  true
+                    },
+    "authorization":  {
+                          "staff":  "Same CreateOnly import operations; no role/security/global identity/policy changes or delete",
+                          "platformOperator":  "No tenant privileges",
+                          "institutionAdmin":  "Own tenant and own actor batches: template, preview, remap, confirm, report",
+                          "staffNeedsTeacherProfile":  false,
+                          "crossTenantOrActorImportId":  404,
+                          "staffMappedToLegacyAdmin":  false,
+                          "teacherAndStudent":  "No import access",
+                          "collaboration":  "No automatic preview sharing, including other Admin in same tenant",
+                          "legacyAndSelection":  "Rejected by InstitutionAccess authentication"
+                      },
+    "dependencies":  {
+                         "version":  "3.5.1",
+                         "license":  "MIT",
+                         "lockFilesVerified":  [
+                                                   "Infrastructure/packages.lock.json",
+                                                   "Api/packages.lock.json",
+                                                   "tests/Integration/packages.lock.json",
+                                                   "tools/PlatformAdmin/packages.lock.json"
+                                               ],
+                         "osSecurityOrExecutionPolicyChanged":  false,
+                         "initialSandboxError":  "Access to C:\\Users\\Lorenzo\\AppData\\Roaming\\NuGet\\NuGet.Config is denied; resolved by user host restore, not a sandbox bypass",
+                         "hostApplicationRestore":  {
+                                                        "provenance":  "User-reported Windows host PowerShell",
+                                                        "exitCode":  0,
+                                                        "command":  "dotnet restore tests/Integration/Integration.Tests.csproj --verbosity minimal"
+                                                    },
+                         "sandboxBuild":  "dotnet build/test --no-restore succeeded with host-generated NuGet assets",
+                         "target":  "net10.0",
+                         "nugetConfigPreexistingModified":  false,
+                         "applicableAssetsVerified":  true,
+                         "package":  "DocumentFormat.OpenXml",
+                         "frameworkVersion":  "3.5.1",
+                         "hostProbeRestore":  {
+                                                  "provenance":  "User-reported Windows host PowerShell",
+                                                  "exitCode":  0,
+                                                  "command":  "dotnet restore .staff-private/import-package-probe/probe.csproj --verbosity minimal"
+                                              }
+                     },
+    "database":  {
+                     "instances":  [
+                                       {
+                                           "value":  [
+                                                         {
+                                                             "port":  23331,
+                                                             "datadir":  "C:/Users/Lorenzo/ElectronicRegister/.staff-private/import-instance-54fad2619a0f4b3d889c486f43aed9ca/data/",
+                                                             "pid":  23908,
+                                                             "stopped":  true,
+                                                             "uuid":  "c2eb10ad-d24c-11f1-a8c6-345a605ed9a7"
+                                                         },
+                                                         {
+                                                             "port":  23332,
+                                                             "datadir":  "C:/Users/Lorenzo/ElectronicRegister/.staff-private/import-migration-bc8037dda83a4620893888f6a8ce3a49/data/",
+                                                             "pid":  4316,
+                                                             "stopped":  true,
+                                                             "uuid":  "1a685249-d250-11f1-a030-345a605ed9a7"
+                                                         },
+                                                         {
+                                                             "port":  23333,
+                                                             "datadir":  "C:/Users/Lorenzo/ElectronicRegister/.staff-private/import-bootstrap-deb2ae0daee3426b987f85a659ad0c7a/data/",
+                                                             "pid":  14404,
+                                                             "stopped":  true,
+                                                             "uuid":  "29f633c6-d253-11f1-8a48-345a605ed9a7"
+                                                         },
+                                                         {
+                                                             "port":  23334,
+                                                             "datadir":  "C:/Users/Lorenzo/ElectronicRegister/.staff-private/import-canonical-migration-7c52bf1bb1864e87a5d7cf5f83528f0f/data/",
+                                                             "pid":  30504,
+                                                             "stopped":  true,
+                                                             "uuid":  "8fd4816b-d254-11f1-8bc4-345a605ed9a7"
+                                                         }
+                                                     ],
+                                           "Count":  4
+                                       }
+                                   ],
+                     "exploratoryMigration":  {
+                                                  "port":  23332,
+                                                  "draftThenPolicyFkReconciled":  true,
+                                                  "notUsedAsProofOfSingleFinalScriptApplication":  true
+                                              },
+                     "newForeignKeys":  13,
+                     "after":  {
+                                   "tables":  52,
+                                   "triggers":  129,
+                                   "fks":  158,
+                                   "indexes":  218
+                               },
+                     "ddlTransactionalRollbackClaimed":  false,
+                     "migrationRunner":  {
+                                             "nativeCanonicalSqlMigrationExecutedAndVerified":  true,
+                                             "ps1Executed":  false,
+                                             "syntaxValid":  true,
+                                             "productionExecutionSupported":  false
+                                         },
+                     "newTriggers":  12,
+                     "finalRegressionPort":  23334,
+                     "before":  {
+                                    "tables":  48,
+                                    "triggers":  117,
+                                    "indexes":  199,
+                                    "fks":  145
+                                },
+                     "predecessorDefinitionsPreserved":  {
+                                                             "tables":  48,
+                                                             "triggers":  117
+                                                         },
+                     "freshFullBootstrap":  {
+                                                "port":  23333,
+                                                "tableDefinitionsMatched":  52,
+                                                "noTenantOrUserSeed":  true,
+                                                "zeroViolationSqlChecks":  20,
+                                                "triggerBodiesAndMetadataMatched":  129
+                                            },
+                     "preparatoryRegressionPort":  23331,
+                     "foreignKeyOrAuditEnforcementDisabled":  false,
+                     "newTables":  [
+                                       "institution_import_batch",
+                                       "institution_import_item",
+                                       "institution_import_external_reference",
+                                       "institution_import_event"
+                                   ],
+                     "canonicalMigration":  {
+                                                "sql":  "migrations/institution-import/001_expand.sql",
+                                                "zeroViolationSqlChecks":  10,
+                                                "tableDefinitionsMatched":  52,
+                                                "predecessorBootstrapMatchesInitialPhase2Bytes":  true,
+                                                "attestedIdentityAndSha256Dump":  true,
+                                                "triggerBodiesAndMetadataMatched":  129,
+                                                "port":  23334,
+                                                "sha256":  "2FD185B1CBFB15895F30E6244599B5F5EC0BBF91F184733557A94DC0C80FD1F7",
+                                                "appliedExactlyOnce":  true
+                                            },
+                     "version":  "5.7.24",
+                     "newImportGuardsRemainCanonical":  true,
+                     "productionPorts3306And13306Used":  false,
+                     "postRegression":  {
+                                            "foreignKeyOrphanChecks":  158,
+                                            "orphanViolations":  0,
+                                            "zeroViolationSqlChecks":  20
+                                        },
+                     "fixtureOnlyExistingRetentionGuardsRebound":  10,
+                     "newIndexes":  19
+                 },
+    "privacy":  {
+                    "defaultPendingPerActor":  20,
+                    "stagePrivateAndActorScoped":  true,
+                    "retentionDeletesAcademicOrAuditRecords":  false,
+                    "originalFilePersisted":  false,
+                    "defaultTtlMinutes":  30,
+                    "auditSourceRowsOrEmailsPersisted":  false,
+                    "payloadPurgedOnCommit":  true,
+                    "physicalCleanup":  "Bounded20-per-pass every minute; backlog possible, pending quota includes uncleared expired payloads",
+                    "retentionUsesExplicitServiceActorWithNullHumanIds":  true,
+                    "formulaExecution":  false,
+                    "expiredRowsUnreadableImmediately":  true,
+                    "originalFilenamePersisted":  false,
+                    "externalReferenceDownload":  false,
+                    "defaultMaxStageBytes":  2097152
+                },
+    "regression":  {
+                       "fullIntegrationRun":  {
+                                                  "skipped":  0,
+                                                  "failed":  0,
+                                                  "passed":  1261
+                                              },
+                       "missingIdentities":  [
+
+                                             ],
+                       "previousUnitIdentitiesPreserved":  317,
+                       "previousTotalIdentitiesPreserved":  1493,
+                       "totalDistinct":  1614,
+                       "warnings":  "Existing nullable warnings; zero build errors",
+                       "integrationDistinct":  1262,
+                       "unit":  352,
+                       "previousTestsRemovedRenamedSkippedOrWeakened":  false,
+                       "fullRegressionProvenance":  "Sandbox .NET10, real Program HTTP and isolated MySQL5.7.24",
+                       "skipped":  0,
+                       "oldTestNumericInventoryChangesOnly":  "Nine added MVC routes;214-\u003e223 total,67-\u003e76 School",
+                       "passedDistinct":  1614,
+                       "additionalTeacherEmailCase":  {
+                                                          "applicationCodeChangedAfterFullRun":  false,
+                                                          "passed":  1
+                                                      },
+                       "newHttpSqlBulkImportCases":  49,
+                       "newIntegration":  86,
+                       "failed":  0,
+                       "newPureInfrastructureCsvXlsxCases":  37,
+                       "newUnit":  35,
+                       "previousIntegrationIdentitiesPreserved":  1176
+                   },
+    "manifest":  {
+                     "sha256":  "1D03F79615233122A4C56725E8CF9B894566B02330DB67AB2EE47018E78F072F",
+                     "hostVerifiedInputsRemainByteIdentical":  true,
+                     "files":  166,
+                     "independentSandboxPowerShellHashChecks":  true
+                 },
+    "python":  {
+                   "hashesVerified":  166,
+                   "importValidatorPassed":  true,
+                   "provenance":  "User supplied actual Windows host PowerShell stdout during Phase3",
+                   "exitCodesSeparatelyEchoedInFinalBlock":  false,
+                   "unitTestsPassed":  11,
+                   "sandboxExecuted":  false,
+                   "commands":  [
+                                    "python -m unittest discover -s tools -p \u0027test_*.py\u0027",
+                                    "python tools/verify-project-artifacts.py",
+                                    "python tools/verify-institution-staff.py",
+                                    "python tools/verify-institution-email.py",
+                                    "python tools/verify-institution-import.py"
+                                ],
+                   "staffValidatorPassed":  true,
+                   "requiredHostCommandsPending":  [
+
+                                                   ],
+                   "interpreter":  "C:\\Users\\Lorenzo\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+                   "allSuccessMessagesObserved":  true,
+                   "emailValidatorPassed":  true,
+                   "sqlExecutedByOfflineValidators":  false,
+                   "hostExecuted":  true,
+                   "sandboxError":  "Absolute invocation:CommandNotFoundException; Get-Item:UnauthorizedAccessException/PermissionDenied ItemExistsUnauthorizedAccessError"
+               },
+    "artifacts":  [
+                      {
+                          "sha256":  "63DE712098A565C5F7AFE876917FA53B26649D552D92D25B3EC7E5CD81871F46",
+                          "path":  ".staff-private/import-phase3-tests/import-unit-final.trx"
+                      },
+                      {
+                          "sha256":  "CEDF9BA540CEDE01CAB5DBF62D39294F92821AF7D75ED45185B8C8B2D3E6059A",
+                          "path":  ".staff-private/import-phase3-tests/import-full-final.trx"
+                      },
+                      {
+                          "sha256":  "5B2C58DEE3599CEB4EB47BE95255F827F3512C66B4C5495CBC37908DBE70DF82",
+                          "path":  ".staff-private/import-phase3-tests/import-teacher-email.trx"
+                      },
+                      {
+                          "sha256":  "A55574BF53F5EA1C79EA2EC99F1720C5059C459CCE16195B7F27A8E7BEF9D62A",
+                          "path":  "migrations/bootstrap/schema-contract.json"
+                      }
+                  ],
+    "newTestIdentities":  {
+                              "unit":  [
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.AmbiguousMappingRequiresExplicitChoice",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.ClassReferenceRemainsUnresolvedWithoutTenantAuthorization",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.ClosedMappingRejectsInvalidIndexOrField(index: 0, field: 42)",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.ClosedMappingRejectsInvalidIndexOrField(index: -1, field: FirstName)",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.ClosedMappingRejectsInvalidIndexOrField(index: 2, field: FirstName)",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.DuplicateColumnAssignmentAndForbiddenDestinationsFailClosed",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.DuplicateStableReferenceInvalidatesBothRowsButIsCaseSensitive",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.EmailPreconditionsProduceRowErrors(kind: \"category\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.EmailPreconditionsProduceRowErrors(kind: \"draft\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.EmailPreconditionsProduceRowErrors(kind: \"invalid-template\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.EmailPreconditionsProduceRowErrors(kind: \"missing\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.EmailPreviewReusesPhase2PureGenerator(first: \"Giulia\", last: \"Bianchi\", expected: \"allievo_bianchi.g@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.EmailPreviewReusesPhase2PureGenerator(first: \"Luca\", last: \"De Luca\", expected: \"allievo_deluca.l@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.EmailPreviewReusesPhase2PureGenerator(first: \"Mario\", last: \"Rossi\", expected: \"allievo_rossi.m@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.ExplicitNumericCandidateRemainsBoundedByPublishedPolicy",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.HomonymsAreWarningsRatherThanAnIdentityOrAutomaticMerge",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.InFileEmailCollisionUsesPublishedPolicy(collision: NumericSuffix)",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.InFileEmailCollisionUsesPublishedPolicy(collision: Reject)",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.InvalidRowsHaveStableFieldErrors(first: \"\", last: \"Rossi\", code: \"RequiredFieldMissing\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.InvalidRowsHaveStableFieldErrors(first: \"@SUM(1)\", last: \"Rossi\", code: \"FormulaLikeValue\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.InvalidRowsHaveStableFieldErrors(first: \"+Mario\", last: \"Rossi\", code: \"FormulaLikeValue\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.InvalidRowsHaveStableFieldErrors(first: \"=CMD()\", last: \"Rossi\", code: \"FormulaLikeValue\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.InvalidRowsHaveStableFieldErrors(first: \"-1\", last: \"Rossi\", code: \"FormulaLikeValue\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.InvalidRowsHaveStableFieldErrors(first: \"Ma​rio\", last: \"Rossi\", code: \"InvalidCharacter\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.InvalidRowsHaveStableFieldErrors(first: \"Ma\\nrio\", last: \"Rossi\", code: \"InvalidCharacter\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.InvalidRowsHaveStableFieldErrors(first: \"Mario\", last: \"\", code: \"RequiredFieldMissing\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.MappingRecognizesOnlyExactDocumentedAliases(first: \" nome \", last: \"COGNOME\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.MappingRecognizesOnlyExactDocumentedAliases(first: \"First Name\", last: \"Last Name\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.MappingRecognizesOnlyExactDocumentedAliases(first: \"First Name\", last: \"Surname\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.MappingRecognizesOnlyExactDocumentedAliases(first: \"FirstName\", last: \"LastName\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.MappingRecognizesOnlyExactDocumentedAliases(first: \"Nome\", last: \"Cognome\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.NameLengthMatchesExistingAnagraphicContract",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.NoneNeverGeneratesEmailEvenWhenPolicyIsAvailable",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.TeacherClassMappingRequiresExplicitIgnore",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionImportRulesTests.UnknownHeadersCannotMassAssignSecurityProperties"
+                                       ],
+                              "integration":  [
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_BoundedManyRowBatchCreatesEveryTargetInOneCommit(category: Student)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_BoundedManyRowBatchCreatesEveryTargetInOneCommit(category: Teacher)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ChangedPolicyInvalidatesConfirmationWithoutPartialRows",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ChangingMappingInvalidatesOldDigestAndCanResolveAmbiguousClass",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ClassChangeBeforeConfirmationRequiresFreshPreview",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ConcurrentConfirmationAndLostResponseCannotDuplicatePeople(sameEvent: False)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ConcurrentConfirmationAndLostResponseCannotDuplicatePeople(sameEvent: True)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ConfirmationRejectsUnknownSecurityFields(field: \"Email\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ConfirmationRejectsUnknownSecurityFields(field: \"InstitutionId\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ConfirmationRejectsUnknownSecurityFields(field: \"PasswordHash\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ConfirmationRejectsUnknownSecurityFields(field: \"Role\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ConfirmationRejectsUnknownSecurityFields(field: \"UserId\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_DatabaseGuardsProtectHistoryAndCrossTenantLinks",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_DisabledRolloutAndSelectionTokensCannotMutate",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_EmailReservationUsesPhase2PolicyAndNumericSuffixInRowOrder",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ExistingExternalReferenceBlocksCreateOnlyWithoutMerge",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ExpiredStagingIsUnreadableAndRetentionPurgesOnlyPayload",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_FaultRollsBackAllPeopleReferencesAndBatchCompletion(fault: \"audit\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_FaultRollsBackAllPeopleReferencesAndBatchCompletion(fault: \"second-person\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_GlobalCollisionCannotSilentlyChangeConfirmedEmailsAndRollsBackEarlierRows(collision: NumericSuffix)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_GlobalCollisionCannotSilentlyChangeConfirmedEmailsAndRollsBackEarlierRows(collision: Reject)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_HostileUploadsDoNotCreateStagingOrPeople(kind: \"format\", status: 415)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_HostileUploadsDoNotCreateStagingOrPeople(kind: \"formula\", status: 400)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_HostileUploadsDoNotCreateStagingOrPeople(kind: \"oversize\", status: 413)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_HostileUploadsDoNotCreateStagingOrPeople(kind: \"rows\", status: 413)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_IdenticalFileRequiresExplicitIntentButHomonymsAreAllowed",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_IdenticalRowsRequireWarningAcknowledgementButRemainDistinctPeople",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_InitialClassDoesNotCreateEnrollmentOrTransferAndForeignClassIsUnavailable",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_InvalidRowBlocksEveryWriteWithStableRowErrors",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_LegacyTokenAndDirectManagerWithoutCurrentTenantFailClosed",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_LowRolesCannotUploadOrReadTemplates(role: \"student\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_LowRolesCannotUploadOrReadTemplates(role: \"teacher\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_MalformedMappingAndForbiddenDestinationsAreRejectedBeforeStaging",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_PendingQuotaAndRuntimeRolloutAreRevalidated",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_PreviewIsPrivateAndPureThenConfirmationCreatesOnlyAnagraphics(category: Student, staff: False)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_PreviewIsPrivateAndPureThenConfirmationCreatesOnlyAnagraphics(category: Student, staff: True)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_PreviewIsPrivateAndPureThenConfirmationCreatesOnlyAnagraphics(category: Teacher, staff: False)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_PreviewIsPrivateAndPureThenConfirmationCreatesOnlyAnagraphics(category: Teacher, staff: True)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_PrivatePreviewIsNotSharedWithAnotherAdministrator",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ReplayReturnsSameIdsAndSecondEventCannotRepeatCompletedWork",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_StaffRevocationWaitsForCommitAndThenBlocksOldToken",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_StaleMembershipCannotConfirmStoredPreview(kind: \"generation\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_StaleMembershipCannotConfirmStoredPreview(kind: \"revoke\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_StaleMembershipCannotConfirmStoredPreview(kind: \"suspend\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_TeacherEmailUsesItsOwnPublishedTemplateWithoutTeacherProfile",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_XlsxUsesSamePersistentWorkflow(category: Student, staff: False)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_XlsxUsesSamePersistentWorkflow(category: Student, staff: True)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_XlsxUsesSamePersistentWorkflow(category: Teacher, staff: False)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_XlsxUsesSamePersistentWorkflow(category: Teacher, staff: True)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.AmbiguousDelimiterRequiresExplicitChoice",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.CancellationAndBadLimitsAreHonored",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.DisguisedBinaryAndInvalidSeparatorsAreRejected",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.InvalidUtf8IsNotSilentlyConverted",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.LeadingTrailingSpacesAndTrailingEmptyCellRemainAvailableForValidation",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.MalformedStructureIsRejected(text: \"\\n\\n\", code: \"EmptyFile\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.MalformedStructureIsRejected(text: \"Nome;;Cognome\\nMario;;Rossi\", code: \"InvalidHeader\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.MalformedStructureIsRejected(text: \"Nome;Cognome\\n\\\"Mario;Rossi\", code: \"MalformedCsv\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.MalformedStructureIsRejected(text: \"Nome;Cognome\\n\\\"Mario\\\"x;Rossi\", code: \"MalformedCsv\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.MalformedStructureIsRejected(text: \"Nome;Cognome\\nMa\\\"rio;Rossi\", code: \"MalformedCsv\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.MalformedStructureIsRejected(text: \"Nome;Cognome\\nMario;Rossi;Extra\", code: \"ColumnCountMismatch\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.QuotingEscapesSeparatorsMultilineAndEmptyRowsAreParsed",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.ResourceLimitsAreEnforced(kind: \"cell\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.ResourceLimitsAreEnforced(kind: \"columns\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.ResourceLimitsAreEnforced(kind: \"record\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.ResourceLimitsAreEnforced(kind: \"rows\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.SizeIsMeasuredFromActualBytesNotReportedLength",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.UnsupportedFilesFailClosedBeforeParsing(name: \"students.exe\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.UnsupportedFilesFailClosedBeforeParsing(name: \"students.xls\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.UnsupportedFilesFailClosedBeforeParsing(name: \"students.xlsb\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.UnsupportedFilesFailClosedBeforeParsing(name: \"students.xlsm\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.UnsupportedFilesFailClosedBeforeParsing(name: \"students.xlsx\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.Utf8DelimiterAndBomAreHandled(delimiter: \",\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.Utf8DelimiterAndBomAreHandled(delimiter: \";\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportCsvReaderTests.Utf8WithoutBomAndQuotedCommaPreserveUnicodeAndNames",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.BoundedXmlAndExpansionLimitsAreEnforced(kind: \"expansion\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.BoundedXmlAndExpansionLimitsAreEnforced(kind: \"nodes\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.BoundedXmlAndExpansionLimitsAreEnforced(kind: \"rows\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.DtdIsProhibitedBeforeSdkParsing",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.FormulasCachedValuesNumbersAndExternalLinksAreRejected(kind: \"external\", code: \"ExternalReferenceNotAllowed\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.FormulasCachedValuesNumbersAndExternalLinksAreRejected(kind: \"formula\", code: \"FormulaNotAllowed\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.FormulasCachedValuesNumbersAndExternalLinksAreRejected(kind: \"number\", code: \"UnsupportedCellType\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.HostileZipPathsAndBinaryPartsAreRejected(path: \"../outside.xml\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.HostileZipPathsAndBinaryPartsAreRejected(path: \"xl/%2e%2e/outside.xml\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.HostileZipPathsAndBinaryPartsAreRejected(path: \"xl/vbaProject.bin\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.MultipleSheetsRequireExplicitSelection",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionImportXlsxReaderTests.RealSdkWorkbookPreservesUnicodeAndBlankTrailingCells"
+                                              ]
+                          },
+    "outstanding":  [
+
+                    ],
+    "limitations":  [
+                        "Synchronous bounded CreateOnly; no upsert or automatic homonym merge",
+                        "Private actor-only batches, no automatic collaboration",
+                        "XLSX text cells only; formulas/macros/external/binary content refused",
+                        "CSV templates downloadable; optional XLSX template download not implemented",
+                        "Global email availability changes require explicit new preview/candidate confirmation",
+                        "Physical expired-payload cleanup waits for bounded retention pass/backlog; access blocked immediately",
+                        "Local migration runner syntax checked; real SQL application independently executed; production definer/deployment review outside local scope"
+                    ],
+    "deferredPerScope":  [
+                             "React Native frontend",
+                             "Automatic accounts/passwords/memberships/provisioning and welcome email",
+                             "Microsoft365/GoogleWorkspace",
+                             "Grades/exams/calendars import",
+                             "Formative units/modules/hours/internship",
+                             "Mass transfers/upserts",
+                             "Phase4"
+                         ]
+}

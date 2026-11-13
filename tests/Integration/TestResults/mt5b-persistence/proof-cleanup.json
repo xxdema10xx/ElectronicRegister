@@ -1,0 +1,12 @@
+{
+    "OnlyAuthorizedProofTablesRemoved":  [
+                                             "mt5b_probe_20261020_role",
+                                             "mt5b_probe_20261020_security",
+                                             "mt5b_probe_20261020_membership"
+                                         ],
+    "OriginalTables":  32,
+    "OriginalTriggers":  53,
+    "OriginalFK":  98,
+    "AllProofTablesEmptyBeforeDrop":  true,
+    "NoExternalDependencies":  true
+}

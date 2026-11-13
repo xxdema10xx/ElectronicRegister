@@ -1,0 +1,108 @@
+{
+  "problems": [
+    {
+      "id": "identity-and-legacy-bootstrap",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "identity-and-legacy-bootstrap",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 52.469
+    },
+    {
+      "id": "seed-and-predecessor",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "seed-and-predecessor",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 0.688
+    },
+    {
+      "id": "snapshot",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "snapshot",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 6.656
+    },
+    {
+      "id": "drift-rejection",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "drift-rejection",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 5.25
+    },
+    {
+      "id": "ddl-recovery",
+      "category": "runtime-phase",
+      "file": "C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\python\\Lib\\subprocess.py",
+      "line": 1630,
+      "test": "ddl-recovery",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\runtime_diagnostic.py\", line 31, in phase\n    yield\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_runtime.py\", line 405, in run\n    Runner(db, config, journal).upgrade(recover=recovery, fault=fault)\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py\", line 562, in upgrade\n    self.structural_upgrade(fault)\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py\", line 488, in structural_upgrade\n    verify_schema(self.db,expected,self.config,ready=False)\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py\", line 340, in verify_schema\n    actual = table_ddl(db, name)\n             ^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py\", line 307, in table_ddl\n    actual = db.execute('SHOW CREATE TABLE `' + name + '`').split('\\t', 1)[1]\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py\", line 116, in execute\n    return self._execute(sql, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py\", line 136, in _execute\n    observed = subprocess.run(self.args, input='SELECT VERSION(),@@server_uuid,@@global.offline_mode,CURRENT_USER();\\n', capture_output=True, text=True, timeout=10)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\python\\Lib\\subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\python\\Lib\\subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\python\\Lib\\subprocess.py\", line 1630, in _communicate\n    raise TimeoutExpired(self.args, orig_timeout)\nsubprocess.TimeoutExpired: Command '['docker', 'exec', '-i', 'e3b219c9eb6236579bbfdde1dd17ff8d43faa8a66a8ccdb5aa6c91a8e2fc0e93', 'mysql', '--no-defaults', '--user=root', '--protocol=SOCKET', '--socket=/var/run/mysqld/mysqld.sock', '--skip-password', '--batch', '--raw', '--skip-column-names', '--unbuffered', '--skip-reconnect', '--default-character-set=utf8mb4', '--connect-timeout=5']' timed out after 10 seconds\n",
+      "cause": "Runtime phase failed; subsequent phases share its database state",
+      "priority": "P1",
+      "status": "FAIL",
+      "dependents": [
+        "trigger-routine-acceptance",
+        "fresh-install-after-upgrade"
+      ],
+      "required": true,
+      "elapsedSeconds": 156.453,
+      "outcome": "TIMEOUT",
+      "infrastructure": true,
+      "partialStdout": "",
+      "partialStderr": "",
+      "timeoutSeconds": 10
+    },
+    {
+      "id": "trigger-routine-acceptance",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "trigger-routine-acceptance",
+      "error": "Blocked by: ddl-recovery",
+      "cause": "Prerequisite failed; contaminated state is not reused",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "dependents": [],
+      "required": true
+    },
+    {
+      "id": "fresh-install-after-upgrade",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "fresh-install-after-upgrade",
+      "error": "Blocked by: ddl-recovery",
+      "cause": "Prerequisite failed; contaminated state is not reused",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "dependents": [],
+      "required": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+[
+    {
+        "Rule":  "invalid_edition_path",
+        "Violations":  0
+    },
+    {
+        "Rule":  "invalid_campus_link",
+        "Violations":  0
+    },
+    {
+        "Rule":  "invalid_enrollment",
+        "Violations":  0
+    },
+    {
+        "Rule":  "invalid_class_path",
+        "Violations":  0
+    },
+    {
+        "Rule":  "invalid_edition_state_dates",
+        "Violations":  0
+    },
+    {
+        "Rule":  "invalid_enrollment_state_dates",
+        "Violations":  0
+    },
+    {
+        "Rule":  "missing_restrict_fk",
+        "Violations":  0
+    }
+]

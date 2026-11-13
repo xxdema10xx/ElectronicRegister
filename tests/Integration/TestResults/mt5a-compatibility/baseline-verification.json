@@ -1,0 +1,36 @@
+{
+    "Run":  "baseline",
+    "Valid":  true,
+    "ExpectedTotal":  675,
+    "Total":  675,
+    "Unit":  51,
+    "Integration":  624,
+    "Passed":  675,
+    "Failed":  0,
+    "OtherOutcomes":  0,
+    "PreviousIdentitiesMissing":  0,
+    "NewIdentities":  0,
+    "Files":  [
+                  {
+                      "File":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\baseline\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_42_17_net10.0.trx",
+                      "SHA256":  "3ABC9F03443D0C887C5A37FBCC9D40A6AB151DEFC39B260666171725964AE1DD",
+                      "Total":  624,
+                      "Executed":  624,
+                      "Passed":  624,
+                      "Failed":  0,
+                      "NotExecuted":  0
+                  },
+                  {
+                      "File":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\baseline\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_42_13_net10.0.trx",
+                      "SHA256":  "31CA9FF600B54996C279FD70589771DD2779464B69CF2132E886ECF06834448E",
+                      "Total":  51,
+                      "Executed":  51,
+                      "Passed":  51,
+                      "Failed":  0,
+                      "NotExecuted":  0
+                  }
+              ],
+    "NonPassed":  [
+
+                  ]
+}

@@ -1,0 +1,79 @@
+[
+    {
+        "Name":  "mt5b_membership_delete_contract",
+        "Table":  "institution_membership",
+        "Timing":  "BEFORE",
+        "Event":  "DELETE",
+        "CanonicalBodyMatches":  true
+    },
+    {
+        "Name":  "mt5b_membership_identity_update",
+        "Table":  "institution_membership",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "CanonicalBodyMatches":  true
+    },
+    {
+        "Name":  "mt5b_membership_security_delete",
+        "Table":  "institution_membership",
+        "Timing":  "BEFORE",
+        "Event":  "DELETE",
+        "CanonicalBodyMatches":  true
+    },
+    {
+        "Name":  "mt5b_membership_security_insert",
+        "Table":  "institution_membership",
+        "Timing":  "AFTER",
+        "Event":  "INSERT",
+        "CanonicalBodyMatches":  true
+    },
+    {
+        "Name":  "mt5b_membership_security_update",
+        "Table":  "institution_membership",
+        "Timing":  "AFTER",
+        "Event":  "UPDATE",
+        "CanonicalBodyMatches":  true
+    },
+    {
+        "Name":  "mt5b_role_identity_update",
+        "Table":  "institution_membership_role",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "CanonicalBodyMatches":  true
+    },
+    {
+        "Name":  "mt5b_role_security_delete",
+        "Table":  "institution_membership_role",
+        "Timing":  "AFTER",
+        "Event":  "DELETE",
+        "CanonicalBodyMatches":  true
+    },
+    {
+        "Name":  "mt5b_role_security_insert",
+        "Table":  "institution_membership_role",
+        "Timing":  "AFTER",
+        "Event":  "INSERT",
+        "CanonicalBodyMatches":  true
+    },
+    {
+        "Name":  "mt5b_security_delete",
+        "Table":  "institution_membership_security_state",
+        "Timing":  "BEFORE",
+        "Event":  "DELETE",
+        "CanonicalBodyMatches":  true
+    },
+    {
+        "Name":  "mt5b_security_insert",
+        "Table":  "institution_membership_security_state",
+        "Timing":  "BEFORE",
+        "Event":  "INSERT",
+        "CanonicalBodyMatches":  true
+    },
+    {
+        "Name":  "mt5b_security_update",
+        "Table":  "institution_membership_security_state",
+        "Timing":  "BEFORE",
+        "Event":  "UPDATE",
+        "CanonicalBodyMatches":  true
+    }
+]

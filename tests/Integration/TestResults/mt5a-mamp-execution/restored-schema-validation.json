@@ -1,0 +1,12 @@
+{
+    "Tables":  31,
+    "Columns":  201,
+    "Indexes":  131,
+    "ForeignKeyDefinitionsMatched":  92,
+    "ForeignKeyOrphans":  0,
+    "TriggerDefinitionsMatched":  48,
+    "HoldingProvisioning":  true,
+    "Mt4cAbsent":  true,
+    "ForeignKeyChecks":  1,
+    "UniqueChecks":  1
+}

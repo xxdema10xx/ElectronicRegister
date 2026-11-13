@@ -1,0 +1,1386 @@
+[
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\BackgroundServices\\ExpiredExamSubmissionWorker.cs",
+        "Hash":  "2DE42600D6647F13728E153F0CBE72ECDBE24319A427010D7691F6606B2BAE42"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\ApiControllerBase.cs",
+        "Hash":  "1D67E323217510CCCB8E527DAC1A9AA2A1C91E33196258597463104D05C3DC78"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\AuthController.cs",
+        "Hash":  "5A3CF1C0154E9BD329DC594EA919F5E8EAE17DD1F8BA23A5B8E304A8CF224D97"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\BienniumController.cs",
+        "Hash":  "C0F7649574B57A13151B967C2DB0137823F298968FA8373427FCA9639DE1ABD5"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\ExamController.cs",
+        "Hash":  "AD3774DFE5A49F8F8CEFB33879141DE9CC8F9E78AAFE6154683D3D58179CA2F4"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\GradeController.cs",
+        "Hash":  "5C69E4D163D8687469DFAB6D0FA89FDDEE9CAB69442894B642C76112E4A1ACDB"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionClassSubjectController.cs",
+        "Hash":  "214F3876916BD4E1F4C1E8F93521C40FD00E2E05B64AE5508D0C6E8BC5171AD0"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionExamController.cs",
+        "Hash":  "C7BB4C05209D1564E9C41F3F9AE2572B0A9B6C36E767E4F09DBA2A3A70AA397A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionGradeController.cs",
+        "Hash":  "F1D3BD507EF5FF603A258E941FB9A784CDBAFA222719E72F907EF5A948E1FDDA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionIdentityController.cs",
+        "Hash":  "BDECF1512946938649595D8604040D9859839922666BE213D3C75EF2432073EF"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionStudentController.cs",
+        "Hash":  "7838C49375CE91DC7DB22086E1AA5F66526B8AADBDC9F7B1F26641A0A2089105"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionSubjectController.cs",
+        "Hash":  "9C216FEEF2C079E70037C5C95BA7F03586745729CC94101ABEC8C57DEDB3FF2D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionSubmissionController.cs",
+        "Hash":  "6430CE51A704498034D44E5A7DF3F0D96400CABC498B3F81347D1CDA16E12BBA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionTeacherController.cs",
+        "Hash":  "BE8653D64FCAE28BD3AA072A22385CBB7C652FB2071B00F8CA7C43EAE1A8C511"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\StudentController.cs",
+        "Hash":  "3FD11129A9EB20298801BC7A8C031B61E78C90C5958DE4B1F9FF5EB4A62C4B3A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\SubjectController.cs",
+        "Hash":  "2C2D40E5D4C5D0DD9B1C31C0E958F6FF0C046FE2C54A42AC9820F9A66A601FC4"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\TeacherController.cs",
+        "Hash":  "8E69428BAB898E695FEA66FCDD198EC91897A31078B266EA201C09DD3E3C1FD8"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\UserController.cs",
+        "Hash":  "FE9F5B85A6C5C35ACC68E8FE09CD31F6AC90215AA12A992EFF9D4B12832851B0"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\DependencyInjection\\ServiceCollectionExtensions.cs",
+        "Hash":  "2AB5F2E40C5E86EB842DA71903F130AA8E271E2CABF192E6B560F16134FE6A77"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\ExceptionHandling\\GlobalExceptionHandler.cs",
+        "Hash":  "2949CCA1D94366BFC8C372DD7578ED373CF120043BC8B6CBE9B9763465A68572"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Program.cs",
+        "Hash":  "CA5A38379563D0AACDED8FEC304BA910FC3F480B2DE28648154F3A28C4F13EE2"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Properties\\AssemblyInfo.cs",
+        "Hash":  "46C7AA5C83A08043F62D35B1413682F244F4EF69FEA5FB2C227F6BB97734EDDE"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\InstitutionAuthentication.cs",
+        "Hash":  "FEFB91569DCF0920091E2A4A7B0B2C6008590E44D26B55AB807D208DE12AD5F8"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\InstitutionExamEndpointAttribute.cs",
+        "Hash":  "6C33CA7F2E001557D42B8A907E7146BBF7EB15D9D3E04EB4F6A03495F53ED9AE"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\InstitutionSchoolEndpointAttribute.cs",
+        "Hash":  "BF0EB6BC280658CC2776C71CA5F840E75256DE6AB86F1DD90B527BA6495A1E92"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Security\\LegacyEndpointGate.cs",
+        "Hash":  "5FD72732EB7F2EB32AB1930B4E9BC064DB8D92EB397E4D8983910F08EFEE551E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\DependencyInjection\\AddApplicationManagers.cs",
+        "Hash":  "93451F376C1B839196F89E01FAEAEEDF139422AB3E2ABB067B16C5B42389A25F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\AuthManager.cs",
+        "Hash":  "6F8B6385CECCF941DC3DC924E188D9107AD66926CF7117F95B132A16A309CDCF"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\BienniumManager.cs",
+        "Hash":  "0139141E642FF78C650A4053CDF47831E369B0710A21BF9A7A25BD5E0AEBF2A5"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\ExamManager.cs",
+        "Hash":  "B95034DC934898BCF2DA1387FB0DBC2624B3213DBC051C3EC35E1D53EBDFE591"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\ExamSubmissionManager.cs",
+        "Hash":  "5B306C292D4FBB8480C9A716C280BA8C85D4E340AEB6FC1826DCE86DC653A2AB"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\GradeManager.cs",
+        "Hash":  "9857522CEF4E737D417CA51930C00C630F9697E754F87CAAF703E1C9BB72DF27"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionAuthManager.cs",
+        "Hash":  "F1EBE256637A68C5AD04A1218E509252222429608952C158E130DE5CC777BA3D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionExamManager.cs",
+        "Hash":  "72A21264F622DFB42BD7681E683E4E45C41CF889A6E25CBE9B57032C743F8270"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionStudentManager.cs",
+        "Hash":  "7E3F67780D1A0A57C61C27D657C90C8C4D74EBFFD917DBA17920974263E610A2"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionSubjectManager.cs",
+        "Hash":  "B93DC96AA0CAECA65BE950BAFAEC8CADB9A4DB6542F006A23B648CC802FD7DE1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionTeacherManager.cs",
+        "Hash":  "EE6DE7872DCB8E65E9653F79B7BF2D45B0DA22409EBE0C534602495EAF12D30F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\StudentManager.cs",
+        "Hash":  "9CB4F4FBC818EC68EC907274A73CD42E697F2822CEBFE7C4AC0417402914F9A9"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\StudyAreaManager.cs",
+        "Hash":  "4FF37EB0B820A197350A12863199D81FBB96C72745BC36E65E231E70FF4A2220"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\StudyPathManager.cs",
+        "Hash":  "3897619E1341943823DF54156B9187C17C669E01C644086E5B64C65338832D0F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\SubjectManager.cs",
+        "Hash":  "D01DC08B0C7A59151392F219C3BBD53C55A08C15089403AC04FD48F564598AE3"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\TeacherManager.cs",
+        "Hash":  "2E59EF190CDCC12051372655F86D1801DC0DB041E89204912642867770EF425C"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\UserManager.cs",
+        "Hash":  "60FFA09C359B066753A3AD936226C0D6CF42E092097888D3F35FAB279DA9F9C9"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\ExamCreationMapper.cs",
+        "Hash":  "DF6D2359525693149902BA5FEC0E35EA6C798B16D598F24F6034BC0C3A9B3CEE"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\ExamMapper.cs",
+        "Hash":  "C55F7C5E0BC71F2F54E6BA0D9175BE0B486FD0111AA83DC6BE7DD311E41665B1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\ExamStudentMapper.cs",
+        "Hash":  "B81BAE6A3C38B46DDA44FB7FB6C86094118A5323603630D7B62B355E075CD604"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\ExamSubmissionMapper.cs",
+        "Hash":  "36948466B7010174AB1E7568E0A154B10F0E42DC5404BBC478ACAA313722BEA6"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\GradeMapper.cs",
+        "Hash":  "DA6FB204162A7C8439B0C6A1C1975A1909C30213F0719457C39C559A691A8CF6"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Mappers\\SubmissionVisibility.cs",
+        "Hash":  "1669EEA93B39BF06DFC4530191506E4EB4625ADA60306F2585EF1BACEC059131"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Services\\ExamSubmissionProcessor.cs",
+        "Hash":  "0576A4CFFEEE6264F631A1D7AFA8C6A1BE39BB9FC8D7FCA62C050139DEBCA8CA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Services\\InstitutionExpiryService.cs",
+        "Hash":  "FF7E51F10C1E6E8311D7155ED97654030ADF58CBAB507C7F15B93175EB3B33FC"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Services\\InstitutionProfileResolver.cs",
+        "Hash":  "9B9F212EAD7A711D39F56D7D54C435C04079080E7D04F95187B3002B72FA9E69"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Services\\InstitutionSchoolAuthorization.cs",
+        "Hash":  "DCB879F821AB1FB0275C6BEB8C47E6FC3E52BF4E7C73840EE1B8CE2E746D03D1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\DependencyInjection\\ServiceCollectionExtensions.cs",
+        "Hash":  "E80831A27D9D15C7240875D46D9931C8F46E0D1DEEF9004BD61CFBA1AEB23B76"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\BienniumService.cs",
+        "Hash":  "45C788539B9DC882D656CD1941D7C8C2ABD067E745B0AA2526B5FBF381735FBA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\ExamService.cs",
+        "Hash":  "A1FD496DBFF761CB772B1D0901E3D6CAFB0115238F479F05A0433D74FCEFE59A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\GradeService.cs",
+        "Hash":  "7641E7EFB5759B76D237118B56BEE29BF993E9A14DE3157E0074094B77F77554"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\MembershipAuthorizationRules.cs",
+        "Hash":  "FA44B7368C4F5D01D159574650ED674DB20B14AA7174698B3B942B7114246C88"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\StudentService.cs",
+        "Hash":  "388E19167AAD3500C23677F42D98B767C24A095FEB792AF387E6AFC49DEFCBBD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\StudyAreaService.cs",
+        "Hash":  "3FAB2D33F10EC907F0F3B6AF8A18A91FE3F342B3A139A07DB57B0E2602A457C7"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\StudyPathService.cs",
+        "Hash":  "42B309D913716B164F9294CAE0810A46775BDD5B25FE400D94E9C619949531D0"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\SubjectService.cs",
+        "Hash":  "996B69BBDAAADB23C9315939B790DC4784DBA21C4D8F51730809A0C598B68271"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\SubmissionGradingService.cs",
+        "Hash":  "C4B1F6E57864819EE33C8FD71DDBC6F550E28576FD4B70901CB94F6A2AEA94ED"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\TeacherService.cs",
+        "Hash":  "A867CACD9FC051390D8D676318DBADFD765A1AF8E850DDDD387536AF5E323056"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Business\\ElectronicRegisterAPI.Business\\Services\\UserService.cs",
+        "Hash":  "64FAD5DFA7F4188F0920524C1F2AE0928F055F7DFAFA4F850B2FE01F5F94E904"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Constants\\CustomClaimTypes.cs",
+        "Hash":  "8D8121171FEE68F35095D5816332EEF528FBB406090EDB8688213EBD04561A9B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\AnswerInputDto.cs",
+        "Hash":  "828A81B145B9739CA1BDE373694A7AF30C44F65CF2B5F76098AD2CCF362B15CD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\AssignedExamDto.cs",
+        "Hash":  "DD89522ED56A149480CBABB902DC5BCBB0D66DF0B2D2F7541260A9412D6BC4D7"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\BienniumDto.cs",
+        "Hash":  "59A77B1CEA13638036FE0433FE4464C22C50A862D8DAAAD74B9DBD252848C658"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ClaimsContext.cs",
+        "Hash":  "C88B1EB702E1CAB9351F3EACEAB1BB8AEF2BE7FF46C657D61F6032D2126D073B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateBienniumDto.cs",
+        "Hash":  "5C7BEDE49654E1EB10CC03D63CDB89C66ECF87BAE8BB11ED6781B4DB69613AB9"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateExamDto.cs",
+        "Hash":  "FDE34DB3E15244E88DD0852ED9EFC1C4EBE3395443CC4A2B9E834F7B3974490F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateGradeDto.cs",
+        "Hash":  "3AE6F9A539A8CF9DEA5CAC0ADC84F4144DB294EFF3F1F01A16C0B5284D49C8BD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateStudentDto.cs",
+        "Hash":  "228703DBFD0082E023345E6FCD39CB8C9A2C2AEC4A9BB9A511DF6161ABCF804A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateStudyAreaDto.cs",
+        "Hash":  "A5586EBEAA41E9402D16E74BF2BFF5F4DC85135DB46BA988F3F66127DAF51C08"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateStudyPathDto.cs",
+        "Hash":  "12F1588ABDD27B0267225047AAB83A678AB8A8AC5ED977F209868A8FE0C32B22"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateSubjectDto.cs",
+        "Hash":  "8ACEDDD82AFAC2E1FCE2079C40402364FB60AEFAD6C9B43BA0408A79B7BE05D4"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateTeacherDto.cs",
+        "Hash":  "BAE76E28132ED799527FABA42975C14005435C990846E9AAB2CB072751C715EA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CreateUserDto.cs",
+        "Hash":  "CC12789D04F9E3276BEBE46DBA243AFBEF981502A8A6E1D91CE656957732D0AB"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ExamAssignedStudentDto.cs",
+        "Hash":  "876EA2272ED8B67E7AE59A64F4BF30C01182503F90D8ADA3C9A63EED12975693"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ExamDetailDto.cs",
+        "Hash":  "96E4F304DFE8348FE0B264782C2C931020CD22FC95AE4E06684DDCED2AE7C01F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ExamForStudentDto.cs",
+        "Hash":  "1E615CB2B4EADFE0DD6A7D4A3356B6FBEA779FA731B212BE5A48CC2309DA18E7"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ExamStudentInputDto.cs",
+        "Hash":  "11CAA323A535B0664FA3A362F731A0825EDB2BD18BDA6CDE3536F3BF269D1A1F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ExamSummaryDto.cs",
+        "Hash":  "4BE267E998FEED2E6F265110FC96149761E80DF4B52B3276C92212428790639C"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\FinalizeSubmissionDto.cs",
+        "Hash":  "8EE95A4C360327D83C34DFBBCC9C8A841E33176572F2D5218A53122CD18E253E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\GradeDto.cs",
+        "Hash":  "486CC514D02F45932630B0440D0FC6472413323FD06E33742CDF2844BCD8EC37"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\GradeFiltersDto.cs",
+        "Hash":  "6129F46DFBDFFE6A39DA4C4A6D4EEF26E191013B861D7750CBFD37107FA5C9D4"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\GradePageDto.cs",
+        "Hash":  "D97C219D4D268AA16EF279EBE2BBFFE4982A63E5F8BAA220ADA88A4C02A2F4E7"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\GradeStatisticsDto.cs",
+        "Hash":  "692215C635B032AAA2C18FB7D1BEC35DC673383B9B2AFE74344EC8A8E6977553"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\InstitutionAuthDtos.cs",
+        "Hash":  "9BD87C9254AD4B176B4057D8D5E87C951EA50FAE413E489030979CE369E204EE"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\InstitutionExamDtos.cs",
+        "Hash":  "2B964A7861162967AA119DD15BFED36EA1499A861E33B593ADAFFB0B29611427"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\LoginDto.cs",
+        "Hash":  "35693A9D718EFA14295D8F9064A02D914F2F5AF8B5348C7A77622D2D3149D830"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\MicrosoftLoginDto.cs",
+        "Hash":  "1FE982E5557E7AF470CCBF98A806D7948AED958186B43D4D5516F075DF1DA4DC"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\OpenAnswerReviewInputDto.cs",
+        "Hash":  "D267DB038DB7162CCA38FDC3DA51FF6E01BA0A49215AC008CEFA012F97F4BBAD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionDto.cs",
+        "Hash":  "9662BEFA1C3D7CF7A2C51CECD0AED099F82FFAEC353083BDE058823E79B6E4A4"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionForStudentDto.cs",
+        "Hash":  "4E7ADBB87A4CC6B446CB99686BAABC1099FED9E1E974BECC79B39472AFB78396"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionInputDto.cs",
+        "Hash":  "B2037347FBF48424CB93E821D77179F10D63D7FB7CF87B0B823FA9805A536CCD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionOptionDto.cs",
+        "Hash":  "BE0EA81A1080274606A7979CD20A6B6ACE830F0DEF3432E720318E2595C51100"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionOptionForStudentDto.cs",
+        "Hash":  "192E9BA4664F4FF80DE1BC95CB15635AB40A1FF6FB8BED096C59B619102CBC32"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\QuestionOptionInputDto.cs",
+        "Hash":  "1F4E2A9F792B912E94973F330595FCFA43731C8426F35F8EC821D7BF7298C821"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\RegisterDto.cs",
+        "Hash":  "8EDB1835ADD3FDB9B1A8998E53A959FD0FE236C0E249BA0F3802BF1BBD42EB2B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\RegisterForAdminDto.cs",
+        "Hash":  "4846B04DA643E38140ED364FE3785F044A94DA28467477AF39F0E70A5D910036"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ReportViolationDto.cs",
+        "Hash":  "A7C03A4DC85AF997F4868612C358C9EA35B20C99FB8D10EB75F4FFE529AE6457"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\ReviewOpenAnswersDto.cs",
+        "Hash":  "DDBA52DF317FA478F11512D3888233D2F27DE2B31785C8F31FFBBA5F59E6EB3B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SaveAnswersResponseDto.cs",
+        "Hash":  "FB7FA6EC9AFEDAD87F41E68F331AFDBA9DF6D7D4411B588D9501910BE12F63E8"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SaveExamAnswersDto.cs",
+        "Hash":  "8BC4172D6E58C35B19EEF6D56AB66A9C2F023D19458626BC695CB344D326A8AA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\StartExamDto.cs",
+        "Hash":  "640345810C55697024F5471439A47B34A17DC409703A16A67B78CE0F1E90BA10"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\StudentDto.cs",
+        "Hash":  "1F1925797633E5BCABA5825C667B17BF0BF3426828F9AB236F382E5674B09B1E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\StudyAreaDto.cs",
+        "Hash":  "5E0CBB51118C510CF1B95F8DE81AF3C8E0A5D0002BA42415B1B5C90DC1557930"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\StudyPathDto.cs",
+        "Hash":  "AD038BBE161EF5F3B4DB19AB3279587AC4FF448E7B49AE3B4B5B17EC37573AF7"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubjectDto.cs",
+        "Hash":  "AD70FB821511745BA37FDF5FEE0BB2482863536E121D7082C4BC63DEBDBD0C2C"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmissionAnswerOptionReviewDto.cs",
+        "Hash":  "82802DB0F465238683C68775A4F4380DCB73EDEA62386599C6501D3943752DCD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmissionAnswerReviewDto.cs",
+        "Hash":  "BB4F7343661ECB5E2788C88324D00A0B87D21671AE5A6F9B7076D4FA79D0721E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmissionResultDto.cs",
+        "Hash":  "F4160EB0FD59085D53A382B71969251998A192D457D5569E4635A60371253170"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmissionReviewDto.cs",
+        "Hash":  "6A492F735839A5F714E793B29A6CD50A8CC929214B056B13830B37728B80FC05"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmissionSummaryDto.cs",
+        "Hash":  "3B49FBFCE300FD9AE93B2E548310803EAA949E15FD9C2B7B5EE940D4C8A0B6BD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\SubmitExamDto.cs",
+        "Hash":  "EF765EC9888582137912E165D95DBC5E53F95CCF75334E210788F2F84B5A645A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\TeacherDto.cs",
+        "Hash":  "AEFF0769C1AEB6ADF271205AFA69C35616C7F7424BFA9B40C51A528CF9FD264C"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateBienniumDto.cs",
+        "Hash":  "1AEA588C1B9DA45CFE480635D02231B3666307BCE5CBA84B0267ADA9DECF7CC5"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateExamDto.cs",
+        "Hash":  "B51FBD0EA183F35E9AB4440E5EC1882DBCEEFF10C304C0ABD3DC767E879A1AE0"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateExamStudentsDto.cs",
+        "Hash":  "E06E131A65E151A483DFFBC9875D5952C0CAA3FE4A7D230508BB982788ED8C55"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateGradeDto.cs",
+        "Hash":  "B7233D4CFC00AE218A566FB6FE6286D70D7D863A40B287DA401F59C1CD64EEF6"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdatePasswordDto.cs",
+        "Hash":  "4EA8DE53E7B552519DC602A2EFB0C37A8790FC6A162D10F67AB7CD6339669BD1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateStudentDto.cs",
+        "Hash":  "83748E5D95664EA244B3E9B7DD6361E04E5767744AC8DD470ED4B29DD8933599"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateStudyAreaDto.cs",
+        "Hash":  "1A8A338C2D2B2C006FFD58DD67FAEF43A1D4C114066B326CC3962598CC3616A1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateStudyPathDto.cs",
+        "Hash":  "8F044E15DA3BA316AF4E71C51191E52350ABAF802B3DA05AB89742E0B1A0B6B0"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateSubjectDto.cs",
+        "Hash":  "E120DCA0CEE6B673F055F1AA661C5C45CCF1AF2CC1BA251D124B5311F927A178"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateTeacherDto.cs",
+        "Hash":  "81C5CF262E6CEDB22C661C5F9B79307797F27221100CCF79DE6DA6F0885C1277"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UpdateUserDto.cs",
+        "Hash":  "DC9D05B1540BDFC86564801DB924E6287D594B8796BAB6264F2CCD5C1F0B49B1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\UserDto.cs",
+        "Hash":  "535BE6DE231C321A4FB5777C5EFFE43465B38A491F93FCF927F76B5317F24263"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\ExamStatus.cs",
+        "Hash":  "C0EEB25DF2118BB81363CDF960F0B0C7F61F5EE2FF6473D6F7CC7A42BB190EFA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\InstitutionRole.cs",
+        "Hash":  "BC20E5E447A4FD5AF915B4FD10E1816B876C3226C218BEEC2DCDF609E0166C7F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\InstitutionStatus.cs",
+        "Hash":  "AB0D059B670917A7E1F4B87B2A09423FFE5F1F176829E6D26947B655F2A0F477"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\MembershipStatus.cs",
+        "Hash":  "EA3F0D71D0652BEDA491D1CDC7B8377E8D5A01D330A221B85B3B9615208379CC"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\QuestionType.cs",
+        "Hash":  "4AD172F82C9F19CE07C5B36631F493B207F328CECCE9136BE92C558160BA0EC6"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\SubmissionStatus.cs",
+        "Hash":  "83528F2D78680FAE1756F581E2D384CD67F2B19E4C0FFC124BB92BFCDA50437A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\SubmitReason.cs",
+        "Hash":  "530C32D4D959DAD9FD8B87A40E38C5496ACC09EB0A3A3304D118F3B512F8F2C6"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Enums\\UserRole.cs",
+        "Hash":  "7090AF635178811BEB33D8C52095D775EC3A6CF71664F466F0B3EFDC768AEA6E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Exceptions\\BusinessRuleException.cs",
+        "Hash":  "0CBCD7FFA8A1CCC0977557B429D6AF571CF3EAD7610702E8C71D88CCB4B95A9D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Exceptions\\SubmissionErrors.cs",
+        "Hash":  "69A1831EF229E7871989A041A60AF78100F8E7C1E953216EA094E75090368C8D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IAuthManager.cs",
+        "Hash":  "B633B79F0D06D6712E2B523955D47C107DED9A3FECEBE6184B3AE7EAF5DA0119"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IBienniumManager.cs",
+        "Hash":  "4042A1CF61E4085BD2B1FA488EBD16EFF3F886AA07ED60A07B542F3FBDE9BFDF"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IExamManager.cs",
+        "Hash":  "A0A56F341BC8650B5A2D1BF4A2F356632F51424D46E77DBE90B1309F63308381"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IExamSubmissionManager.cs",
+        "Hash":  "C4212F7605D06AA6A19E6131B4B07330E428C21479942D848017F4449304A5E4"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IGradeManager.cs",
+        "Hash":  "B640FD93632A1F2E886688718F1E0FDAE8E63753F699A5949D299F5345FC0E06"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IInstitutionAuthManager.cs",
+        "Hash":  "CD2BE0A647827C3AA01B1E43EE27CDA0227983F80CEC58137D5AB68805CAB49F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IInstitutionExamManager.cs",
+        "Hash":  "5343909804EFD4BF0C92CCFA2C96A328C8759DD59D07EBC6338337589C5F7069"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IInstitutionSchoolManagers.cs",
+        "Hash":  "259AF54673FB870673E2CF0C652826EB5759ABC39FE422934172C52BCE7E492F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IStudentManager.cs",
+        "Hash":  "D322FF7B1F478AEA6B75FC4E4568FA9E5CFD29346A017C2A7CF1EFC9DD5E91AC"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IStudyAreaManager.cs",
+        "Hash":  "29C5A52BB2D18C6DF7382AC5A8F628174B57DDAA6D61DA83764767FAE23EFEAF"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IStudyPathManager.cs",
+        "Hash":  "99947F4FCF2AAA44E810D8836CBCDD85F17345FC7FA681C9DA72FEEF1C65F4E7"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\ISubjectManager.cs",
+        "Hash":  "0B686BA0D26927D460FF57B1681162E4788BD137DED866E2DA6AC3E06B9FE8FB"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\ITeacherManager.cs",
+        "Hash":  "A5AB985970393FCAEE8B56613A78E3C6170314CD02AF26CB8B01F018C6AA2445"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IUserManager.cs",
+        "Hash":  "5EB10376C70B9FF029DFA6B2F8E6DE0C72DC5D6646DE01ADFA725EA0FF3C363B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IAuditRepository.cs",
+        "Hash":  "E15F68955322356234990217048F8ADB45AC51C51012FC1AB89105AA31AC3568"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IBienniumRepository.cs",
+        "Hash":  "BAB7120B49AFAB2C9CB960005AD0EA958162BB98613B60434C9F6DD4DC622C65"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\ICampusRepository.cs",
+        "Hash":  "A9E47F0FE1055E584E08517B60425C88043D7F84A24844262386F9DA6E0A381D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IClassSubjectRepository.cs",
+        "Hash":  "7CE9CCD1D00FDB5E434DD2DDFC6F9A2FC2CC72F2F6847D601BC4DCD5B4829B59"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\ICourseStructureRepository.cs",
+        "Hash":  "3DF7B224DA5304CA4B8ED4001DB3086F1553BBB765E67D8194DDEF9A21F97281"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IExamRepository.cs",
+        "Hash":  "97DDD1C08CFB0E2ECEB51707AD3EDB2194C1DE6A8445E7D3AE0CF761B4DD3F2B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IExamSubmissionRepository.cs",
+        "Hash":  "39968B6ADA09BE8F9D4531403146911BF6574B1088AFA4FB9A3D282281E1912C"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IGradeRepository.cs",
+        "Hash":  "C5865D36B776059B73AB20E6D1F65212074AF839B861A069701637EF1E35C5BA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionExamRepositories.cs",
+        "Hash":  "299FABE50734235930357FF549F3D76D74BEAC089DB6D8DBDEF8F6E6521B0D3F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionMembershipRepository.cs",
+        "Hash":  "B0820A5BE0A87CE6862C9BE1A302FF8EA30352F4AA877C18B8BA6966634D1BF3"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionProfileRepository.cs",
+        "Hash":  "2CA35EF51645445238F56E65550400A07E3FE942946291F3910FCB966E2F37C5"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionRepository.cs",
+        "Hash":  "C73A37DE995245C1263C0B261AC02B97E91DCCDA61817ECB8B7FAC4BE468FA27"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IInstitutionSchoolRepositories.cs",
+        "Hash":  "D34DAA3415A906A14DDEC92BACB699366196C8304C24F259559332D5AD0E33DA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IMembershipAuthorizationRepository.cs",
+        "Hash":  "0630F24D9BED7D4C9194AF79F724383C2382A2B397DC24A2CC96E989995B0476"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IStudentRepository.cs",
+        "Hash":  "7F1E46A7D23820AEF33909E72D641BE8E7E8C04793A18FE764735ED2AC5C2F8E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IStudyAreaRepository.cs",
+        "Hash":  "B8FD826A25F297E7A0439BEEF7BBB9C8E6C2701CEFBB84AD766BBEA0B37684BD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IStudyPathRepository.cs",
+        "Hash":  "A38A80ED913F40234DC7C67CAAD2166E95A752634EEC7D7AF6D6087DCA717211"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\ISubjectRepository.cs",
+        "Hash":  "477DFB4AC9359EFF573EBA7B913F58C2A345420FE9393C8B6697178BDD1AF30C"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\ITeacherRepository.cs",
+        "Hash":  "EB35A599E2920EFE86FB13477C70F0202BA2F7358BB1A4F950B4FBA1C2EF2F19"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\ITransactionManager.cs",
+        "Hash":  "576802610F441B5210CF1273A05A6C928A4B2BA555E6689EB034EF3503860852"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\IUserRepository.cs",
+        "Hash":  "FD8AFD7A30325AABE61421D7C543CDE5B5B980C7AA4E4C99A722FFE6BA98AC49"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Security\\IInstitutionTokens.cs",
+        "Hash":  "23E4DA6659122F82C6041C62AFA0F116EA3AFFF84108064E1D39367F342DF0CD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Security\\IJwtTokenGenerator.cs",
+        "Hash":  "B416CCCB9D69AFAC9F9605B8F908CE303AF0CF89ABBFD31DFFCAA25738261033"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Security\\IMicrosoftTokenValidator.cs",
+        "Hash":  "3986EE130E24843F72FD3713F32C2A965435188A827375EFD0FB8E6AE7672257"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Security\\IPasswordHasher.cs",
+        "Hash":  "6DEAB478B471171D6410D0EFED8FA6F6D3A5145D2BC911A592C4725FC79705EF"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IBienniumService.cs",
+        "Hash":  "3B11C31C652DC893983EB6941B06831872F37A31457E3B536733E3A2EE66007B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IExamService.cs",
+        "Hash":  "BEC7CC856AFFD029087154ADE19EC343575E94E7F6D0566D33D6289E038C2498"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IExamSubmissionProcessor.cs",
+        "Hash":  "5E2D992C37CFF0A5C7BE5FAEBF9BE7D1E44C3653ED375B8F355F7DD22E225F81"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IGradeService.cs",
+        "Hash":  "25B4336B409B0434128479412DDF28312D50741031DE77215D60233D05D55571"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IInstitutionProfileResolver.cs",
+        "Hash":  "0581D4453EE837F736BFE1CD7C7F7BFF73B555A4073DCEF3E7807E00C27A1D8A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IStudentService.cs",
+        "Hash":  "6FE1034C04869AFDC562094698CB23CE59D54D47B0F1257F1AF826EAB857AC70"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IStudyAreaService.cs",
+        "Hash":  "9211160433124858AB4E8B5DC77F755DB696378188FB86F1C2A81CA3AE9C5E05"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IStudyPathService.cs",
+        "Hash":  "AB172B56F45CB371CE4582D9A674E1DD7ACE3E43536C200818896B0FB1931090"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\ISubjectService.cs",
+        "Hash":  "61E43B9ECA6759CC32F6B41C0EE567526F414E608BE0F1A38C206FF7A6E08156"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\ISubmissionGradingService.cs",
+        "Hash":  "012452A52DCFB6BB2528AC8AD7CBC811FA11E945A2C5547EF2640AE672FD595F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\ITeacherService.cs",
+        "Hash":  "998121FAAB6A74BE51FBCA45253F51BADC5A3636111AC817A794C824087EE34D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\ITimeProvider.cs",
+        "Hash":  "5F180CDA7E361398828CDB9D8EE67BF477EBC12AA81ECA85C80A090E2B116E3E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Services\\IUserService.cs",
+        "Hash":  "6CCEEEC611A2233883D8D1EF510B3907295BF57EA8B3A415E40AB29622EFBF74"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\AuditEvent.cs",
+        "Hash":  "F7AB615E0DE0F9C4F1B91D1194E363893935B4266424F30D5C94BFE896EA8B2E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Biennium.cs",
+        "Hash":  "7AE5511E4287C00880767342F605B2DA83BF4F9AE2EEEB2677B5D710043B7B2A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Campus.cs",
+        "Hash":  "C9D6B76D7851B9330D5216C4A32C8E25E03906410EE22264D1DD8CEEF5B995B1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ClassSubject.cs",
+        "Hash":  "3EB294ED874345692DD51D131E3ED723E9A9C0E9BFF2240ABA7C71E3E14EEE36"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\CourseEdition.cs",
+        "Hash":  "44B564AB70950855A2F9B719EFF26FA18418850679C9B2EF1389945ECDBB5A9B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Exam.cs",
+        "Hash":  "7BD0EAB6FA7E916AAA157EEFB42B55C091D0122C441D6379EC61A1FC4A08BB36"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ExamPrincipal.cs",
+        "Hash":  "B1DE47E626154869A8A3565B1845F2EE426646F814EAF28D46C3E059743846BA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ExamStudent.cs",
+        "Hash":  "CD58B9ABC1407ABA6D2822A7E9ECFB492D68873B7669A04C219B6A327198E51F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ExamSubmission.cs",
+        "Hash":  "B02B593D726775B1AF04019692CC8C4AA368C4C5D76D08EF7DA36AF56CBCB38A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ExamViolation.cs",
+        "Hash":  "3244870BA7ED0BC8839C8DD096E0DFF9F73F53C2F08964185FB2E82B23784D15"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Grade.cs",
+        "Hash":  "B262708B50D5F7474FDFF497497ACDBBAC243330305DF49E0653367780CDC59E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\GradeStatistics.cs",
+        "Hash":  "09432D13B459871AD84AE63B18E64D94F223D8E10A5E932886F0A7288D9ABD6B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Institution.cs",
+        "Hash":  "F7C650A0CF8D41DCE2B9F2EEA3F8B70913882F7DBCF29C8EFF1A3B1BE7005B4D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\InstitutionMembership.cs",
+        "Hash":  "D4B42992CB7D9F0FC5F953462A25BEBB79FAADBA8A95DEE935965B3C9B8E423A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\ItsClass.cs",
+        "Hash":  "B3B7B7D454A956D71248E16396F9DA2F45E3962802C360A09C18CA6684A16131"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Question.cs",
+        "Hash":  "A2CD39D7671F249A1AEDD440884A889A709205A0FE5EEB097C849F8D8E158ADF"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\QuestionOption.cs",
+        "Hash":  "79799FCD32B92927B6C0DAF1EE93D8CD8C7E248FFB2143EAC6E12573338FDD64"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Student.cs",
+        "Hash":  "60D18CF8FF976EC7A95A728A45914606EF8422E2CB8237BA8479D6407FEFF4C9"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\StudyArea.cs",
+        "Hash":  "8C6287DCB517F9819971E8B54929436A48D80C9C6E29BF89D3C884592916B87A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\StudyPath.cs",
+        "Hash":  "A133D8B3C999C10D8F80B92A09CFBCE6F8181741C736496C6B0D38E90788B1C1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Subject.cs",
+        "Hash":  "C6A1EFC753FF7CDE24114D5B4F54B0140F56512AE1740277988D52D3CA322A90"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\SubmissionAnswer.cs",
+        "Hash":  "52F44F8FBE0A2AD16E47D1C28DBD2831A65ACDC369519B7808627B624F939D7F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\SubmissionExpiryWork.cs",
+        "Hash":  "9350AA8FE1149487DF13C76FAEC1B5D9FF077DB2F96E9F16FD0A38741B169D98"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\Teacher.cs",
+        "Hash":  "360BDF90ADFBDFE29EBCC369CE2EAF96577D0B0E10B73127D7B2E0EF48AC7222"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\TenantContext.cs",
+        "Hash":  "703ABF758BF7A39F463EB4CF73FBD70A73D1AA728B1FEA1135425548377AB8FC"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Models\\User.cs",
+        "Hash":  "16216495D516DEC984B22EA02FC0E2AA32916946C6B0EC9D41F2DDD943CCC118"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Results\\ClosedGradingResult.cs",
+        "Hash":  "9520C47236040F212F43943763ABA1A79A8A18CB3FC223BADB86CE2532176A68"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Results\\SaveAnswersResult.cs",
+        "Hash":  "2472E852DA031C452410F07D01CD7E7A6200F1FF1AB5C5CEA2AB1412D92A6AFE"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Results\\SubmissionEvaluation.cs",
+        "Hash":  "F8F545885F57062B7D982715AE93537E404ED73D47DE4DED23BAF0A955E2B438"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\DependencyInjection\\ServiceCollectionExtensions.cs",
+        "Hash":  "4D99F23C52E137628E80C2D0BD56B6D551CD5F5901B46F988362787B5D22C5AD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Mappers\\ExamStatusMapper.cs",
+        "Hash":  "00F978D86A41BD5296F7199FA9E0D529BF2D106BCF2D620015476B99D2040638"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Mappers\\QuestionTypeMapper.cs",
+        "Hash":  "62268A32A42CAE4CAAE08ABC8E9BED510BC18C32E18D701D177B4C5C2B749F74"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Mappers\\RoleMapper.cs",
+        "Hash":  "AEBACA6AD8C053F34A2F3D0E0C94C352182EB2699ECD3F4519F434AF24D2B9D8"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Mappers\\SubmissionStatusMapper.cs",
+        "Hash":  "3271E6FF2B958819A2EEECDB9216D54B536DB6F56BE83D92D4575319EC36D0E3"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Mappers\\SubmitReasonMapper.cs",
+        "Hash":  "84AAE734F53FDFB78E0B49DE15A4A0B70F17846ABED50C2398E4E033BAF4349C"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Options\\AzureAdOptions.cs",
+        "Hash":  "8BD4B436F59CAD549ED84FD14263991A3CEA6DB643E49171FEBBBB109C7112DC"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Options\\IdentityMigrationOptions.cs",
+        "Hash":  "F1EEC16976915BE4D8B73B5DD4018465880CA86B531A7AADA3041D85734781DD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Options\\JwtOptions.cs",
+        "Hash":  "9F9DC1CF7A19579A45BF39D4454A3ACE32E2004493E835DCDCF4BB86DC2A51EE"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\DbUtc.cs",
+        "Hash":  "7A3B216026B66E5025F897D91158C35BC4B8F37529DBD73E4D5EBE538D5B8762"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.cs",
+        "Hash":  "E07E4B7B8E66DC84950848CBDE28508F155A905FA17F0037AB57F6BE07A9E7F5"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Mt3aOwnership.cs",
+        "Hash":  "0EE25CE88793ED4141E9EEC193C5A4F3F2772F52BFCA7F11A60CED1D327E002F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Mt3Profiles.cs",
+        "Hash":  "FCB0D471EC910D134EC32EEC124296BA98743A5CB8325DA267D2A81D8CCC693B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Mt4.cs",
+        "Hash":  "A6EC1503DD7E7B3E0B3F4146DE6AE43BEFF3A0AA94AF3EFBB817BCCC0E0EEA21"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Multitenancy.cs",
+        "Hash":  "4A07AF693F20FA4FD8514BAA7CB5DC207106412EC3F503F4539072632A4A127A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\AuditEvent.cs",
+        "Hash":  "A7C0BAFB1FA6962B62E2A074CA97EB6F38A30F53928FAA31E37360AA14E3517F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Biennium.cs",
+        "Hash":  "174770391379228F52D5CF217C7D42A13F5A81A5C754CBF897C1289F6E7C5DC6"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\BienniumStudyArea.cs",
+        "Hash":  "99BD3676EE988C118DCD8F2AA6578D83E0CE9A999170A6DE16A2215FFD1A71CE"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\BienniumStudyPath.cs",
+        "Hash":  "85D45CC148D160DABA9AD63CBB8A254F240CA26A068C1E539F2A82C66DB8364A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Campus.cs",
+        "Hash":  "33856A2C01F39188F3DDCC7AD5F85C8AA3C4E3FCE2B3EE265649CCD2957EA0C5"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Class.cs",
+        "Hash":  "5F800B8EF7305BBC5B48C459F744ACB976E6A13D4664C58B4B8E71E9C6B2A052"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\ClassSubject.cs",
+        "Hash":  "1023B99E4653411189CB2EC0231686C08F036C6BFC4CC96C09F22DBED81F93DA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\CourseEdition.cs",
+        "Hash":  "62A926762056D7725C1408E6609611E4F49F0AA20FB6F7934DCD1D14CE7E94AD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\CourseEditionCampus.cs",
+        "Hash":  "B5B7C7DEFB40949007A6912D972C8F085519FB7F02044C3DDD4794023E3C077F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Exam.cs",
+        "Hash":  "ACD56123076954495C1A532637D3308419AFE99EE435258EA4432A35A89D44C1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\ExamStudent.cs",
+        "Hash":  "E7374D83FCD78F2627B9D81904A16FE5215F78F0A391413E22572553AD101190"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\ExamSubmission.cs",
+        "Hash":  "03113CD72B5CA9BF89BCA4134967573A56151E91B79D0FC2C304C5C81AD53A44"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\ExamViolation.cs",
+        "Hash":  "CFF2CCFFFF9FCB2757C7FA9418BB6CBE0597BBDE1B4D12636DF4ABA62643B565"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Grade.cs",
+        "Hash":  "18BF3C8CC15BFA7A06D0191699E103E58EDDBD20551F17B87FFBA9AED057CB30"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Institution.cs",
+        "Hash":  "EBD5A141B33767773452ABDB74005E949E8F2EE0F9B73AD3A49AB0DAED59589E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\InstitutionMembership.cs",
+        "Hash":  "B1E66B004AB1893CD9E488362DE3CB9AA28F272751825848AB7C840DD282EE8C"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\InstitutionMembershipRole.cs",
+        "Hash":  "184D11176EB6A6881033BA81A25DBE2EE9D3270B474A40E7406E5E595BEEA864"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\InstitutionStudentProfile.cs",
+        "Hash":  "3B00EDD0363CF94A6B7CCFD9FDD1B8470E6AEB28559EC36E78AB7CD82C95C63E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\InstitutionTeacherProfile.cs",
+        "Hash":  "719BA9A8DF68800B8E6FDBC4739FE1BF3AF47A2F2F21366ABE4AC9D5DEC83AB8"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Question.cs",
+        "Hash":  "5075083724F27B2DAA3B2EF9845560F8F6365B3F536F307A5C59841C1DD76B69"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\QuestionOption.cs",
+        "Hash":  "5A3A3CF7BCB45D2461B87BD62A326067988435289D17B864D4D71D2B66BE404A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Student.cs",
+        "Hash":  "F7B30F55F24D6279466C4B495CCCC206B05DB48367107B92D517870011ADA814"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\StudentEnrollment.cs",
+        "Hash":  "C3D4CA58F528060F8E5E22DE5FD12510419541E900430596DCFC8B63CC0776C4"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\StudyArea.cs",
+        "Hash":  "F05C66C01C2AD572DBEA4660F1A2A93E2EBDADFDA07042D756B9F480445435D6"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\StudyPath.cs",
+        "Hash":  "11E078BF4C090F535333BB4E502D96D45131207266158FC9C8C9A755AFD3E1A6"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Subject.cs",
+        "Hash":  "F3C9C2C2BA6771DCA16AD95A3720030AD39A55E5981AAD87DAA8E76194ED5A66"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\SubmissionAnswer.cs",
+        "Hash":  "87CA7B611259F5198ECA234FD2332471EA1FB00C49D3531F7BCF1897B51328DF"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\Teacher.cs",
+        "Hash":  "625263E6824FEAC9F95F08BFED8178E19964781DCF1981C21BB71B12C5BDF70F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\User.cs",
+        "Hash":  "322E93631A7926DA3EA2552CBE79A4FB53064CC361B0DD89E5B4CEBA052CE40A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Migrations\\Mt1SchemaMigration.cs",
+        "Hash":  "45D0D2E3DE27F49FF98AED22D1C06DA20E8E6C7E4DB010677FD047C6FF505A45"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Migrations\\Mt3aOwnershipMigration.cs",
+        "Hash":  "5161BAF1DBA6153DE19A71F8743797CD8FFD95E78B26BD8A582CEABBDB312EB1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Migrations\\Mt3ProfileBackfill.cs",
+        "Hash":  "9DF33FB24D7BF2D46E83A69F7D0014B5A6AAE14DAADC16C2EB5B1E846936CAD2"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Migrations\\Mt4CourseStructureIntegrity.cs",
+        "Hash":  "8A91BF61C7E305CA1481340FA5FE982F4138B0585C240797F76E6D4DDB343168"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\TestDatabaseSession.cs",
+        "Hash":  "DE427B56E1ECA579AC83056FD55CE56FE6E5856E190BB5C63127119187862F93"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\AuditRepository.cs",
+        "Hash":  "2023D385365AF51E2455C557B30ECC45AE5083CC483FBFA19C045FCC16B369FC"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\BienniumRepository.cs",
+        "Hash":  "9141A19288C48370289E7360A15D870892E9FF9C055312FDD1E3444CF9411E0D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\CampusRepository.cs",
+        "Hash":  "FA805434B9A0B1FE85720833C01A9C9C82AEB7D72778E4D31D2BFF61DE6CAE0C"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\ClassSubjectRepository.cs",
+        "Hash":  "48F874534BAA3016175557C5C8E0303635382F97D18CEDA1BEE157F03EF13AF4"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\CourseStructureRepository.cs",
+        "Hash":  "7987F7AA2C13C5257FD160EC005D79C5246496E39659B188E38429AF4EAD84CD"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\ExamRepository.cs",
+        "Hash":  "055B1E75BD62217B488EE090CD4B951611E06D899403EDC1A92F168C7C227A54"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\ExamSubmissionRepository.cs",
+        "Hash":  "4FE51B353373A5D5B774FC66D0A37E4E60B337F3F4756C8499F9FC5110B7D280"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\GradeRepository.cs",
+        "Hash":  "180CE7C741072862935CB0E315A83555688BB497F830B4EA97A2E2DCDF63A188"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionExamDataScope.cs",
+        "Hash":  "3AC010EE384AB4CBE7AF9656E3F67A8202CF0A7C8F3355D80895C1E38C4F8C20"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionExamRepositoryFactory.cs",
+        "Hash":  "81EE84DA20239F3EAD4AAE1E74F1ED3BBB9DB73936A034B95F48D2E4C7D7D51E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionMembershipRepository.cs",
+        "Hash":  "64DA245F0A87DEE530C97812DBE9A900E595716E39386E4A4BAEBC7EFBBC66B3"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionProfileRepository.cs",
+        "Hash":  "FAA886DB7FA146173BD637AD047365987E6687C32A256C3A2D924422CC7FB2FE"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionRepository.cs",
+        "Hash":  "857E34E1F51947C81274B9AE61AC0D2E72F521FB69BC251589EAFDB4DC6A40D1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionSchoolQueries.cs",
+        "Hash":  "3D0C67BC19EEF02A1DF90328A251BD9772C40AE48C16C34BCE2168B52DA0CECE"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionStudentRepository.cs",
+        "Hash":  "F325E03B28A8C219E8F885621CC79B7C466CD8AC30CB1331EEBF76E733E914E4"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionSubjectRepository.cs",
+        "Hash":  "72335379955D28AF74FD580837922F0BBF8E36C530167F47DC796D63D60A7EBC"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\InstitutionTeacherRepository.cs",
+        "Hash":  "E710D95475FCB0E2F5974EE9AD91AD77D300992213C9D564AFAD166FDA27BE14"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\MembershipAuthorizationRepository.cs",
+        "Hash":  "3DB8F45DDDB99F8A7B91211FE0851D14D0BD25DB128A6E2AC562CEAE7D50840C"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\StudentRepository.cs",
+        "Hash":  "4933DB9EA1FAF1F7EA0A78C387B961B5CD7E5D53FE84F557BE337EC91C84901D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\StudyAreaRepository.cs",
+        "Hash":  "EBE750D39D37B4108AC0BC6D6784F11A5C8E3E5552F1136EDC236105F3BFB924"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\StudyPathRepository.cs",
+        "Hash":  "882CC7F8B247506D070C505ECDE643660FABD11128330757B96A6FF5F72359F6"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\SubjectRepository.cs",
+        "Hash":  "B67D6DE85346462D6D387C752FBDBF2A2437C557950C31173B21D04ECB98993A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\SubmissionExpiryStore.cs",
+        "Hash":  "9AA0D9E75C43F59187F26C66C980BCD13948B66E0CB781F0EB88CE2B9A703C1F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\TeacherRepository.cs",
+        "Hash":  "AF0C9A8AB7A56BA1FFDB3FA98D6CD9B65085D61DFD757A43A7A54CC1B80E37B8"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\TransactionRepository.cs",
+        "Hash":  "A399E4696EECFC2650150C3537BBB7C245D3964C875DCBF797062098C7870CE9"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\UserRepository.cs",
+        "Hash":  "A69B7CBC9F4AE9532D70F85599067A90C6C5351C61799F727EEC3A30C01B3D4E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\BcryptPasswordHasher.cs",
+        "Hash":  "25D93BF5A18798AF9C9E78A07B70CB32C5B3A0A51402D82A7BA47886F1AA825F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\InstitutionTokens.cs",
+        "Hash":  "FA45E80CBD105A111DF54B231EB3530798FE123A7CC8670C028382FABCE907A4"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\JwtTokenGenerator.cs",
+        "Hash":  "2ED01B3ADB6F046E34C81E338B5AEA85F29BE8E6F2B799CAFF502D0C89468650"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\LegacyAccess.cs",
+        "Hash":  "021E8A0FEBD6EBFD0045638AE97E1D7DCD1878A6AD295713113E879FC809EA3B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\MicrosoftIdentityLink.cs",
+        "Hash":  "6CABBC278228F508883B557C2F8101AB91B511EBF6EDBC2C3D5452467B642F47"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Security\\MicrosoftTokenValidator.cs",
+        "Hash":  "818B93AC4CB8459051C5F48F9DD31CE1773FE8A48DA96A3F68C8C3B2474838D0"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Services\\SystemTimeProvider.cs",
+        "Hash":  "C07028B46A17444FF5DD468C9F360265FA5B27F26E1CA5F5FDF71CBE48E63A58"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI\\Infrastructure\\DependencyInjection\\ServiceCollectionExtensions.cs",
+        "Hash":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\AuditBootstrapTests.cs",
+        "Hash":  "8A3C0D01407F9D75B67C9B37A8CA78C76E3FA99A1CA74E28668E02857DDFA375"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\AuditMicrosoftTests.cs",
+        "Hash":  "17ABB99CE1A5B934AD99B7320D51137B3F81C09591E1FE96D65D31B35FD2DAAA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\AuditRegressionTests.cs",
+        "Hash":  "1804F577803783AFF05367DC785AB636ED12E4BF07B1F314E45856DC5B9C73C7"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\ConcurrencyIntegrationTests.cs",
+        "Hash":  "A27EE3AA1B64D18F05277DF3FC9904DB4423D3024D1E8CC27979B9042EF6C458"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\ExamBusinessRulesUpdateTests.cs",
+        "Hash":  "7E5F6C20104C8B6183D2C29346ED42DF098F3D500FB2FF6BF417F1B0A9BF24F4"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\ExamRegressionTests.cs",
+        "Hash":  "DC7B79C16CEBEE708A7129589D5F1BA8EDDD43EBBF5DF323CAD46669C3E8C6F7"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\ExamSecurityTests.cs",
+        "Hash":  "6BCF23F5C6C6AA7E810EC193067E44D4A8B5033B76A6421917069347AD0F3271"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\ExamValidationTests.cs",
+        "Hash":  "D220750CE19F6494885390BE69D0AE2BE24FD6AF650F2657B6779B43A4E62980"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\FinalGradeValidationTests.cs",
+        "Hash":  "B0E6BA2D0CFC99F88F6146FD2EC1242124F9F18A820A8400CC6A1C64D5127E61"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\FinalizeConcurrencyTests.cs",
+        "Hash":  "C53D9BAC40BBEB526A53C84BEA321164A9CDC4F58B2D4F093D5A417CBCF9713A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\GradeMappingTests.cs",
+        "Hash":  "E2A543E7527EB4E1D263B599175799F81ACE5ABFF6FDD2C3836726B2AE871747"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\IntegrationFixture.cs",
+        "Hash":  "41F1DB6CA7CCC904ABA81AC148178646B971F1BA19F85EB0C1692E9A3C3B826A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt1IntegrityTests.cs",
+        "Hash":  "97AC39C60063957FD7F2D62D9D74D6C9B90B7A8CE785474AD2C3D82574FF99B6"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt2IdentityTests.cs",
+        "Hash":  "9FE2E48B4B34883C626DA89C7ACC366FCA688143AA3805DEBF9C3877C1FCB596"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt2MicrosoftIdentityTests.cs",
+        "Hash":  "9F6D5A291CF5D149546B2D9B47425A74CE70594A380546CE69544D59C8AD5093"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt3aOwnershipTests.cs",
+        "Hash":  "25AD50689DDF83021EDA05EF4E7C3EC529E44E1A45D333DDABD7447411A02F79"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt3bSchoolTests.cs",
+        "Hash":  "6B6E929877ED7E0ED3B1615CBD2039EC23DB983898B021D0D9F63D199230638B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt3cHttpTests.cs",
+        "Hash":  "9E10D5F75341555D5FC6022292D9E542520EFEF09D16A3BCB1DED9D9E6650E59"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt3cPreflightTests.cs",
+        "Hash":  "8ACF07D55D49424361F1077A1C676C3F9952173C386CE8B65337C3906F5161B5"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt3cProgramHost.cs",
+        "Hash":  "CBCEA88F0DB69B5B54712848D7D51413C2D2A070FAFFA5363422AF59F04EEF4D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt3dHttpTests.cs",
+        "Hash":  "286D399053093E90589BCFB999CAC2F70D8F21CFE5F6BE8C2D40F295B44CD7C1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt3eWorkerTests.cs",
+        "Hash":  "850EF97CC822DE592A00B53D1537244D44A51F0FF8923B42B49D944C0256901B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt3ProfileTests.cs",
+        "Hash":  "649FE11970C92B2D53F706610FE713418541DA6E6B54C05773E5616FB0E0DA7A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Mt4aCourseStructureTests.cs",
+        "Hash":  "2ABA4664DF1E85C55FD4C239DD794252EA8D3A92DCB276A51A7140088515979E"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\OpenScoreDoubleCountTests.cs",
+        "Hash":  "981B16256668C4F5783C903F4F841564E72B4A1E262290141A8845055F253EDE"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Phase2B_AdditionalTests.cs",
+        "Hash":  "100BD8FF12E7860E5B3D15969492D6663CD50DCA58F3160763E63F7CD798208F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Phase2B_ConversionAndOverrideTests.cs",
+        "Hash":  "C3F015263A1901969F3FFEF6AAA23153F8422577AF48F6D5C9B30E958C45040D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Phase2C_ApiTests.cs",
+        "Hash":  "3627C0B7B130411C9957C5E5A07E994E3331F13A82FB421DDBBD28E1F6F78D97"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Phase2C_HttpHost.cs",
+        "Hash":  "77F5B6185F69C154728E8A01EBCD7E6C87E9BEB4612ABB3D66BB81932F086C4A"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Phase2C_VisibilityTests.cs",
+        "Hash":  "D52DF77DDDC7608DAB6F06A0DD270C4D2A7926E225E0BC262134F37F1315F4A1"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Phase3_ConcurrencyTests.cs",
+        "Hash":  "8B7F1706AFFBE8241E3ABBB667BD662F6941BF9EBACD1F0F186138362FFA8E0F"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Phase3_TestSupport.cs",
+        "Hash":  "59CBF1DA4422E7166DC50C66508111DB8A29DB2E1096D7C57E936D68135CCAB5"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Phase3_TransactionRollbackTests.cs",
+        "Hash":  "C8620B0E71D41445327B13F2593CB4A7B77D753F89046D78D02855468640DBDF"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Phase3_WorkerRecoveryTests.cs",
+        "Hash":  "97F4C8548ED80C9F20B9606DE81C797DE539495CBF0B9C461775241E4BD23008"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Phase4_ExamLifecycleTests.cs",
+        "Hash":  "D780044BB384FC4D578E23B0703AAB6B5A9E66600245382B922DF267606DAF68"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\Phase4_ExamValidationAndAtomicityTests.cs",
+        "Hash":  "D00AEA93FC430472CF67C94E51CB1E0448E1ADD152F551FF2DDCF1E00917F84B"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\SeedData.cs",
+        "Hash":  "8A5EAA5AD1C6396642E83B8B4555B4726A8CFF9D22A4C28F12D701B771659AF5"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Integration\\TestDatabaseSchema.cs",
+        "Hash":  "E5D02ED9102FE38D0EFB3ED6B790AD02F071924FA61DA815DD124C99925116FA"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Unit\\Application\\ExamSubmissionProcessorTests.cs",
+        "Hash":  "1EA9516F3BE675FC3FF78479A2B10C83F4135E2811FC075EADFDA3E2102AEEC0"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Unit\\ExamLifecycleServiceTests.cs",
+        "Hash":  "56DA8935CF5CC407543E79D01C0F614719F0D28EAF5B25139D268EDB330BF74D"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Unit\\MembershipAuthorizationTests.cs",
+        "Hash":  "045CBBD5B64F85ACA2A8A88ED0D0AB43589D3AE73325E9188F7451BC06948583"
+    },
+    {
+        "Path":  "C:\\Users\\LorenzoBaracchi\\Desktop\\ElectronicRegister\\tests\\Unit\\SubmissionGradingServiceTests.cs",
+        "Hash":  "55F3B74A55C8BA2CE7A49711303BFFDDDD6FE5A9414D41FEA062C3ACB3582127"
+    }
+]

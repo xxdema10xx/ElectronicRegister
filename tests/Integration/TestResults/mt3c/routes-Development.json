@@ -1,0 +1,2473 @@
+[
+  {
+    "method": "GET",
+    "route": "api/identity/account",
+    "controller": "IdentityAccount",
+    "action": "Get",
+    "roles": [],
+    "policies": [
+      "InstitutionSelection"
+    ],
+    "migrated": false,
+    "managers": [
+      "IIdentityAccountManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/identity/account",
+    "controller": "IdentityAccount",
+    "action": "Update",
+    "roles": [],
+    "policies": [
+      "InstitutionSelection"
+    ],
+    "migrated": false,
+    "managers": [
+      "IIdentityAccountManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/identity/account/password",
+    "controller": "IdentityAccount",
+    "action": "ChangePassword",
+    "roles": [],
+    "policies": [
+      "InstitutionSelection"
+    ],
+    "migrated": false,
+    "managers": [
+      "IIdentityAccountManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/identity/accounts",
+    "controller": "IdentityRegistration",
+    "action": "Register",
+    "roles": [],
+    "policies": [],
+    "migrated": false,
+    "managers": [
+      "IIdentityAccountManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/biennia",
+    "controller": "InstitutionBiennium",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/biennia/{id:guid}",
+    "controller": "InstitutionBiennium",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/biennia",
+    "controller": "InstitutionBiennium",
+    "action": "Create",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/biennia/{id:guid}",
+    "controller": "InstitutionBiennium",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/biennia/{id:guid}",
+    "controller": "InstitutionBiennium",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/biennium-study-areas",
+    "controller": "InstitutionBienniumStudyArea",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/biennium-study-areas/{id:guid}",
+    "controller": "InstitutionBienniumStudyArea",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/biennium-study-areas",
+    "controller": "InstitutionBienniumStudyArea",
+    "action": "Create",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/biennium-study-areas/{id:guid}",
+    "controller": "InstitutionBienniumStudyArea",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/biennium-study-paths",
+    "controller": "InstitutionBienniumStudyPath",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/biennium-study-paths/{id:guid}",
+    "controller": "InstitutionBienniumStudyPath",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/biennium-study-paths",
+    "controller": "InstitutionBienniumStudyPath",
+    "action": "Create",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/biennium-study-paths/{id:guid}",
+    "controller": "InstitutionBienniumStudyPath",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/campuses",
+    "controller": "InstitutionCampus",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCampusManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/campuses/{id:guid}",
+    "controller": "InstitutionCampus",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCampusManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/campuses",
+    "controller": "InstitutionCampus",
+    "action": "Create",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCampusManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/campuses/{id:guid}",
+    "controller": "InstitutionCampus",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCampusManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/campuses/{id:guid}",
+    "controller": "InstitutionCampus",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCampusManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/classes",
+    "controller": "InstitutionClass",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionClassManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/classes/{id:guid}",
+    "controller": "InstitutionClass",
+    "action": "GetById",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionClassManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/classes",
+    "controller": "InstitutionClass",
+    "action": "Add",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionClassManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/classes/{id:guid}",
+    "controller": "InstitutionClass",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionClassManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/classes/{id:guid}",
+    "controller": "InstitutionClass",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionClassManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/class-subjects",
+    "controller": "InstitutionClassSubject",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionClassSubjectManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/class-subjects/{id:guid}",
+    "controller": "InstitutionClassSubject",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionClassSubjectManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/class-subjects",
+    "controller": "InstitutionClassSubject",
+    "action": "Create",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionClassSubjectManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/class-subjects/{id:guid}",
+    "controller": "InstitutionClassSubject",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionClassSubjectManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/class-subjects/{id:guid}",
+    "controller": "InstitutionClassSubject",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionClassSubjectManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions",
+    "controller": "InstitutionCourseEdition",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}",
+    "controller": "InstitutionCourseEdition",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/by-code/{code}",
+    "controller": "InstitutionCourseEdition",
+    "action": "ByCode",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions",
+    "controller": "InstitutionCourseEdition",
+    "action": "Create",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/course-editions/{id:guid}",
+    "controller": "InstitutionCourseEdition",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/campuses",
+    "controller": "InstitutionCourseEdition",
+    "action": "Campuses",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions/{id:guid}/campuses",
+    "controller": "InstitutionCourseEdition",
+    "action": "LinkCampus",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/classes",
+    "controller": "InstitutionCourseEdition",
+    "action": "Classes",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions/{editionId:guid}/classes/{classId:guid}",
+    "controller": "InstitutionCourseEdition",
+    "action": "AssignClass",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/enrollments",
+    "controller": "InstitutionCourseEdition",
+    "action": "Enrollments",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/audit",
+    "controller": "InstitutionCourseEdition",
+    "action": "Audit",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/email-policies",
+    "controller": "InstitutionEmail",
+    "action": "Policies",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/email-policies/{category}",
+    "controller": "InstitutionEmail",
+    "action": "Policy",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/email-policies/{category}",
+    "controller": "InstitutionEmail",
+    "action": "CreatePolicy",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/email-policies/{category}",
+    "controller": "InstitutionEmail",
+    "action": "UpdatePolicy",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/email-policies/{category}/history",
+    "controller": "InstitutionEmail",
+    "action": "PolicyHistory",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/email-policies/preview",
+    "controller": "InstitutionEmail",
+    "action": "Preview",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/email-assignments",
+    "controller": "InstitutionEmail",
+    "action": "Assignments",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/email-assignments/{id:guid}",
+    "controller": "InstitutionEmail",
+    "action": "Assignment",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/email-assignments",
+    "controller": "InstitutionEmail",
+    "action": "Reserve",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/email-assignments/create-person",
+    "controller": "InstitutionEmail",
+    "action": "CreatePerson",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/email-assignments/{id:guid}/override",
+    "controller": "InstitutionEmail",
+    "action": "Override",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/email-assignments/{id:guid}/retire",
+    "controller": "InstitutionEmail",
+    "action": "Retire",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/email-assignments/{id:guid}/history",
+    "controller": "InstitutionEmail",
+    "action": "AssignmentHistory",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionEmailManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/{id:guid}",
+    "controller": "InstitutionEnrollment",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments",
+    "controller": "InstitutionEnrollment",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/enrollments",
+    "controller": "InstitutionEnrollment",
+    "action": "Create",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/me",
+    "controller": "InstitutionEnrollment",
+    "action": "Me",
+    "roles": [
+      "Student"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/enrollments/{id:guid}/transition",
+    "controller": "InstitutionEnrollment",
+    "action": "Transition",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/enrollments/{id:guid}/completion-date",
+    "controller": "InstitutionEnrollment",
+    "action": "CorrectCompletion",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/{id:guid}/history",
+    "controller": "InstitutionEnrollment",
+    "action": "History",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionCourseAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionCourseManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams",
+    "controller": "InstitutionExam",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}",
+    "controller": "InstitutionExam",
+    "action": "GetById",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/assigned",
+    "controller": "InstitutionExam",
+    "action": "Assigned",
+    "roles": [
+      "Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}/eligible-students",
+    "controller": "InstitutionExam",
+    "action": "EligibleStudents",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams",
+    "controller": "InstitutionExam",
+    "action": "Add",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/exams/{id:guid}",
+    "controller": "InstitutionExam",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/exams/{id:guid}/students",
+    "controller": "InstitutionExam",
+    "action": "Assign",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/publish",
+    "controller": "InstitutionExam",
+    "action": "Publish",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/close",
+    "controller": "InstitutionExam",
+    "action": "Close",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/cancel",
+    "controller": "InstitutionExam",
+    "action": "Cancel",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/exams/{id:guid}",
+    "controller": "InstitutionExam",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/start",
+    "controller": "InstitutionExam",
+    "action": "Start",
+    "roles": [
+      "Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}/submissions",
+    "controller": "InstitutionExam",
+    "action": "Submissions",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades",
+    "controller": "InstitutionGrade",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/{id:guid}",
+    "controller": "InstitutionGrade",
+    "action": "GetById",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/count",
+    "controller": "InstitutionGrade",
+    "action": "Count",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/paged",
+    "controller": "InstitutionGrade",
+    "action": "Paged",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/filters",
+    "controller": "InstitutionGrade",
+    "action": "Filters",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/statistics",
+    "controller": "InstitutionGrade",
+    "action": "Statistics",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/grades",
+    "controller": "InstitutionGrade",
+    "action": "Add",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/grades/{id:guid}",
+    "controller": "InstitutionGrade",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/grades/{id:guid}",
+    "controller": "InstitutionGrade",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/identity/login",
+    "controller": "InstitutionIdentity",
+    "action": "Login",
+    "roles": [],
+    "policies": [],
+    "migrated": false,
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/identity/microsoft-login",
+    "controller": "InstitutionIdentity",
+    "action": "MicrosoftLogin",
+    "roles": [],
+    "policies": [],
+    "migrated": false,
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/Auth/institutions",
+    "controller": "InstitutionIdentity",
+    "action": "Institutions",
+    "roles": [],
+    "policies": [
+      "InstitutionSelection"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/select-institution",
+    "controller": "InstitutionIdentity",
+    "action": "Select",
+    "roles": [],
+    "policies": [
+      "InstitutionSelection"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/Auth/context",
+    "controller": "InstitutionIdentity",
+    "action": "Context",
+    "roles": [],
+    "policies": [
+      "InstitutionAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/imports/templates/students.csv",
+    "controller": "InstitutionImport",
+    "action": "StudentTemplate",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionImportManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/imports/templates/teachers.csv",
+    "controller": "InstitutionImport",
+    "action": "TeacherTemplate",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionImportManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/imports/preview",
+    "controller": "InstitutionImport",
+    "action": "Preview",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionImportManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/imports",
+    "controller": "InstitutionImport",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionImportManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/imports/{id:guid}",
+    "controller": "InstitutionImport",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionImportManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/imports/{id:guid}/rows",
+    "controller": "InstitutionImport",
+    "action": "Rows",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionImportManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/imports/{id:guid}/mapping",
+    "controller": "InstitutionImport",
+    "action": "Remap",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionImportManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/imports/{id:guid}/confirm",
+    "controller": "InstitutionImport",
+    "action": "Confirm",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionImportManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/imports/{id:guid}/result",
+    "controller": "InstitutionImport",
+    "action": "Result",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionImportManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/invitations",
+    "controller": "InstitutionInvitation",
+    "action": "Invite",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/invitations/{id:guid}/revoke",
+    "controller": "InstitutionInvitation",
+    "action": "Revoke",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/invitations/{id:guid}/reissue",
+    "controller": "InstitutionInvitation",
+    "action": "Reissue",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/members/{membershipId:guid}/profile-acquisitions",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "Acquisitions",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/members/{membershipId:guid}/profile-acquisitions",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "AcquireProfile",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/admin/members/{membershipId:guid}/mutations",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "Mutate",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/members",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "List",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/members/{membershipId:guid}",
+    "controller": "InstitutionMembershipAdmin",
+    "action": "Detail",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionMembershipAdminManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/audit",
+    "controller": "InstitutionMembershipAudit",
+    "action": "List",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IMembershipAuditManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/admin/audit/{eventId:guid}",
+    "controller": "InstitutionMembershipAudit",
+    "action": "Get",
+    "roles": [],
+    "policies": [
+      "InstitutionMembershipAdminAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IMembershipAuditManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students",
+    "controller": "InstitutionStudent",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionStudentManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/count",
+    "controller": "InstitutionStudent",
+    "action": "Count",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionStudentManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/{id:guid}",
+    "controller": "InstitutionStudent",
+    "action": "GetById",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionStudentManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/bylastname/{lastName}",
+    "controller": "InstitutionStudent",
+    "action": "ByLastName",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionStudentManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/me",
+    "controller": "InstitutionStudent",
+    "action": "Me",
+    "roles": [
+      "Student"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionStudentManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/students",
+    "controller": "InstitutionStudent",
+    "action": "Add",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionStudentManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/students/{id:guid}",
+    "controller": "InstitutionStudent",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionStudentManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/students/{id:guid}",
+    "controller": "InstitutionStudent",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionStudentManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/students/{id:guid}/transfer-class",
+    "controller": "InstitutionStudentTransfer",
+    "action": "Transfer",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionStudentTransferManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/{id:guid}/class-history",
+    "controller": "InstitutionStudentTransfer",
+    "action": "History",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionStudentTransferManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/study-areas",
+    "controller": "InstitutionStudyArea",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/study-areas/{id:guid}",
+    "controller": "InstitutionStudyArea",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/study-areas",
+    "controller": "InstitutionStudyArea",
+    "action": "Create",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/study-areas/{id:guid}",
+    "controller": "InstitutionStudyArea",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/study-areas/{id:guid}",
+    "controller": "InstitutionStudyArea",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/study-paths",
+    "controller": "InstitutionStudyPath",
+    "action": "List",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/study-paths/{id:guid}",
+    "controller": "InstitutionStudyPath",
+    "action": "Get",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/study-paths",
+    "controller": "InstitutionStudyPath",
+    "action": "Create",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/study-paths/{id:guid}",
+    "controller": "InstitutionStudyPath",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/study-paths/{id:guid}",
+    "controller": "InstitutionStudyPath",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionAcademicCatalogManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects",
+    "controller": "InstitutionSubject",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionSubjectManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/count",
+    "controller": "InstitutionSubject",
+    "action": "Count",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionSubjectManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/{id:guid}",
+    "controller": "InstitutionSubject",
+    "action": "GetById",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionSubjectManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/byname/{name}",
+    "controller": "InstitutionSubject",
+    "action": "ByName",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionSubjectManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/byteacher/{teacherId:guid}",
+    "controller": "InstitutionSubject",
+    "action": "ByTeacher",
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionSubjectManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/subjects",
+    "controller": "InstitutionSubject",
+    "action": "Add",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionSubjectManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/subjects/{id:guid}",
+    "controller": "InstitutionSubject",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionSubjectManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/subjects/{id:guid}",
+    "controller": "InstitutionSubject",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionSubjectManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/session",
+    "controller": "InstitutionSubmission",
+    "action": "Session",
+    "roles": [
+      "Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/submissions/{id:guid}/answers",
+    "controller": "InstitutionSubmission",
+    "action": "Save",
+    "roles": [
+      "Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/submit",
+    "controller": "InstitutionSubmission",
+    "action": "Submit",
+    "roles": [
+      "Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/submit-expired",
+    "controller": "InstitutionSubmission",
+    "action": "SubmitExpired",
+    "roles": [
+      "Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/violations",
+    "controller": "InstitutionSubmission",
+    "action": "ReportViolation",
+    "roles": [
+      "Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/violations",
+    "controller": "InstitutionSubmission",
+    "action": "Violations",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/work",
+    "controller": "InstitutionSubmission",
+    "action": "OwnWork",
+    "roles": [
+      "Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/review",
+    "controller": "InstitutionSubmission",
+    "action": "Review",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/submissions/{id:guid}/review",
+    "controller": "InstitutionSubmission",
+    "action": "Review",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/finalize",
+    "controller": "InstitutionSubmission",
+    "action": "FinalizeSubmission",
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/result",
+    "controller": "InstitutionSubmission",
+    "action": "Result",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionExamAccess"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionExamManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers",
+    "controller": "InstitutionTeacher",
+    "action": "GetAll",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionTeacherManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/count",
+    "controller": "InstitutionTeacher",
+    "action": "Count",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionTeacherManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/{id:guid}",
+    "controller": "InstitutionTeacher",
+    "action": "GetById",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionTeacherManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/bylastname/{lastName}",
+    "controller": "InstitutionTeacher",
+    "action": "ByLastName",
+    "roles": [
+      "InstitutionAdmin,Staff,Teacher,Student"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionTeacherManager"
+    ]
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/me",
+    "controller": "InstitutionTeacher",
+    "action": "Me",
+    "roles": [
+      "Teacher"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionTeacherManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/teachers",
+    "controller": "InstitutionTeacher",
+    "action": "Add",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionTeacherManager"
+    ]
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/teachers/{id:guid}",
+    "controller": "InstitutionTeacher",
+    "action": "Update",
+    "roles": [
+      "InstitutionAdmin,Staff"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionTeacherManager"
+    ]
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/teachers/{id:guid}",
+    "controller": "InstitutionTeacher",
+    "action": "Delete",
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "policies": [
+      "InstitutionSchoolAccess"
+    ],
+    "migrated": true,
+    "managers": [
+      "IInstitutionTeacherManager"
+    ]
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/invitations/{id:guid}/accept",
+    "controller": "InvitationAcceptance",
+    "action": "Accept",
+    "roles": [],
+    "policies": [
+      "InstitutionSelection"
+    ],
+    "migrated": false,
+    "managers": [
+      "IInstitutionOnboardingManager"
+    ]
+  }
+]

@@ -1,0 +1,49 @@
+{
+  "config": {
+    "database": "er84_434ad3afeb3b_restart",
+    "host": "127.0.0.1",
+    "port": 32768,
+    "serverPort": 3306,
+    "serverUuid": "67ba047b-d787-11f1-b5e0-02bdbd4b6de4",
+    "defaultsFile": "/home/runner/work/_temp/er84.cnf",
+    "isolatedCI": true,
+    "mysqlContainer": "31d7325d873e6bcd6578df867a9e954efbc67586ae651538e776f30df525df10",
+    "recoverySocketAccount": "root@localhost",
+    "definerUser": "er84_434ad3afeb3b_definer",
+    "definerHost": "%",
+    "apiUser": "er84_434ad3afeb3b_api_r",
+    "apiHost": "%",
+    "reviewUser": "er84_434ad3afeb3b_review",
+    "reviewHost": "%",
+    "recoveryBinding": {
+      "container": "31d7325d873e6bcd6578df867a9e954efbc67586ae651538e776f30df525df10",
+      "image": "sha256:d2a0d367629f5b5dcd6cdabc53fe9183a0a3c313f9bd354e368290ba6fbf6d3f",
+      "hostname": "31d7325d873e",
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "5912bcc704f42aa5c233bdbdc052adf2deda3beade6b1334bc1cfa3880480a50",
+          "Source": "/var/lib/docker/volumes/5912bcc704f42aa5c233bdbdc052adf2deda3beade6b1334bc1cfa3880480a50/_data",
+          "Destination": "/var/lib/mysql",
+          "RW": true
+        }
+      ],
+      "ports": {
+        "3306/tcp": [
+          {
+            "HostIp": "",
+            "HostPort": ""
+          }
+        ]
+      }
+    }
+  },
+  "before": {
+    "mode": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+    "port": 3306,
+    "uuid": "67ba047b-d787-11f1-b5e0-02bdbd4b6de4",
+    "events": "OFF",
+    "offline": 0,
+    "version": "8.4.13"
+  }
+}

@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="3f7d9530-fa42-4916-ae49-f214a00070e5" name="LorenzoBaracchi@CES01622 2026-10-19 11:28:09" runUser="AzureAD\LorenzoBaracchi" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-19T11:28:09.5073230+02:00" queuing="2026-10-19T11:28:09.5073235+02:00" start="2026-10-19T11:28:04.2216766+02:00" finish="2026-10-19T11:28:32.4621545+02:00" />
+  <TestSettings name="default" id="91a48146-86ae-4978-b135-d120d4a55f5c">
+    <Deployment runDeploymentRoot="LorenzoBaracchi_CES01622_2026-10-19_11_28_09" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="76c5857b-fcf6-4f60-b7f6-66061d39250a" testId="f94119c4-3970-a320-0a37-26ec365186fb" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 5)" computerName="CES01622" duration="00:00:01.9852612" startTime="2026-10-19T11:28:17.6532733+02:00" endTime="2026-10-19T11:28:17.6532734+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="76c5857b-fcf6-4f60-b7f6-66061d39250a" />
+    <UnitTestResult executionId="2a48d29b-c7ad-44a5-ab3d-59ce3cf71d5a" testId="474d56b0-fca5-d2e2-8515-5f446c31d950" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.GradeCrudPagingFiltersStatisticsAndTeacherOwnershipRemainScoped" computerName="CES01622" duration="00:00:00.8315013" startTime="2026-10-19T11:28:30.2096417+02:00" endTime="2026-10-19T11:28:30.2096419+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2a48d29b-c7ad-44a5-ab3d-59ce3cf71d5a" />
+    <UnitTestResult executionId="4ee3e2a6-1166-4aae-b01e-5acbe7e291ca" testId="40084a47-4935-e4f7-24fc-c7039ccdafb3" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: &quot;admin&quot;)" computerName="CES01622" duration="00:00:01.3660406" startTime="2026-10-19T11:28:11.0184788+02:00" endTime="2026-10-19T11:28:11.0184790+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4ee3e2a6-1166-4aae-b01e-5acbe7e291ca">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Strings differ&#xD;
+                                  ↓ (pos 108)&#xD;
+Expected: ···"":404,"traceId":"00-83ee6dd7f73fffc84777b"···&#xD;
+Actual:   ···"":404,"traceId":"00-eb9dd4de7136f9c7608a7"···&#xD;
+                                  ↑ (pos 108)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(String managerRole) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 405&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="66c3b1a1-8f16-439d-8cd2-cbae334577e0" testId="60bfb24d-232d-8779-5fc2-4e054115e46c" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OfficialClosedResultPassedAndGenericGradeProtectionArePreserved(correct: True)" computerName="CES01622" duration="00:00:01.2550390" startTime="2026-10-19T11:28:22.4188170+02:00" endTime="2026-10-19T11:28:22.4188172+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="66c3b1a1-8f16-439d-8cd2-cbae334577e0" />
+    <UnitTestResult executionId="3e26b1b4-2677-4d5a-a803-a80eeb6906d0" testId="adde1f97-e051-3e4c-e1ad-614dae5950fb" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 6)" computerName="CES01622" duration="00:00:02.2005658" startTime="2026-10-19T11:28:13.4372274+02:00" endTime="2026-10-19T11:28:13.4372277+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3e26b1b4-2677-4d5a-a803-a80eeb6906d0" />
+    <UnitTestResult executionId="3578e2ec-7fc3-4472-bff3-53abb839d974" testId="5390a55d-e07a-cf3a-2269-6adbdb10a554" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Single)" computerName="CES01622" duration="00:00:01.1869276" startTime="2026-10-19T11:28:27.9216525+02:00" endTime="2026-10-19T11:28:27.9216526+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3578e2ec-7fc3-4472-bff3-53abb839d974" />
+    <UnitTestResult executionId="5a41224f-183d-4ef5-b99b-98e33cd9f10f" testId="0923c898-80b6-0b9d-f0d0-62edee666061" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssignedSubmissionIdResumeAndRevisionSurviveNewLoginWithoutNewAttempt" computerName="CES01622" duration="00:00:01.2325409" startTime="2026-10-19T11:28:32.3852833+02:00" endTime="2026-10-19T11:28:32.3852836+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5a41224f-183d-4ef5-b99b-98e33cd9f10f" />
+    <UnitTestResult executionId="cf068b96-98ea-4d40-b2e3-ad07b21ce861" testId="976483fa-18eb-f8ab-4362-0bfaec9f6179" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: &quot;window_blur&quot;)" computerName="CES01622" duration="00:00:01.0038187" startTime="2026-10-19T11:28:18.8012757+02:00" endTime="2026-10-19T11:28:18.8012758+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cf068b96-98ea-4d40-b2e3-ad07b21ce861" />
+    <UnitTestResult executionId="e32af376-a8bc-4739-995a-a2768048b586" testId="3f544aaa-d316-5922-3a86-f2994b51f3ca" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssignmentsRejectForeignWrongClassDuplicatesAndInvalidExtraTimeAtomically" computerName="CES01622" duration="00:00:00.6736067" startTime="2026-10-19T11:28:31.0203106+02:00" endTime="2026-10-19T11:28:31.0203108+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e32af376-a8bc-4739-995a-a2768048b586" />
+    <UnitTestResult executionId="bfe52bab-9530-4eb0-bc5a-d85931e5101c" testId="e48b255a-5b7b-eb33-121c-c228adcb1f28" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Open)" computerName="CES01622" duration="00:00:01.2860370" startTime="2026-10-19T11:28:25.2550421+02:00" endTime="2026-10-19T11:28:25.2550423+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bfe52bab-9530-4eb0-bc5a-d85931e5101c" />
+    <UnitTestResult executionId="df20080b-b67b-4b32-8b1f-19315ef96b05" testId="731e3e40-0904-e24a-609e-90462dd11e63" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: &quot;fullscreen_exit&quot;)" computerName="CES01622" duration="00:00:01.0135457" startTime="2026-10-19T11:28:19.9517041+02:00" endTime="2026-10-19T11:28:19.9517043+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="df20080b-b67b-4b32-8b1f-19315ef96b05" />
+    <UnitTestResult executionId="4ace6723-9b00-4d7d-826f-2bd374b813bc" testId="7eac32cb-1557-4e0b-e1e1-e2a45eaf3f16" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Multiple)" computerName="CES01622" duration="00:00:01.1675705" startTime="2026-10-19T11:28:26.5899216+02:00" endTime="2026-10-19T11:28:26.5899218+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4ace6723-9b00-4d7d-826f-2bd374b813bc" />
+    <UnitTestResult executionId="4e8eb034-2fb0-4b10-a05d-c605676dcf4b" testId="6faa8e10-5d83-5d65-429b-595fe1977f44" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: &quot;tab_hidden&quot;)" computerName="CES01622" duration="00:00:00.9556637" startTime="2026-10-19T11:28:21.0225177+02:00" endTime="2026-10-19T11:28:21.0225179+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4e8eb034-2fb0-4b10-a05d-c605676dcf4b" />
+    <UnitTestResult executionId="c4f8c718-29fa-4548-a5fc-4a013e65b77f" testId="085c2258-8515-0c29-8dd2-49de20651843" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 9)" computerName="CES01622" duration="00:00:01.9717141" startTime="2026-10-19T11:28:15.5601489+02:00" endTime="2026-10-19T11:28:15.5601491+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c4f8c718-29fa-4548-a5fc-4a013e65b77f" />
+    <UnitTestResult executionId="e0ace153-5a72-47bf-b2c9-31f20ecd9f69" testId="2e19db1c-5965-5714-9494-73d47ce74ffe" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: &quot;teacher&quot;)" computerName="CES01622" duration="00:00:02.5688668" startTime="2026-10-19T11:28:09.4873507+02:00" endTime="2026-10-19T11:28:09.4873773+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e0ace153-5a72-47bf-b2c9-31f20ecd9f69">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Strings differ&#xD;
+                                  ↓ (pos 108)&#xD;
+Expected: ···"":404,"traceId":"00-cc81f2d7eb5ba1d9ce477"···&#xD;
+Actual:   ···"":404,"traceId":"00-b8f47bc3032d9ea0d156e"···&#xD;
+                                  ↑ (pos 108)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(String managerRole) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 405&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="67c8c5a8-d852-4967-9388-ac1c9dc32f5c" testId="5da01c14-a93f-1eb5-8f8d-dde3a3b58bbe" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OfficialClosedResultPassedAndGenericGradeProtectionArePreserved(correct: False)" computerName="CES01622" duration="00:00:01.2253274" startTime="2026-10-19T11:28:23.8377060+02:00" endTime="2026-10-19T11:28:23.8377064+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="67c8c5a8-d852-4967-9388-ac1c9dc32f5c" />
+    <UnitTestResult executionId="cc7af881-966d-4f72-b0c6-80f4d3118bbb" testId="be369d5b-6176-9334-ffec-6f49d10b9bbd" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.DropdownAndStudentClassFilterAreScopedAndAssignmentSpecific" computerName="CES01622" duration="00:00:01.1907665" startTime="2026-10-19T11:28:29.2618008+02:00" endTime="2026-10-19T11:28:29.2618012+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cc7af881-966d-4f72-b0c6-80f4d3118bbb" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OfficialClosedResultPassedAndGenericGradeProtectionArePreserved(correct: False)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="5da01c14-a93f-1eb5-8f8d-dde3a3b58bbe">
+      <Execution id="67c8c5a8-d852-4967-9388-ac1c9dc32f5c" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="OfficialClosedResultPassedAndGenericGradeProtectionArePreserved" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssignedSubmissionIdResumeAndRevisionSurviveNewLoginWithoutNewAttempt" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="0923c898-80b6-0b9d-f0d0-62edee666061">
+      <Execution id="5a41224f-183d-4ef5-b99b-98e33cd9f10f" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="AssignedSubmissionIdResumeAndRevisionSurviveNewLoginWithoutNewAttempt" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Multiple)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="7eac32cb-1557-4e0b-e1e1-e2a45eaf3f16">
+      <Execution id="4ace6723-9b00-4d7d-826f-2bd374b813bc" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: &quot;teacher&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="2e19db1c-5965-5714-9494-73d47ce74ffe">
+      <Execution id="e0ace153-5a72-47bf-b2c9-31f20ecd9f69" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Single)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="5390a55d-e07a-cf3a-2269-6adbdb10a554">
+      <Execution id="3578e2ec-7fc3-4472-bff3-53abb839d974" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: &quot;admin&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="40084a47-4935-e4f7-24fc-c7039ccdafb3">
+      <Execution id="4ee3e2a6-1166-4aae-b01e-5acbe7e291ca" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 9)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="085c2258-8515-0c29-8dd2-49de20651843">
+      <Execution id="c4f8c718-29fa-4548-a5fc-4a013e65b77f" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 6)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="adde1f97-e051-3e4c-e1ad-614dae5950fb">
+      <Execution id="3e26b1b4-2677-4d5a-a803-a80eeb6906d0" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: &quot;window_blur&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="976483fa-18eb-f8ab-4362-0bfaec9f6179">
+      <Execution id="cf068b96-98ea-4d40-b2e3-ad07b21ce861" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: &quot;tab_hidden&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="6faa8e10-5d83-5d65-429b-595fe1977f44">
+      <Execution id="4e8eb034-2fb0-4b10-a05d-c605676dcf4b" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 5)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="f94119c4-3970-a320-0a37-26ec365186fb">
+      <Execution id="76c5857b-fcf6-4f60-b7f6-66061d39250a" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: &quot;fullscreen_exit&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="731e3e40-0904-e24a-609e-90462dd11e63">
+      <Execution id="df20080b-b67b-4b32-8b1f-19315ef96b05" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.GradeCrudPagingFiltersStatisticsAndTeacherOwnershipRemainScoped" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="474d56b0-fca5-d2e2-8515-5f446c31d950">
+      <Execution id="2a48d29b-c7ad-44a5-ab3d-59ce3cf71d5a" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="GradeCrudPagingFiltersStatisticsAndTeacherOwnershipRemainScoped" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssignmentsRejectForeignWrongClassDuplicatesAndInvalidExtraTimeAtomically" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="3f544aaa-d316-5922-3a86-f2994b51f3ca">
+      <Execution id="e32af376-a8bc-4739-995a-a2768048b586" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="AssignmentsRejectForeignWrongClassDuplicatesAndInvalidExtraTimeAtomically" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Open)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="e48b255a-5b7b-eb33-121c-c228adcb1f28">
+      <Execution id="bfe52bab-9530-4eb0-bc5a-d85931e5101c" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.DropdownAndStudentClassFilterAreScopedAndAssignmentSpecific" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="be369d5b-6176-9334-ffec-6f49d10b9bbd">
+      <Execution id="cc7af881-966d-4f72-b0c6-80f4d3118bbb" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="DropdownAndStudentClassFilterAreScopedAndAssignmentSpecific" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OfficialClosedResultPassedAndGenericGradeProtectionArePreserved(correct: True)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="60bfb24d-232d-8779-5fc2-4e054115e46c">
+      <Execution id="66c3b1a1-8f16-439d-8cd2-cbae334577e0" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="OfficialClosedResultPassedAndGenericGradeProtectionArePreserved" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="f94119c4-3970-a320-0a37-26ec365186fb" executionId="76c5857b-fcf6-4f60-b7f6-66061d39250a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="474d56b0-fca5-d2e2-8515-5f446c31d950" executionId="2a48d29b-c7ad-44a5-ab3d-59ce3cf71d5a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="40084a47-4935-e4f7-24fc-c7039ccdafb3" executionId="4ee3e2a6-1166-4aae-b01e-5acbe7e291ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="60bfb24d-232d-8779-5fc2-4e054115e46c" executionId="66c3b1a1-8f16-439d-8cd2-cbae334577e0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="adde1f97-e051-3e4c-e1ad-614dae5950fb" executionId="3e26b1b4-2677-4d5a-a803-a80eeb6906d0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5390a55d-e07a-cf3a-2269-6adbdb10a554" executionId="3578e2ec-7fc3-4472-bff3-53abb839d974" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0923c898-80b6-0b9d-f0d0-62edee666061" executionId="5a41224f-183d-4ef5-b99b-98e33cd9f10f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="976483fa-18eb-f8ab-4362-0bfaec9f6179" executionId="cf068b96-98ea-4d40-b2e3-ad07b21ce861" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3f544aaa-d316-5922-3a86-f2994b51f3ca" executionId="e32af376-a8bc-4739-995a-a2768048b586" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e48b255a-5b7b-eb33-121c-c228adcb1f28" executionId="bfe52bab-9530-4eb0-bc5a-d85931e5101c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="731e3e40-0904-e24a-609e-90462dd11e63" executionId="df20080b-b67b-4b32-8b1f-19315ef96b05" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7eac32cb-1557-4e0b-e1e1-e2a45eaf3f16" executionId="4ace6723-9b00-4d7d-826f-2bd374b813bc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6faa8e10-5d83-5d65-429b-595fe1977f44" executionId="4e8eb034-2fb0-4b10-a05d-c605676dcf4b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="085c2258-8515-0c29-8dd2-49de20651843" executionId="c4f8c718-29fa-4548-a5fc-4a013e65b77f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2e19db1c-5965-5714-9494-73d47ce74ffe" executionId="e0ace153-5a72-47bf-b2c9-31f20ecd9f69" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5da01c14-a93f-1eb5-8f8d-dde3a3b58bbe" executionId="67c8c5a8-d852-4967-9388-ac1c9dc32f5c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="be369d5b-6176-9334-ffec-6f49d10b9bbd" executionId="cc7af881-966d-4f72-b0c6-80f4d3118bbb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="17" executed="17" passed="15" failed="2" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.08]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.15]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.16]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:04.62]       Assert.Equal() Failure: Strings differ&#xD;
+[xUnit.net 00:00:04.62]                                         ↓ (pos 108)&#xD;
+[xUnit.net 00:00:04.62]       Expected: ···"":404,"traceId":"00-cc81f2d7eb5ba1d9ce477"···&#xD;
+[xUnit.net 00:00:04.62]       Actual:   ···"":404,"traceId":"00-b8f47bc3032d9ea0d156e"···&#xD;
+[xUnit.net 00:00:04.62]                                         ↑ (pos 108)&#xD;
+[xUnit.net 00:00:04.62]       Stack Trace:&#xD;
+[xUnit.net 00:00:04.62]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(405,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(String managerRole)&#xD;
+[xUnit.net 00:00:04.62]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:06.15]       Assert.Equal() Failure: Strings differ&#xD;
+[xUnit.net 00:00:06.15]                                         ↓ (pos 108)&#xD;
+[xUnit.net 00:00:06.15]       Expected: ···"":404,"traceId":"00-83ee6dd7f73fffc84777b"···&#xD;
+[xUnit.net 00:00:06.15]       Actual:   ···"":404,"traceId":"00-eb9dd4de7136f9c7608a7"···&#xD;
+[xUnit.net 00:00:06.15]                                         ↑ (pos 108)&#xD;
+[xUnit.net 00:00:06.15]       Stack Trace:&#xD;
+[xUnit.net 00:00:06.15]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(405,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(String managerRole)&#xD;
+[xUnit.net 00:00:06.15]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:27.53]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T11:28:09.4848391+02:00">
+        <Text>[xUnit.net 00:00:04.62]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: "teacher") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T11:28:11.0185678+02:00">
+        <Text>[xUnit.net 00:00:06.15]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: "admin") [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

@@ -1,0 +1,13 @@
+{
+  "Version": "MT-5B-D-snapshot-1",
+  "Files": [
+    {
+      "File": "003_event_snapshot_shape.sql",
+      "SHA256": "A95129E530BC76B8C964A5540CED2000CBA91A81BB9628F27080BC80AB4CB107"
+    },
+    {
+      "File": "004_validate_snapshot.sql",
+      "SHA256": "1CB8B3B3BAB35C91E08D662DD8ED750B0DA194088C1E92BBD7C6A8F33AE2975E"
+    }
+  ]
+}

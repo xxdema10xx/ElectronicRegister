@@ -1,0 +1,165 @@
+{
+  "provenance": "Offline reconstruction from SHA 1b3ff87b7866025e23fb15003cee64cef2228b9d and user-confirmed MySQL representations; CI logs unavailable (403). Not captured server output.",
+  "records": [
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5b_membership_delete_contract",
+      "difference": "ddl",
+      "expectedHash": "6D204123A396ADF1248A73C79D3E8B38108189D21FAC0666B34CB93A03325A23",
+      "actualHash": "3A2E22CC67D13B7A724261F4DD2701B8A6D64A5C9DFD97C39F1EEB8E220F2BB9"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5b_membership_identity_update",
+      "difference": "ddl",
+      "expectedHash": "417DD1D5DEE5BBAA1951FD0126FA3E66C50581A4DB453237E3A1B5738A83BA1B",
+      "actualHash": "1A32157ED63C5B771265CB7E77C827B155BA7D7162D0BEC89E0717E1C28C30A7"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5b_membership_security_delete",
+      "difference": "ddl",
+      "expectedHash": "F96D9CF2F91E5166CB0CA672AE81318F1B56A72A4995C03613D2464A6AA48CA2",
+      "actualHash": "9F4279C5D7EF0226BA07788BDC0B02A2E1499A570ECB6E038839802116A948DA"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5b_membership_security_insert",
+      "difference": "ddl",
+      "expectedHash": "665EF61EAD242A8876CE49C72FA8AEC831B8352EA14BDEDB39E05C549A4BB943",
+      "actualHash": "5681A87A34280AEE9C7E57E046A1B49FE80EDC469710AD6CDB78EB73DD2DA78E"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5b_membership_security_update",
+      "difference": "ddl",
+      "expectedHash": "6FD97FE59F6FC599E393BC1835C3D551C43A2D45DA8F1C8C54332DF9B5BADA00",
+      "actualHash": "A6018D3082FB21A67433A3F3CBD939FD885DD67D8102BEA947FF3AFBE187C6D5"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5b_role_identity_update",
+      "difference": "ddl",
+      "expectedHash": "BBE13A5FF47BB8EB435BF1C7880B9DB57DE87428F59C487896DE229F78313A6B",
+      "actualHash": "45C92DDFF59304F43B19C1CE12B1008317A049E2C28B0A5C810100B74F203FB3"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5b_role_security_delete",
+      "difference": "ddl",
+      "expectedHash": "1E896D51A615CF125728090F285318E94F00C89009991FDC4E2869567D0CF23D",
+      "actualHash": "D1D6176AF742938C1D031ED3C6586DAB58BAF465133617FE6DA803536E7702DC"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5b_role_security_insert",
+      "difference": "ddl",
+      "expectedHash": "54ECFE7203664AD7285C3D225C75E36532DF3E02B37EFAAA51EA8E07E474BBD5",
+      "actualHash": "B75601C2CFA3F435AAC60AE36C469ADC09F0E2E14653FE53A49E238E031F9E77"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5b_security_delete",
+      "difference": "ddl",
+      "expectedHash": "92BE38364DB76FB9CF324B1A5AF5CAFD10405F5ECB4D3E8186A750FF2F0F2552",
+      "actualHash": "3A58F5B4E90B6BF8C2F1A6D4B1AE6E36A81BDF67BBE316D7D3D1828D194F5D2E"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5b_security_insert",
+      "difference": "ddl",
+      "expectedHash": "F1AF2611AEDAF2CD460F0E54820122E8818A53BE805E831200827E050C00CEA6",
+      "actualHash": "C7CE59E19E7A96CEA5BE30233F051B97E44FE72BF53954ECCAD17A5C4A82E194"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5b_security_update",
+      "difference": "ddl",
+      "expectedHash": "1ECBC2FAE2AFED6768ADC337FE2CC2CAB78B58022B0245F981EAFE80D5FFC773",
+      "actualHash": "6406AA488EE36BB9DCC39FC88AD77B8553AC6FCD01E8C1639257388C77CFB027"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5d_event_delete",
+      "difference": "ddl",
+      "expectedHash": "0A801E221F151BE2E646F8DF7737D8D3BB5DE53550F3C8B04DB2B9ABFB19E59D",
+      "actualHash": "21E28A09DE31E5A761337930EFF22BEB4C3260FBA91AD45CF0451391D2260E34"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5d_event_insert",
+      "difference": "ddl",
+      "expectedHash": "D048AE1E97360906F287BEAE260CD987E793CD01E7D645EA20C94D94C135042E",
+      "actualHash": "A65BF201F5118FF6F22BA5B790F21C53753843ADF2438E303C59C1351B8E9B2C"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5d_event_snapshot_shape",
+      "difference": "ddl",
+      "expectedHash": "C0D73F4D434F517D089CCE21B8FD36E2B2B9290660A2DD6807C4C2D5F4DF1DAD",
+      "actualHash": "9636E3DCF7747C540856DBDD8B23653B15477F68C8775D82BA95FB6668F10F89"
+    },
+    {
+      "id": "base-trigger-ddl",
+      "category": "trigger",
+      "object": "mt5d_event_update",
+      "difference": "ddl",
+      "expectedHash": "5D3F65EFA3556BCD7AA8DE02A7A557454EE493B67CB135D21662209917A72975",
+      "actualHash": "5482C152F4262230CC48D21205A88193DE1ACC8FE0144EFCBCB3C33D263AD487"
+    },
+    {
+      "id": "additive-foreignKeys",
+      "category": "metadata",
+      "object": "identity_account_event",
+      "difference": "foreignKeys",
+      "expectedHash": "B873A6A7122B991973D188BA92C7C0304976466FF37F6C5669381BA2A6579B63",
+      "actualHash": "4D013210641660269C03E14254AB6EED5E44B08561DE4EF02795A59412E7D9A3"
+    },
+    {
+      "id": "additive-foreignKeys",
+      "category": "metadata",
+      "object": "identity_account_state",
+      "difference": "foreignKeys",
+      "expectedHash": "C3416D5496485A005DBADB24560F94E8FA4AC5EF00E5685159C84D6E0816A5E9",
+      "actualHash": "A8C75D86E4FA81938E57A0B15CFAC9C6E4349DCF8FFAA59E462190C91C038105"
+    },
+    {
+      "id": "additive-foreignKeys",
+      "category": "metadata",
+      "object": "identity_password_attempt",
+      "difference": "foreignKeys",
+      "expectedHash": "A6283759D3586D2AC60826228953DAC0B3D033AAA8A22BEFE1B257FFB4AED46B",
+      "actualHash": "EBDB218B3A284922BBD17DAA3427B704EB454437D750112E8359A45C33F00BCC"
+    },
+    {
+      "id": "additive-foreignKeys",
+      "category": "metadata",
+      "object": "institution_profile_acquisition",
+      "difference": "foreignKeys",
+      "expectedHash": "4895B41EB89C0A9D8022AD2CDCF5D5ACA43E4421574EF943F581A1BC07CF0491",
+      "actualHash": "F2C20F7DAF288354E88891A2B5BEEFAE87AAB37AB16DC31BDC95F8054A54AB03"
+    },
+    {
+      "id": "readiness-probe",
+      "category": "metadata",
+      "object": "er_schema_ready",
+      "difference": "ready",
+      "expectedHash": "6B86B273FF34FCE19D6B804EFF5A3F5747ADA4EAA22F1D49C01E52DDB7875B4B",
+      "actualHash": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9"
+    }
+  ]
+}

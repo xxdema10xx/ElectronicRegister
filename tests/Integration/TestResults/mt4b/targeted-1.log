@@ -1,0 +1,261 @@
+Esecuzione dei test per C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll (.NETCoreApp,Version=v10.0)
+Un totale di 1 file di test corrisponde al criterio specificato.
+dotnet : [xUnit.net 00:00:05.94]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitClassAssignmentIsPat
+hScopedImmutableAndNeverChangesStudentClass [FAIL]
+In riga:34 car:1
++ dotnet test tests/Integration/Integration.Tests.csproj --no-build --f ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([xUnit.net 00:0...entClass [FAIL]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitClassAssignmentIsPathScopedImmutableAndNeverChangesStudentClass [593 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitClassAssignmentIsPathScopedImmutableAndNeverChangesStudentClass() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 202
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:08.44]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.NonAdminsCannotUseAnyAdministrativeAction(role: "teacher") [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.NonAdminsCannotUseAnyAdministrativeAction(role: "teacher") [193 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.NonAdminsCannotUseAnyAdministrativeAction(String role) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 236
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:10.85]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.NonAdminsCannotUseAnyAdministrativeAction(role: "student") [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.NonAdminsCannotUseAnyAdministrativeAction(role: "student") [186 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.NonAdminsCannotUseAnyAdministrativeAction(String role) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 236
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:13.78]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ConcurrentUniquenessClassAssignmentAn
+dDescriptionUpdatesHaveSingleWinners [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ConcurrentUniquenessClassAssignmentAndDescriptionUpdatesHaveSingleWinners [631 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ConcurrentUniquenessClassAssignmentAndDescriptionUpdatesHaveSingleWinners() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 325
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:16.20]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: True, course: 
+False) [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: True, course: False) [188 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(Boolean school, Boolean course) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 256
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:18.64]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: False, course: 
+False) [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: False, course: False) [188 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(Boolean school, Boolean course) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 256
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:21.07]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: False, course: 
+True) [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: False, course: True) [185 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(Boolean school, Boolean course) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 256
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:41.52]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CampusLinksAreManyToManyScopedUniqueAndPreservedWhenInactive 
+[FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CampusLinksAreManyToManyScopedUniqueAndPreservedWhenInactive [190 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CampusLinksAreManyToManyScopedUniqueAndPreservedWhenInactive() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 189
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:53.64]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ImmutableFieldsInvalidDatesAndUnapprovedMutationsAreRejected 
+[FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ImmutableFieldsInvalidDatesAndUnapprovedMutationsAreRejected [191 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ImmutableFieldsInvalidDatesAndUnapprovedMutationsAreRejected() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 299
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:56.02]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: 
+"membership") [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: "membership") [177 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(String change) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 266
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:58.44]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: "roles") 
+[FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: "roles") [190 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(String change) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 266
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:00.83]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: 
+"institution") [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: "institution") [178 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(String change) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 266
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:05.37]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPolic
+iesAndKeepsOldRoutesClosed(environment: "Development") [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(environment: "Development") [2 s]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(String environment) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 381
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(String environment) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 383
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:09.90]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPolic
+iesAndKeepsOldRoutesClosed(environment: "Production") [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(environment: "Production") [2 s]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(String environment) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 381
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(String environment) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 383
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:12.33]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadab
+leForStudentsWithoutAnyAccount(status: "completed") [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: "completed") [199 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(String status) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 408
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:14.69]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadab
+leForStudentsWithoutAnyAccount(status: "enrolled") [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: "enrolled") [177 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(String status) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 408
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:17.16]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadab
+leForStudentsWithoutAnyAccount(status: "withdrawn") [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: "withdrawn") [186 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(String status) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 408
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:19.68]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadab
+leForStudentsWithoutAnyAccount(status: "cancelled") [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: "cancelled") [195 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(String status) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 408
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:22.08]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ParallelTenantQueriesAndPostsNeverMixDataAndSqlWritersCarryOwner 
+[FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ParallelTenantQueriesAndPostsNeverMixDataAndSqlWritersCarryOwner [188 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ParallelTenantQueriesAndPostsNeverMixDataAndSqlWritersCarryOwner() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 336
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:24.51]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EnrollmentHistoryAndPersonalMembershi
+pProfilesStaySeparateAcrossSharedUser [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EnrollmentHistoryAndPersonalMembershipProfilesStaySeparateAcrossSharedUser [207 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EnrollmentHistoryAndPersonalMembershipProfilesStaySeparateAcrossSharedUser() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 213
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:26.91]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.SelectionLegacyAndAnonymousTokensCann
+otUseNewRoutesOrOpenGlobalUserApi [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.SelectionLegacyAndAnonymousTokensCannotUseNewRoutesOrOpenGlobalUserApi [184 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.SelectionLegacyAndAnonymousTokensCannotUseNewRoutesOrOpenGlobalUserApi() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 284
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:29.34]     
+ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.MissingSelectedStudentProfileNeverFallsBackToOtherInstitution 
+[FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.MissingSelectedStudentProfileNeverFallsBackToOtherInstitution [177 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.MissingSelectedStudentProfileNeverFallsBackToOtherInstitution() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 276
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:31.77]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.AdminForeignResourceMatrixIsIndisting
+uishableFromMissingAndLeavesBothGraphsIntact [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.AdminForeignResourceMatrixIsIndistinguishableFromMissingAndLeavesBothGraphsIntact [190 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.AdminForeignResourceMatrixIsIndistinguishableFromMissingAndLeavesBothGraphsIntact() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 388
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:34.22]     ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CatalogCreationFiltersOwnershipAndDes
+criptiveUpdatesPreserveStatusAndPath [FAIL]
+  Non superato ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath [192 ms]
+  Messaggio di errore:
+   Expected OK, got InternalServerError: {"title":"Errore interno del server","status":500,"detail":"Si è verificato un errore interno."}
+  Analisi dello stack:
+     at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Expect(HttpResponseMessage response, HttpStatusCode code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 130
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CreateEdition(Boolean b, String code) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 136
+   at ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt4bHttpTests.cs:line 162
+--- End of stack trace from previous location ---
+File di risultati: C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestResults\mt4b\targeted-1\LorenzoBaracchi_CES01622_2026-10-19_15_24_12_net10.0.trx
+
+Non superato! - Non superati:    24. Superati:    13. Ignorati:     0. Totale:    37. Durata: 1 m 33 s - Integration.Tests.dll (net10.0)

@@ -1,0 +1,11 @@
+{
+    "Applied":  true,
+    "Tables":  33,
+    "Triggers":  63,
+    "ForeignKeys":  99,
+    "ValidationRules":  6,
+    "Violations":  0,
+    "BackfillHistoricalEvents":  0,
+    "JwtChanged":  false,
+    "OriginalPortTouched":  false
+}

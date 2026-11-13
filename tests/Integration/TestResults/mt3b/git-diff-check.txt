@@ -1,0 +1,2 @@
+git diff --check: PASS (repository native line-ending configuration)
+New MT-3B source/test/report whitespace: PASS

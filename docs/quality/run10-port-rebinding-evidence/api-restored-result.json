@@ -1,0 +1,7 @@
+{
+  "returncode": 0,
+  "stdout": "1\n",
+  "stderr": "mysql: [Warning] Using a password on the command line interface can be insecure.\n",
+  "mysqlErrno": null,
+  "sqlstate": null
+}

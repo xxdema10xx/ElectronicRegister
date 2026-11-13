@@ -1,0 +1,368 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="2c7ced90-da42-463e-afce-9f29a5636136" name="Lorenzo@DESKTOP-QUOAG32 2026-10-18 18:52:48" runUser="DESKTOP-QUOAG32\Lorenzo" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-18T18:52:48.3443174+02:00" queuing="2026-10-18T18:52:48.3443175+02:00" start="2026-10-18T18:52:45.9500553+02:00" finish="2026-10-18T18:52:48.3480840+02:00" />
+  <TestSettings name="default" id="14531834-614f-4de6-8a08-6b8441c60a19">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-18_18_52_48" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="94ed42cc-f900-4e92-a93b-db18cbd4ff12" testId="5394611e-d6d3-d55c-01bd-178a42068049" testName="ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: &quot;Development&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.4306292" startTime="2026-10-18T18:52:48.2891024+02:00" endTime="2026-10-18T18:52:48.2891025+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="94ed42cc-f900-4e92-a93b-db18cbd4ff12">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(String environment) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditBootstrapTests.cs:line 103&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(String environment) in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditBootstrapTests.cs:line 118&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a24deaf4-195b-4c17-bb32-fb25a191b5b4" testId="049b40ce-c768-86e9-2f5c-07c913521bf5" testName="ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: &quot;Production&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.7127227" startTime="2026-10-18T18:52:47.8531540+02:00" endTime="2026-10-18T18:52:47.8531667+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a24deaf4-195b-4c17-bb32-fb25a191b5b4" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: &quot;Production&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="049b40ce-c768-86e9-2f5c-07c913521bf5">
+      <Execution id="a24deaf4-195b-4c17-bb32-fb25a191b5b4" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests" name="RealProgram_StartsAuthenticatesDocumentsAndStops" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: &quot;Development&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="5394611e-d6d3-d55c-01bd-178a42068049">
+      <Execution id="94ed42cc-f900-4e92-a93b-db18cbd4ff12" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests" name="RealProgram_StartsAuthenticatesDocumentsAndStops" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="5394611e-d6d3-d55c-01bd-178a42068049" executionId="94ed42cc-f900-4e92-a93b-db18cbd4ff12" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="049b40ce-c768-86e9-2f5c-07c913521bf5" executionId="a24deaf4-195b-4c17-bb32-fb25a191b5b4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="2" executed="2" passed="1" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.05]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.08]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.09]   Starting:    Integration.Tests&#xD;
+info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[63]&#xD;
+      User profile is available. Using 'C:\Users\Lorenzo\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.&#xD;
+info: ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker[0]&#xD;
+      ExpiredExamSubmissionWorker started.&#xD;
+info: Microsoft.Hosting.Lifetime[14]&#xD;
+      Now listening on: http://127.0.0.1:50434&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application started. Press Ctrl+C to shut down.&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Hosting environment: Production&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Content root path: C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://127.0.0.1:50434/api/Auth/me - - -&#xD;
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[2]&#xD;
+      Authorization failed. These requirements were not met:&#xD;
+      RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (teacher|admin|student)&#xD;
+info: Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler[12]&#xD;
+      AuthenticationScheme: Bearer was challenged.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://127.0.0.1:50434/api/Auth/me - 401 0 - 20.4488ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://127.0.0.1:50434/api/Auth/login - application/json;+charset=utf-8 -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'ElectronicRegisterAPI.Api.Controllers.AuthController.Login (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]&#xD;
+      Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] Login(ElectronicRegisterAPI.Domain.DTOs.LoginDto) on controller ElectronicRegisterAPI.Api.Controllers.AuthController (ElectronicRegisterAPI).&#xD;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]&#xD;
+      Executed DbCommand (0ms) [Parameters=[@__email_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']&#xD;
+      SELECT `u`.`id`, `u`.`email`, `u`.`password_hash`, `u`.`role`, `u`.`student_id`, `u`.`teacher_id`&#xD;
+      FROM `user` AS `u`&#xD;
+      WHERE `u`.`email` = @__email_0&#xD;
+      LIMIT 1&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]&#xD;
+      Executing OkObjectResult, writing value of type '&lt;&gt;f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]&#xD;
+      Executed action ElectronicRegisterAPI.Api.Controllers.AuthController.Login (ElectronicRegisterAPI) in 184.3632ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'ElectronicRegisterAPI.Api.Controllers.AuthController.Login (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://127.0.0.1:50434/api/Auth/login - 200 - application/json;+charset=utf-8 200.5898ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://127.0.0.1:50434/api/Auth/me - - -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'ElectronicRegisterAPI.Api.Controllers.AuthController.GetCurrentUser (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]&#xD;
+      Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ElectronicRegisterAPI.Domain.DTOs.UserDto]] GetCurrentUser() on controller ElectronicRegisterAPI.Api.Controllers.AuthController (ElectronicRegisterAPI).&#xD;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]&#xD;
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']&#xD;
+      SELECT `u`.`id`, `u`.`email`, `u`.`password_hash`, `u`.`role`, `u`.`student_id`, `u`.`teacher_id`&#xD;
+      FROM `user` AS `u`&#xD;
+      WHERE `u`.`id` = @__id_0&#xD;
+      LIMIT 1&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]&#xD;
+      Executing OkObjectResult, writing value of type 'ElectronicRegisterAPI.Domain.DTOs.UserDto'.&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]&#xD;
+      Executed action ElectronicRegisterAPI.Api.Controllers.AuthController.GetCurrentUser (ElectronicRegisterAPI) in 12.0294ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'ElectronicRegisterAPI.Api.Controllers.AuthController.GetCurrentUser (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://127.0.0.1:50434/api/Auth/me - 200 - application/json;+charset=utf-8 31.8052ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://127.0.0.1:50434/api/Exam - - -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.GetAll (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]&#xD;
+      Route matched with {action = "GetAll", controller = "Exam"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[ElectronicRegisterAPI.Domain.DTOs.ExamSummaryDto]]] GetAll() on controller ElectronicRegisterAPI.Api.Controllers.ExamController (ElectronicRegisterAPI).&#xD;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]&#xD;
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']&#xD;
+      SELECT `e`.`id` AS `Id`, `e`.`name` AS `Name`, `e`.`description` AS `Description`, `e`.`class_subject_id` AS `ClassSubjectId`, `e`.`retake_of_exam_id` AS `RetakeOfExamId`, `e`.`available_from` AS `AvailableFrom`, `e`.`available_until` AS `AvailableUntil`, `e`.`duration_minutes` AS `DurationMinutes`, `e`.`passing_percent` AS `PassingPercent`, `e`.`total_points` AS `TotalPoints`, `e`.`status` AS `Status`, (&#xD;
+          SELECT COUNT(*)&#xD;
+          FROM `exam_student` AS `e0`&#xD;
+          WHERE `e`.`id` = `e0`.`exam_id`) AS `AssignedStudentsCount`, `e`.`published_at` AS `PublishedAt`, `e`.`closed_at` AS `ClosedAt`, `e`.`cancelled_at` AS `CancelledAt`&#xD;
+      FROM `exam` AS `e`&#xD;
+      ORDER BY `e`.`available_from` DESC&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]&#xD;
+      Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[ElectronicRegisterAPI.Domain.DTOs.ExamSummaryDto, ElectronicRegisterAPI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]&#xD;
+      Executed action ElectronicRegisterAPI.Api.Controllers.ExamController.GetAll (ElectronicRegisterAPI) in 36.9254ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.GetAll (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://127.0.0.1:50434/api/Exam - 200 - application/json;+charset=utf-8 40.9291ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://127.0.0.1:50434/api/Exam/ca7d2d3a-fa7f-4e68-acaa-934e62b26125/close - - 0&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.Close (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]&#xD;
+      Route matched with {action = "Close", controller = "Exam"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] Close(System.Guid) on controller ElectronicRegisterAPI.Api.Controllers.ExamController (ElectronicRegisterAPI).&#xD;
+warn: Microsoft.EntityFrameworkCore.Query[10103]&#xD;
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.&#xD;
+warn: Microsoft.EntityFrameworkCore.Query[20504]&#xD;
+      Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w =&gt; w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.&#xD;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]&#xD;
+      Executed DbCommand (3ms) [Parameters=[p0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']&#xD;
+      SELECT `e1`.`id`, `e1`.`available_from`, `e1`.`available_until`, `e1`.`cancelled_at`, `e1`.`class_subject_id`, `e1`.`closed_at`, `e1`.`created_at`, `e1`.`description`, `e1`.`duration_minutes`, `e1`.`name`, `e1`.`passing_percent`, `e1`.`published_at`, `e1`.`retake_of_exam_id`, `e1`.`status`, `e1`.`total_points`, `e1`.`updated_at`, `s`.`id`, `s`.`exam_id`, `s`.`points`, `s`.`position`, `s`.`required`, `s`.`text`, `s`.`type`, `s`.`id0`, `s`.`is_correct`, `s`.`position0`, `s`.`question_id`, `s`.`text0`, `e0`.`exam_id`, `e0`.`student_id`, `e0`.`assigned_at`, `e0`.`extra_time_minutes`&#xD;
+      FROM (&#xD;
+          SELECT `e`.`id`, `e`.`available_from`, `e`.`available_until`, `e`.`cancelled_at`, `e`.`class_subject_id`, `e`.`closed_at`, `e`.`created_at`, `e`.`description`, `e`.`duration_minutes`, `e`.`name`, `e`.`passing_percent`, `e`.`published_at`, `e`.`retake_of_exam_id`, `e`.`status`, `e`.`total_points`, `e`.`updated_at`&#xD;
+          FROM (&#xD;
+              SELECT * FROM exam WHERE id = @p0 FOR UPDATE&#xD;
+          ) AS `e`&#xD;
+          LIMIT 1&#xD;
+      ) AS `e1`&#xD;
+      LEFT JOIN (&#xD;
+          SELECT `q`.`id`, `q`.`exam_id`, `q`.`points`, `q`.`position`, `q`.`required`, `q`.`text`, `q`.`type`, `q0`.`id` AS `id0`, `q0`.`is_correct`, `q0`.`position` AS `position0`, `q0`.`question_id`, `q0`.`text` AS `text0`&#xD;
+          FROM `question` AS `q`&#xD;
+          LEFT JOIN `question_option` AS `q0` ON `q`.`id` = `q0`.`question_id`&#xD;
+      ) AS `s` ON `e1`.`id` = `s`.`exam_id`&#xD;
+      LEFT JOIN `exam_student` AS `e0` ON `e1`.`id` = `e0`.`exam_id`&#xD;
+      ORDER BY `e1`.`id`, `s`.`id`, `s`.`id0`, `e0`.`exam_id`&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]&#xD;
+      Executed action ElectronicRegisterAPI.Api.Controllers.ExamController.Close (ElectronicRegisterAPI) in 58.4502ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.Close (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://127.0.0.1:50434/api/Exam/ca7d2d3a-fa7f-4e68-acaa-934e62b26125/close - 404 - application/json;+charset=utf-8 67.9049ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://127.0.0.1:50434/api/Exam/not-a-guid - - -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.GetById (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]&#xD;
+      Route matched with {action = "GetById", controller = "Exam"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ElectronicRegisterAPI.Domain.DTOs.ExamDetailDto]] GetById(System.Guid) on controller ElectronicRegisterAPI.Api.Controllers.ExamController (ElectronicRegisterAPI).&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]&#xD;
+      Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]&#xD;
+      Executed action ElectronicRegisterAPI.Api.Controllers.ExamController.GetById (ElectronicRegisterAPI) in 11.6752ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.GetById (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://127.0.0.1:50434/api/Exam/not-a-guid - 400 - application/problem+json;+charset=utf-8 15.2553ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://127.0.0.1:50434/openapi/v1.json - - -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://127.0.0.1:50434/openapi/v1.json - 404 0 - 0.3080ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[16]&#xD;
+      Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://127.0.0.1:50434/openapi/v1.json, Response status code: 404&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://127.0.0.1:50434/api/Auth/me - - -&#xD;
+info: Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler[1]&#xD;
+      Failed to validate the token.&#xD;
+      Microsoft.IdentityModel.Tokens.SecurityTokenSignatureKeyNotFoundException: IDX10517: Signature validation failed. The token's kid is missing. Keys tried: 'Microsoft.IdentityModel.Tokens.SymmetricSecurityKey, KeyId: '', InternalId: 'xuSv5gQkJYBrxfFokT86X9XkIGw7ysZHhfX0rsmTiIY'. , KeyId: &#xD;
+      '. Number of keys in TokenValidationParameters: '1'. &#xD;
+Number of keys in Configuration: '0'. &#xD;
+Exceptions caught:&#xD;
+ '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.&#xD;
+token: '[PII of type 'Microsoft.IdentityModel.JsonWebTokens.JsonWebToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'. See https://aka.ms/IDX10503 for details.&#xD;
+         at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateSignature(JsonWebToken jwtToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)&#xD;
+         at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateSignatureAndIssuerSecurityKey(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)&#xD;
+         at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateJWSAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)&#xD;
+info: Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler[7]&#xD;
+      Bearer was not authenticated. Failure message: IDX10517: Signature validation failed. The token's kid is missing. Keys tried: 'Microsoft.IdentityModel.Tokens.SymmetricSecurityKey, KeyId: '', InternalId: 'xuSv5gQkJYBrxfFokT86X9XkIGw7ysZHhfX0rsmTiIY'. , KeyId: &#xD;
+      '. Number of keys in TokenValidationParameters: '1'. &#xD;
+Number of keys in Configuration: '0'. &#xD;
+Exceptions caught:&#xD;
+ '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.&#xD;
+token: '[PII of type 'Microsoft.IdentityModel.JsonWebTokens.JsonWebToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'. See https://aka.ms/IDX10503 for details.&#xD;
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[2]&#xD;
+      Authorization failed. These requirements were not met:&#xD;
+      RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (teacher|admin|student)&#xD;
+info: Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler[12]&#xD;
+      AuthenticationScheme: Bearer was challenged.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://127.0.0.1:50434/api/Auth/me - 401 0 - 3.3006ms&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application is shutting down...&#xD;
+info: ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker[0]&#xD;
+      ExpiredExamSubmissionWorker stopping.&#xD;
+info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[63]&#xD;
+      User profile is available. Using 'C:\Users\Lorenzo\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.&#xD;
+info: ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker[0]&#xD;
+      ExpiredExamSubmissionWorker started.&#xD;
+info: Microsoft.Hosting.Lifetime[14]&#xD;
+      Now listening on: http://127.0.0.1:50443&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application started. Press Ctrl+C to shut down.&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Hosting environment: Development&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Content root path: C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://127.0.0.1:50443/api/Auth/me - - -&#xD;
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[2]&#xD;
+      Authorization failed. These requirements were not met:&#xD;
+      RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (teacher|admin|student)&#xD;
+info: Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler[12]&#xD;
+      AuthenticationScheme: Bearer was challenged.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://127.0.0.1:50443/api/Auth/me - 401 0 - 2.4270ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://127.0.0.1:50443/api/Auth/login - application/json;+charset=utf-8 -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'ElectronicRegisterAPI.Api.Controllers.AuthController.Login (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]&#xD;
+      Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] Login(ElectronicRegisterAPI.Domain.DTOs.LoginDto) on controller ElectronicRegisterAPI.Api.Controllers.AuthController (ElectronicRegisterAPI).&#xD;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]&#xD;
+      Executed DbCommand (0ms) [Parameters=[@__email_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']&#xD;
+      SELECT `u`.`id`, `u`.`email`, `u`.`password_hash`, `u`.`role`, `u`.`student_id`, `u`.`teacher_id`&#xD;
+      FROM `user` AS `u`&#xD;
+      WHERE `u`.`email` = @__email_0&#xD;
+      LIMIT 1&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]&#xD;
+      Executing OkObjectResult, writing value of type '&lt;&gt;f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]&#xD;
+      Executed action ElectronicRegisterAPI.Api.Controllers.AuthController.Login (ElectronicRegisterAPI) in 112.8057ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'ElectronicRegisterAPI.Api.Controllers.AuthController.Login (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://127.0.0.1:50443/api/Auth/login - 200 - application/json;+charset=utf-8 118.1170ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://127.0.0.1:50443/api/Auth/me - - -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'ElectronicRegisterAPI.Api.Controllers.AuthController.GetCurrentUser (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]&#xD;
+      Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ElectronicRegisterAPI.Domain.DTOs.UserDto]] GetCurrentUser() on controller ElectronicRegisterAPI.Api.Controllers.AuthController (ElectronicRegisterAPI).&#xD;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]&#xD;
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']&#xD;
+      SELECT `u`.`id`, `u`.`email`, `u`.`password_hash`, `u`.`role`, `u`.`student_id`, `u`.`teacher_id`&#xD;
+      FROM `user` AS `u`&#xD;
+      WHERE `u`.`id` = @__id_0&#xD;
+      LIMIT 1&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]&#xD;
+      Executing OkObjectResult, writing value of type 'ElectronicRegisterAPI.Domain.DTOs.UserDto'.&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]&#xD;
+      Executed action ElectronicRegisterAPI.Api.Controllers.AuthController.GetCurrentUser (ElectronicRegisterAPI) in 1.4888ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'ElectronicRegisterAPI.Api.Controllers.AuthController.GetCurrentUser (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://127.0.0.1:50443/api/Auth/me - 200 - application/json;+charset=utf-8 4.7815ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://127.0.0.1:50443/api/Exam - - -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.GetAll (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]&#xD;
+      Route matched with {action = "GetAll", controller = "Exam"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[ElectronicRegisterAPI.Domain.DTOs.ExamSummaryDto]]] GetAll() on controller ElectronicRegisterAPI.Api.Controllers.ExamController (ElectronicRegisterAPI).&#xD;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]&#xD;
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']&#xD;
+      SELECT `e`.`id` AS `Id`, `e`.`name` AS `Name`, `e`.`description` AS `Description`, `e`.`class_subject_id` AS `ClassSubjectId`, `e`.`retake_of_exam_id` AS `RetakeOfExamId`, `e`.`available_from` AS `AvailableFrom`, `e`.`available_until` AS `AvailableUntil`, `e`.`duration_minutes` AS `DurationMinutes`, `e`.`passing_percent` AS `PassingPercent`, `e`.`total_points` AS `TotalPoints`, `e`.`status` AS `Status`, (&#xD;
+          SELECT COUNT(*)&#xD;
+          FROM `exam_student` AS `e0`&#xD;
+          WHERE `e`.`id` = `e0`.`exam_id`) AS `AssignedStudentsCount`, `e`.`published_at` AS `PublishedAt`, `e`.`closed_at` AS `ClosedAt`, `e`.`cancelled_at` AS `CancelledAt`&#xD;
+      FROM `exam` AS `e`&#xD;
+      ORDER BY `e`.`available_from` DESC&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]&#xD;
+      Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[ElectronicRegisterAPI.Domain.DTOs.ExamSummaryDto, ElectronicRegisterAPI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]&#xD;
+      Executed action ElectronicRegisterAPI.Api.Controllers.ExamController.GetAll (ElectronicRegisterAPI) in 4.3129ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.GetAll (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://127.0.0.1:50443/api/Exam - 200 - application/json;+charset=utf-8 7.7492ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://127.0.0.1:50443/api/Exam/700aadad-45b4-4eb8-b137-f90546f7e010/close - - 0&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.Close (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]&#xD;
+      Route matched with {action = "Close", controller = "Exam"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] Close(System.Guid) on controller ElectronicRegisterAPI.Api.Controllers.ExamController (ElectronicRegisterAPI).&#xD;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]&#xD;
+      Executed DbCommand (1ms) [Parameters=[p0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']&#xD;
+      SELECT `e1`.`id`, `e1`.`available_from`, `e1`.`available_until`, `e1`.`cancelled_at`, `e1`.`class_subject_id`, `e1`.`closed_at`, `e1`.`created_at`, `e1`.`description`, `e1`.`duration_minutes`, `e1`.`name`, `e1`.`passing_percent`, `e1`.`published_at`, `e1`.`retake_of_exam_id`, `e1`.`status`, `e1`.`total_points`, `e1`.`updated_at`, `s`.`id`, `s`.`exam_id`, `s`.`points`, `s`.`position`, `s`.`required`, `s`.`text`, `s`.`type`, `s`.`id0`, `s`.`is_correct`, `s`.`position0`, `s`.`question_id`, `s`.`text0`, `e0`.`exam_id`, `e0`.`student_id`, `e0`.`assigned_at`, `e0`.`extra_time_minutes`&#xD;
+      FROM (&#xD;
+          SELECT `e`.`id`, `e`.`available_from`, `e`.`available_until`, `e`.`cancelled_at`, `e`.`class_subject_id`, `e`.`closed_at`, `e`.`created_at`, `e`.`description`, `e`.`duration_minutes`, `e`.`name`, `e`.`passing_percent`, `e`.`published_at`, `e`.`retake_of_exam_id`, `e`.`status`, `e`.`total_points`, `e`.`updated_at`&#xD;
+          FROM (&#xD;
+              SELECT * FROM exam WHERE id = @p0 FOR UPDATE&#xD;
+          ) AS `e`&#xD;
+          LIMIT 1&#xD;
+      ) AS `e1`&#xD;
+      LEFT JOIN (&#xD;
+          SELECT `q`.`id`, `q`.`exam_id`, `q`.`points`, `q`.`position`, `q`.`required`, `q`.`text`, `q`.`type`, `q0`.`id` AS `id0`, `q0`.`is_correct`, `q0`.`position` AS `position0`, `q0`.`question_id`, `q0`.`text` AS `text0`&#xD;
+          FROM `question` AS `q`&#xD;
+          LEFT JOIN `question_option` AS `q0` ON `q`.`id` = `q0`.`question_id`&#xD;
+      ) AS `s` ON `e1`.`id` = `s`.`exam_id`&#xD;
+      LEFT JOIN `exam_student` AS `e0` ON `e1`.`id` = `e0`.`exam_id`&#xD;
+      ORDER BY `e1`.`id`, `s`.`id`, `s`.`id0`, `e0`.`exam_id`&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]&#xD;
+      Executed action ElectronicRegisterAPI.Api.Controllers.ExamController.Close (ElectronicRegisterAPI) in 3.8494ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.Close (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://127.0.0.1:50443/api/Exam/700aadad-45b4-4eb8-b137-f90546f7e010/close - 404 - application/json;+charset=utf-8 7.1037ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://127.0.0.1:50443/api/Exam/not-a-guid - - -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.GetById (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]&#xD;
+      Route matched with {action = "GetById", controller = "Exam"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ElectronicRegisterAPI.Domain.DTOs.ExamDetailDto]] GetById(System.Guid) on controller ElectronicRegisterAPI.Api.Controllers.ExamController (ElectronicRegisterAPI).&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]&#xD;
+      Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.&#xD;
+info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]&#xD;
+      Executed action ElectronicRegisterAPI.Api.Controllers.ExamController.GetById (ElectronicRegisterAPI) in 7.8993ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'ElectronicRegisterAPI.Api.Controllers.ExamController.GetById (ElectronicRegisterAPI)'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://127.0.0.1:50443/api/Exam/not-a-guid - 400 - application/problem+json;+charset=utf-8 11.2076ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://127.0.0.1:50443/openapi/v1.json - - -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /openapi/{documentName}.json'&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /openapi/{documentName}.json'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://127.0.0.1:50443/openapi/v1.json - 200 - application/json;charset=utf-8 86.6858ms&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application is shutting down...&#xD;
+info: ElectronicRegisterAPI.Api.BackgroundServices.ExpiredExamSubmissionWorker[0]&#xD;
+      ExpiredExamSubmissionWorker stopping.&#xD;
+[xUnit.net 00:00:02.05]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:02.05]       Expected: True&#xD;
+[xUnit.net 00:00:02.05]       Actual:   False&#xD;
+[xUnit.net 00:00:02.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditBootstrapTests.cs(103,0): at ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(String environment)&#xD;
+[xUnit.net 00:00:02.05]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditBootstrapTests.cs(118,0): at ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(String environment)&#xD;
+[xUnit.net 00:00:02.05]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:02.05]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:52:48.2880417+02:00">
+        <Text>[xUnit.net 00:00:02.05]     ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: "Development") [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

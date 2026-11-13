@@ -1,0 +1,52 @@
+{
+  "checkedAt": "2026-10-30T19:59:18.346Z",
+  "registry": "registry-1.docker.io/library/mysql",
+  "version": "8.4.13",
+  "image": "mysql:8.4.13@sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+  "indexDigest": "sha256:a0225d1ea6631c8bc2385dc4c2faba17bbf1834ecf369e1659a9a382bd8d5dd7",
+  "amd64Digest": "sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+  "os": "linux",
+  "architecture": "amd64",
+  "annotations": {
+    "com.docker.official-images.bashbrew.arch": "amd64",
+    "org.opencontainers.image.base.digest": "sha256:b7b530a7be38b0a17d2132fbc2bc8a3669d5c7624f68d40914f4be5d6d1de4ad",
+    "org.opencontainers.image.base.name": "oraclelinux:9-slim",
+    "org.opencontainers.image.created": "2026-10-27T23:07:13Z",
+    "org.opencontainers.image.revision": "c92fbc392511086e6c1500f28a21421413f0bb51",
+    "org.opencontainers.image.source": "https://github.com/docker-library/mysql.git#c92fbc392511086e6c1500f28a21421413f0bb51:8.4",
+    "org.opencontainers.image.url": "https://hub.docker.com/_/mysql",
+    "org.opencontainers.image.version": "8.4.13"
+  },
+  "configDigest": "sha256:d2a0d367629f5b5dcd6cdabc53fe9183a0a3c313f9bd354e368290ba6fbf6d3f",
+  "history": [
+    {
+      "created": "2026-10-27T23:07:17.98741801Z",
+      "created_by": "RUN /bin/sh -c set -eux; \tgroupadd --system --gid 999 mysql; \tuseradd --system --uid 999 --gid 999 --home-dir /var/lib/mysql --no-create-home mysql # buildkit",
+      "comment": "buildkit.dockerfile.v0"
+    },
+    {
+      "created": "2026-10-27T23:07:54.03914301Z",
+      "created_by": "ENV MYSQL_VERSION=8.4.13-1.el9",
+      "comment": "buildkit.dockerfile.v0",
+      "empty_layer": true
+    },
+    {
+      "created": "2026-10-27T23:08:30.670495377Z",
+      "created_by": "RUN /bin/sh -c set -eux; \tmicrodnf install -y \"mysql-community-server-minimal-$MYSQL_VERSION\"; \tmicrodnf clean all; \tgrep -F 'socket=/var/lib/mysql/mysql.sock' /etc/my.cnf; \tsed -i 's!^socket=.*!socket=/var/run/mysqld/mysqld.sock!' /etc/my.cnf; \tgrep -F 'socket=/var/run/mysqld/mysqld.sock' /etc/my.cnf; \t{ echo '[client]'; echo 'socket=/var/run/mysqld/mysqld.sock'; } >> /etc/my.cnf; \t\t! grep -F '!includedir' /etc/my.cnf; \t{ echo; echo '!includedir /etc/mysql/conf.d/'; } >> /etc/my.cnf; \tmkdir -p /etc/mysql/conf.d; \tmkdir -p /var/lib/mysql /var/run/mysqld; \tchown mysql:mysql /var/lib/mysql /var/run/mysqld; \tchmod 1777 /var/lib/mysql /var/run/mysqld; \t\tmkdir /docker-entrypoint-initdb.d; \t\tmysqld --version; \tmysql --version # buildkit",
+      "comment": "buildkit.dockerfile.v0"
+    },
+    {
+      "created": "2026-10-27T23:09:13.668625416Z",
+      "created_by": "CMD [\"mysqld\"]",
+      "comment": "buildkit.dockerfile.v0",
+      "empty_layer": true
+    }
+  ],
+  "containersExecuted": false,
+  "runtimeTlsVerified": false,
+  "staticFilesystem": {
+    "layerDigest": "sha256:4143b5578588023307b710623d1362a77af4557a51c1c72983aca1fe5d5969b4",
+    "etc/group": "mysql:x:999:",
+    "etc/passwd": "mysql:x:999:999::/var/lib/mysql:/bin/bash"
+  }
+}

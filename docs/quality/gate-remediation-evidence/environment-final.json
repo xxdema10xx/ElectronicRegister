@@ -1,0 +1,7 @@
+{
+    "OwnedListenersRemaining":  0,
+    "DockerAvailable":  false,
+    "ContainerRun":  false,
+    "PodmanAvailable":  false,
+    "ImageBuilt":  false
+}

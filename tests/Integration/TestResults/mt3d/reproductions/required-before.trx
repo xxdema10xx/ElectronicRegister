@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="4f3bf09d-64e2-4f70-be30-47b2385e3d99" name="LorenzoBaracchi@CES01622 2026-10-19 11:06:37" runUser="AzureAD\LorenzoBaracchi" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-19T11:06:37.7816450+02:00" queuing="2026-10-19T11:06:37.7816455+02:00" start="2026-10-19T11:06:35.8586829+02:00" finish="2026-10-19T11:06:37.8020248+02:00" />
+  <TestSettings name="default" id="9f37f066-3296-4d79-a8bc-672bbb135656">
+    <Deployment runDeploymentRoot="LorenzoBaracchi_CES01622_2026-10-19_11_06_37" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="c6ae5c89-e57b-43ee-b92d-f1c93fe8583d" testId="123cfac5-4b2b-6853-a84f-8f48ea615150" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Open)" computerName="CES01622" duration="00:00:00.0041079" startTime="2026-10-19T11:06:37.7264822+02:00" endTime="2026-10-19T11:06:37.7264823+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c6ae5c89-e57b-43ee-b92d-f1c93fe8583d">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: No exception was thrown&#xD;
+Expected: typeof(System.InvalidOperationException)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(QuestionType type) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 42&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="970b1b7f-a89e-4af8-87ef-7687f6a166fe" testId="732e43e0-f8a8-4ef1-192d-d1d1ac1add20" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Multiple)" computerName="CES01622" duration="00:00:00.6766723" startTime="2026-10-19T11:06:37.7184001+02:00" endTime="2026-10-19T11:06:37.7184332+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="970b1b7f-a89e-4af8-87ef-7687f6a166fe">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: No exception was thrown&#xD;
+Expected: typeof(System.InvalidOperationException)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(QuestionType type) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 42&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="87aa2750-120e-4c1d-8f8d-7fa520a1e62e" testId="9b723684-2cdc-2451-caa0-f0fcc3f8bb00" testName="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Single)" computerName="CES01622" duration="00:00:00.0089049" startTime="2026-10-19T11:06:37.7222164+02:00" endTime="2026-10-19T11:06:37.7222164+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="87aa2750-120e-4c1d-8f8d-7fa520a1e62e">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: No exception was thrown&#xD;
+Expected: typeof(System.InvalidOperationException)</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(QuestionType type) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs:line 42&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Single)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="9b723684-2cdc-2451-caa0-f0fcc3f8bb00">
+      <Execution id="87aa2750-120e-4c1d-8f8d-7fa520a1e62e" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="Mt3dRequiredQuestionIdWithEmptyContentIsRejected" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Open)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="123cfac5-4b2b-6853-a84f-8f48ea615150">
+      <Execution id="c6ae5c89-e57b-43ee-b92d-f1c93fe8583d" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="Mt3dRequiredQuestionIdWithEmptyContentIsRejected" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Multiple)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="732e43e0-f8a8-4ef1-192d-d1d1ac1add20">
+      <Execution id="970b1b7f-a89e-4af8-87ef-7687f6a166fe" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests" name="Mt3dRequiredQuestionIdWithEmptyContentIsRejected" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="123cfac5-4b2b-6853-a84f-8f48ea615150" executionId="c6ae5c89-e57b-43ee-b92d-f1c93fe8583d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="732e43e0-f8a8-4ef1-192d-d1d1ac1add20" executionId="970b1b7f-a89e-4af8-87ef-7687f6a166fe" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9b723684-2cdc-2451-caa0-f0fcc3f8bb00" executionId="87aa2750-120e-4c1d-8f8d-7fa520a1e62e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="3" executed="3" passed="0" failed="3" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.16]   Discovering: Unit.Tests&#xD;
+[xUnit.net 00:00:00.21]   Discovered:  Unit.Tests&#xD;
+[xUnit.net 00:00:00.21]   Starting:    Unit.Tests&#xD;
+[xUnit.net 00:00:00.94]       Assert.Throws() Failure: No exception was thrown&#xD;
+[xUnit.net 00:00:00.94]       Expected: typeof(System.InvalidOperationException)&#xD;
+[xUnit.net 00:00:00.94]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.94]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(42,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(QuestionType type)&#xD;
+[xUnit.net 00:00:00.94]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.94]       Assert.Throws() Failure: No exception was thrown&#xD;
+[xUnit.net 00:00:00.94]       Expected: typeof(System.InvalidOperationException)&#xD;
+[xUnit.net 00:00:00.94]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.94]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(42,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(QuestionType type)&#xD;
+[xUnit.net 00:00:00.94]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.95]       Assert.Throws() Failure: No exception was thrown&#xD;
+[xUnit.net 00:00:00.95]       Expected: typeof(System.InvalidOperationException)&#xD;
+[xUnit.net 00:00:00.95]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.95]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Unit\Application\ExamSubmissionProcessorTests.cs(42,0): at ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(QuestionType type)&#xD;
+[xUnit.net 00:00:00.95]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.95]   Finished:    Unit.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T11:06:37.7152421+02:00">
+        <Text>[xUnit.net 00:00:00.94]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Multiple) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T11:06:37.7222553+02:00">
+        <Text>[xUnit.net 00:00:00.94]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Single) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T11:06:37.7264681+02:00">
+        <Text>[xUnit.net 00:00:00.95]     ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.Mt3dRequiredQuestionIdWithEmptyContentIsRejected(type: Open) [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

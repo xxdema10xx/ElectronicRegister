@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-10-30T17:00:36.941Z",
+  "mysqlTag": "mysql:5.7.24",
+  "tagDigest": "sha256:bf17a7109057494c45fba5aab7fc805ca00ac1eef638dfdd42b38d5a7190c9bb",
+  "amd64Digest": "sha256:1f627f590dac0b2c4659282258ce205033adf94ebe8775a3e3a8424a87cdd746",
+  "platforms": [
+    {
+      "architecture": "amd64",
+      "os": "linux"
+    }
+  ],
+  "architecture": "amd64",
+  "versionEnv": [
+    "MYSQL_VERSION=5.7.24-1debian9"
+  ],
+  "sdkNobleManifestStatus": 200,
+  "containersExecuted": false,
+  "mysqlTlsVerified": false
+}

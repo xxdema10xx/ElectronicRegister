@@ -1,0 +1,43 @@
+{
+  "identity": {
+    "version": "5.7.24",
+    "port": 13449
+  },
+  "complete": {
+    "exit": 0,
+    "stdout": "1",
+    "stderr": ""
+  },
+  "completePreflight": {
+    "exit": 0,
+    "stdout": "{\"ReadOnly\":true,\"IdentityVerified\":true,\"BaseTablesVerified\":66,\"BaseTriggersVerified\":174,\"AdditiveProbeReady\":true,\"Release\":\"er-quality-1\"}",
+    "stderr": ""
+  },
+  "missingRequiredColumn": {
+    "probe": {
+      "exit": 0,
+      "stdout": "1",
+      "stderr": ""
+    },
+    "preflight": {
+      "exit": 0,
+      "stdout": "{\"ReadOnly\":true,\"IdentityVerified\":true,\"BaseTablesVerified\":66,\"BaseTriggersVerified\":174,\"AdditiveProbeReady\":true,\"Release\":\"er-quality-1\"}",
+      "stderr": ""
+    },
+    "passwordQuery": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "ERROR 1054 (42S22) at line 1: Unknown column 'lease_until' in 'field list'"
+    }
+  },
+  "realProgram": {
+    "exit": 0,
+    "output": "Real Program: live=200, readiness=200; expected 200",
+    "error": ""
+  },
+  "restored": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+}

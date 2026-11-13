@@ -1,0 +1,265 @@
+{
+  "audit_event": [
+    "id",
+    "actor_user_id",
+    "action",
+    "entity_type",
+    "entity_id",
+    "before_json",
+    "after_json",
+    "request_id",
+    "created_at",
+    "institution_id"
+  ],
+  "biennium": [
+    "id",
+    "start_year",
+    "end_year",
+    "institution_id"
+  ],
+  "biennium_study_area": [
+    "id",
+    "biennium_id",
+    "study_area_id",
+    "institution_id"
+  ],
+  "biennium_study_path": [
+    "id",
+    "biennium_study_area_id",
+    "study_path_id",
+    "institution_id"
+  ],
+  "campus": [
+    "id",
+    "institution_id",
+    "name",
+    "address",
+    "city",
+    "province",
+    "is_active"
+  ],
+  "class": [
+    "id",
+    "biennium_study_path_id",
+    "name",
+    "institution_id",
+    "course_edition_id"
+  ],
+  "class_subject": [
+    "id",
+    "class_id",
+    "subject_id",
+    "teacher_id",
+    "institution_id"
+  ],
+  "course_edition": [
+    "id",
+    "institution_id",
+    "study_path_id",
+    "code",
+    "name",
+    "start_date",
+    "end_date",
+    "status",
+    "created_at",
+    "updated_at"
+  ],
+  "course_edition_campus": [
+    "institution_id",
+    "course_edition_id",
+    "campus_id"
+  ],
+  "exam": [
+    "id",
+    "class_subject_id",
+    "retake_of_exam_id",
+    "name",
+    "description",
+    "available_from",
+    "available_until",
+    "duration_minutes",
+    "passing_percent",
+    "total_points",
+    "status",
+    "published_at",
+    "closed_at",
+    "cancelled_at",
+    "created_at",
+    "updated_at",
+    "institution_id",
+    "retake_institution_id"
+  ],
+  "exam_student": [
+    "exam_id",
+    "student_id",
+    "extra_time_minutes",
+    "assigned_at",
+    "institution_id"
+  ],
+  "exam_submission": [
+    "id",
+    "exam_id",
+    "student_id",
+    "status",
+    "started_at",
+    "deadline_at",
+    "submitted_at",
+    "submit_reason",
+    "violation_count",
+    "last_client_revision",
+    "max_score",
+    "passing_score",
+    "closed_score",
+    "open_max_points",
+    "open_score",
+    "total_score",
+    "passed",
+    "suggested_grade",
+    "override_reason",
+    "grade_id",
+    "reviewed_by_user_id",
+    "finalized_at",
+    "created_at",
+    "updated_at",
+    "institution_id",
+    "grade_institution_id"
+  ],
+  "exam_violation": [
+    "id",
+    "submission_id",
+    "type",
+    "metadata_json",
+    "occurred_at",
+    "institution_id"
+  ],
+  "grade": [
+    "id",
+    "student_id",
+    "class_subject_id",
+    "value",
+    "date",
+    "institution_id"
+  ],
+  "institution": [
+    "id",
+    "name",
+    "code",
+    "legal_tax_code",
+    "region",
+    "status",
+    "created_at",
+    "updated_at"
+  ],
+  "institution_membership": [
+    "id",
+    "institution_id",
+    "user_id",
+    "status",
+    "joined_at",
+    "suspended_at"
+  ],
+  "institution_membership_role": [
+    "membership_id",
+    "role"
+  ],
+  "institution_student_profile": [
+    "institution_id",
+    "membership_id",
+    "student_id"
+  ],
+  "institution_teacher_profile": [
+    "institution_id",
+    "membership_id",
+    "teacher_id"
+  ],
+  "mt3a_legacy_scope": [
+    "scope",
+    "institution_id"
+  ],
+  "question": [
+    "id",
+    "exam_id",
+    "position",
+    "text",
+    "type",
+    "points",
+    "required",
+    "institution_id"
+  ],
+  "question_option": [
+    "id",
+    "question_id",
+    "position",
+    "text",
+    "is_correct",
+    "institution_id"
+  ],
+  "student": [
+    "id",
+    "first_name",
+    "last_name",
+    "class_id",
+    "institution_id",
+    "class_institution_id"
+  ],
+  "student_enrollment": [
+    "id",
+    "institution_id",
+    "student_id",
+    "course_edition_id",
+    "enrollment_date",
+    "completion_date",
+    "status",
+    "created_at",
+    "updated_at"
+  ],
+  "study_area": [
+    "id",
+    "name",
+    "description",
+    "institution_id"
+  ],
+  "study_path": [
+    "id",
+    "name",
+    "description",
+    "institution_id"
+  ],
+  "subject": [
+    "id",
+    "name",
+    "institution_id"
+  ],
+  "submission_answer": [
+    "id",
+    "submission_id",
+    "question_id",
+    "open_text",
+    "is_correct",
+    "awarded_points",
+    "teacher_comment",
+    "last_saved_at",
+    "institution_id",
+    "exam_id"
+  ],
+  "submission_answer_option": [
+    "submission_answer_id",
+    "option_id",
+    "institution_id",
+    "question_id"
+  ],
+  "teacher": [
+    "id",
+    "first_name",
+    "last_name",
+    "institution_id"
+  ],
+  "user": [
+    "id",
+    "email",
+    "password_hash",
+    "role",
+    "student_id",
+    "teacher_id"
+  ]
+}

@@ -1,0 +1,357 @@
+{
+    "format":  1,
+    "verifiedAtUtc":  "2026-10-27T20:39:48.4869689Z",
+    "status":  "IMPLEMENTED_AND_VERIFIED_WITH_MANUAL_HOST_EVIDENCE",
+    "phaseCompleted":  true,
+    "initialGit":  {
+                       "branch":  "refactor-database-entities",
+                       "sourceHashInventory":  ".staff-private/email-phase2-5de426c8dbf64ca7a9383eb143c49013/source-baseline.json",
+                       "head":  "d5bf774d57eb143252a3659a29e653e4a0ce19a9",
+                       "workingTreeClean":  false,
+                       "preexistingPhase1ChangesPreserved":  true
+                   },
+    "git":  {
+                "pushPerformed":  false,
+                "commitPerformed":  false,
+                "historicalGeneratedArtifactsRestored":  15,
+                "destructiveCheckoutPerformed":  false,
+                "restorationVerifiedAgainstInitialHashes":  true,
+                "productionDataModified":  false
+            },
+    "regression":  {
+                       "finalAdditionalOwnAndForeignTenantDigestTestPassed":  true,
+                       "passed":  1493,
+                       "provenance":  "Direct sandbox execution, real .NET10 and isolated MySQL5.7.24",
+                       "unit":  317,
+                       "previousUnit":  231,
+                       "newIntegration":  39,
+                       "previousAssertionsWeakened":  false,
+                       "integration":  1176,
+                       "skipped":  0,
+                       "missingIdentities":  [
+
+                                             ],
+                       "previousIntegration":  1137,
+                       "previousTestsRenamedOrIgnored":  false,
+                       "total":  1493,
+                       "previousIdentitiesPreserved":  1368,
+                       "newUnit":  86,
+                       "failed":  0
+                   },
+    "database":  {
+                     "legacyUserRoleChanged":  false,
+                     "version":  "5.7.24",
+                     "userEmailRewrittenByModule":  false,
+                     "instances":  [
+                                       {
+                                           "value":  [
+                                                         {
+                                                             "port":  23321,
+                                                             "datadir":  "C:/Users/Lorenzo/ElectronicRegister/.staff-private/instance-a179dcfde04449bfa02c7e78cad69e09/data/",
+                                                             "pid":  23560,
+                                                             "stopped":  true,
+                                                             "uuid":  "0ea9b46c-d241-11f1-9238-345a605ed9a7"
+                                                         },
+                                                         {
+                                                             "port":  23322,
+                                                             "datadir":  "C:/Users/Lorenzo/ElectronicRegister/.staff-private/instance-988dddd572a6487d85ba373305cdc5e2/data/",
+                                                             "pid":  5556,
+                                                             "stopped":  true,
+                                                             "uuid":  "d7688035-d242-11f1-b03b-345a605ed9a7"
+                                                         },
+                                                         {
+                                                             "port":  23323,
+                                                             "datadir":  "C:/Users/Lorenzo/ElectronicRegister/.staff-private/instance-1543f483ec9e45a59b1be1758f4bab04/data/",
+                                                             "pid":  22984,
+                                                             "stopped":  true,
+                                                             "uuid":  "0f15244c-d244-11f1-bd42-345a605ed9a7"
+                                                         }
+                                                     ],
+                                           "Count":  3
+                                       }
+                                   ],
+                     "migrationRunner":  {
+                                             "nativeMigrationExecutionIsSeparateEvidence":  true,
+                                             "productionExecutionSupported":  false,
+                                             "syntaxParsed":  true,
+                                             "scriptExecuted":  false
+                                         },
+                     "after":  {
+                                   "tables":  48,
+                                   "triggers":  117,
+                                   "fks":  145,
+                                   "indexes":  199
+                               },
+                     "before":  {
+                                    "tables":  43,
+                                    "triggers":  99,
+                                    "indexes":  180,
+                                    "fks":  131
+                                },
+                     "ddlTransactionalRollbackClaimed":  false,
+                     "globalUniqueConstraint":  true,
+                     "bootstrap":  {
+                                       "userSeed":  0,
+                                       "technicalMutexRows":  1,
+                                       "zeroViolationChecks":  10,
+                                       "provenance":  "Native client executed by agent on a separate new datadir",
+                                       "tableDefinitionsMatched":  48,
+                                       "port":  23323,
+                                       "institutionSeed":  0,
+                                       "triggerBodiesAndMetadataMatched":  117
+                                   },
+                     "newPolicyVersionsRenameExistingAddresses":  false,
+                     "globalNamespaceIncludesAllUserWriters":  true,
+                     "institutionalOldAddressesRetained":  true,
+                     "schemaAdditive":  true,
+                     "additiveMigration":  {
+                                               "port":  23322,
+                                               "provenance":  "Native client executed by agent, explicit identity, private SHA256 dump and postflight",
+                                               "postRegressionZeroViolationChecks":  10,
+                                               "appliedOnce":  true,
+                                               "sql":  "migrations/institution-email/001_expand.sql",
+                                               "sqlSha256":  "24ED4A96F74DD06C2541159C40DA78791BB614B3EA59139E47D784EF7546182A"
+                                           }
+                 },
+    "authorization":  {
+                          "auditAppendOnly":  true,
+                          "securityGenerationPreserved":  true,
+                          "staff":  "Own tenant Student/Teacher published policy preview, reservation and atomic anagraphic creation; no policy writes, override, verification, delete or global identity changes",
+                          "platformOperator":  "No tenant privileges",
+                          "membershipRevalidated":  true,
+                          "eventIdIdempotency":  true,
+                          "expectedRevision":  true,
+                          "multiRole":  "Email category selected explicitly; no automatic multiple addresses or IAM role assignment",
+                          "admin":  "Own tenant policy/version/history/reserve/override/retire",
+                          "iamFirstLocks":  true,
+                          "teacherAndStudent":  "Own assignments through actual membership/profiles"
+                      },
+    "identity":  {
+                     "globalAccountCreated":  false,
+                     "providerIntegrationImplemented":  false,
+                     "domainVerificationWorkflowImplemented":  false,
+                     "microsoftIdentityLinked":  false,
+                     "loginAliasCreated":  false,
+                     "globalUserSeparate":  true,
+                     "mailboxVerificationWorkflowImplemented":  false,
+                     "domainVerificationState":  "ConfiguredUnverified",
+                     "mailboxCreated":  false
+                 },
+    "manifest":  {
+                     "independentPowerShellHashVerification":  true,
+                     "sha256":  "FE2342758D7A172A27970EA5F4CC4D456596AA9B0AD33D6875E5CC145C7D4B57",
+                     "files":  159,
+                     "pythonExecution":  false,
+                     "versionableIgnoreClosureVerified":  true
+                 },
+    "python":  {
+                   "priorManualHostEvidence":  {
+                                                   "phase":  "Phase1 only, user reported",
+                                                   "validForUpdatedPhase2Inputs":  false,
+                                                   "hashesVerified":  152,
+                                                   "staffValidatorExitCode":  0,
+                                                   "pythonTestsPassed":  11
+                                               },
+                   "updatedToolTestsExecuted":  false,
+                   "pathInspectionError":  "UnauthorizedAccessException / PermissionDenied / ItemExistsUnauthorizedAccessError,Microsoft.PowerShell.Commands.GetItemCommand",
+                   "restrictionsBypassed":  false,
+                   "hostInterpreter":  "C:\\Users\\Lorenzo\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+                   "updatedManifestExecutedInPython":  false,
+                   "installedOrModified":  false,
+                   "newValidatorExecuted":  false,
+                   "status":  "HOST_VERIFIED_SANDBOX_BLOCKED",
+                   "directInvocationError":  "CommandNotFoundException",
+                   "sandboxExecutionStatus":  "Not executed; preceding sandbox access errors retained",
+                   "hostExecutionStatus":  "All four commands passed, user-reported Windows host execution against Phase2 inputs",
+                   "hostTestsPassed":  11,
+                   "hostHashesVerified":  159,
+                   "hostAllExitCodes":  0,
+                   "oldBooleanFieldsReferToSandboxOnly":  true,
+                   "commandsCompletedOnHostForPhase2":  [
+                                                            "\u0026 $py -m unittest discover -s tools -p \"test_*.py\"",
+                                                            "\u0026 $py tools/verify-project-artifacts.py",
+                                                            "\u0026 $py tools/verify-institution-staff.py",
+                                                            "\u0026 $py tools/verify-institution-email.py"
+                                                        ]
+               },
+    "artifacts":  [
+                      {
+                          "sha256":  "2B22EF90DDDD37DA1A9CBD6C2AABB98C6B197B406698B6978F97985511B3ABFA",
+                          "path":  ".staff-private/email-phase2-tests/email-unit-delivery.trx"
+                      },
+                      {
+                          "sha256":  "8017648E620D784ECD4F07B153E9448EB43F43BE9EB255F5CD06086EEB582E44",
+                          "path":  ".staff-private/email-phase2-tests/email-full-delivery.trx"
+                      },
+                      {
+                          "sha256":  "39852466323DC1D8130390DDDFCB51A1FB5FBBEAD2A90E80F05FA640CB7AEF03",
+                          "path":  ".staff-private/email-phase2-tests/email-own-digest.trx"
+                      },
+                      {
+                          "sha256":  "21E24D288B788DE7217C4FF41C634CD24A333F363DF067204CA90EA9880A8EAB",
+                          "path":  "migrations/bootstrap/schema-contract.json"
+                      }
+                  ],
+    "newTestIdentities":  {
+                              "unit":  [
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome:}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome:primi( 2)}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \"a..it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"{cognome}.{nome}\", expected: \"rossi.mario\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome:eval}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{unknown}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \".abc\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome.ToString()}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnusableNamesRequireReview(first: \"\\0Mario\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.SuffixCandidatesHaveSafeConfiguredGrammarButDoNotClaimAvailability",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.WordSeparatorIsNotUniversallyRemoved(separator: \"_\", expected: \"anna_maria.de_luca\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"a!#$%\u0026\u0027*+-/=?^_`|~{nome}\", expected: \"a!#$%\u0026\u0027*+-/=?^_`|~mario\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"{{{nome}}}\", expected: \"{mario}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.OverridesMustMatchPolicyDomainAndValidAddress(address: \"evil@other.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"a..b\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnusableNamesRequireReview(first: \"\\ud83d\\ude00\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome:primi(1.5)}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome:primi(0)}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \"itsumbria.it/path\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome:primi(-1)}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \" good.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"{cognome}{nome:iniziale}\", expected: \"rossim\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \"-bad.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UmbriaNamesAreNormalizedByExplicitPolicy(first: \"Luca\", last: \"De Luca\", expected: \"allievo_deluca.l@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnpairedSurrogateRequiresReview(codeUnit: 55296)",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnusableNamesRequireReview(first: \"ÃƒÂÃ‹Å“ÃƒÂÃ‚Â²ÃƒÂÃ‚Â°ÃƒÂÃ‚Â½\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnusableNamesRequireReview(first: \"Mario\\tRossi\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \"localhost\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{Nome}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnusableNamesRequireReview(first: \"Mario\\n\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.BoundariesAndOutputAreValidatedForEveryInput",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"{nome:iniziale}.{cognome}\", expected: \"m.rossi\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \"it.\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"docente-{cognome}-{nome}\", expected: \"docente-rossi-mario\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"staff.{nome}.{cognome}\", expected: \"staff.mario.rossi\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.NumericSuffixValidationUsesOnlyReachableCandidates",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"abc.\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnusableNamesRequireReview(first: \"ÃƒÂ§Ã…Â½Ã¢â‚¬Â¹\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.OverridesMustMatchPolicyDomainAndValidAddress(address: \"a@itsumbria.it\\n\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UmbriaNamesAreNormalizedByExplicitPolicy(first: \"Giulia\", last: \"Bianchi\", expected: \"allievo_bianchi.g@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome:primi(65)}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"mailbox\", expected: \"mailbox\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"\\n{nome}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \"a@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnusableNamesRequireReview(first: \"MaÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â¹rio\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.PreviewNeverMeansProvisionedVerifiedOrCredential",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.WordSeparatorIsNotUniversallyRemoved(separator: \"-\", expected: \"anna-maria.de-luca\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \"espaÃƒÆ’Ã‚Â±ol.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"studente_{nome}_{cognome}\", expected: \"studente_mario_rossi\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnpairedSurrogateRequiresReview(codeUnit: 56320)",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \"\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome{cognome}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ComposedAndDecomposedUnicodeAreDeterministic",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"{nome}.{cognome}\", expected: \"mario.rossi\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \"itsumbria.it:443\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome:regex(.*)}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UmbriaNamesAreNormalizedByExplicitPolicy(first: \"  Anna   Maria \", last: \" De   Luca \", expected: \"allievo_deluca.a@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UmbriaNamesAreNormalizedByExplicitPolicy(first: \"JosÃƒÆ’Ã‚Â©\", last: \"GarcÃƒÆ’Ã‚Â­a\", expected: \"allievo_garcia.j@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \".it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.WordSeparatorIsNotUniversallyRemoved(separator: \".\", expected: \"anna.maria.de.luca\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"{nome}.{cognome:iniziale}\", expected: \"mario.r\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnusableNamesRequireReview(first: \"---\u0027\u0027\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"{nome:maiuscolo}.{cognome:minuscolo}\", expected: \"MARIO.rossi\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \"https://itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome:primi(01)}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.WordSeparatorIsNotUniversallyRemoved(separator: \"\", expected: \"annamaria.deluca\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"x+{nome:primi(3)}_{cognome:primi(2)}-2027\", expected: \"x+mar_ro-2027\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.OverridesMustMatchPolicyDomainAndValidAddress(address: \" a@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.OverridesMustMatchPolicyDomainAndValidAddress(address: \"a..b@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.HyphenAndApostropheBoundaryArePolicyChoices",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UmbriaNamesAreNormalizedByExplicitPolicy(first: \"Jean-Pierre\", last: \"Dupont\", expected: \"allievo_dupont.j@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.InvalidDomainsCannotBePublished(domain: \"bad-.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.OverridesMustMatchPolicyDomainAndValidAddress(address: \"a@https://itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnusableNamesRequireReview(first: \"\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{User.Email}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.OverridesMustMatchPolicyDomainAndValidAddress(address: \"a@@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UmbriaNamesAreNormalizedByExplicitPolicy(first: \"Mario\", last: \"Rossi\", expected: \"allievo_rossi.m@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"nome}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UnusableNamesRequireReview(first: \"   \")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UmbriaNamesAreNormalizedByExplicitPolicy(first: \"Mario\", last: \"DÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Angelo\", expected: \"allievo_dangelo.m@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.ArbitraryCompositionsAreConfiguration(template: \"{nome:primi(3):maiuscolo}.{cognome:iniziale}\", expected: \"MAR.r\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.UmbriaNamesAreNormalizedByExplicitPolicy(first: \"Anna Maria\", last: \"D\u0027Angelo\", expected: \"allievo_dangelo.a@itsumbria.it\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome} {cognome}\")",
+                                           "ElectronicRegisterAPI.Tests.Unit.InstitutionEmailGeneratorTests.MalformedTemplateIsRejectedStructurally(template: \"{nome}@other.it\")"
+                                       ],
+                              "integration":  [
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ForbiddenFieldsCannotCreateCredentialsOrVerification(field: \"institutionId\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_MembershipOnlyStaffAddressRequiresAdminAndExplicitNames",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_CategoriesAreIndependentAndDoNotChangeIamRoles(category: Staff)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_CrossTenantNamespaceCollisionReturnsOnlyGenericConflict",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_DisabledRolloutAndRevokedStaffCannotMutate",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_AtomicCreateSupportsUnlinkedProfilesAndIdempotentReplay(category: Teacher)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_StaffPreviewAndReservationDoNotCreateMailboxOrChangeGlobalIdentity",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_TenantsHaveIndependentConventionsAndForeignRecipientsAreNotFound",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_AtomicCreateSupportsUnlinkedProfilesAndIdempotentReplay(category: Student)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ConcurrentPolicyVersionsHaveOneWinner",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_CategoriesAreIndependentAndDoNotChangeIamRoles(category: InstitutionAdmin)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ForbiddenFieldsCannotCreateCredentialsOrVerification(field: \"domainVerified\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_CategoriesAreIndependentAndDoNotChangeIamRoles(category: Teacher)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_TeacherAndStudentCannotWritePoliciesOrReserve(role: \"teacher\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_OwnAddressVisibilityUsesRealProfiles(category: \"Teacher\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_RevocationWaitsForEmailWriteThenOldTokenFails",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ConcurrentGlobalWriterAndAssignmentCannotDuplicateAddress",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_AtomicCreateRollsBackProfileWhenReservationCollides",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_OwnAddressVisibilityUsesRealProfiles(category: \"Student\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_StaffCannotConfigureOverrideOrForceDomain",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_CollisionUsesGlobalUniqueReservationAndConfiguredSuffix(strategy: NumericSuffix)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_AuditFaultRollsBackPolicyAssignmentAndNewPerson(operation: \"assignment\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_CategoriesAreIndependentAndDoNotChangeIamRoles(category: Student)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_AuditFaultRollsBackPolicyAssignmentAndNewPerson(operation: \"policy\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_UppercaseDisplayUsesLowercaseGlobalNamespace",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ForbiddenFieldsCannotCreateCredentialsOrVerification(field: \"userId\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_TeacherAndStudentCannotWritePoliciesOrReserve(role: \"student\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_NewVersionsLeaveOldAddressesAndSnapshotsUnchanged",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_RetiredAddressCannotBeReservedForAnotherPerson",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ForbiddenFieldsCannotCreateCredentialsOrVerification(field: \"role\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ForbiddenFieldsCannotCreateCredentialsOrVerification(field: \"mailboxVerified\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_CollisionUsesGlobalUniqueReservationAndConfiguredSuffix(strategy: Reject)",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ConcurrentSameAddressHasExactlyOneWinner",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_EventReplayReturnsSameAssignmentAndConflictingReplayNeverWrites",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_OverrideRetainsOldReservationAndAudit",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_AuditFaultRollsBackPolicyAssignmentAndNewPerson(operation: \"create-person\")",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_OneInstitutionCanPublishDifferentTemplatesForAllCategories",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ExistingGlobalEmailConflictsAndGlobalWritersCannotClaimInstitutionalReservations",
+                                                  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_AppendOnlyAuditAndAssignmentsRejectDirectDestruction"
+                                              ]
+                          },
+    "outstanding":  [
+
+                    ],
+    "operationalLimitations":  [
+                                   "Controlled migration runner syntax was checked; its .ps1 execution was not performed. Native SQL migration and bootstrap were executed and independently verified.",
+                                   "The local runner records root-defined new triggers; a production deployment requires its own reviewed execution/definer contract.",
+                                   "Individual category changes and reconciliation of already assigned identities are not automated."
+                               ],
+    "deferredPerScope":  [
+                             "Mailbox provider provisioning and verification",
+                             "DNS/domain ownership verification",
+                             "Login aliases or Microsoft identity linking",
+                             "Excel/CSV import",
+                             "Frontend"
+                         ],
+    "phase2ManualHostCompletion":  {
+                                       "provenance":  "User reported manual Windows host PowerShell execution, not Codex sandbox",
+                                       "reportedForPhase2Inputs":  true,
+                                       "commands":  [
+                                                        "python -m unittest discover -s tools -p test_*.py",
+                                                        "python tools/verify-project-artifacts.py",
+                                                        "python tools/verify-institution-staff.py",
+                                                        "python tools/verify-institution-email.py"
+                                                    ],
+                                       "pythonTestsPassed":  11,
+                                       "sha256Verified":  159,
+                                       "staffValidatorPassed":  true,
+                                       "emailValidatorPassed":  true,
+                                       "allExitCodes":  0,
+                                       "newPhase3InputsCovered":  false
+                                   }
+}

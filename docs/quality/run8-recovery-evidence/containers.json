@@ -1,0 +1,125 @@
+[
+    {
+        "Id":  "e3b219c9eb6236579bbfdde1dd17ff8d43faa8a66a8ccdb5aa6c91a8e2fc0e93",
+        "Name":  "/er84-run8-final-20261103",
+        "State":  {
+                      "Status":  "running",
+                      "Running":  true,
+                      "Paused":  false,
+                      "Restarting":  false,
+                      "OOMKilled":  false,
+                      "Dead":  false,
+                      "Pid":  31914,
+                      "ExitCode":  0,
+                      "Error":  "",
+                      "StartedAt":  "2026-11-03T11:44:08.583057933Z",
+                      "FinishedAt":  "2026-11-03T11:44:08.28067856Z"
+                  },
+        "RestartCount":  0,
+        "Image":  "sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+        "ConfiguredImage":  "mysql:8.4.13@sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+        "Hostname":  "e3b219c9eb62",
+        "Mounts":  [
+                       {
+                           "Type":  "volume",
+                           "Name":  "er84-run8-final-20261103-data",
+                           "Source":  "/var/lib/docker/volumes/er84-run8-final-20261103-data/_data",
+                           "Destination":  "/var/lib/mysql",
+                           "Driver":  "local",
+                           "Mode":  "z",
+                           "RW":  true,
+                           "Propagation":  ""
+                       }
+                   ],
+        "Ports":  {
+                      "3306/tcp":  [
+                                       {
+                                           "HostIp":  "127.0.0.1",
+                                           "HostPort":  "13386"
+                                       }
+                                   ]
+                  }
+    },
+    {
+        "Id":  "2a79ec5343e4b4dd6f70241776f9ccd39c053a928a85c6aeacc19258dc0f8525",
+        "Name":  "/er84-run8-20261103",
+        "State":  {
+                      "Status":  "exited",
+                      "Running":  false,
+                      "Paused":  false,
+                      "Restarting":  false,
+                      "OOMKilled":  false,
+                      "Dead":  false,
+                      "Pid":  0,
+                      "ExitCode":  0,
+                      "Error":  "",
+                      "StartedAt":  "2026-11-03T10:27:57.410411074Z",
+                      "FinishedAt":  "2026-11-03T10:36:07.210590635Z"
+                  },
+        "RestartCount":  0,
+        "Image":  "sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+        "ConfiguredImage":  "mysql:8.4.13@sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+        "Hostname":  "2a79ec5343e4",
+        "Mounts":  [
+                       {
+                           "Type":  "volume",
+                           "Name":  "er84-run8-20261103-data",
+                           "Source":  "/var/lib/docker/volumes/er84-run8-20261103-data/_data",
+                           "Destination":  "/var/lib/mysql",
+                           "Driver":  "local",
+                           "Mode":  "z",
+                           "RW":  true,
+                           "Propagation":  ""
+                       }
+                   ],
+        "Ports":  {
+                      "3306/tcp":  [
+                                       {
+                                           "HostIp":  "127.0.0.1",
+                                           "HostPort":  "13385"
+                                       }
+                                   ]
+                  }
+    },
+    {
+        "Id":  "2299602d4bce333ef0fb626e9b1fb22758ae15ed62edb637357c7ebd4d8bc1b2",
+        "Name":  "/mysql84-local",
+        "State":  {
+                      "Status":  "running",
+                      "Running":  true,
+                      "Paused":  false,
+                      "Restarting":  false,
+                      "OOMKilled":  false,
+                      "Dead":  false,
+                      "Pid":  442,
+                      "ExitCode":  0,
+                      "Error":  "",
+                      "StartedAt":  "2026-11-03T10:21:03.108229749Z",
+                      "FinishedAt":  "2026-11-03T10:21:02.309023377Z"
+                  },
+        "RestartCount":  0,
+        "Image":  "sha256:a0225d1ea6631c8bc2385dc4c2faba17bbf1834ecf369e1659a9a382bd8d5dd7",
+        "ConfiguredImage":  "mysql:8.4.13",
+        "Hostname":  "2299602d4bce",
+        "Mounts":  [
+                       {
+                           "Type":  "volume",
+                           "Name":  "mysql84_data",
+                           "Source":  "/var/lib/docker/volumes/mysql84_data/_data",
+                           "Destination":  "/var/lib/mysql",
+                           "Driver":  "local",
+                           "Mode":  "z",
+                           "RW":  true,
+                           "Propagation":  ""
+                       }
+                   ],
+        "Ports":  {
+                      "3306/tcp":  [
+                                       {
+                                           "HostIp":  "127.0.0.1",
+                                           "HostPort":  "3307"
+                                       }
+                                   ]
+                  }
+    }
+]

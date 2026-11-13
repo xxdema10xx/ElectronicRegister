@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="78cdb115-4ee6-4fa9-8979-2c475ce44b78" name="Lorenzo@DESKTOP-QUOAG32 2026-10-18 22:18:46" runUser="DESKTOP-QUOAG32\Lorenzo" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-18T22:18:46.6910258+02:00" queuing="2026-10-18T22:18:46.6910259+02:00" start="2026-10-18T22:18:46.1442097+02:00" finish="2026-10-18T22:18:46.6950463+02:00" />
+  <TestSettings name="default" id="b5737315-d67c-4b54-86a4-b81be5838d05">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-18_22_18_46" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="31869481-e1d2-44a8-b557-fe18a70add64" testId="2c26d9d0-48ed-1403-cc9a-d76a74e06803" testName="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveMembershipIsNeverSelectable(status: Left)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0411942" startTime="2026-10-18T22:18:46.6190029+02:00" endTime="2026-10-18T22:18:46.6190161+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="31869481-e1d2-44a8-b557-fe18a70add64" />
+    <UnitTestResult executionId="98abb052-2feb-44b7-9be4-58de8f50853a" testId="3a40dfcc-ac7f-0fa5-2dac-239b4597e1d4" testName="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveInstitutionIsNeverSelectable(status: Archived)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000944" startTime="2026-10-18T22:18:46.6208906+02:00" endTime="2026-10-18T22:18:46.6208907+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="98abb052-2feb-44b7-9be4-58de8f50853a" />
+    <UnitTestResult executionId="b86b279b-0e8e-4c2a-8f20-92fa5a7bd004" testId="6f0592f3-6935-c2da-2e46-57ab12b417e2" testName="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveMembershipIsNeverSelectable(status: Suspended)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000023" startTime="2026-10-18T22:18:46.6208688+02:00" endTime="2026-10-18T22:18:46.6208688+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b86b279b-0e8e-4c2a-8f20-92fa5a7bd004" />
+    <UnitTestResult executionId="e81a370b-4d7d-46ee-9dd3-afcd33912b25" testId="05ac92fe-bfdc-489d-6ced-1b470a729f7a" testName="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveInstitutionIsNeverSelectable(status: Provisioning)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0001358" startTime="2026-10-18T22:18:46.6208973+02:00" endTime="2026-10-18T22:18:46.6208974+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e81a370b-4d7d-46ee-9dd3-afcd33912b25" />
+    <UnitTestResult executionId="8bc710d0-d460-43bd-b192-7a44b5e55fcf" testId="9921a13e-6845-4664-f5ef-03aad2e2acf2" testName="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.RolesAreCopiedAndCannotBeChangedAfterContextCreation" computerName="DESKTOP-QUOAG32" duration="00:00:00.0030195" startTime="2026-10-18T22:18:46.6282111+02:00" endTime="2026-10-18T22:18:46.6282112+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8bc710d0-d460-43bd-b192-7a44b5e55fcf" />
+    <UnitTestResult executionId="305bcf60-58fa-450a-9f0c-10fc69745bc4" testId="3634cc3f-8765-d308-6618-2d94077e965b" testName="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EmptyInstitutionIsNotAnImplicitTenant" computerName="DESKTOP-QUOAG32" duration="00:00:00.0003878" startTime="2026-10-18T22:18:46.6251595+02:00" endTime="2026-10-18T22:18:46.6251595+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="305bcf60-58fa-450a-9f0c-10fc69745bc4" />
+    <UnitTestResult executionId="7aa815d8-e8ac-4197-88ee-6dcbc9c97532" testId="8acf7b41-4837-bd5e-25fa-e68c9bbf8b54" testName="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveInstitutionIsNeverSelectable(status: Suspended)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0000020" startTime="2026-10-18T22:18:46.6209095+02:00" endTime="2026-10-18T22:18:46.6209095+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7aa815d8-e8ac-4197-88ee-6dcbc9c97532" />
+    <UnitTestResult executionId="4e7f7221-3134-4e68-b2ad-5373e5700cbe" testId="cb02c6d6-d1c7-307e-c17b-8399a7e9d409" testName="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveMembershipIsNeverSelectable(status: Pending)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0001402" startTime="2026-10-18T22:18:46.6206648+02:00" endTime="2026-10-18T22:18:46.6206649+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4e7f7221-3134-4e68-b2ad-5373e5700cbe" />
+    <UnitTestResult executionId="bbcf1a57-7ce8-4a29-a1d7-cbc75f2a76c8" testId="678763bb-b33f-85ae-1ed2-91fa451972af" testName="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.SameRolesInAnotherInstitutionOrIdentityDoNotAuthorize" computerName="DESKTOP-QUOAG32" duration="00:00:00.0056283" startTime="2026-10-18T22:18:46.6247517+02:00" endTime="2026-10-18T22:18:46.6247518+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bbcf1a57-7ce8-4a29-a1d7-cbc75f2a76c8" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.RolesAreCopiedAndCannotBeChangedAfterContextCreation" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="9921a13e-6845-4664-f5ef-03aad2e2acf2">
+      <Execution id="8bc710d0-d460-43bd-b192-7a44b5e55fcf" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests" name="RolesAreCopiedAndCannotBeChangedAfterContextCreation" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EmptyInstitutionIsNotAnImplicitTenant" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="3634cc3f-8765-d308-6618-2d94077e965b">
+      <Execution id="305bcf60-58fa-450a-9f0c-10fc69745bc4" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests" name="EmptyInstitutionIsNotAnImplicitTenant" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveMembershipIsNeverSelectable(status: Suspended)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="6f0592f3-6935-c2da-2e46-57ab12b417e2">
+      <Execution id="b86b279b-0e8e-4c2a-8f20-92fa5a7bd004" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests" name="NonActiveMembershipIsNeverSelectable" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.SameRolesInAnotherInstitutionOrIdentityDoNotAuthorize" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="678763bb-b33f-85ae-1ed2-91fa451972af">
+      <Execution id="bbcf1a57-7ce8-4a29-a1d7-cbc75f2a76c8" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests" name="SameRolesInAnotherInstitutionOrIdentityDoNotAuthorize" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveInstitutionIsNeverSelectable(status: Archived)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="3a40dfcc-ac7f-0fa5-2dac-239b4597e1d4">
+      <Execution id="98abb052-2feb-44b7-9be4-58de8f50853a" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests" name="NonActiveInstitutionIsNeverSelectable" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveInstitutionIsNeverSelectable(status: Provisioning)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="05ac92fe-bfdc-489d-6ced-1b470a729f7a">
+      <Execution id="e81a370b-4d7d-46ee-9dd3-afcd33912b25" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests" name="NonActiveInstitutionIsNeverSelectable" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveInstitutionIsNeverSelectable(status: Suspended)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="8acf7b41-4837-bd5e-25fa-e68c9bbf8b54">
+      <Execution id="7aa815d8-e8ac-4197-88ee-6dcbc9c97532" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests" name="NonActiveInstitutionIsNeverSelectable" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveMembershipIsNeverSelectable(status: Pending)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="cb02c6d6-d1c7-307e-c17b-8399a7e9d409">
+      <Execution id="4e7f7221-3134-4e68-b2ad-5373e5700cbe" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests" name="NonActiveMembershipIsNeverSelectable" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.NonActiveMembershipIsNeverSelectable(status: Left)" storage="c:\users\lorenzo\electronicregister\tests\unit\bin\debug\net10.0\unit.tests.dll" id="2c26d9d0-48ed-1403-cc9a-d76a74e06803">
+      <Execution id="31869481-e1d2-44a8-b557-fe18a70add64" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests" name="NonActiveMembershipIsNeverSelectable" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="2c26d9d0-48ed-1403-cc9a-d76a74e06803" executionId="31869481-e1d2-44a8-b557-fe18a70add64" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3a40dfcc-ac7f-0fa5-2dac-239b4597e1d4" executionId="98abb052-2feb-44b7-9be4-58de8f50853a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6f0592f3-6935-c2da-2e46-57ab12b417e2" executionId="b86b279b-0e8e-4c2a-8f20-92fa5a7bd004" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="05ac92fe-bfdc-489d-6ced-1b470a729f7a" executionId="e81a370b-4d7d-46ee-9dd3-afcd33912b25" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9921a13e-6845-4664-f5ef-03aad2e2acf2" executionId="8bc710d0-d460-43bd-b192-7a44b5e55fcf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3634cc3f-8765-d308-6618-2d94077e965b" executionId="305bcf60-58fa-450a-9f0c-10fc69745bc4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8acf7b41-4837-bd5e-25fa-e68c9bbf8b54" executionId="7aa815d8-e8ac-4197-88ee-6dcbc9c97532" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="cb02c6d6-d1c7-307e-c17b-8399a7e9d409" executionId="4e7f7221-3134-4e68-b2ad-5373e5700cbe" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="678763bb-b33f-85ae-1ed2-91fa451972af" executionId="bbcf1a57-7ce8-4a29-a1d7-cbc75f2a76c8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="9" executed="9" passed="9" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.05]   Discovering: Unit.Tests&#xD;
+[xUnit.net 00:00:00.09]   Discovered:  Unit.Tests&#xD;
+[xUnit.net 00:00:00.09]   Starting:    Unit.Tests&#xD;
+[xUnit.net 00:00:00.17]   Finished:    Unit.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

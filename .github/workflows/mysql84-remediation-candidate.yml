@@ -1,0 +1,320 @@
+name: MySQL 8.4 corrective release and upgrade
+on:
+  workflow_dispatch:
+  push:
+    branches: [refactor-database-entities]
+  pull_request:
+    branches: [refactor-database-entities]
+permissions: { contents: read }
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        mode: [fresh, upgrade]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    services:
+      mysql:
+        image: mysql:8.4.13@sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_ROOT_HOST: '%'
+        ports: ['3306/tcp']
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: '10.0.x'
+      - name: Tools and actionlint
+        id: tools
+        run: |
+          exec > >(tee "$RUNNER_TEMP/tools.log") 2>&1
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+          go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+          "$(go env GOPATH)/bin/actionlint" -shellcheck= -pyflakes=
+      - name: Immutable predecessor positive and negative controls
+        id: predecessor
+        if: always()
+        run: |
+          exec > >(tee "$RUNNER_TEMP/predecessor.log") 2>&1
+          git clone --no-hardlinks . "$RUNNER_TEMP/er-quality-1"
+          git -C "$RUNNER_TEMP/er-quality-1" checkout --detach 8e7d9ecd42c001f1fa9b30e120535ce1bb0ef6e8
+          node "$RUNNER_TEMP/er-quality-1/tools/release-artifacts.cjs"
+          node "$RUNNER_TEMP/er-quality-1/tools/test-release-manifest.cjs"
+          node "$RUNNER_TEMP/er-quality-1/tools/test-mysql84.cjs"
+      - name: Build runtime test binaries
+        id: build
+        if: always()
+        run: |
+          exec > >(tee "$RUNNER_TEMP/build.log") 2>&1
+          dotnet restore Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx --locked-mode
+          dotnet build Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx -c Release --no-restore
+      - name: Bind only the disposable service
+        id: bind
+        if: always()
+        env:
+          MYSQL_PORT: ${{ job.services.mysql.ports['3306'] }}
+          MYSQL_CONTAINER: ${{ job.services.mysql.id }}
+        run: |
+          exec > >(tee "$RUNNER_TEMP/bind.log") 2>&1
+          printf '[client]\nuser=root\n' > "$RUNNER_TEMP/er84.cnf"
+          chmod 600 "$RUNNER_TEMP/er84.cnf"
+          mysql --defaults-extra-file="$RUNNER_TEMP/er84.cnf" --host=127.0.0.1 --port="$MYSQL_PORT" --protocol=TCP --ssl-mode=DISABLED -e 'SET GLOBAL event_scheduler=OFF'
+          export ER84_UUID
+          ER84_UUID=$(mysql --defaults-extra-file="$RUNNER_TEMP/er84.cnf" --host=127.0.0.1 --port="$MYSQL_PORT" --protocol=TCP --ssl-mode=DISABLED --batch --skip-column-names -e 'SELECT @@server_uuid')
+          python3 - <<'PY'
+          import json, os, pathlib, uuid
+          name = 'er84_' + uuid.uuid4().hex[:12]
+          config = dict(database=name, host='127.0.0.1', port=int(os.environ['MYSQL_PORT']), serverPort=3306, serverUuid=os.environ['ER84_UUID'], defaultsFile=os.environ['RUNNER_TEMP']+'/er84.cnf', isolatedCI=True, mysqlContainer=os.environ['MYSQL_CONTAINER'])
+          config['recoverySocketAccount'] = 'root@localhost'
+          for role in ('definer','api','review'):
+              config[role+'User'] = name+'_'+role
+              config[role+'Host'] = '%'
+          pathlib.Path(os.environ['RUNNER_TEMP']+'/er84-config.json').write_text(json.dumps(config))
+          PY
+      - name: ICU ASCII, case, absolute end and NULL on real server
+        id: predicates
+        if: always() && steps.bind.outcome == 'success'
+        env:
+          MYSQL_CONTAINER: ${{ job.services.mysql.id }}
+        run: |
+          exec > >(tee "$RUNNER_TEMP/predicates.log") 2>&1
+          node tools/test-mysql84-remediation.cjs --sql > "$RUNNER_TEMP/predicates.sql"
+          docker exec -i "$MYSQL_CONTAINER" mysql --batch --raw --skip-column-names --default-character-set=utf8mb4 < "$RUNNER_TEMP/predicates.sql" > "$RUNNER_TEMP/predicates.out"
+          python3 - "$RUNNER_TEMP/predicates.out" <<'PY'
+          import pathlib, sys
+          rows = pathlib.Path(sys.argv[1]).read_text().splitlines()
+          assert rows[0] == '8.4.13' and len(rows) > 8
+          assert all(row == '1' for row in rows[1:]), rows
+          PY
+      - name: Isolated install or upgrade and recovery
+        id: runtime
+        timeout-minutes: 30
+        if: always() && steps.bind.outcome == 'success'
+        env:
+          RUNTIME_MODE: ${{ matrix.mode }}
+        run: |
+          exec > >(tee "$RUNNER_TEMP/runtime.log") 2>&1
+          python3 - <<'PY'
+          import json, os, pathlib
+          temp = pathlib.Path(os.environ['RUNNER_TEMP'])
+          args = ['--fresh-only'] if os.environ['RUNTIME_MODE'] == 'fresh' else []
+          command = ['python3','tools/mysql84_runtime.py',str(temp/'er84-config.json'),str(temp/'er84-evidence')]+args
+          protocol = ['python3','tools/mysql84_protocol.py',str(temp/'er84-config.json'),str(temp/'protocol-result.json')]
+          restart = ['python3','tools/test_mysql84_restart.py','ci',str(temp/'er84-config.json'),str(temp/'restart-regression.json')]
+          plan = [dict(id='client-protocol',command=protocol,timeout=240)]
+          if os.environ['RUNTIME_MODE'] == 'upgrade':
+              plan.append(dict(id='restart-regression',needs=['client-protocol'],command=restart,timeout=180))
+          plan.append(dict(id='runtime-execution',needs=['restart-regression'] if os.environ['RUNTIME_MODE'] == 'upgrade' else ['client-protocol'],command=command,timeout=1500))
+          (temp/'runtime-plan.json').write_text(json.dumps(plan))
+          PY
+          python3 tools/ci_diagnostic.py --plan "$RUNNER_TEMP/runtime-plan.json" --output "$RUNNER_TEMP/runtime-check.json"
+      - name: Actual embedded C# validation and MySqlConnector predicates
+        id: csharp
+        if: always() && matrix.mode == 'upgrade' && steps.runtime.outcome == 'success' && steps.build.outcome == 'success'
+        env:
+          ER_MYSQL84_RELEASE_CONFIG: ${{ runner.temp }}/er84-config.json
+          ER_MYSQL84_EVIDENCE: ${{ runner.temp }}/er84-evidence
+        run: |
+          exec > >(tee "$RUNNER_TEMP/csharp.log") 2>&1
+          python3 -c "from pathlib import Path; Path('tests/Integration/TestResults/mysql84-release.trx').unlink(missing_ok=True)"
+          dotnet test tests/Integration/Integration.Tests.csproj -c Release --no-build --filter Category=MySQL84Release --logger 'trx;LogFileName=mysql84-release.trx'
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          import pathlib, sys
+          sys.path.insert(0, 'tools')
+          from ci_diagnostic import validate_trx
+          validate_trx(pathlib.Path('tests/Integration/TestResults/mysql84-release.trx'))
+          root = ET.parse('tests/Integration/TestResults/mysql84-release.trx').getroot()
+          counts = root.find('{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}ResultSummary/{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}Counters').attrib
+          assert counts['total'] == counts['executed'] == counts['passed'] == '1', counts
+          PY
+      - name: Record runtime gate outcomes
+        if: always()
+        env:
+          STEP_RESULTS: ${{ toJSON(steps) }}
+          RUNTIME_MODE: ${{ matrix.mode }}
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib
+          steps = json.loads(os.environ['STEP_RESULTS'])
+          rows = []
+          for name in ('tools', 'predecessor', 'build', 'bind', 'predicates', 'runtime', 'csharp'):
+              value = steps.get(name, {}).get('outcome', 'skipped')
+              rows.append(dict(id=name, category='runtime', file='.github/workflows/mysql84-remediation-candidate.yml', line=1, test=name, error=(pathlib.Path(os.environ['RUNNER_TEMP'])/(name+'.log')).read_text() if (pathlib.Path(os.environ['RUNNER_TEMP'])/(name+'.log')).exists() else value, cause='Command failed; complete output captured in error and uploaded log' if value == 'failure' else 'Workflow step outcome', priority='P1', required=True, status='PASS' if value == 'success' else 'BLOCKED' if value == 'skipped' else 'FAIL', dependents=[]))
+          dependencies = dict(predicates=['bind'], runtime=['bind'], csharp=['runtime','build'])
+          by_id = {row['id']:row for row in rows}
+          for row in rows:
+              blocked = [name for name in dependencies.get(row['id'],[]) if by_id[name]['status'] != 'PASS']
+              if row['status'] == 'BLOCKED' and blocked:
+                  row.update(error='Blocked by: '+', '.join(blocked), cause='Prerequisite did not pass')
+                  for name in blocked: by_id[name]['dependents'].append(row['id'])
+          if os.environ['RUNTIME_MODE'] == 'fresh':
+              for row in rows:
+                  if row['id'] == 'csharp':
+                      row.update(status='SKIPPED', justification='Embedded validation and HTTP release test execute in upgrade job after both installs; fresh-only job has no upgraded database.')
+          log = pathlib.Path(os.environ['RUNNER_TEMP']+'/runtime-check.json')
+          if log.exists(): rows.extend(json.loads(log.read_text())['problems'])
+          phases = pathlib.Path(os.environ['RUNNER_TEMP']+'/er84-evidence/runtime-phases.json')
+          if phases.exists(): rows.extend(json.loads(phases.read_text())['problems'])
+          pathlib.Path(os.environ['RUNNER_TEMP']+'/runtime-diagnostic.json').write_text(json.dumps(dict(suite='runtime-'+os.environ['RUNTIME_MODE'],problems=rows)))
+          PY
+      - name: Preserve synthetic runtime evidence (no credentials)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mysql84-corrective-release-evidence-${{ matrix.mode }}
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/*.log
+            ${{ runner.temp }}/runtime-diagnostic.json
+            ${{ runner.temp }}/predicates.out
+            ${{ runner.temp }}/protocol-result.json
+            ${{ runner.temp }}/*restart-result.json
+            ${{ runner.temp }}/restart-regression.json
+            ${{ runner.temp }}/rejected-*-result.json
+            ${{ runner.temp }}/er84-evidence/*result.json
+            ${{ runner.temp }}/er84-evidence/*journal.json
+            ${{ runner.temp }}/er84-evidence/runtime-phases.json
+            ${{ runner.temp }}/er84-evidence/before.json
+            ${{ runner.temp }}/er84-evidence/synthetic-before.sql
+            tests/Integration/TestResults/mysql84-release.trx
+
+  diagnostic:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: '10.0.x'
+      - name: Aggregate provenance and independent static gates
+        run: python3 tools/ci_diagnostic.py --audit --output .diagnostics/static-diagnostic.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: mysql84-static-diagnostic
+          include-hidden-files: true
+          path: .diagnostics/static-diagnostic.json
+
+  integration:
+    needs: [release, diagnostic]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {domain: calendar, shard: 0, shards: 1}
+          - {domain: formative, shard: 0, shards: 1}
+          - {domain: email, shard: 0, shards: 1}
+          - {domain: imports, shard: 0, shards: 1}
+          - {domain: iam, shard: 0, shards: 2}
+          - {domain: iam, shard: 1, shards: 2}
+          - {domain: iam-security, shard: 0, shards: 4}
+          - {domain: iam-security, shard: 1, shards: 4}
+          - {domain: iam-security, shard: 2, shards: 4}
+          - {domain: iam-security, shard: 3, shards: 4}
+          - {domain: onboarding, shard: 0, shards: 1}
+          - {domain: tenants, shard: 0, shards: 6}
+          - {domain: tenants, shard: 1, shards: 6}
+          - {domain: tenants, shard: 2, shards: 6}
+          - {domain: tenants, shard: 3, shards: 6}
+          - {domain: tenants, shard: 4, shards: 6}
+          - {domain: tenants, shard: 5, shards: 6}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: '10.0.x'
+      - name: Fixture preflight and isolated functional tests on pinned MySQL
+        timeout-minutes: 65
+        env:
+          DOMAIN: ${{ matrix.domain }}
+          SHARD: ${{ matrix.shard }}
+          SHARDS: ${{ matrix.shards }}
+          ER_TEST_MYSQL84: '1'
+        run: python3 tools/ci_diagnostic.py --integration "$DOMAIN" --shard "$SHARD" --shards "$SHARDS" --output ".diagnostics/$DOMAIN-$SHARD-diagnostic.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: mysql84-integration-${{ matrix.domain }}-${{ matrix.shard }}
+          include-hidden-files: true
+          path: .diagnostics/
+
+  windows-cli:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: '10.0.x'
+      - name: Download pinned native Windows compatibility fixture
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $package = Get-Content tools/windows-cli-mysql.json -Raw | ConvertFrom-Json
+          $archive = Join-Path $env:RUNNER_TEMP 'mysql-5.7.24-winx64.zip'
+          Invoke-WebRequest $package.url -OutFile $archive
+          if ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash -ne $package.sha256) { throw 'MySQL archive digest mismatch' }
+          Expand-Archive -LiteralPath $archive -DestinationPath (Join-Path $env:RUNNER_TEMP 'windows-cli-mysql')
+      - name: Real signed CLI operations and NTFS authority ACL negative control
+        shell: pwsh
+        run: |
+          python tools/windows_cli_certification.py --mysql-bin "$env:RUNNER_TEMP/windows-cli-mysql/mysql-5.7.24-winx64/bin" --output .diagnostics/windows-cli
+          if ($LASTEXITCODE -ne 0) { throw 'Mandatory Windows certification failed' }
+      - name: Preserve sanitized report and exact TRX evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mysql84-windows-cli
+          include-hidden-files: true
+          if-no-files-found: error
+          path: |
+            .diagnostics/windows-cli/windows-cli-diagnostic.json
+            .diagnostics/windows-cli/*.trx
+
+  final-gate:
+    if: always()
+    needs: [release, diagnostic, integration, windows-cli]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: mysql84-*
+          path: .diagnostics/downloaded
+      - name: Aggregate all mandatory outcomes, including absent jobs
+        if: always()
+        env:
+          JOB_RESULTS: ${{ toJSON(needs) }}
+        run: python3 tools/final_ci_diagnostic.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: mysql84-ci-diagnostic-report
+          include-hidden-files: true
+          path: |
+            .diagnostics/MYSQL84_CI_DIAGNOSTIC_REPORT.json
+            .diagnostics/MYSQL84_CI_DIAGNOSTIC_REPORT.md

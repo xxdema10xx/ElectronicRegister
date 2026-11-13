@@ -1,0 +1,30 @@
+[
+    {
+        "Port":  13445,
+        "Directory":  "C:\\Users\\Lorenzo\\ElectronicRegister\\.staff-private\\instance-c35d1bb637984bc6a17fa7f3d94aef71",
+        "IdentityVerified":  true,
+        "Stopped":  true,
+        "PreservedData":  true
+    },
+    {
+        "Port":  13446,
+        "Directory":  "C:\\Users\\Lorenzo\\ElectronicRegister\\.staff-private\\instance-b10f46b3ee974f04af1aa8c841634d85",
+        "IdentityVerified":  true,
+        "Stopped":  true,
+        "PreservedData":  true
+    },
+    {
+        "Port":  13447,
+        "Directory":  "C:\\Users\\Lorenzo\\ElectronicRegister\\.staff-private\\instance-44a1ae572cd341c48658b5b8dbf3376a",
+        "IdentityVerified":  true,
+        "Stopped":  true,
+        "PreservedData":  true
+    },
+    {
+        "Port":  13448,
+        "Directory":  "C:\\Users\\Lorenzo\\ElectronicRegister\\.staff-private\\instance-1f2bcb9002e942c896d9308e0404b362",
+        "IdentityVerified":  true,
+        "Stopped":  true,
+        "PreservedData":  true
+    }
+]

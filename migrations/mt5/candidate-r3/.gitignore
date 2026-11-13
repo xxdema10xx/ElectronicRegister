@@ -1,0 +1,13 @@
+# Review package allowlist: no local config, logs, backups or datadir here.
+*
+!.gitignore
+!README.md
+!manifest-r3.json
+!static-review.json
+!verify_static.py
+!000_preflight.sql
+!001_security_state_expand.sql
+!002_security_state_backfill.sql
+!003_security_state_validate.sql
+!004_membership_delete_error_contract.sql
+!005_delete_contract_validate.sql

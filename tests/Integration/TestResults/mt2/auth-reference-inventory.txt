@@ -1,0 +1,255 @@
+﻿src/Domain/ElectronicRegisterAPI.Domain/DTOs/ClaimsContext.cs:5:public record ClaimsContext(Guid UserId, UserRole Role, Guid? StudentId, Guid? TeacherId);
+src/Application\ElectronicRegisterAPI.Application\Services\ExamSubmissionProcessor.cs:41:        public async Task<SubmissionResultDto> ProcessSubmitAsync(Guid submissionId, SubmitExamDto? dto, SubmitReason reason, ClaimsContext? caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\AuthManager.cs:51:        return _jwtTokenGenerator.Generate(user.Id, user.Email, user.Role, user.StudentId, user.TeacherId);
+src/Application\ElectronicRegisterAPI.Application\Managers\AuthManager.cs:61:        return _jwtTokenGenerator.Generate(user.Id, user.Email, user.Role, user.StudentId, user.TeacherId);
+src/Application\ElectronicRegisterAPI.Application\Managers\AuthManager.cs:136:    public async Task<UserDto?> GetCurrentUserAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\AuthManager.cs:141:        var student = user.StudentId.HasValue ? await _studentRepository.GetByIdAsync(user.StudentId.Value) : null;
+src/Application\ElectronicRegisterAPI.Application\Managers\AuthManager.cs:142:        var teacher = user.TeacherId.HasValue ? await _teacherRepository.GetByIdAsync(user.TeacherId.Value) : null;
+src/Application\ElectronicRegisterAPI.Application\Managers\AuthManager.cs:148:            Role = user.Role.ToString().ToLowerInvariant(),
+src/Application\ElectronicRegisterAPI.Application\Managers\AuthManager.cs:149:            StudentId = user.StudentId,
+src/Application\ElectronicRegisterAPI.Application\Managers\AuthManager.cs:152:            TeacherId = user.TeacherId,
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:47:    public async Task<List<SubmissionSummaryDto>> GetByExamAsync(Guid examId, SubmissionStatus? status, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:53:        if (caller.Role == UserRole.Admin)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:58:        else if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:60:            if (!caller.TeacherId.HasValue)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:67:            if (classSubject is null || classSubject.TeacherId != caller.TeacherId)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:99:    public async Task<SubmissionReviewDto> GetByIdAsync(Guid id, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:106:        if (caller.Role is not (UserRole.Student or UserRole.Teacher or UserRole.Admin))
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:110:        if (caller.Role == UserRole.Student && caller.StudentId != submission.StudentId)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:113:        if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:119:            if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:121:                if (!caller.TeacherId.HasValue)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:126:                if (classSubject is null || classSubject.TeacherId != caller.TeacherId)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:229:    public async Task ReviewAsync(Guid id, ReviewOpenAnswersDto dto, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:233:        if (caller.Role != UserRole.Teacher && caller.Role != UserRole.Admin)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:244:            if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:246:                if (!caller.TeacherId.HasValue) throw new UnauthorizedAccessException("Identificativo docente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:250:                if (classSubject is null || classSubject.TeacherId != caller.TeacherId)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:309:    public async Task FinalizeAsync(Guid id, FinalizeSubmissionDto dto, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:314:        if (caller.Role != UserRole.Teacher && caller.Role != UserRole.Admin)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:324:            if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:326:                if (!caller.TeacherId.HasValue) throw new UnauthorizedAccessException("Identificativo docente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:330:                if (classSubject is null || classSubject.TeacherId != caller.TeacherId)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamSubmissionManager.cs:439:            if (caller.Role == UserRole.Teacher || caller.Role == UserRole.Admin)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:57:        public async Task<List<ExamSummaryDto>> GetAllAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:60:            if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:65:            if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:67:                teacherId = caller.TeacherId
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:76:        public async Task<ExamDetailDto?> GetByIdAsync(Guid id, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:79:            if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:82:            if (caller.Role == UserRole.Teacher && !caller.TeacherId.HasValue)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:96:            if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:98:                Guid teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:117:        public async Task<List<AssignedExamDto>> GetAssignedAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:120:            if (caller.Role != UserRole.Student)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:123:            var studentId = caller.StudentId ?? throw new UnauthorizedAccessException("Identificativo studente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:140:        public async Task<Guid> AddAsync(CreateExamDto dto, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:147:                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:166:                if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:168:                    var teacherId = caller.TeacherId
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:209:        public async Task UpdateAsync(Guid id, UpdateExamDto dto, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:215:                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:223:                if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:225:                    var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:277:        public async Task UpdateStudentsAsync(Guid id, UpdateExamStudentsDto dto, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:283:                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:291:                if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:293:                    var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:328:        public async Task PublishAsync(Guid id, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:334:                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:340:                if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:342:                    var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:366:        public async Task CloseAsync(Guid id, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:372:                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:378:                if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:380:                    var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:399:        public async Task CancelAsync(Guid id, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:405:                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:411:                if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:413:                    var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:432:        public async Task DeleteAsync(Guid id, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:438:                if (caller.Role != UserRole.Admin && caller.Role != UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:444:                if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:446:                    var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:462:        public async Task<StartExamDto> StartAsync(Guid id, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:469:                if (caller.Role != UserRole.Student)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:472:                var studentId = caller.StudentId ?? throw new UnauthorizedAccessException("Identificativo studente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:511:        public async Task<SaveAnswersResponseDto> SaveAnswersAsync(Guid id, SaveExamAnswersDto dto, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:515:            if (caller.Role != UserRole.Student)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:520:            var studentId = caller.StudentId ?? throw new UnauthorizedAccessException("Identificativo studente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:544:        public async Task<SubmissionResultDto> SubmitAsync(Guid id, SubmitExamDto dto, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:548:            if (caller.Role != UserRole.Student)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:553:            var studentId = caller.StudentId ?? throw new UnauthorizedAccessException("Identificativo studente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:570:        public async Task<SubmissionResultDto> GetResultAsync(Guid id, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:577:            if (caller.Role == UserRole.Student)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:579:                var studentId = caller.StudentId ?? throw new UnauthorizedAccessException("Identificativo studente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:583:            else if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:585:                var teacherId = caller.TeacherId ?? throw new UnauthorizedAccessException("Identificativo docente non presente.");
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:592:            else if (caller.Role != UserRole.Admin)
+src/Application\ElectronicRegisterAPI.Application\Managers\ExamManager.cs:627:        private Task WriteLifecycleAuditAsync(Exam exam, ClaimsContext caller, string action, string beforeJson) =>
+src/Application\ElectronicRegisterAPI.Application\Mappers\SubmissionVisibility.cs:11:    public static SubmissionResultDto Apply(SubmissionResultDto dto, ClaimsContext? caller)
+src/Application\ElectronicRegisterAPI.Application\Mappers\SubmissionVisibility.cs:25:    public static SubmissionReviewDto Apply(SubmissionReviewDto dto, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Mappers\SubmissionVisibility.cs:30:        if (caller.Role != UserRole.Student) return dto;
+src/Application\ElectronicRegisterAPI.Application\Managers\StudentManager.cs:19:        public async Task<int> CountAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\StudentManager.cs:24:        public async Task<List<StudentDto>> GetAllAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\StudentManager.cs:30:        public async Task<StudentDto?> GetByIdAsync(Guid id, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\StudentManager.cs:37:        public async Task<List<StudentDto>> GetStudentsByLastNameAsync(string lastName, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\StudentManager.cs:72:        private static Guid? TeacherRestriction(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\StudentManager.cs:75:            if (caller.Role == ElectronicRegisterAPI.Domain.Enums.UserRole.Admin) return null;
+src/Application\ElectronicRegisterAPI.Application\Managers\StudentManager.cs:76:            if (caller.Role == ElectronicRegisterAPI.Domain.Enums.UserRole.Teacher && caller.TeacherId.HasValue)
+src/Application\ElectronicRegisterAPI.Application\Managers\StudentManager.cs:77:                return caller.TeacherId.Value;
+src/Api\ElectronicRegisterAPI\Controllers\UserController.cs:10:[Authorize]
+src/Api\ElectronicRegisterAPI\Controllers\UserController.cs:21:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\UserController.cs:28:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\UserController.cs:36:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\UserController.cs:44:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\UserController.cs:52:    [Authorize(Roles = "student,teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\UserController.cs:60:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\UserController.cs:68:    [Authorize(Roles = "admin")]
+src/Application\ElectronicRegisterAPI.Application\Mappers\ExamSubmissionMapper.cs:21:    public static SubmissionResultDto ToSubmissionResultDto(ExamSubmission s, decimal? officialGradeValue, ClaimsContext? caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:34:        public async Task<int> CountAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:36:            var studentId = caller.Role == UserRole.Student
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:37:                ? caller.StudentId
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:39:            var teacherId = caller.Role == UserRole.Teacher
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:40:                ? caller.TeacherId
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:44:        public async Task<List<GradeDto>> GetAllAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:46:            var studentId = caller.Role == UserRole.Student
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:47:                ? caller.StudentId
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:50:            var teacherId = caller.Role == UserRole.Teacher
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:51:                ? caller.TeacherId
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:61:        public async Task<GradeDto?> GetByIdAsync(Guid id, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:68:            if (caller.Role == UserRole.Student &&
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:69:                grade.StudentId != caller.StudentId)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:74:            if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:81:                    classSubject.TeacherId != caller.TeacherId)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:99:            ClaimsContext caller
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:105:            Guid? restrictToStudentId = caller.Role == UserRole.Student ? caller.StudentId : null;
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:106:            Guid? restrictToTeacherId = caller.Role == UserRole.Teacher ? caller.TeacherId : null;
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:116:        public async Task<GradeStatisticsDto?> GetStatisticsAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:118:            Guid? teacherId = caller.Role == UserRole.Teacher ? caller.TeacherId : null;
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:119:            Guid? studentId = caller.Role == UserRole.Student ? caller.StudentId : null;
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:131:        public async Task<GradeFiltersDto> GetFiltersAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:136:            if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:137:                teacherId = caller.TeacherId;
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:138:            else if (caller.Role == UserRole.Student)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:139:                studentId = caller.StudentId;
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:208:        public async Task<List<GradeDto>?>GetGradesBySubjectNameAsync(string subjectName, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:211:                caller.Role == UserRole.Student
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:212:                    ? caller.StudentId
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:216:                caller.Role == UserRole.Teacher
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:217:                    ? caller.TeacherId
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:229:        public async Task<List<GradeDto>>GetGradesByDateAsync(DateOnly date, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:232:                caller.Role == UserRole.Student
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:233:                    ? caller.StudentId
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:237:                caller.Role == UserRole.Teacher
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:238:                    ? caller.TeacherId
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:250:        public async Task<Guid?> AddAsync(CreateGradeDto dto, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:278:            if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:280:                if (!caller.TeacherId.HasValue)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:285:                        caller.TeacherId.Value,
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:303:        public async Task<bool> UpdateAsync(Guid id, UpdateGradeDto dto, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:313:            if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:315:                if (!caller.TeacherId.HasValue)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:319:                    caller.TeacherId.Value,
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:348:            if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\GradeManager.cs:351:                        caller.TeacherId!.Value,
+src/Application\ElectronicRegisterAPI.Application\Managers\UserManager.cs:52:    public async Task<bool> UpdatePasswordAsync(Guid id, UpdatePasswordDto dto, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\UserManager.cs:97:            if (user.StudentId.HasValue)
+src/Application\ElectronicRegisterAPI.Application\Managers\UserManager.cs:99:                var student = await _studentRepository.GetByIdAsync(user.StudentId.Value);
+src/Application\ElectronicRegisterAPI.Application\Managers\UserManager.cs:106:            else if (user.TeacherId.HasValue)
+src/Application\ElectronicRegisterAPI.Application\Managers\UserManager.cs:108:                var teacher = await _teacherRepository.GetByIdAsync(user.TeacherId.Value);
+src/Application\ElectronicRegisterAPI.Application\Managers\UserManager.cs:158:            Role = user.Role.ToString().ToLowerInvariant(),
+src/Application\ElectronicRegisterAPI.Application\Managers\UserManager.cs:159:            StudentId = user.StudentId,
+src/Application\ElectronicRegisterAPI.Application\Managers\UserManager.cs:160:            TeacherId = user.TeacherId
+src/Api\ElectronicRegisterAPI\Controllers\TeacherController.cs:10:[Authorize]
+src/Api\ElectronicRegisterAPI\Controllers\TeacherController.cs:21:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\TeacherController.cs:28:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\TeacherController.cs:36:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\TeacherController.cs:44:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\TeacherController.cs:52:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\TeacherController.cs:60:    [Authorize(Roles = "admin")]
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:29:        public async Task<int> CountAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:31:            if (caller.Role == UserRole.Admin) return await _subjectRepository.CountAsync();
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:38:        public async Task<List<SubjectDto>> GetAllAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:44:        public async Task<SubjectDto?> GetByIdAsync(Guid id, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:47:            if (caller.Role == UserRole.Admin) return subject is null ? null : MapToDto(subject);
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:56:        public async Task<SubjectDto?> GetSubjectByNameAsync(string name, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:60:            if (caller.Role == UserRole.Admin)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:75:        public async Task<List<SubjectDto>>GetSubjectsByTeacherIdAsync(Guid teacherId, ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:77:            if (caller.Role == UserRole.Teacher && caller.TeacherId != teacherId)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:84:            if (caller.Role == UserRole.Student)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:86:                if (!caller.StudentId.HasValue) return new List<SubjectDto>();
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:87:                var student = await _studentRepository.GetByIdAsync(caller.StudentId.Value);
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:147:        private async Task<List<Subject>> GetVisibleSubjectsAsync(ClaimsContext caller)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:149:            if (caller.Role == UserRole.Teacher)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:151:                if (!caller.TeacherId.HasValue)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:154:                var classSubjects = await _classSubjectRepository.GetByTeacherIdAsync(caller.TeacherId.Value);
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:166:            if (caller.Role == UserRole.Student)
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:168:                if (!caller.StudentId.HasValue) return new List<Subject>();
+src/Application\ElectronicRegisterAPI.Application\Managers\SubjectManager.cs:170:                var student = await _studentRepository.GetByIdAsync(caller.StudentId.Value);
+src/Api\ElectronicRegisterAPI\Controllers\SubjectController.cs:10:[Authorize]
+src/Api\ElectronicRegisterAPI\Controllers\SubjectController.cs:21:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\SubjectController.cs:28:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\SubjectController.cs:36:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\SubjectController.cs:44:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\SubjectController.cs:52:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\SubjectController.cs:60:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\SubjectController.cs:68:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\SubjectController.cs:76:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Security\LegacyEndpointGate.cs:36:            !await legacy.IsTokenAllowedAsync(new ClaimsContext(userId, role, student, teacher), http.RequestAborted))
+src/Api\ElectronicRegisterAPI\Controllers\StudentController.cs:10:[Authorize]
+src/Api\ElectronicRegisterAPI\Controllers\StudentController.cs:21:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\StudentController.cs:28:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\StudentController.cs:36:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\StudentController.cs:44:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\StudentController.cs:52:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\StudentController.cs:60:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\StudentController.cs:68:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:11:[Authorize]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:24:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:32:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:40:    [Authorize(Roles = "student")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:48:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:56:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:64:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:72:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:80:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:88:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:96:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:104:    [Authorize(Roles = "student")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:112:    [Authorize(Roles = "student")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:120:    [Authorize(Roles = "student")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:128:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:135:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:142:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:150:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ExamController.cs:158:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\AuthController.cs:41:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\AuthController.cs:49:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\AuthController.cs:57:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:11:[Authorize]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:22:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:30:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:38:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:46:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:67:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:75:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:83:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:91:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:99:    [Authorize(Roles = "teacher,admin,student")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:107:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:115:    [Authorize(Roles = "teacher,admin")]
+src/Api\ElectronicRegisterAPI\Controllers\GradeController.cs:123:    [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\BienniumController.cs:11:    [Authorize]
+src/Api\ElectronicRegisterAPI\Controllers\BienniumController.cs:24:        [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\BienniumController.cs:31:        [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\BienniumController.cs:39:        [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\BienniumController.cs:47:        [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\BienniumController.cs:55:        [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\BienniumController.cs:63:        [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\BienniumController.cs:71:        [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\BienniumController.cs:79:        [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\BienniumController.cs:87:        [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\BienniumController.cs:95:        [Authorize(Roles = "admin")]
+src/Api\ElectronicRegisterAPI\Controllers\ApiControllerBase.cs:12:    protected ClaimsContext CurrentCaller()
+src/Api\ElectronicRegisterAPI\Controllers\ApiControllerBase.cs:25:        return new ClaimsContext(userId, role, studentId, teacherId);

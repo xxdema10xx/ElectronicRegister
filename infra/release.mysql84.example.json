@@ -1,0 +1,19 @@
+{
+  "database": "electronic_register_staging",
+  "host": "er-stage-db",
+  "port": 3306,
+  "serverPort": 3306,
+  "serverUuid": "REPLACE_WITH_ATTESTED_SERVER_UUID",
+  "stageId": "REPLACE_WITH_EXISTING_32_CHARACTER_STAGE_ID",
+  "dedicatedServer": true,
+  "transport": "socket",
+  "socketFile": "/var/run/mysqld/mysqld.sock",
+  "mysqlPrefix": ["docker", "exec", "-i", "REPLACE_WITH_64_CHARACTER_LOCAL_DATABASE_CONTAINER_ID"],
+  "defaultsFile": "/run/secrets/root.cnf",
+  "definerUser": "er_stage_definer",
+  "definerHost": "%",
+  "apiUser": "er_api",
+  "apiHost": "172.30.252.%",
+  "reviewUser": "er_review",
+  "reviewHost": "172.30.252.%"
+}

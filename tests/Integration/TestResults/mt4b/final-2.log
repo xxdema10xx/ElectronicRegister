@@ -1,0 +1,10 @@
+Esecuzione dei test per C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll (.NETCoreApp,Version=v10.0)
+Esecuzione dei test per C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Unit\bin\Debug\net10.0\Unit.Tests.dll (.NETCoreApp,Version=v10.0)
+Un totale di 1 file di test corrisponde al criterio specificato.
+Un totale di 1 file di test corrisponde al criterio specificato.
+File di risultati: C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestResults\mt4b\final-2\LorenzoBaracchi_CES01622_2026-10-19_15_52_45_net10.0.trx
+
+Superato!     - Non superati:     0. Superati:    51. Ignorati:     0. Totale:    51. Durata: 189 ms - Unit.Tests.dll (net10.0)
+File di risultati: C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\TestResults\mt4b\final-2\LorenzoBaracchi_CES01622_2026-10-19_15_52_50_net10.0.trx
+
+Superato!     - Non superati:     0. Superati:   593. Ignorati:     0. Totale:   593. Durata: 26 m 51 s - Integration.Tests.dll (net10.0)

@@ -3,6 +3,7 @@
 
 # ASP.NET configuration / secrets
 **/appsettings.json
+**/appsettings.*.json
 **/appsettings.Development.json
 **/appsettings.Local.json
 **/appsettings.*.local.json
@@ -12,6 +13,9 @@
 
 # Environment / local files
 *.env
+.env
+.env.*
+!.env.example
 report.json
 config.js
 
@@ -25,6 +29,138 @@ node_modules/
 # Database / backup files
 *.sql
 *.old
+**/private/
+**/mysql/data/
+**/ibdata*
+**/ib_logfile*
+**/aria_log*
+**/credentials-private.json
+*.pfx
+*.p12
+*.key
+*.pem
+*.log
+*.bak
+*.BAK
+*.ibd
+*.frm
+*.MYD
+*.MYI
+*.MAI
+*.MAD
+**/my.ini
+**/client.ini
+*.cnf
+*.ini
+
+# MT-5B-R1 review candidates only; keep dumps and private SQL excluded.
+!/migrations/mt5/candidate-r1/000_preflight.sql
+!/migrations/mt5/candidate-r1/001_security_state_expand.sql
+!/migrations/mt5/candidate-r1/002_security_state_backfill.sql
+!/migrations/mt5/candidate-r1/003_security_state_validate.sql
+!/migrations/mt5/candidate-r1/004_membership_delete_error_contract.sql
+!/migrations/mt5/candidate-r1/005_delete_contract_validate.sql
+
+# MT-5B candidate R2: separate review revision after R3 preflight rejection.
+!/migrations/mt5/candidate-r2/000_preflight.sql
+!/migrations/mt5/candidate-r2/001_security_state_expand.sql
+!/migrations/mt5/candidate-r2/002_security_state_backfill.sql
+!/migrations/mt5/candidate-r2/003_security_state_validate.sql
+!/migrations/mt5/candidate-r2/004_membership_delete_error_contract.sql
+!/migrations/mt5/candidate-r2/005_delete_contract_validate.sql
+
+# MT-5B candidate R3: reject prefix owner indexes, review package only.
+!/migrations/mt5/candidate-r3/000_preflight.sql
+!/migrations/mt5/candidate-r3/001_security_state_expand.sql
+!/migrations/mt5/candidate-r3/002_security_state_backfill.sql
+!/migrations/mt5/candidate-r3/003_security_state_validate.sql
+!/migrations/mt5/candidate-r3/004_membership_delete_error_contract.sql
+!/migrations/mt5/candidate-r3/005_delete_contract_validate.sql
 
 # Visual Studio
+# MT-5B-D: additive canonical IAM SQL only, never private dumps.
+!/migrations/mt5/iam-d/001_membership_event.sql
+!/migrations/mt5/iam-d/002_validate.sql
+!/migrations/mt5/iam-d/003_event_snapshot_shape.sql
+!/migrations/mt5/iam-d/004_validate_snapshot.sql
+
+# Consolidated schema only: never allow arbitrary SQL dumps.
+!/migrations/bootstrap/001_schema.sql
+!/migrations/mt5/onboarding/001_expand.sql
+!/migrations/mt5/onboarding/002_validate.sql
+!/migrations/20261016_add_override_reason.sql
+__pycache__/
+/.repro/
+/.rc/
+/.rd/
 .vs/
+
+# Administrative runtime configuration and signed intents stay private.
+/tools/PlatformAdmin/*.json
+!/tools/PlatformAdmin/admin.example.json
+!/tools/PlatformAdmin/packages.lock.json
+**/platform-authority.local.json
+**/platform-operator.local.json
+
+# MT-5D: only canonical additive governance schema and validator.
+!/migrations/mt5/governance/001_expand.sql
+!/migrations/mt5/governance/002_validate.sql
+
+# MT-6 disposable reproduction and offline recovery evidence, never source inputs.
+/.r6/
+/.r6restore/
+/infra/*.local.json
+/release-private/
+/.r6f/
+/.r6fr/
+
+# Versioned exam presentation migration; never backups.
+!/migrations/exam-presentation/001_expand.sql
+!/migrations/exam-presentation/002_validate.sql
+
+/.exam-private/
+
+# Raw test logs stay local; sanitized verification summary is versioned.
+/tests/**/TestResults/exam-presentation-*.trx
+
+# Institution Class additive schema and validators.
+!/migrations/institution-class/001_expand.sql
+!/migrations/institution-class/002_validate.sql
+/tests/**/TestResults/institution-class-*.trx
+
+# Shared institution administration ledger.
+!/migrations/institution-administration/001_expand.sql
+!/migrations/institution-administration/002_validate.sql
+/tests/**/TestResults/institution-administration-*.trx
+
+# Additive student transfer schema and validators.
+!/migrations/student-class-transfer/001_expand.sql
+!/migrations/student-class-transfer/002_validate.sql
+# Disposable Staff verification instances and private SQL backups.
+.staff-private/
+!/migrations/institution-staff/001_expand.sql
+!/migrations/institution-staff/002_validate.sql
+/tests/**/TestResults/staff/
+!/migrations/institution-email/001_expand.sql
+!/migrations/institution-email/002_validate.sql
+!/migrations/institution-import/001_expand.sql
+!/migrations/institution-import/002_validate.sql
+
+# Local formative-plan verification logs and initial working-tree snapshot.
+/.formative-private/
+!/migrations/institution-formative-plan/001_expand.sql
+!/migrations/institution-formative-plan/002_validate.sql
+!/migrations/institution-calendar/001_expand.sql
+!/migrations/institution-calendar/002_validate.sql
+
+# Reviewed additive account/release schema; arbitrary SQL dumps remain ignored.
+!/migrations/identity-account/001_identity_account.sql
+!/migrations/identity-account/002_profile_acquisition.sql
+!/migrations/identity-account/003_password_attempt.sql
+!/migrations/identity-account/004_release_schema.sql
+!/migrations/identity-account/005_release_gate.sql
+/infra/staging/__pycache__/
+
+/.migration-tools/
+
+/.diagnostics/

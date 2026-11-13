@@ -1,0 +1,21 @@
+{
+  "exitCode": 1,
+  "violationsDetected": 24,
+  "categoriesDetected": [
+    "compressed-parameters",
+    "compressed-statements",
+    "dependency",
+    "dependency-cycle",
+    "enum-location",
+    "exception-location",
+    "filename",
+    "interface-location",
+    "manager-contract-location",
+    "multiple-types",
+    "namespace",
+    "nested-type-review",
+    "repository-contract-location",
+    "source-dependency",
+    "syntax"
+  ]
+}

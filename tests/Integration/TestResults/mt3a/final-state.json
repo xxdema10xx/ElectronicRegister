@@ -1,0 +1,112 @@
+﻿{
+    "NoOperationalSecondTenant":  true,
+    "SchoolTables":  {
+                         "biennium":  {
+                                          "count":  1,
+                                          "unowned":  0,
+                                          "outsideHolding":  0
+                                      },
+                         "study_area":  {
+                                            "count":  1,
+                                            "unowned":  0,
+                                            "outsideHolding":  0
+                                        },
+                         "study_path":  {
+                                            "count":  1,
+                                            "unowned":  0,
+                                            "outsideHolding":  0
+                                        },
+                         "subject":  {
+                                         "count":  1,
+                                         "unowned":  0,
+                                         "outsideHolding":  0
+                                     },
+                         "teacher":  {
+                                         "count":  2,
+                                         "unowned":  0,
+                                         "outsideHolding":  0
+                                     },
+                         "student":  {
+                                         "count":  12,
+                                         "unowned":  0,
+                                         "outsideHolding":  0
+                                     },
+                         "biennium_study_area":  {
+                                                     "count":  1,
+                                                     "unowned":  0,
+                                                     "outsideHolding":  0
+                                                 },
+                         "biennium_study_path":  {
+                                                     "count":  1,
+                                                     "unowned":  0,
+                                                     "outsideHolding":  0
+                                                 },
+                         "class":  {
+                                       "count":  1,
+                                       "unowned":  0,
+                                       "outsideHolding":  0
+                                   },
+                         "class_subject":  {
+                                               "count":  1,
+                                               "unowned":  0,
+                                               "outsideHolding":  0
+                                           },
+                         "exam":  {
+                                      "count":  12,
+                                      "unowned":  0,
+                                      "outsideHolding":  0
+                                  },
+                         "exam_student":  {
+                                              "count":  12,
+                                              "unowned":  0,
+                                              "outsideHolding":  0
+                                          },
+                         "grade":  {
+                                       "count":  4,
+                                       "unowned":  0,
+                                       "outsideHolding":  0
+                                   },
+                         "exam_submission":  {
+                                                 "count":  12,
+                                                 "unowned":  0,
+                                                 "outsideHolding":  0
+                                             },
+                         "question":  {
+                                          "count":  24,
+                                          "unowned":  0,
+                                          "outsideHolding":  0
+                                      },
+                         "question_option":  {
+                                                 "count":  24,
+                                                 "unowned":  0,
+                                                 "outsideHolding":  0
+                                             },
+                         "submission_answer":  {
+                                                   "count":  22,
+                                                   "unowned":  0,
+                                                   "outsideHolding":  0
+                                               },
+                         "submission_answer_option":  {
+                                                          "count":  13,
+                                                          "unowned":  0,
+                                                          "outsideHolding":  0
+                                                      },
+                         "exam_violation":  {
+                                                "count":  0,
+                                                "unowned":  0,
+                                                "outsideHolding":  0
+                                            }
+                     },
+    "DatabaseState":  {
+                          "sqlMode":  "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+                          "version":  "5.7.24",
+                          "database":  "electronic_register_test",
+                          "memberships":  0,
+                          "institutions":  1,
+                          "holdingStatus":  "provisioning",
+                          "auditWithoutOwner":  0,
+                          "studentProfileLinks":  0,
+                          "teacherProfileLinks":  0,
+                          "nonHoldingInstitutions":  0
+                      }
+}

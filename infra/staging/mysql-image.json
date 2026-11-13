@@ -1,0 +1,9 @@
+{
+  "version": "8.4.13",
+  "image": "mysql:8.4.13@sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+  "platform": "linux/amd64",
+  "uid": "999",
+  "gid": "999",
+  "tls": "TLSv1.2",
+  "sslLibrary": "OpenSSL"
+}

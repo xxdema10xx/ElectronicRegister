@@ -1,0 +1,289 @@
+﻿{
+    "head":  "f12a0e1ac6b95507bc0ac571600c797fd9ededfc",
+    "comparison":  [
+                       {
+                           "suite":  "unit",
+                           "baseline":  {
+                                            "sha256":  "7A3C6BE32112D0D9F167DF78709B8E77C769DEDF1E5468DCF352C4B9AFF606CB",
+                                            "failed":  "0",
+                                            "skipped":  "0",
+                                            "total":  "559",
+                                            "passed":  "559"
+                                        },
+                           "final":  {
+                                         "sha256":  "3B3491E17C1983F312A9FEFF8957C84CAF599253E16494164A637B12A575C77B",
+                                         "failed":  "0",
+                                         "skipped":  "0",
+                                         "total":  "587",
+                                         "passed":  "587"
+                                     },
+                           "removedOrChanged":  [
+
+                                                ],
+                           "added":  [
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 1)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.InstitutionalProcessorRejectsAnUnmatchedRepositoryBeforeOpeningTransaction|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 4)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 11)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.InstitutionalReplayUsesOfficialGradeAndPreservesStudentVisibility(status: Finalized, official: True)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.InstitutionalSubmitPreservesAuditIdentityAndRedactsProvisionalScores(reason: TimeExpired)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.LegacyAdapterRetainsTheOriginalIdentityWithoutRoleTranslation|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 9)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.InstitutionalReplayUsesOfficialGradeAndPreservesStudentVisibility(status: Graded, official: True)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 5)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 12)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 15)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 3)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.MissingMembershipFailsClosed|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.InstitutionalReplayUsesOfficialGradeAndPreservesStudentVisibility(status: PendingReview, official: False)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.InstitutionalPrincipalCannotBeProjectedIntoGlobalLegacyIdentity(role: Teacher)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.InstitutionalSubmitPreservesAuditIdentityAndRedactsProvisionalScores(reason: Manual)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.Application.ExamSubmissionProcessorTests.InstitutionalReplayUsesOfficialGradeAndPreservesStudentVisibility(status: Graded, official: False)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 13)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 2)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 7)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.InstitutionalPrincipalCannotBeProjectedIntoGlobalLegacyIdentity(role: Staff)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 8)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 10)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.InstitutionalPrincipalCannotBeProjectedIntoGlobalLegacyIdentity(role: InstitutionAdmin)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.InstitutionStaffPermissionsTests.InstitutionalPrincipalCannotBeProjectedIntoGlobalLegacyIdentity(role: Student)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 14)|Passed|count=1",
+                                         "ElectronicRegisterAPI.Tests.Unit.MembershipAuthorizationTests.EveryValidCombinedMembershipRequiresExactIdentityGenerationAndRoleSet(mask: 6)|Passed|count=1"
+                                     ]
+                       },
+                       {
+                           "suite":  "integration",
+                           "baseline":  {
+                                            "sha256":  "72B19CF7E2657305E382A3C47733B65F3CB7CADC81E787291B5A65791EEB2452",
+                                            "failed":  "1279",
+                                            "skipped":  "0",
+                                            "total":  "1418",
+                                            "passed":  "82"
+                                        },
+                           "final":  {
+                                         "sha256":  "093081E074D52657ADE46E2AC766AFE4904323ECCD7FECBB6576E678D7C37898",
+                                         "failed":  "1279",
+                                         "skipped":  "0",
+                                         "total":  "1418",
+                                         "passed":  "82"
+                                     },
+                           "removedOrChanged":  [
+
+                                                ],
+                           "added":  [
+
+                                     ]
+                       }
+                   ],
+    "generatedSourceCount":  40,
+    "generatedSourcesChanged":  [
+
+                                ],
+    "projectReferenceFilesChanged":  [
+
+                                     ],
+    "sqlFilesChanged":  [
+
+                        ],
+    "apiFilesChanged":  [
+
+                        ],
+    "testConnectionConfigured":  false,
+    "dockerPipePresent":  false,
+    "organizationGuard":  "blocked: missing assets; restore denied access to user NuGet.Config",
+    "gitDiffCheck":  "passed exit 0; responsibility-diff-check.log",
+    "databaseSetupPreflight":  {
+                                   "supportedMampBinaryPresent":  true,
+                                   "pythonOnPath":  false,
+                                   "pyLauncherOnPath":  false,
+                                   "existingHistoricalDatadirPresent":  true,
+                                   "existingInstanceAdopted":  false,
+                                   "newInstanceCreated":  false
+                               },
+    "continuation":  {
+                         "scope":  "Verification only; further application refactoring suspended pending complete regression",
+                         "status":  "diagnosed_not_sql_certified",
+                         "applicationSourceHashesPreserved":  719,
+                         "applicationSourceChanges":  0,
+                         "testsSourceChanges":  0,
+                         "resumeUnit":  {
+                                            "path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\docs\\refactoring\\validation\\responsibility-resume-unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-29_19_18_38_net10.0.trx",
+                                            "sha256":  "E3F5868DE66A2768E12AAECB13DDBB93EB1834D4EA43388CF54A1E523F2E2FF0",
+                                            "total":  587,
+                                            "passed":  587,
+                                            "failed":  0,
+                                            "skipped":  0
+                                        },
+                         "resumeSafeIntegrationSubset":  {
+                                                             "path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\docs\\refactoring\\validation\\responsibility-resume-safe-integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-29_19_20_06_net10.0.trx",
+                                                             "sha256":  "A21AF3F345329DDD1C103DF9DFF76C696EEBCF2C6C3A9A7B60CE59AD37D7EC8D",
+                                                             "total":  82,
+                                                             "passed":  82,
+                                                             "failed":  0,
+                                                             "skipped":  0
+                                                         },
+                         "fullHttpMySqlExecuted":  false,
+                         "baselineSqlBeforeRefactoringExecuted":  false,
+                         "previousBaselineVsFinalOutcomeDifferences":  0,
+                         "failureCauseCounts":  [
+                                                    {
+                                                        "id":  "FIXTURE-NO-ENGINE",
+                                                        "count":  1025
+                                                    },
+                                                    {
+                                                        "id":  "EXPLICIT-TARGET",
+                                                        "count":  94
+                                                    },
+                                                    {
+                                                        "id":  "ONBOARDING-NO-CONNECTION",
+                                                        "count":  62
+                                                    },
+                                                    {
+                                                        "id":  "RUNTIME-NO-CONNECTION",
+                                                        "count":  6
+                                                    },
+                                                    {
+                                                        "id":  "IAM-NO-CONNECTION",
+                                                        "count":  53
+                                                    },
+                                                    {
+                                                        "id":  "DIRECTORY-NO-CONNECTION",
+                                                        "count":  36
+                                                    },
+                                                    {
+                                                        "id":  "MT4A-EMPTY-CONNECTION",
+                                                        "count":  2
+                                                    },
+                                                    {
+                                                        "id":  "PREFLIGHT-CONFIG",
+                                                        "count":  1
+                                                    }
+                                                ],
+                         "diagnosis":  "docs/refactoring/validation/responsibility-integration-diagnosis.json",
+                         "hostCommands":  "docs/refactoring/RESPONSIBILITY_INTEGRATION_HOST_COMMANDS.md",
+                         "nativeRunner":  "tools/New-InstitutionStaffTestInstance.ps1",
+                         "runnerRequiresPython":  false,
+                         "attemptedPort":  13429,
+                         "executionPolicy":  "Restricted",
+                         "runnerResult":  "PSSecurityException before script body",
+                         "newInstanceCreated":  false,
+                         "policyBypassed":  false,
+                         "nugetConfigChanged":  false,
+                         "interpretersInstalled":  false,
+                         "nextApplicationChangesAllowedAfter":  "Actual complete HTTP/MySQL regression and diagnosed results",
+                         "nonProbativePassedTest":  {
+                                                        "test":  "ElectronicRegisterAPI.Tests.Integration.Mt6RuntimeTests.RealProgramRefusesIncompleteProductionConfigurationAtStartup",
+                                                        "reportedOutcome":  "Passed",
+                                                        "certifiesProgramStartupRefusal":  false,
+                                                        "reason":  "ThrowsAnyAsync also accepts the Start helper exception for missing TEST_MYSQL_CONNECTION before Program starts",
+                                                        "source":  "tests/Integration/Mt6RuntimeTests.cs:79-85,104-106"
+                                                    }
+                     },
+    "fixtureIsolationCorrection":  {
+                                       "status":  "fixture_fix_implemented_pending_host_cli_and_full_regression",
+                                       "fixtureRoot":  ".staff-private/cli-fixtures-\u003crun-guid\u003e/\u003clabel\u003e-\u003ctest-guid\u003e",
+                                       "testSources":  [
+                                                           {
+                                                               "path":  "tests/Integration/PrivateTestFiles.cs",
+                                                               "sha256":  "3A2A41042FD800DE8319073341D3B718DC65B4599C48C0DE0D4DAF9A3A63BB74"
+                                                           },
+                                                           {
+                                                               "path":  "tests/Integration/PrivateTestFilesTests.cs",
+                                                               "sha256":  "D82CB7A2ADE13255F0AA37FB489C98A033667C857BAE0D699E4EEEFBEBC2125D"
+                                                           },
+                                                           {
+                                                               "path":  "tests/Integration/Mt5cOnboardingTests.cs",
+                                                               "sha256":  "440E6272770263D16AC9DE281519EC977C42A29524D45B9876714AD42DC928DD"
+                                                           },
+                                                           {
+                                                               "path":  "tests/Integration/Mt5dGovernanceTests.cs",
+                                                               "sha256":  "C3E611435D1A527DB181E48A6A10CAD5716BB4366F9FD9BB69FC4B0DD1C1936A"
+                                                           },
+                                                           {
+                                                               "path":  "tests/Integration/Mt6OperatorSecurityTests.cs",
+                                                               "sha256":  "73F4FF505EEF174DB21468026A6C6329D40E26DF8335CC764B318DF7E8C148B8"
+                                                           }
+                                                       ],
+                                       "applicationSourcesChanged":  0,
+                                       "localBuild":  "passed",
+                                       "unitPassed":  587,
+                                       "filesystemPassed":  2,
+                                       "originalCliThree":  "not_executed_in_Codex",
+                                       "fullRegression":  "pending_fresh_instance_after_three_pass",
+                                       "hostResultBeforeFix":  {
+                                                                   "port":  13429,
+                                                                   "passed":  1415,
+                                                                   "source":  "user reported, host TRX not inspected by Codex",
+                                                                   "failed":  3,
+                                                                   "total":  1418,
+                                                                   "skipped":  0
+                                                               },
+                                       "evidence":  "docs/refactoring/validation/responsibility-cli-fixture-verification.json",
+                                       "hostCommands":  "docs/refactoring/RESPONSIBILITY_CLI_FIXTURE_HOST_COMMANDS.md"
+                                   },
+    "status":  "current_code_sql_http_regression_passed_refactoring_partial",
+    "currentVerification":  {
+                                "status":  "current_code_sql_http_regression_passed_refactoring_partial",
+                                "evidence":  "docs/refactoring/validation/responsibility-host-regression-verification.json",
+                                "unit":  {
+                                             "suite":  "Unit",
+                                             "path":  ".staff-private/instance-50d37b8bb5564efb8a125521531ad5e6/Unit/result.trx",
+                                             "sha256":  "905AE164994B770C27C4951F7BFDEE6F0CEB8E3248AB9C969C18A6195C85F92D",
+                                             "start":  "2026-10-29T20:14:20.1530167+01:00",
+                                             "finish":  "2026-10-29T20:14:21.3756174+01:00",
+                                             "summaryOutcome":  "Completed",
+                                             "total":  587,
+                                             "executed":  587,
+                                             "passed":  587,
+                                             "failed":  0,
+                                             "skipped":  0,
+                                             "actualResultElements":  587,
+                                             "nonPassedResultElements":  0,
+                                             "cliAndFilesystemResults":  [
+
+                                                                         ]
+                                         },
+                                "integration":  {
+                                                    "suite":  "Integration",
+                                                    "path":  ".staff-private/instance-50d37b8bb5564efb8a125521531ad5e6/Integration/result.trx",
+                                                    "sha256":  "36C335D69D08684F81B9AA9D341D77EFA80A1C56959CABBB3F8327EC54196F7C",
+                                                    "start":  "2026-10-29T20:14:21.9705278+01:00",
+                                                    "finish":  "2026-10-29T20:21:02.8376508+01:00",
+                                                    "summaryOutcome":  "Completed",
+                                                    "total":  1420,
+                                                    "executed":  1420,
+                                                    "passed":  1420,
+                                                    "failed":  0,
+                                                    "skipped":  0,
+                                                    "actualResultElements":  1420,
+                                                    "nonPassedResultElements":  0,
+                                                    "cliAndFilesystemResults":  [
+                                                                                    {
+                                                                                        "name":  "ElectronicRegisterAPI.Tests.Integration.PrivateTestFilesTests.EveryoneReadIsActuallyAppliedAndCanBeRestoredOnTheNewFileOnly",
+                                                                                        "outcome":  "Passed"
+                                                                                    },
+                                                                                    {
+                                                                                        "name":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_ActualCliUsesTheDedicatedManagerWithoutRequiringNotificationDelivery",
+                                                                                        "outcome":  "Passed"
+                                                                                    },
+                                                                                    {
+                                                                                        "name":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.PlatformCliRefusesAuthorityConfigurationReadableByEveryoneBeforeMutation",
+                                                                                        "outcome":  "Passed"
+                                                                                    },
+                                                                                    {
+                                                                                        "name":  "ElectronicRegisterAPI.Tests.Integration.PrivateTestFilesTests.EachFixtureHasItsOwnPrivateDirectoryOutsideDatabaseDatadirs",
+                                                                                        "outcome":  "Passed"
+                                                                                    },
+                                                                                    {
+                                                                                        "name":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.ActualAdministrativeCliVerifiesSignedIntentAndUsesOnlyOwnerInstalledChannel",
+                                                                                        "outcome":  "Passed"
+                                                                                    }
+                                                                                ]
+                                                },
+                                "fullHttpMySqlExecuted":  true,
+                                "fullResponsibilityRefactoringCompleted":  false,
+                                "baselineSqlBeforeRefactoringExecuted":  false,
+                                "proposal":  "docs/refactoring/RESPONSIBILITY_COMPLETION_PROPOSAL.md"
+                            },
+    "historicalCheckpointPolicy":  "Earlier baseline, comparison, continuation and local-run fields describe their original checkpoints; currentVerification is the authoritative current SQL/HTTP status. No green pre-refactoring SQL baseline is claimed."
+}

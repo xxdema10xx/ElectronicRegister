@@ -1,0 +1,73 @@
+ M Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs
+ M Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/ExceptionHandling/GlobalExceptionHandler.cs
+ M Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/InstitutionAuthentication.cs
+ M Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/LegacyEndpointGate.cs
+ M Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/appsettings.example.json
+ M Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/DependencyInjection/AddApplicationManagers.cs
+ M Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/ExamManager.cs
+ M Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/ExamSubmissionManager.cs
+ M Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/GradeManager.cs
+ M Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionStudentManager.cs
+ M Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Mappers/ExamMapper.cs
+ M Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Services/ExamSubmissionProcessor.cs
+ M Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/Services/GradeService.cs
+ M Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/Services/SubjectService.cs
+ M Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/AssignedExamDto.cs
+ M Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IInstitutionSchoolManagers.cs
+ M Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionSchoolRepositories.cs
+ M Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Services/IExamSubmissionProcessor.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/DependencyInjection/ServiceCollectionExtensions.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.Mt3aOwnership.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/Mt3aOwnershipMigration.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/AuditRepository.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/ClassSubjectRepository.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/ExamRepository.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/ExamSubmissionRepository.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/GradeRepository.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionStudentRepository.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/StudentRepository.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/SubjectRepository.cs
+ M Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/TransactionRepository.cs
+ M docs/architecture/MULTITENANCY_DESIGN.md
+ M docs/architecture/MULTITENANCY_ISOLATION_MATRIX.md
+ M tests/Integration/AuditBootstrapTests.cs
+ M tests/Integration/EXAM_BUSINESS_RULES_UPDATE.md
+ M tests/Integration/Mt2IdentityTests.cs
+ M tests/Unit/Application/ExamSubmissionProcessorTests.cs
+?? Backend/ElectronicRegisterAPI/mt3c-evidence/
+?? Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionClassSubjectController.cs
+?? Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionExamController.cs
+?? Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionGradeController.cs
+?? Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionStudentController.cs
+?? Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionSubjectController.cs
+?? Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionSubmissionController.cs
+?? Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionTeacherController.cs
+?? Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/InstitutionExamEndpointAttribute.cs
+?? Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/InstitutionSchoolEndpointAttribute.cs
+?? Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionExamManager.cs
+?? Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Services/InstitutionExpiryService.cs
+?? Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/InstitutionExamDtos.cs
+?? Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IInstitutionExamManager.cs
+?? Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionExamRepositories.cs
+?? Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/ExamPrincipal.cs
+?? Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/SubmissionExpiryWork.cs
+?? Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/DbUtc.cs
+?? Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/TestDatabaseSession.cs
+?? Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionExamDataScope.cs
+?? Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionExamRepositoryFactory.cs
+?? Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/SubmissionExpiryStore.cs
+?? Backend/ElectronicRegisterAPI/tools/Mt3cTestPreparation/
+?? Frontend/ElectronicRegisterReact/.vscode/
+?? docs/api/
+?? docs/architecture/MULTITENANCY_RELEASE_GATE.md
+?? tests/Integration/MULTITENANCY_MT3C_REPORT.md
+?? tests/Integration/MULTITENANCY_MT3D_REPORT.md
+?? tests/Integration/MULTITENANCY_MT3E_REPORT.md
+?? tests/Integration/Mt3cHttpTests.cs
+?? tests/Integration/Mt3cPreflightTests.cs
+?? tests/Integration/Mt3cProgramHost.cs
+?? tests/Integration/Mt3dHttpTests.cs
+?? tests/Integration/Mt3eWorkerTests.cs
+?? tests/Integration/TestResults/mt3c/
+?? tests/Integration/TestResults/mt3d/
+?? tests/Integration/TestResults/mt3e/

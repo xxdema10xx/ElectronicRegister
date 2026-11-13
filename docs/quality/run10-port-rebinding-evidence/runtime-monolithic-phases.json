@@ -1,0 +1,103 @@
+{
+  "problems": [
+    {
+      "id": "identity-and-legacy-bootstrap",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "identity-and-legacy-bootstrap",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 55.992
+    },
+    {
+      "id": "seed-and-predecessor",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "seed-and-predecessor",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 0.791
+    },
+    {
+      "id": "snapshot",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "snapshot",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 6.81
+    },
+    {
+      "id": "drift-rejection",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "drift-rejection",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 5.769
+    },
+    {
+      "id": "ddl-recovery",
+      "category": "runtime-phase",
+      "file": "C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py",
+      "line": 28,
+      "test": "ddl-recovery",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\runtime_diagnostic.py\", line 31, in phase\n    yield\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_runtime.py\", line 425, in run\n    require(time.monotonic() < wait_until, 'Explicit local restart approval not completed')\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Lorenzo\\ElectronicRegister\\tools\\mysql84_release.py\", line 28, in require\n    raise RuntimeError(message)\nRuntimeError: Explicit local restart approval not completed\n",
+      "cause": "Runtime phase failed; subsequent phases share its database state",
+      "priority": "P1",
+      "status": "FAIL",
+      "dependents": [
+        "trigger-routine-acceptance",
+        "fresh-install-after-upgrade"
+      ],
+      "required": true,
+      "elapsedSeconds": 918.053
+    },
+    {
+      "id": "trigger-routine-acceptance",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "trigger-routine-acceptance",
+      "error": "Blocked by: ddl-recovery",
+      "cause": "Prerequisite failed; contaminated state is not reused",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "dependents": [],
+      "required": true
+    },
+    {
+      "id": "fresh-install-after-upgrade",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "fresh-install-after-upgrade",
+      "error": "Blocked by: ddl-recovery",
+      "cause": "Prerequisite failed; contaminated state is not reused",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "dependents": [],
+      "required": true
+    }
+  ]
+}

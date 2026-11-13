@@ -1,0 +1,22 @@
+[
+    {
+        "FileName":  "20261019-141428-3269.sql",
+        "SHA256":  "3F56B13CEBF28735EE177A90FA0D74D6F2972D6F24C2B87B23E71713AF90E756",
+        "TableDefinitions":  28,
+        "HasCourseEdition":  false,
+        "HasEnrollment":  false,
+        "HasLedger":  false,
+        "HasRevisionColumn":  false,
+        "HasMt4cTrigger":  false
+    },
+    {
+        "FileName":  "20261019-165115-0036.sql",
+        "SHA256":  "80797A2C793366040D9B231544FA1AC7CD0770E5706F7AB6EDB806E88BBC022A",
+        "TableDefinitions":  31,
+        "HasCourseEdition":  true,
+        "HasEnrollment":  true,
+        "HasLedger":  false,
+        "HasRevisionColumn":  false,
+        "HasMt4cTrigger":  false
+    }
+]

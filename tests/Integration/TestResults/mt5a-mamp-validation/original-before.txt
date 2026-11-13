@@ -1,0 +1,933 @@
+version	version_comment	hostname	port	datadir	selected_database	global_sql_mode	session_sql_mode
+5.7.24	MySQL Community Server (GPL)	DESKTOP-QUOAG32	3306	C:\\MAMP\\db\\mysql\\	electronic_register_test	ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION	ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+table_name	engine
+audit_event	InnoDB
+biennium	InnoDB
+biennium_study_area	InnoDB
+biennium_study_path	InnoDB
+campus	InnoDB
+class	InnoDB
+class_subject	InnoDB
+exam	InnoDB
+exam_student	InnoDB
+exam_submission	InnoDB
+exam_violation	InnoDB
+grade	InnoDB
+institution	InnoDB
+institution_membership	InnoDB
+institution_membership_role	InnoDB
+institution_student_profile	InnoDB
+institution_teacher_profile	InnoDB
+mt3a_legacy_scope	InnoDB
+question	InnoDB
+question_option	InnoDB
+student	InnoDB
+study_area	InnoDB
+study_path	InnoDB
+subject	InnoDB
+submission_answer	InnoDB
+submission_answer_option	InnoDB
+teacher	InnoDB
+user	InnoDB
+table_name	column_name	column_type	is_nullable	column_default	extra
+audit_event	id	char(36)	NO	NULL	
+audit_event	actor_user_id	char(36)	YES	NULL	
+audit_event	action	varchar(100)	NO	NULL	
+audit_event	entity_type	varchar(100)	NO	NULL	
+audit_event	entity_id	char(36)	YES	NULL	
+audit_event	before_json	longtext	YES	NULL	
+audit_event	after_json	longtext	YES	NULL	
+audit_event	request_id	varchar(100)	YES	NULL	
+audit_event	created_at	datetime(6)	NO	CURRENT_TIMESTAMP(6)	
+audit_event	institution_id	char(36)	YES	NULL	
+biennium	id	char(36)	NO	NULL	
+biennium	start_year	date	NO	NULL	
+biennium	end_year	date	NO	NULL	
+biennium	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+biennium_study_area	id	char(36)	NO	NULL	
+biennium_study_area	biennium_id	char(36)	NO	NULL	
+biennium_study_area	study_area_id	char(36)	NO	NULL	
+biennium_study_area	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+biennium_study_path	id	char(36)	NO	NULL	
+biennium_study_path	biennium_study_area_id	char(36)	NO	NULL	
+biennium_study_path	study_path_id	char(36)	NO	NULL	
+biennium_study_path	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+campus	id	char(36)	NO	NULL	
+campus	institution_id	char(36)	NO	NULL	
+campus	name	varchar(200)	NO	NULL	
+campus	address	varchar(300)	YES	NULL	
+campus	city	varchar(100)	YES	NULL	
+campus	province	varchar(100)	YES	NULL	
+campus	is_active	tinyint(1)	NO	1	
+class	id	char(36)	NO	NULL	
+class	biennium_study_path_id	char(36)	NO	NULL	
+class	name	varchar(20)	NO	NULL	
+class	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+class_subject	id	char(36)	NO	NULL	
+class_subject	class_id	char(36)	NO	NULL	
+class_subject	subject_id	char(36)	NO	NULL	
+class_subject	teacher_id	char(36)	NO	NULL	
+class_subject	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+exam	id	char(36)	NO	NULL	
+exam	class_subject_id	char(36)	NO	NULL	
+exam	retake_of_exam_id	char(36)	YES	NULL	
+exam	name	varchar(150)	NO	NULL	
+exam	description	text	YES	NULL	
+exam	available_from	datetime(6)	NO	NULL	
+exam	available_until	datetime(6)	NO	NULL	
+exam	duration_minutes	int(11)	NO	NULL	
+exam	passing_percent	decimal(5,2)	NO	60.00	
+exam	total_points	decimal(7,2)	NO	NULL	
+exam	status	enum('draft','published','closed','cancelled')	NO	draft	
+exam	published_at	datetime(6)	YES	NULL	
+exam	closed_at	datetime(6)	YES	NULL	
+exam	cancelled_at	datetime(6)	YES	NULL	
+exam	created_at	datetime(6)	NO	CURRENT_TIMESTAMP(6)	
+exam	updated_at	datetime(6)	NO	CURRENT_TIMESTAMP(6)	on update CURRENT_TIMESTAMP(6)
+exam	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+exam	retake_institution_id	char(36)	YES	NULL	
+exam_student	exam_id	char(36)	NO	NULL	
+exam_student	student_id	char(36)	NO	NULL	
+exam_student	extra_time_minutes	int(11)	NO	NULL	
+exam_student	assigned_at	datetime(6)	NO	CURRENT_TIMESTAMP(6)	
+exam_student	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+exam_submission	id	char(36)	NO	NULL	
+exam_submission	exam_id	char(36)	NO	NULL	
+exam_submission	student_id	char(36)	NO	NULL	
+exam_submission	status	enum('in_progress','graded','pending_review','failed_auto','finalized')	NO	in_progress	
+exam_submission	started_at	datetime(6)	NO	NULL	
+exam_submission	deadline_at	datetime(6)	NO	NULL	
+exam_submission	submitted_at	datetime(6)	YES	NULL	
+exam_submission	submit_reason	enum('manual','time_expired','violations')	YES	NULL	
+exam_submission	violation_count	int(11)	NO	NULL	
+exam_submission	last_client_revision	bigint(20) unsigned	NO	NULL	
+exam_submission	max_score	decimal(7,2)	YES	NULL	
+exam_submission	passing_score	decimal(7,2)	YES	NULL	
+exam_submission	closed_score	decimal(7,2)	YES	NULL	
+exam_submission	open_max_points	decimal(7,2)	YES	NULL	
+exam_submission	open_score	decimal(7,2)	YES	NULL	
+exam_submission	total_score	decimal(7,2)	YES	NULL	
+exam_submission	passed	tinyint(1)	YES	NULL	
+exam_submission	suggested_grade	decimal(4,2)	YES	NULL	
+exam_submission	override_reason	varchar(1000)	YES	NULL	
+exam_submission	grade_id	char(36)	YES	NULL	
+exam_submission	reviewed_by_user_id	char(36)	YES	NULL	
+exam_submission	finalized_at	datetime(6)	YES	NULL	
+exam_submission	created_at	datetime(6)	NO	CURRENT_TIMESTAMP(6)	
+exam_submission	updated_at	datetime(6)	NO	CURRENT_TIMESTAMP(6)	on update CURRENT_TIMESTAMP(6)
+exam_submission	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+exam_submission	grade_institution_id	char(36)	YES	NULL	
+exam_violation	id	char(36)	NO	NULL	
+exam_violation	submission_id	char(36)	NO	NULL	
+exam_violation	type	varchar(50)	NO	NULL	
+exam_violation	metadata_json	longtext	YES	NULL	
+exam_violation	occurred_at	datetime(6)	NO	CURRENT_TIMESTAMP(6)	
+exam_violation	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+grade	id	char(36)	NO	NULL	
+grade	student_id	char(36)	NO	NULL	
+grade	class_subject_id	char(36)	NO	NULL	
+grade	value	decimal(4,2)	NO	NULL	
+grade	date	date	NO	NULL	
+grade	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+institution	id	char(36)	NO	NULL	
+institution	name	varchar(200)	NO	NULL	
+institution	code	varchar(64)	NO	NULL	
+institution	legal_tax_code	varchar(32)	YES	NULL	
+institution	region	varchar(100)	YES	NULL	
+institution	status	enum('provisioning','active','suspended','archived')	NO	provisioning	
+institution	created_at	datetime(6)	NO	CURRENT_TIMESTAMP(6)	
+institution	updated_at	datetime(6)	NO	CURRENT_TIMESTAMP(6)	on update CURRENT_TIMESTAMP(6)
+institution_membership	id	char(36)	NO	NULL	
+institution_membership	institution_id	char(36)	NO	NULL	
+institution_membership	user_id	char(36)	NO	NULL	
+institution_membership	status	enum('pending','active','suspended','left')	NO	pending	
+institution_membership	joined_at	datetime(6)	NO	CURRENT_TIMESTAMP(6)	
+institution_membership	suspended_at	datetime(6)	YES	NULL	
+institution_membership_role	membership_id	char(36)	NO	NULL	
+institution_membership_role	role	enum('InstitutionAdmin','Teacher','Student')	NO	NULL	
+institution_student_profile	institution_id	char(36)	NO	NULL	
+institution_student_profile	membership_id	char(36)	NO	NULL	
+institution_student_profile	student_id	char(36)	NO	NULL	
+institution_teacher_profile	institution_id	char(36)	NO	NULL	
+institution_teacher_profile	membership_id	char(36)	NO	NULL	
+institution_teacher_profile	teacher_id	char(36)	NO	NULL	
+mt3a_legacy_scope	scope	enum('legacy')	NO	NULL	
+mt3a_legacy_scope	institution_id	char(36)	NO	NULL	
+question	id	char(36)	NO	NULL	
+question	exam_id	char(36)	NO	NULL	
+question	position	int(11)	NO	NULL	
+question	text	text	NO	NULL	
+question	type	enum('single','multiple','open')	NO	NULL	
+question	points	decimal(7,2)	NO	NULL	
+question	required	tinyint(1)	NO	NULL	
+question	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+question_option	id	char(36)	NO	NULL	
+question_option	question_id	char(36)	NO	NULL	
+question_option	position	int(11)	NO	NULL	
+question_option	text	varchar(500)	NO	NULL	
+question_option	is_correct	tinyint(1)	NO	NULL	
+question_option	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+student	id	char(36)	NO	NULL	
+student	first_name	varchar(100)	NO	NULL	
+student	last_name	varchar(100)	NO	NULL	
+student	class_id	char(36)	YES	NULL	
+student	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+student	class_institution_id	char(36)	YES	NULL	
+study_area	id	char(36)	NO	NULL	
+study_area	name	varchar(100)	NO	NULL	
+study_area	description	text	NO	NULL	
+study_area	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+study_path	id	char(36)	NO	NULL	
+study_path	name	varchar(100)	NO	NULL	
+study_path	description	text	YES	NULL	
+study_path	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+subject	id	char(36)	NO	NULL	
+subject	name	varchar(150)	NO	NULL	
+subject	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+submission_answer	id	char(36)	NO	NULL	
+submission_answer	submission_id	char(36)	NO	NULL	
+submission_answer	question_id	char(36)	NO	NULL	
+submission_answer	open_text	text	YES	NULL	
+submission_answer	is_correct	tinyint(1)	YES	NULL	
+submission_answer	awarded_points	decimal(7,2)	YES	NULL	
+submission_answer	teacher_comment	text	YES	NULL	
+submission_answer	last_saved_at	datetime(6)	NO	CURRENT_TIMESTAMP(6)	
+submission_answer	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+submission_answer	exam_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+submission_answer_option	submission_answer_id	char(36)	NO	NULL	
+submission_answer_option	option_id	char(36)	NO	NULL	
+submission_answer_option	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+submission_answer_option	question_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+teacher	id	char(36)	NO	NULL	
+teacher	first_name	varchar(100)	NO	NULL	
+teacher	last_name	varchar(100)	NO	NULL	
+teacher	institution_id	char(36)	NO	00000000-0000-0000-0000-000000000000	
+user	id	char(36)	NO	NULL	
+user	email	varchar(255)	NO	NULL	
+user	password_hash	varchar(255)	NO	NULL	
+user	role	enum('admin','teacher','student')	NO	NULL	
+user	student_id	char(36)	YES	NULL	
+user	teacher_id	char(36)	YES	NULL	
+table_name	index_name	non_unique	seq_in_index	column_name
+audit_event	idx_audit_actor	1	1	actor_user_id
+audit_event	idx_audit_actor	1	2	created_at
+audit_event	idx_audit_entity	1	1	entity_type
+audit_event	idx_audit_entity	1	2	entity_id
+audit_event	idx_audit_entity	1	3	created_at
+audit_event	idx_mt3a_audit_owner_created	1	1	institution_id
+audit_event	idx_mt3a_audit_owner_created	1	2	created_at
+audit_event	PRIMARY	0	1	id
+biennium	PRIMARY	0	1	id
+biennium	uq_biennium	0	1	institution_id
+biennium	uq_biennium	0	2	start_year
+biennium	uq_biennium	0	3	end_year
+biennium	uq_mt3a_biennium_owner	0	1	institution_id
+biennium	uq_mt3a_biennium_owner	0	2	id
+biennium_study_area	idx_bsa_area	1	1	study_area_id
+biennium_study_area	idx_mt3a_bsa_area	1	1	institution_id
+biennium_study_area	idx_mt3a_bsa_area	1	2	study_area_id
+biennium_study_area	idx_mt3a_bsa_biennium	1	1	institution_id
+biennium_study_area	idx_mt3a_bsa_biennium	1	2	biennium_id
+biennium_study_area	PRIMARY	0	1	id
+biennium_study_area	uq_biennium_area	0	1	biennium_id
+biennium_study_area	uq_biennium_area	0	2	study_area_id
+biennium_study_area	uq_mt3a_biennium_study_area_owner	0	1	institution_id
+biennium_study_area	uq_mt3a_biennium_study_area_owner	0	2	id
+biennium_study_path	idx_bsp_path	1	1	study_path_id
+biennium_study_path	idx_mt3a_bsp_bsa	1	1	institution_id
+biennium_study_path	idx_mt3a_bsp_bsa	1	2	biennium_study_area_id
+biennium_study_path	idx_mt3a_bsp_path	1	1	institution_id
+biennium_study_path	idx_mt3a_bsp_path	1	2	study_path_id
+biennium_study_path	PRIMARY	0	1	id
+biennium_study_path	uq_bsa_path	0	1	biennium_study_area_id
+biennium_study_path	uq_bsa_path	0	2	study_path_id
+biennium_study_path	uq_mt3a_biennium_study_path_owner	0	1	institution_id
+biennium_study_path	uq_mt3a_biennium_study_path_owner	0	2	id
+campus	idx_campus_institution	1	1	institution_id
+campus	PRIMARY	0	1	id
+class	idx_class_bsp	1	1	biennium_study_path_id
+class	idx_mt3a_class_bsp	1	1	institution_id
+class	idx_mt3a_class_bsp	1	2	biennium_study_path_id
+class	PRIMARY	0	1	id
+class	uq_class	0	1	biennium_study_path_id
+class	uq_class	0	2	name
+class	uq_mt3a_class_owner	0	1	institution_id
+class	uq_mt3a_class_owner	0	2	id
+class_subject	idx_cs_subject	1	1	subject_id
+class_subject	idx_cs_teacher	1	1	teacher_id
+class_subject	idx_mt3a_cs_class	1	1	institution_id
+class_subject	idx_mt3a_cs_class	1	2	class_id
+class_subject	idx_mt3a_cs_subject	1	1	institution_id
+class_subject	idx_mt3a_cs_subject	1	2	subject_id
+class_subject	idx_mt3a_cs_teacher	1	1	institution_id
+class_subject	idx_mt3a_cs_teacher	1	2	teacher_id
+class_subject	PRIMARY	0	1	id
+class_subject	uq_class_subject	0	1	class_id
+class_subject	uq_class_subject	0	2	subject_id
+class_subject	uq_mt3a_class_subject_owner	0	1	institution_id
+class_subject	uq_mt3a_class_subject_owner	0	2	id
+exam	idx_exam_class_subject	1	1	class_subject_id
+exam	idx_exam_retake_of	1	1	retake_of_exam_id
+exam	idx_exam_status_window	1	1	status
+exam	idx_exam_status_window	1	2	available_from
+exam	idx_exam_status_window	1	3	available_until
+exam	idx_mt3a_exam_class_subject	1	1	institution_id
+exam	idx_mt3a_exam_class_subject	1	2	class_subject_id
+exam	idx_mt3a_exam_retake_of	1	1	retake_institution_id
+exam	idx_mt3a_exam_retake_of	1	2	retake_of_exam_id
+exam	PRIMARY	0	1	id
+exam	uq_mt3a_exam_owner	0	1	institution_id
+exam	uq_mt3a_exam_owner	0	2	id
+exam_student	idx_exam_student_student	1	1	student_id
+exam_student	idx_exam_student_student	1	2	exam_id
+exam_student	idx_mt3a_exam_student_exam	1	1	institution_id
+exam_student	idx_mt3a_exam_student_exam	1	2	exam_id
+exam_student	idx_mt3a_exam_student_student	1	1	institution_id
+exam_student	idx_mt3a_exam_student_student	1	2	student_id
+exam_student	PRIMARY	0	1	exam_id
+exam_student	PRIMARY	0	2	student_id
+exam_submission	fk_exam_submission_reviewer	1	1	reviewed_by_user_id
+exam_submission	idx_exam_submission_exam_status	1	1	exam_id
+exam_submission	idx_exam_submission_exam_status	1	2	status
+exam_submission	idx_exam_submission_expiration	1	1	status
+exam_submission	idx_exam_submission_expiration	1	2	deadline_at
+exam_submission	idx_exam_submission_student_status	1	1	student_id
+exam_submission	idx_exam_submission_student_status	1	2	status
+exam_submission	idx_mt3a_exam_submission_grade	1	1	grade_institution_id
+exam_submission	idx_mt3a_exam_submission_grade	1	2	grade_id
+exam_submission	idx_mt3a_exam_submission_student	1	1	institution_id
+exam_submission	idx_mt3a_exam_submission_student	1	2	student_id
+exam_submission	PRIMARY	0	1	id
+exam_submission	uq_exam_submission_grade	0	1	grade_id
+exam_submission	uq_exam_submission_student	0	1	exam_id
+exam_submission	uq_exam_submission_student	0	2	student_id
+exam_submission	uq_mt3a_exam_submission_owner	0	1	institution_id
+exam_submission	uq_mt3a_exam_submission_owner	0	2	id
+exam_submission	uq_mt3a_submission_exam	0	1	institution_id
+exam_submission	uq_mt3a_submission_exam	0	2	exam_id
+exam_submission	uq_mt3a_submission_exam	0	3	id
+exam_violation	idx_exam_violation_submission	1	1	submission_id
+exam_violation	idx_exam_violation_submission	1	2	occurred_at
+exam_violation	idx_mt3a_exam_violation_submission	1	1	institution_id
+exam_violation	idx_mt3a_exam_violation_submission	1	2	submission_id
+exam_violation	PRIMARY	0	1	id
+grade	idx_grade_class_subject	1	1	class_subject_id
+grade	idx_grade_student	1	1	student_id
+grade	idx_mt3a_grade_class_subject	1	1	institution_id
+grade	idx_mt3a_grade_class_subject	1	2	class_subject_id
+grade	idx_mt3a_grade_student	1	1	institution_id
+grade	idx_mt3a_grade_student	1	2	student_id
+grade	PRIMARY	0	1	id
+grade	uq_mt3a_grade_owner	0	1	institution_id
+grade	uq_mt3a_grade_owner	0	2	id
+institution	PRIMARY	0	1	id
+institution	uq_institution_code	0	1	code
+institution_membership	idx_membership_institution	1	1	institution_id
+institution_membership	PRIMARY	0	1	id
+institution_membership	uq_membership_institution_id	0	1	institution_id
+institution_membership	uq_membership_institution_id	0	2	id
+institution_membership	uq_membership_user_institution	0	1	user_id
+institution_membership	uq_membership_user_institution	0	2	institution_id
+institution_membership_role	PRIMARY	0	1	membership_id
+institution_membership_role	PRIMARY	0	2	role
+institution_student_profile	idx_mt3a_student_profile	1	1	institution_id
+institution_student_profile	idx_mt3a_student_profile	1	2	student_id
+institution_student_profile	PRIMARY	0	1	institution_id
+institution_student_profile	PRIMARY	0	2	membership_id
+institution_student_profile	uq_institution_student_profile_student	0	1	student_id
+institution_teacher_profile	idx_mt3a_teacher_profile	1	1	institution_id
+institution_teacher_profile	idx_mt3a_teacher_profile	1	2	teacher_id
+institution_teacher_profile	PRIMARY	0	1	institution_id
+institution_teacher_profile	PRIMARY	0	2	membership_id
+institution_teacher_profile	uq_institution_teacher_profile_teacher	0	1	teacher_id
+mt3a_legacy_scope	institution_id	0	1	institution_id
+mt3a_legacy_scope	PRIMARY	0	1	scope
+question	idx_question_exam	1	1	exam_id
+question	PRIMARY	0	1	id
+question	uq_mt3a_question_exam	0	1	institution_id
+question	uq_mt3a_question_exam	0	2	exam_id
+question	uq_mt3a_question_exam	0	3	id
+question	uq_mt3a_question_owner	0	1	institution_id
+question	uq_mt3a_question_owner	0	2	id
+question	uq_question_position	0	1	exam_id
+question	uq_question_position	0	2	position
+question_option	idx_question_option_question	1	1	question_id
+question_option	PRIMARY	0	1	id
+question_option	uq_mt3a_option_question	0	1	institution_id
+question_option	uq_mt3a_option_question	0	2	question_id
+question_option	uq_mt3a_option_question	0	3	id
+question_option	uq_question_option_position	0	1	question_id
+question_option	uq_question_option_position	0	2	position
+student	idx_mt3a_student_class	1	1	class_institution_id
+student	idx_mt3a_student_class	1	2	class_id
+student	idx_student_class	1	1	class_id
+student	PRIMARY	0	1	id
+student	uq_mt3a_student_owner	0	1	institution_id
+student	uq_mt3a_student_owner	0	2	id
+study_area	PRIMARY	0	1	id
+study_area	uq_mt3a_study_area_owner	0	1	institution_id
+study_area	uq_mt3a_study_area_owner	0	2	id
+study_area	uq_study_area_name	0	1	institution_id
+study_area	uq_study_area_name	0	2	name
+study_path	PRIMARY	0	1	id
+study_path	uq_mt3a_study_path_owner	0	1	institution_id
+study_path	uq_mt3a_study_path_owner	0	2	id
+study_path	uq_study_path_name	0	1	institution_id
+study_path	uq_study_path_name	0	2	name
+subject	PRIMARY	0	1	id
+subject	uq_mt3a_subject_owner	0	1	institution_id
+subject	uq_mt3a_subject_owner	0	2	id
+subject	uq_subject_name	0	1	institution_id
+subject	uq_subject_name	0	2	name
+submission_answer	idx_mt3a_submission_answer_question	1	1	institution_id
+submission_answer	idx_mt3a_submission_answer_question	1	2	exam_id
+submission_answer	idx_mt3a_submission_answer_question	1	3	question_id
+submission_answer	idx_mt3a_submission_answer_submission	1	1	institution_id
+submission_answer	idx_mt3a_submission_answer_submission	1	2	exam_id
+submission_answer	idx_mt3a_submission_answer_submission	1	3	submission_id
+submission_answer	idx_submission_answer_question	1	1	question_id
+submission_answer	idx_submission_answer_submission	1	1	submission_id
+submission_answer	PRIMARY	0	1	id
+submission_answer	uq_mt3a_answer_question	0	1	institution_id
+submission_answer	uq_mt3a_answer_question	0	2	question_id
+submission_answer	uq_mt3a_answer_question	0	3	id
+submission_answer	uq_submission_answer	0	1	submission_id
+submission_answer	uq_submission_answer	0	2	question_id
+submission_answer_option	idx_mt3a_submission_answer_option_answer	1	1	institution_id
+submission_answer_option	idx_mt3a_submission_answer_option_answer	1	2	question_id
+submission_answer_option	idx_mt3a_submission_answer_option_answer	1	3	submission_answer_id
+submission_answer_option	idx_mt3a_submission_answer_option_option	1	1	institution_id
+submission_answer_option	idx_mt3a_submission_answer_option_option	1	2	question_id
+submission_answer_option	idx_mt3a_submission_answer_option_option	1	3	option_id
+submission_answer_option	idx_submission_answer_option_option	1	1	option_id
+submission_answer_option	PRIMARY	0	1	submission_answer_id
+submission_answer_option	PRIMARY	0	2	option_id
+teacher	PRIMARY	0	1	id
+teacher	uq_mt3a_teacher_owner	0	1	institution_id
+teacher	uq_mt3a_teacher_owner	0	2	id
+user	idx_user_student	0	1	student_id
+user	idx_user_teacher	0	1	teacher_id
+user	PRIMARY	0	1	id
+user	uq_user_email	0	1	email
+table_name	constraint_name	column_name	referenced_table_name	referenced_column_name	ordinal_position
+audit_event	fk_audit_actor	actor_user_id	user	id	1
+audit_event	fk_mt3a_audit_owner	institution_id	institution	id	1
+audit_event	PRIMARY	id	NULL	NULL	1
+biennium	fk_mt3a_biennium_owner	institution_id	institution	id	1
+biennium	PRIMARY	id	NULL	NULL	1
+biennium	uq_biennium	institution_id	NULL	NULL	1
+biennium	uq_biennium	start_year	NULL	NULL	2
+biennium	uq_biennium	end_year	NULL	NULL	3
+biennium	uq_mt3a_biennium_owner	institution_id	NULL	NULL	1
+biennium	uq_mt3a_biennium_owner	id	NULL	NULL	2
+biennium_study_area	fk_bsa_area	study_area_id	study_area	id	1
+biennium_study_area	fk_bsa_biennium	biennium_id	biennium	id	1
+biennium_study_area	fk_mt3a_biennium_study_area_owner	institution_id	institution	id	1
+biennium_study_area	fk_mt3a_bsa_area	institution_id	study_area	institution_id	1
+biennium_study_area	fk_mt3a_bsa_area	study_area_id	study_area	id	2
+biennium_study_area	fk_mt3a_bsa_biennium	institution_id	biennium	institution_id	1
+biennium_study_area	fk_mt3a_bsa_biennium	biennium_id	biennium	id	2
+biennium_study_area	PRIMARY	id	NULL	NULL	1
+biennium_study_area	uq_biennium_area	biennium_id	NULL	NULL	1
+biennium_study_area	uq_biennium_area	study_area_id	NULL	NULL	2
+biennium_study_area	uq_mt3a_biennium_study_area_owner	institution_id	NULL	NULL	1
+biennium_study_area	uq_mt3a_biennium_study_area_owner	id	NULL	NULL	2
+biennium_study_path	fk_bsp_bsa	biennium_study_area_id	biennium_study_area	id	1
+biennium_study_path	fk_bsp_path	study_path_id	study_path	id	1
+biennium_study_path	fk_mt3a_biennium_study_path_owner	institution_id	institution	id	1
+biennium_study_path	fk_mt3a_bsp_bsa	institution_id	biennium_study_area	institution_id	1
+biennium_study_path	fk_mt3a_bsp_bsa	biennium_study_area_id	biennium_study_area	id	2
+biennium_study_path	fk_mt3a_bsp_path	institution_id	study_path	institution_id	1
+biennium_study_path	fk_mt3a_bsp_path	study_path_id	study_path	id	2
+biennium_study_path	PRIMARY	id	NULL	NULL	1
+biennium_study_path	uq_bsa_path	biennium_study_area_id	NULL	NULL	1
+biennium_study_path	uq_bsa_path	study_path_id	NULL	NULL	2
+biennium_study_path	uq_mt3a_biennium_study_path_owner	institution_id	NULL	NULL	1
+biennium_study_path	uq_mt3a_biennium_study_path_owner	id	NULL	NULL	2
+campus	fk_campus_institution	institution_id	institution	id	1
+campus	PRIMARY	id	NULL	NULL	1
+class	fk_class_bsp	biennium_study_path_id	biennium_study_path	id	1
+class	fk_mt3a_class_bsp	institution_id	biennium_study_path	institution_id	1
+class	fk_mt3a_class_bsp	biennium_study_path_id	biennium_study_path	id	2
+class	fk_mt3a_class_owner	institution_id	institution	id	1
+class	PRIMARY	id	NULL	NULL	1
+class	uq_class	biennium_study_path_id	NULL	NULL	1
+class	uq_class	name	NULL	NULL	2
+class	uq_mt3a_class_owner	institution_id	NULL	NULL	1
+class	uq_mt3a_class_owner	id	NULL	NULL	2
+class_subject	fk_cs_class	class_id	class	id	1
+class_subject	fk_cs_subject	subject_id	subject	id	1
+class_subject	fk_cs_teacher	teacher_id	teacher	id	1
+class_subject	fk_mt3a_class_subject_owner	institution_id	institution	id	1
+class_subject	fk_mt3a_cs_class	institution_id	class	institution_id	1
+class_subject	fk_mt3a_cs_class	class_id	class	id	2
+class_subject	fk_mt3a_cs_subject	institution_id	subject	institution_id	1
+class_subject	fk_mt3a_cs_subject	subject_id	subject	id	2
+class_subject	fk_mt3a_cs_teacher	institution_id	teacher	institution_id	1
+class_subject	fk_mt3a_cs_teacher	teacher_id	teacher	id	2
+class_subject	PRIMARY	id	NULL	NULL	1
+class_subject	uq_class_subject	class_id	NULL	NULL	1
+class_subject	uq_class_subject	subject_id	NULL	NULL	2
+class_subject	uq_mt3a_class_subject_owner	institution_id	NULL	NULL	1
+class_subject	uq_mt3a_class_subject_owner	id	NULL	NULL	2
+exam	fk_exam_class_subject	class_subject_id	class_subject	id	1
+exam	fk_exam_retake_of	retake_of_exam_id	exam	id	1
+exam	fk_mt3a_exam_class_subject	institution_id	class_subject	institution_id	1
+exam	fk_mt3a_exam_class_subject	class_subject_id	class_subject	id	2
+exam	fk_mt3a_exam_owner	institution_id	institution	id	1
+exam	fk_mt3a_exam_retake_of	retake_institution_id	exam	institution_id	1
+exam	fk_mt3a_exam_retake_of	retake_of_exam_id	exam	id	2
+exam	PRIMARY	id	NULL	NULL	1
+exam	uq_mt3a_exam_owner	institution_id	NULL	NULL	1
+exam	uq_mt3a_exam_owner	id	NULL	NULL	2
+exam_student	fk_exam_student_exam	exam_id	exam	id	1
+exam_student	fk_exam_student_student	student_id	student	id	1
+exam_student	fk_mt3a_exam_student_exam	institution_id	exam	institution_id	1
+exam_student	fk_mt3a_exam_student_exam	exam_id	exam	id	2
+exam_student	fk_mt3a_exam_student_owner	institution_id	institution	id	1
+exam_student	fk_mt3a_exam_student_student	institution_id	student	institution_id	1
+exam_student	fk_mt3a_exam_student_student	student_id	student	id	2
+exam_student	PRIMARY	exam_id	NULL	NULL	1
+exam_student	PRIMARY	student_id	NULL	NULL	2
+exam_submission	fk_exam_submission_exam	exam_id	exam	id	1
+exam_submission	fk_exam_submission_grade	grade_id	grade	id	1
+exam_submission	fk_exam_submission_reviewer	reviewed_by_user_id	user	id	1
+exam_submission	fk_exam_submission_student	student_id	student	id	1
+exam_submission	fk_mt3a_exam_submission_exam	institution_id	exam	institution_id	1
+exam_submission	fk_mt3a_exam_submission_exam	exam_id	exam	id	2
+exam_submission	fk_mt3a_exam_submission_grade	grade_institution_id	grade	institution_id	1
+exam_submission	fk_mt3a_exam_submission_grade	grade_id	grade	id	2
+exam_submission	fk_mt3a_exam_submission_owner	institution_id	institution	id	1
+exam_submission	fk_mt3a_exam_submission_student	institution_id	student	institution_id	1
+exam_submission	fk_mt3a_exam_submission_student	student_id	student	id	2
+exam_submission	PRIMARY	id	NULL	NULL	1
+exam_submission	uq_exam_submission_grade	grade_id	NULL	NULL	1
+exam_submission	uq_exam_submission_student	exam_id	NULL	NULL	1
+exam_submission	uq_exam_submission_student	student_id	NULL	NULL	2
+exam_submission	uq_mt3a_exam_submission_owner	institution_id	NULL	NULL	1
+exam_submission	uq_mt3a_exam_submission_owner	id	NULL	NULL	2
+exam_submission	uq_mt3a_submission_exam	institution_id	NULL	NULL	1
+exam_submission	uq_mt3a_submission_exam	exam_id	NULL	NULL	2
+exam_submission	uq_mt3a_submission_exam	id	NULL	NULL	3
+exam_violation	fk_exam_violation_submission	submission_id	exam_submission	id	1
+exam_violation	fk_mt3a_exam_violation_owner	institution_id	institution	id	1
+exam_violation	fk_mt3a_exam_violation_submission	institution_id	exam_submission	institution_id	1
+exam_violation	fk_mt3a_exam_violation_submission	submission_id	exam_submission	id	2
+exam_violation	PRIMARY	id	NULL	NULL	1
+grade	fk_grade_class_subject	class_subject_id	class_subject	id	1
+grade	fk_grade_student	student_id	student	id	1
+grade	fk_mt3a_grade_class_subject	institution_id	class_subject	institution_id	1
+grade	fk_mt3a_grade_class_subject	class_subject_id	class_subject	id	2
+grade	fk_mt3a_grade_owner	institution_id	institution	id	1
+grade	fk_mt3a_grade_student	institution_id	student	institution_id	1
+grade	fk_mt3a_grade_student	student_id	student	id	2
+grade	PRIMARY	id	NULL	NULL	1
+grade	uq_mt3a_grade_owner	institution_id	NULL	NULL	1
+grade	uq_mt3a_grade_owner	id	NULL	NULL	2
+institution	PRIMARY	id	NULL	NULL	1
+institution	uq_institution_code	code	NULL	NULL	1
+institution_membership	fk_membership_institution	institution_id	institution	id	1
+institution_membership	fk_membership_user	user_id	user	id	1
+institution_membership	PRIMARY	id	NULL	NULL	1
+institution_membership	uq_membership_institution_id	institution_id	NULL	NULL	1
+institution_membership	uq_membership_institution_id	id	NULL	NULL	2
+institution_membership	uq_membership_user_institution	user_id	NULL	NULL	1
+institution_membership	uq_membership_user_institution	institution_id	NULL	NULL	2
+institution_membership_role	fk_membership_role_membership	membership_id	institution_membership	id	1
+institution_membership_role	PRIMARY	membership_id	NULL	NULL	1
+institution_membership_role	PRIMARY	role	NULL	NULL	2
+institution_student_profile	fk_mt3a_student_profile_owner	institution_id	student	institution_id	1
+institution_student_profile	fk_mt3a_student_profile_owner	student_id	student	id	2
+institution_student_profile	fk_student_profile_membership	institution_id	institution_membership	institution_id	1
+institution_student_profile	fk_student_profile_membership	membership_id	institution_membership	id	2
+institution_student_profile	fk_student_profile_student	student_id	student	id	1
+institution_student_profile	PRIMARY	institution_id	NULL	NULL	1
+institution_student_profile	PRIMARY	membership_id	NULL	NULL	2
+institution_student_profile	uq_institution_student_profile_student	student_id	NULL	NULL	1
+institution_teacher_profile	fk_mt3a_teacher_profile_owner	institution_id	teacher	institution_id	1
+institution_teacher_profile	fk_mt3a_teacher_profile_owner	teacher_id	teacher	id	2
+institution_teacher_profile	fk_teacher_profile_membership	institution_id	institution_membership	institution_id	1
+institution_teacher_profile	fk_teacher_profile_membership	membership_id	institution_membership	id	2
+institution_teacher_profile	fk_teacher_profile_teacher	teacher_id	teacher	id	1
+institution_teacher_profile	PRIMARY	institution_id	NULL	NULL	1
+institution_teacher_profile	PRIMARY	membership_id	NULL	NULL	2
+institution_teacher_profile	uq_institution_teacher_profile_teacher	teacher_id	NULL	NULL	1
+mt3a_legacy_scope	fk_mt3a_legacy_scope	institution_id	institution	id	1
+mt3a_legacy_scope	institution_id	institution_id	NULL	NULL	1
+mt3a_legacy_scope	PRIMARY	scope	NULL	NULL	1
+question	fk_mt3a_question_exam	institution_id	exam	institution_id	1
+question	fk_mt3a_question_exam	exam_id	exam	id	2
+question	fk_mt3a_question_owner	institution_id	institution	id	1
+question	fk_question_exam	exam_id	exam	id	1
+question	PRIMARY	id	NULL	NULL	1
+question	uq_mt3a_question_exam	institution_id	NULL	NULL	1
+question	uq_mt3a_question_exam	exam_id	NULL	NULL	2
+question	uq_mt3a_question_exam	id	NULL	NULL	3
+question	uq_mt3a_question_owner	institution_id	NULL	NULL	1
+question	uq_mt3a_question_owner	id	NULL	NULL	2
+question	uq_question_position	exam_id	NULL	NULL	1
+question	uq_question_position	position	NULL	NULL	2
+question_option	fk_mt3a_question_option_owner	institution_id	institution	id	1
+question_option	fk_mt3a_question_option_question	institution_id	question	institution_id	1
+question_option	fk_mt3a_question_option_question	question_id	question	id	2
+question_option	fk_question_option_question	question_id	question	id	1
+question_option	PRIMARY	id	NULL	NULL	1
+question_option	uq_mt3a_option_question	institution_id	NULL	NULL	1
+question_option	uq_mt3a_option_question	question_id	NULL	NULL	2
+question_option	uq_mt3a_option_question	id	NULL	NULL	3
+question_option	uq_question_option_position	question_id	NULL	NULL	1
+question_option	uq_question_option_position	position	NULL	NULL	2
+student	fk_mt3a_student_class	class_institution_id	class	institution_id	1
+student	fk_mt3a_student_class	class_id	class	id	2
+student	fk_mt3a_student_owner	institution_id	institution	id	1
+student	fk_student_class	class_id	class	id	1
+student	PRIMARY	id	NULL	NULL	1
+student	uq_mt3a_student_owner	institution_id	NULL	NULL	1
+student	uq_mt3a_student_owner	id	NULL	NULL	2
+study_area	fk_mt3a_study_area_owner	institution_id	institution	id	1
+study_area	PRIMARY	id	NULL	NULL	1
+study_area	uq_mt3a_study_area_owner	institution_id	NULL	NULL	1
+study_area	uq_mt3a_study_area_owner	id	NULL	NULL	2
+study_area	uq_study_area_name	institution_id	NULL	NULL	1
+study_area	uq_study_area_name	name	NULL	NULL	2
+study_path	fk_mt3a_study_path_owner	institution_id	institution	id	1
+study_path	PRIMARY	id	NULL	NULL	1
+study_path	uq_mt3a_study_path_owner	institution_id	NULL	NULL	1
+study_path	uq_mt3a_study_path_owner	id	NULL	NULL	2
+study_path	uq_study_path_name	institution_id	NULL	NULL	1
+study_path	uq_study_path_name	name	NULL	NULL	2
+subject	fk_mt3a_subject_owner	institution_id	institution	id	1
+subject	PRIMARY	id	NULL	NULL	1
+subject	uq_mt3a_subject_owner	institution_id	NULL	NULL	1
+subject	uq_mt3a_subject_owner	id	NULL	NULL	2
+subject	uq_subject_name	institution_id	NULL	NULL	1
+subject	uq_subject_name	name	NULL	NULL	2
+submission_answer	fk_mt3a_submission_answer_owner	institution_id	institution	id	1
+submission_answer	fk_mt3a_submission_answer_question	institution_id	question	institution_id	1
+submission_answer	fk_mt3a_submission_answer_question	exam_id	question	exam_id	2
+submission_answer	fk_mt3a_submission_answer_question	question_id	question	id	3
+submission_answer	fk_mt3a_submission_answer_submission	institution_id	exam_submission	institution_id	1
+submission_answer	fk_mt3a_submission_answer_submission	exam_id	exam_submission	exam_id	2
+submission_answer	fk_mt3a_submission_answer_submission	submission_id	exam_submission	id	3
+submission_answer	fk_submission_answer_question	question_id	question	id	1
+submission_answer	fk_submission_answer_submission	submission_id	exam_submission	id	1
+submission_answer	PRIMARY	id	NULL	NULL	1
+submission_answer	uq_mt3a_answer_question	institution_id	NULL	NULL	1
+submission_answer	uq_mt3a_answer_question	question_id	NULL	NULL	2
+submission_answer	uq_mt3a_answer_question	id	NULL	NULL	3
+submission_answer	uq_submission_answer	submission_id	NULL	NULL	1
+submission_answer	uq_submission_answer	question_id	NULL	NULL	2
+submission_answer_option	fk_mt3a_submission_answer_option_answer	institution_id	submission_answer	institution_id	1
+submission_answer_option	fk_mt3a_submission_answer_option_answer	question_id	submission_answer	question_id	2
+submission_answer_option	fk_mt3a_submission_answer_option_answer	submission_answer_id	submission_answer	id	3
+submission_answer_option	fk_mt3a_submission_answer_option_option	institution_id	question_option	institution_id	1
+submission_answer_option	fk_mt3a_submission_answer_option_option	question_id	question_option	question_id	2
+submission_answer_option	fk_mt3a_submission_answer_option_option	option_id	question_option	id	3
+submission_answer_option	fk_mt3a_submission_answer_option_owner	institution_id	institution	id	1
+submission_answer_option	fk_submission_answer_option_answer	submission_answer_id	submission_answer	id	1
+submission_answer_option	fk_submission_answer_option_option	option_id	question_option	id	1
+submission_answer_option	PRIMARY	submission_answer_id	NULL	NULL	1
+submission_answer_option	PRIMARY	option_id	NULL	NULL	2
+teacher	fk_mt3a_teacher_owner	institution_id	institution	id	1
+teacher	PRIMARY	id	NULL	NULL	1
+teacher	uq_mt3a_teacher_owner	institution_id	NULL	NULL	1
+teacher	uq_mt3a_teacher_owner	id	NULL	NULL	2
+user	fk_user_student	student_id	student	id	1
+user	fk_user_teacher	teacher_id	teacher	id	1
+user	idx_user_student	student_id	NULL	NULL	1
+user	idx_user_teacher	teacher_id	NULL	NULL	1
+user	PRIMARY	id	NULL	NULL	1
+user	uq_user_email	email	NULL	NULL	1
+table_name	constraint_name	referenced_table_name	update_rule	delete_rule
+audit_event	fk_audit_actor	user	RESTRICT	SET NULL
+audit_event	fk_mt3a_audit_owner	institution	RESTRICT	RESTRICT
+biennium	fk_mt3a_biennium_owner	institution	RESTRICT	RESTRICT
+biennium_study_area	fk_bsa_area	study_area	RESTRICT	RESTRICT
+biennium_study_area	fk_bsa_biennium	biennium	RESTRICT	CASCADE
+biennium_study_area	fk_mt3a_biennium_study_area_owner	institution	RESTRICT	RESTRICT
+biennium_study_area	fk_mt3a_bsa_area	study_area	RESTRICT	RESTRICT
+biennium_study_area	fk_mt3a_bsa_biennium	biennium	RESTRICT	CASCADE
+biennium_study_path	fk_bsp_bsa	biennium_study_area	RESTRICT	CASCADE
+biennium_study_path	fk_bsp_path	study_path	RESTRICT	RESTRICT
+biennium_study_path	fk_mt3a_biennium_study_path_owner	institution	RESTRICT	RESTRICT
+biennium_study_path	fk_mt3a_bsp_bsa	biennium_study_area	RESTRICT	CASCADE
+biennium_study_path	fk_mt3a_bsp_path	study_path	RESTRICT	RESTRICT
+campus	fk_campus_institution	institution	RESTRICT	RESTRICT
+class	fk_class_bsp	biennium_study_path	RESTRICT	RESTRICT
+class	fk_mt3a_class_bsp	biennium_study_path	RESTRICT	RESTRICT
+class	fk_mt3a_class_owner	institution	RESTRICT	RESTRICT
+class_subject	fk_cs_class	class	RESTRICT	CASCADE
+class_subject	fk_cs_subject	subject	RESTRICT	RESTRICT
+class_subject	fk_cs_teacher	teacher	RESTRICT	RESTRICT
+class_subject	fk_mt3a_class_subject_owner	institution	RESTRICT	RESTRICT
+class_subject	fk_mt3a_cs_class	class	RESTRICT	CASCADE
+class_subject	fk_mt3a_cs_subject	subject	RESTRICT	RESTRICT
+class_subject	fk_mt3a_cs_teacher	teacher	RESTRICT	RESTRICT
+exam	fk_exam_class_subject	class_subject	RESTRICT	RESTRICT
+exam	fk_exam_retake_of	exam	RESTRICT	SET NULL
+exam	fk_mt3a_exam_class_subject	class_subject	RESTRICT	RESTRICT
+exam	fk_mt3a_exam_owner	institution	RESTRICT	RESTRICT
+exam	fk_mt3a_exam_retake_of	exam	RESTRICT	SET NULL
+exam_student	fk_exam_student_exam	exam	RESTRICT	CASCADE
+exam_student	fk_exam_student_student	student	RESTRICT	RESTRICT
+exam_student	fk_mt3a_exam_student_exam	exam	RESTRICT	CASCADE
+exam_student	fk_mt3a_exam_student_owner	institution	RESTRICT	RESTRICT
+exam_student	fk_mt3a_exam_student_student	student	RESTRICT	RESTRICT
+exam_submission	fk_exam_submission_exam	exam	RESTRICT	RESTRICT
+exam_submission	fk_exam_submission_grade	grade	RESTRICT	SET NULL
+exam_submission	fk_exam_submission_reviewer	user	RESTRICT	SET NULL
+exam_submission	fk_exam_submission_student	student	RESTRICT	RESTRICT
+exam_submission	fk_mt3a_exam_submission_exam	exam	RESTRICT	RESTRICT
+exam_submission	fk_mt3a_exam_submission_grade	grade	RESTRICT	SET NULL
+exam_submission	fk_mt3a_exam_submission_owner	institution	RESTRICT	RESTRICT
+exam_submission	fk_mt3a_exam_submission_student	student	RESTRICT	RESTRICT
+exam_violation	fk_exam_violation_submission	exam_submission	RESTRICT	CASCADE
+exam_violation	fk_mt3a_exam_violation_owner	institution	RESTRICT	RESTRICT
+exam_violation	fk_mt3a_exam_violation_submission	exam_submission	RESTRICT	CASCADE
+grade	fk_grade_class_subject	class_subject	RESTRICT	RESTRICT
+grade	fk_grade_student	student	RESTRICT	CASCADE
+grade	fk_mt3a_grade_class_subject	class_subject	RESTRICT	RESTRICT
+grade	fk_mt3a_grade_owner	institution	RESTRICT	RESTRICT
+grade	fk_mt3a_grade_student	student	RESTRICT	CASCADE
+institution_membership	fk_membership_institution	institution	RESTRICT	RESTRICT
+institution_membership	fk_membership_user	user	RESTRICT	RESTRICT
+institution_membership_role	fk_membership_role_membership	institution_membership	RESTRICT	RESTRICT
+institution_student_profile	fk_mt3a_student_profile_owner	student	RESTRICT	RESTRICT
+institution_student_profile	fk_student_profile_membership	institution_membership	RESTRICT	RESTRICT
+institution_student_profile	fk_student_profile_student	student	RESTRICT	RESTRICT
+institution_teacher_profile	fk_mt3a_teacher_profile_owner	teacher	RESTRICT	RESTRICT
+institution_teacher_profile	fk_teacher_profile_membership	institution_membership	RESTRICT	RESTRICT
+institution_teacher_profile	fk_teacher_profile_teacher	teacher	RESTRICT	RESTRICT
+mt3a_legacy_scope	fk_mt3a_legacy_scope	institution	RESTRICT	RESTRICT
+question	fk_mt3a_question_exam	exam	RESTRICT	CASCADE
+question	fk_mt3a_question_owner	institution	RESTRICT	RESTRICT
+question	fk_question_exam	exam	RESTRICT	CASCADE
+question_option	fk_mt3a_question_option_owner	institution	RESTRICT	RESTRICT
+question_option	fk_mt3a_question_option_question	question	RESTRICT	CASCADE
+question_option	fk_question_option_question	question	RESTRICT	CASCADE
+student	fk_mt3a_student_class	class	RESTRICT	SET NULL
+student	fk_mt3a_student_owner	institution	RESTRICT	RESTRICT
+student	fk_student_class	class	RESTRICT	SET NULL
+study_area	fk_mt3a_study_area_owner	institution	RESTRICT	RESTRICT
+study_path	fk_mt3a_study_path_owner	institution	RESTRICT	RESTRICT
+subject	fk_mt3a_subject_owner	institution	RESTRICT	RESTRICT
+submission_answer	fk_mt3a_submission_answer_owner	institution	RESTRICT	RESTRICT
+submission_answer	fk_mt3a_submission_answer_question	question	RESTRICT	RESTRICT
+submission_answer	fk_mt3a_submission_answer_submission	exam_submission	RESTRICT	CASCADE
+submission_answer	fk_submission_answer_question	question	RESTRICT	RESTRICT
+submission_answer	fk_submission_answer_submission	exam_submission	RESTRICT	CASCADE
+submission_answer_option	fk_mt3a_submission_answer_option_answer	submission_answer	RESTRICT	CASCADE
+submission_answer_option	fk_mt3a_submission_answer_option_option	question_option	RESTRICT	RESTRICT
+submission_answer_option	fk_mt3a_submission_answer_option_owner	institution	RESTRICT	RESTRICT
+submission_answer_option	fk_submission_answer_option_answer	submission_answer	RESTRICT	CASCADE
+submission_answer_option	fk_submission_answer_option_option	question_option	RESTRICT	RESTRICT
+teacher	fk_mt3a_teacher_owner	institution	RESTRICT	RESTRICT
+user	fk_user_student	student	RESTRICT	SET NULL
+user	fk_user_teacher	teacher	RESTRICT	SET NULL
+trigger_name	event_object_table	action_timing	event_manipulation	action_statement
+mt3a_audit_insert	audit_event	BEFORE	INSERT	BEGIN
+\n DECLARE resolved CHAR(36) CHARACTER SET ascii COLLATE ascii_general_ci;
+\n 
+\n IF NEW.entity_type='platform' THEN
+\n IF NEW.institution_id IS NOT NULL OR NEW.entity_id IS NOT NULL OR NEW.before_json IS NOT NULL OR NEW.after_json IS NOT NULL OR NEW.action NOT LIKE 'platform.%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A platform shape required'; END IF;
+\n ELSE
+\n IF NEW.entity_type='exam' THEN SET resolved=(SELECT institution_id FROM exam WHERE id=NEW.entity_id);
+\n ELSEIF NEW.entity_type='exam_submission' THEN SET resolved=(SELECT institution_id FROM exam_submission WHERE id=NEW.entity_id);
+\n ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit classification required'; END IF;
+\n IF resolved IS NULL THEN
+\n   IF 'INSERT'='INSERT' OR NEW.institution_id IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit entity unresolved'; END IF;
+\n ELSE
+\n   IF NEW.institution_id IS NULL THEN SET NEW.institution_id=resolved; END IF;
+\n   IF NEW.institution_id<>resolved THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit owner mismatch'; END IF;
+\n END IF;
+\n END IF;
+\n END
+mt3a_audit_update	audit_event	BEFORE	UPDATE	BEGIN
+\n DECLARE resolved CHAR(36) CHARACTER SET ascii COLLATE ascii_general_ci;
+\n IF NOT(NEW.institution_id <=> OLD.institution_id) OR NOT(NEW.entity_type <=> OLD.entity_type) OR NOT(NEW.entity_id <=> OLD.entity_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit attribution immutable'; END IF;
+\n IF NEW.entity_type='platform' THEN
+\n IF NEW.institution_id IS NOT NULL OR NEW.entity_id IS NOT NULL OR NEW.before_json IS NOT NULL OR NEW.after_json IS NOT NULL OR NEW.action NOT LIKE 'platform.%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A platform shape required'; END IF;
+\n ELSE
+\n IF NEW.entity_type='exam' THEN SET resolved=(SELECT institution_id FROM exam WHERE id=NEW.entity_id);
+\n ELSEIF NEW.entity_type='exam_submission' THEN SET resolved=(SELECT institution_id FROM exam_submission WHERE id=NEW.entity_id);
+\n ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit classification required'; END IF;
+\n IF resolved IS NULL THEN
+\n   IF 'UPDATE'='INSERT' OR NEW.institution_id IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit entity unresolved'; END IF;
+\n ELSE
+\n   IF NEW.institution_id IS NULL THEN SET NEW.institution_id=resolved; END IF;
+\n   IF NEW.institution_id<>resolved THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A audit owner mismatch'; END IF;
+\n END IF;
+\n END IF;
+\n END
+mt3a_biennium_insert	biennium	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM mt3a_legacy_scope WHERE scope='legacy'); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_biennium_study_area_insert	biennium_study_area	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `biennium` WHERE id=NEW.biennium_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_biennium_study_area_update	biennium_study_area	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_biennium_study_path_insert	biennium_study_path	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `biennium_study_area` WHERE id=NEW.biennium_study_area_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_biennium_study_path_update	biennium_study_path	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_biennium_update	biennium	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_class_insert	class	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `biennium_study_path` WHERE id=NEW.biennium_study_path_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_class_subject_insert	class_subject	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `class` WHERE id=NEW.class_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_class_subject_update	class_subject	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_class_update	class	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_exam_insert	exam	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `class_subject` WHERE id=NEW.class_subject_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\n  SET NEW.retake_institution_id=IF(NEW.retake_of_exam_id IS NULL,NULL,NEW.institution_id);
+\nEND
+mt3a_exam_student_insert	exam_student	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `exam` WHERE id=NEW.exam_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_exam_student_update	exam_student	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_exam_submission_insert	exam_submission	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `exam` WHERE id=NEW.exam_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\n  SET NEW.grade_institution_id=IF(NEW.grade_id IS NULL,NULL,NEW.institution_id);
+\nEND
+mt3a_exam_submission_update	exam_submission	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\n  SET NEW.grade_institution_id=IF(NEW.grade_id IS NULL,NULL,NEW.institution_id);
+\nEND
+mt3a_exam_update	exam	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\n  SET NEW.retake_institution_id=IF(NEW.retake_of_exam_id IS NULL,NULL,NEW.institution_id);
+\nEND
+mt3a_exam_violation_insert	exam_violation	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `exam_submission` WHERE id=NEW.submission_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_exam_violation_update	exam_violation	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_grade_insert	grade	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `student` WHERE id=NEW.student_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_grade_update	grade	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_question_insert	question	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `exam` WHERE id=NEW.exam_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_question_option_insert	question_option	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `question` WHERE id=NEW.question_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_question_option_update	question_option	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_question_update	question	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_student_insert	student	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=COALESCE((SELECT institution_id FROM class WHERE id=NEW.class_id),(SELECT institution_id FROM mt3a_legacy_scope WHERE scope='legacy')); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\n  SET NEW.class_institution_id=IF(NEW.class_id IS NULL,NULL,NEW.institution_id);
+\nEND
+mt3a_student_update	student	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\n  SET NEW.class_institution_id=IF(NEW.class_id IS NULL,NULL,NEW.institution_id);
+\nEND
+mt3a_study_area_insert	study_area	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM mt3a_legacy_scope WHERE scope='legacy'); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_study_area_update	study_area	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_study_path_insert	study_path	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM mt3a_legacy_scope WHERE scope='legacy'); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_study_path_update	study_path	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_subject_insert	subject	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM mt3a_legacy_scope WHERE scope='legacy'); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_subject_update	subject	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_submission_answer_insert	submission_answer	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `exam_submission` WHERE id=NEW.submission_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\n  SET NEW.exam_id=(SELECT exam_id FROM exam_submission WHERE id=NEW.submission_id);
+\nEND
+mt3a_submission_answer_option_insert	submission_answer_option	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM `submission_answer` WHERE id=NEW.submission_answer_id); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\n  SET NEW.question_id=(SELECT question_id FROM submission_answer WHERE id=NEW.submission_answer_id);
+\nEND
+mt3a_submission_answer_option_update	submission_answer_option	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\n  SET NEW.question_id=(SELECT question_id FROM submission_answer WHERE id=NEW.submission_answer_id);
+\nEND
+mt3a_submission_answer_update	submission_answer	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\n  SET NEW.exam_id=(SELECT exam_id FROM exam_submission WHERE id=NEW.submission_id);
+\nEND
+mt3a_teacher_insert	teacher	BEFORE	INSERT	BEGIN
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SET NEW.institution_id=(SELECT institution_id FROM mt3a_legacy_scope WHERE scope='legacy'); END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+mt3a_teacher_update	teacher	BEFORE	UPDATE	BEGIN
+\n  IF NOT(NEW.institution_id <=> OLD.institution_id) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A owner is immutable'; END IF;
+\n  IF NEW.institution_id IS NULL OR NEW.institution_id='00000000-0000-0000-0000-000000000000' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='MT3A explicit owner required'; END IF;
+\nEND
+code	status
+MT3A_LEGACY_TEST	provisioning
+tables_count	trigger_count	user_count	membership_count	role_count
+28	40	15	0	0
+Table	Create Table
+institution_membership	CREATE TABLE `institution_membership` (\n  `id` char(36) CHARACTER SET ascii NOT NULL,\n  `institution_id` char(36) CHARACTER SET ascii NOT NULL,\n  `user_id` char(36) CHARACTER SET ascii NOT NULL,\n  `status` enum('pending','active','suspended','left') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',\n  `joined_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),\n  `suspended_at` datetime(6) DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `uq_membership_user_institution` (`user_id`,`institution_id`),\n  UNIQUE KEY `uq_membership_institution_id` (`institution_id`,`id`),\n  KEY `idx_membership_institution` (`institution_id`),\n  CONSTRAINT `fk_membership_institution` FOREIGN KEY (`institution_id`) REFERENCES `institution` (`id`),\n  CONSTRAINT `fk_membership_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+Table	Create Table
+institution_membership_role	CREATE TABLE `institution_membership_role` (\n  `membership_id` char(36) CHARACTER SET ascii NOT NULL,\n  `role` enum('InstitutionAdmin','Teacher','Student') COLLATE utf8mb4_unicode_ci NOT NULL,\n  PRIMARY KEY (`membership_id`,`role`),\n  CONSTRAINT `fk_membership_role_membership` FOREIGN KEY (`membership_id`) REFERENCES `institution_membership` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+Table	Create Table
+class	CREATE TABLE `class` (\n  `id` char(36) CHARACTER SET ascii NOT NULL,\n  `biennium_study_path_id` char(36) CHARACTER SET ascii NOT NULL,\n  `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,\n  `institution_id` char(36) CHARACTER SET ascii NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `uq_class` (`biennium_study_path_id`,`name`),\n  UNIQUE KEY `uq_mt3a_class_owner` (`institution_id`,`id`),\n  KEY `idx_class_bsp` (`biennium_study_path_id`),\n  KEY `idx_mt3a_class_bsp` (`institution_id`,`biennium_study_path_id`),\n  CONSTRAINT `fk_class_bsp` FOREIGN KEY (`biennium_study_path_id`) REFERENCES `biennium_study_path` (`id`),\n  CONSTRAINT `fk_mt3a_class_bsp` FOREIGN KEY (`institution_id`, `biennium_study_path_id`) REFERENCES `biennium_study_path` (`institution_id`, `id`),\n  CONSTRAINT `fk_mt3a_class_owner` FOREIGN KEY (`institution_id`) REFERENCES `institution` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

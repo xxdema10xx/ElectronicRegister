@@ -1,0 +1,109 @@
+{
+  "fresh": true,
+  "idempotent": true,
+  "equivalentSchemaContract": true,
+  "acceptance": {
+    "triggerDml": [
+      "mt5c_invitation_insert",
+      "mt5c_event_insert",
+      "mt5c_nonce_insert",
+      "import_batch_insert",
+      "import_event_insert",
+      "fpe_insert",
+      "mt5c_invitation_update",
+      "mt5d_event_insert",
+      "mt5d_event_insert",
+      "mt5d_event_insert",
+      "email_event_insert",
+      "import_event_insert:Confirmed:Student",
+      "import_batch_insert:Teacher",
+      "import_event_insert:Confirmed:Teacher",
+      "institution_calendar_event_bi",
+      "profile_acquisition_insert",
+      "institution_calendar_import_bi",
+      "mt4c_course_event_insert",
+      "transfer_event_insert",
+      "mt5c_invitation_update:pending-hash",
+      "mt5c_invitation_delete",
+      "mt5d_event_delete",
+      "mt5c_event_delete",
+      "mt5c_nonce_delete",
+      "mt5c_provisioning_delete",
+      "mt5gov_recovery_delete",
+      "mt5gov_approval_delete",
+      "mt5b_security_delete",
+      "mt5b_membership_delete_contract"
+    ],
+    "deleteGuards": "Production 8.4 rejects fixture cleanup",
+    "ids": {
+      "tenant": "9045263f-415c-4044-a364-7f7ff7af8786",
+      "other": "328111a9-7f7e-4f43-a46e-828c19b3612a",
+      "user": "4be0bf6e-2244-43d4-ba03-72615466ba26",
+      "targetUser": "cb41af1a-2f36-4384-ac96-e83b64361b70",
+      "member": "211c7221-7cd2-4ccb-bf28-438434e8f5e5",
+      "target": "a65f4122-43cb-478b-97b8-7e0f8d49941b",
+      "invite": "94cef355-0303-445d-9bc2-37bdf5f366a5",
+      "event": "56ec3925-189c-4c0d-91d2-2ac767618d26",
+      "batch": "a9197c03-eecc-4b5c-8bef-ef58d833a3ad",
+      "plan": "20ea2e7d-0d8b-4d50-92bb-721030cc133e",
+      "path": "675c5b01-8d8e-4d3c-97cc-07b64a445b9d",
+      "recovery": "a51434c9-aff5-4c28-98c3-600fa107118a",
+      "recoveryEvent": "c1171edd-cae1-4371-9aff-dc407918a9f9",
+      "approvalEvent": "3244c2c0-4aec-477c-a20b-6339dbbbc898",
+      "student": "894d1315-dba1-4ff9-b83c-625ace620ad2",
+      "teacher": "4f262ecb-a71a-4b52-871b-7cb4ac484409"
+    },
+    "cases": 1386,
+    "failures": [],
+    "phases": [
+      {
+        "phase": "core",
+        "status": "PASS"
+      },
+      {
+        "phase": "email",
+        "status": "PASS"
+      },
+      {
+        "phase": "imports",
+        "status": "PASS"
+      },
+      {
+        "phase": "governance",
+        "status": "PASS"
+      },
+      {
+        "phase": "calendar",
+        "status": "PASS"
+      },
+      {
+        "phase": "profile-hash",
+        "status": "PASS"
+      },
+      {
+        "phase": "calendar-import-hash",
+        "status": "PASS"
+      },
+      {
+        "phase": "school-hashes",
+        "status": "PASS"
+      },
+      {
+        "phase": "hash-updates",
+        "status": "PASS"
+      },
+      {
+        "phase": "pending-hash-updates",
+        "status": "PASS"
+      },
+      {
+        "phase": "retention",
+        "status": "PASS"
+      },
+      {
+        "phase": "audit",
+        "status": "PASS"
+      }
+    ]
+  }
+}

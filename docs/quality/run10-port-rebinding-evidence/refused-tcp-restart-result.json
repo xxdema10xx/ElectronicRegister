@@ -1,0 +1,90 @@
+[
+  {
+    "container": "3ccbb050937e59810333fdd89fa946d1573d1b7d0b384efd0411cdde4661d4f2",
+    "beforeBinding": {
+      "container": "3ccbb050937e59810333fdd89fa946d1573d1b7d0b384efd0411cdde4661d4f2",
+      "image": "sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+      "hostname": "3ccbb050937e",
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "er84-run10-20261103-data",
+          "Source": "/var/lib/docker/volumes/er84-run10-20261103-data/_data",
+          "Destination": "/var/lib/mysql",
+          "RW": true
+        }
+      ],
+      "ports": {
+        "3306/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": ""
+          }
+        ]
+      },
+      "publishedPorts": {
+        "3306/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "60704"
+          }
+        ]
+      }
+    },
+    "afterBinding": {
+      "container": "3ccbb050937e59810333fdd89fa946d1573d1b7d0b384efd0411cdde4661d4f2",
+      "image": "sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+      "hostname": "3ccbb050937e",
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "er84-run10-20261103-data",
+          "Source": "/var/lib/docker/volumes/er84-run10-20261103-data/_data",
+          "Destination": "/var/lib/mysql",
+          "RW": true
+        }
+      ],
+      "ports": {
+        "3306/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": ""
+          }
+        ]
+      },
+      "publishedPorts": {
+        "3306/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "60704"
+          }
+        ]
+      }
+    },
+    "tcpReachable": true,
+    "socket": {
+      "returncode": 0,
+      "stdout": "8.4.13\t07381d54-d792-11f1-9a89-a291036c5940\t3ccbb050937e\t3306\t/var/lib/mysql/\t1\troot@localhost\troot@localhost\n",
+      "stderr": "mysql: [Warning] Using a password on the command line interface can be insecure.\n",
+      "mysqlErrno": null,
+      "sqlstate": null
+    },
+    "administrativeTcp": {
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "mysql: [Warning] Using a password on the command line interface can be insecure.\nERROR 3032 (HY000): The server is currently in offline mode\n",
+      "mysqlErrno": 3032,
+      "sqlstate": "HY000"
+    },
+    "grants": [
+      "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER, CREATE TABLESPACE, CREATE ROLE, DROP ROLE ON *.* TO `root`@`localhost` WITH GRANT OPTION",
+      "GRANT ALLOW_NONEXISTENT_DEFINER,APPLICATION_PASSWORD_ADMIN,AUDIT_ABORT_EXEMPT,AUDIT_ADMIN,AUTHENTICATION_POLICY_ADMIN,BACKUP_ADMIN,BINLOG_ADMIN,BINLOG_ENCRYPTION_ADMIN,CLONE_ADMIN,CONNECTION_ADMIN,ENCRYPTION_KEY_ADMIN,FIREWALL_EXEMPT,FLUSH_OPTIMIZER_COSTS,FLUSH_PRIVILEGES,FLUSH_STATUS,FLUSH_TABLES,FLUSH_USER_RESOURCES,GROUP_REPLICATION_ADMIN,GROUP_REPLICATION_STREAM,INNODB_REDO_LOG_ARCHIVE,INNODB_REDO_LOG_ENABLE,OPTIMIZE_LOCAL_TABLE,PASSWORDLESS_USER_ADMIN,PERSIST_RO_VARIABLES_ADMIN,REPLICATION_APPLIER,REPLICATION_SLAVE_ADMIN,RESOURCE_GROUP_ADMIN,RESOURCE_GROUP_USER,ROLE_ADMIN,SENSITIVE_VARIABLES_OBSERVER,SERVICE_CONNECTION_ADMIN,SESSION_VARIABLES_ADMIN,SET_ANY_DEFINER,SHOW_ROUTINE,SYSTEM_USER,SYSTEM_VARIABLES_ADMIN,TABLE_ENCRYPTION_ADMIN,TELEMETRY_LOG_ADMIN,TRANSACTION_GTID_TAG,XA_RECOVER_ADMIN ON *.* TO `root`@`localhost` WITH GRANT OPTION",
+      "GRANT PROXY ON ``@`` TO `root`@`localhost` WITH GRANT OPTION"
+    ],
+    "status": "PASS",
+    "attestedTcpTarget": {
+      "host": "127.0.0.1",
+      "port": 60704
+    }
+  }
+]

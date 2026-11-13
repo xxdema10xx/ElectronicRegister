@@ -1,0 +1,13 @@
+﻿{
+    "AllPersistenceSourceHashesUnchanged":  true,
+    "Guards":  [
+                   {
+                       "ApplyRejectedBeforeCopy":  true,
+                       "Script":  "../../migrations/mt1/Scaffold-Mt1.ps1"
+                   },
+                   {
+                       "ApplyRejectedBeforeCopy":  true,
+                       "Script":  "../../migrations/mt3/Scaffold-Mt3.ps1"
+                   }
+               ]
+}

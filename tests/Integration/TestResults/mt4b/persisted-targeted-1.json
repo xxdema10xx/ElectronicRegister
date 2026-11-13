@@ -1,0 +1,126 @@
+{
+  "audit_event": {
+    "rows": 10,
+    "sha256": "3e40afed656989b96d6fc2eb0ebddac93b51f241fdee8e7f1bb12a1c9bef7872"
+  },
+  "biennium": {
+    "rows": 1,
+    "sha256": "c82f550ceeebd7a2180880406cddd7eeeea0fce2779a692210c46550b4d6455b"
+  },
+  "biennium_study_area": {
+    "rows": 1,
+    "sha256": "3fe9a5c57871409fe7cdc974114a47b4c159926bf87f833bd5feb10f29616307"
+  },
+  "biennium_study_path": {
+    "rows": 1,
+    "sha256": "ac0f7dbaca705c942adc3168ef2fa1705579c466845041dbd18c447cc02a0a93"
+  },
+  "campus": {
+    "rows": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "class": {
+    "rows": 1,
+    "sha256": "3d225e43a9bca4d8449a0f9c7dfdb750775adabf980b31c62f9c5f8c49c52c2e"
+  },
+  "class_subject": {
+    "rows": 1,
+    "sha256": "59930f97d0718442c14883acac9afc00fa974cd979e36635a2605881b1272dd0"
+  },
+  "course_edition": {
+    "rows": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "course_edition_campus": {
+    "rows": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "exam": {
+    "rows": 12,
+    "sha256": "89d9fabbb44f90eedf3ef664450db7bdde1b24f38f42bf34bfc94db301da8a74"
+  },
+  "exam_student": {
+    "rows": 12,
+    "sha256": "8a5a8e8b8064bd62093273d4f9c9a9392d171729044fc91537ec26092e3a7c82"
+  },
+  "exam_submission": {
+    "rows": 12,
+    "sha256": "60a7f0811d8da366c2216630253d46383eb3dcb31e3dff92cd214c79b0a5bbb2"
+  },
+  "exam_violation": {
+    "rows": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "grade": {
+    "rows": 4,
+    "sha256": "cfd4f9c8d1b5c2ec7a178dc8322f8784dae864c892e30837a4aa0096b527ba72"
+  },
+  "institution": {
+    "rows": 1,
+    "sha256": "f9ef1ecf33b2109524cecd42da29f9dcf871a5562ae9974bca01feec62bbe834"
+  },
+  "institution_membership": {
+    "rows": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "institution_membership_role": {
+    "rows": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "institution_student_profile": {
+    "rows": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "institution_teacher_profile": {
+    "rows": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "mt3a_legacy_scope": {
+    "rows": 1,
+    "sha256": "bb2cd14ce04f87972d056eed0c3379768a9b394490651c288bdf875327e3817a"
+  },
+  "question": {
+    "rows": 24,
+    "sha256": "256d528dce6e45c41d6c48d2aeb005c27bb5f78ae491c00f9eee404f7a6b6dc4"
+  },
+  "question_option": {
+    "rows": 24,
+    "sha256": "257d05322d6ae8571b251d0cd058f03d44b3ad4d712c2fad23ccec8a7383fb4b"
+  },
+  "student": {
+    "rows": 12,
+    "sha256": "212be81bb5284d83177ee2b3a69245e85bbfc87f0702bbee93ce3a3f8c0d684f"
+  },
+  "student_enrollment": {
+    "rows": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "study_area": {
+    "rows": 1,
+    "sha256": "acbc69b7cf463f05f74a04545e4334a9139b5b653f7c8d28a0b2412df427707f"
+  },
+  "study_path": {
+    "rows": 1,
+    "sha256": "1d5e1e2c8e229022b2477f9a6f1922dbba11f286d3b0857bb28bb3f4181063b5"
+  },
+  "subject": {
+    "rows": 1,
+    "sha256": "5d396cb36166b9a0bd58ffa238323e84adce2afa32d58c432e26e26358e4ad06"
+  },
+  "submission_answer": {
+    "rows": 22,
+    "sha256": "d36e6f9a7f783e32eb69b876917f50d661c25b212175dd048a1dee0c42ece53f"
+  },
+  "submission_answer_option": {
+    "rows": 13,
+    "sha256": "95e5af2dfa361d72a813521e3df4e05f0a3064ce55c70ed7ba4860c4d1900a0a"
+  },
+  "teacher": {
+    "rows": 2,
+    "sha256": "21a102f507fe4f8966579e737f0f7ec51d27cbfebaf784afb50ce79dff93ad88"
+  },
+  "user": {
+    "rows": 15,
+    "sha256": "156d54f89af8091f10a7c3cec7299940118a7fd0dff9e4d824b77fe0614bf42e"
+  }
+}

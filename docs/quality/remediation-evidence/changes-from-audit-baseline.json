@@ -1,0 +1,272 @@
+[
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/packages.lock.json",
+        "Before":  "56ABDB9A45B15876DB979F1405CE9FBCAA3F6D6B7EB0E5F88978F70131683EAB",
+        "After":  "AC01F1508FC22D8A7F07F381CFD0CEE0E6C3055C3D80E4D3286D5356CD2981FF"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionExamController.cs",
+        "Before":  "C314CC0FDEF10F64A773713F69614BE1A04CD889DCAF7424A548F286C0E77FC1",
+        "After":  "CD0C09E96DCFF96285E3AF24608822AD69FA34A39380820919F09EE7CB4426DD"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionGradeController.cs",
+        "Before":  "008A7DE9BBE2BB2474E1A4A155BFEBCCECCDF71268B971C80EB970A994757313",
+        "After":  "625CB487BF175F0C78154F573FD67CD42E413C87090DEA5291826D4C016AEE7E"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionSubmissionController.cs",
+        "Before":  "9A37CE285C30B69EA3B03F87CB99215F3E899A5F10696D5435C8E35B56354CF3",
+        "After":  "7A979F37EC8C1412421764C548AF9C0E870CC6E7AEA4A65789EDBBAC5D50DCB1"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/ExceptionHandling/GlobalExceptionHandler.cs",
+        "Before":  "70C15FA471F2266E54C3BF66A8AFB0084E4D1EABABCE44D9113B5BCA74A790FC",
+        "After":  "004335D99D3E6469CD9F8B69DF0DA5420468E27ABA94FE2625DE00F904D930E0"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Operations/OperationalPipeline.cs",
+        "Before":  "141B2026D494F113BBA2EF955515728085D97D77057A11A84C8D33B34F73A049",
+        "After":  "A2E85DEE242BE1924AD1F84C3AB17CBB32FB7BD3FC56CADA5EFBBAAFE51F757E"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Operations/RuntimePolicy.cs",
+        "Before":  "485BB1FE47290E9A689AA45A70A38B3CE8F939D099ED528DB06C259F554A935B",
+        "After":  "FE964790F7668E8E6F627B8AE1930E97070CA13B21A4C99C861E7AA5819FE5FA"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/InstitutionAuthentication.cs",
+        "Before":  "8DE752758B5A2BB16D1C34A5A198742F132243CCCF1F7F5001A1E1D9643AB870",
+        "After":  "D91E643265363B557CF05F178A77D123291A12EB208F71D589FC6FA60840952C"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/packages.lock.json",
+        "Before":  "A40266B57ABC7F51BC7DACAB8ECECF19F52F7D5B12714B9F2D9E36456D14F193",
+        "After":  "B4D05EBA877875673C04E042C271D751537C5385EA9647F98F1397D0D54C4430"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/IdentityAccountManager.cs",
+        "Before":  "FE3B6DFE0853071B801AB57C483CC6B00D66E381ABA692CC351B6AF1D8EF9529",
+        "After":  "7711A5244C7F252597198B61B02FD6658A1C4EB4C251A80DEBFD881848E33131"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionExamManager.cs",
+        "Before":  "EB003C72AEB754EC4D83B60DEDABCD8C2BC75403DF79B8BE11C73C0BA5CBAA45",
+        "After":  "524D67133EBBE37087AD5CD6872DEF9DD398D5626E8964F1F0B271836EE72158"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/packages.lock.json",
+        "Before":  "444B440C8873D69F361BDEC16F2BD82CA1BBC67C9832F6B06B5FB2260CE72D1B",
+        "After":  "C85D0B2B9AD0005415965F75DB3A2D091B77203B723070EDDB18F82426A088A6"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/packages.lock.json",
+        "Before":  "A29C6AA8CFB81874FF8BB78DC369D7416F28C9B8CC47E99592BFC019B20C41EB",
+        "After":  "A4364D81A6DE2707D66FBCED18FBBC926C882AB96E1D1AEBBB17E871285B9D75"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IInstitutionExamManager.cs",
+        "Before":  "C8290162DAA5609C1952DAA5328CB7DBEBA7E1DED8905CAF7627CD7AA8BDE8F6",
+        "After":  "1AFCF20DEF61B72DC3A5F45EB48067BC78292354A609A9CC7C57411C61246CBA"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IIdentityAccountRepository.cs",
+        "Before":  "FFD47C754E1A30F08923CE4D1FFC488DF4203BFF665BF6891EE41391C50435C8",
+        "After":  "5E5F7D774B69B6AD31219F28E2528807ADE19CDFE40278E142C4EA1A47A610AA"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionExamRepositoryFactory.cs",
+        "Before":  "8813295A6034F59F214F43D4C38AD3077304792E82711030675E230094484F1B",
+        "After":  "45B95F6A3A52D2CCAD8433A4F5657EF90DE58A6E1C68D8D94E163272452FBE91"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionWriteAuthorization.cs",
+        "Before":  "D8F0FB7FDC72B78BA6F8313812AA3EAEE2D6B4472E4F806FF3A377DB58EBC6C4",
+        "After":  "53B0FFD78ADD90B5EA4993C6E8D676548F66B9CD608F12DB63C2EB475FD11825"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/TenantContext.cs",
+        "Before":  "660F9B003077182674D588508CFE3DC348D42902D8E404F9486C797DB363FD21",
+        "After":  "9CBB2C401BDCCDDAE0289D46EBA3AF688C164427C2BA8D4FB21B530899E177E5"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/ElectronicRegisterAPI.Infrastructure.csproj",
+        "Before":  "2791FCA8193D60528E36E8A11C83D7BD6A3B46072574FCDBBDD12A665F6F9A4F",
+        "After":  "E573B1C73B4BA55379258079C4EC55F652CD4A917BA3E4FFED87B90B72B18114"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/packages.lock.json",
+        "Before":  "87F44A15FD17A93F9DAC7FC91E960064016E120AE57344F4FD01911B775E61A3",
+        "After":  "728C169051790A5B10D18EF00640CAD88BBB8533E01BD9D5245A3C24719DA827"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/IdentityAccountIntegrity.cs",
+        "Before":  "5F55455E0AF9483FA82894496210C2CC10401A0AFE4E8F109AEA730AD6AD7A7B",
+        "After":  "ACC18C1D904750462F909A56D46E5BDB395C8E746B975C561278FB50CCCEDBB6"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/AuditRepository.cs",
+        "Before":  "E6A4B2682632981A6FBF740DAE7DFEF5E14D46588AE2C77A6D0AC2DF41B45A3C",
+        "After":  "53E75AE168E8A6A0FAE08E918506EC88A3E35690757B27910C50D76C1524D0E4"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/ClassSubjectRepository.cs",
+        "Before":  "802E158839F1888EB32B514A0C170CA215A0D05465A18F2D7EF61B06BDD071F1",
+        "After":  "8F0116390319649262D3BEDE526A7C9EC2F91BBB1FCCEA9C20B7A718FE041DB0"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/ExamRepository.cs",
+        "Before":  "78BA1FE2CF031EDB779463A9326026C311B10B29E51084A26A5487051240B59B",
+        "After":  "547056DC8F2C74AE437E4FB272CAA0EA59CA29D4A79BFBCB4787039883E2BC26"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/ExamSubmissionRepository.cs",
+        "Before":  "7FBE5BA97FE7605CE3F3A287C1638604B84929C916488CA1FEF2A5E2E1B5C322",
+        "After":  "6954974C2F2EF2D509038F7F30B770D5F663E50E88AFAACB02A1ADC279E1CC96"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/GradeRepository.cs",
+        "Before":  "37D135A643998621AEE4860E808B49A1A51E90B2C550EA94F7F6CCC7FD2F3E30",
+        "After":  "E311490755D1872006010E4209B11E042E5A67D6F6BADEB21C0CF8A36D5338CA"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/IdentityAccountRepository.cs",
+        "Before":  "217AA53473023DCDAB52CEB0968AF78CB0BC2F1D59266B2116914D6FE5D36F5D",
+        "After":  "19796AE33798ED3487777F730BF21D2CBEFC0FF15AE351C96E4972CAE130F193"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionExamDataScope.cs",
+        "Before":  "A8596BE36D5E3209D071FF8114DA1CDCD651708582AD461E346C53D4E2020A1D",
+        "After":  "DE52672410A9F998BF08446F33695EF7BDEE803B1500EDD5E12BFB5FCC878FE8"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionExamRepositoryFactory.cs",
+        "Before":  "03B07687CA20A2328517A035A186A6D42854907A495F10B88174663337AD6670",
+        "After":  "1E64E4AB805D284E90DBD0E80528E8964D39CBED1CF042252D8D331894DACB78"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionWriteAuthorization.cs",
+        "Before":  "5ACEA82B2692723C5B91B2275720C6A17D00F41271B010C9AA9DC035E041A2ED",
+        "After":  "519283739753C21F3E384AAD04E8C0EEBEB6E99DCE75711E7AC19EC9885F823C"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/StudentRepository.cs",
+        "Before":  "E196A9B1EFB9BD4AF84A35867078CFD567ECB0A69773C8D2F1C8EEBEA72A8144",
+        "After":  "6C648CAB6FCF3702223A8D0BFC35FE190E86B87734156C5114A9B775C3A67893"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/SubjectRepository.cs",
+        "Before":  "DE30C5D280F064F36F8B7283659F2FEE9AC1DF54A41361987486B4A30360E75D",
+        "After":  "0F08372DC991D73FA4831DAE13C06ACE5E3C090439598F2DBCB20DAC1FF3C9F0"
+    },
+    {
+        "Path":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/TransactionManager.cs",
+        "Before":  "C405FC3E2B3BF5D11A24FA34B07C5BFE122990F6D8F7A1B9EA3A0E437D0B674A",
+        "After":  "C0B25AF7973D59452D3D3D4709D27272466258ADF80E31AA07F28F6C7030A3D7"
+    },
+    {
+        "Path":  "tests/Integration/IdentityAccountTests.cs",
+        "Before":  "712866F0B6EA5B73F9A009AE25E58C82339AE99D627DFDF7E7C0185CC9271600",
+        "After":  "D7FB7058CC777BC0C65A5F2354401B1EADAD0AE65F5858962435496C5A2456B6"
+    },
+    {
+        "Path":  "tests/Integration/InstitutionBulkImportAtomicityTests.cs",
+        "Before":  "51E356D5BD584EA0F64CE59F524BD0E2A36DDCF0D3D91F7133AD53416A8238B7",
+        "After":  "7B4085B241C8BA4AADD222CBBBC1C0023C9E550CDD42F1A2692D6751F161F3F2"
+    },
+    {
+        "Path":  "tests/Integration/InstitutionCalendarConcurrencyTests.cs",
+        "Before":  "9D0E22A04BCA63AEE56B69507812C84917D7836057C0840984037989DCFD9515",
+        "After":  "17579418B56DA8C76C576BD4F14AD06B87CEE30DD3164996C6C454E871D59A95"
+    },
+    {
+        "Path":  "tests/Integration/InstitutionEmailAtomicityTests.cs",
+        "Before":  "D74FEC702E9D78A32E58AD6414BA3B7F70F182591B53ADF9E3BA92C6EA45C8B6",
+        "After":  "24BDD19F170AA9FE926A8CF383B675C8B1036246844DFE43CF44FC6D199CF242"
+    },
+    {
+        "Path":  "tests/Integration/InstitutionFormativePlanLifecycleTests.cs",
+        "Before":  "A0A24EC89907B498AD024D489729C5CB846BC403AEFE2F89A95964DA82FB495E",
+        "After":  "E6C7E733A22D3032C3707894BB75A26C0DBB061978EB0F026F02D6A7B84DCCF6"
+    },
+    {
+        "Path":  "tests/Integration/InstitutionStaffAtomicityTests.cs",
+        "Before":  "B2E29B3B2860F168310CABEEA468FE512D0A6A1C5E294A03A9028ED6470988E2",
+        "After":  "7FAC7243B1EC09333031B8FCC02F07ACE48A9945DAA83990CAF33C756B4ACD82"
+    },
+    {
+        "Path":  "tests/Integration/Mt5bSecurityStateTests.cs",
+        "Before":  "FB50A5A975BF110D5CF87A8909AEA4EF45D7B886BB2B26055FB8A2BD674AC925",
+        "After":  "CE6214B53093C8D070D006EC0615A4755E3C26EC207D2DC49B2052E861D42ED5"
+    },
+    {
+        "Path":  "tests/Integration/Mt6OperatorSecurityTests.cs",
+        "Before":  "908B8F28663179EC94A171E1FDB61572B81CB6052E04C2601F1E7916242A6475",
+        "After":  "E82F1EC8192C3A458E69CDD1A0B3DCCBD2A4AFB36EC5384155ECE1CAC3539999"
+    },
+    {
+        "Path":  "tests/Integration/Mt6RuntimeTests.cs",
+        "Before":  "563F46DF8F4638C259F125A49709A9F93F3CDF1012605886E0F748E9FBCFCBEA",
+        "After":  "6CC66069976C4B700D64BFDE03E2B58E1E5EB4BE32DD3234B3C453C8EF14D76D"
+    },
+    {
+        "Path":  "tests/Integration/packages.lock.json",
+        "Before":  "E6373A326C35E55292B3D24D52756B7806CF6AD743CC6E923497CE8DBECD5F13",
+        "After":  "CEC84452FA26F6FFAB05983FF7F1EC2DF79E3302779F0AB67F9B5023FBE6B417"
+    },
+    {
+        "Path":  "tests/Integration/Phase3_TestSupport.cs",
+        "Before":  "36C48D19D0B93BE81894EB7696EC22671350EA00701B5BE0E46FA91051A83CA0",
+        "After":  "AAA2F698F801DCD1F4BF3CB0AB2295DACD44CE6DA1FAD7C68156F354D67094B3"
+    },
+    {
+        "Path":  "tests/Integration/TestResults/mt3c/http-query-observations.json",
+        "Before":  "C10D68E9AF398249307B23149AA347F080B670FAE8C017B6DA66209F4898E369",
+        "After":  "D5F2645424F22CFE448BF2D5758E85B533242653FA0CB122317506CEBEFAAA66"
+    },
+    {
+        "Path":  "tests/Integration/TestResults/mt3d/http-query-observations.json",
+        "Before":  "0F37ACAC8FFB686920A24E8F1346D00613533B72544F7995FF58F733D1C40F40",
+        "After":  "EC41C369438AFE4BFCF54D863309DBFB4F69343BC6B59F14AF808E0AF5B719EA"
+    },
+    {
+        "Path":  "tests/Integration/TestResults/mt3e/worker-query-observations.json",
+        "Before":  "9ACB4237074C36E407438863346E5C2313015527AD9EB59F19DFA61E460B9BA7",
+        "After":  "A7DC33B189D9527E67100E16BD5955689CA0935BE036A25404A1C0D393D2C954"
+    },
+    {
+        "Path":  "tests/Integration/TestResults/mt4b/course-sql.json",
+        "Before":  "B263D4FEAC72C1F4BEDE6BAD8DE73760159F534C1064F8E99C19D4A9571A84BB",
+        "After":  "713FF1366C8DAFF3881CBA3A534B4861F29A6F9BD61299E86CA26BC05CF2A098"
+    },
+    {
+        "Path":  "tests/Integration/TestResults/mt5a/directory-sql.json",
+        "Before":  "67ACF7273B72D98809858D843D54E6ADBD3DF4F1C9FEC602884D23854BE3EF43",
+        "After":  "6D8EB0902B8B85867F5849A359BCCC15FE4621BB2958939D9AE6F8402981D1F9"
+    },
+    {
+        "Path":  "tests/Unit/packages.lock.json",
+        "Before":  "6E2B34DFE0678BFF7272D0C797E8BFBB7F3DF35D4C7145A25E6BB7FC17FC393D",
+        "After":  "F2EEE91FD082B22638888D52EB7FF337C0B8D8913512C04AC2E6B5C8FB08B819"
+    },
+    {
+        "Path":  "tools/local_test_db.py",
+        "Before":  "EAFD4C8888517FBC87AADC84EAA0D6C7815D1374AD9A9BCC082F02ACD6244341",
+        "After":  "EA9D60D3FD1C767AD9035F69CEB4A21A0A39FCA0BD04EFAF47FACA3879808CD7"
+    },
+    {
+        "Path":  "tools/test_local_test_db.py",
+        "Before":  "20A21972138C79C4D0908DF29DDB19CD3ACD7AA137B80EEF07A728BB009187EE",
+        "After":  "4A6B4CB050681E1C743976B5A8EB2F8A5CA401D450BBE4F7078A1EFD1AD777B8"
+    },
+    {
+        "Path":  "tools/verify-project-artifacts.py",
+        "Before":  "19B1D49C0F3E28F143CF16BB36E656B1B15FA15925A1A641C225BD61B785291A",
+        "After":  "F724639301A143B52FE25438A1565FD39F80EFE56AD6770DBBC0D364049804BA"
+    },
+    {
+        "Path":  "tools/PlatformAdmin/packages.lock.json",
+        "Before":  "57E2273D6C004C8886ABECA53E68B435DD38CD091547C182B73223087B9BF475",
+        "After":  "FB9BCE12B0E040DCB9325D5698064B2D444AC00B6C1CE2CF06959E8C665E2968"
+    }
+]

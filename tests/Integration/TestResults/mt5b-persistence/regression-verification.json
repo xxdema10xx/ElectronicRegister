@@ -1,0 +1,53 @@
+{
+    "Run":  "regression",
+    "Valid":  false,
+    "Total":  738,
+    "Unit":  51,
+    "Integration":  687,
+    "Passed":  734,
+    "Failed":  4,
+    "Other":  0,
+    "HistoricalIdentitiesMissing":  0,
+    "NewIdentities":  27,
+    "NewIdentityDifferences":  0,
+    "Files":  [
+                  {
+                      "File":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\regression\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_39_28_net10.0.trx",
+                      "SHA256":  "E425E33AA1F798AE8585836EF63CEE85E39E0F4E1669AEF17B5E234F3BA60154",
+                      "Total":  687,
+                      "Passed":  683,
+                      "Failed":  4,
+                      "NotExecuted":  0
+                  },
+                  {
+                      "File":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\regression\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_39_24_net10.0.trx",
+                      "SHA256":  "AD67EFE02A8981732696CD68059B41831987FF47F74B45FCAED548DD6CDFF6AC",
+                      "Total":  51,
+                      "Passed":  51,
+                      "Failed":  0,
+                      "NotExecuted":  0
+                  }
+              ],
+    "NonPassed":  [
+                      {
+                          "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_ForeignAndMissingResourcesAreIndistinguishableAndTenantRolesNeverCombine",
+                          "Outcome":  "Failed",
+                          "Project":  "Integration"
+                      },
+                      {
+                          "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows",
+                          "Outcome":  "Failed",
+                          "Project":  "Integration"
+                      },
+                      {
+                          "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph",
+                          "Outcome":  "Failed",
+                          "Project":  "Integration"
+                      },
+                      {
+                          "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched",
+                          "Outcome":  "Failed",
+                          "Project":  "Integration"
+                      }
+                  ]
+}

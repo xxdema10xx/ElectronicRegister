@@ -1,0 +1,10 @@
+{
+  "source": "Actual database scaffold candidate mt4c",
+  "byteIdenticalReproduction": [
+    "Entities/CourseAdministrationEvent.cs",
+    "ElectronicRegisterContext.Mt4c.cs",
+    "ElectronicRegisterContext.Multitenancy.cs"
+  ],
+  "classNavigation": "Ignored only in EF ledger; composite FK enforced in SQL",
+  "generatedLegacyEntities": "Not overwritten"
+}

@@ -1,0 +1,116 @@
+﻿{
+    "baseline":  {
+                     "total":  540,
+                     "allPreserved":  true,
+                     "integration":  489,
+                     "unit":  51
+                 },
+    "final1":  {
+                   "total":  577,
+                   "failed":  0,
+                   "skipped":  0,
+                   "integration":  526,
+                   "unit":  51
+               },
+    "final2":  {
+                   "total":  577,
+                   "failed":  0,
+                   "skipped":  0,
+                   "integration":  526,
+                   "unit":  51
+               },
+    "identicalFinalSets":  true,
+    "newTestCount":  37,
+    "newUnit":  [
+
+                ],
+    "newIntegration":  [
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eBoundedKeysetScanAdvancesPastFailureAndResetsOnRestart",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eCancellationAndRestartDoNotLoseExpiredSubmission",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eCapabilityCannotBeForgedOrRetargetedAndNoHttpSurfaceExists",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"connection\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"grading\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"timeout\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eDispatcherSqlAndWriteScopesAreMeasuredAndBounded",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFailedItemDoesNotBlockOtherTenantAndNewSweepRecovers",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFinalInventoryIncludesEveryRegisteredRouteAndNoTechnicalHttpApi(environment: \"Development\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFinalInventoryIncludesEveryRegisteredRouteAndNoTechnicalHttpApi(environment: \"Production\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eIndependentTenantWorkersHoldSubmissionLocksConcurrently",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealHostedTimerDeliversOfflineAndStopsCleanly",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: \"audit-after\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: \"audit-before\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: \"cancel\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: \"grade-after\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: \"grade-before\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eStaleCapabilityAndIncoherentAssignmentFailClosedUnderLock",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: \"institution\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: \"membership\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: \"roles\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerAllowsCloseOnlyAfterLastInProgressAndDoesNotPenalizeViolations",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Multiple)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Open)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Single)",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerFlagDoesNotOpenGlobalAccountOrMembershipAdministration",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesAdministrativeActionsWithoutPartialOfficialGrade(action: \"close\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesAdministrativeActionsWithoutPartialOfficialGrade(action: \"finalize\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesAdministrativeActionsWithoutPartialOfficialGrade(action: \"review\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: \"autosave\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: \"http\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: \"manual\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: \"worker\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRetryPreservesIndependentRetakeGrades",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: \"\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: \"false\")",
+                           "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: \"invalid\")"
+                       ],
+    "files":  [
+                  {
+                      "file":  "baseline/unit.trx",
+                      "total":  51,
+                      "passed":  51,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "8E499257E85B5A089BF8FA19F85C483D7185DD91BA41879613C73F0297FEC5BD"
+                  },
+                  {
+                      "file":  "baseline/integration.trx",
+                      "total":  489,
+                      "passed":  489,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "716D09082629049737E575559D4D7856AFF94BEAD538A6BCEBCE0BBB5A7AB898"
+                  },
+                  {
+                      "file":  "final-1/unit.trx",
+                      "total":  51,
+                      "passed":  51,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "B6ECAFAD92081BAB1F81FA71A37E16281293ED07448DB92606F0B480D873D8A2"
+                  },
+                  {
+                      "file":  "final-1/integration.trx",
+                      "total":  526,
+                      "passed":  526,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "C69D41B9AD0B85B4AC3E91C2A5EE98A326344433DA031276B449068211289A24"
+                  },
+                  {
+                      "file":  "final-2/unit.trx",
+                      "total":  51,
+                      "passed":  51,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "D86275608A3744C6BAE07426DDE249C18CABB8B7E9110E3ED712027978A9D791"
+                  },
+                  {
+                      "file":  "final-2/integration.trx",
+                      "total":  526,
+                      "passed":  526,
+                      "failed":  0,
+                      "skipped":  0,
+                      "sha256":  "9C3FB4546FBB50BCB933A3D429DBAB5F0FF5DDF3C5B0DB3183314680BC175609"
+                  }
+              ]
+}

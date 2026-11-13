@@ -1,0 +1,596 @@
+Versione di VSTest 18.7.0 (x64)
+
+Sono disponibili i test seguenti:
+    ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: "Production")
+    ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: "Development")
+    ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(correctIssuer: False)
+    ElectronicRegisterAPI.Tests.Integration.AuditMicrosoftTests.MicrosoftValidator_RequiresConfiguredTenantIssuer(correctIssuer: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudyAreaDependencyUsesStudyAreaForeignKey
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_BienniumUpdatePreservesDateValidation
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(teacherProfile: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_UserUpdateFaultIsAtomic(teacherProfile: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_GradeReadsCannotEscapeOwnership(otherStudent: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_GradeReadsCannotEscapeOwnership(otherStudent: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudentTeacherSubjectsCannotBypassClassVisibility
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_OrdinaryGradeRemainsEditableAndDeletable
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: "update-teacher")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: "update-admin")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: "delete-admin")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: "count")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: "list")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: "id")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: "name")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_LoginWithoutPasswordHashIsUnauthorized
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: "Student")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: "Users")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: "Biennium")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: "none", blocked: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: "in_progress", blocked: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: "pending_review", blocked: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: "graded", blocked: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: "finalized", blocked: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: "failed_auto", blocked: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: "expired", blocked: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: "mixed", blocked: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseBusinessRule_HttpAndMySql(kind: "completed", blocked: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseAndStart_AreSerializedInBothOrders(closeFirst: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseAndStart_AreSerializedInBothOrders(closeFirst: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.ExpiredLastSubmission_WorkerDeliveryAllowsHttpClose
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseDuringSubmit_PreservesInvariantAndAllowsRetry(automatic: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseDuringSubmit_PreservesInvariantAndAllowsRetry(automatic: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.DraftUpdate_ApplicationPersistsStructureAndLink
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.DraftUpdate_PersistsRetakeLinkAndRejectsClassSubjectChange
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.UpdateAssignments_UsesClassIdAndPersistsExtraTime
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Close_RejectsIllegalSourceState(state: "draft")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Close_RejectsIllegalSourceState(state: "cancelled")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_PersistsSingleAtomicLifecycleAudit
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.RetakeLinks_RejectSelfCyclesMissingAndOtherClassSubject_WithoutChanges
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidAssignments_AreRejectedWithoutChanges(kind: "duplicate", status: 400)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidAssignments_AreRejectedWithoutChanges(kind: "negative", status: 400)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidAssignments_AreRejectedWithoutChanges(kind: "missing", status: 404)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidAssignments_AreRejectedWithoutChanges(kind: "null", status: 400)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidAssignments_AreRejectedWithoutChanges(kind: "wrong-class", status: 400)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.NonDraft_RejectsUpdatesPublishAndDelete(state: "published")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.NonDraft_RejectsUpdatesPublishAndDelete(state: "closed")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.NonDraft_RejectsUpdatesPublishAndDelete(state: "cancelled")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.DeleteReferencedOriginal_IsConflict_AndDeleteUnreferencedDraftIsSafe
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CloseWithActiveSubmission_IsRejected_AndClosesAfterAutomaticDelivery
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.RetakeFullHttpFlow_KeepsOriginalGradeAndSubmissionIndependent
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.RetakeAssignments_AreExplicitAndAdminCanReplaceThemInDraft
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.StudentStart_RequiresPublishedAndCurrentWindow(state: "draft")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.StudentStart_RequiresPublishedAndCurrentWindow(state: "closed")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.StudentStart_RequiresPublishedAndCurrentWindow(state: "cancelled")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.StudentStart_RequiresPublishedAndCurrentWindow(state: "future")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.StudentStart_RequiresPublishedAndCurrentWindow(state: "expired")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: "create")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: "read")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: "update")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: "students")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: "publish")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: "close")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: "cancel")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleHttp_RejectsAnonymousStudentAndNonOwner(operation: "delete")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.AssignedRetake_VisibleOnlyToAssignedStudent_AndCancelledCannotStart
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: "name")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: "schedule")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: "duration")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: "passing")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: "questions")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: "points")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: "options")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.InvalidCreateInput_Returns400WithoutPersistingExam(kind: "position")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_RevalidatesPersistedDraft_AndFailureLeavesNoAudit(kind: "total", status: 409)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_RevalidatesPersistedDraft_AndFailureLeavesNoAudit(kind: "expired", status: 409)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_RevalidatesPersistedDraft_AndFailureLeavesNoAudit(kind: "students", status: 409)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_RevalidatesPersistedDraft_AndFailureLeavesNoAudit(kind: "options", status: 400)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Publish_RevalidatesPersistedDraft_AndFailureLeavesNoAudit(kind: "passing", status: 400)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: "publish")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: "close")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: "cancel")
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.DraftUpdate_FaultAfterSql_RestoresStructureAndProperties(failOnSave: 1)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.DraftUpdate_FaultAfterSql_RestoresStructureAndProperties(failOnSave: 3)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.AssignmentUpdate_FaultAfterSql_RestoresPreviousExtraTime
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.MissingResourcesAndDraftWithSubmission_ReturnAppropriateErrors
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.ConcurrentPublish_ProducesOneTransitionAndOneAudit
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CancelAndStart_AreSerializedWithoutCancelledExamAttempts(cancelFirst: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.CancelAndStart_AreSerializedWithoutCancelledExamAttempts(cancelFirst: True)
+    ElectronicRegisterAPI.Tests.Integration.ConcurrencyIntegrationTests.ConcurrentSaveAnswers_HigherRevisionWins
+    ElectronicRegisterAPI.Tests.Integration.ConcurrencyIntegrationTests.ConcurrentSubmit_OneDeliveryOnly
+    ElectronicRegisterAPI.Tests.Integration.ConcurrencyIntegrationTests.AutosaveAfterDeadline_NoWrite
+    ElectronicRegisterAPI.Tests.Integration.ConcurrencyIntegrationTests.AutosaveConcurrentToSubmit_NoAnswerSavedAfterSubmit
+    ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.TeacherNonOwner_CannotReview
+    ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.TeacherNonOwner_CannotFinalize
+    ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.TeacherOwner_CanReviewAndFinalize
+    ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.Admin_CanReviewAndFinalize
+    ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.Review_DoesNotFinalizeWithoutGrade
+    ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.ReviewThenFinalize_CreatesExactlyOneGrade
+    ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.FinalizeTwice_RemainsIdempotent
+    ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.CalculateOpenScore_OnlyOpenQuestionsCounted
+    ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.TotalScore_DoesNotDoubleCountClosedAnswers
+    ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.FullReplace_NoUniqueConstraintViolation
+    ElectronicRegisterAPI.Tests.Integration.ExamRegressionTests.FailedReplace_RollsBackAllChanges
+    ElectronicRegisterAPI.Tests.Integration.ExamSecurityTests.TeacherNonOwner_CannotListExamSubmissions
+    ElectronicRegisterAPI.Tests.Integration.ExamSecurityTests.Student_CannotSeeCorrectOptions
+    ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Review_InProgress_IsRejected
+    ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Review_Finalized_IsRejectedWithoutChanges
+    ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Finalize_InProgress_IsRejectedWithoutGrade
+    ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Autosave_ForeignQuestion_IsRejected
+    ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Autosave_ForeignOption_IsRejected
+    ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Autosave_DuplicateQuestion_IsRejected
+    ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Submit_InvalidAnswerSnapshot_RollsBack
+    ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.Review_ClosedQuestion_IsRejected
+    ElectronicRegisterAPI.Tests.Integration.ExamValidationTests.ConcurrentReviewAndFinalize_PreservesFinalizedGrade
+    ElectronicRegisterAPI.Tests.Integration.FinalGradeValidationTests.Finalize_WithFinalGradeZero_IsRejectedAndNoPersistence
+    ElectronicRegisterAPI.Tests.Integration.FinalGradeValidationTests.Finalize_WithFinalGradeNegative_IsRejectedAndNoPersistence
+    ElectronicRegisterAPI.Tests.Integration.FinalGradeValidationTests.Finalize_WithFinalGradeTooLarge_IsRejectedAndNoPersistence
+    ElectronicRegisterAPI.Tests.Integration.FinalGradeValidationTests.Finalize_WithFinalGradeAtLowerBound_Succeeds
+    ElectronicRegisterAPI.Tests.Integration.FinalGradeValidationTests.Finalize_WithFinalGradeAtUpperBound_Succeeds
+    ElectronicRegisterAPI.Tests.Integration.FinalizeConcurrencyTests.ConcurrentFinalize_CreatesSingleGrade
+    ElectronicRegisterAPI.Tests.Integration.GradeMappingTests.Result_ClosedOnly_ReturnsPersistedOfficialGrade
+    ElectronicRegisterAPI.Tests.Integration.GradeMappingTests.Result_ManualFinalization_ReturnsPersistedOfficialGrade
+    ElectronicRegisterAPI.Tests.Integration.GradeMappingTests.Result_PendingReview_HasNoOfficialGrade
+    ElectronicRegisterAPI.Tests.Integration.GradeMappingTests.Submit_Idempotent_ReturnsPersistedOfficialGrade
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.MultipleFoundationsInSameRegionRemainDistinctAndProvisioning
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InstitutionCodeIsUniqueIncludingCaseVariants(lowerCase: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InstitutionCodeIsUniqueIncludingCaseVariants(lowerCase: True)
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.MultipleCampusesBelongToExactlyOneFoundationAndInactiveFalsePersists
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.GlobalUserCanHaveDifferentAndMultipleRolesPerFoundation
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.DuplicateMembershipAndDuplicateRoleAreRejectedByMySql
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.SuspensionPreservesMembershipRolesIdentityAndEveryLegacyCell
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.MembershipOperationsRejectAnotherInstitutionGuid
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InvalidForeignKeysAreRejectedByMySql(kind: "campus-institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InvalidForeignKeysAreRejectedByMySql(kind: "membership-institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InvalidForeignKeysAreRejectedByMySql(kind: "membership-user")
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.InvalidForeignKeysAreRejectedByMySql(kind: "role-membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.HistoricalParentsCannotBeCascadeDeleted(parent: "institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.HistoricalParentsCannotBeCascadeDeleted(parent: "user")
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.HistoricalParentsCannotBeCascadeDeleted(parent: "membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.UnknownGlobalPrivilegeCannotBeInsertedAsMembershipRole
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.PreparatoryRepositoryDoesNotActivateFoundations
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.MigrationToolRejectsOtherDatabaseBeforeOpeningConnection(backfill: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.MigrationToolRejectsOtherDatabaseBeforeOpeningConnection(backfill: True)
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.CanonicalExpandIsRerunnableAndDoesNotChangeLegacyData
+    ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.ControlledLegacyBackfillPreservesEveryGuidAndCellAndIsIdempotent
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.IdentitySelectionSeparatesFoundationsAndRolesWithoutLegacyProfiles
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "pending")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "suspended")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "left")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "institution-suspended")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "institution-archived")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "institution-provisioning")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "roles-removed")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "admin-removed")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "teacher-removed")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "roles-added")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "membership-deleted")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange(change: "user-deleted")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: "another-user")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: "wrong-institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: "missing-membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: "missing-institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: "unowned-role")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole(fault: "numeric-role")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "signature", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "membership", status: 403)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "institution", status: 403)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "legacy-role", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "unknown-role", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "duplicate-role", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "duplicate-property", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "duplicate-sub", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "empty-institution", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "missing-jti", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "missing-role", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "missing-membership", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "missing-institution", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "missing-sub", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "purpose", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "type", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "expired", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "duplicate-audience", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "audience", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "issuer", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "other-user", status: 403)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected(fault: "unowned-role", status: 403)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.TokenPurposesCannotBeInterchangedAndNoMembershipIsPublic
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.EveryLegacyEndpointRejectsBothScopedAndSelectionTokensBeforeReadingOrWriting
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SimultaneousRequestsNeverShareTenantContext
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.BackfilledLegacyBridgeAlsoChecksCurrentAuthorization(change: "membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.BackfilledLegacyBridgeAlsoChecksCurrentAuthorization(change: "institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.BackfilledLegacyBridgeAlsoChecksCurrentAuthorization(change: "role")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.BackfilledLegacyBridgeAlsoChecksCurrentAuthorization(change: "global-role")
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.LegacyNeedsExplicitEnablementAndUnbackfilledOptIn(enabled: False, unbackfilled: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.LegacyNeedsExplicitEnablementAndUnbackfilledOptIn(enabled: True, unbackfilled: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: "linked", accepted: True)
+    ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: "email-only", accepted: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: "wrong-object", accepted: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: "wrong-tenant", accepted: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: "foreign-issuer", accepted: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: "expired", accepted: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: "wrong-audience", accepted: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: "untrusted-signature", accepted: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: "missing-object", accepted: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: "deleted-user", accepted: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt2MicrosoftIdentityTests.MicrosoftRequiresValidatedStableExplicitBinding(scenario: "duplicate-binding", accepted: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "biennium_study_area", column: "biennium_id", parent: "biennium")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "submission_answer", column: "submission_id", parent: "exam_submission")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "submission_answer", column: "question_id", parent: "question")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "question_option", column: "question_id", parent: "question")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "question", column: "exam_id", parent: "exam")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "grade", column: "class_subject_id", parent: "class_subject")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "grade", column: "student_id", parent: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "exam_submission", column: "grade_id", parent: "grade")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "exam_submission", column: "exam_id", parent: "exam")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "exam_submission", column: "student_id", parent: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "submission_answer_option", column: "option_id", parent: "question_option")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "exam_student", column: "student_id", parent: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "exam", column: "class_subject_id", parent: "class_subject")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "class_subject", column: "subject_id", parent: "subject")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "class_subject", column: "teacher_id", parent: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "class_subject", column: "class_id", parent: "class")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "student", column: "class_id", parent: "class")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "class", column: "biennium_study_path_id", parent: "biennium_study_path")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "biennium_study_path", column: "study_path_id", parent: "study_path")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "biennium_study_path", column: "biennium_study_area_id", parent: "biennium_study_area")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "biennium_study_area", column: "study_area_id", parent: "study_area")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "exam", column: "retake_of_exam_id", parent: "exam")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RealCompositeForeignKeysRejectCrossTenantUpdate(child: "exam_violation", column: "submission_id", parent: "exam_submission")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.CatalogNamesAndBienniumDatesAreIndependentAndProfilesHaveNoInventedUsers
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.ProfileOwnershipCannotBeMovedOrRelinked(kind: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.ProfileOwnershipCannotBeMovedOrRelinked(kind: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AnswersCannotUseAnotherExamOrAnOptionOfAnotherQuestionInTheSameTenant
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: "class")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: "grade")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.HistoricalSetNullKeepsOwnerAndOtherTenantData(kind: "retake")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AuditIsAttributedFromEntityAndCannotClaimAnotherInstitution
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.PlatformAuditRequiresExplicitMetadataOnlyShapeAndNeverClaimsSchoolData
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.InstitutionDeleteRestrictsAndCannotCascadeSchoolData
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.RootOwnershipRequiresAnExistingInstitutionAndLegacyFallbackIsExplicit
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AllCompositeConstraintsAndSupportingIndexesExistWithStrictGuidTypes
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipToolRejectsUnauthorizedDatabaseBeforeNetwork(database: "electronic_register")
+    ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipToolRejectsUnauthorizedDatabaseBeforeNetwork(database: "other_database")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentDirectoryFiltersAllLookupsAndSqlCountForAdminAndAssignedTeacher
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.TeacherWithNoAssignmentsSeesNoStudentOrSubjectAndNeverFallsBackToGlobalRole
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentOwnProfileIsDistinctFromDirectoryAndSubjectByTeacherKeepsClassIntersection
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SharedGlobalUserResolvesDifferentTeacherProfilesAndDirectoryStaysInTenant
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SubjectNamesAreIndependentAndAllLookupsUseVisibility(role: "admin", expected: 2)
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SubjectNamesAreIndependentAndAllLookupsUseVisibility(role: "teacher", expected: 1)
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SubjectNamesAreIndependentAndAllLookupsUseVisibility(role: "student", expected: 1)
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ScopedCrudWritesExplicitOwnerAndLeavesBUnchanged(family: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ScopedCrudWritesExplicitOwnerAndLeavesBUnchanged(family: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ScopedCrudWritesExplicitOwnerAndLeavesBUnchanged(family: "subject")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: "student", delete: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: "student", delete: True)
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: "teacher", delete: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: "teacher", delete: True)
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: "subject", delete: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CrossTenantMutationIsGenericNotFoundAndBUnchanged(family: "subject", delete: True)
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.TeacherAndStudentCannotUseAdministrativeWriters(family: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.TeacherAndStudentCannotUseAdministrativeWriters(family: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.TeacherAndStudentCannotUseAdministrativeWriters(family: "subject")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.NewOperationRechecksRevocationAndNeverFallsBack(change: "membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.NewOperationRechecksRevocationAndNeverFallsBack(change: "institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.NewOperationRechecksRevocationAndNeverFallsBack(change: "role-removed")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.NewOperationRechecksRevocationAndNeverFallsBack(change: "role-added")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.NewOperationRechecksRevocationAndNeverFallsBack(change: "missing-profile")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ContextCannotInventPermissions(fault: "none")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ContextCannotInventPermissions(fault: "forged-role")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ContextCannotInventPermissions(fault: "wrong-membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ContextCannotInventPermissions(fault: "wrong-tenant")
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.MultiRoleAdminUsesAdminPermissionButTeacherOperationRequiresItsOwnProfile
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.InvalidClassOrMembershipRejectsAndDuplicateLinkRollsBackNewProfile
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentCreationLinksOnlyExistingAuthorizedMembershipWithoutDuplicatingGlobalIdentity
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SuspendedAdminCannotWriteAnyFamilyAndBRemainsAvailable(institution: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.SuspendedAdminCannotWriteAnyFamilyAndBRemainsAvailable(institution: True)
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.MissingStudentProfileAndNonHttpScopeFailClosed
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.DeleteBusinessRulesAndScopedNameUniquenessRemainEffective
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ForeignKeysAndImmutableOwnerStillProtectManagerCreatedRecords
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ConcurrentScopedCallsAndTwoAdministratorsHaveNoContextOrOwnershipLeak
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.ConcurrentDuplicateSubjectIsOneSuccessAndOneBusinessError
+    ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.CapturedQueriesFilterInSqlHaveServerCountAndNoListNPlusOne
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.StudentReadsRespectAdminTeacherAndOwnProfileAcrossBothTenants
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: "subject")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: "student", method: "GET")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: "student", method: "PUT")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: "student", method: "DELETE")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: "teacher", method: "GET")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: "teacher", method: "PUT")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: "teacher", method: "DELETE")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: "subject", method: "GET")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: "subject", method: "PUT")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CrossTenantIdsAreIndistinguishableFromMissingAndNeverChangePersistedData(family: "subject", method: "DELETE")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: "student", role: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: "student", role: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: "teacher", role: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: "teacher", role: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: "subject", role: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NonAdministratorsNeverWriteAndDatabaseRemainsUnchanged(family: "subject", role: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ForeignLinksAreRejectedAtomicallyByManager(family: "student", link: "class")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ForeignLinksAreRejectedAtomicallyByManager(family: "student", link: "membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ForeignLinksAreRejectedAtomicallyByManager(family: "teacher", link: "membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.MembershipLinksNeedExistingActiveRoleAndUniqueProfile(family: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.MembershipLinksNeedExistingActiveRoleAndUniqueProfile(family: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.TeacherDirectoryAndSelfProfileAreLocalForEveryRole
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SubjectsIntersectAssignmentsForAllLookupsIncludingByTeacher
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.UnassignedTeacherAndStudentWithoutClassReceiveEmptyCollections
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.NamesAreUniqueOnlyWithinInstitutionAndDependenciesRemainConflicts
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: "none", expected: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: "legacy", expected: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: "selection", expected: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: "expired", expected: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: "audience", expected: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.EveryActionRejectsInvalidTokenBeforeAnyWrite(fault: "other-user", expected: 403)
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: "membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: "institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: "admin-removed")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: "teacher-removed")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.CommittedRevocationBlocksAllActionsAndWrites(fault: "roles-added")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.MultipleRolesStayWithinSelectedMembershipAndProfilesNeverFallBackToUser
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.DefaultRolloutRejectsValidScopedTokensForAllActions
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.RealBootstrapHasExactPoliciesUnambiguousRoutesOpenApiAndWorker(environment: "Development")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.RealBootstrapHasExactPoliciesUnambiguousRoutesOpenApiAndWorker(environment: "Production")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.HttpQueriesKeepTenantSqlServerCountAndConstantListCost
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SearchAndCountNeverRevealForeignOnlyNames(family: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SearchAndCountNeverRevealForeignOnlyNames(family: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.SearchAndCountNeverRevealForeignOnlyNames(family: "subject")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ClientInstitutionIdentifiersCannotSelectOwnerOrContext
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ValidLinksCreateProfilesWithoutCreatingUsersMembershipsOrRoles
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.InvalidBodiesAreBadRequestsWithoutWrites(family: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.InvalidBodiesAreBadRequestsWithoutWrites(family: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.InvalidBodiesAreBadRequestsWithoutWrites(family: "subject")
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.GateMetadataCannotBypassMissingContextOrWrongPolicy(wrongPolicy: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.GateMetadataCannotBypassMissingContextOrWrongPolicy(wrongPolicy: True)
+    ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.ConcurrentHttpRequestsOfSharedIdentityKeepSeparateTenantScopes
+    ElectronicRegisterAPI.Tests.Integration.Mt3cPreflightTests.DefaultRolloutNeverOpensSchoolRoutesWithoutAuthorization
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.DropdownAndStudentClassFilterAreScopedAndAssignmentSpecific
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssignedSubmissionIdResumeAndRevisionSurviveNewLoginWithoutNewAttempt
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OfficialClosedResultPassedAndGenericGradeProtectionArePreserved(correct: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OfficialClosedResultPassedAndGenericGradeProtectionArePreserved(correct: True)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Single)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Multiple)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ManualRequiredUsesContentButExpiryUsesOnlyPersistedPartialAnswers(type: Open)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: "tab_hidden")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: "window_blur")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ViolationsPersistIdempotentlyWithoutPenaltiesAndRejectInvalidEvents(type: "fullscreen_exit")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 5)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 6)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(grade: 9)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: "admin")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryResourceActionScopesForeignIdsBeforeReadingLockingOrWriting(managerRole: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssignmentsRejectForeignWrongClassDuplicatesAndInvalidExtraTimeAtomically
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.GradeCrudPagingFiltersStatisticsAndTeacherOwnershipRemainScoped
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: "none", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: "legacy", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: "selection", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: "expired", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: "audience", status: 401)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.EveryExamActionRejectsInvalidJwtBeforeModelBindingOrWrites(fault: "other-user", status: 403)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: "membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: "institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: "admin-removed")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: "teacher-removed")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CommittedRevocationBlocksEveryExamAction(fault: "roles-added")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.BothRolloutFlagsAreRequiredForEveryNewAction(school: False, exam: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.BothRolloutFlagsAreRequiredForEveryNewAction(school: True, exam: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.BothRolloutFlagsAreRequiredForEveryNewAction(school: False, exam: True)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.LegacyWorkerAndNullCallerCannotProcessInstitutionalSubmissions
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.MultipleRequiredNeedsOneSelectionNotAllCorrectOptions
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnotherStudentInSameInstitutionCannotReadResumeSubmitOrReportEvents
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StartRacesPreserveExamLockAndSingleAttempt(opponent: "start")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StartRacesPreserveExamLockAndSingleAttempt(opponent: "close")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StartRacesPreserveExamLockAndSingleAttempt(opponent: "cancel")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ConcurrentDeviceRevisionsAndAutosaveSubmitNeverLoseAcceptedRevision
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.LateManualAndExpiryRaceCreatesOnlyOneOfficialGrade
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.StaffMultiRoleDoesNotNeedImplicitTeacherProfileOrGrantPrivilegesInB
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.TeacherStudentMembershipCombinesReadPermissionsWithoutExposingProvisionalOwnResult
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.CrossTenantEventIdCollisionRollsBackCountAndDoesNotRevealForeignEvent
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.RealBootstrapInventoriesAllPoliciesRoutesOpenApiAndRetainsWorker(environment: "Development")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.RealBootstrapInventoriesAllPoliciesRoutesOpenApiAndRetainsWorker(environment: "Production")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.DraftUpdateDeleteAndUnstartedCancellationUseInstitutionalLocationsAndAudit
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: "foreign-question", status: 404)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: "foreign-option", status: 404)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: "duplicate-question", status: 400)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: "duplicate-option", status: 400)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AnswerTamperingIsRejectedWithoutChangingEitherInstitution(fault: "single-many-options", status: 400)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.ReviewFinalizeRaceLeavesOneOfficialGradeAndAtomicAudit
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.OversizedViolationBodyNeverPersistsAnEvent
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.UninitializedContextAndManuallyConstructedPrincipalNeverAuthorizeARepository
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.SharedGlobalStudentConcurrentSessionsNeverMixAnswersOrInstitution
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Single)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Multiple)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Open)
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: "false")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: "invalid")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: "")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: "institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: "membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: "roles")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eCapabilityCannotBeForgedOrRetargetedAndNoHttpSurfaceExists
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: "worker")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: "http")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: "manual")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: "autosave")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerAllowsCloseOnlyAfterLastInProgressAndDoesNotPenalizeViolations
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: "grade-before")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: "grade-after")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: "audit-after")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: "audit-before")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: "cancel")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFailedItemDoesNotBlockOtherTenantAndNewSweepRecovers
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eBoundedKeysetScanAdvancesPastFailureAndResetsOnRestart
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealHostedTimerDeliversOfflineAndStopsCleanly
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: "connection")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: "timeout")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: "grading")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eStaleCapabilityAndIncoherentAssignmentFailClosedUnderLock
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRetryPreservesIndependentRetakeGrades
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesAdministrativeActionsWithoutPartialOfficialGrade(action: "review")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesAdministrativeActionsWithoutPartialOfficialGrade(action: "finalize")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesAdministrativeActionsWithoutPartialOfficialGrade(action: "close")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eCancellationAndRestartDoNotLoseExpiredSubmission
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerFlagDoesNotOpenGlobalAccountOrMembershipAdministration
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eDispatcherSqlAndWriteScopesAreMeasuredAndBounded
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eIndependentTenantWorkersHoldSubmissionLocksConcurrently
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFinalInventoryIncludesEveryRegisteredRouteAndNoTechnicalHttpApi(environment: "Development")
+    ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFinalInventoryIncludesEveryRegisteredRouteAndNoTechnicalHttpApi(environment: "Production")
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.GlobalIdentityResolvesDifferentProfilesAndBothRolesInEachFoundation
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: "wrong-user")
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: "wrong-institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: "wrong-membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ContextCannotInventAProfile(fault: "admin-no-profile")
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: "membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: "institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: "role")
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RevocationOrMissingProfileNeverFallsBackToGlobalTeacherId(change: "missing-profile")
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: "membership", number: 1452)
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: "membership", number: 1452)
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: "duplicate", number: 1062)
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: "duplicate", number: 1062)
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: True, fault: "missing", number: 1452)
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.SqlRejectsCrossInstitutionMembershipDuplicateOwnershipAndInvalidReferences(teacher: False, fault: "missing", number: 1452)
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ControlledProfileBackfillPreservesEveryLegacyCellAndIsIdempotent
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.ConflictingOwnershipRollsBackEntireBackfill
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.MigrationRejectsAnyOtherDatabaseBeforeConnecting(database: "other_database")
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.MigrationRejectsAnyOtherDatabaseBeforeConnecting(database: "electronic_register")
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.IncompatibleLegacyRoleBlocksBackfillWithoutChangingAnyLegacyCell
+    ElectronicRegisterAPI.Tests.Integration.Mt3ProfileTests.RealAdminMembershipDoesNotImplyTeacherOrStudentProfile
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnersCodesAndScopedQueries
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: "edition-path")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: "campus")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: "student-a")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: "student-b")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.CompositeForeignKeysRejectOtherTenant(kind: "class")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.MultipleCampusesAndEditionsLoadWithEf
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentHistorySurvivesStatusAndClassIsUnchanged
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: "institution_id")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: "student_id")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: "course_edition_id")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.EnrollmentIdentityIsImmutable(column: "enrollment_date")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: "edition-owner")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: "edition-path")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: "campus-owner")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.OwnershipCannotBeTransferred(kind: "link-owner")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: "edition-status")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: "edition-dates")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: "enrollment-status")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: "enrollment-dates")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.SqlValidatesStructure(kind: "blank-code")
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ClassPathMustMatchAndLegacyRemainsNullable
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.RepositoryRejectsForgedOwnerAndForeignResources
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ConcurrentScopesRemainSeparate
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.InformationSchemaHasCompositeRestrictConstraints
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ReadQueriesFilterOwnerBeforeMaterialization
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ClassCannotUseDifferentPathWithinSameTenant
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.RepositoryValidatesDatesAndStatusesWithoutWriting
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph
+    ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.LegacyEfWritersStillReceiveTriggerDerivedOwners
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.CampusLinksAreManyToManyScopedUniqueAndPreservedWhenInactive
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitClassAssignmentIsPathScopedImmutableAndNeverChangesStudentClass
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EnrollmentHistoryAndPersonalMembershipProfilesStaySeparateAcrossSharedUser
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.NonAdminsCannotUseAnyAdministrativeAction(role: "teacher")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.NonAdminsCannotUseAnyAdministrativeAction(role: "student")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: False, course: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: True, course: False)
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.BothServerFlagsRequiredOnEveryAction(school: False, course: True)
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: "membership")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: "institution")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.PreviouslyIssuedJwtLosesRightsOnNextOperation(change: "roles")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.MissingSelectedStudentProfileNeverFallsBackToOtherInstitution
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.SelectionLegacyAndAnonymousTokensCannotUseNewRoutesOrOpenGlobalUserApi
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ImmutableFieldsInvalidDatesAndUnapprovedMutationsAreRejected
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ConcurrentUniquenessClassAssignmentAndDescriptionUpdatesHaveSingleWinners
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ParallelTenantQueriesAndPostsNeverMixDataAndSqlWritersCarryOwner
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(environment: "Development")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(environment: "Production")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.AdminForeignResourceMatrixIsIndistinguishableFromMissingAndLeavesBothGraphsIntact
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: "enrolled")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: "completed")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: "withdrawn")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.ExplicitTechnicalStatusesRemainReadableForStudentsWithoutAnyAccount(status: "cancelled")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EditionStatusMustBeExplicitAndIsNeverDerivedFromDates(status: "planned")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EditionStatusMustBeExplicitAndIsNeverDerivedFromDates(status: "active")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EditionStatusMustBeExplicitAndIsNeverDerivedFromDates(status: "completed")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.EditionStatusMustBeExplicitAndIsNeverDerivedFromDates(status: "cancelled")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.AbsentOrInvalidCourseFlagCannotBeEnabledByClientAndWorkerFlagDoesNotOpenHttp
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: "identity")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: "school")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: "exam")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: "duplicate")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: "policy")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: "scheme")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: "anonymous")
+    ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.GateRejectsCombinedMarkersAndAlternativeAuthorizationEvenWithVerifiedContext(kind: "wrong-marker-policy")
+    ElectronicRegisterAPI.Tests.Integration.OpenScoreDoubleCountTests.OpenScore_IgnoresClosedAnswerAwardedPoints
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.ClosedOnly_70Percent_CreatesSuggestedAndOfficialSeven
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.ClosedOnly_BelowThreshold_NeverPasses
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.DifferentMaxScore_UsesPassingPercentNotPassingScore
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.PendingReview_DoesNotPublishOfficialGrade
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.FinalizeWithoutOverride_UsesSuggestedGrade
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.TeacherOverride_SevenToFive_MarksFailed
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.TeacherOverride_FiveToSeven_MarksPassed
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.OverrideWithoutReason_IsRejected
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.OverrideWithWhitespaceReason_IsRejected
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.OverrideWithInvalidGrade_IsRejectedWithoutChanges
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.TeacherNonOwner_CannotOverride
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.Admin_CanOverride
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.ClosedOnly_Override_UpdatesExistingGradeWithoutDuplication
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.Override_PersistsReasonActorAndTimestamp
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.Override_CreatesAuditEventInSameTransaction
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.FinalizeRetry_IsIdempotentAndDoesNotDuplicateAudit
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.ConcurrentDifferentOverrides_OnlyOneWins
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_AdditionalTests.AfterOverride_ResultReturnsOfficialGradeAndPassed
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_ConversionAndOverrideTests.ClosedOnly_60Percent_CreatesGradeSix
+    ElectronicRegisterAPI.Tests.Integration.Phase2B_ConversionAndOverrideTests.FullyReviewed_CalculatesAndPersistsSuggestedGrade
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.ReviewApis_RejectStudentAndAnonymous(operation: "list")
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.ReviewApis_RejectStudentAndAnonymous(operation: "read")
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.ReviewApis_RejectStudentAndAnonymous(operation: "review")
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.ReviewApis_RejectStudentAndAnonymous(operation: "finalize")
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.NonOwnerTeacher_ForbiddenAtHttpAndApplicationLevels(operation: "list")
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.NonOwnerTeacher_ForbiddenAtHttpAndApplicationLevels(operation: "read")
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.NonOwnerTeacher_ForbiddenAtHttpAndApplicationLevels(operation: "review")
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.NonOwnerTeacher_ForbiddenAtHttpAndApplicationLevels(operation: "finalize")
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.OwnerAndAdmin_ReviewFinalizeRetryAndConflict(admin: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.OwnerAndAdmin_ReviewFinalizeRetryAndConflict(admin: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.FinalizeWithoutOverride_UsesSuggestedAndOrdinaryAudit
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.Summary_UsesPersistedMetadataAndStatusFilter
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.MissingRoleIdentity_ForbiddenInsteadOfUnrestrictedQueries
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_ApiTests.InvalidInputsAndMissingResources_UseSafeHttpErrors
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.UnpublishedStates_NeverExposeProvisionalValues(status: InProgress)
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.UnpublishedStates_NeverExposeProvisionalValues(status: PendingReview)
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.UnpublishedStates_NeverExposeProvisionalValues(status: FailedAuto)
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.UnpublishedStates_NeverExposeProvisionalValues(status: Graded)
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.UnpublishedStates_NeverExposeProvisionalValues(status: Finalized)
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.StudentOwnWork_RedactsInProgressAndReviewedPending(reviewed: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.StudentOwnWork_RedactsInProgressAndReviewedPending(reviewed: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.Student_CannotReadOthersOrInvokeReviewManagers
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.StudentSubmitResponse_OnlyPublishesPersistedOfficialGrade(closedOnly: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase2C_VisibilityTests.StudentSubmitResponse_OnlyPublishesPersistedOfficialGrade(closedOnly: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ReviewAndFinalize_BothLockOrdersUseOnlyCommittedCompleteReview(finalizeFirst: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ReviewAndFinalize_BothLockOrdersUseOnlyCommittedCompleteReview(finalizeFirst: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ManualAndAutomaticSubmit_BothLockOrdersDeliverExactlyOnce(automaticFirst: False, closedOnly: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ManualAndAutomaticSubmit_BothLockOrdersDeliverExactlyOnce(automaticFirst: False, closedOnly: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ManualAndAutomaticSubmit_BothLockOrdersDeliverExactlyOnce(automaticFirst: True, closedOnly: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.ManualAndAutomaticSubmit_BothLockOrdersDeliverExactlyOnce(automaticFirst: True, closedOnly: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_ConcurrencyTests.TimingGuards_RejectEarlyAutomaticAndLateManualWithoutWrites
+    ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.ManualSubmit_RollsBackReplacementAndCompletedWrites(closedOnly: False, failAfterAudit: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.ManualSubmit_RollsBackReplacementAndCompletedWrites(closedOnly: False, failAfterAudit: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.ManualSubmit_RollsBackReplacementAndCompletedWrites(closedOnly: True, failAfterAudit: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.ManualSubmit_RollsBackReplacementAndCompletedWrites(closedOnly: True, failAfterAudit: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.AutomaticSubmit_RollsBackGradeSubmissionAndAudit(closedOnly: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.AutomaticSubmit_RollsBackGradeSubmissionAndAudit(closedOnly: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.Finalize_RollsBackNewOrUpdatedGradeAndAudit(isOverride: False, existingGrade: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.Finalize_RollsBackNewOrUpdatedGradeAndAudit(isOverride: True, existingGrade: False)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.Finalize_RollsBackNewOrUpdatedGradeAndAudit(isOverride: True, existingGrade: True)
+    ElectronicRegisterAPI.Tests.Integration.Phase3_TransactionRollbackTests.Review_RollsBackActuallyWrittenPointsCommentAndSuggestedGrade
+    ElectronicRegisterAPI.Tests.Integration.Phase3_WorkerRecoveryTests.HostedWorker_ResolvesWithScopeValidation
+    ElectronicRegisterAPI.Tests.Integration.Phase3_WorkerRecoveryTests.ControlledStopBeforeDispatch_NewWorkerRecoversPersistedExpiredBatch
+    ElectronicRegisterAPI.Tests.Integration.Phase3_WorkerRecoveryTests.TwoWorkers_SelectSameBatch_CommitOneDeliveryEachWithoutTechnicalFailures
+    ElectronicRegisterAPI.Tests.Integration.Phase3_WorkerRecoveryTests.ItemFailureAfterSql_DoesNotStopBatch_AndNextBatchRecoversWithFreshScope

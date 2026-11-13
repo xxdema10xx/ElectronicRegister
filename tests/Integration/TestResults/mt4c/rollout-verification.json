@@ -1,0 +1,10 @@
+{
+  "source": "Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\appsettings.example.json",
+  "flags": {
+    "SchoolApi": false,
+    "CourseApi": false,
+    "ExamApi": false,
+    "InstitutionWorker": false
+  },
+  "productionActivated": false
+}

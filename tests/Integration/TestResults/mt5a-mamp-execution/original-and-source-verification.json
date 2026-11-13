@@ -1,0 +1,17 @@
+{
+    "OriginalDumpBeforeSHA256":  "8508D8F09C79128D206E707ACD5109BA9C8E72AB93B2F06482AAA61D0744C06E",
+    "OriginalDumpAfterSHA256":  "8508D8F09C79128D206E707ACD5109BA9C8E72AB93B2F06482AAA61D0744C06E",
+    "OriginalLogicalDumpUnchanged":  true,
+    "OriginalMetadataUnchanged":  true,
+    "OriginalPort":  3306,
+    "OriginalTables":  28,
+    "OriginalTriggers":  40,
+    "ApplicationSourceFilesChecked":  370,
+    "ApplicationSourceFilesChanged":  0,
+    "CanonicalSqlFilesChecked":  6,
+    "CanonicalSqlFilesChanged":  0,
+    "OriginalTestEnvironmentTargetPreserved":  true,
+    "PasswordEnvironmentVariablePresent":  false,
+    "BootstrapFileRemoved":  true,
+    "SuitesExecuted":  false
+}

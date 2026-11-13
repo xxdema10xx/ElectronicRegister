@@ -1,0 +1,182 @@
+[
+    {
+        "File":  "acl-result.txt",
+        "Hash":  "F344583744F56327018E7B0C5B6AB8947C27C0AD01BBB1CF8E9B1C1652C44F1D"
+    },
+    {
+        "File":  "before-mt4c-backup.json",
+        "Hash":  "BFE95C5EC52B7EE05EF6E9350EBDCC54A5853BD8787CE8422A176863D088F5AF"
+    },
+    {
+        "File":  "credential-protection.json",
+        "Hash":  "1B067A98493D4DB09C723955DE2E3EDF9FA0C80B1B6C982FCC4FDEB456CF8AF1"
+    },
+    {
+        "File":  "empty-before-restore-backup.json",
+        "Hash":  "5BD703EFA442F7A9B86520AF3A7A56A3DC4F4E5A7BBF8489727D1A0A00A329DE"
+    },
+    {
+        "File":  "final-columns.txt",
+        "Hash":  "72FD17DAED43BC0D1D851780424365445E58A3E80ACD8CB169DBE82D6B1B4B9F"
+    },
+    {
+        "File":  "final-fk-integrity.json",
+        "Hash":  "F159A2A3E5CAEE665A872F5A0FBD87F2345F007FC74A80DC328DC8EDAEFE8A59"
+    },
+    {
+        "File":  "final-git-status.txt",
+        "Hash":  "E5FCA0B28CCD753244F0D293640395852D714445C8A472B7327669C3D8FA9E56"
+    },
+    {
+        "File":  "final-index-column-verification.json",
+        "Hash":  "F99F0A46E52EDE03DB5680B736E181A60F4DF0DB4E7096318C17169071C45A65"
+    },
+    {
+        "File":  "final-indexes.txt",
+        "Hash":  "275D14098E0AC559519D6B68312F2F828361E84ECC6AABEDA5E8CCE4AE0A6191"
+    },
+    {
+        "File":  "final-isolated-identity.json",
+        "Hash":  "0437EF0CFF0BE1757AF019632A69BEE10E3737ED1F5C6D656BB2C2EC498D8596"
+    },
+    {
+        "File":  "final-isolated-validation.json",
+        "Hash":  "51FF03CFDACA66D79A7F5A60F3D065C9FC4DE04554A148BED345D9D9B555A8E1"
+    },
+    {
+        "File":  "final-mt4a-validator.json",
+        "Hash":  "CD5FF126DB520D44D0AAD3F789AE4C121C794648FE0E53C5CFA7306133C4F54C"
+    },
+    {
+        "File":  "final-mt4c-backup.json",
+        "Hash":  "2CA4CDBC4D80E6CEB6FC527BE9F09AA4019DAB3221E6FD1CB1056F5EFF65035F"
+    },
+    {
+        "File":  "final-mt4c-validator.json",
+        "Hash":  "B24BBD3D048B8C8FE3CF35A16FD304B6526A794744B540F78E087BC565C3F5AD"
+    },
+    {
+        "File":  "final-referential_constraints.txt",
+        "Hash":  "B3778C3A4D9C2A144D2AC70C1FD6C380EAEAE6D13A4D5EF40FBAE1D36BD9CEDF"
+    },
+    {
+        "File":  "final-trigger-integrity.json",
+        "Hash":  "DBE0C6AA3EFC082A67D8D67D477073E9B1A90B05012B142919DFCDA62E952955"
+    },
+    {
+        "File":  "git-diff-check-stderr.txt",
+        "Hash":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "File":  "git-diff-check.txt",
+        "Hash":  "1E2F9B60A52422B6AEC9992E47FFE372FE75459138CEC36DEFDB6608017CCEFF"
+    },
+    {
+        "File":  "ignore-check.txt",
+        "Hash":  "E9B9216401A0A1AA979F2CACAAEF4447831D613DB49447B6B779410589B22672"
+    },
+    {
+        "File":  "initial-git-status.txt",
+        "Hash":  "5214C91850079C1CC07FDC4D9FB5997B9513B78F06FE9C43146B5FC774FCCE25"
+    },
+    {
+        "File":  "initial-head.txt",
+        "Hash":  "CEDA376F66BC5E1DD0F2E710899CB49B4B288F65623F0F56D9C4951A290660C7"
+    },
+    {
+        "File":  "initialization.json",
+        "Hash":  "447E0643F6F9A9F91AF9C7A6A34D858CF88C186A07B07004704771B315A5F97B"
+    },
+    {
+        "File":  "isolated-identity-before.json",
+        "Hash":  "0533B393C57C9B3F373D621A9082FA8F8104139B6B5E7434ECD880C779A77962"
+    },
+    {
+        "File":  "isolated-process.json",
+        "Hash":  "685E10769B131DBB3CCD8B7FAF161DEA91D3CAB99BDCCCD1E7F17CA2D740B55E"
+    },
+    {
+        "File":  "migration.json",
+        "Hash":  "6D35E95CCF707C9DA9D394AF91088C8AE52E900F03B2FA06627487485AA36082"
+    },
+    {
+        "File":  "mt4a-validator.json",
+        "Hash":  "CD5FF126DB520D44D0AAD3F789AE4C121C794648FE0E53C5CFA7306133C4F54C"
+    },
+    {
+        "File":  "mt4c-validator.json",
+        "Hash":  "B24BBD3D048B8C8FE3CF35A16FD304B6526A794744B540F78E087BC565C3F5AD"
+    },
+    {
+        "File":  "mysql-trigger-representation.json",
+        "Hash":  "F6AA1AAFFABA06450061532EF6D23D48E48C9B78FB3241E06B37DB9D356CFA71"
+    },
+    {
+        "File":  "original-and-source-verification.json",
+        "Hash":  "F3B899902929EAC04308520AF00F0267F49EA238A6E47D4B3F903A2CE73F2703"
+    },
+    {
+        "File":  "original-backup.json",
+        "Hash":  "1DDC3D9A8F1D37ABDF6AE8E13C941A75FDEEA11E7300A170C5F2194750784F57"
+    },
+    {
+        "File":  "original-column-order-verification.json",
+        "Hash":  "D8662204804F5CE26E923CED8E31449CA63CEF0C27145EA757149EF37C0FC262"
+    },
+    {
+        "File":  "original-final-preflight.txt",
+        "Hash":  "599891D4994047BAD77F86F3BE3AE09FFFA9C5322B53CFCF7748768E93136CE0"
+    },
+    {
+        "File":  "original-preflight.txt",
+        "Hash":  "599891D4994047BAD77F86F3BE3AE09FFFA9C5322B53CFCF7748768E93136CE0"
+    },
+    {
+        "File":  "post-mt4c-data-snapshot.json",
+        "Hash":  "A7EF8AEFF00812BD41549482E38965DA5851FDAEB06D084D478FFFE458647EB3"
+    },
+    {
+        "File":  "pre-mt4c-data-snapshot.json",
+        "Hash":  "A7EF8AEFF00812BD41549482E38965DA5851FDAEB06D084D478FFFE458647EB3"
+    },
+    {
+        "File":  "preflight.json",
+        "Hash":  "004178E18AB057DE51452E99A24B226B1F37BA57B4E7FEB0A3D052DADE7F5281"
+    },
+    {
+        "File":  "private-directory.json",
+        "Hash":  "52CF0C4893A4284FD866CD41FA788544FEB90EE19DCF493FE1FD6BE6DF96290F"
+    },
+    {
+        "File":  "restore.json",
+        "Hash":  "28BC9C51E81423346DF864A255CE57A668AC5AE5798C394C00F2AAC74AC2F747"
+    },
+    {
+        "File":  "restored-baseline-backup.json",
+        "Hash":  "82EE5657C3896464E87FB2ADD9AA53AE5FFE7589876A3DF8D51DDF9E9C2E841E"
+    },
+    {
+        "File":  "restored-data-digests.json",
+        "Hash":  "0070371650742B064B8BA808A45C2872DB5FC16D19966A1EC07C1D8B3F86AEDB"
+    },
+    {
+        "File":  "restored-data-verification.json",
+        "Hash":  "6F3BF6F7EE3F1287F6A973A4450C072C74883901F365300EFE5BB2E753CBAC96"
+    },
+    {
+        "File":  "restored-fk-integrity.json",
+        "Hash":  "9A696F3D20C6DC7C73998B12E664BCB4BB00F4F027633027DEEC59A17F63C81F"
+    },
+    {
+        "File":  "restored-schema-validation.json",
+        "Hash":  "50521E844424255AC98E864B206BB9BC3FA1F80ACD702F07CD58BB9FA3E4CC48"
+    },
+    {
+        "File":  "restored-trigger-integrity.json",
+        "Hash":  "08EE4264C0BE7DAD0189AB2BE4BE3FBBFFD24D64B3502FE8612CF07A213BED60"
+    },
+    {
+        "File":  "verification.json",
+        "Hash":  "4856E43EEEF934D3CA3ABE5F0EE644D243D06948A1C3DDE00FBE7E761A8EF1D4"
+    }
+]
