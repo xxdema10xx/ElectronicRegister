@@ -81,7 +81,7 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
             await cmd.ExecuteNonQueryAsync();
             foreach(var id in _extraUsers)
             {
-                await using var extra = Cmd(c, "DELETE FROM user WHERE id=@u AND email=@e", null, ("@u", id), ("@e", id.ToString("N") + "@mt5bp.example.test"));
+                await using var extra = Cmd(c, "SET @er_mt5b_fixture_owners=@u; DELETE FROM user WHERE id=@u AND email=@e; SET @er_mt5b_fixture_owners=NULL", null, ("@u", id), ("@e", id.ToString("N") + "@mt5bp.example.test"));
                 await extra.ExecuteNonQueryAsync();
             }
         }

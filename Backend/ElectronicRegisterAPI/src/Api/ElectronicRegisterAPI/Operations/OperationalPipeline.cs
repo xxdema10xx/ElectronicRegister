@@ -127,7 +127,7 @@ public static class OperationalPipeline
         app.MapGet("/health/ready", async (
         IConfiguration configuration,
         RuntimePolicy policy,
-        ElectronicRegisterAPI.Domain.Configuration.PlatformIdentitySettings platform,
+        [Microsoft.AspNetCore.Mvc.FromServices] ElectronicRegisterAPI.Domain.Configuration.PlatformIdentitySettings platform,
         IHostApplicationLifetime lifetime,
         ILoggerFactory loggerFactory,
         CancellationToken ct

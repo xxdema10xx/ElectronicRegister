@@ -19,7 +19,7 @@ internal static class IdentityAccountIntegrity
             return[];
         if (count != 2 || await Scalar($"SELECT COUNT(*) FROM information_schema.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND TABLE_NAME IN ({tables}) AND REFERENCED_TABLE_NAME='user' AND DELETE_RULE='RESTRICT'") != 2 || await Scalar("SELECT COUNT(*) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA=DATABASE() AND TRIGGER_NAME IN ('identity_account_event_no_update','identity_account_event_no_delete','identity_account_state_guard')") != 3)
             throw new InvalidOperationException("Incomplete identity account schema; no backfill permitted.");
-        if (await Scalar("SELECT COUNT(*) FROM identity_account_state s LEFT JOIN `user` u ON u.id=s.user_id WHERE u.id IS NULL OR s.generation<0") != 0 || await Scalar("SELECT COUNT(*) FROM identity_account_event e LEFT JOIN `user` u ON u.id=e.user_id WHERE u.id IS NULL OR e.action NOT IN ('account.registered','password.changed','profile.updated')") != 0)
+        if (await Scalar("SELECT COUNT(*) FROM identity_account_state s LEFT JOIN `user` u ON u.id=s.user_id WHERE u.id IS NULL OR s.generation<0") != 0 || await Scalar("SELECT COUNT(*) FROM identity_account_event e LEFT JOIN `user` u ON u.id=e.user_id WHERE u.id IS NULL OR e.action NOT IN ('account.registered','account.provisioned','password.temporary','password.changed','profile.updated')") != 0)
             throw new InvalidOperationException("Invalid global identity state; no backfill permitted.");
         var known = new List<string>
         {

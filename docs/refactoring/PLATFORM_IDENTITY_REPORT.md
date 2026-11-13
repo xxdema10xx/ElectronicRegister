@@ -85,11 +85,12 @@ Esecuzione unica, un solo processo, 16 min 45 s: **1730 casi, 1709 superati, 21 
     (contratto rigenerato su 8.4.13, `002_validate.sql` a zero); la suite completa **non è stata rieseguita**.
   - `InstitutionClassCrud.BulkImport_StaffRevocationWaitsForCommit…`: la lettura preliminare dell'import apriva una
     seconda transazione. **Corretto dopo la suite** (lettura solo con il flag attivo); non rieseguito.
-  - **Ancora aperti:** `Mt5bSecurityState.TechnicalProvisioning…` (teardown che cancella un utente senza la deroga
-    D-B), `Mt3aOwnership.AmbiguousLegacyAudit…` (`IdentityAccountIntegrity` rifiuta le azioni
-    `identity_account_event` scritte dalla creazione di account nello stesso database condiviso; da verificare se
-    preesistente), `StagingCalendarFeatureTests.EverySmokeCase…` (errore di inferenza del body sulle rotte, da
-    analizzare: in baseline falliva prima per Python assente).
+  - Corretti dopo la suite, anch'essi **non rieseguiti**: `Mt5bSecurityState.TechnicalProvisioning…` (il teardown
+    degli utenti extra azzerava la deroga prima della cancellazione), `Mt3aOwnership.AmbiguousLegacyAudit…`
+    (allowlist di `IdentityAccountIntegrity` allineata alle azioni già scritte dal codice di partenza, A30) e
+    `StagingCalendarFeatureTests.EverySmokeCase…` (parametro di readiness dedotto come body, A31).
+  - Una seconda esecuzione completa è stata interrotta dal sistema per memoria insufficiente: la verifica finale
+    della suite dopo queste correzioni resta da fare.
 
 ## Cosa non è stato verificato
 
