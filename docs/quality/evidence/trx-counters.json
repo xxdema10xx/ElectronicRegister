@@ -1,0 +1,14 @@
+[
+    {
+        "Suite":  "Unit",
+        "Counters":  "\u003cCounters total=\"590\" executed=\"590\" passed=\"590\" failed=\"0\" error=\"0\" timeout=\"0\" aborted=\"0\" inconclusive=\"0\" passedButRunAborted=\"0\" notRunnable=\"0\" notExecuted=\"0\" disconnected=\"0\" warning=\"0\" completed=\"0\" inProgress=\"0\" pending=\"0\" xmlns=\"http://microsoft.com/schemas/VisualStudio/TeamTest/2010\" /\u003e",
+        "Results":  590,
+        "NotPassed":  0
+    },
+    {
+        "Suite":  "Integration",
+        "Counters":  "\u003cCounters total=\"1458\" executed=\"1458\" passed=\"1458\" failed=\"0\" error=\"0\" timeout=\"0\" aborted=\"0\" inconclusive=\"0\" passedButRunAborted=\"0\" notRunnable=\"0\" notExecuted=\"0\" disconnected=\"0\" warning=\"0\" completed=\"0\" inProgress=\"0\" pending=\"0\" xmlns=\"http://microsoft.com/schemas/VisualStudio/TeamTest/2010\" /\u003e",
+        "Results":  1458,
+        "NotPassed":  0
+    }
+]

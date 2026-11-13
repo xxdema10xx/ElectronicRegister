@@ -1,0 +1,5 @@
+-- All counts must be zero; no historical events are invented.
+SELECT 'invalid_administration_events',COUNT(*) FROM institution_administration_event WHERE revision<1 OR action NOT IN ('created','updated','deleted') OR (before_json IS NOT NULL AND NOT JSON_VALID(before_json)) OR (after_json IS NOT NULL AND NOT JSON_VALID(after_json));
+SELECT 'foreign_administration_actors',COUNT(*) FROM institution_administration_event e LEFT JOIN institution_membership m ON m.institution_id=e.institution_id AND m.id=e.actor_membership_id AND m.user_id=e.actor_user_id WHERE m.id IS NULL;
+SELECT 'administration_event_trigger_count',ABS(3-COUNT(*)) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA=DATABASE() AND TRIGGER_NAME IN ('administration_event_insert','administration_event_update','administration_event_delete');
+SELECT 'administration_revision_gaps',COUNT(*) FROM (SELECT institution_id,entity_type,entity_id FROM institution_administration_event GROUP BY institution_id,entity_type,entity_id HAVING MIN(revision)<>1 OR MAX(revision)<>COUNT(*)) x;

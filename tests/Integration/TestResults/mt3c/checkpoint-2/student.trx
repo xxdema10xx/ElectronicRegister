@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="5a1ce359-6d77-4d8c-94fc-0d85fa464ac4" name="LorenzoBaracchi@CES01622 2026-10-19 10:25:15" runUser="AzureAD\LorenzoBaracchi" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-19T10:25:15.1551687+02:00" queuing="2026-10-19T10:25:15.1551690+02:00" start="2026-10-19T10:25:11.3778692+02:00" finish="2026-10-19T10:25:17.2947284+02:00" />
+  <TestSettings name="default" id="a7fed75d-8c10-4824-ba26-e9d15a0f5fd8">
+    <Deployment runDeploymentRoot="LorenzoBaracchi_CES01622_2026-10-19_10_25_15" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="d94ff3d3-8b20-4f3f-b7de-570c3f472630" testId="44bd10b2-48d1-a868-71ee-63378adb0e45" testName="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentOwnProfileIsDistinctFromDirectoryAndSubjectByTeacherKeepsClassIntersection" computerName="CES01622" duration="00:00:00.2637479" startTime="2026-10-19T10:25:14.2571844+02:00" endTime="2026-10-19T10:25:14.2572033+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d94ff3d3-8b20-4f3f-b7de-570c3f472630" />
+    <UnitTestResult executionId="f2ed9456-7bb7-493a-8ccd-e14abfbab028" testId="1febe234-36fc-69f5-3e6d-860168e676b4" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cPreflightTests.DefaultRolloutNeverOpensSchoolRoutesEvenForSignedAccessToken" computerName="CES01622" duration="00:00:00.0453906" startTime="2026-10-19T10:25:17.2292594+02:00" endTime="2026-10-19T10:25:17.2292596+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f2ed9456-7bb7-493a-8ccd-e14abfbab028" />
+    <UnitTestResult executionId="86142209-a1fd-4301-bec8-7cdb1fe8589a" testId="3a2ddd64-983d-5142-0eb9-a7ee615b2311" testName="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentDirectoryFiltersAllLookupsAndSqlCountForAdminAndAssignedTeacher" computerName="CES01622" duration="00:00:00.1714061" startTime="2026-10-19T10:25:14.5082121+02:00" endTime="2026-10-19T10:25:14.5082122+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="86142209-a1fd-4301-bec8-7cdb1fe8589a" />
+    <UnitTestResult executionId="b46e9d1f-3624-4f8a-a75d-2a9445f1148f" testId="fc3f1f4c-b617-d44e-b490-4421b01f3721" testName="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentCreationLinksOnlyExistingAuthorizedMembershipWithoutDuplicatingGlobalIdentity" computerName="CES01622" duration="00:00:00.0592312" startTime="2026-10-19T10:25:14.6336481+02:00" endTime="2026-10-19T10:25:14.6336483+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b46e9d1f-3624-4f8a-a75d-2a9445f1148f" />
+    <UnitTestResult executionId="89a58c81-dced-4135-9db9-ca49a31f45a8" testId="139c7beb-0e62-eba2-946d-01c35a46aafa" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.StudentReadsRespectAdminTeacherAndOwnProfileAcrossBothTenants" computerName="CES01622" duration="00:00:01.4026212" startTime="2026-10-19T10:25:17.1831077+02:00" endTime="2026-10-19T10:25:17.1831081+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="89a58c81-dced-4135-9db9-ca49a31f45a8" />
+    <UnitTestResult executionId="d8c74984-7206-4379-abca-90c457daaf4a" testId="7973189f-c37c-cc33-876d-f79c34a4bf01" testName="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: &quot;student&quot;)" computerName="CES01622" duration="00:00:00.5755479" startTime="2026-10-19T10:25:15.6204696+02:00" endTime="2026-10-19T10:25:15.6204699+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d8c74984-7206-4379-abca-90c457daaf4a" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentDirectoryFiltersAllLookupsAndSqlCountForAdminAndAssignedTeacher" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="3a2ddd64-983d-5142-0eb9-a7ee615b2311">
+      <Execution id="86142209-a1fd-4301-bec8-7cdb1fe8589a" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests" name="StudentDirectoryFiltersAllLookupsAndSqlCountForAdminAndAssignedTeacher" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cPreflightTests.DefaultRolloutNeverOpensSchoolRoutesEvenForSignedAccessToken" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="1febe234-36fc-69f5-3e6d-860168e676b4">
+      <Execution id="f2ed9456-7bb7-493a-8ccd-e14abfbab028" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cPreflightTests" name="DefaultRolloutNeverOpensSchoolRoutesEvenForSignedAccessToken" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant(family: &quot;student&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="7973189f-c37c-cc33-876d-f79c34a4bf01">
+      <Execution id="d8c74984-7206-4379-abca-90c457daaf4a" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="AdminCrudReturnsRealLocationAndPersistsOnlyOwnTenant" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.StudentReadsRespectAdminTeacherAndOwnProfileAcrossBothTenants" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="139c7beb-0e62-eba2-946d-01c35a46aafa">
+      <Execution id="89a58c81-dced-4135-9db9-ca49a31f45a8" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests" name="StudentReadsRespectAdminTeacherAndOwnProfileAcrossBothTenants" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentOwnProfileIsDistinctFromDirectoryAndSubjectByTeacherKeepsClassIntersection" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="44bd10b2-48d1-a868-71ee-63378adb0e45">
+      <Execution id="d94ff3d3-8b20-4f3f-b7de-570c3f472630" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests" name="StudentOwnProfileIsDistinctFromDirectoryAndSubjectByTeacherKeepsClassIntersection" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests.StudentCreationLinksOnlyExistingAuthorizedMembershipWithoutDuplicatingGlobalIdentity" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="fc3f1f4c-b617-d44e-b490-4421b01f3721">
+      <Execution id="b46e9d1f-3624-4f8a-a75d-2a9445f1148f" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3bSchoolTests" name="StudentCreationLinksOnlyExistingAuthorizedMembershipWithoutDuplicatingGlobalIdentity" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="44bd10b2-48d1-a868-71ee-63378adb0e45" executionId="d94ff3d3-8b20-4f3f-b7de-570c3f472630" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1febe234-36fc-69f5-3e6d-860168e676b4" executionId="f2ed9456-7bb7-493a-8ccd-e14abfbab028" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3a2ddd64-983d-5142-0eb9-a7ee615b2311" executionId="86142209-a1fd-4301-bec8-7cdb1fe8589a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fc3f1f4c-b617-d44e-b490-4421b01f3721" executionId="b46e9d1f-3624-4f8a-a75d-2a9445f1148f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="139c7beb-0e62-eba2-946d-01c35a46aafa" executionId="89a58c81-dced-4135-9db9-ca49a31f45a8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7973189f-c37c-cc33-876d-f79c34a4bf01" executionId="d8c74984-7206-4379-abca-90c457daaf4a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="6" executed="6" passed="6" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.36]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.43]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.43]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:05.17]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

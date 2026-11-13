@@ -1,0 +1,182 @@
+[
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"anonymous\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"identity\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"role=admin\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"exam\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MembershipRolesNeverInheritGlobalAdminOrAnotherTenantAdmin(name: \"multi\", b: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MissingLegacySelectionExpiredAndSuspendedTokensCannotRead",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"search=\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"course\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"pageNumber=2147483647\u0026pageSize=100\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.BootstrapPoliciesReadOnlyRoutesAndClosedDefaultAreExplicit(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"duplicate\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.FiltersSearchAndPaginationAreLocalDeterministicAndReadOnly",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.CurrentStateRevokesBothActionsAndDoesNotAffectOtherTenant(change: \"remove-role\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"policy\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.DirectoryAndDetailKeepGlobalIdentityAndRolesSeparateWithoutWritesOrSecrets",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.BootstrapPoliciesReadOnlyRoutesAndClosedDefaultAreExplicit(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"role=1\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.RepositoryUsesOneBoundedSqlProjectionPerReadAndNoTrackedEntities",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"no-context\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"status=unknown\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"school\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.CurrentStateRevokesBothActionsAndDoesNotAffectOtherTenant(change: \"add-role\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MembershipRolesNeverInheritGlobalAdminOrAnotherTenantAdmin(name: \"student\", b: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"pageSize=0\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"pageSize=101\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"status=\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"scheme\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"pageNumber=0\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.CurrentStateRevokesBothActionsAndDoesNotAffectOtherTenant(change: \"membership\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"role=\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MembershipRolesNeverInheritGlobalAdminOrAnotherTenantAdmin(name: \"teacher\", b: False)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"status=Active\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MembershipRolesNeverInheritGlobalAdminOrAnotherTenantAdmin(name: \"admin\", b: True)",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.InvalidFiltersReturn400(query: \"search=%20\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.MarkerCannotBypassGateWithCombinedOrAlternativeMetadata(kind: \"wrong-marker-policy\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt5aMembershipAdminTests.CurrentStateRevokesBothActionsAndDoesNotAffectOtherTenant(change: \"institution\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    }
+]

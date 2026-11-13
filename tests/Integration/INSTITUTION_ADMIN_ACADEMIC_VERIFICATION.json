@@ -1,0 +1,208 @@
+{
+  "date": "2026-10-22",
+  "branch": "refactor-database-entities",
+  "phases": {
+    "A": {
+      "unit": 97,
+      "integration": 976,
+      "total": 1073,
+      "failed": 0,
+      "skipped": 0
+    },
+    "B": {
+      "unit": 97,
+      "integration": 995,
+      "total": 1092,
+      "failed": 0,
+      "skipped": 0
+    },
+    "C/global": {
+      "unit": 103,
+      "integration": 1027,
+      "total": 1130,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "identity": {
+    "baseline": 1034,
+    "final": 1130,
+    "preserved": 1034,
+    "missing": [],
+    "added": 96,
+    "addedUnit": 13,
+    "addedIntegration": 83
+  },
+  "portability": {
+    "candidateManifestFiles": 138,
+    "ports": {
+      "13307": {
+        "version": "5.7.24",
+        "inventory": {
+          "tables": 42,
+          "triggers": 94,
+          "fks": 122,
+          "indexes": 170
+        },
+        "tableDefinitions": 42,
+        "triggerDefinitions": 94,
+        "triggerMetadata": 94,
+        "validators": [
+          "migrations/mt4/003_validate.sql",
+          "migrations/mt4/006_enrollment_audit_validate.sql",
+          "migrations/mt5/candidate-r3/003_security_state_validate.sql",
+          "migrations/mt5/candidate-r3/005_delete_contract_validate.sql",
+          "migrations/mt5/iam-d/002_validate.sql",
+          "migrations/mt5/iam-d/004_validate_snapshot.sql",
+          "migrations/mt5/onboarding/002_validate.sql",
+          "migrations/mt5/governance/002_validate.sql",
+          "migrations/institution-class/002_validate.sql",
+          "migrations/institution-administration/002_validate.sql"
+        ]
+      },
+      "13308": {
+        "version": "5.7.24",
+        "inventory": {
+          "tables": 42,
+          "triggers": 94,
+          "fks": 122,
+          "indexes": 170
+        },
+        "tableDefinitions": 42,
+        "triggerDefinitions": 94,
+        "triggerMetadata": 94,
+        "validators": [
+          "migrations/mt4/003_validate.sql",
+          "migrations/mt4/006_enrollment_audit_validate.sql",
+          "migrations/mt5/candidate-r3/003_security_state_validate.sql",
+          "migrations/mt5/candidate-r3/005_delete_contract_validate.sql",
+          "migrations/mt5/iam-d/002_validate.sql",
+          "migrations/mt5/iam-d/004_validate_snapshot.sql",
+          "migrations/mt5/onboarding/002_validate.sql",
+          "migrations/mt5/governance/002_validate.sql",
+          "migrations/institution-class/002_validate.sql",
+          "migrations/institution-administration/002_validate.sql"
+        ]
+      }
+    },
+    "preservedPriorBootstrapPrefix": true
+  },
+  "protectedPreviousFiles": 80,
+  "intentionalProtectedChanges": [
+    "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionClassSubjectController.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/ExamRepository.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionExamDataScope.cs"
+  ],
+  "restoredGeneratedEvidenceFiles": 817,
+  "port3306": "Never connected to or modified",
+  "existing13306": "New process/datadir attested before DDL; no existing instance adopted",
+  "migrationReplay": "Rejected before DDL",
+  "manifestSha256": "6D08017269AA0F2CAD18C9AF3BC140CA3CF91358D8225C3A6AA8E9D2C4770D34",
+  "filesToReviewForThisDelivery": [
+    "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionAcademicHttp.cs",
+    "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionBienniumController.cs",
+    "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionBienniumStudyAreaController.cs",
+    "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionBienniumStudyPathController.cs",
+    "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionStudyAreaController.cs",
+    "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionStudyPathController.cs",
+    "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionAcademicCatalogManager.cs",
+    "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionCampusManager.cs",
+    "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionClassSubjectManager.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/InstitutionAcademicCatalogDtos.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/InstitutionCampusDtos.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/InstitutionClassSubjectDtos.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IInstitutionAcademicCatalogManager.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IInstitutionCampusManager.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Managers/IInstitutionClassSubjectManager.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionAcademicCatalogRepository.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionCampusRepository.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Interfaces/Repositories/IInstitutionClassSubjectRepository.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/InstitutionAcademicRules.cs",
+    "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/InstitutionCampusRules.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.InstitutionAdministration.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/InstitutionAdministrationEvent.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/InstitutionAdministrationIntegrity.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionAcademicCatalogRepository.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionAdministrationPersistence.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionCampusRepository.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionClassSubjectRepository.cs",
+    "docs/api/INSTITUTION_ACADEMIC_MANAGEMENT.md",
+    "docs/development/INSTITUTION_ADMIN_COVERAGE_REPORT.md",
+    "migrations/institution-administration/001_expand.sql",
+    "migrations/institution-administration/002_validate.sql",
+    "migrations/institution-administration/README.md",
+    "tests/Integration/INSTITUTION_ACADEMIC_CATALOG_CRUD_REPORT.md",
+    "tests/Integration/INSTITUTION_ADMIN_ACADEMIC_VERIFICATION.json",
+    "tests/Integration/INSTITUTION_CAMPUS_CRUD_REPORT.md",
+    "tests/Integration/INSTITUTION_CLASS_SUBJECT_CRUD_REPORT.md",
+    "tests/Integration/InstitutionAcademicAuditFaultTests.cs",
+    "tests/Integration/InstitutionAcademicCatalogTests.cs",
+    "tests/Integration/InstitutionAcademicManagementSecurityTests.cs",
+    "tests/Integration/InstitutionAdministrationDependencyRaceTests.cs",
+    "tests/Integration/InstitutionCampusAuditFaultTests.cs",
+    "tests/Integration/InstitutionCampusCrudTests.cs",
+    "tests/Integration/InstitutionClassSubjectAuditFaultTests.cs",
+    "tests/Integration/InstitutionClassSubjectCrudTests.cs",
+    "tests/Unit/InstitutionAcademicRulesTests.cs",
+    "tests/Unit/InstitutionCampusRulesTests.cs",
+    "tools/Invoke-InstitutionAdministrationMigration.ps1",
+    ".gitattributes",
+    ".gitignore",
+    "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionCampusController.cs",
+    "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionClassSubjectController.cs",
+    "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/DependencyInjection/AddApplicationManagers.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/DependencyInjection/ServiceCollectionExtensions.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.Multitenancy.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/Mt3aOwnershipMigration.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/ExamRepository.cs",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionExamDataScope.cs",
+    "docs/development/LOCAL_DATABASE_SETUP.md",
+    "migrations/bootstrap/001_schema.sql",
+    "migrations/bootstrap/README.md",
+    "migrations/bootstrap/manifest.json",
+    "migrations/bootstrap/schema-contract.json",
+    "tests/Integration/AuditBootstrapTests.cs",
+    "tests/Integration/MembershipHttpSurface.cs",
+    "tests/Integration/Mt2IdentityTests.cs",
+    "tests/Integration/Mt3cHttpTests.cs",
+    "tests/Integration/Mt3dHttpTests.cs",
+    "tests/Integration/Mt4bHttpTests.cs",
+    "tools/local_test_db.py"
+  ],
+  "finalRegression": "institution-administration-owner-sql-final.trx",
+  "finalBuild": {
+    "success": true,
+    "errors": 0,
+    "existingNullableWarnings": 11
+  },
+  "liveIntegrity": {
+    "foreignKeysChecked": 122,
+    "orphanCounts": 0,
+    "administrationValidator": [
+      "invalid_administration_events\t0",
+      "foreign_administration_actors\t0",
+      "administration_event_trigger_count\t0",
+      "administration_revision_gaps\t0"
+    ],
+    "examPresentationColumn": "display_order_json\tlongtext\tYES",
+    "invalidPersistedOrders": 0
+  },
+  "finalTenantSql": "Metadata-discovered children join tenant-owned parent; role locks join tenant-owned membership",
+  "ownedTestInstances": {
+    "ports": [
+      13306,
+      13307,
+      13308
+    ],
+    "state": "Cleanly shut down after exact datadir and netstat PID verification",
+    "privateDatadirs": "Retained, ignored, never Git candidates"
+  },
+  "listenerInventory": "Native netstat; CIM inventory unavailable under sandbox permissions",
+  "githubPortability": {
+    "manifestFiles": 138,
+    "sha256": "All verified",
+    "eol": "All verified",
+    "deliveryCandidates": 69,
+    "ignoredRequiredFiles": 0
+  }
+}

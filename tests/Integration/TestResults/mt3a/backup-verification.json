@@ -1,0 +1,1529 @@
+{
+  "preDdlBackups": 169,
+  "allDigestsVerified": true,
+  "allReadableCompleteStrictTestDatabase": true,
+  "restoreTested": false,
+  "backups": [
+    {
+      "file": "ddl-21d63c5b73fb4ab085754b68fdea1a36.sql",
+      "sha256": "6CED35C6B3DCB3BC75168DD6C78996569A78B6E2606B7F37C1CA6F05D674690B",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-92afb8a2a8e84aa5b5a2f231b3e6d22d.sql",
+      "sha256": "285A98C53A43708D71F3DCA885819F7A4D5D2D55CCAFCEE4BBAE1DE083D93899",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-f475daf75a784dc2869fe2fb14162a63.sql",
+      "sha256": "AC3FD6B2633906F5196705CAE66593C0D9A206573BBA63096B701EF97AF10FA8",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-95fba573e5f9407baf8d6296e97f2a79.sql",
+      "sha256": "A9220415D143DDD3C07AADF4792897113E8D4A056CB3DD35C81DFA3F8C872007",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-be54abeb73764653a0ee4aa8df9b2419.sql",
+      "sha256": "33DA5F9ADC86DD4112B01A9FFDB46995FF81CFAA4492F681E6E286AC5D0E4E55",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-682b819edcdf4d8191bc57f888d6c8b3.sql",
+      "sha256": "E1D11EEF6760C7D1D6262CD55D0D0A162E122C1F28344FAE0E11A6277FEBE5EB",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-bec783f599354c058194ead4b08e60aa.sql",
+      "sha256": "5EF2DFD39288569264D548844CC36CDE6EEF127DEF0795123A1EBC97C348A478",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-99cc44bdcc7d45688e9ef9d2c284abd8.sql",
+      "sha256": "06788F7C8D62342350A60498A96ADCF7E3DD61C3DA138C40813BAE5B80A84362",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-8998d31406de4e3cb11447f67de25ebe.sql",
+      "sha256": "B2C6DC11DDA51460F3600965AFCC3CC040C6459E29429FC7D232216E5E8E3BBA",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-f32f1a73ff9a4c63b9a058873406bb4d.sql",
+      "sha256": "8196D26A298C71F0F23E49035B8D9CE76E7CAC33FC061D578FCAC36C6E36A0F1",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-925081feb93d4be0abdeffa00a0d4d2a.sql",
+      "sha256": "C8A2E83C7D9D72D3D483556ED272FD366473E97BB9194DEEBE7A96F138CF4629",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-96c90f052ee84b7fb2314162a018d6ee.sql",
+      "sha256": "C671A3D8CC25493EAC79AB8E9CA3EDE4FE3078EE206C99D24183E3D234C22663",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-365049610a9149bc8fdac80fb62d3c19.sql",
+      "sha256": "3CDD0E833C7DEE2631088A0616B0227050C314EA9E38DCF16C7A52113384B447",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-963e100ec7b649fc84aee2e21034ce46.sql",
+      "sha256": "474784F20B02B6FFF0EDFF8CB4C2E7FD6DF436BAAC89B2F82CB5507F0665DFB2",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-9f65b8cc701949be932056737ffc8824.sql",
+      "sha256": "7451AB1B46C71CDB66E406769425AC3AECB4979FF7078799B78C44719A02E05B",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-8aa90a1c92ff4dba8b8e070326887b6e.sql",
+      "sha256": "7C836C2E1EA7C944B4B4F592602B1A8D53FB85A91EC321182B28FEE203DF83D6",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-097eb23861714fc4ad1915eefab0c9fd.sql",
+      "sha256": "30D3246B75782BCF533F057DD6B0255DD0A66FDBF07795DA3B3CFB9439856DE7",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c5f36645b5484f8d8b58808aaa294741.sql",
+      "sha256": "D1968222920976128C0C6239A8B52BCC85D6DBEA82855386553030E289C3FCAB",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-d237ee6ce6974daeb24c326613047ee7.sql",
+      "sha256": "DC4924FF6F246830E27EF38ED56F14CCE7D09CBACFEE25DEE5F82505B2D0EC2D",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-5f72094593a447c8bc7aa32a35e8142b.sql",
+      "sha256": "AC41D227044EE8DFE9C0900058F18CEFFBB5FA07F415B70B96AD3F37FA32AC14",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-0e35f1999724435b9719fa7b545e6a08.sql",
+      "sha256": "B8BDD51404D88F48A64EEFD903A8AF865A00E2AB772F8BB39B2440087E921E62",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-2429cb041c3c4b8083ced711bc729ef4.sql",
+      "sha256": "4056726BDC1834ACB32FF4D95162F217CECD6D6E2DA68AF451DC16525F088108",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-cba52ff463fe47c98ab1925cf3ff114c.sql",
+      "sha256": "8A0C1A122BF4EE703C75258A07C77E1AAADB2DB2B5B1B5F957128A4F7B0440B4",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-bd3a7f0bdc714f48b192db413dd1c5fe.sql",
+      "sha256": "34660B46EA66D72FB3939CF01E0D3D70FB5A87AF609156A2E065A77B3E5AAD0C",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-d0c3502e3fe4491d9a4c3fa0d204ac36.sql",
+      "sha256": "646EA0052719BFA26403EDAC7E90BFEF5CEE199487C5BA67CC017A3B29CC6258",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c7e83e4963d84a5ca1fff8033bdccf72.sql",
+      "sha256": "8900392CF252B03406EF1C523C416D09BAA80CCD4FFCA1660B81E0385FEE783F",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-6b3cbfc4a57141a3bdd9680f5ce5d8ba.sql",
+      "sha256": "1873D92D10EB12F6CFADFA85C9CF36997542091D2B92707987142C93BD687964",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-7043267051f148e8a1c21a3cd7ee2f77.sql",
+      "sha256": "7C716F69358E0616A2D65B70A850041CE1176C102A78F14F8A5569C7939EEBFD",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-50dc8b12a53f43af82f4abec3a3f0bbc.sql",
+      "sha256": "84D60CA2F64AA756FF6165BDEF729AE0ABB0D1CEEAB4ED6C1C3E59041556E396",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-a25762880cbe49e4874e50c08bdb3967.sql",
+      "sha256": "0B0BE3A87F745F498DDBB5EF71B65231CAFFEB168A36F6C6944AE9E05DAD5ADF",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-187d4820deb34fffb3260cba1743797a.sql",
+      "sha256": "C08CB06FB3077917B1443CE5073225E507ACF80358F083E993806065A23174B4",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-ae3e0e05dfba4d0c9aec9c728eacce65.sql",
+      "sha256": "AE10088592408A2EE1B1E5F23B1EF22CCBD09F088260131F59082DF9077B375E",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-1188e575ed6a4eea8b43cea4251cdd70.sql",
+      "sha256": "97CE1E2A2BB2AD9781F447F7595AA8F579C4681EA0A0C8C175C6B3D802A50305",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-5dd6651a751141dbbd57abdff2f1ea24.sql",
+      "sha256": "4C9FB278B8E6D6F803739ABB7AC95A7ED37089493D725E212C71D503F01CAA53",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-0c39d06267ab4cfe976c66c413b1f18c.sql",
+      "sha256": "318A79AF6D3C997D0DDC3A5E82F11B6DEFF734B347E05CAB5F7928E5C992C082",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-701a462f71854e95bc2ae9448c847e21.sql",
+      "sha256": "8765758766B380A3804D307779D10F7D072FEDB92A49687E81EA97AE9D43CBB4",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-3cd504a9b0414b2dbb4085a15a639862.sql",
+      "sha256": "AA64737AD8BD65FD9551B47ED327C4523380ED76812B24F748292F40A27159B9",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-6fbf9f6b449b4db1aba3270421aae167.sql",
+      "sha256": "497A6110294ADE83D24AA7EDAD9FB516A98238A9B3B00D057AC91D2B5826EEF6",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-8e8c6863cb1546c8992e899b2e5fb395.sql",
+      "sha256": "BB4677C9786872E07393B60EE482E7F9FF2E140B813F741287861FB8C48FB241",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-9c31cd9a621140f0b25b5d969556dc14.sql",
+      "sha256": "56517FD1D3CFE68AA9BE642FCB482040984A9B96D3F26FEDC2C9D8C3B1427D0C",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-692bc5a2fa7d4ea792ce81a50e4d694c.sql",
+      "sha256": "185F2F5FF7E3EB2E83C23F8F544C8A22DB3CAB644CCEF61FA6F2D94E3EFE184F",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-196eec931a984ab29bfc9b1ce10afa95.sql",
+      "sha256": "C610BB9A2A249FF7097D3823AAA8287EE92CE2229C9D6626D2F01122EF8ED005",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-28ee60a2d30a4215b5b211f9535f7861.sql",
+      "sha256": "7CBD2708BE96807C76C64D723799C6B08125E0765FAB9BC892919AD226F622AA",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-3d234e6fa73d4bf99a6e40803a6354c8.sql",
+      "sha256": "4649384B976E06055917499A4E6240987DE4254E5A6CAE62285214D62F9FF320",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c5bfa700310d4535a1ca83e8301c5905.sql",
+      "sha256": "BC4355128D65434FD5A102761335167510D711D50D51F9D7EA7809ED7E4A56AB",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-ab853e4a557140ec99923be1581966cb.sql",
+      "sha256": "8DE9DD36876E20CE5823229F6AF2682EE78A59BDAB19537305DE981523E5E6D9",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-dea2518b92484f59854dc3901271d548.sql",
+      "sha256": "CB2A55A5C400B2A2B7A227A321242E94AD37B6BA768D1196B9AF6AD965FE936D",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-2f2ed522c9e244688278c2652b0770c2.sql",
+      "sha256": "3DFA0FDBE304E7B950F7296B949BB1C145A457C59B6730D203402FABA88B4F86",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-a40e143d5d5844cf9f3ae2f7f5981fdb.sql",
+      "sha256": "4AF865D1B5A7FA46F9948AED394812E04879BD88E8FBA970D7FDB3CEC0487D8F",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-0ae34200e2cb485eaa9be4ac2ff530b3.sql",
+      "sha256": "D44DCBB155E3649655793EA6740C40C56709F66AA8B7AB245BA77C3B12ABBD4E",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-2eff822c252144c0b5cea7599c40d605.sql",
+      "sha256": "287BC5361FF923A4D40CB3F17EB34770B6A485B19574545EE39C83A4557DC4DE",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-7d180cb905054ddc998c264eb0882110.sql",
+      "sha256": "0A631FAE3F9FE464E8C7F38B0D55C4D7A56D08656F5024709E68271CA59C99C2",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c594952858ba46bca7bbc2f46ff35119.sql",
+      "sha256": "02CAB5C2C46DC2ED0F59784B7B6FD90EE2206A5CAE78F9AE483F6868D4C53973",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-2683add7cd764cc48f0e5f5f994b5c81.sql",
+      "sha256": "339B4CB2C7C2795CBB5F4E6AD53EA59138E62D22F1873D20631D4F433F3DD144",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-4c52dec1db7744c4baca24e27d1d1081.sql",
+      "sha256": "F916359841084274C73C7C5DB2CF4B6E373C2DD4B778C3A9A9931B85F7D3865F",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-e032070b5f9143d4bb0628d8c94254c9.sql",
+      "sha256": "752D95318D2CED6366395B1FA6975CB276DC9777279811E13D8E766672D2ADB5",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-366f8da963d5462f86fedcbd8206bc16.sql",
+      "sha256": "C7E55B37137BE43DFB0F27BC03E11D084AD2836F1350C16F93BCC8476D0150E7",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-3a5f8a3cd8f74b6386532b79d0a36f27.sql",
+      "sha256": "38E07211EDD6061EB069D48C83D3B677EB5AD9AE86EA0A0FDA7A12F104EE7102",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-02b6b128cde04e13828c9fba4fd0ed31.sql",
+      "sha256": "44CC55BA235576ED6E79AC01B9A612B78ECFA34AF43CEADF4AE45A80B6950D97",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-ad194786ec784b06874028c8f5d84fcc.sql",
+      "sha256": "AC811A2F12D3F589E0FC78E29C9EB18215D650D2FE73F4E08318D14882E50120",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-2ea201b146d5406e953df1de3bc88c0b.sql",
+      "sha256": "93C26BA5B5FB22BFB83FD2AC623900921A8CBCE41656114B08F9264B878C6C6C",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-a55da6bc17e7468a9b533f0a21e81723.sql",
+      "sha256": "D73D5F3B74C2B4D00A781B06D71F0C1D8F74DACF47B5445C9D1B8B6EE149B3EE",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-56552b7076fc40a9a246f9113075cf29.sql",
+      "sha256": "00EFFEA7B63BBE652F33B95A18D6E710A89BC92315AEB5C6F921000A74D5E99C",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-d572523c6010437596a21e19948d3cb3.sql",
+      "sha256": "EAEFE45A39898BBB4C0E82047B0AD51A28C8AE94D192B51494087C13490FDF83",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-97181a8f56764f669fbf1c286cadc690.sql",
+      "sha256": "EBDC41CC3E2118C2EFBC4BE5D7187A3555FF28A1F506D960DCAA078B5A008D48",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-bfe63d0f58044fa2a220c60721d557ad.sql",
+      "sha256": "294B3CB26EE54343027CA8F1A59BC96B4E4535EB8D6DF08B6A0C75364BEC3BFD",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-9e1a4baa258e42b1ad8c832db237cc61.sql",
+      "sha256": "D832F53817781AACD8301E678D5E1BD786E5CFCD2DB7461038020FCBA99D30CE",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-8a06e2883c8941699b408de1cd1a03ed.sql",
+      "sha256": "476E2F640C65BB6FFCFE1AEDB266398571CC8E259B9E6102F034AB4AD71AC1A5",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-98c5151f18e241cebc075eab22fe742a.sql",
+      "sha256": "CADC5452862F45A5A875979AE6F2863F0EDE1E73E60FBB8EC1E0969728ED320C",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-75b3990de1cd4fe3a8170d2ed153c86a.sql",
+      "sha256": "605D82B2B200F3F85E539CAB6CEF8568ADD12DDCD49B2D4547BB0F90842521B6",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-2db71ca563f84434b03ddccc002190ad.sql",
+      "sha256": "B3A73D8083D034315C7A1A99BA8E148D3C9C2F0A5AB0EE77A072424C7FC1269F",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-a975f693e6444598ba898cfc0ad7f271.sql",
+      "sha256": "AF076DDE56F4B4D7CFA8899E9D3AC666053F1BC8B376F0B3534DACB6F48C2AA5",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c9f1181cf9d24a46bf9a4f2941712cab.sql",
+      "sha256": "E2E078DC6A2F3C2216F611E9783C6ECA774BB852D0EFE77B10782A3EECDB71DF",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-8d4bef328dfd4ab18b4a491eb4a3c411.sql",
+      "sha256": "5C04DC2E4AB8A6F24EA29099AF546CA7E68D7C00E10EC92C3A3E9844776FFD2E",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-0d23d54f255843a0a017a42a1fe32e28.sql",
+      "sha256": "1881BC4FC1A09AF48ED0F4990FF23A3FFEB66534FBA2C7E6A6BC881C65799C32",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-76d742e1b7f94dd6aaa1939c8f4b1ac4.sql",
+      "sha256": "639D4D823115715D65A8E05B7382F3A7DD11D2CF203C40FC378C07A33850C9E0",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-d17b6bbe362e44e9910951793ffd89d9.sql",
+      "sha256": "7EE47E6BB72F707E0E1A8B9ADA917E08B3A4D2B5DA2CCB7A7B45A4A6866B100B",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-93d99d03799d4d53b76c04340fc39e77.sql",
+      "sha256": "913B2E8213A5CD8EB60EDA5052531296212187AB02906F12B88F78A61C7FA5AD",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-1ed6671b0ed94c4a94660a8b374e823f.sql",
+      "sha256": "844E30CF4BEF100791374BDCE07B28DA93C8FCC26DC897D30541CB220847C8F5",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-f40bfa20c1454fc8866276eb371174e6.sql",
+      "sha256": "7D8404A9CB36589F0B63332BD812B6BA8FEE0CA16502A3407EE2CDEC302D92B8",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-3d263dc6788c4f82a344ff3b5fd3feb9.sql",
+      "sha256": "8FBDD42DF2014B6C8B881F425FF168D86C454E37CB955DB0E5E03E362A2963EB",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-458205a6a78b4b2baf8a195bac80314f.sql",
+      "sha256": "CCD0BBE10CCC30395C2606145592540BCA87FA936FED6D817B874E1843BF44CE",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-25d9a22eba964efeb36877cf2a6ccdb9.sql",
+      "sha256": "1025C7C8376CBBD7EB6F275D8C8B8BD1F775B52CC0035E0F1548EB869FC17DE4",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-edc46e33c68446238d8011d5464fe160.sql",
+      "sha256": "75C6B74EC1E44BDEAE3BC8E8DC8E10C0EBA4BF1F799DBE9DB59600168EACC44E",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-78a62799c2c74d15bebbcacc5c8fae1f.sql",
+      "sha256": "D19CE3564C6BAC3254E8B6A121970E2B12A3373BFA74A9D83BAAF265103C37A4",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-8493acc81219486bac142f0e8a7e1dd2.sql",
+      "sha256": "5B1C45994DC747C23BC60AF5F841AF3A5DEDF516F818E0F12532F5528DBF7393",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-691c56bf8d244c38a9d809cb4468d440.sql",
+      "sha256": "E5DB4D30C8A03859A9B80E7D0F62A81A8D612540C300D1CC8BAC9923EB1AB47D",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-75c9dd6fd3094faca5d68a51147fa6eb.sql",
+      "sha256": "D22BAA72375CE5FCF89D9F02BD8698428822546AC20D730BE1E9873A2CD784EF",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-a1367dce78be41f8b1aa9a46f181a4d3.sql",
+      "sha256": "7285A67783B49FE43C07DB2461D6BCAFFBEEA3525F6C1CE87BC9BB94CF3DCF67",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-60f60a96a2f147c9ac72fc029e74a18b.sql",
+      "sha256": "A64C2BC6C8A287462B91AB37A43F317D24D0C7F9E8B680C6C96480BF782C516E",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-fc9e834bf416418f92caad15d0c1a632.sql",
+      "sha256": "8D8C5567175B92432596FD8FDCF592FB429A5859709AA6732D8ED40B630734BA",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-d54d5c93125a43488e0839f9d80cac14.sql",
+      "sha256": "27FFD295D5DC03E383C66E81BB4A9B6EF408323965B4951B7BB3B9745DB54304",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c961ae635ffb4381af15ceefa67b259f.sql",
+      "sha256": "9A5C78ED10488153DAF690E3F8B7E176D2FA8A0D4443753219F3E7FACA9D071C",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-153845ac8a3a43e593b5cf72854dd82e.sql",
+      "sha256": "C05C320827E7E9E0986BBF140C95BB8D0FEABBF8209BBC2A6401CD788A1EF7BE",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-a0a3e29a79254f5ab0a62a06be19e5ac.sql",
+      "sha256": "40EC9FC8430BC048883A41FA1F294A5AAE8F71CD407C1138E3A4F5A0995BB7BD",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-34d8c2abe8d045f49595ad5fa3e14474.sql",
+      "sha256": "30BA58BBD98CED47E7BA7D8C847B8B1708E852CED0645FD4586DEBB22C7984FA",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-804c61a84ca2402bbc1f6196d23cbabb.sql",
+      "sha256": "5B872A1E35813D69CA1290A0E2D981F36FC2CFEB3F4CE25F4FDEF010780FDD52",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-9280f8f7548c4567a1dd2bdfc896b95c.sql",
+      "sha256": "B896BFEA839B0494A91D3FFDF87977715829B3562A817E462F6944CADC1E297E",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-9f3917d3e3424a2095b128ee9e7f9b82.sql",
+      "sha256": "B697EE04320951F98416554E4F597436FD0179CCE9C48137341E2CFF51CAF158",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c81aab5dd263425386b80be19a2569a2.sql",
+      "sha256": "F67EA487C520D0F4F4C46CD276144452BF606B010D23F531C0E549B08E84892B",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-69d46eec751e40c198db6687b44739bb.sql",
+      "sha256": "D684A6CE7155D5271ED369ED6FF61ABF67E76BBA558B6A9D961F9E20CF29804C",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-17a934d228f847fb87dddd09ed840b8e.sql",
+      "sha256": "B38428CC465BA8C63421D0252BD7917CCEC89AB6BE1D964BA554283FF09C3B49",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c34439eed9f2401a99c167b528e33284.sql",
+      "sha256": "5F68C3396A2FA20FBB1245E1135CE22334E1E344C7F28D12A14AF1DBE0EED6A0",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-4594711fd6c84177b709cb630ab9665f.sql",
+      "sha256": "08C8750BC2119969321119BC1279845C3C108C7A70D783090E18853533BB8CE6",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-d0c7ba2b937049f1b7e5e047d7e30ec6.sql",
+      "sha256": "B6951CDF165971329714D2112862C4BD0B30FEEDF2CFEBC6349F6A4A62B85ADF",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c38c3e4185f74351a1d09758d05c131f.sql",
+      "sha256": "43262825555EBF1FB80CA8170E27965D2E7F667FCA74D0D4A6BE3BB3331669B6",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-7421254b59934c14b5c445176b81a554.sql",
+      "sha256": "64A786D7B25394B381F23A2C73219BF58F7A238537CC040A23153074078192E3",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-0c59156ff8ee4d7f9ec1a7bf2443ee7a.sql",
+      "sha256": "3188E426505FCA2AA0918FC2461EC12CC12779C82CA32D65F1FEA9DE9619C785",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-ec50214f237e40288d6f08fad4a0540a.sql",
+      "sha256": "280BD044B6DC18BA63A027366F3B692722E601DE3540689276075E09B5386E05",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-8adf32bce7f840fa8e6c07b875638c3a.sql",
+      "sha256": "EC086FC7B11A861AC6205D4A93C9D6417C5D2BFC8E4330184D9AE0364B0261AC",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-cf5e30bd1c39407bb48b744dd0f615a4.sql",
+      "sha256": "3F125829F9225DECE2F447C14DB5069859DB0687069D272069B6E8B4F94BFA18",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-176f9def11564813b0a26e28c4238df1.sql",
+      "sha256": "66FCDD1B0215BA2937F0EC8589C77451BA8C1E48F3E36271E87A8CDEAE853FE8",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-6843d325fec647bfaa2341fa785cc469.sql",
+      "sha256": "B504FA3144940E5863F9D5378D8BE779B82FBE699F5D83E07380AF398A592745",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-1e77331e565a417c950bfdec467f0108.sql",
+      "sha256": "821BD19CB0B219A0EEFF0DECFF55C391F38454C84A6FF23F5A278DA59226BD56",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-8e728bfbf61949e5a7bc4ce0d781ba44.sql",
+      "sha256": "F0B5853BE5742EBA8B2FF539122A91A19EA3F2F1EC5BBE86D24437E63089CDB3",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-8f193fe449c74b30a8d75ae556a7247d.sql",
+      "sha256": "BB27FF7058E2203433A38B64BF83B7222667C4FF80A9A1E4E4F7E21C08AEF1E6",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-20028e07925341aca51106f482fb8ffb.sql",
+      "sha256": "27083CB3E006F7D31BE6B76CB007AD546DF89095ED7C227F3994D60C81C84F2C",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-91d8f903c6254d77871a303e00ea56c7.sql",
+      "sha256": "0023BF9A309DF446FE81897F042E021C5CCEEABFBA3EE3E5E408147E2FFB8D0C",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-186bd3993fdb41fabe975148885ff336.sql",
+      "sha256": "193C41AC3B5C084C8B0ABA9F40D5FEF30670B19D98ED49E8FAD6F4F058251B53",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 27,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-8b6f67d215ce4f358c482369b3cedbd8.sql",
+      "sha256": "329900D18FFB8B96F1AF94CF7FAA5BE447F8F8EC8523B8FA3DDE7A84615B3757",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c036e3d6670349b7a4d1dc363d878c3b.sql",
+      "sha256": "851177F08CE0C118EDC986CDBA4A995075B8E13A61AD2363BFB8F7B14DDD1565",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-2d75bdc8cac7468d947aedd8365761dc.sql",
+      "sha256": "5168B81BD41F21E5619A944FD55829EF6828A0AAC09EAF72F56773C0B7D75940",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-5429c31ecb794cbdb25f3e763227bfbd.sql",
+      "sha256": "8757209F446951A9E822D98880C37C1FE55016E60DDE5B9341B5F2CFA196A5D7",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-9772eed973a540ada25fcaa52ea1a35d.sql",
+      "sha256": "7153CCE8290034B4FACF62AD32AB5B9101E237777A686E97A9937A3ED1F1C3B2",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-684290097c9744d6951229c3ad342895.sql",
+      "sha256": "7676C4FDCD86C6B9272C40027106C2453829C1A5603F6B2C9D3C29A8E3756997",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-4dc85501f0f44e3b97da38cacf332244.sql",
+      "sha256": "9705BFF5B0C4EC41DD77CD36F236EF8BE40E310ED25986241C9B845CFF8DFBB6",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-aeeaa1ff2f3f4be28a85c97894eff911.sql",
+      "sha256": "443B69F8FEF452D8D51CD72ECCD561851661D5ACE3BC52711E01FF16FAF5DE8A",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-155993eda5ad449f88d4d9a9731c4b99.sql",
+      "sha256": "7A831FC7A54E6D6F8C1D27564CA5D877C8A1AEA444CCC43945BB5C42C57DACEB",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-de7b775ebc014d0788fba984af112c4a.sql",
+      "sha256": "219F684FC37CF71709392F17569A361292C8354E5D016CA2FECC53A9C1A90867",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-f7a19d7270c440b389ca0d86de1b9321.sql",
+      "sha256": "DB3073A18900396422D096AC5D6CF019A25C22B9900DC4588A0450A78E317C93",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-b7ee4dd4c94d4424962738c6ab49d804.sql",
+      "sha256": "8DF8A0C8018BE213E527E072D71C41E17548C55920750C0716CF873567795800",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-cc591c4563bf42af83f1cb76951e9f26.sql",
+      "sha256": "06D0152F6DA34322ADAD76826C4D06BBB5BDB71B02D1EBAC48E293C63EB75595",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-28d125d8732b4995821c02695a82ff9c.sql",
+      "sha256": "C04563D66E094F85CE59774418ED4D0E174CD0E8AF1E25F8797C07469744DD63",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-b46c05e4043a4273b1573e64d911c825.sql",
+      "sha256": "503FB875C7F0D18490529D390BB5B050C03536D0031A675048C1F35CABB235C4",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-1177f65ae5484a209ddbb95222cc560f.sql",
+      "sha256": "DBCCBE362E84E16B370B7FD0084F9CA60F9F03B4D68B675B11B0A1BDB8649F80",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-72005aafe4714c3aae2936cb2b5f16bc.sql",
+      "sha256": "284D702C0D48BC9213039D287BC73D7673A241D14C9339CCD409BF91AC21A379",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c81a18d85b954ceb8ffc0c69b0903d41.sql",
+      "sha256": "A2014B8A85F5EADC5B4E170231D28190FDB30245F86AFD9FE0A013C39A6EFB84",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-76449ff2cd2742f8bdb930380882e30e.sql",
+      "sha256": "78132E1A2E38864847F0253F98ED38D86D88E5E6E7EAD33D7A0D32724D1CBB53",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-af420e5d8c164fdd8dd9daa479b837de.sql",
+      "sha256": "954058E43011D6CA5B319407E015F62391E52DAB20E343808556CFE085C2EE74",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-22bb41d9cfe340448641aa1108623ba9.sql",
+      "sha256": "41278090D82E827218915B2D83712A4CB5EAABDC42DFACC5BFFAB870D5D3C15A",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-383f00315ae047f3bbb624c8b98e699c.sql",
+      "sha256": "35580CE03E6961E74EC11CF6FAE735DBD917A734ED617691B35F67CC0A9E8C9F",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-b7db6c02536f496290f1cdf876c36287.sql",
+      "sha256": "F46D66DEC2ECFA26C51AFDE7DBC0F32B9C57F982E65AAF8221759F96B70478AF",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-3f381a4e6bcf4096a65076dab5ef86db.sql",
+      "sha256": "A99D5EFC8ADD819A1D0DA37C5AE4F042E4739A321E8A071E94F97A547E32D2DE",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-43886caa2f8f4e4787733516e2060291.sql",
+      "sha256": "0900EA524E4EB056940BC6A64CA7C979D97ADE06234C892070EF836B79922E90",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-b87ee370f89c40d29ee97ce582411352.sql",
+      "sha256": "5ED9E4213C6E136613C38AC391257ECE60A54D1CC96442EEC6C28C4029F49E6A",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-00c0004da8884900884c9482a33ecdbb.sql",
+      "sha256": "7DAC0F28A070E3DFCA769564511BF77AE3F2BC9BFA128414A5AABD64F4A5B90A",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-37552e1ac467438c8dea2b21f73f772f.sql",
+      "sha256": "31934E257A385921D97878A194B9C4F7CCE7C1DD4FC8188CA26A390A7634D4E0",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-efa35b10e5d3431380b7786c77623d28.sql",
+      "sha256": "5ADC20EC53FAD2D94BFC6D4CACDE17C9A5BF3EF5AFBDBFB8ED8F45A5F31C8462",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-d9c7ab765df94f938aea78fb835f6588.sql",
+      "sha256": "A16EDB7E84ADFDC4E0C9D807DF7B1A528132BB2A27A4D836B60E3EC73D63484F",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-edfd824c1d5b41149fddaf3549555f76.sql",
+      "sha256": "A9A6320EA3134338C0887A4BD5B98DD5CFA1C3DFB0D8EEFF178E7E5ACBC24E58",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-fc22a0c0937d4ce5b908d252e371ffd8.sql",
+      "sha256": "5DDB4DB9ED4053EC5F83CDD1F58D31C2879A69702558F958B27610EEC95BCBD2",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-fbfd79f67a2b4fad94993e394f102182.sql",
+      "sha256": "E8F9BF650AEBE06719FBBCD963E0CD5E467B79EEE9815183C7F9508666B913EB",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-dbd7592a1ff341118e9c33236a6d61dc.sql",
+      "sha256": "36E52924D1670C38B9AB5D51BBA2BD896AEDAB48AE896D0F8313CC2CE98FF53F",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-2517b8e60dfd4a55b52de3d0b85a374a.sql",
+      "sha256": "505FF2C69F1D8E247678C387C89F3E11817F14BF20828718EC2CF7D5A4859390",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-c3e4ba3643a74e10954c4e108875bd11.sql",
+      "sha256": "1C429FC17ECD90E3166FB31A7E482A768047CF63CF16E71E32ACE2654E93204C",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-ca6ed7bd20a940d280147b0fa2baee55.sql",
+      "sha256": "7ACB64F2F52176AEF943DE3558BC058F0A73EB8CD4DDC98184B0091B691949FE",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-a01194788af249368f77589f13e6da45.sql",
+      "sha256": "EEEBC7B0748DA31C7F15ADB127CA944B842B016064D74D9D63D5D1281DDC1712",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-16ff8913a9b840fe90e574b6e28007d1.sql",
+      "sha256": "818D77109CB68D061704A6E19AE12402334D291C19DD65E92CA077118E53A1A4",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-ba11154ba9f94d079e4c8e09f1f0f9d4.sql",
+      "sha256": "482B1FDA09E2BD86A586047E837BBC96D51FCBBB97801DDC3C7A9293D7C22F99",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-1bc27c54c06c4b14a288c42cd5353558.sql",
+      "sha256": "A5F8F27C49092F9AEB4CDEA5CD49D17EB869443DE14EF143F026184543627F4A",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-bf53fa0208a44d578c8c80fc537a25d8.sql",
+      "sha256": "723018236CA1DED5BC945399A8AB947D82AEB3ECC44A836DFEC20541B43E46EF",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-6c3e411bd89e4bacaa902e2362339bc9.sql",
+      "sha256": "3BEDA2963027477A5BF9075E2FB4E244649133C91BC66DD7E73F8A654161256C",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-6413ba711a5c4770ab0861a4ecb17e34.sql",
+      "sha256": "B108BA1A41628F63939EF75AEEAECB2353E814262F5B53201CE7E740E6E596E1",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-27f3c1d1a4284a7aad6d6ca8567f5288.sql",
+      "sha256": "F98AB0BF9DAD92A30BF24DBE3C5FB40FBCA9EE5B6ED2D86512534B5597DE9E96",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-443274da8e5f47368aa9515934e01fee.sql",
+      "sha256": "42372DD30BEBFC930296C9210A6ECF8345CA1E33D82FA52A6619D8B78D5F164E",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-b823251aaf68463bb580686babf7687d.sql",
+      "sha256": "36A06B0DFDF5ECDEE84E8EC92B05EC131592AA489883DE57608D4F7E7F86D74B",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-434fe953cdf043d18a1d2b14a9505b53.sql",
+      "sha256": "CB61057BF60D1199EE94975A6144A21A6B46F573507A2A1E7A0E213A111AFE88",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-4c62e9ef07ae447497d022e650430eaa.sql",
+      "sha256": "1353FD938EE39BBAB4F757FF9144C386A42737029C84D4D3D0D6B41E75F998C4",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    },
+    {
+      "file": "ddl-b9c78e7f2fc746e5bb23d5581a58c58c.sql",
+      "sha256": "2BE1D6EE8F0D856F6902FD32F71BEC2445F6C94DFD29F1604C7DC21888E26455",
+      "database": "electronic_register_test",
+      "version": "5.7.24",
+      "strictMode": true,
+      "tables": 28,
+      "readableAndComplete": true
+    }
+  ]
+}

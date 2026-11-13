@@ -1,0 +1,60 @@
+{
+  "problems": [
+    {
+      "id": "persistent-state-and-authorized-channel",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "persistent-state-and-authorized-channel",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 3.438
+    },
+    {
+      "id": "remaining-ddl-recovery",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "remaining-ddl-recovery",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 1495.812
+    },
+    {
+      "id": "post-completion-acceptance",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "post-completion-acceptance",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 235.469
+    },
+    {
+      "id": "fresh-install-after-recovery",
+      "category": "runtime-phase",
+      "file": "tools/mysql84_runtime.py",
+      "line": 1,
+      "test": "fresh-install-after-recovery",
+      "error": "",
+      "cause": "Runtime phase completed",
+      "priority": "P1",
+      "status": "PASS",
+      "dependents": [],
+      "required": true,
+      "elapsedSeconds": 355.703
+    }
+  ]
+}

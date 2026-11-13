@@ -1,0 +1,29 @@
+Table	Non_unique	Key_name	Seq_in_index	Column_name	Collation	Cardinality	Sub_part	Packed	Null	Index_type	Comment	Index_comment
+exam_submission	0	PRIMARY	1	id	A	12	NULL	NULL		BTREE		
+exam_submission	0	uq_exam_submission_student	1	exam_id	A	12	NULL	NULL		BTREE		
+exam_submission	0	uq_exam_submission_student	2	student_id	A	12	NULL	NULL		BTREE		
+exam_submission	0	uq_mt3a_exam_submission_owner	1	institution_id	A	6	NULL	NULL		BTREE		
+exam_submission	0	uq_mt3a_exam_submission_owner	2	id	A	12	NULL	NULL		BTREE		
+exam_submission	0	uq_mt3a_submission_exam	1	institution_id	A	6	NULL	NULL		BTREE		
+exam_submission	0	uq_mt3a_submission_exam	2	exam_id	A	12	NULL	NULL		BTREE		
+exam_submission	0	uq_mt3a_submission_exam	3	id	A	12	NULL	NULL		BTREE		
+exam_submission	0	uq_exam_submission_grade	1	grade_id	A	12	NULL	NULL	YES	BTREE		
+exam_submission	1	fk_exam_submission_reviewer	1	reviewed_by_user_id	A	4	NULL	NULL	YES	BTREE		
+exam_submission	1	idx_exam_submission_exam_status	1	exam_id	A	12	NULL	NULL		BTREE		
+exam_submission	1	idx_exam_submission_exam_status	2	status	A	12	NULL	NULL		BTREE		
+exam_submission	1	idx_exam_submission_expiration	1	status	A	12	NULL	NULL		BTREE		
+exam_submission	1	idx_exam_submission_expiration	2	deadline_at	A	12	NULL	NULL		BTREE		
+exam_submission	1	idx_exam_submission_student_status	1	student_id	A	12	NULL	NULL		BTREE		
+exam_submission	1	idx_exam_submission_student_status	2	status	A	12	NULL	NULL		BTREE		
+exam_submission	1	idx_mt3a_exam_submission_student	1	institution_id	A	6	NULL	NULL		BTREE		
+exam_submission	1	idx_mt3a_exam_submission_student	2	student_id	A	12	NULL	NULL		BTREE		
+exam_submission	1	idx_mt3a_exam_submission_grade	1	grade_institution_id	A	4	NULL	NULL	YES	BTREE		
+exam_submission	1	idx_mt3a_exam_submission_grade	2	grade_id	A	12	NULL	NULL	YES	BTREE		
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	PRIMARY	s	range	uq_exam_submission_student,uq_mt3a_exam_submission_owner,uq_mt3a_submission_exam,idx_exam_submission_exam_status,idx_exam_submission_expiration,idx_exam_submission_student_status,idx_mt3a_exam_submission_student	idx_exam_submission_expiration	9	NULL	1	Using index condition; Using where
+1	PRIMARY	i	eq_ref	PRIMARY	PRIMARY	36	electronic_register_test.s.institution_id	1	Using where
+1	PRIMARY	cs	ref	PRIMARY,uq_mt3a_class_subject_owner,idx_mt3a_cs_class,idx_mt3a_cs_subject,idx_mt3a_cs_teacher	idx_mt3a_cs_class	36	electronic_register_test.s.institution_id	1	Using index
+1	PRIMARY	e	eq_ref	PRIMARY,uq_mt3a_exam_owner,idx_exam_class_subject,idx_mt3a_exam_class_subject	PRIMARY	36	electronic_register_test.s.exam_id	1	Using where
+1	PRIMARY	es	eq_ref	PRIMARY,idx_exam_student_student,idx_mt3a_exam_student_exam,idx_mt3a_exam_student_student	PRIMARY	72	electronic_register_test.s.exam_id,electronic_register_test.s.student_id	1	Using where
+1	PRIMARY	st	eq_ref	PRIMARY,uq_mt3a_student_owner	PRIMARY	36	electronic_register_test.s.student_id	1	Using where
+2	DEPENDENT SUBQUERY	m	const	PRIMARY	PRIMARY	1	const	1	

@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="416fc5cb-4c40-4b03-9714-01563cd88af4" name="Lorenzo@DESKTOP-QUOAG32 2026-10-18 18:55:13" runUser="DESKTOP-QUOAG32\Lorenzo" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-18T18:55:13.1130986+02:00" queuing="2026-10-18T18:55:13.1130987+02:00" start="2026-10-18T18:55:09.8715291+02:00" finish="2026-10-18T18:55:15.0858772+02:00" />
+  <TestSettings name="default" id="06d4cdb2-d11a-40bc-a554-6550b00c27ba">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-18_18_55_13" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="e8ac30ff-b4c3-4b86-ab60-8bd9dc9de0b9" testId="39cf3f32-dac1-786b-7b65-eebe6c05d366" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;update-admin&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.1905795" startTime="2026-10-18T18:55:13.7863973+02:00" endTime="2026-10-18T18:55:13.7863974+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e8ac30ff-b4c3-4b86-ab60-8bd9dc9de0b9" />
+    <UnitTestResult executionId="62932f17-9922-4997-9351-14df21f95b3a" testId="30786857-d7b4-ba88-aa7b-433168fa5289" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Student&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0242219" startTime="2026-10-18T18:55:14.6760555+02:00" endTime="2026-10-18T18:55:14.6760556+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="62932f17-9922-4997-9351-14df21f95b3a" />
+    <UnitTestResult executionId="5e08537c-9655-432f-8642-72c1ad10c07c" testId="06fe7fc8-b4e5-e1b9-3f5f-1ed4989764be" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;update-teacher&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.1954005" startTime="2026-10-18T18:55:13.5483500+02:00" endTime="2026-10-18T18:55:13.5483501+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5e08537c-9655-432f-8642-72c1ad10c07c" />
+    <UnitTestResult executionId="6d5136f6-ff06-4152-8c34-41c2e9f407ba" testId="b9a86dde-ccf6-e895-52af-f4e283ebe7ee" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;list&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0388082" startTime="2026-10-18T18:55:14.2950426+02:00" endTime="2026-10-18T18:55:14.2950427+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6d5136f6-ff06-4152-8c34-41c2e9f407ba" />
+    <UnitTestResult executionId="bf71372c-1bee-45b2-aa9a-8257aee70933" testId="955883f1-14a1-a160-1238-ba0be1fd9eec" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;close&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0741798" startTime="2026-10-18T18:55:14.0093647+02:00" endTime="2026-10-18T18:55:14.0093648+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bf71372c-1bee-45b2-aa9a-8257aee70933" />
+    <UnitTestResult executionId="361e1532-1c9b-46f0-80bb-d3504c7f8e94" testId="1ac26f0e-1f98-e492-ccc5-7dc1436868a2" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;delete-admin&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.2192190" startTime="2026-10-18T18:55:13.3083874+02:00" endTime="2026-10-18T18:55:13.3083875+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="361e1532-1c9b-46f0-80bb-d3504c7f8e94" />
+    <UnitTestResult executionId="6bb13bd1-416f-4d3e-8bde-b09f3b749b4d" testId="d9436bc0-0f01-86e8-cb05-311f0e2cc400" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Biennium&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0337133" startTime="2026-10-18T18:55:14.6062437+02:00" endTime="2026-10-18T18:55:14.6062438+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6bb13bd1-416f-4d3e-8bde-b09f3b749b4d" />
+    <UnitTestResult executionId="35a6ca5a-ad80-4049-9283-0e048b1858df" testId="119ace4c-748c-8335-87f1-37e42888032b" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudentTeacherSubjectsCannotBypassClassVisibility" computerName="DESKTOP-QUOAG32" duration="00:00:00.0373098" startTime="2026-10-18T18:55:13.8784180+02:00" endTime="2026-10-18T18:55:13.8784181+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="35a6ca5a-ad80-4049-9283-0e048b1858df">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: NotFound&#xD;
+Actual:   OK</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudentTeacherSubjectsCannotBypassClassVisibility() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 50&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudentTeacherSubjectsCannotBypassClassVisibility() in C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs:line 57&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ba998359-0d2d-4d11-82d4-6089ed7b6d4a" testId="447477d3-aeb4-f20b-3d8f-b36db2185a5a" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: True)" computerName="DESKTOP-QUOAG32" duration="00:00:00.1336162" startTime="2026-10-18T18:55:13.0438792+02:00" endTime="2026-10-18T18:55:13.0438793+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ba998359-0d2d-4d11-82d4-6089ed7b6d4a" />
+    <UnitTestResult executionId="a1832021-7e40-4709-bec3-6fa08f16074f" testId="568efad9-6f04-c40a-e290-a0c88a726b7d" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_GradeReadsCannotEscapeOwnership(otherStudent: True)" computerName="DESKTOP-QUOAG32" duration="00:00:00.2172452" startTime="2026-10-18T18:55:12.6773758+02:00" endTime="2026-10-18T18:55:12.6773759+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a1832021-7e40-4709-bec3-6fa08f16074f" />
+    <UnitTestResult executionId="a200a2b2-9fae-48ce-8771-95d6e06c9f1f" testId="a898384c-741c-7e75-83a7-77c060c0fad5" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;id&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0212323" startTime="2026-10-18T18:55:14.3614614+02:00" endTime="2026-10-18T18:55:14.3614615+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a200a2b2-9fae-48ce-8771-95d6e06c9f1f" />
+    <UnitTestResult executionId="e15122d1-e229-49be-a576-5e10279ebe56" testId="3553ab77-9d8e-0980-8a7e-aacb2e142a26" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;publish&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0388045" startTime="2026-10-18T18:55:14.1033309+02:00" endTime="2026-10-18T18:55:14.1033310+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e15122d1-e229-49be-a576-5e10279ebe56" />
+    <UnitTestResult executionId="f301df20-3b16-45cd-adfd-800b0a3c6ae5" testId="799f90f2-33a7-98ee-75ba-b66176f0e10b" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_OrdinaryGradeRemainsEditableAndDeletable" computerName="DESKTOP-QUOAG32" duration="00:00:00.0524197" startTime="2026-10-18T18:55:15.0338026+02:00" endTime="2026-10-18T18:55:15.0338027+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f301df20-3b16-45cd-adfd-800b0a3c6ae5" />
+    <UnitTestResult executionId="c4cd53c5-965f-4f16-9fd6-6cd96a3f2390" testId="6dac8224-2afc-d572-1a95-5c66aac58646" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;cancel&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0586948" startTime="2026-10-18T18:55:14.2093901+02:00" endTime="2026-10-18T18:55:14.2093902+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c4cd53c5-965f-4f16-9fd6-6cd96a3f2390" />
+    <UnitTestResult executionId="d0d32aff-507c-44fd-914c-1f5cf21b37ed" testId="35b0b1a7-34b9-0983-0922-746847091d75" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;name&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0283273" startTime="2026-10-18T18:55:14.4357605+02:00" endTime="2026-10-18T18:55:14.4357605+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d0d32aff-507c-44fd-914c-1f5cf21b37ed" />
+    <UnitTestResult executionId="5505e460-9c37-4e87-a56f-bb6d293b6e0d" testId="1accf719-8621-9341-a216-b987af60f0cf" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Users&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.1507188" startTime="2026-10-18T18:55:14.8860521+02:00" endTime="2026-10-18T18:55:14.8860521+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5505e460-9c37-4e87-a56f-bb6d293b6e0d" />
+    <UnitTestResult executionId="9669e751-8e58-400b-af69-caad22e3cc84" testId="dfa2b6ca-e2a7-6cba-60e5-733471405370" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_GradeReadsCannotEscapeOwnership(otherStudent: False)" computerName="DESKTOP-QUOAG32" duration="00:00:00.8518657" startTime="2026-10-18T18:55:12.4052073+02:00" endTime="2026-10-18T18:55:12.4052250+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9669e751-8e58-400b-af69-caad22e3cc84" />
+    <UnitTestResult executionId="1f08950c-e5d1-4c25-9be9-7cc150ea61f5" testId="3d7e464f-3933-3b71-2780-9abfd199163a" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;count&quot;)" computerName="DESKTOP-QUOAG32" duration="00:00:00.0274697" startTime="2026-10-18T18:55:14.5094984+02:00" endTime="2026-10-18T18:55:14.5094985+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1f08950c-e5d1-4c25-9be9-7cc150ea61f5" />
+    <UnitTestResult executionId="80cacd51-7a27-4a4c-8074-65f026efc525" testId="37de46a7-a75e-6a57-812a-b28675e83dec" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_LoginWithoutPasswordHashIsUnauthorized" computerName="DESKTOP-QUOAG32" duration="00:00:00.0120612" startTime="2026-10-18T18:55:14.9404564+02:00" endTime="2026-10-18T18:55:14.9404565+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="80cacd51-7a27-4a4c-8074-65f026efc525" />
+    <UnitTestResult executionId="64a5c790-9227-4f0c-8484-14eceb7d1a93" testId="7ce4f4fe-1cff-0756-5ecf-ffbcea24f902" testName="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: False)" computerName="DESKTOP-QUOAG32" duration="00:00:00.1523113" startTime="2026-10-18T18:55:12.8708734+02:00" endTime="2026-10-18T18:55:12.8708734+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="64a5c790-9227-4f0c-8484-14eceb7d1a93" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;update-admin&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="39cf3f32-dac1-786b-7b65-eebe6c05d366">
+      <Execution id="e8ac30ff-b4c3-4b86-ab60-8bd9dc9de0b9" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_ExamGradeCannotBypassFinalization" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudentTeacherSubjectsCannotBypassClassVisibility" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="119ace4c-748c-8335-87f1-37e42888032b">
+      <Execution id="35a6ca5a-ad80-4049-9283-0e048b1858df" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_StudentTeacherSubjectsCannotBypassClassVisibility" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_OrdinaryGradeRemainsEditableAndDeletable" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="799f90f2-33a7-98ee-75ba-b66176f0e10b">
+      <Execution id="f301df20-3b16-45cd-adfd-800b0a3c6ae5" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_OrdinaryGradeRemainsEditableAndDeletable" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Biennium&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="d9436bc0-0f01-86e8-cb05-311f0e2cc400">
+      <Execution id="6bb13bd1-416f-4d3e-8bde-b09f3b749b4d" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_CreateReturnsPersistedGuidAndUsableLocation" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;list&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="b9a86dde-ccf6-e895-52af-f4e283ebe7ee">
+      <Execution id="6d5136f6-ff06-4152-8c34-41c2e9f407ba" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_TeacherWithoutAssignmentsCannotReadStudents" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;name&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="35b0b1a7-34b9-0983-0922-746847091d75">
+      <Execution id="d0d32aff-507c-44fd-914c-1f5cf21b37ed" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_TeacherWithoutAssignmentsCannotReadStudents" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: False)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="7ce4f4fe-1cff-0756-5ecf-ffbcea24f902">
+      <Execution id="64a5c790-9227-4f0c-8484-14eceb7d1a93" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_RegistrationFaultRollsBackProfileAndUser" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;close&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="955883f1-14a1-a160-1238-ba0be1fd9eec">
+      <Execution id="bf71372c-1bee-45b2-aa9a-8257aee70933" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_LoginWithoutPasswordHashIsUnauthorized" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="37de46a7-a75e-6a57-812a-b28675e83dec">
+      <Execution id="80cacd51-7a27-4a4c-8074-65f026efc525" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_LoginWithoutPasswordHashIsUnauthorized" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;update-teacher&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="06fe7fc8-b4e5-e1b9-3f5f-1ed4989764be">
+      <Execution id="5e08537c-9655-432f-8642-72c1ad10c07c" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_ExamGradeCannotBypassFinalization" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_GradeReadsCannotEscapeOwnership(otherStudent: True)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="568efad9-6f04-c40a-e290-a0c88a726b7d">
+      <Execution id="a1832021-7e40-4709-bec3-6fa08f16074f" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_GradeReadsCannotEscapeOwnership" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_RegistrationFaultRollsBackProfileAndUser(adminFlow: True)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="447477d3-aeb4-f20b-3d8f-b36db2185a5a">
+      <Execution id="ba998359-0d2d-4d11-82d4-6089ed7b6d4a" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_RegistrationFaultRollsBackProfileAndUser" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;cancel&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="6dac8224-2afc-d572-1a95-5c66aac58646">
+      <Execution id="c4cd53c5-965f-4f16-9fd6-6cd96a3f2390" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_ExamGradeCannotBypassFinalization(operation: &quot;delete-admin&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="1ac26f0e-1f98-e492-ccc5-7dc1436868a2">
+      <Execution id="361e1532-1c9b-46f0-80bb-d3504c7f8e94" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_ExamGradeCannotBypassFinalization" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_GradeReadsCannotEscapeOwnership(otherStudent: False)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="dfa2b6ca-e2a7-6cba-60e5-733471405370">
+      <Execution id="9669e751-8e58-400b-af69-caad22e3cc84" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_GradeReadsCannotEscapeOwnership" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Student&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="30786857-d7b4-ba88-aa7b-433168fa5289">
+      <Execution id="62932f17-9922-4997-9351-14df21f95b3a" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_CreateReturnsPersistedGuidAndUsableLocation" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_CreateReturnsPersistedGuidAndUsableLocation(resource: &quot;Users&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="1accf719-8621-9341-a216-b987af60f0cf">
+      <Execution id="5505e460-9c37-4e87-a56f-bb6d293b6e0d" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_CreateReturnsPersistedGuidAndUsableLocation" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit(operation: &quot;publish&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="3553ab77-9d8e-0980-8a7e-aacb2e142a26">
+      <Execution id="e15122d1-e229-49be-a576-5e10279ebe56" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="LifecycleAudit_FaultAfterAuditSql_RollsBackStateAndAudit" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;count&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="3d7e464f-3933-3b71-2780-9abfd199163a">
+      <Execution id="1f08950c-e5d1-4c25-9be9-7cc150ea61f5" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_TeacherWithoutAssignmentsCannotReadStudents" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_TeacherWithoutAssignmentsCannotReadStudents(operation: &quot;id&quot;)" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="a898384c-741c-7e75-83a7-77c060c0fad5">
+      <Execution id="a200a2b2-9fae-48ce-8771-95d6e06c9f1f" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests" name="Audit_TeacherWithoutAssignmentsCannotReadStudents" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="39cf3f32-dac1-786b-7b65-eebe6c05d366" executionId="e8ac30ff-b4c3-4b86-ab60-8bd9dc9de0b9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="30786857-d7b4-ba88-aa7b-433168fa5289" executionId="62932f17-9922-4997-9351-14df21f95b3a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="06fe7fc8-b4e5-e1b9-3f5f-1ed4989764be" executionId="5e08537c-9655-432f-8642-72c1ad10c07c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b9a86dde-ccf6-e895-52af-f4e283ebe7ee" executionId="6d5136f6-ff06-4152-8c34-41c2e9f407ba" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="955883f1-14a1-a160-1238-ba0be1fd9eec" executionId="bf71372c-1bee-45b2-aa9a-8257aee70933" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1ac26f0e-1f98-e492-ccc5-7dc1436868a2" executionId="361e1532-1c9b-46f0-80bb-d3504c7f8e94" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d9436bc0-0f01-86e8-cb05-311f0e2cc400" executionId="6bb13bd1-416f-4d3e-8bde-b09f3b749b4d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="119ace4c-748c-8335-87f1-37e42888032b" executionId="35a6ca5a-ad80-4049-9283-0e048b1858df" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="447477d3-aeb4-f20b-3d8f-b36db2185a5a" executionId="ba998359-0d2d-4d11-82d4-6089ed7b6d4a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="568efad9-6f04-c40a-e290-a0c88a726b7d" executionId="a1832021-7e40-4709-bec3-6fa08f16074f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a898384c-741c-7e75-83a7-77c060c0fad5" executionId="a200a2b2-9fae-48ce-8771-95d6e06c9f1f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3553ab77-9d8e-0980-8a7e-aacb2e142a26" executionId="e15122d1-e229-49be-a576-5e10279ebe56" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="799f90f2-33a7-98ee-75ba-b66176f0e10b" executionId="f301df20-3b16-45cd-adfd-800b0a3c6ae5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6dac8224-2afc-d572-1a95-5c66aac58646" executionId="c4cd53c5-965f-4f16-9fd6-6cd96a3f2390" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="35b0b1a7-34b9-0983-0922-746847091d75" executionId="d0d32aff-507c-44fd-914c-1f5cf21b37ed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1accf719-8621-9341-a216-b987af60f0cf" executionId="5505e460-9c37-4e87-a56f-bb6d293b6e0d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dfa2b6ca-e2a7-6cba-60e5-733471405370" executionId="9669e751-8e58-400b-af69-caad22e3cc84" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3d7e464f-3933-3b71-2780-9abfd199163a" executionId="1f08950c-e5d1-4c25-9be9-7cc150ea61f5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="37de46a7-a75e-6a57-812a-b28675e83dec" executionId="80cacd51-7a27-4a4c-8074-65f026efc525" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7ce4f4fe-1cff-0756-5ecf-ffbcea24f902" executionId="64a5c790-9227-4f0c-8484-14eceb7d1a93" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="20" executed="20" passed="19" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.09]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.13]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.13]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:03.71]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:03.71]       Expected: NotFound&#xD;
+[xUnit.net 00:00:03.71]       Actual:   OK&#xD;
+[xUnit.net 00:00:03.71]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.71]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(50,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudentTeacherSubjectsCannotBypassClassVisibility()&#xD;
+[xUnit.net 00:00:03.71]         C:\Users\Lorenzo\ElectronicRegister\tests\Integration\AuditRegressionTests.cs(57,0): at ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudentTeacherSubjectsCannotBypassClassVisibility()&#xD;
+[xUnit.net 00:00:03.71]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:04.87]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-QUOAG32" outcome="Error" timestamp="2026-10-18T18:55:13.8771862+02:00">
+        <Text>[xUnit.net 00:00:03.71]     ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_StudentTeacherSubjectsCannotBypassClassVisibility [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

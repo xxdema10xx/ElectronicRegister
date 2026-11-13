@@ -1,0 +1,27 @@
+{
+  "new": [
+    "Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\EnrollmentLifecycleDtos.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Mt4c.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Entities\\CourseAdministrationEvent.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\CourseStructureRepository.Lifecycle.cs",
+    "tests\\Integration\\Mt4cEnrollmentTests.cs"
+  ],
+  "modified": [
+    "Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionCourseEditionController.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\Controllers\\InstitutionEnrollmentController.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Application\\ElectronicRegisterAPI.Application\\Managers\\InstitutionCourseManager.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\DTOs\\CourseDtos.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Managers\\IInstitutionCourseManager.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Domain\\ElectronicRegisterAPI.Domain\\Interfaces\\Repositories\\ICourseStructureRepository.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\ElectronicRegisterContext.Multitenancy.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Persistence\\Migrations\\Mt4CourseStructureIntegrity.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\CourseStructureRepository.cs",
+    "Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\Repositories\\CourseStructureRepository.Queries.cs",
+    "tests\\Integration\\AuditBootstrapTests.cs",
+    "tests\\Integration\\Mt2IdentityTests.cs",
+    "tests\\Integration\\Mt3dHttpTests.cs",
+    "tests\\Integration\\Mt4aCourseStructureTests.cs",
+    "tests\\Integration\\Mt4bHttpTests.cs"
+  ],
+  "deleted": []
+}

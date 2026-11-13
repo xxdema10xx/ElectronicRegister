@@ -1,0 +1,22 @@
+[
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.IdentitySelectionSeparatesFoundationsAndRolesWithoutLegacyProfiles",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSql_AppendOnlyCompositeOwnersAndUtcAreEnforcedByRealMariaDb",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    }
+]

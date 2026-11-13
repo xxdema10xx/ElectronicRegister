@@ -1,0 +1,13 @@
+{
+    "SourcesChecked":  370,
+    "ChangedSources":  0,
+    "CanonicalSqlChecked":  6,
+    "ChangedCanonicalSql":  0,
+    "ParentEnvironmentTargetStill3306":  true,
+    "PasswordEnvironmentVariablePresent":  false,
+    "NoNewPasswords":  true,
+    "BaselineFailed":  true,
+    "Targeted36Executed":  false,
+    "FinalSuitesExecuted":  0,
+    "Verdict":  "MT-5A PARZIALE - VALIDATION BLOCKED"
+}

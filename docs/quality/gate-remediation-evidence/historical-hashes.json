@@ -1,0 +1,22 @@
+[
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\migrations\\bootstrap\\manifest.json",
+        "Hash":  "CB1097278CC0A67CE386CBF2D87FBD2BA4B5EF1319C9A2A38373499719609E23"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\migrations\\identity-account\\001_identity_account.sql",
+        "Hash":  "BB9DF7CC82EE4AB297E27C78E31D650B02A3B9B4E6FE7E35886DDD2EE83BE083"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\migrations\\identity-account\\002_profile_acquisition.sql",
+        "Hash":  "46705F845110EE706763A14299E64843BA234D94EB02D1C27BA746B8A85F910F"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\migrations\\identity-account\\003_password_attempt.sql",
+        "Hash":  "AA7AEAED856924B4667F3B47D0B24284690FA4A629721895BD372D92B3C4A40D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\migrations\\identity-account\\004_release_schema.sql",
+        "Hash":  "968C4B3FF7716EE669BBA5B793D8DE37689296A8CE7A61C77A6CB41963074307"
+    }
+]

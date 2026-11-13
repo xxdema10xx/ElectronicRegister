@@ -1,0 +1,13 @@
+[
+  {
+    "container": "e3b219c9eb6236579bbfdde1dd17ff8d43faa8a66a8ccdb5aa6c91a8e2fc0e93",
+    "tcpReachable": true,
+    "socket": {
+      "returncode": 0,
+      "stdout": "8.4.13\tccb5af5b-d772-11f1-a92e-62d36692ed32\te3b219c9eb62\t3306\t/var/lib/mysql/\t1\troot@localhost\troot@localhost\n",
+      "stderr": "mysql: [Warning] Using a password on the command line interface can be insecure.\n",
+      "mysqlErrno": null,
+      "sqlstate": null
+    }
+  }
+]

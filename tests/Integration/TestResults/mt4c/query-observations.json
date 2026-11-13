@@ -1,0 +1,9 @@
+{
+  "capturedCommands": 40,
+  "capturedAuditInserts": 7,
+  "allCarryInstitutionId": true,
+  "capture": "Real EF DiagnosticListener, MT4B A/B writer/query case reexecuted with MT4C audit enabled",
+  "lifecycleQueries": "Source review plus actual SQL fault/barrier interceptors; EXPLAIN archived separately, not a load benchmark",
+  "projection": "History omits RequestHash/navigation graphs, owner/parent predicate before paging",
+  "paging": "default20 max100, no count/N+1"
+}

@@ -1,0 +1,12 @@
+tests/Integration/Mt3eWorkerTests.cs:245:    private sealed class CommandTimeoutFault : DbCommandInterceptor
+tests/Integration/Mt3eWorkerTests.cs:249:        internal Exception? ProviderFailure;
+tests/Integration/Mt3eWorkerTests.cs:252:            if (Fired && command.CommandText.Contains("SLEEP(5)")) ProviderFailure = data.Exception;
+tests/Integration/Mt3eWorkerTests.cs:296:            var settings = new MySqlConnector.MySqlConnectionStringBuilder(fixture.ConnectionString) { CancellationTimeout = -1 };
+tests/Integration/Mt3eWorkerTests.cs:313:                var providerError = Assert.IsType<MySqlConnector.MySqlException>(timeout.ProviderFailure);
+tests/Integration/Mt3eWorkerTests.cs:325:        var recovered = await Digest(false);
+tests/Integration/Mt3eWorkerTests.cs:383:        string globalBefore="";
+tests/Integration/Mt3eWorkerTests.cs:384:        await Db(async db=>globalBefore=System.Text.Json.JsonSerializer.Serialize(await db.Users.AsNoTracking().Where(u=>u.Id==_studentUser).Select(u=>new{u.Id,u.Email,u.PasswordHash,u.Role,u.StudentId,u.TeacherId}).SingleAsync()));
+tests/Integration/Mt3eWorkerTests.cs:394:        await Db(async db=>Assert.Equal(globalBefore,System.Text.Json.JsonSerializer.Serialize(await db.Users.AsNoTracking().Where(u=>u.Id==_studentUser).Select(u=>new{u.Id,u.Email,u.PasswordHash,u.Role,u.StudentId,u.TeacherId}).SingleAsync())));
+tests/Integration/Mt3dHttpTests.cs:743:        string globalBefore = null!;
+tests/Integration/Mt3dHttpTests.cs:744:        await Db(async db => globalBefore = await db.Database.SqlQueryRaw<string>("SELECT @@GLOBAL.sql_mode AS Value").SingleAsync());
+tests/Integration/Mt3dHttpTests.cs:775:            Assert.Contains("STRICT_TRANS_TABLES", session); Assert.Equal(globalBefore, global);

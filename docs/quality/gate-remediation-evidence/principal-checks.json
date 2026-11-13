@@ -1,0 +1,28 @@
+{
+  "baseline": {
+    "exit": 0,
+    "stdout": "{\"ReadOnly\":true,\"IdentityVerified\":true,\"BaseTablesVerified\":66,\"BaseTriggersVerified\":174,\"AdditiveTablesVerified\":5,\"AdditiveTriggersVerified\":6,\"RoutineDefinitionVerified\":true,\"DefinerVerified\":true,\"AdditiveProbeReady\":true,\"Release\":\"er-quality-1\"}",
+    "error": ""
+  },
+  "apiDdlDenied": [
+    true,
+    true,
+    true
+  ],
+  "noExecuteRejected": true,
+  "noMetadata": {
+    "exit": 1,
+    "stdout": "",
+    "error": "Error: Additive schema prerequisites missing\r"
+  },
+  "missingDefiner": {
+    "exit": 1,
+    "stdout": "",
+    "error": "Error: Release definer missing\r"
+  },
+  "restored": {
+    "exit": 0,
+    "stdout": "{\"ReadOnly\":true,\"IdentityVerified\":true,\"BaseTablesVerified\":66,\"BaseTriggersVerified\":174,\"AdditiveTablesVerified\":5,\"AdditiveTriggersVerified\":6,\"RoutineDefinitionVerified\":true,\"DefinerVerified\":true,\"AdditiveProbeReady\":true,\"Release\":\"er-quality-1\"}",
+    "error": ""
+  }
+}

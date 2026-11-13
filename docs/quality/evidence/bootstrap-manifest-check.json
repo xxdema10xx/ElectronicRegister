@@ -1,0 +1,269 @@
+{
+    "Files":  256,
+    "Mismatches":  [
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionCalendarController.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionFormativePlanController.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/ExceptionHandling/CalendarErrorsAttribute.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/ExceptionHandling/FormativePlanErrorsAttribute.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Program.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/CalendarControllerFeatureProvider.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Security/FormativePlanControllerFeatureProvider.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/appsettings.example.json",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/DependencyInjection/AddApplicationManagers.cs",
+                           "State":  "missing"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionCalendarManager.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Managers/InstitutionFormativePlanManager.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/DependencyInjection/ServiceCollectionExtensions.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/Services/CalendarImportRules.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Business/ElectronicRegisterAPI.Business/Services/FormativeDraftBuilder.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Exceptions/FormativePublicationException.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/CalendarPermissions.cs",
+                           "State":  "missing"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/CalendarTeachingBinding.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/FormativePlanRules.cs",
+                           "State":  "missing"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/InstitutionCalendar.cs",
+                           "State":  "missing"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/InstitutionCalendarImport.cs",
+                           "State":  "missing"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/InstitutionCalendarRules.cs",
+                           "State":  "missing"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Models/InstitutionFormativePlan.cs",
+                           "State":  "missing"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/DependencyInjection/ServiceCollectionExtensions.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.Calendar.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.Formative.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.Multitenancy.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/InstitutionCalendarEventRecord.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/InstitutionCalendarImportRecord.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/InstitutionCalendarOccupancyRecord.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/InstitutionCalendarPeriodRecord.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/InstitutionCalendarSettingsRecord.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/InstitutionLessonRecord.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/CalendarIntegrity.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/FormativePlanIntegrity.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/Mt3aOwnershipMigration.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionCalendarRepository.Imports.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionCalendarRepository.Lessons.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionCalendarRepository.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionClassRepository.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/InstitutionFormativePlanRepository.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Services/InstitutionImportFileReader.Calendar.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "README.md",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "docs/api/INSTITUTION_STAFF_PERMISSIONS.md",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "docs/architecture/INSTITUTION_MEMBERSHIP_GOVERNANCE.md",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "docs/architecture/INSTITUTION_MEMBERSHIP_MUTATIONS_AND_AUDIT.md",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "docs/architecture/ITS_FORMATIVE_PLAN_VERSIONING.md",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "docs/development/INSTITUTION_ADMIN_COVERAGE_REPORT.md",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "docs/development/LOCAL_DATABASE_SETUP.md",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Integration/InstitutionCalendarAtomicityTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Integration/InstitutionCalendarConcurrencyTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Integration/InstitutionCalendarDeadlockTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Integration/InstitutionCalendarFileReaderTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Integration/InstitutionCalendarHttpTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Integration/InstitutionCalendarIntegrityTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Integration/InstitutionCalendarOpenApiTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Integration/InstitutionCalendarRecoveryTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Integration/InstitutionCalendarSecurityLifecycleTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Integration/InstitutionFormativePlanLifecycleTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Integration/InstitutionFormativePlanTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Unit/CalendarImportRulesTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Unit/CalendarTeachingRulesTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Unit/FormativeDraftBuilderTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Unit/FormativePlanRulesTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tests/Unit/InstitutionCalendarRulesTests.cs",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tools/New-InstitutionStaffTestInstance.ps1",
+                           "State":  "sha256 mismatch"
+                       },
+                       {
+                           "File":  "tools/PlatformAdmin/Program.cs",
+                           "State":  "sha256 mismatch"
+                       }
+                   ]
+}

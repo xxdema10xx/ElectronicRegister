@@ -1,0 +1,50 @@
+[
+    {
+        "Finding":  "F01",
+        "Status":  "FIXED"
+    },
+    {
+        "Finding":  "F02",
+        "Status":  "FIXED"
+    },
+    {
+        "Finding":  "F03",
+        "Status":  "MITIGATED"
+    },
+    {
+        "Finding":  "F04",
+        "Status":  "FIXED"
+    },
+    {
+        "Finding":  "F05",
+        "Status":  "FIXED"
+    },
+    {
+        "Finding":  "F06",
+        "Status":  "FIXED"
+    },
+    {
+        "Finding":  "F07",
+        "Status":  "FIXED"
+    },
+    {
+        "Finding":  "F08",
+        "Status":  "FIXED"
+    },
+    {
+        "Finding":  "F09",
+        "Status":  "MITIGATED"
+    },
+    {
+        "Finding":  "F10",
+        "Status":  "FIXED"
+    },
+    {
+        "Finding":  "F11",
+        "Status":  "FIXED"
+    },
+    {
+        "Finding":  "F12",
+        "Status":  "FIXED"
+    }
+]

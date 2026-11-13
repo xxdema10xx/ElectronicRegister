@@ -1,0 +1,143 @@
+DATABASE()	VERSION()	@@SESSION.sql_mode	@@GLOBAL.sql_mode
+electronic_register_test	10.4.32-MariaDB	NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION	NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION
+table_name	column_name	column_type	collation_name
+biennium	id	char(36)	ascii_general_ci
+biennium	start_year	date	NULL
+biennium	end_year	date	NULL
+biennium	institution_id	char(36)	ascii_general_ci
+biennium_study_area	id	char(36)	ascii_general_ci
+biennium_study_area	biennium_id	char(36)	ascii_general_ci
+biennium_study_area	study_area_id	char(36)	ascii_general_ci
+biennium_study_area	institution_id	char(36)	ascii_general_ci
+biennium_study_path	id	char(36)	ascii_general_ci
+biennium_study_path	biennium_study_area_id	char(36)	ascii_general_ci
+biennium_study_path	study_path_id	char(36)	ascii_general_ci
+biennium_study_path	institution_id	char(36)	ascii_general_ci
+campus	id	char(36)	ascii_general_ci
+campus	institution_id	char(36)	ascii_general_ci
+campus	name	varchar(200)	utf8mb4_unicode_ci
+campus	address	varchar(300)	utf8mb4_unicode_ci
+campus	city	varchar(100)	utf8mb4_unicode_ci
+campus	province	varchar(100)	utf8mb4_unicode_ci
+campus	is_active	tinyint(1)	NULL
+class	id	char(36)	ascii_general_ci
+class	biennium_study_path_id	char(36)	ascii_general_ci
+class	name	varchar(20)	utf8mb4_unicode_ci
+class	institution_id	char(36)	ascii_general_ci
+institution	id	char(36)	ascii_general_ci
+institution	name	varchar(200)	utf8mb4_unicode_ci
+institution	code	varchar(64)	ascii_general_ci
+institution	legal_tax_code	varchar(32)	utf8mb4_unicode_ci
+institution	region	varchar(100)	utf8mb4_unicode_ci
+institution	status	enum('provisioning','active','suspended','archived')	utf8mb4_unicode_ci
+institution	created_at	datetime(6)	NULL
+institution	updated_at	datetime(6)	NULL
+institution_membership	id	char(36)	ascii_general_ci
+institution_membership	institution_id	char(36)	ascii_general_ci
+institution_membership	user_id	char(36)	ascii_general_ci
+institution_membership	status	enum('pending','active','suspended','left')	utf8mb4_unicode_ci
+institution_membership	joined_at	datetime(6)	NULL
+institution_membership	suspended_at	datetime(6)	NULL
+institution_student_profile	institution_id	char(36)	ascii_general_ci
+institution_student_profile	membership_id	char(36)	ascii_general_ci
+institution_student_profile	student_id	char(36)	ascii_general_ci
+student	id	char(36)	ascii_general_ci
+student	first_name	varchar(100)	utf8mb4_unicode_ci
+student	last_name	varchar(100)	utf8mb4_unicode_ci
+student	class_id	char(36)	ascii_general_ci
+student	institution_id	char(36)	ascii_general_ci
+student	class_institution_id	char(36)	ascii_general_ci
+study_area	id	char(36)	ascii_general_ci
+study_area	name	varchar(100)	utf8mb4_unicode_ci
+study_area	description	text	utf8mb4_unicode_ci
+study_area	institution_id	char(36)	ascii_general_ci
+study_path	id	char(36)	ascii_general_ci
+study_path	name	varchar(100)	utf8mb4_unicode_ci
+study_path	description	text	utf8mb4_unicode_ci
+study_path	institution_id	char(36)	ascii_general_ci
+constraint_name	table_name	referenced_table_name	delete_rule	update_rule
+fk_audit_actor	audit_event	user	SET NULL	RESTRICT
+fk_mt3a_audit_owner	audit_event	institution	RESTRICT	RESTRICT
+fk_mt3a_biennium_owner	biennium	institution	RESTRICT	RESTRICT
+fk_bsa_area	biennium_study_area	study_area	RESTRICT	RESTRICT
+fk_bsa_biennium	biennium_study_area	biennium	CASCADE	RESTRICT
+fk_mt3a_biennium_study_area_owner	biennium_study_area	institution	RESTRICT	RESTRICT
+fk_mt3a_bsa_area	biennium_study_area	study_area	RESTRICT	RESTRICT
+fk_mt3a_bsa_biennium	biennium_study_area	biennium	CASCADE	RESTRICT
+fk_bsp_bsa	biennium_study_path	biennium_study_area	CASCADE	RESTRICT
+fk_bsp_path	biennium_study_path	study_path	RESTRICT	RESTRICT
+fk_mt3a_biennium_study_path_owner	biennium_study_path	institution	RESTRICT	RESTRICT
+fk_mt3a_bsp_bsa	biennium_study_path	biennium_study_area	CASCADE	RESTRICT
+fk_mt3a_bsp_path	biennium_study_path	study_path	RESTRICT	RESTRICT
+fk_campus_institution	campus	institution	RESTRICT	RESTRICT
+fk_class_bsp	class	biennium_study_path	RESTRICT	RESTRICT
+fk_mt3a_class_bsp	class	biennium_study_path	RESTRICT	RESTRICT
+fk_mt3a_class_owner	class	institution	RESTRICT	RESTRICT
+fk_cs_class	class_subject	class	CASCADE	RESTRICT
+fk_cs_subject	class_subject	subject	RESTRICT	RESTRICT
+fk_cs_teacher	class_subject	teacher	RESTRICT	RESTRICT
+fk_mt3a_class_subject_owner	class_subject	institution	RESTRICT	RESTRICT
+fk_mt3a_cs_class	class_subject	class	CASCADE	RESTRICT
+fk_mt3a_cs_subject	class_subject	subject	RESTRICT	RESTRICT
+fk_mt3a_cs_teacher	class_subject	teacher	RESTRICT	RESTRICT
+fk_exam_class_subject	exam	class_subject	RESTRICT	RESTRICT
+fk_exam_retake_of	exam	exam	SET NULL	RESTRICT
+fk_mt3a_exam_class_subject	exam	class_subject	RESTRICT	RESTRICT
+fk_mt3a_exam_owner	exam	institution	RESTRICT	RESTRICT
+fk_mt3a_exam_retake_of	exam	exam	SET NULL	RESTRICT
+fk_exam_student_exam	exam_student	exam	CASCADE	RESTRICT
+fk_exam_student_student	exam_student	student	RESTRICT	RESTRICT
+fk_mt3a_exam_student_exam	exam_student	exam	CASCADE	RESTRICT
+fk_mt3a_exam_student_owner	exam_student	institution	RESTRICT	RESTRICT
+fk_mt3a_exam_student_student	exam_student	student	RESTRICT	RESTRICT
+fk_exam_submission_exam	exam_submission	exam	RESTRICT	RESTRICT
+fk_exam_submission_grade	exam_submission	grade	SET NULL	RESTRICT
+fk_exam_submission_reviewer	exam_submission	user	SET NULL	RESTRICT
+fk_exam_submission_student	exam_submission	student	RESTRICT	RESTRICT
+fk_mt3a_exam_submission_exam	exam_submission	exam	RESTRICT	RESTRICT
+fk_mt3a_exam_submission_grade	exam_submission	grade	SET NULL	RESTRICT
+fk_mt3a_exam_submission_owner	exam_submission	institution	RESTRICT	RESTRICT
+fk_mt3a_exam_submission_student	exam_submission	student	RESTRICT	RESTRICT
+fk_exam_violation_submission	exam_violation	exam_submission	CASCADE	RESTRICT
+fk_mt3a_exam_violation_owner	exam_violation	institution	RESTRICT	RESTRICT
+fk_mt3a_exam_violation_submission	exam_violation	exam_submission	CASCADE	RESTRICT
+fk_grade_class_subject	grade	class_subject	RESTRICT	RESTRICT
+fk_grade_student	grade	student	CASCADE	RESTRICT
+fk_mt3a_grade_class_subject	grade	class_subject	RESTRICT	RESTRICT
+fk_mt3a_grade_owner	grade	institution	RESTRICT	RESTRICT
+fk_mt3a_grade_student	grade	student	CASCADE	RESTRICT
+fk_membership_institution	institution_membership	institution	RESTRICT	RESTRICT
+fk_membership_user	institution_membership	user	RESTRICT	RESTRICT
+fk_membership_role_membership	institution_membership_role	institution_membership	RESTRICT	RESTRICT
+fk_mt3a_student_profile_owner	institution_student_profile	student	RESTRICT	RESTRICT
+fk_student_profile_membership	institution_student_profile	institution_membership	RESTRICT	RESTRICT
+fk_student_profile_student	institution_student_profile	student	RESTRICT	RESTRICT
+fk_mt3a_teacher_profile_owner	institution_teacher_profile	teacher	RESTRICT	RESTRICT
+fk_teacher_profile_membership	institution_teacher_profile	institution_membership	RESTRICT	RESTRICT
+fk_teacher_profile_teacher	institution_teacher_profile	teacher	RESTRICT	RESTRICT
+fk_mt3a_legacy_scope	mt3a_legacy_scope	institution	RESTRICT	RESTRICT
+fk_mt3a_question_exam	question	exam	CASCADE	RESTRICT
+fk_mt3a_question_owner	question	institution	RESTRICT	RESTRICT
+fk_question_exam	question	exam	CASCADE	RESTRICT
+fk_mt3a_question_option_owner	question_option	institution	RESTRICT	RESTRICT
+fk_mt3a_question_option_question	question_option	question	CASCADE	RESTRICT
+fk_question_option_question	question_option	question	CASCADE	RESTRICT
+fk_mt3a_student_class	student	class	SET NULL	RESTRICT
+fk_mt3a_student_owner	student	institution	RESTRICT	RESTRICT
+fk_student_class	student	class	SET NULL	RESTRICT
+fk_mt3a_study_area_owner	study_area	institution	RESTRICT	RESTRICT
+fk_mt3a_study_path_owner	study_path	institution	RESTRICT	RESTRICT
+fk_mt3a_subject_owner	subject	institution	RESTRICT	RESTRICT
+fk_mt3a_submission_answer_owner	submission_answer	institution	RESTRICT	RESTRICT
+fk_mt3a_submission_answer_question	submission_answer	question	RESTRICT	RESTRICT
+fk_mt3a_submission_answer_submission	submission_answer	exam_submission	CASCADE	RESTRICT
+fk_submission_answer_question	submission_answer	question	RESTRICT	RESTRICT
+fk_submission_answer_submission	submission_answer	exam_submission	CASCADE	RESTRICT
+fk_mt3a_submission_answer_option_answer	submission_answer_option	submission_answer	CASCADE	RESTRICT
+fk_mt3a_submission_answer_option_option	submission_answer_option	question_option	RESTRICT	RESTRICT
+fk_mt3a_submission_answer_option_owner	submission_answer_option	institution	RESTRICT	RESTRICT
+fk_submission_answer_option_answer	submission_answer_option	submission_answer	CASCADE	RESTRICT
+fk_submission_answer_option_option	submission_answer_option	question_option	RESTRICT	RESTRICT
+fk_mt3a_teacher_owner	teacher	institution	RESTRICT	RESTRICT
+fk_user_student	user	student	SET NULL	RESTRICT
+fk_user_teacher	user	teacher	SET NULL	RESTRICT

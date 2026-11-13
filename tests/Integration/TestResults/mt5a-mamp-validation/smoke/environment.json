@@ -1,0 +1,13 @@
+{
+    "Stage":  "smoke",
+    "ServerVersion":  "5.7.24",
+    "ServerPID":  24340,
+    "Host":  "127.0.0.1",
+    "Port":  13306,
+    "Database":  "electronic_register_test",
+    "Datadir":  "C:\\Users\\Lorenzo\\ElectronicRegister\\migrations\\mt4\\private\\mt5a-mamp-13306\\data\\",
+    "StrictSession":  true,
+    "DumpFlavor":  "MySQL",
+    "CredentialsFromPrivateFile":  true,
+    "EnvironmentScope":  "process only"
+}

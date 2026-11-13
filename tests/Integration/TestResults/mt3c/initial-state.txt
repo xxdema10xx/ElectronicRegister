@@ -1,0 +1,11 @@
+Branch: refactor-database-entities
+HEAD: 01702b57a19fc19079c1b7c005789ef69aa394a2
+Initial status:
+ M tests/Integration/EXAM_BUSINESS_RULES_UPDATE.md
+?? Frontend/ElectronicRegisterReact/.vscode/
+These pre-existing changes are preserved.
+Database server: MariaDB 10.4.32 (XAMPP)
+Initial global/session sql_mode: NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION
+Initial database: EF-created shape; no Institution, no memberships, no MT3A constraints/triggers/manifest.
+Baseline original: 48 unit passed, 306 integration passed, 72 integration failed, zero skipped.
+Strict baseline: 48 unit passed, 345 integration passed, 33 integration failed, zero skipped.

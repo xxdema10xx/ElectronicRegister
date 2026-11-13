@@ -1,0 +1,14 @@
+[
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Api\\ElectronicRegisterAPI\\packages.lock.json",
+        "TFM":  "net10.0",
+        "Type":  "Transitive",
+        "Resolved":  "2.6.1"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\Backend\\ElectronicRegisterAPI\\src\\Infrastructure\\ElectronicRegisterAPI.Infrastructure\\packages.lock.json",
+        "TFM":  "net10.0",
+        "Type":  "Direct",
+        "Resolved":  "2.6.1"
+    }
+]

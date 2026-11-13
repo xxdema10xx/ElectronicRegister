@@ -1,0 +1,286 @@
+{
+  "format": 1,
+  "suite": "windows-cli",
+  "problems": [
+    {
+      "id": "platform",
+      "test": "platform",
+      "required": true,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "id": "restore",
+      "test": "restore",
+      "required": true,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "id": "build",
+      "test": "build",
+      "required": true,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "id": "provision",
+      "test": "provision",
+      "required": true,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "id": "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.ActualAdministrativeCliVerifiesSignedIntentAndUsesOnlyOwnerInstalledChannel",
+      "test": "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.ActualAdministrativeCliVerifiesSignedIntentAndUsesOnlyOwnerInstalledChannel",
+      "required": true,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "id": "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_ActualCliUsesTheDedicatedManagerWithoutRequiringNotificationDelivery",
+      "test": "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_ActualCliUsesTheDedicatedManagerWithoutRequiringNotificationDelivery",
+      "required": true,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "id": "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.PlatformCliRefusesAuthorityConfigurationReadableByEveryoneBeforeMutation",
+      "test": "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.PlatformCliRefusesAuthorityConfigurationReadableByEveryoneBeforeMutation",
+      "required": true,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "id": "acl",
+      "test": "acl",
+      "required": true,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "id": "cleanup",
+      "test": "cleanup",
+      "required": true,
+      "status": "PASS",
+      "error": ""
+    }
+  ],
+  "trx": [
+    {
+      "file": "0.trx",
+      "sha256": "28fd531469c3e1c6408fcd3fb148167ab1c8dfacc8141ca07f69947c6c7472d0"
+    },
+    {
+      "file": "1.trx",
+      "sha256": "1816755a0a5c0dc1543a247b7da92f92143f08da5ebd85fa99c85c4d22910955"
+    },
+    {
+      "file": "2.trx",
+      "sha256": "cd2b79dc0a4cf708f2a078c956935cb6e1f0d7469ee1403cac84c282c6848862"
+    }
+  ],
+  "acl": [
+    {
+      "trusted": [
+        "S-1-5-21-909392792-1091772842-33005029-1001",
+        "S-1-5-18",
+        "S-1-5-32-544"
+      ],
+      "owner": "S-1-5-21-909392792-1091772842-33005029-1001",
+      "rules": [
+        {
+          "sid": "S-1-5-18",
+          "rights": "FullControl",
+          "type": "Allow"
+        },
+        {
+          "sid": "S-1-5-32-544",
+          "rights": "FullControl",
+          "type": "Allow"
+        },
+        {
+          "sid": "S-1-5-21-909392792-1091772842-33005029-1001",
+          "rights": "FullControl",
+          "type": "Allow"
+        }
+      ],
+      "sddl": "O:S-1-5-21-909392792-1091772842-33005029-1001G:S-1-5-21-909392792-1091772842-33005029-513D:AI(A;OICIID;FA;;;SY)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;S-1-5-21-909392792-1091772842-33005029-1001)"
+    },
+    {
+      "trusted": [
+        "S-1-5-21-909392792-1091772842-33005029-1001",
+        "S-1-5-18",
+        "S-1-5-32-544"
+      ],
+      "owner": "S-1-5-21-909392792-1091772842-33005029-1001",
+      "rules": [
+        {
+          "sid": "S-1-5-18",
+          "rights": "FullControl",
+          "type": "Allow"
+        },
+        {
+          "sid": "S-1-5-32-544",
+          "rights": "FullControl",
+          "type": "Allow"
+        },
+        {
+          "sid": "S-1-5-21-909392792-1091772842-33005029-1001",
+          "rights": "FullControl",
+          "type": "Allow"
+        }
+      ],
+      "sddl": "O:S-1-5-21-909392792-1091772842-33005029-1001G:S-1-5-21-909392792-1091772842-33005029-513D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-909392792-1091772842-33005029-1001)"
+    },
+    {
+      "trusted": [
+        "S-1-5-21-909392792-1091772842-33005029-1001",
+        "S-1-5-18",
+        "S-1-5-32-544"
+      ],
+      "owner": "S-1-5-21-909392792-1091772842-33005029-1001",
+      "rules": [
+        {
+          "sid": "S-1-5-18",
+          "rights": "FullControl",
+          "type": "Allow"
+        },
+        {
+          "sid": "S-1-5-32-544",
+          "rights": "FullControl",
+          "type": "Allow"
+        },
+        {
+          "sid": "S-1-5-21-909392792-1091772842-33005029-1001",
+          "rights": "FullControl",
+          "type": "Allow"
+        }
+      ],
+      "sddl": "O:S-1-5-21-909392792-1091772842-33005029-1001G:S-1-5-21-909392792-1091772842-33005029-513D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-909392792-1091772842-33005029-1001)"
+    },
+    {
+      "trusted": [
+        "S-1-5-21-909392792-1091772842-33005029-1001",
+        "S-1-5-18",
+        "S-1-5-32-544"
+      ],
+      "owner": "S-1-5-21-909392792-1091772842-33005029-1001",
+      "rules": [
+        {
+          "sid": "S-1-5-18",
+          "rights": "FullControl",
+          "type": "Allow"
+        },
+        {
+          "sid": "S-1-5-32-544",
+          "rights": "FullControl",
+          "type": "Allow"
+        },
+        {
+          "sid": "S-1-5-21-909392792-1091772842-33005029-1001",
+          "rights": "FullControl",
+          "type": "Allow"
+        }
+      ],
+      "sddl": "O:S-1-5-21-909392792-1091772842-33005029-1001G:S-1-5-21-909392792-1091772842-33005029-513D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-909392792-1091772842-33005029-1001)"
+    }
+  ],
+  "provenance": {
+    "platform": "win32",
+    "GITHUB_SHA": "",
+    "GITHUB_RUN_ID": "",
+    "GITHUB_RUN_ATTEMPT": ""
+  },
+  "package": {
+    "url": "https://cdn.mysql.com/archives/mysql-5.7/mysql-5.7.24-winx64.zip",
+    "sha256": "B851100272E5D6D741E650E59989DCCCF518A75478E25B5947B1552FB47E4F11",
+    "executables": {
+      "mysqld.exe": "4D8266AD6E53517302166FCEED51047E893163639F8E2EDAEC3E819E9ECF06BB",
+      "mysql.exe": "D434D52392BC4E37792DF42C1255C1D29FD45B4F27D81A967A67027896DCBD90",
+      "mysqladmin.exe": "184A009A99D2B395ED65C012737B53EF9180BD05ACD754D7AFE4E911CB4E7579",
+      "mysqldump.exe": "AE9869CC979FEEFCBC6B510023EDFD62A7A8CE5F9E7FF6E69341C7BAA21CDA3C"
+    }
+  },
+  "identity": {
+    "version": "5.7.24",
+    "uuid": "6d2be9f4-d7c6-11f1-bc40-00155d60b5cf",
+    "port": 64774,
+    "pid": 38676,
+    "bind": "127.0.0.1",
+    "datadir": "C:/Users/Lorenzo/ElectronicRegister/.staff-private/windows-cli-1c2609f24ceb4d7b8db5168448007e06/migrations/mt4/private/mt5a-mamp-13306/data/"
+  },
+  "aclNegative": [
+    {
+      "stage": "private-before",
+      "owner": "S-1-5-21-909392792-1091772842-33005029-1001",
+      "sddl": "O:S-1-5-21-909392792-1091772842-33005029-1001D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-909392792-1091772842-33005029-1001)",
+      "rules": [
+        {
+          "sid": "S-1-5-18",
+          "rights": 2032127,
+          "allow": true
+        },
+        {
+          "sid": "S-1-5-32-544",
+          "rights": 2032127,
+          "allow": true
+        },
+        {
+          "sid": "S-1-5-21-909392792-1091772842-33005029-1001",
+          "rights": 2032127,
+          "allow": true
+        }
+      ]
+    },
+    {
+      "stage": "broad-refused-without-mutation",
+      "owner": "S-1-5-21-909392792-1091772842-33005029-1001",
+      "sddl": "O:S-1-5-21-909392792-1091772842-33005029-1001D:AI(A;;0x100001;;;WD)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-909392792-1091772842-33005029-1001)",
+      "rules": [
+        {
+          "sid": "S-1-1-0",
+          "rights": 1048577,
+          "allow": true
+        },
+        {
+          "sid": "S-1-5-18",
+          "rights": 2032127,
+          "allow": true
+        },
+        {
+          "sid": "S-1-5-32-544",
+          "rights": 2032127,
+          "allow": true
+        },
+        {
+          "sid": "S-1-5-21-909392792-1091772842-33005029-1001",
+          "rights": 2032127,
+          "allow": true
+        }
+      ]
+    },
+    {
+      "stage": "private-restored-and-accepted",
+      "owner": "S-1-5-21-909392792-1091772842-33005029-1001",
+      "sddl": "O:S-1-5-21-909392792-1091772842-33005029-1001D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-909392792-1091772842-33005029-1001)",
+      "rules": [
+        {
+          "sid": "S-1-5-18",
+          "rights": 2032127,
+          "allow": true
+        },
+        {
+          "sid": "S-1-5-32-544",
+          "rights": 2032127,
+          "allow": true
+        },
+        {
+          "sid": "S-1-5-21-909392792-1091772842-33005029-1001",
+          "rights": 2032127,
+          "allow": true
+        }
+      ]
+    }
+  ]
+}

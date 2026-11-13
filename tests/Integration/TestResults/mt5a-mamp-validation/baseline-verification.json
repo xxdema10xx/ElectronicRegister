@@ -1,0 +1,45 @@
+{
+    "Run":  "baseline",
+    "Valid":  false,
+    "ExpectedTotal":  675,
+    "Total":  675,
+    "Unit":  51,
+    "Integration":  624,
+    "Passed":  673,
+    "Failed":  2,
+    "OtherOutcomes":  0,
+    "PreviousIdentitiesMissing":  0,
+    "NewIdentities":  0,
+    "Files":  [
+                  {
+                      "File":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-mamp-validation\\baseline\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_25_32_net10.0.trx",
+                      "SHA256":  "55A8B3C3C9E35C334054857FA8DA6DC83EA406EDE355C88B02EB83EEED1C0870",
+                      "Total":  624,
+                      "Executed":  624,
+                      "Passed":  622,
+                      "Failed":  2,
+                      "NotExecuted":  0
+                  },
+                  {
+                      "File":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-mamp-validation\\baseline\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_25_28_net10.0.trx",
+                      "SHA256":  "A478FB19B0DA445941BD8AA85886E50F445EF758DD9F18F73BA4EB38E2203B9F",
+                      "Total":  51,
+                      "Executed":  51,
+                      "Passed":  51,
+                      "Failed":  0,
+                      "NotExecuted":  0
+                  }
+              ],
+    "NonPassed":  [
+                      {
+                          "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eConnectionTimeoutAndGradingFailuresRecoverWithoutPartialWrites(kind: \"timeout\")",
+                          "Outcome":  "Failed",
+                          "Project":  "Integration"
+                      },
+                      {
+                          "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.HttpSqlHasTenantParametersConstantListCostAndExplicitOwnedWrites",
+                          "Outcome":  "Failed",
+                          "Project":  "Integration"
+                      }
+                  ]
+}

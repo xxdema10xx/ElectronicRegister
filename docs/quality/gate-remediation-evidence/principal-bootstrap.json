@@ -1,0 +1,9 @@
+{
+  "mysql": "5.7.24",
+  "port": 13451,
+  "HistoricalErTestAbsent": true,
+  "All180TriggersUseExplicitDefiner": true,
+  "DefinerAccountLocked": true,
+  "ApiRepresentativeDmlSucceeded": true,
+  "ApiReadiness": true
+}

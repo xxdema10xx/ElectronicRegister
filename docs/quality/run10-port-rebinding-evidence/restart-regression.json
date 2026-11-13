@@ -1,0 +1,112 @@
+{
+  "config": {
+    "protectedContainer": "2299602d4bce333ef0fb626e9b1fb22758ae15ed62edb637357c7ebd4d8bc1b2",
+    "database": "er84_run10_restart",
+    "reviewUser": "er84_run10_review",
+    "containerName": "er84-run10-20261103",
+    "volumeName": "er84-run10-20261103-data",
+    "apiUser": "er84_run10_api_r",
+    "defaultsFile": "C:/Users/Lorenzo/ElectronicRegister/.diagnostics/run8-local/root.cnf",
+    "isolatedLocal": true,
+    "localAttestation": "run10-20261103",
+    "reviewHost": "%",
+    "definerUser": "er84_run10_definer",
+    "mysqlClient": "C:/Program Files/MySQL/MySQL Server 8.0/bin/mysql.exe",
+    "serverPort": 3306,
+    "dedicatedServer": true,
+    "definerHost": "%",
+    "serverHost": "3ccbb050937e",
+    "serverUuid": "07381d54-d792-11f1-9a89-a291036c5940",
+    "mysqlContainer": "3ccbb050937e59810333fdd89fa946d1573d1b7d0b384efd0411cdde4661d4f2",
+    "port": 60704,
+    "host": "127.0.0.1",
+    "apiHost": "%",
+    "dumpClient": "C:/Program Files/MySQL/MySQL Server 8.0/bin/mysqldump.exe",
+    "recoverySocketAccount": "root@localhost",
+    "recoveryBinding": {
+      "container": "3ccbb050937e59810333fdd89fa946d1573d1b7d0b384efd0411cdde4661d4f2",
+      "image": "sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+      "hostname": "3ccbb050937e",
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "er84-run10-20261103-data",
+          "Source": "/var/lib/docker/volumes/er84-run10-20261103-data/_data",
+          "Destination": "/var/lib/mysql",
+          "RW": true
+        }
+      ],
+      "ports": {
+        "3306/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": ""
+          }
+        ]
+      },
+      "publishedPorts": {
+        "3306/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "60704"
+          }
+        ]
+      }
+    }
+  },
+  "before": {
+    "mode": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+    "port": 3306,
+    "uuid": "07381d54-d792-11f1-9a89-a291036c5940",
+    "events": "OFF",
+    "offline": 0,
+    "version": "8.4.13"
+  },
+  "after": {
+    "mode": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+    "port": 3306,
+    "uuid": "07381d54-d792-11f1-9a89-a291036c5940",
+    "events": "ON",
+    "offline": 1,
+    "version": "8.4.13"
+  },
+  "api": {
+    "returncode": 1,
+    "stdout": "",
+    "stderr": "mysql: [Warning] Using a password on the command line interface can be insecure.\nERROR 3032 (HY000): The server is currently in offline mode\n",
+    "mysqlErrno": 3032,
+    "sqlstate": "HY000"
+  },
+  "limitedIdentity": "er84_restart_limited@localhost\ter84_restart_limited@localhost\n",
+  "limitedGrants": "GRANT USAGE ON *.* TO `er84_restart_limited`@`localhost`\nGRANT CONNECTION_ADMIN ON *.* TO `er84_restart_limited`@`localhost`\n",
+  "insufficientPrivilegesRejected": true,
+  "identityRejections": [
+    {
+      "field": "container",
+      "error": "Recovery container/volume binding changed"
+    },
+    {
+      "field": "volume",
+      "error": "Recovery container/volume binding changed"
+    },
+    {
+      "field": "image",
+      "error": "Recovery container/volume binding changed"
+    },
+    {
+      "field": "uuid",
+      "error": "Recovery server UUID/identity/barrier mismatch"
+    }
+  ],
+  "apiRestored": {
+    "returncode": 0,
+    "stdout": "1\n",
+    "stderr": "mysql: [Warning] Using a password on the command line interface can be insecure.\n",
+    "mysqlErrno": null,
+    "sqlstate": null
+  },
+  "status": "PASS",
+  "dataPreserved": true,
+  "persistentBarrier": true,
+  "barrierRemoved": true
+}

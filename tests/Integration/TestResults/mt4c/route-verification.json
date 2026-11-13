@@ -1,0 +1,12 @@
+{
+  "Production": {
+    "endpoints": 154,
+    "courseActions": 19,
+    "otherEndpoints": 135
+  },
+  "Development": {
+    "endpoints": 159,
+    "courseActions": 19,
+    "otherEndpoints": 140
+  }
+}

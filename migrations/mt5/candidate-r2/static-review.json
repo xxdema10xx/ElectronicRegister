@@ -1,0 +1,31 @@
+{
+  "Status": "STATIC_REVIEW_CHECKS_PASSED",
+  "SQLExecuted": false,
+  "MySQLGrammarParsed": false,
+  "DotNetSuiteExecuted": false,
+  "CandidateFiles": 6,
+  "TriggerNamesAndShapesMatched": 11,
+  "RetainedCanonicalTriggerNames": 53,
+  "TriggerNameCollisions": 0,
+  "ValidatorRuleCounts": [
+    7,
+    6,
+    2
+  ],
+  "StatementCounts": {
+    "000_preflight.sql": 1,
+    "001_security_state_expand.sql": 16,
+    "002_security_state_backfill.sql": 6,
+    "003_security_state_validate.sql": 1,
+    "004_membership_delete_error_contract.sql": 6,
+    "005_delete_contract_validate.sql": 1
+  },
+  "FixturePredicatesIdentical": true,
+  "CandidateHashesVerified": true,
+  "HistoricalManifestUnchanged": true,
+  "PredecessorSQLUnchanged": true,
+  "Limits": [
+    "Lexical/dependency review only; not MySQL syntax certification",
+    "Requires approved isolated execution for errors, ordering, 1442, rollback, concurrency and teardown"
+  ]
+}

@@ -1,0 +1,516 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="e69a058e-ddee-40a1-9356-a05231a6193a" name="LorenzoBaracchi@CES01622 2026-10-19 12:24:56" runUser="AzureAD\LorenzoBaracchi" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-19T12:24:56.6069190+02:00" queuing="2026-10-19T12:24:56.6069195+02:00" start="2026-10-19T12:24:46.9308820+02:00" finish="2026-10-19T12:25:30.0604723+02:00" />
+  <TestSettings name="default" id="0284f8fe-a2db-4dce-902f-d5eba7b8c63a">
+    <Deployment runDeploymentRoot="LorenzoBaracchi_CES01622_2026-10-19_12_24_56" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="8e9dd4f7-017a-4a23-8bf2-82219922be7b" testId="d992ac69-dfa9-874f-d130-8389ad811950" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: &quot;cancel&quot;)" computerName="CES01622" duration="00:00:00.8289388" startTime="2026-10-19T12:24:57.5737320+02:00" endTime="2026-10-19T12:24:57.5737322+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8e9dd4f7-017a-4a23-8bf2-82219922be7b">
+      <Output>
+        <ErrorInfo>
+          <Message>System.UnauthorizedAccessException : Contesto non autorizzato.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs:line 22&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 36&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(String stage) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 196&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7d944e19-390b-47d2-8575-e11196a9be19" testId="60d016a2-f4e5-7948-fbef-1899dab1162c" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eBoundedKeysetScanAdvancesPastFailureAndResetsOnRestart" computerName="CES01622" duration="00:00:00.8441600" startTime="2026-10-19T12:25:07.5498213+02:00" endTime="2026-10-19T12:25:07.5498214+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7d944e19-390b-47d2-8575-e11196a9be19">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 156&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 169&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eBoundedKeysetScanAdvancesPastFailureAndResetsOnRestart() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 215&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="fb96aa91-521b-4c8d-962f-452eea33f86b" testId="e8170258-e190-1f52-e99b-220d9c845a64" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealHostedTimerDeliversOfflineAndStopsCleanly" computerName="CES01622" duration="00:00:15.2693847" startTime="2026-10-19T12:25:28.9801892+02:00" endTime="2026-10-19T12:25:28.9801895+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fb96aa91-521b-4c8d-962f-452eea33f86b" />
+    <UnitTestResult executionId="380a6645-9db3-46a4-bb36-c7ec29772edc" testId="24c39d5e-dba4-577a-81a2-41728eac59b5" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: &quot;worker&quot;)" computerName="CES01622" duration="00:00:00.7216228" startTime="2026-10-19T12:25:00.8775320+02:00" endTime="2026-10-19T12:25:00.8775322+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="380a6645-9db3-46a4-bb36-c7ec29772edc">
+      <Output>
+        <ErrorInfo>
+          <Message>System.UnauthorizedAccessException : Contesto non autorizzato.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs:line 22&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 36&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(String competitor) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 146&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="529ebc59-23d8-4cd7-8563-1965ff4ab3b4" testId="0eeb969e-1534-7a00-e982-dd005f4ca13d" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Multiple)" computerName="CES01622" duration="00:00:00.8275656" startTime="2026-10-19T12:25:05.5771752+02:00" endTime="2026-10-19T12:25:05.5771753+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="529ebc59-23d8-4cd7-8563-1965ff4ab3b4">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 156&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 169&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(QuestionType type) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 72&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="21a70b25-4ac3-414c-b139-92ab5df4fbf5" testId="4306f124-e5eb-9dcf-7a30-ce074ce6786c" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: &quot;invalid&quot;)" computerName="CES01622" duration="00:00:00.5967673" startTime="2026-10-19T12:25:11.2059710+02:00" endTime="2026-10-19T12:25:11.2059712+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="21a70b25-4ac3-414c-b139-92ab5df4fbf5" />
+    <UnitTestResult executionId="5eab57f6-eccc-4517-b9d9-978a2e64b459" testId="6bde4e72-e4c9-d46a-3241-9910176b4055" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: &quot;manual&quot;)" computerName="CES01622" duration="00:00:00.7888159" startTime="2026-10-19T12:25:01.8034163+02:00" endTime="2026-10-19T12:25:01.8034164+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5eab57f6-eccc-4517-b9d9-978a2e64b459">
+      <Output>
+        <ErrorInfo>
+          <Message>System.UnauthorizedAccessException : Contesto non autorizzato.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs:line 22&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 36&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(String competitor) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 152&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="93be961a-5e58-4ce0-a9b9-8be621fda910" testId="8e8cd581-9d12-e132-e234-1ba163d42a4f" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: &quot;&quot;)" computerName="CES01622" duration="00:00:00.5787773" startTime="2026-10-19T12:25:12.5931128+02:00" endTime="2026-10-19T12:25:12.5931130+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="93be961a-5e58-4ce0-a9b9-8be621fda910" />
+    <UnitTestResult executionId="ca87c4b2-5ffa-4164-94ef-fcefdefedbac" testId="4134c42e-452e-cd5f-7a36-c12b333de451" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: &quot;false&quot;)" computerName="CES01622" duration="00:00:00.5672563" startTime="2026-10-19T12:25:11.9013931+02:00" endTime="2026-10-19T12:25:11.9013933+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ca87c4b2-5ffa-4164-94ef-fcefdefedbac" />
+    <UnitTestResult executionId="eb1dc9b3-c78d-4a86-bbd9-bee82c025238" testId="10d7c956-bf0e-8a4f-1e4d-bc809b9b7807" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: &quot;audit-after&quot;)" computerName="CES01622" duration="00:00:00.6467131" startTime="2026-10-19T12:24:59.1134639+02:00" endTime="2026-10-19T12:24:59.1134640+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eb1dc9b3-c78d-4a86-bbd9-bee82c025238">
+      <Output>
+        <ErrorInfo>
+          <Message>System.UnauthorizedAccessException : Contesto non autorizzato.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs:line 22&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 36&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(String stage) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 196&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c8739169-ce09-4d2f-a58b-3ebb79cdda39" testId="b693f944-e699-bf65-8b5f-778726623c00" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: &quot;grade-before&quot;)" computerName="CES01622" duration="00:00:00.7415827" startTime="2026-10-19T12:25:00.0101882+02:00" endTime="2026-10-19T12:25:00.0101886+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c8739169-ce09-4d2f-a58b-3ebb79cdda39">
+      <Output>
+        <ErrorInfo>
+          <Message>System.UnauthorizedAccessException : Contesto non autorizzato.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs:line 22&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 36&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(String stage) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 196&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a9b23c15-54ac-4192-ab49-78924e3b50fb" testId="1369d323-78b3-9f1b-e312-b880a480cea5" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Single)" computerName="CES01622" duration="00:00:00.8674777" startTime="2026-10-19T12:25:06.5624817+02:00" endTime="2026-10-19T12:25:06.5624817+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a9b23c15-54ac-4192-ab49-78924e3b50fb">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 156&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 169&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(QuestionType type) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 72&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="6fd95edc-aa58-488a-83fa-d7aebaea15a9" testId="454e443a-ba8f-6000-7a82-ca8995bc4100" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Open)" computerName="CES01622" duration="00:00:00.8567909" startTime="2026-10-19T12:25:04.6056682+02:00" endTime="2026-10-19T12:25:04.6056685+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6fd95edc-aa58-488a-83fa-d7aebaea15a9">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 156&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 169&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(QuestionType type) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 72&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8e3927ec-3391-4920-9c01-d847908e7f37" testId="de410a81-3f6b-20a3-1776-57435147236a" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: &quot;http&quot;)" computerName="CES01622" duration="00:00:00.8161230" startTime="2026-10-19T12:25:03.6228319+02:00" endTime="2026-10-19T12:25:03.6228320+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8e3927ec-3391-4920-9c01-d847908e7f37">
+      <Output>
+        <ErrorInfo>
+          <Message>System.UnauthorizedAccessException : Contesto non autorizzato.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs:line 22&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 36&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(String competitor) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 152&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="cd878113-6655-45c1-8648-e6cc8b6b914e" testId="2a4f980a-3e4a-eed5-c80c-36322c8f1690" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerAllowsCloseOnlyAfterLastInProgressAndDoesNotPenalizeViolations" computerName="CES01622" duration="00:00:04.4820933" startTime="2026-10-19T12:24:56.5799155+02:00" endTime="2026-10-19T12:24:56.5799416+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cd878113-6655-45c1-8648-e6cc8b6b914e">
+      <Output>
+        <ErrorInfo>
+          <Message>System.UnauthorizedAccessException : Contesto non autorizzato.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs:line 22&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 36&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerAllowsCloseOnlyAfterLastInProgressAndDoesNotPenalizeViolations() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 165&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="f850598f-09af-4648-91c0-1485dad4c0d0" testId="90d70a42-24a7-6def-4c07-7149ddf8f07c" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eCapabilityCannotBeForgedOrRetargetedAndNoHttpSurfaceExists" computerName="CES01622" duration="00:00:00.8375811" startTime="2026-10-19T12:25:13.5729357+02:00" endTime="2026-10-19T12:25:13.5729358+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f850598f-09af-4648-91c0-1485dad4c0d0">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 156&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 169&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eCapabilityCannotBeForgedOrRetargetedAndNoHttpSurfaceExists() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 120&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="17e4ab16-f7ae-4bdf-b0ca-3a5482eff669" testId="2ad5ff3d-530b-f1e8-1339-ca2711483a28" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: &quot;grade-after&quot;)" computerName="CES01622" duration="00:00:00.6496731" startTime="2026-10-19T12:24:58.3603983+02:00" endTime="2026-10-19T12:24:58.3603985+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="17e4ab16-f7ae-4bdf-b0ca-3a5482eff669">
+      <Output>
+        <ErrorInfo>
+          <Message>System.UnauthorizedAccessException : Contesto non autorizzato.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs:line 22&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 36&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(String stage) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 196&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a12fd8be-8fcc-4762-a935-81be301f3e7c" testId="16484142-e531-7cd2-b182-d17413f60bae" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: &quot;institution&quot;)" computerName="CES01622" duration="00:00:00.8100170" startTime="2026-10-19T12:25:09.5021700+02:00" endTime="2026-10-19T12:25:09.5021701+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a12fd8be-8fcc-4762-a935-81be301f3e7c">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.NotNull() Failure: Value of type 'Nullable&lt;DateTime&gt;' does not have a value</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.&lt;&gt;c__DisplayClass73_0.&lt;&lt;AssertTechnical&gt;b__0&gt;d.MoveNext() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 46&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Db(Func`2 action) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 53&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssertTechnical(Guid id, Boolean b, Boolean open, Decimal grade) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 43&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(String revoked) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 113&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c272f044-c333-4681-9021-f31cc3db8354" testId="e2e85a80-4f59-5b38-37db-766be7a56e50" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: &quot;membership&quot;)" computerName="CES01622" duration="00:00:00.8570762" startTime="2026-10-19T12:25:08.5479972+02:00" endTime="2026-10-19T12:25:08.5479974+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c272f044-c333-4681-9021-f31cc3db8354">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.NotNull() Failure: Value of type 'Nullable&lt;DateTime&gt;' does not have a value</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.&lt;&gt;c__DisplayClass73_0.&lt;&lt;AssertTechnical&gt;b__0&gt;d.MoveNext() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 46&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Db(Func`2 action) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 53&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssertTechnical(Guid id, Boolean b, Boolean open, Decimal grade) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 43&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(String revoked) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 113&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="bda11a34-bb3d-4f38-86bc-41d8aa372323" testId="0516d334-cdd1-53db-6b37-d3c5602a6d3b" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: &quot;autosave&quot;)" computerName="CES01622" duration="00:00:00.7372710" startTime="2026-10-19T12:25:02.6543072+02:00" endTime="2026-10-19T12:25:02.6543073+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bda11a34-bb3d-4f38-86bc-41d8aa372323">
+      <Output>
+        <ErrorInfo>
+          <Message>System.UnauthorizedAccessException : Contesto non autorizzato.</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs:line 22&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 36&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(String competitor) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 152&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="1262420c-d745-4979-8902-15dc7d052733" testId="b8e54415-c2d7-b5a3-f4f6-c38c1fd71694" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: &quot;roles&quot;)" computerName="CES01622" duration="00:00:00.7791441" startTime="2026-10-19T12:25:10.4834223+02:00" endTime="2026-10-19T12:25:10.4834225+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1262420c-d745-4979-8902-15dc7d052733">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.NotNull() Failure: Value of type 'Nullable&lt;DateTime&gt;' does not have a value</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.&lt;&gt;c__DisplayClass73_0.&lt;&lt;AssertTechnical&gt;b__0&gt;d.MoveNext() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 46&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Db(Func`2 action) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 53&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssertTechnical(Guid id, Boolean b, Boolean open, Decimal grade) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 43&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(String revoked) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 113&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="1df6a26e-8c48-4c37-8dd6-92e188b16d4c" testId="7a3458e1-3dac-4e20-76e2-6701713afdcc" testName="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFailedItemDoesNotBlockOtherTenantAndNewSweepRecovers" computerName="CES01622" duration="00:00:00.8488346" startTime="2026-10-19T12:25:29.9928914+02:00" endTime="2026-10-19T12:25:29.9928915+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1df6a26e-8c48-4c37-8dd6-92e188b16d4c">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}</Message>
+          <StackTrace>   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 156&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b) in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs:line 169&#xD;
+   at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFailedItemDoesNotBlockOtherTenantAndNewSweepRecovers() in C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs:line 202&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealHostedTimerDeliversOfflineAndStopsCleanly" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="e8170258-e190-1f52-e99b-220d9c845a64">
+      <Execution id="fb96aa91-521b-4c8d-962f-452eea33f86b" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eRealHostedTimerDeliversOfflineAndStopsCleanly" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: &quot;http&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="de410a81-3f6b-20a3-1776-57435147236a">
+      <Execution id="8e3927ec-3391-4920-9c01-d847908e7f37" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: &quot;audit-after&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="10d7c956-bf0e-8a4f-1e4d-bc809b9b7807">
+      <Execution id="eb1dc9b3-c78d-4a86-bbd9-bee82c025238" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eRealTransactionRollsBackAndNextAttemptRecovers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: &quot;autosave&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="0516d334-cdd1-53db-6b37-d3c5602a6d3b">
+      <Execution id="bda11a34-bb3d-4f38-86bc-41d8aa372323" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Multiple)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="0eeb969e-1534-7a00-e982-dd005f4ca13d">
+      <Execution id="529ebc59-23d8-4cd7-8563-1965ff4ab3b4" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: &quot;manual&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="6bde4e72-e4c9-d46a-3241-9910176b4055">
+      <Execution id="5eab57f6-eccc-4517-b9d9-978a2e64b459" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: &quot;grade-before&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="b693f944-e699-bf65-8b5f-778726623c00">
+      <Execution id="c8739169-ce09-4d2f-a58b-3ebb79cdda39" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eRealTransactionRollsBackAndNextAttemptRecovers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Single)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="1369d323-78b3-9f1b-e312-b880a480cea5">
+      <Execution id="a9b23c15-54ac-4192-ab49-78924e3b50fb" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: &quot;grade-after&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="2ad5ff3d-530b-f1e8-1339-ca2711483a28">
+      <Execution id="17e4ab16-f7ae-4bdf-b0ca-3a5482eff669" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eRealTransactionRollsBackAndNextAttemptRecovers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: &quot;institution&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="16484142-e531-7cd2-b182-d17413f60bae">
+      <Execution id="a12fd8be-8fcc-4762-a935-81be301f3e7c" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eBoundedKeysetScanAdvancesPastFailureAndResetsOnRestart" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="60d016a2-f4e5-7948-fbef-1899dab1162c">
+      <Execution id="7d944e19-390b-47d2-8575-e11196a9be19" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eBoundedKeysetScanAdvancesPastFailureAndResetsOnRestart" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: &quot;invalid&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="4306f124-e5eb-9dcf-7a30-ce074ce6786c">
+      <Execution id="21a70b25-4ac3-414c-b139-92ab5df4fbf5" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eWorkerRolloutDeniesWithoutExplicitTrue" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: &quot;roles&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="b8e54415-c2d7-b5a3-f4f6-c38c1fd71694">
+      <Execution id="1262420c-d745-4979-8902-15dc7d052733" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: &quot;membership&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="e2e85a80-4f59-5b38-37db-766be7a56e50">
+      <Execution id="c272f044-c333-4681-9021-f31cc3db8354" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: &quot;&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="8e8cd581-9d12-e132-e234-1ba163d42a4f">
+      <Execution id="93be961a-5e58-4ce0-a9b9-8be621fda910" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eWorkerRolloutDeniesWithoutExplicitTrue" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFailedItemDoesNotBlockOtherTenantAndNewSweepRecovers" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="7a3458e1-3dac-4e20-76e2-6701713afdcc">
+      <Execution id="1df6a26e-8c48-4c37-8dd6-92e188b16d4c" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eFailedItemDoesNotBlockOtherTenantAndNewSweepRecovers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerAllowsCloseOnlyAfterLastInProgressAndDoesNotPenalizeViolations" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="2a4f980a-3e4a-eed5-c80c-36322c8f1690">
+      <Execution id="cd878113-6655-45c1-8648-e6cc8b6b914e" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eWorkerAllowsCloseOnlyAfterLastInProgressAndDoesNotPenalizeViolations" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: &quot;cancel&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="d992ac69-dfa9-874f-d130-8389ad811950">
+      <Execution id="8e9dd4f7-017a-4a23-8bf2-82219922be7b" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eRealTransactionRollsBackAndNextAttemptRecovers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: &quot;worker&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="24c39d5e-dba4-577a-81a2-41728eac59b5">
+      <Execution id="380a6645-9db3-46a4-bb36-c7ec29772edc" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Open)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="454e443a-ba8f-6000-7a82-ca8995bc4100">
+      <Execution id="6fd95edc-aa58-488a-83fa-d7aebaea15a9" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRolloutDeniesWithoutExplicitTrue(flag: &quot;false&quot;)" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="4134c42e-452e-cd5f-7a36-c12b333de451">
+      <Execution id="ca87c4b2-5ffa-4164-94ef-fcefdefedbac" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eWorkerRolloutDeniesWithoutExplicitTrue" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eCapabilityCannotBeForgedOrRetargetedAndNoHttpSurfaceExists" storage="c:\users\lorenzobaracchi\desktop\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="90d70a42-24a7-6def-4c07-7149ddf8f07c">
+      <Execution id="f850598f-09af-4648-91c0-1485dad4c0d0" />
+      <TestMethod codeBase="C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests" name="Mt3eCapabilityCannotBeForgedOrRetargetedAndNoHttpSurfaceExists" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="d992ac69-dfa9-874f-d130-8389ad811950" executionId="8e9dd4f7-017a-4a23-8bf2-82219922be7b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="60d016a2-f4e5-7948-fbef-1899dab1162c" executionId="7d944e19-390b-47d2-8575-e11196a9be19" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e8170258-e190-1f52-e99b-220d9c845a64" executionId="fb96aa91-521b-4c8d-962f-452eea33f86b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="24c39d5e-dba4-577a-81a2-41728eac59b5" executionId="380a6645-9db3-46a4-bb36-c7ec29772edc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0eeb969e-1534-7a00-e982-dd005f4ca13d" executionId="529ebc59-23d8-4cd7-8563-1965ff4ab3b4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4306f124-e5eb-9dcf-7a30-ce074ce6786c" executionId="21a70b25-4ac3-414c-b139-92ab5df4fbf5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6bde4e72-e4c9-d46a-3241-9910176b4055" executionId="5eab57f6-eccc-4517-b9d9-978a2e64b459" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8e8cd581-9d12-e132-e234-1ba163d42a4f" executionId="93be961a-5e58-4ce0-a9b9-8be621fda910" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4134c42e-452e-cd5f-7a36-c12b333de451" executionId="ca87c4b2-5ffa-4164-94ef-fcefdefedbac" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="10d7c956-bf0e-8a4f-1e4d-bc809b9b7807" executionId="eb1dc9b3-c78d-4a86-bbd9-bee82c025238" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b693f944-e699-bf65-8b5f-778726623c00" executionId="c8739169-ce09-4d2f-a58b-3ebb79cdda39" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1369d323-78b3-9f1b-e312-b880a480cea5" executionId="a9b23c15-54ac-4192-ab49-78924e3b50fb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="454e443a-ba8f-6000-7a82-ca8995bc4100" executionId="6fd95edc-aa58-488a-83fa-d7aebaea15a9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="de410a81-3f6b-20a3-1776-57435147236a" executionId="8e3927ec-3391-4920-9c01-d847908e7f37" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2a4f980a-3e4a-eed5-c80c-36322c8f1690" executionId="cd878113-6655-45c1-8648-e6cc8b6b914e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="90d70a42-24a7-6def-4c07-7149ddf8f07c" executionId="f850598f-09af-4648-91c0-1485dad4c0d0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2ad5ff3d-530b-f1e8-1339-ca2711483a28" executionId="17e4ab16-f7ae-4bdf-b0ca-3a5482eff669" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="16484142-e531-7cd2-b182-d17413f60bae" executionId="a12fd8be-8fcc-4762-a935-81be301f3e7c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e2e85a80-4f59-5b38-37db-766be7a56e50" executionId="c272f044-c333-4681-9021-f31cc3db8354" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0516d334-cdd1-53db-6b37-d3c5602a6d3b" executionId="bda11a34-bb3d-4f38-86bc-41d8aa372323" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b8e54415-c2d7-b5a3-f4f6-c38c1fd71694" executionId="1262420c-d745-4979-8902-15dc7d052733" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7a3458e1-3dac-4e20-76e2-6701713afdcc" executionId="1df6a26e-8c48-4c37-8dd6-92e188b16d4c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="22" executed="22" passed="4" failed="18" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.61]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.70]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.71]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:08.94]       System.UnauthorizedAccessException : Contesto non autorizzato.&#xD;
+[xUnit.net 00:00:08.94]       Stack Trace:&#xD;
+[xUnit.net 00:00:08.94]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs(22,0): at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value()&#xD;
+[xUnit.net 00:00:08.94]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(36,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct)&#xD;
+[xUnit.net 00:00:08.95]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(165,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerAllowsCloseOnlyAfterLastInProgressAndDoesNotPenalizeViolations()&#xD;
+[xUnit.net 00:00:08.95]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:09.94]       System.UnauthorizedAccessException : Contesto non autorizzato.&#xD;
+[xUnit.net 00:00:09.94]       Stack Trace:&#xD;
+[xUnit.net 00:00:09.94]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs(22,0): at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value()&#xD;
+[xUnit.net 00:00:09.94]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(36,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct)&#xD;
+[xUnit.net 00:00:09.94]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(196,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(String stage)&#xD;
+[xUnit.net 00:00:09.94]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:10.73]       System.UnauthorizedAccessException : Contesto non autorizzato.&#xD;
+[xUnit.net 00:00:10.73]       Stack Trace:&#xD;
+[xUnit.net 00:00:10.73]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs(22,0): at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value()&#xD;
+[xUnit.net 00:00:10.73]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(36,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct)&#xD;
+[xUnit.net 00:00:10.73]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(196,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(String stage)&#xD;
+[xUnit.net 00:00:10.73]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:11.48]       System.UnauthorizedAccessException : Contesto non autorizzato.&#xD;
+[xUnit.net 00:00:11.48]       Stack Trace:&#xD;
+[xUnit.net 00:00:11.48]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs(22,0): at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value()&#xD;
+[xUnit.net 00:00:11.48]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(36,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct)&#xD;
+[xUnit.net 00:00:11.48]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(196,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(String stage)&#xD;
+[xUnit.net 00:00:11.48]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:12.38]       System.UnauthorizedAccessException : Contesto non autorizzato.&#xD;
+[xUnit.net 00:00:12.38]       Stack Trace:&#xD;
+[xUnit.net 00:00:12.38]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs(22,0): at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value()&#xD;
+[xUnit.net 00:00:12.38]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(36,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct)&#xD;
+[xUnit.net 00:00:12.38]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(196,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(String stage)&#xD;
+[xUnit.net 00:00:12.38]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:13.25]       System.UnauthorizedAccessException : Contesto non autorizzato.&#xD;
+[xUnit.net 00:00:13.25]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.25]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs(22,0): at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value()&#xD;
+[xUnit.net 00:00:13.25]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(36,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct)&#xD;
+[xUnit.net 00:00:13.25]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(146,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(String competitor)&#xD;
+[xUnit.net 00:00:13.25]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:14.17]       System.UnauthorizedAccessException : Contesto non autorizzato.&#xD;
+[xUnit.net 00:00:14.17]       Stack Trace:&#xD;
+[xUnit.net 00:00:14.17]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs(22,0): at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value()&#xD;
+[xUnit.net 00:00:14.17]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(36,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct)&#xD;
+[xUnit.net 00:00:14.17]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(152,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(String competitor)&#xD;
+[xUnit.net 00:00:14.17]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:15.02]       System.UnauthorizedAccessException : Contesto non autorizzato.&#xD;
+[xUnit.net 00:00:15.02]       Stack Trace:&#xD;
+[xUnit.net 00:00:15.02]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs(22,0): at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value()&#xD;
+[xUnit.net 00:00:15.03]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(36,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct)&#xD;
+[xUnit.net 00:00:15.03]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(152,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(String competitor)&#xD;
+[xUnit.net 00:00:15.03]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:15.99]       System.UnauthorizedAccessException : Contesto non autorizzato.&#xD;
+[xUnit.net 00:00:15.99]       Stack Trace:&#xD;
+[xUnit.net 00:00:15.99]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\Security\InstitutionAuthentication.cs(22,0): at ElectronicRegisterAPI.Api.Security.CurrentTenant.get_Value()&#xD;
+[xUnit.net 00:00:15.99]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(36,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Technical(Guid submission, Boolean b, IServiceProvider provider, CancellationToken ct)&#xD;
+[xUnit.net 00:00:15.99]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(152,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(String competitor)&#xD;
+[xUnit.net 00:00:15.99]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:16.98]       Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}&#xD;
+[xUnit.net 00:00:16.98]       Stack Trace:&#xD;
+[xUnit.net 00:00:16.98]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(156,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected)&#xD;
+[xUnit.net 00:00:16.98]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(169,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b)&#xD;
+[xUnit.net 00:00:16.98]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(72,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(QuestionType type)&#xD;
+[xUnit.net 00:00:16.98]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:17.95]       Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}&#xD;
+[xUnit.net 00:00:17.95]       Stack Trace:&#xD;
+[xUnit.net 00:00:17.95]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(156,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected)&#xD;
+[xUnit.net 00:00:17.95]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(169,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b)&#xD;
+[xUnit.net 00:00:17.95]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(72,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(QuestionType type)&#xD;
+[xUnit.net 00:00:17.95]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:18.93]       Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}&#xD;
+[xUnit.net 00:00:18.93]       Stack Trace:&#xD;
+[xUnit.net 00:00:18.93]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(156,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected)&#xD;
+[xUnit.net 00:00:18.93]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(169,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b)&#xD;
+[xUnit.net 00:00:18.93]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(72,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(QuestionType type)&#xD;
+[xUnit.net 00:00:18.93]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:19.92]       Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}&#xD;
+[xUnit.net 00:00:19.92]       Stack Trace:&#xD;
+[xUnit.net 00:00:19.92]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(156,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected)&#xD;
+[xUnit.net 00:00:19.92]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(169,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b)&#xD;
+[xUnit.net 00:00:19.92]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(215,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eBoundedKeysetScanAdvancesPastFailureAndResetsOnRestart()&#xD;
+[xUnit.net 00:00:19.92]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:20.92]       Assert.NotNull() Failure: Value of type 'Nullable&lt;DateTime&gt;' does not have a value&#xD;
+[xUnit.net 00:00:20.92]       Stack Trace:&#xD;
+[xUnit.net 00:00:20.92]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(46,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.&lt;&gt;c__DisplayClass73_0.&lt;&lt;AssertTechnical&gt;b__0&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:20.92]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:20.92]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(53,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Db(Func`2 action)&#xD;
+[xUnit.net 00:00:20.92]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(43,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssertTechnical(Guid id, Boolean b, Boolean open, Decimal grade)&#xD;
+[xUnit.net 00:00:20.92]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(113,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(String revoked)&#xD;
+[xUnit.net 00:00:20.92]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:21.87]       Assert.NotNull() Failure: Value of type 'Nullable&lt;DateTime&gt;' does not have a value&#xD;
+[xUnit.net 00:00:21.87]       Stack Trace:&#xD;
+[xUnit.net 00:00:21.87]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(46,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.&lt;&gt;c__DisplayClass73_0.&lt;&lt;AssertTechnical&gt;b__0&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:21.87]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:21.87]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(53,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Db(Func`2 action)&#xD;
+[xUnit.net 00:00:21.87]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(43,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssertTechnical(Guid id, Boolean b, Boolean open, Decimal grade)&#xD;
+[xUnit.net 00:00:21.87]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(113,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(String revoked)&#xD;
+[xUnit.net 00:00:21.87]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:22.85]       Assert.NotNull() Failure: Value of type 'Nullable&lt;DateTime&gt;' does not have a value&#xD;
+[xUnit.net 00:00:22.85]       Stack Trace:&#xD;
+[xUnit.net 00:00:22.85]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(46,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.&lt;&gt;c__DisplayClass73_0.&lt;&lt;AssertTechnical&gt;b__0&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:22.85]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:22.85]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(53,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Db(Func`2 action)&#xD;
+[xUnit.net 00:00:22.85]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(43,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.AssertTechnical(Guid id, Boolean b, Boolean open, Decimal grade)&#xD;
+[xUnit.net 00:00:22.85]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(113,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(String revoked)&#xD;
+[xUnit.net 00:00:22.85]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:25.94]       Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}&#xD;
+[xUnit.net 00:00:25.94]       Stack Trace:&#xD;
+[xUnit.net 00:00:25.94]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(156,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected)&#xD;
+[xUnit.net 00:00:25.94]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(169,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b)&#xD;
+[xUnit.net 00:00:25.94]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(120,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eCapabilityCannotBeForgedOrRetargetedAndNoHttpSurfaceExists()&#xD;
+[xUnit.net 00:00:25.94]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:42.36]       Expected NoContent, received NotFound: {"title":"La risorsa non esiste","status":404,"detail":"La risorsa non esiste"}&#xD;
+[xUnit.net 00:00:42.36]       Stack Trace:&#xD;
+[xUnit.net 00:00:42.36]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(156,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Expect(HttpResponseMessage response, HttpStatusCode expected)&#xD;
+[xUnit.net 00:00:42.36]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3dHttpTests.cs(169,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Start(ExamDetailDto exam, Boolean b)&#xD;
+[xUnit.net 00:00:42.36]         C:\Users\LorenzoBaracchi\Desktop\ElectronicRegister\tests\Integration\Mt3eWorkerTests.cs(202,0): at ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFailedItemDoesNotBlockOtherTenantAndNewSweepRecovers()&#xD;
+[xUnit.net 00:00:42.36]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:42.37]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:24:56.5694961+02:00">
+        <Text>[xUnit.net 00:00:08.94]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerAllowsCloseOnlyAfterLastInProgressAndDoesNotPenalizeViolations [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:24:57.5738464+02:00">
+        <Text>[xUnit.net 00:00:09.94]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: "cancel") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:24:58.3605113+02:00">
+        <Text>[xUnit.net 00:00:10.73]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: "grade-after") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:24:59.1135935+02:00">
+        <Text>[xUnit.net 00:00:11.48]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: "audit-after") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:00.0102235+02:00">
+        <Text>[xUnit.net 00:00:12.38]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eRealTransactionRollsBackAndNextAttemptRecovers(stage: "grade-before") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:00.8776980+02:00">
+        <Text>[xUnit.net 00:00:13.25]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: "worker") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:01.8031768+02:00">
+        <Text>[xUnit.net 00:00:14.17]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: "manual") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:02.6543792+02:00">
+        <Text>[xUnit.net 00:00:15.02]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: "autosave") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:03.6230065+02:00">
+        <Text>[xUnit.net 00:00:15.99]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerRacesDoNotDuplicateOrAcceptLateAnswers(competitor: "http") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:04.6058176+02:00">
+        <Text>[xUnit.net 00:00:16.98]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Open) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:05.5772358+02:00">
+        <Text>[xUnit.net 00:00:17.95]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Multiple) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:06.5625995+02:00">
+        <Text>[xUnit.net 00:00:18.93]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eWorkerDeliversBothTenantsWithEmptyRequiredAndPreservesAttempt(type: Single) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:07.5499553+02:00">
+        <Text>[xUnit.net 00:00:19.92]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eBoundedKeysetScanAdvancesPastFailureAndResetsOnRestart [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:08.5480198+02:00">
+        <Text>[xUnit.net 00:00:20.92]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: "membership") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:09.5022538+02:00">
+        <Text>[xUnit.net 00:00:21.87]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: "institution") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:10.4835298+02:00">
+        <Text>[xUnit.net 00:00:22.85]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eTechnicalExpiryPreservesSavedDataAfterInteractiveRevocation(revoked: "roles") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:13.5730471+02:00">
+        <Text>[xUnit.net 00:00:25.94]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eCapabilityCannotBeForgedOrRetargetedAndNoHttpSurfaceExists [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CES01622" outcome="Error" timestamp="2026-10-19T12:25:29.9926901+02:00">
+        <Text>[xUnit.net 00:00:42.36]     ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Mt3eFailedItemDoesNotBlockOtherTenantAndNewSweepRecovers [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

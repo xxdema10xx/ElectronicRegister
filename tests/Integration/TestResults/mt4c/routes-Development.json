@@ -1,0 +1,2862 @@
+[
+  {
+    "method": "GET",
+    "route": "/openapi/{documentName}.json",
+    "course": false,
+    "policy": [],
+    "roles": [],
+    "manager": null,
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "/scalar/scalar.js",
+    "course": false,
+    "policy": [],
+    "roles": [],
+    "manager": null,
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "/scalar/scalar.aspnetcore.js",
+    "course": false,
+    "policy": [],
+    "roles": [],
+    "manager": null,
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "/scalar/favicon.svg",
+    "course": false,
+    "policy": [],
+    "roles": [],
+    "manager": null,
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "/scalar/{documentName?}",
+    "course": false,
+    "policy": [],
+    "roles": [],
+    "manager": null,
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/count",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/active",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/inactive",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/byname/{name}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Biennium/byteacher/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Biennium/update/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Biennium",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Biennium/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IBienniumManager",
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/login",
+    "course": false,
+    "policy": [],
+    "roles": [],
+    "manager": [
+      "IAuthManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/microsoft-login",
+    "course": false,
+    "policy": [],
+    "roles": [],
+    "manager": [
+      "IAuthManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/register",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IAuthManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/RegisterForAdmin",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IAuthManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Auth/me",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "IAuthManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "MissingSelectedStudentProfileNeverFallsBackToOtherInstitution"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/assigned",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "student"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Exam/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Exam/{id}/students",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/publish",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/close",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/cancel",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Exam/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/start",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "student"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/answers/save",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "student"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/{id}/submit",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "student"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/{examId}/submissions",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/submission/{id}/review",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Exam/submission/{id}/review",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Exam/submission/{id}/finalize",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Exam/submission/{id}/result",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "IExamManager",
+      "IExamSubmissionManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/count",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/statistics",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/filters",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/paged",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/bystudentid/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/bysubject/{subject}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Grade/bydate/{date}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Grade",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Grade/update/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Grade/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IGradeManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/campuses",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CampusLinksAreManyToManyScopedUniqueAndPreservedWhenInactive",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/class-subjects",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/by-code/{code}",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/course-editions/{id:guid}",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/campuses",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CampusLinksAreManyToManyScopedUniqueAndPreservedWhenInactive",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions/{id:guid}/campuses",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CampusLinksAreManyToManyScopedUniqueAndPreservedWhenInactive",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/classes",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "ExplicitClassAssignmentIsPathScopedImmutableAndNeverChangesStudentClass",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/course-editions/{editionId:guid}/classes/{classId:guid}",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "ExplicitClassAssignmentIsPathScopedImmutableAndNeverChangesStudentClass",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/enrollments",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "EnrollmentHistoryAndPersonalMembershipProfilesStaySeparateAcrossSharedUser",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/course-editions/{id:guid}/audit",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "Mt4cLifecycle_AllMt4bMutationsAreAuditedAtomicallyWithoutDuplicateClassEvents",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/{id:guid}",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "EnrollmentHistoryAndPersonalMembershipProfilesStaySeparateAcrossSharedUser",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "EnrollmentHistoryAndPersonalMembershipProfilesStaySeparateAcrossSharedUser",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/enrollments",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "EnrollmentHistoryAndPersonalMembershipProfilesStaySeparateAcrossSharedUser",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/me",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "EnrollmentHistoryAndPersonalMembershipProfilesStaySeparateAcrossSharedUser",
+    "negativeTest": "MissingSelectedStudentProfileNeverFallsBackToOtherInstitution"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/enrollments/{id:guid}/transition",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "Mt4cLifecycle_EnrolledTerminatesWithExplicitDateReasonRevisionAndHistory",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/enrollments/{id:guid}/completion-date",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "Mt4cLifecycle_CorrectionKeepsThePreviousTerminalDateAndCannotCorrectEnrolled",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/enrollments/{id:guid}/history",
+    "course": true,
+    "policy": [
+      "InstitutionCourseAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionCourseManager"
+    ],
+    "repository": "ICourseStructureRepository",
+    "ownership": "verified TenantContext \u002B SQL owner \u002B composite FK",
+    "rollout": "CourseApi \u0026\u0026 SchoolApi",
+    "positiveTest": "Mt4cLifecycle_AllMt4bMutationsAreAuditedAtomicallyWithoutDuplicateClassEvents",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/assigned",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}/eligible-students",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/exams/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/exams/{id:guid}/students",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/publish",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/close",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/cancel",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/exams/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/exams/{id:guid}/start",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/exams/{id:guid}/submissions",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/count",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/paged",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/filters",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/grades/statistics",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/grades",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/grades/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/grades/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/identity/login",
+    "course": false,
+    "policy": [],
+    "roles": [],
+    "manager": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/identity/microsoft-login",
+    "course": false,
+    "policy": [],
+    "roles": [],
+    "manager": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Auth/institutions",
+    "course": false,
+    "policy": [
+      "InstitutionSelection"
+    ],
+    "roles": [],
+    "manager": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Auth/select-institution",
+    "course": false,
+    "policy": [
+      "InstitutionSelection"
+    ],
+    "roles": [],
+    "manager": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Auth/context",
+    "course": false,
+    "policy": [
+      "InstitutionAccess"
+    ],
+    "roles": [],
+    "manager": [
+      "IInstitutionAuthManager",
+      "ICurrentTenant"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/count",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/bylastname/{lastName}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/students/me",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "manager": [
+      "IInstitutionStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "MissingSelectedStudentProfileNeverFallsBackToOtherInstitution"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/students",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/students/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/students/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionSubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/count",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionSubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionSubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/byname/{name}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionSubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/subjects/byteacher/{teacherId:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionSubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/subjects",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionSubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/subjects/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionSubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/subjects/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionSubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/session",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/submissions/{id:guid}/answers",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/submit",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/submit-expired",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/violations",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/violations",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/review",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/submissions/{id:guid}/review",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/submissions/{id:guid}/finalize",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/submissions/{id:guid}/result",
+    "course": false,
+    "policy": [
+      "InstitutionExamAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionExamManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "ExamApi \u0026\u0026 SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionTeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/count",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher"
+    ],
+    "manager": [
+      "IInstitutionTeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionTeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/bylastname/{lastName}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin,Teacher,Student"
+    ],
+    "manager": [
+      "IInstitutionTeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/institution/teachers/me",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "Teacher"
+    ],
+    "manager": [
+      "IInstitutionTeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "MissingSelectedStudentProfileNeverFallsBackToOtherInstitution"
+  },
+  {
+    "method": "POST",
+    "route": "api/institution/teachers",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionTeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/institution/teachers/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionTeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/institution/teachers/{id:guid}",
+    "course": false,
+    "policy": [
+      "InstitutionSchoolAccess"
+    ],
+    "roles": [
+      "InstitutionAdmin"
+    ],
+    "manager": [
+      "IInstitutionTeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "SchoolApi",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Student/count",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Student",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Student/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Student/bylastname/{lastName}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "IStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Student/update/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Student",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Student/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IStudentManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/count",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/byname/{name}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Subject/byteacher/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Subject/update/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Subject",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Subject/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "ISubjectManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Teacher/count",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin"
+    ],
+    "manager": [
+      "ITeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Teacher",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "ITeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Teacher/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "teacher,admin,student"
+    ],
+    "manager": [
+      "ITeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Teacher/update/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "ITeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Teacher",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "ITeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Teacher/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "ITeacherManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Users/count",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IUserManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Users",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IUserManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "GET",
+    "route": "api/Users/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IUserManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Users/update/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IUserManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "PUT",
+    "route": "api/Users/updatepassword/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "student,teacher,admin"
+    ],
+    "manager": [
+      "IUserManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "POST",
+    "route": "api/Users",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IUserManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  },
+  {
+    "method": "DELETE",
+    "route": "api/Users/{id}",
+    "course": false,
+    "policy": [],
+    "roles": [
+      "admin"
+    ],
+    "manager": [
+      "IUserManager"
+    ],
+    "repository": "existing (see MT3E inventory)",
+    "ownership": "existing checkpoint scope/gate",
+    "rollout": "identity/legacy gate or Development diagnostics",
+    "positiveTest": "CatalogCreationFiltersOwnershipAndDescriptiveUpdatesPreserveStatusAndPath",
+    "negativeTest": "NonAdminsCannotUseAnyAdministrativeAction"
+  }
+]

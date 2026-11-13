@@ -1,0 +1,15 @@
+{
+  "format": 1,
+  "operation": "upgrade",
+  "phase": "triggers",
+  "database": "er84_fecc29d5a65d",
+  "serverUuid": "f94034a9-d716-11f1-b8d5-f286586ee9b8",
+  "manifest": "5B7FAD412C439E7F0A8797EEB82906C325FDA1965EA3C6EAD0348B55E76C6CB2",
+  "tableChanges": {
+    "course_administration_event": {
+      "phase": "intent",
+      "hash": "8D7673A331063F28FA7358B9E42328D53ED44F3F2F2824E3F327EF03E7CE3333"
+    }
+  },
+  "triggers": {}
+}

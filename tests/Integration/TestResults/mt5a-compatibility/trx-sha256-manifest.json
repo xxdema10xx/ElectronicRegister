@@ -1,0 +1,42 @@
+[
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\baseline\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_42_17_net10.0.trx",
+        "SHA256":  "3ABC9F03443D0C887C5A37FBCC9D40A6AB151DEFC39B260666171725964AE1DD"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\baseline\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_42_13_net10.0.trx",
+        "SHA256":  "31CA9FF600B54996C279FD70589771DD2779464B69CF2132E886ECF06834448E"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\final-1\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_45_52_net10.0.trx",
+        "SHA256":  "4A00F05936A21C78C7A954920FAFAF116B821425E3E198312A3F5E0D3630563D"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\final-1\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_45_48_net10.0.trx",
+        "SHA256":  "0C6A9C915ED7C86B07134E48538603AD5F874D623245D35C6C9A99EEFD3CD549"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\final-2\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_49_13_net10.0.trx",
+        "SHA256":  "D7333039429BBE4742368F20937EEC642BD608DD252852B68F5BD15E69A4D4E9"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\final-2\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_49_09_net10.0.trx",
+        "SHA256":  "56A809997B77DA9A790F513B5993C30E1ECD2A6CF3A0BFE42B7CBAA95D456C87"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\fixes\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_40_22_net10.0.trx",
+        "SHA256":  "A88C435A90D8BFC089F38000AB8B8B41A3DF63E3A8516CC412F490CE92555434"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\fixes-2\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_41_17_net10.0.trx",
+        "SHA256":  "EC4FCAB6360F61900B608341ECD48DAD9AE3E4224C6EB1B9AFECE114D030AED7"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\fixes-3\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_41_58_net10.0.trx",
+        "SHA256":  "7A0CEFF6CDDF1BD85311BFB28A17A4288AADBEF65A12DCDDB7F9B2D9E43A7564"
+    },
+    {
+        "Path":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5a-compatibility\\targeted\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_21_45_32_net10.0.trx",
+        "SHA256":  "73B03DC069173969F060AED278361450B9D64A2D3105626ECF69912265B00E61"
+    }
+]

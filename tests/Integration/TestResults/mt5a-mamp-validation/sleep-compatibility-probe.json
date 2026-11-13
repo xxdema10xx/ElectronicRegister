@@ -1,0 +1,12 @@
+{
+    "ServerVersion":  "5.7.24",
+    "Port":  13306,
+    "Operation":  "Read-only SELECT SLEEP(5) with statement-local MAX_EXECUTION_TIME(1000) hint",
+    "Result":  "1",
+    "Milliseconds":  1043,
+    "SqlClientError":  false,
+    "FixturesCreated":  false,
+    "GlobalSettingsChanged":  false,
+    "ProviderCommandTimeoutReproduction":  false,
+    "Interpretation":  "Server-side interruption of SLEEP alone can produce a normal scalar result; supports test-injection compatibility diagnosis, not a full provider-timeout trace."
+}

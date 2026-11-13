@@ -1,0 +1,28 @@
+{
+  "tables": 21,
+  "allLegacyColumnsCountsAndCellDigestsEqual": true,
+  "tablesManifestSha256": "17f3897925e76638d6a0d53993b4be557e630a4164e5c71d42302b83a6c8a11b",
+  "counts": {
+    "audit_event": 12,
+    "biennium": 1,
+    "biennium_study_area": 1,
+    "biennium_study_path": 1,
+    "class": 1,
+    "class_subject": 1,
+    "exam": 12,
+    "exam_student": 12,
+    "exam_submission": 12,
+    "exam_violation": 0,
+    "grade": 4,
+    "question": 24,
+    "question_option": 24,
+    "student": 12,
+    "study_area": 1,
+    "study_path": 1,
+    "subject": 1,
+    "submission_answer": 22,
+    "submission_answer_option": 13,
+    "teacher": 2,
+    "user": 15
+  }
+}

@@ -1,0 +1,22 @@
+{
+    "Tables":  32,
+    "Triggers":  53,
+    "ForeignKeys":  98,
+    "ForeignKeyDefinitionsMatched":  98,
+    "ForeignKeyOrphans":  0,
+    "OldTriggersPreserved":  48,
+    "NewCanonicalTriggersMatched":  5,
+    "AppendOnlyTriggerDefinitionsVerified":  true,
+    "RevisionDefinitionVerified":  true,
+    "NewIndexesVerified":  4,
+    "LedgerColumns":  20,
+    "LedgerRows":  0,
+    "NonZeroRevisionRows":  0,
+    "HoldingProvisioning":  true,
+    "UserCount":  15,
+    "MembershipCount":  0,
+    "GlobalSqlModeUnchanged":  true,
+    "ForeignKeyChecks":  1,
+    "UniqueChecks":  1,
+    "TestsExecuted":  false
+}

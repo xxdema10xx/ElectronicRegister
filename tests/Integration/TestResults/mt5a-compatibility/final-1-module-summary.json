@@ -1,0 +1,114 @@
+[
+    {
+        "Module":  "MT1",
+        "Total":  21,
+        "Passed":  21,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "MT2",
+        "Total":  61,
+        "Passed":  61,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "MT3 profiles",
+        "Total":  21,
+        "Passed":  21,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "MT3A",
+        "Total":  39,
+        "Passed":  39,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "MT3B",
+        "Total":  39,
+        "Passed":  39,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "MT3C",
+        "Total":  56,
+        "Passed":  56,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "MT3D",
+        "Total":  55,
+        "Passed":  55,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "MT3E",
+        "Total":  37,
+        "Passed":  37,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "MT4A",
+        "Total":  30,
+        "Passed":  30,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "MT4B",
+        "Total":  37,
+        "Passed":  37,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "MT4C",
+        "Total":  31,
+        "Passed":  31,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "MT5A",
+        "Total":  36,
+        "Passed":  36,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "Other integration",
+        "Total":  197,
+        "Passed":  197,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    },
+    {
+        "Module":  "Unit",
+        "Total":  51,
+        "Passed":  51,
+        "Failed":  0,
+        "Other":  0,
+        "FullyPassed":  true
+    }
+]

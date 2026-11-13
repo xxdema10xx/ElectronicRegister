@@ -1,0 +1,13 @@
+{
+  "Version": "MT-5B-D-1",
+  "Files": [
+    {
+      "File": "001_membership_event.sql",
+      "SHA256": "75433A668EAE7F924340FCF903DE75268997194D4EFF669ABF312113EC0EAB6F"
+    },
+    {
+      "File": "002_validate.sql",
+      "SHA256": "4EB07A653C8D99716FAE0E2414860324EA0C69F1B992177A7750A1D0FC93BC5F"
+    }
+  ]
+}

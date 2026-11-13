@@ -1,0 +1,264 @@
+﻿DATABASE()	VERSION()	@@sql_mode	@@tx_isolation
+electronic_register_test	5.7.24	ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION	REPEATABLE-READ
+Tables_in_electronic_register_test
+audit_event
+biennium
+biennium_study_area
+biennium_study_path
+campus
+class
+class_subject
+exam
+exam_student
+exam_submission
+exam_violation
+grade
+institution
+institution_membership
+institution_membership_role
+question
+question_option
+student
+study_area
+study_path
+subject
+submission_answer
+submission_answer_option
+teacher
+user
+TABLE_NAME	COLUMN_NAME	COLUMN_TYPE	COLLATION_NAME
+audit_event	id	char(36)	ascii_general_ci
+audit_event	actor_user_id	char(36)	ascii_general_ci
+audit_event	action	varchar(100)	utf8mb4_unicode_ci
+audit_event	entity_type	varchar(100)	utf8mb4_unicode_ci
+audit_event	entity_id	char(36)	ascii_general_ci
+audit_event	before_json	longtext	utf8mb4_unicode_ci
+audit_event	after_json	longtext	utf8mb4_unicode_ci
+audit_event	request_id	varchar(100)	utf8mb4_unicode_ci
+audit_event	created_at	datetime(6)	NULL
+biennium	id	char(36)	ascii_general_ci
+biennium	start_year	date	NULL
+biennium	end_year	date	NULL
+biennium_study_area	id	char(36)	ascii_general_ci
+biennium_study_area	biennium_id	char(36)	ascii_general_ci
+biennium_study_area	study_area_id	char(36)	ascii_general_ci
+biennium_study_path	id	char(36)	ascii_general_ci
+biennium_study_path	biennium_study_area_id	char(36)	ascii_general_ci
+biennium_study_path	study_path_id	char(36)	ascii_general_ci
+campus	id	char(36)	ascii_general_ci
+campus	institution_id	char(36)	ascii_general_ci
+campus	name	varchar(200)	utf8mb4_unicode_ci
+campus	address	varchar(300)	utf8mb4_unicode_ci
+campus	city	varchar(100)	utf8mb4_unicode_ci
+campus	province	varchar(100)	utf8mb4_unicode_ci
+campus	is_active	tinyint(1)	NULL
+class	id	char(36)	ascii_general_ci
+class	biennium_study_path_id	char(36)	ascii_general_ci
+class	name	varchar(20)	utf8mb4_unicode_ci
+class_subject	id	char(36)	ascii_general_ci
+class_subject	class_id	char(36)	ascii_general_ci
+class_subject	subject_id	char(36)	ascii_general_ci
+class_subject	teacher_id	char(36)	ascii_general_ci
+exam	id	char(36)	ascii_general_ci
+exam	class_subject_id	char(36)	ascii_general_ci
+exam	retake_of_exam_id	char(36)	ascii_general_ci
+exam	name	varchar(150)	utf8mb4_unicode_ci
+exam	description	text	utf8mb4_unicode_ci
+exam	available_from	datetime(6)	NULL
+exam	available_until	datetime(6)	NULL
+exam	duration_minutes	int(11)	NULL
+exam	passing_percent	decimal(5,2)	NULL
+exam	total_points	decimal(7,2)	NULL
+exam	status	enum('draft','published','closed','cancelled')	utf8mb4_unicode_ci
+exam	published_at	datetime(6)	NULL
+exam	closed_at	datetime(6)	NULL
+exam	cancelled_at	datetime(6)	NULL
+exam	created_at	datetime(6)	NULL
+exam	updated_at	datetime(6)	NULL
+exam_student	exam_id	char(36)	ascii_general_ci
+exam_student	student_id	char(36)	ascii_general_ci
+exam_student	extra_time_minutes	int(11)	NULL
+exam_student	assigned_at	datetime(6)	NULL
+exam_submission	id	char(36)	ascii_general_ci
+exam_submission	exam_id	char(36)	ascii_general_ci
+exam_submission	student_id	char(36)	ascii_general_ci
+exam_submission	status	enum('in_progress','graded','pending_review','failed_auto','finalized')	utf8mb4_unicode_ci
+exam_submission	started_at	datetime(6)	NULL
+exam_submission	deadline_at	datetime(6)	NULL
+exam_submission	submitted_at	datetime(6)	NULL
+exam_submission	submit_reason	enum('manual','time_expired','violations')	utf8mb4_unicode_ci
+exam_submission	violation_count	int(11)	NULL
+exam_submission	last_client_revision	bigint(20) unsigned	NULL
+exam_submission	max_score	decimal(7,2)	NULL
+exam_submission	passing_score	decimal(7,2)	NULL
+exam_submission	closed_score	decimal(7,2)	NULL
+exam_submission	open_max_points	decimal(7,2)	NULL
+exam_submission	open_score	decimal(7,2)	NULL
+exam_submission	total_score	decimal(7,2)	NULL
+exam_submission	passed	tinyint(1)	NULL
+exam_submission	suggested_grade	decimal(4,2)	NULL
+exam_submission	override_reason	varchar(1000)	utf8mb4_unicode_ci
+exam_submission	grade_id	char(36)	ascii_general_ci
+exam_submission	reviewed_by_user_id	char(36)	ascii_general_ci
+exam_submission	finalized_at	datetime(6)	NULL
+exam_submission	created_at	datetime(6)	NULL
+exam_submission	updated_at	datetime(6)	NULL
+exam_violation	id	char(36)	ascii_general_ci
+exam_violation	submission_id	char(36)	ascii_general_ci
+exam_violation	type	varchar(50)	utf8mb4_unicode_ci
+exam_violation	metadata_json	longtext	utf8mb4_unicode_ci
+exam_violation	occurred_at	datetime(6)	NULL
+grade	id	char(36)	ascii_general_ci
+grade	student_id	char(36)	ascii_general_ci
+grade	class_subject_id	char(36)	ascii_general_ci
+grade	value	decimal(4,2)	NULL
+grade	date	date	NULL
+institution	id	char(36)	ascii_general_ci
+institution	name	varchar(200)	utf8mb4_unicode_ci
+institution	code	varchar(64)	ascii_general_ci
+institution	legal_tax_code	varchar(32)	utf8mb4_unicode_ci
+institution	region	varchar(100)	utf8mb4_unicode_ci
+institution	status	enum('provisioning','active','suspended','archived')	utf8mb4_unicode_ci
+institution	created_at	datetime(6)	NULL
+institution	updated_at	datetime(6)	NULL
+institution_membership	id	char(36)	ascii_general_ci
+institution_membership	institution_id	char(36)	ascii_general_ci
+institution_membership	user_id	char(36)	ascii_general_ci
+institution_membership	status	enum('pending','active','suspended','left')	utf8mb4_unicode_ci
+institution_membership	joined_at	datetime(6)	NULL
+institution_membership	suspended_at	datetime(6)	NULL
+institution_membership_role	membership_id	char(36)	ascii_general_ci
+institution_membership_role	role	enum('InstitutionAdmin','Teacher','Student')	utf8mb4_unicode_ci
+question	id	char(36)	ascii_general_ci
+question	exam_id	char(36)	ascii_general_ci
+question	position	int(11)	NULL
+question	text	text	utf8mb4_unicode_ci
+question	type	enum('single','multiple','open')	utf8mb4_unicode_ci
+question	points	decimal(7,2)	NULL
+question	required	tinyint(1)	NULL
+question_option	id	char(36)	ascii_general_ci
+question_option	question_id	char(36)	ascii_general_ci
+question_option	position	int(11)	NULL
+question_option	text	varchar(500)	utf8mb4_unicode_ci
+question_option	is_correct	tinyint(1)	NULL
+student	id	char(36)	ascii_general_ci
+student	first_name	varchar(100)	utf8mb4_unicode_ci
+student	last_name	varchar(100)	utf8mb4_unicode_ci
+student	class_id	char(36)	ascii_general_ci
+study_area	id	char(36)	ascii_general_ci
+study_area	name	varchar(100)	utf8mb4_unicode_ci
+study_area	description	text	utf8mb4_unicode_ci
+study_path	id	char(36)	ascii_general_ci
+study_path	name	varchar(100)	utf8mb4_unicode_ci
+study_path	description	text	utf8mb4_unicode_ci
+subject	id	char(36)	ascii_general_ci
+subject	name	varchar(150)	utf8mb4_unicode_ci
+submission_answer	id	char(36)	ascii_general_ci
+submission_answer	submission_id	char(36)	ascii_general_ci
+submission_answer	question_id	char(36)	ascii_general_ci
+submission_answer	open_text	text	utf8mb4_unicode_ci
+submission_answer	is_correct	tinyint(1)	NULL
+submission_answer	awarded_points	decimal(7,2)	NULL
+submission_answer	teacher_comment	text	utf8mb4_unicode_ci
+submission_answer	last_saved_at	datetime(6)	NULL
+submission_answer_option	submission_answer_id	char(36)	ascii_general_ci
+submission_answer_option	option_id	char(36)	ascii_general_ci
+teacher	id	char(36)	ascii_general_ci
+teacher	first_name	varchar(100)	utf8mb4_unicode_ci
+teacher	last_name	varchar(100)	utf8mb4_unicode_ci
+user	id	char(36)	ascii_general_ci
+user	email	varchar(255)	utf8mb4_unicode_ci
+user	password_hash	varchar(255)	utf8mb4_unicode_ci
+user	role	enum('admin','teacher','student')	utf8mb4_unicode_ci
+user	student_id	char(36)	ascii_general_ci
+user	teacher_id	char(36)	ascii_general_ci
+TABLE_NAME	CONSTRAINT_NAME	COLUMN_NAME	REFERENCED_TABLE_NAME	REFERENCED_COLUMN_NAME
+audit_event	fk_audit_actor	actor_user_id	user	id
+audit_event	PRIMARY	id	NULL	NULL
+biennium	PRIMARY	id	NULL	NULL
+biennium	uq_biennium	start_year	NULL	NULL
+biennium	uq_biennium	end_year	NULL	NULL
+biennium_study_area	fk_bsa_area	study_area_id	study_area	id
+biennium_study_area	fk_bsa_biennium	biennium_id	biennium	id
+biennium_study_area	PRIMARY	id	NULL	NULL
+biennium_study_area	uq_biennium_area	biennium_id	NULL	NULL
+biennium_study_area	uq_biennium_area	study_area_id	NULL	NULL
+biennium_study_path	fk_bsp_bsa	biennium_study_area_id	biennium_study_area	id
+biennium_study_path	fk_bsp_path	study_path_id	study_path	id
+biennium_study_path	PRIMARY	id	NULL	NULL
+biennium_study_path	uq_bsa_path	biennium_study_area_id	NULL	NULL
+biennium_study_path	uq_bsa_path	study_path_id	NULL	NULL
+campus	fk_campus_institution	institution_id	institution	id
+campus	PRIMARY	id	NULL	NULL
+class	fk_class_bsp	biennium_study_path_id	biennium_study_path	id
+class	PRIMARY	id	NULL	NULL
+class	uq_class	biennium_study_path_id	NULL	NULL
+class	uq_class	name	NULL	NULL
+class_subject	fk_cs_class	class_id	class	id
+class_subject	fk_cs_subject	subject_id	subject	id
+class_subject	fk_cs_teacher	teacher_id	teacher	id
+class_subject	PRIMARY	id	NULL	NULL
+class_subject	uq_class_subject	class_id	NULL	NULL
+class_subject	uq_class_subject	subject_id	NULL	NULL
+exam	fk_exam_class_subject	class_subject_id	class_subject	id
+exam	fk_exam_retake_of	retake_of_exam_id	exam	id
+exam	PRIMARY	id	NULL	NULL
+exam_student	fk_exam_student_exam	exam_id	exam	id
+exam_student	fk_exam_student_student	student_id	student	id
+exam_student	PRIMARY	exam_id	NULL	NULL
+exam_student	PRIMARY	student_id	NULL	NULL
+exam_submission	fk_exam_submission_exam	exam_id	exam	id
+exam_submission	fk_exam_submission_grade	grade_id	grade	id
+exam_submission	fk_exam_submission_reviewer	reviewed_by_user_id	user	id
+exam_submission	fk_exam_submission_student	student_id	student	id
+exam_submission	PRIMARY	id	NULL	NULL
+exam_submission	uq_exam_submission_grade	grade_id	NULL	NULL
+exam_submission	uq_exam_submission_student	exam_id	NULL	NULL
+exam_submission	uq_exam_submission_student	student_id	NULL	NULL
+exam_violation	fk_exam_violation_submission	submission_id	exam_submission	id
+exam_violation	PRIMARY	id	NULL	NULL
+grade	fk_grade_class_subject	class_subject_id	class_subject	id
+grade	fk_grade_student	student_id	student	id
+grade	PRIMARY	id	NULL	NULL
+institution	PRIMARY	id	NULL	NULL
+institution	uq_institution_code	code	NULL	NULL
+institution_membership	fk_membership_institution	institution_id	institution	id
+institution_membership	fk_membership_user	user_id	user	id
+institution_membership	PRIMARY	id	NULL	NULL
+institution_membership	uq_membership_user_institution	user_id	NULL	NULL
+institution_membership	uq_membership_user_institution	institution_id	NULL	NULL
+institution_membership_role	fk_membership_role_membership	membership_id	institution_membership	id
+institution_membership_role	PRIMARY	membership_id	NULL	NULL
+institution_membership_role	PRIMARY	role	NULL	NULL
+question	fk_question_exam	exam_id	exam	id
+question	PRIMARY	id	NULL	NULL
+question	uq_question_position	exam_id	NULL	NULL
+question	uq_question_position	position	NULL	NULL
+question_option	fk_question_option_question	question_id	question	id
+question_option	PRIMARY	id	NULL	NULL
+question_option	uq_question_option_position	question_id	NULL	NULL
+question_option	uq_question_option_position	position	NULL	NULL
+student	fk_student_class	class_id	class	id
+student	PRIMARY	id	NULL	NULL
+study_area	PRIMARY	id	NULL	NULL
+study_area	uq_study_area_name	name	NULL	NULL
+study_path	PRIMARY	id	NULL	NULL
+study_path	uq_study_path_name	name	NULL	NULL
+subject	PRIMARY	id	NULL	NULL
+subject	uq_subject_name	name	NULL	NULL
+submission_answer	fk_submission_answer_question	question_id	question	id
+submission_answer	fk_submission_answer_submission	submission_id	exam_submission	id
+submission_answer	PRIMARY	id	NULL	NULL
+submission_answer	uq_submission_answer	submission_id	NULL	NULL
+submission_answer	uq_submission_answer	question_id	NULL	NULL
+submission_answer_option	fk_submission_answer_option_answer	submission_answer_id	submission_answer	id
+submission_answer_option	fk_submission_answer_option_option	option_id	question_option	id
+submission_answer_option	PRIMARY	submission_answer_id	NULL	NULL
+submission_answer_option	PRIMARY	option_id	NULL	NULL
+teacher	PRIMARY	id	NULL	NULL
+user	fk_user_student	student_id	student	id
+user	fk_user_teacher	teacher_id	teacher	id
+user	idx_user_student	student_id	NULL	NULL
+user	idx_user_teacher	teacher_id	NULL	NULL
+user	PRIMARY	id	NULL	NULL
+user	uq_user_email	email	NULL	NULL

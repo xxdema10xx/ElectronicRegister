@@ -1,0 +1,74 @@
+{
+  "before": {
+    "mode": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+    "port": 3306,
+    "uuid": "ccb5af5b-d772-11f1-a92e-62d36692ed32",
+    "events": "OFF",
+    "offline": 0,
+    "version": "8.4.13"
+  },
+  "after": {
+    "mode": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+    "port": 3306,
+    "uuid": "ccb5af5b-d772-11f1-a92e-62d36692ed32",
+    "events": "ON",
+    "offline": 1,
+    "version": "8.4.13"
+  },
+  "api": {
+    "returncode": 1,
+    "stdout": "",
+    "stderr": "mysql: [Warning] Using a password on the command line interface can be insecure.\nERROR 3032 (HY000): The server is currently in offline mode\n",
+    "mysqlErrno": 3032,
+    "sqlstate": "HY000"
+  },
+  "limitedIdentity": "er84_restart_limited@localhost\ter84_restart_limited@localhost\n",
+  "limitedGrants": "GRANT USAGE ON *.* TO `er84_restart_limited`@`localhost`\nGRANT CONNECTION_ADMIN ON *.* TO `er84_restart_limited`@`localhost`\n",
+  "insufficientPrivilegesRejected": true,
+  "identityRejections": [
+    {
+      "field": "container",
+      "error": "Recovery container/volume binding changed"
+    },
+    {
+      "field": "volume",
+      "error": "Recovery container/volume binding changed"
+    },
+    {
+      "field": "uuid",
+      "error": "Recovery server UUID/identity/barrier mismatch"
+    }
+  ],
+  "status": "PASS",
+  "dataPreserved": true,
+  "persistentBarrier": true,
+  "barrierRemoved": true,
+  "target": {
+    "database": "er84_run8_restart",
+    "mysqlContainer": "e3b219c9eb6236579bbfdde1dd17ff8d43faa8a66a8ccdb5aa6c91a8e2fc0e93",
+    "serverUuid": "ccb5af5b-d772-11f1-a92e-62d36692ed32",
+    "recoveryBinding": {
+      "container": "e3b219c9eb6236579bbfdde1dd17ff8d43faa8a66a8ccdb5aa6c91a8e2fc0e93",
+      "image": "sha256:5cf1e1293ea42e077e6a22114e6773b9aae3bb8f9933a2acd5a9721518ff8f5b",
+      "hostname": "e3b219c9eb62",
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "er84-run8-final-20261103-data",
+          "Source": "/var/lib/docker/volumes/er84-run8-final-20261103-data/_data",
+          "Destination": "/var/lib/mysql",
+          "RW": true
+        }
+      ],
+      "ports": {
+        "3306/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13386"
+          }
+        ]
+      }
+    },
+    "recoverySocketAccount": "root@localhost"
+  }
+}

@@ -1,0 +1,5 @@
+SELECT 'invalid_revision' AS rule,COUNT(*) AS violations FROM student_enrollment WHERE revision<0
+UNION ALL SELECT 'invalid_actor',COUNT(*) FROM course_administration_event a LEFT JOIN institution_membership m ON m.institution_id=a.institution_id AND m.id=a.actor_membership_id AND m.user_id=a.actor_user_id WHERE m.id IS NULL
+UNION ALL SELECT 'invalid_edition',COUNT(*) FROM course_administration_event a LEFT JOIN course_edition c ON c.institution_id=a.institution_id AND c.id=a.course_edition_id WHERE c.id IS NULL
+UNION ALL SELECT 'invalid_enrollment',COUNT(*) FROM course_administration_event a LEFT JOIN student_enrollment e ON e.institution_id=a.institution_id AND e.id=a.enrollment_id AND e.course_edition_id=a.course_edition_id WHERE a.enrollment_id IS NOT NULL AND e.id IS NULL
+UNION ALL SELECT 'missing_fk',6-COUNT(*) FROM information_schema.referential_constraints WHERE constraint_schema=DATABASE() AND constraint_name LIKE 'fk_mt4c_%' AND delete_rule='RESTRICT' AND update_rule='RESTRICT';

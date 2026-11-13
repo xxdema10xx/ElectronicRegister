@@ -1,0 +1,2161 @@
+{
+    "format":  1,
+    "run":  41504155288,
+    "analyzedCommit":  "981c63f7d15e25174fd0fcdbb7077a4032c2d1c1",
+    "ready":  false,
+    "counts":  {
+                   "discovered":  351,
+                   "pass":  0,
+                   "fail":  0,
+                   "blocked":  351
+               },
+    "problems":  [
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.IdentityAccountTests.AnonymousAndExternalOnlyCredentialsCannotEstablishLocalPassword",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.IdentityAccountTests.ConcurrentCredentialUpdatesCommitExactlyOnce",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.IdentityAccountTests.HistoricalAccountHasNoInferredMembershipAndPersonalUpdateCannotMutateAuthority",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.IdentityAccountTests.InvalidPasswordChangeDoesNotRevokeOrModifyCredential",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.IdentityAccountTests.MalformedPersistedCredentialFailsClosedWithoutLeakingHashErrors",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.IdentityAccountTests.PasswordChangeRevokesAccessAcrossEveryInstitution",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.IdentityAccountTests.PasswordChangeRevokesAllPriorTicketsAndCannotBeReplayed",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.IdentityAccountTests.Quality_PasswordPutBudgetIsSharedByTwoHostsAndCannotBeSpoofedByProxyHeaders",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.IdentityAccountTests.RegistrationCreatesOnlyIdentityAndCollisionCannotAcquireHistoricalAccount",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicAdministrationRequiresCurrentAdmin",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicAssociationDuplicatesAndUnknownStructuralFieldsAreRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicCrudPersistsRevisionsAndImmutableHistory",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicFaultAfterAuditRollsBackBothResourceAndLedger",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicForeignTenantIsIndistinguishableAndUnknownOwnerRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicHttpConfigurationBuildsClassAndBlocksAllStructuralDeletes",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicInvalidDatesAreRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicInvalidNamesAreRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicMySqlCollationAndConcurrentDuplicatesAreAuthoritative",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicNullRequiredDescriptionAndForeignAssociationAreRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicPaginationAndAuthenticationFailClosed",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AcademicPathDeletionAndClassCreationNeverCascadeACommittedClass",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AdministrationEveryNewRouteRejectsInvalidTokenPurposesAndGenerations",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AdministrationLedgerIsAppendOnlyEvenForRootAndRetainsSnapshots",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AdministrationRevocationBlocksEveryNewMutationAndRead",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AdministrationRolloutFlagsRemainFailClosed",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AdministrationRouteInventoryKeepsExactPolicyMarkersAndAdminCommands",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AssignmentAdministrativeCommandsRejectNonAdmins",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AssignmentConcurrentCreateAndUpdateHaveOneWinner",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AssignmentCrudKeepsClassAndSubjectImmutableAndRetainsAudit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AssignmentDeletionAndExamInsertKeepEveryCommittedExam",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AssignmentExamCreationAndTeacherReassignmentCannotCrossAuthorship",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AssignmentFaultAfterAuditRollsBackEveryMutation",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AssignmentForeignReferencesAreRejectedWithoutWrites",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AssignmentOwnershipAndSqlPagingPreserveTeacherChoices",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AssignmentTeacherExamStudentSubmissionAndAutomaticGradeRemainCompatible",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AssignmentUpdateRejectsUnknownOrImmutableFields",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.AssignmentWithGradeCannotChangeTeacherOrBeDeleted",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_BoundedManyRowBatchCreatesEveryTargetInOneCommit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ChangedPolicyInvalidatesConfirmationWithoutPartialRows",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ChangingMappingInvalidatesOldDigestAndCanResolveAmbiguousClass",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ClassChangeBeforeConfirmationRequiresFreshPreview",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ConcurrentConfirmationAndLostResponseCannotDuplicatePeople",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ConfirmationRejectsUnknownSecurityFields",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_DatabaseGuardsProtectHistoryAndCrossTenantLinks",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_DisabledRolloutAndSelectionTokensCannotMutate",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_EmailReservationUsesPhase2PolicyAndNumericSuffixInRowOrder",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ExistingExternalReferenceBlocksCreateOnlyWithoutMerge",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ExpiredStagingIsUnreadableAndRetentionPurgesOnlyPayload",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_FaultRollsBackAllPeopleReferencesAndBatchCompletion",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_GlobalCollisionCannotSilentlyChangeConfirmedEmailsAndRollsBackEarlierRows",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_HostileUploadsDoNotCreateStagingOrPeople",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_IdenticalFileRequiresExplicitIntentButHomonymsAreAllowed",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_IdenticalRowsRequireWarningAcknowledgementButRemainDistinctPeople",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_InitialClassDoesNotCreateEnrollmentOrTransferAndForeignClassIsUnavailable",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_InvalidRowBlocksEveryWriteWithStableRowErrors",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_LegacyTokenAndDirectManagerWithoutCurrentTenantFailClosed",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_LowRolesCannotUploadOrReadTemplates",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_MalformedMappingAndForbiddenDestinationsAreRejectedBeforeStaging",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_PendingQuotaAndRuntimeRolloutAreRevalidated",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_PreviewIsPrivateAndPureThenConfirmationCreatesOnlyAnagraphics",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_PrivatePreviewIsNotSharedWithAnotherAdministrator",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_ReplayReturnsSameIdsAndSecondEventCannotRepeatCompletedWork",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_StaffRevocationWaitsForCommitAndThenBlocksOldToken",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_StaleMembershipCannotConfirmStoredPreview",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_TeacherEmailUsesItsOwnPublishedTemplateWithoutTeacherProfile",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.BulkImport_XlsxUsesSamePersistentWorkflow",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CampusCourseEditionLinksAndHistorySurviveDeactivation",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CampusCrudAndActivationRetainPermanentAudit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CampusDatabaseLengthsAreValidated",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CampusDeletionAndCourseLinkPreserveEditionAndEveryCommittedLink",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CampusEmptyNamesAreRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CampusFailureAfterAuditRollsBackEveryMutation",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CampusNonAdminsCannotReadOrMutate",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CampusOwnershipAndOptimisticConcurrencyAreEnforced",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CampusPutRequiresExplicitActivationAndPagingIsValidated",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CampusRevocationAfterManagerAuthorizationIsRevalidatedInsideTransaction",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CampusUnknownFieldsAreRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.ClassAuditIsAppendOnlyEvenForDirectSqlAndSurvivesDeletion",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.ClassWithExamsSubmissionsAndGradesCannotBeDeletedOrMutatedIndirectly",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.ConcurrentCreatesHaveOneWinnerAndOneAudit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.ConcurrentRenamesRejectStaleRevisionAndDoNotChangeAssociations",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.CreateListDetailRenameAndDeleteEmptyClassKeepPermanentAudit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.DeleteNeverCascadesOrDisconnectsSchoolData",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.DeleteWithEditionAndAdministrativeHistoryPreservesEveryReference",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.DuplicateNamesRespectRealMySqlCollation",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_AppendOnlyAuditAndAssignmentsRejectDirectDestruction",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_AtomicCreateRollsBackProfileWhenReservationCollides",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_AtomicCreateSupportsUnlinkedProfilesAndIdempotentReplay",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_AuditFaultRollsBackPolicyAssignmentAndNewPerson",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_CategoriesAreIndependentAndDoNotChangeIamRoles",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_CollisionUsesGlobalUniqueReservationAndConfiguredSuffix",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ConcurrentGlobalWriterAndAssignmentCannotDuplicateAddress",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ConcurrentPolicyVersionsHaveOneWinner",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ConcurrentSameAddressHasExactlyOneWinner",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_CrossTenantNamespaceCollisionReturnsOnlyGenericConflict",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_DisabledRolloutAndRevokedStaffCannotMutate",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_EventReplayReturnsSameAssignmentAndConflictingReplayNeverWrites",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ExistingGlobalEmailConflictsAndGlobalWritersCannotClaimInstitutionalReservations",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_ForbiddenFieldsCannotCreateCredentialsOrVerification",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_MembershipOnlyStaffAddressRequiresAdminAndExplicitNames",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_NewVersionsLeaveOldAddressesAndSnapshotsUnchanged",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_OneInstitutionCanPublishDifferentTemplatesForAllCategories",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_OverrideRetainsOldReservationAndAudit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_OwnAddressVisibilityUsesRealProfiles",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_RetiredAddressCannotBeReservedForAnotherPerson",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_RevocationWaitsForEmailWriteThenOldTokenFails",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_StaffCannotConfigureOverrideOrForceDomain",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_StaffPreviewAndReservationDoNotCreateMailboxOrChangeGlobalIdentity",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_TeacherAndStudentCannotWritePoliciesOrReserve",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_TenantsHaveIndependentConventionsAndForeignRecipientsAreNotFound",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EmailPolicy_UppercaseDisplayUsesLowercaseGlobalNamespace",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.EveryOperationIsTenantScopedAndForeignIdsLookMissing",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.ExactClassRouteInventoryUsesVerifiedInstitutionPolicyAndAdminOnly",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.FailureAfterAuditRollsBackMutationAndLedgerTogether",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.IncompleteMetadataPrivilegeContractFailsClosed",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.InvalidNamesDoNotCreateAnything",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.InvalidStudyPathsAreRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.LeastPrivilegeDeletePreservesEditionAndHistory",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.LeastPrivilegeDeletePreservesExamsSubmissionsAndGrades",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.LeastPrivilegeDeletePreservesSchoolDependencies",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.LeastPrivilegeEmptyDeletePreservesPermanentAudit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.LeastPrivilegeMissingCalendarForeignKeyFailsClosed",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.LeastPrivilegeMissingCalendarHistoryTableFailsClosed",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.LeastPrivilegeUnknownCascadeForeignKeyBlocksEvenEmptyDelete",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.NewClassWorksWithStudentCrudAndDedicatedCourseEditionAssignment",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.NonAdminRolesCannotUseAnyClassOperation",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.OtherTokenPurposesCannotEnterTheInstitutionClassSurface",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.PaginationFiltersOrderingAndPageSizeAreApplied",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_AuthorizedWriteHoldsIamUntilCommit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_AutosaveDisposesOnlyItsOwnedTransaction",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_CancellationBeforeRepositoryCreationNeverWrites",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_ConcurrentCreatesDoNotUpgradeSharedTenantLocksOrDeadlock",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_ExamFanoutMeasurementPreservesShapeAndSnapshot",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_GlobalPasswordChangeWaitsForAuthorizedCommit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_GlobalPasswordGenerationRevokesOpenedWrite",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_GradePaginationHasTotalOrderAndRejectsOverflow",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_LockEvidenceRejectsMissingIamLockMutant",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_ReadinessRequiresReleaseMarkerAndExecutePermission",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RevocationCommittedAfterOpenPreventsWrite",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_RoleRemovalCommittedAfterOpenPreventsWrite",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Quality_UnknownEntityCannotUseTenantOnlyExamFallback",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Release_OriginalIamGenerationOmissionIsReproducedByTestOnlyMutant",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Release_PasswordRotationLinearizesAdministrativeIam",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Release_ReadinessRequiresGateRevisionMarker",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Release_ReciprocalAcquisitionsOrderBothGlobalIdentities",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.Release_ValidationBeforeLockMutantCannotProveSerialization",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.RolloutDisabledAndRevokedGenerationDenyAccess",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_AdminPlusStaffKeepsGradeAndDraftExamDelete",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_AllowlistedLegacyTeacherCannotBypassStaffDeleteRestriction",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_AnagraphicCruIsTenantScopedWithoutCreatingGlobalAccounts",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_CannotReachGovernanceLegacyOrStructuralWrites",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_DoesNotGrantTeachingOrStudentSubmissionMutations",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_ExamForgedFieldsCannotCreateOrAttributeData",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_ExamLifecycleUsesRealActorWithoutTeacherProfile",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_FaultAfterPersistingAuditRollsBackWholeResource",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_ForbiddenStudentFieldsProduceNoWrite",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_GradesCruKeepIdentityAndTenantAndRejectDelete",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_IamAssignsAndRevokesStaffWithAuditAndGeneration",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_MixedRolesCannotDeleteOrCancelExams",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_PreviousJwtFailsAfterMembershipChange",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_RevocationWaitsForAuthorizedWriteAndThenBlocksOldToken",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_RolloutAndSelectionTicketCannotAuthorizeStaffWrites",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_SameUserTeacherInOtherFoundationKeepsIndependentScope",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_SignedStaffClaimCannotGrantRoleMissingFromMembership",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.StaffRole_StudentRoleUsesRealProfileAndExamGradeStillRequiresFinalizationWorkflow",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferAdministrativeConflictsMakeNoMutation",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferAndExamStartCannotBothWinTheSameStudentState",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferAndHistoryRejectInvalidAuthentication",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferAndHistoryRejectNonAdmin",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferAndHistoryRevalidateMembership",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferBlocksRealInProgressAttemptWithoutTouchingAnswersOrDeadline",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferConcurrentIntentionsHaveExactlyOneWinner",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferConcurrentReplayReturnsOnePersistedReceipt",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferFaultAfterEachCriticalMutationRollsBackEntireUnit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferForeignIdsAreIndistinguishableFromMissing",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferHistoryRejectsInvalidPagination",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferHttpRejectsServerOwnedFields",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferHttpUsesInjectedClockAndConfiguredInclusiveCalendarWindow",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferKeepsUnstartedAssignmentsButCannotStartOldClassExam",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferLedgerIsAppendOnlyAndRestrictsHistoricalParentDeletion",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferParallelTenantContextsCannotBleedAcrossRequests",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferPreservesCareerAndWritesCoherentEnrollmentHistory",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferPreservesSubmittedAttemptAndHistoricalReviewFinalization",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferRejectsBackdatingAndFutureDates",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferRejectsMissingSchoolOrCourseRollout",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferRejectsOversizedPayloadBeforeAnyMutation",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferReplayCannotBeClaimedByAnotherAdministrator",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferReplaySurvivesLaterTransfersAndPolicyChange",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferRequiresExplicitIntentionDateAndRevision",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferRevisionStartsAtZeroWithNoInventedHistoryAndCannotBypassStudentPut",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.TransferRoutesCarrySchoolPolicyAdminRoleAndCourseWriteGuard",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionClassCrudTests.UnknownOrStructuralBodyFieldsAreRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.AuditIsAppendOnlyAtSqlLevel",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.AuditRetainsActualActorAndBeforeAfterState",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.BindingDifferentStudyPathFailsInHttpAndSql",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.BindingDraftFailsAndLegacyEditionStillExists",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.BindingHistoryCannotBeUpdatedOrDeletedBySql",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.BindingIsReusableAuditedIdempotentAndCannotBeReplaced",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_AfterCommitResponseFailureReplaysDurableReceiptOnAnotherHost",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_CancellationAndCompletionRaceCannotProduceCancelledDeliveredLesson",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_ClosedStartupHasNoRoutesAndSelectionTokenCannotWrite",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_CombinedOperationalRolesDoNotWidenPersonalStudentScope",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_CompetingImportConfirmationsRevalidateTeacherBookings",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_ConcurrentImportAndManualBookingCannotDoubleBookTeacher",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_ConcurrentOverlappingManualWritesHaveOneWinnerAndAdjacentLessonsAreAllowed",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_ConcurrentPublicationAndConcurrentCompletionAreRevisionProtected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_DirectUnauditedSqlMutationAndReservedJsonPropertiesAreRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_EndToEndCsvThreeClassesPublicationPersonalViewsCompletionHoursAndAudit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_ExpiredPreviewCannotCommitAndLatePublicationDoesNotCertifyDelivery",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_FaultInjectionRollsBackRowsPeriodsAndAudit",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_ForeignOrInventedReferencesCannotCreateLessons",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_IamRevocationWaitsForAuthorizedCommitThenRejectsOldToken",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_ImportCommitRejectsUntrustedOrStalePreview",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_ImportFaultOnSecondLessonRollsBackEntireBatchAndRetainsPreview",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_InvalidImportIsAllOrNothingAndXlsxImportPersists",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_LegacyClassAndModuleFromAnotherPublishedVersionAreRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_NativeDeadlockLeavesOneDurableLessonAndSameIntentCanRetry",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_OpenApiDeclaresTypedResponsesForTheEnabledCalendar",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_PersonalRolesCannotUseOperationalCapabilities",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_PublicationFaultRollsBackVisibilityAndOccupancy",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_PublishedAmendmentCancellationRecoveryAndDeliveredCorrectionPreserveHistory",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_PublishedChangesAppearInBothPersonalViewsAndReasonsRemainPrivate",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_PublishingOneClassDoesNotExposeOtherDraftsAndBudgetsStaySeparate",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_ReplaceExactDraftScopePreservesOtherClassesAndPublishedRecords",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_RevocationInvalidatesOldTokenAndAuditCannotBeDeleted",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_RuntimeRolloutClosureBeforeCommitRollsBackAllWrites",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_SameEventWithDifferentPayloadConflictsAndCompletedReplayDoesNotDoubleHours",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_SqlRejectsSignedPublishedOverlapAndOccupancyTampering",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_StaffPublishesAndCombinedStaffTeacherDoesNotGainIamPrivileges",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_StudentCalendarFollowsAuthorizedTransferWithoutRewritingLessons",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_SubstituteReadsOwnPublishedModuleWithoutClassSubjectPrivileges",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_SubstitutionChangesRealTeacherViewWithoutChangingClassSubject",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_TeacherInTwoInstitutionsCannotLeakLessonsAcrossSelectedContexts",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_TeacherStudentCombinationRetainsStudentScopeWithoutInventingTeacherProfile",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.Calendar_TwoAdministratorsAndPublicationVersusSubstitutionSerialize",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.ConcurrentCloneNumbersAreDistinctAndSequential",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.ConcurrentDraftEditsHaveOneWinner",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.ConcurrentPublicationHasOneWinnerAndReplayIsStable",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.ConfigurableBudgetsPublishExactly",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.CreateIsPersistentAndReplayReturnsOriginalIdentity",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.CrossTenantSubjectRejectedBeforeMutation",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.DeepClonePersistsNewIdsAndLeavesPublishedVersionUnchanged",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.DisabledRolloutHasNoRoutes",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.DuplicateCodeInSameTenantConflicts",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.EmptyDraftIsValidToSaveButNotToPublish",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.FailedCloneDuringChildCopyLeavesNoNewVersion",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.FaultAfterAuditRollsBackLifecycleOperation",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.FaultRollsBackDraftAndAuditTogether",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.ForeignPathAndForeignResourceAreIndistinguishableFromMissing",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.InvalidModuleMinutesNeverPersist",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.LeastPrivilegeDeletePreservesCancelledCalendarPeriodAndHistory",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.LegacyBackfillDoesNotRewriteFormativeSnapshots",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.LegacyGlobalAdminDoesNotGrantInstitutionAdmin",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.ManagerWithoutCurrentTenantAndRepositoryWithoutAdminFailClosed",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.MembershipChangeInvalidatesExistingToken",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.NonAdminCannotMutateOrReadHistory",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.PersonalRolesCannotEnumerateCatalogOrUnrelatedEdition",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.PlanRenameDoesNotRewritePublishedSnapshot",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.PublicationRejectsDeficitAndExcessWithoutRewritingBudget",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.PublishedStructureRejectsDirectSqlDeletes",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.PublishedStructureRejectsDirectSqlUpdates",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.PublishedStructureRejectsSqlInserts",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.PublishedVersionCannotBeEditedByHttp",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.RemovingDraftElementsIsAuditedAndPreservesRevision",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.RepeatedSubjectInDifferentUnitsPreservesDistinctIdsAndOrderedOutcomes",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.ReplayAfterLaterRevisionReturnsOriginalReceipt",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.RevocationWaitsForAuthorizedMutationThenOldTokenFails",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.RuntimeRolloutDisableBeforeCommitRollsBack",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.SameCodeInDifferentTenantsIsValidAndForeignIdsAreHidden",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.SameConcurrentCloneEventCreatesOnlyOneVersion",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.SecurityGenerationAndInstitutionStateAreRevalidated",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.SelectionTicketCannotAccessInstitutionalSurface",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.SignedRoleClaimCannotGrantMissingMembershipRole",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.SqlCannotMoveModuleOrAssignForeignSubject",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.SqlCannotPublishIncompletePlanOrChangeOwnership",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.SqlRejectsDuplicateDraftOrderAndPublishedVersionDelete",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.SqlRejectsInvalidDraftMinutes",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.StaffReadsCatalogButCombinedTeacherRoleDoesNotGrantWrite",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.StudentReadsOnlyOwnEnrollmentPlanAndModule",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.TeacherAccessRequiresRealAssignmentToEditionClass",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.TwoDifferentAdminsEditingSameRevisionHaveOneWinner",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.TwoDifferentBindingEventsCannotBothWin",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.TwoDifferentPublicationEventsHaveOneWinner",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.TwoPublishedVersionsBindIndependentlyAndCanBeReused",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.InstitutionFormativePlanTests.UnknownOrServerOwnedFieldsAreRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.CanonicalAccessChecksLiveMembershipAndDoesNotUseGlobalRole",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.EveryLegacyEndpointRejectsBothScopedAndSelectionTokensBeforeReadingOrWriting",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.ExistingTokenIsForbiddenAfterCommittedAuthorizationChange",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.IdentitySelectionSeparatesFoundationsAndRolesWithoutLegacyProfiles",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.InvalidOrInconsistentJwtIsRejected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.LegacyConfigurationCannotReenableRetiredIdentityOrStudentEndpoints",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.RetiredExamGradeRoutesStayAbsentAndGlobalJwtCannotAuthorizeInstitutionalApis",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SelectionNeverTrustsClientIdentifiersOrRole",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.SimultaneousRequestsNeverShareTenantContext",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt2IdentityTests.TokenPurposesCannotBeInterchangedAndNoMembershipIsPublic",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.ActualAdministrativeCliVerifiesSignedIntentAndUsesOnlyOwnerInstalledChannel",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.ConcurrentAcceptanceAndRetryConsumeOnlyOnceAndKeepRolesApproved",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.ConcurrentProvisioningIsIdempotentAndEventIntentChangesConflict",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.DefaultClosedRolloutRejectsOtherwiseValidRecipientAndAdminRequests",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.ExactNonceReplayIsDeniedButFreshlySignedIdempotentRetryRevalidatesAuthority",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.ExistingPendingOrLeftMembershipIsNeverImplicitlyRejoined",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.ExpiredChallengeAndUnapprovedFirstAdminCannotCreateMemberships",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.FaultAfterWritesRollsBackMembershipApprovalAuditAndNonce",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_ActualCliUsesTheDedicatedManagerWithoutRequiringNotificationDelivery",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_ArchivePreservesMembershipsAndRejectsOtherwiseValidHttpMutations",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_AuditHttpIsOwnerFilteredPaginatedAndContainsOnlyIamProjection",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_AuditHttpRejectsMalformedFiltersWithoutChangingData",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_AuditHttpRejectsTeacherAndRevalidatesRevokedAdminJwt",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_AuditRepositoryMasksRowsIfAuthorizationWasRevokedAfterTheManagerCheck",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_AuditRolloutIsClosedAndNoAuditMutationRouteExists",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_AuthorityRevokedDuringAwaitedWorkCannotCommitRecovery",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_ConcurrentRecoveryRequestsAndApprovalsHaveOnePersistentEffect",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_ConcurrentRetriesAreIdempotentAndRevokedOperatorsCannotReplay",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_DefaultClosedAndUnauthorizedOperatorsNeverMutateLifecycle",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_FaultRollsBackStatusGenerationAuditAndNonce",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_LifecycleRevokesOnlyTheSelectedInstitutionAndArchiveIsTerminal",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_OneOperatorOrDuplicateApprovalCannotEnableRecovery",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_OperatorAliasesUsingTheSameKeyDoNotCountAsIndependentPeople",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_ReactivationRequiresAValidAdminAndOverflowRollsBack",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_RecoveryAcceptFaultRollsBackAndConcurrentRetryConsumesOnce",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_RecoveryCanBeRevokedEvenWhenAnotherApproverHasBeenRevoked",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_RecoveryReissueInvalidatesOldProofAndPreservesIndependentApprovals",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_RecoveryRequestsAndApprovalsAreAppendOnly",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_RecoveryRequiresTwoIndependentApprovalsAndRecipientAcceptance",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_RevokedApprovalAndCrossTenantIntentCannotBeAccepted",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.Governance_RootKnowingAProofCannotBypassIndependentApprovals",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.InviteSharedUserWithoutChangingBAndReissueInvalidatesPreviousChallenge",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.LegacyTechnicalWritersCannotPreseedAdministratorsIntoVerifiedOnboarding",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.PlatformCliRefusesAuthorityConfigurationReadableByEveryoneBeforeMutation",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.ProvisioningDoesNotAssignRolesUntilPersonallyAcceptedAndAuditsDistinctActors",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.RecipientMustAuthenticateAndPossessDeliveredProofForTheExactUserAndTenant",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.RevokedInvitationCannotBeAcceptedAndForeignAdminCannotRevokeIt",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.UnconfiguredTrustedChannelKeepsTheWorkflowClosed",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.UnhandledHttpErrorPreservesSecurityHeadersAndNeverLogsExceptionSecretOrQuery",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.UnknownRecipientAndExistingMemberHaveNeutralResponsesAndPersistentRateLimits",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.UntrustedOperatorsAndInvalidSignedOperationsNeverCreateAnInstitution",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.UnverifiedLegalRequestIsNotTreatedAsVerified",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5cOnboardingTests.WrongChallengesArePersistentlyLimitedAndSignedReissueRotatesTheProof",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.BothRolloutFlagsAreRequiredAndGetRemainsReadOnly",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.ConcurrentIdenticalEventsApplyExactlyOnce",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.ForeignAndAbsentTargetsAreIndistinguishableAndLeaveBothTenantsUntouched",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.FourOperationsPersistAuditAndMonotoneRevocationWithoutAffectingB",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.IdempotenceReturnsHistoricalBodyAndConflictsNeverWrite",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.InvalidBodiesAre400AndNeverWrite",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.MutualAdminSuspensionsLeaveOneAdminAndDenyRevokedRetry",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.NonTenantAdminCannotWriteEvenWithGlobalAdminRole",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.NoopIsConflictWithoutAuditOrGeneration",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.RealHttpErrorsRollBackBeforeAndAfterAuditAndStayOpaque",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.RevokedAdminCannotRetryAndRestoringRoleRequiresANewJwt",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.SoleAdminAndSelfAdministrationAreProtected",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     },
+                     {
+                         "id":  "ElectronicRegisterAPI.Tests.Integration.Mt5eIamHttpTests.WrongAuthenticationCannotEnterIam",
+                         "status":  "BLOCKED",
+                         "cause":  "Local Docker engine unavailable; MySQL 8.4.13 runtime not executed",
+                         "required":  true
+                     }
+                 ],
+    "checks":  [
+                   {
+                       "id":  "dotnet-build",
+                       "status":  "PASS"
+                   },
+                   {
+                       "id":  "dotnet-unit",
+                       "status":  "PASS",
+                       "passed":  598
+                   },
+                   {
+                       "id":  "fixture-config",
+                       "status":  "PASS",
+                       "passed":  4
+                   },
+                   {
+                       "id":  "python-regressions",
+                       "status":  "BLOCKED",
+                       "cause":  "Python unavailable; portable runtime download denied by network"
+                   },
+                   {
+                       "id":  "mysql84-runtime",
+                       "status":  "BLOCKED",
+                       "cause":  "Docker unavailable; WSL access denied"
+                   },
+                   {
+                       "id":  "actionlint",
+                       "status":  "BLOCKED",
+                       "cause":  "Executable unavailable"
+                   },
+                   {
+                       "id":  "local-portability",
+                       "status":  "PASS",
+                       "passed":  7
+                   },
+                   {
+                       "id":  "node-release-and-manifest",
+                       "status":  "PASS",
+                       "scope":  "offline; immutable predecessor and negative controls"
+                   }
+               ]
+}

@@ -1,0 +1,325 @@
+{
+  "mysql": "5.7.24",
+  "port": 13450,
+  "positivePreflight": true,
+  "apiDdlDenied": true,
+  "apiExecuteOnlyProbe": true,
+  "noExecuteRejected": true,
+  "cases": [
+    {
+      "name": "original: lease_until absent",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: er_schema_release.version",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: er_schema_release.applied_at",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_account_event.id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_account_event.user_id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_account_event.action",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_account_event.created_at",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_account_state.user_id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_account_state.generation",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_account_state.display_name",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_password_attempt.user_id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_password_attempt.window_start",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_password_attempt.attempts",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_password_attempt.lease_id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: identity_password_attempt.lease_until",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.institution_id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.actor_user_id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.actor_membership_id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.target_user_id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.target_membership_id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.student_id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.teacher_id",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.status",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.request_hash",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.reason",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column default: institution_profile_acquisition.created_at",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column type: lease_until",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "column nullability: attempts",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "primary key: er_schema_release.PRIMARY",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "index: identity_account_event.idx_identity_event_user",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "primary key: identity_account_event.PRIMARY",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "primary key: identity_account_state.PRIMARY",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "primary key: identity_password_attempt.PRIMARY",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "index: institution_profile_acquisition.fk_profile_acquisition_actor",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "index: institution_profile_acquisition.fk_profile_acquisition_student",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "index: institution_profile_acquisition.fk_profile_acquisition_target",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "index: institution_profile_acquisition.fk_profile_acquisition_teacher",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "primary key: institution_profile_acquisition.PRIMARY",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "foreign key: fk_identity_event_user",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "foreign key: fk_identity_state_user",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "foreign key: fk_password_attempt_user",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "foreign key: fk_profile_acquisition_actor",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "foreign key: fk_profile_acquisition_student",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "foreign key: fk_profile_acquisition_target",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "foreign key: fk_profile_acquisition_teacher",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger missing: identity_account_event_no_delete",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger body: identity_account_event_no_delete",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger missing: identity_account_event_no_update",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger body: identity_account_event_no_update",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger missing: identity_account_state_guard",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger body: identity_account_state_guard",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger missing: profile_acquisition_insert",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger body: profile_acquisition_insert",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger missing: profile_acquisition_no_delete",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger body: profile_acquisition_no_delete",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger missing: profile_acquisition_no_update",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "trigger body: profile_acquisition_no_update",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "table: password quota",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "marker: er-quality-1",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "marker: er-quality-1-closure-1",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "routine SQL SECURITY",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    },
+    {
+      "name": "routine absent",
+      "readinessAccepted": false,
+      "preflightExit": 1
+    }
+  ]
+}

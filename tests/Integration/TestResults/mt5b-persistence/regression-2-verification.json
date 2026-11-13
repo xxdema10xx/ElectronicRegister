@@ -1,0 +1,34 @@
+{
+    "Run":  "regression-2",
+    "Valid":  true,
+    "Total":  738,
+    "Unit":  51,
+    "Integration":  687,
+    "Passed":  738,
+    "Failed":  0,
+    "Other":  0,
+    "HistoricalIdentitiesMissing":  0,
+    "NewIdentities":  27,
+    "NewIdentityDifferences":  0,
+    "Files":  [
+                  {
+                      "File":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\regression-2\\Integration\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_46_54_net10.0.trx",
+                      "SHA256":  "2E0D6732573AD6A33B0F1C2E76B52B92E20DB7EE226817CB9555DC95A7080B15",
+                      "Total":  687,
+                      "Passed":  687,
+                      "Failed":  0,
+                      "NotExecuted":  0
+                  },
+                  {
+                      "File":  "C:\\Users\\Lorenzo\\ElectronicRegister\\tests\\Integration\\TestResults\\mt5b-persistence\\regression-2\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_46_50_net10.0.trx",
+                      "SHA256":  "5235BBA9949E471E08234510124D68E35602357E818A2CCB27570DA379420990",
+                      "Total":  51,
+                      "Passed":  51,
+                      "Failed":  0,
+                      "NotExecuted":  0
+                  }
+              ],
+    "NonPassed":  [
+
+                  ]
+}

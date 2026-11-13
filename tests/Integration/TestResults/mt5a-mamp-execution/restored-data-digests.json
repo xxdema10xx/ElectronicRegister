@@ -1,0 +1,250 @@
+[
+    {
+        "Table":  "audit_event",
+        "SourceRows":  10,
+        "RestoredRows":  10,
+        "SourceSHA256":  "54B4855F124C4690B537F552E3ADEB107B49ADF831E2022F39529916BB6D60F2",
+        "RestoredSHA256":  "54B4855F124C4690B537F552E3ADEB107B49ADF831E2022F39529916BB6D60F2",
+        "Equal":  true
+    },
+    {
+        "Table":  "biennium",
+        "SourceRows":  1,
+        "RestoredRows":  1,
+        "SourceSHA256":  "D40EFCBA9DDD0BE0DF07CBA3D6E0BE2E7DE8701089808FB7C260DBF5E5B94F0B",
+        "RestoredSHA256":  "D40EFCBA9DDD0BE0DF07CBA3D6E0BE2E7DE8701089808FB7C260DBF5E5B94F0B",
+        "Equal":  true
+    },
+    {
+        "Table":  "biennium_study_area",
+        "SourceRows":  1,
+        "RestoredRows":  1,
+        "SourceSHA256":  "7DC587F03BD3F8DF874A78B3E61FF99CF343D1DC5023F6597FECF0F3110C3D5C",
+        "RestoredSHA256":  "7DC587F03BD3F8DF874A78B3E61FF99CF343D1DC5023F6597FECF0F3110C3D5C",
+        "Equal":  true
+    },
+    {
+        "Table":  "biennium_study_path",
+        "SourceRows":  1,
+        "RestoredRows":  1,
+        "SourceSHA256":  "F8C6381AFB2133B93E15898A62D727A42C15019E2D53059F8A3CAFA2E9CE3CC1",
+        "RestoredSHA256":  "F8C6381AFB2133B93E15898A62D727A42C15019E2D53059F8A3CAFA2E9CE3CC1",
+        "Equal":  true
+    },
+    {
+        "Table":  "campus",
+        "SourceRows":  0,
+        "RestoredRows":  0,
+        "SourceSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "RestoredSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "Equal":  true
+    },
+    {
+        "Table":  "class",
+        "SourceRows":  1,
+        "RestoredRows":  1,
+        "SourceSHA256":  "218FBA942A061229D3126EDFDCD614714EA3D047BEFA0A178AE2477093089A59",
+        "RestoredSHA256":  "218FBA942A061229D3126EDFDCD614714EA3D047BEFA0A178AE2477093089A59",
+        "Equal":  true
+    },
+    {
+        "Table":  "class_subject",
+        "SourceRows":  1,
+        "RestoredRows":  1,
+        "SourceSHA256":  "8C55A015A83E47110AB376DD55D88C1716723FF6897865A3C801E90ADB9E39A6",
+        "RestoredSHA256":  "8C55A015A83E47110AB376DD55D88C1716723FF6897865A3C801E90ADB9E39A6",
+        "Equal":  true
+    },
+    {
+        "Table":  "course_edition",
+        "SourceRows":  0,
+        "RestoredRows":  0,
+        "SourceSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "RestoredSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "Equal":  true
+    },
+    {
+        "Table":  "course_edition_campus",
+        "SourceRows":  0,
+        "RestoredRows":  0,
+        "SourceSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "RestoredSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "Equal":  true
+    },
+    {
+        "Table":  "exam",
+        "SourceRows":  12,
+        "RestoredRows":  12,
+        "SourceSHA256":  "AD02DAD99EFD5165E0988BF0FF61A4A66F16F0F9891D322457F4E6452E57647A",
+        "RestoredSHA256":  "AD02DAD99EFD5165E0988BF0FF61A4A66F16F0F9891D322457F4E6452E57647A",
+        "Equal":  true
+    },
+    {
+        "Table":  "exam_student",
+        "SourceRows":  12,
+        "RestoredRows":  12,
+        "SourceSHA256":  "6BBD6EA29FBAF97739658516826451296C6F83D79DA8311948DDD7A5A3B6C9FF",
+        "RestoredSHA256":  "6BBD6EA29FBAF97739658516826451296C6F83D79DA8311948DDD7A5A3B6C9FF",
+        "Equal":  true
+    },
+    {
+        "Table":  "exam_submission",
+        "SourceRows":  12,
+        "RestoredRows":  12,
+        "SourceSHA256":  "8E6DD86C116A9BE9D8711773BD9B8CBDE71D56BD79BA15ED0E8F0F3E15B4B7F5",
+        "RestoredSHA256":  "8E6DD86C116A9BE9D8711773BD9B8CBDE71D56BD79BA15ED0E8F0F3E15B4B7F5",
+        "Equal":  true
+    },
+    {
+        "Table":  "exam_violation",
+        "SourceRows":  0,
+        "RestoredRows":  0,
+        "SourceSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "RestoredSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "Equal":  true
+    },
+    {
+        "Table":  "grade",
+        "SourceRows":  4,
+        "RestoredRows":  4,
+        "SourceSHA256":  "16D93EF7D5A1B5EEB789F060E5ECB8FF38BF8DD5554F0FC2FE404354A6023234",
+        "RestoredSHA256":  "16D93EF7D5A1B5EEB789F060E5ECB8FF38BF8DD5554F0FC2FE404354A6023234",
+        "Equal":  true
+    },
+    {
+        "Table":  "institution",
+        "SourceRows":  1,
+        "RestoredRows":  1,
+        "SourceSHA256":  "BB86386FB24BAD0B98CFB16EF21235192F58779D54F65AD92AB635C23FB0E7AE",
+        "RestoredSHA256":  "BB86386FB24BAD0B98CFB16EF21235192F58779D54F65AD92AB635C23FB0E7AE",
+        "Equal":  true
+    },
+    {
+        "Table":  "institution_membership",
+        "SourceRows":  0,
+        "RestoredRows":  0,
+        "SourceSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "RestoredSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "Equal":  true
+    },
+    {
+        "Table":  "institution_membership_role",
+        "SourceRows":  0,
+        "RestoredRows":  0,
+        "SourceSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "RestoredSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "Equal":  true
+    },
+    {
+        "Table":  "institution_student_profile",
+        "SourceRows":  0,
+        "RestoredRows":  0,
+        "SourceSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "RestoredSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "Equal":  true
+    },
+    {
+        "Table":  "institution_teacher_profile",
+        "SourceRows":  0,
+        "RestoredRows":  0,
+        "SourceSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "RestoredSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "Equal":  true
+    },
+    {
+        "Table":  "mt3a_legacy_scope",
+        "SourceRows":  1,
+        "RestoredRows":  1,
+        "SourceSHA256":  "BCCDF938D7FC70438E818A2DEC06A75ED07296B5381D02E6CB4DCD9720DFDF3A",
+        "RestoredSHA256":  "BCCDF938D7FC70438E818A2DEC06A75ED07296B5381D02E6CB4DCD9720DFDF3A",
+        "Equal":  true
+    },
+    {
+        "Table":  "question",
+        "SourceRows":  24,
+        "RestoredRows":  24,
+        "SourceSHA256":  "FE0BAA69B6A27E56418E75D5E23206D57521807481C68A465ABB23C6270203FD",
+        "RestoredSHA256":  "FE0BAA69B6A27E56418E75D5E23206D57521807481C68A465ABB23C6270203FD",
+        "Equal":  true
+    },
+    {
+        "Table":  "question_option",
+        "SourceRows":  24,
+        "RestoredRows":  24,
+        "SourceSHA256":  "D675A79BFEF9F9726D32847AD53EB86D2D423322C739C7EC1FB12410D8044583",
+        "RestoredSHA256":  "D675A79BFEF9F9726D32847AD53EB86D2D423322C739C7EC1FB12410D8044583",
+        "Equal":  true
+    },
+    {
+        "Table":  "student",
+        "SourceRows":  12,
+        "RestoredRows":  12,
+        "SourceSHA256":  "98DBDA8D8517E08238C72353FD178C1D3F5CD70872FBC2D860907624EE47E647",
+        "RestoredSHA256":  "98DBDA8D8517E08238C72353FD178C1D3F5CD70872FBC2D860907624EE47E647",
+        "Equal":  true
+    },
+    {
+        "Table":  "student_enrollment",
+        "SourceRows":  0,
+        "RestoredRows":  0,
+        "SourceSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "RestoredSHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "Equal":  true
+    },
+    {
+        "Table":  "study_area",
+        "SourceRows":  1,
+        "RestoredRows":  1,
+        "SourceSHA256":  "915C0AC3D1B0957C9F8BCDED3500BF8AABAA0CB80E2D6C3EEB2E35D524C14BFE",
+        "RestoredSHA256":  "915C0AC3D1B0957C9F8BCDED3500BF8AABAA0CB80E2D6C3EEB2E35D524C14BFE",
+        "Equal":  true
+    },
+    {
+        "Table":  "study_path",
+        "SourceRows":  1,
+        "RestoredRows":  1,
+        "SourceSHA256":  "34F4E47B622C437C012C71A1D357E7E83151260EC14012C773A2B192224096DF",
+        "RestoredSHA256":  "34F4E47B622C437C012C71A1D357E7E83151260EC14012C773A2B192224096DF",
+        "Equal":  true
+    },
+    {
+        "Table":  "subject",
+        "SourceRows":  1,
+        "RestoredRows":  1,
+        "SourceSHA256":  "FDEF3E701CA9CF027509C8C270FD89C925E7FF3FF779C205E747FAA92F5375CF",
+        "RestoredSHA256":  "FDEF3E701CA9CF027509C8C270FD89C925E7FF3FF779C205E747FAA92F5375CF",
+        "Equal":  true
+    },
+    {
+        "Table":  "submission_answer",
+        "SourceRows":  22,
+        "RestoredRows":  22,
+        "SourceSHA256":  "97F4CB8E8E07AACCDE3836B909A977E763B26366860DCDF537347704B442DE9F",
+        "RestoredSHA256":  "97F4CB8E8E07AACCDE3836B909A977E763B26366860DCDF537347704B442DE9F",
+        "Equal":  true
+    },
+    {
+        "Table":  "submission_answer_option",
+        "SourceRows":  13,
+        "RestoredRows":  13,
+        "SourceSHA256":  "F150E7ABFDC2A565177AF904BB9933C17DE76F99FBD50C13085E3EF2415E08D7",
+        "RestoredSHA256":  "F150E7ABFDC2A565177AF904BB9933C17DE76F99FBD50C13085E3EF2415E08D7",
+        "Equal":  true
+    },
+    {
+        "Table":  "teacher",
+        "SourceRows":  2,
+        "RestoredRows":  2,
+        "SourceSHA256":  "64E0298EE606018BD4810D5B0AC9656159FC7787F20B9E2DDFD9945E4D3369DA",
+        "RestoredSHA256":  "64E0298EE606018BD4810D5B0AC9656159FC7787F20B9E2DDFD9945E4D3369DA",
+        "Equal":  true
+    },
+    {
+        "Table":  "user",
+        "SourceRows":  15,
+        "RestoredRows":  15,
+        "SourceSHA256":  "92E62E6E3FD7BBBA03DEB2A51DF8FA1330174DBAC08E24CA9A583286D06D9287",
+        "RestoredSHA256":  "92E62E6E3FD7BBBA03DEB2A51DF8FA1330174DBAC08E24CA9A583286D06D9287",
+        "Equal":  true
+    }
+]

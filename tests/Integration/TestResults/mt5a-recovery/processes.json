@@ -1,0 +1,12 @@
+[
+    {
+        "Id":  19800,
+        "ProcessName":  "MAMP",
+        "Path":  "C:\\MAMP\\MAMP.exe"
+    },
+    {
+        "Id":  8948,
+        "ProcessName":  "mysqld",
+        "Path":  "C:\\MAMP\\bin\\mysql\\bin\\mysqld.exe"
+    }
+]

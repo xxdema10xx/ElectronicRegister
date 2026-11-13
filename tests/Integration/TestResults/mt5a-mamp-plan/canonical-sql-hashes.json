@@ -1,0 +1,26 @@
+[
+    {
+        "File":  "001_expand.sql",
+        "Hash":  "780905AD6761C542E553A857F8BFCE0AC66338C7F3F0D1E72883D41F0B1A3900"
+    },
+    {
+        "File":  "002_backfill.sql",
+        "Hash":  "02AC1CBFAD27E240DFC9185EBFC64CE86F0752DF07FC693586B2CA71C2036F8F"
+    },
+    {
+        "File":  "003_validate.sql",
+        "Hash":  "6F112EBE000AB601CCE4276686CC7DB43B1853D9B420B00320FA4542FBBEFE93"
+    },
+    {
+        "File":  "004_enrollment_audit_expand.sql",
+        "Hash":  "877B1CC060B6886EAF90424B76D588D1D1A80728751365025705C67AE89FCFFE"
+    },
+    {
+        "File":  "005_enrollment_audit_backfill.sql",
+        "Hash":  "371E8E1F065C02C8941AB6B8B8105B9634F05A2C0F9C665B030C4B3592655338"
+    },
+    {
+        "File":  "006_enrollment_audit_validate.sql",
+        "Hash":  "F0B52A0D09FF780DFD5981EEC6E0436B199FF3EF035B15186BABDA25FA2C2EA2"
+    }
+]

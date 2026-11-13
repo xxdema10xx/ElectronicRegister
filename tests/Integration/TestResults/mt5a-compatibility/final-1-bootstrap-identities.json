@@ -1,0 +1,42 @@
+[
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.RealBootstrapHasExactPoliciesUnambiguousRoutesOpenApiAndWorker(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3cHttpTests.RealBootstrapHasExactPoliciesUnambiguousRoutesOpenApiAndWorker(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.RealBootstrapInventoriesAllPoliciesRoutesOpenApiAndRetainsWorker(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.AuditBootstrapTests.RealProgram_StartsAuthenticatesDocumentsAndStops(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.RealBootstrapInventoriesExactNewPoliciesAndKeepsOldRoutesClosed(environment: \"Development\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    },
+    {
+        "Name":  "ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.RealBootstrapInventoriesAllPoliciesRoutesOpenApiAndRetainsWorker(environment: \"Production\")",
+        "Outcome":  "Passed",
+        "Project":  "Integration"
+    }
+]

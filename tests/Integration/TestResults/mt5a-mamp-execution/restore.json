@@ -1,0 +1,9 @@
+{
+    "RestoreExecutedOnce":  true,
+    "Success":  true,
+    "Tables":  31,
+    "Triggers":  48,
+    "ForeignKeys":  92,
+    "DefinerAccountLocked":  true,
+    "DumpUnmodified":  true
+}

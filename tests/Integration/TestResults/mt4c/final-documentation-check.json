@@ -1,0 +1,10 @@
+{
+  "documents": 7,
+  "reportSections": 28,
+  "relativeLinks": 47,
+  "whitespaceViolations": 0,
+  "gitDiffCheck": "passed",
+  "legacyDdlSnapshots": "31 tables identical",
+  "sourceFreeze": 362,
+  "checkpoint": "MT4C complete; rollout closed"
+}

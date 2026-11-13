@@ -1,0 +1,22 @@
+[
+    {
+        "Rule":  "invalid_revision",
+        "Violations":  0
+    },
+    {
+        "Rule":  "invalid_actor",
+        "Violations":  0
+    },
+    {
+        "Rule":  "invalid_edition",
+        "Violations":  0
+    },
+    {
+        "Rule":  "invalid_enrollment",
+        "Violations":  0
+    },
+    {
+        "Rule":  "missing_fk",
+        "Violations":  0
+    }
+]

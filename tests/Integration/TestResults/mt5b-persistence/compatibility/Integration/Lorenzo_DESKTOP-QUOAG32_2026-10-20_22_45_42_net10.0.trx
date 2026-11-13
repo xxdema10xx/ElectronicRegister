@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="bc9554da-2736-439e-a0e1-0903bd6103a0" name="Lorenzo@DESKTOP-QUOAG32 2026-10-20 22:45:42" runUser="DESKTOP-QUOAG32\CodexSandboxOffline" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-20T22:45:42.8880297+02:00" queuing="2026-10-20T22:45:42.8880298+02:00" start="2026-10-20T22:45:38.9504594+02:00" finish="2026-10-20T22:45:44.9946560+02:00" />
+  <TestSettings name="default" id="d109bd47-01bb-428f-a15d-9b7e734187de">
+    <Deployment runDeploymentRoot="Lorenzo_DESKTOP-QUOAG32_2026-10-20_22_45_42" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="42fdf354-c70e-4d98-9303-50a1fdde0860" testId="24a0f994-a05e-17f4-e5a5-694f5c5c382a" testName="ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_ForeignAndMissingResourcesAreIndistinguishableAndTenantRolesNeverCombine" computerName="DESKTOP-QUOAG32" duration="00:00:01.3082161" startTime="2026-10-20T22:45:44.8376793+02:00" endTime="2026-10-20T22:45:44.8376795+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="42fdf354-c70e-4d98-9303-50a1fdde0860" />
+    <UnitTestResult executionId="c94be98c-f880-4876-9676-296aef89f0ec" testId="6555e44b-f429-76a6-8061-4a9a15ce63d0" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows" computerName="DESKTOP-QUOAG32" duration="00:00:00.2518278" startTime="2026-10-20T22:45:42.3008174+02:00" endTime="2026-10-20T22:45:42.3008181+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c94be98c-f880-4876-9676-296aef89f0ec" />
+    <UnitTestResult executionId="07c49639-f554-433c-8579-ecc9c98fefd1" testId="035375d5-dea3-ed4c-4d15-9b0c59f09512" testName="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph" computerName="DESKTOP-QUOAG32" duration="00:00:00.6357519" startTime="2026-10-20T22:45:42.9385627+02:00" endTime="2026-10-20T22:45:42.9385632+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="07c49639-f554-433c-8579-ecc9c98fefd1" />
+    <UnitTestResult executionId="ebb868da-415a-4724-84ef-1cab62334541" testId="0b8bc77e-bfa1-ade1-4a73-71907a7c84d4" testName="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched" computerName="DESKTOP-QUOAG32" duration="00:00:00.3376930" startTime="2026-10-20T22:45:41.9654018+02:00" endTime="2026-10-20T22:45:41.9654556+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ebb868da-415a-4724-84ef-1cab62334541" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="6555e44b-f429-76a6-8061-4a9a15ce63d0">
+      <Execution id="c94be98c-f880-4876-9676-296aef89f0ec" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="OwnershipBackfillIsIdempotentAndPreservesAllLegacyCellsAndTenantRows" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="035375d5-dea3-ed4c-4d15-9b0c59f09512">
+      <Execution id="07c49639-f554-433c-8579-ecc9c98fefd1" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests" name="ExistingBackfillIsIdempotentWithAttributedMt4Graph" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="0b8bc77e-bfa1-ade1-4a73-71907a7c84d4">
+      <Execution id="ebb868da-415a-4724-84ef-1cab62334541" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests" name="AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched" />
+    </UnitTest>
+    <UnitTest name="ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests.Mt4cSecurity_ForeignAndMissingResourcesAreIndistinguishableAndTenantRolesNeverCombine" storage="c:\users\lorenzo\electronicregister\tests\integration\bin\debug\net10.0\integration.tests.dll" id="24a0f994-a05e-17f4-e5a5-694f5c5c382a">
+      <Execution id="42fdf354-c70e-4d98-9303-50a1fdde0860" />
+      <TestMethod codeBase="C:\Users\Lorenzo\ElectronicRegister\tests\Integration\bin\Debug\net10.0\Integration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ElectronicRegisterAPI.Tests.Integration.Mt4bHttpTests" name="Mt4cSecurity_ForeignAndMissingResourcesAreIndistinguishableAndTenantRolesNeverCombine" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="24a0f994-a05e-17f4-e5a5-694f5c5c382a" executionId="42fdf354-c70e-4d98-9303-50a1fdde0860" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6555e44b-f429-76a6-8061-4a9a15ce63d0" executionId="c94be98c-f880-4876-9676-296aef89f0ec" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="035375d5-dea3-ed4c-4d15-9b0c59f09512" executionId="07c49639-f554-433c-8579-ecc9c98fefd1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0b8bc77e-bfa1-ade1-4a73-71907a7c84d4" executionId="ebb868da-415a-4724-84ef-1cab62334541" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tutti i risultati caricati" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="4" executed="4" passed="4" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.49]   Discovering: Integration.Tests&#xD;
+[xUnit.net 00:00:00.62]   Discovered:  Integration.Tests&#xD;
+[xUnit.net 00:00:00.63]   Starting:    Integration.Tests&#xD;
+[xUnit.net 00:00:05.50]   Finished:    Integration.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

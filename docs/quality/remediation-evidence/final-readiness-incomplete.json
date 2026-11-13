@@ -1,0 +1,7 @@
+{
+  "Liveness": 200,
+  "Readiness": 503,
+  "Expected": 503,
+  "Port": 13447,
+  "DDLExecutedByProbe": false
+}

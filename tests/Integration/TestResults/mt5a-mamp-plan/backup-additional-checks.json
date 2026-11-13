@@ -1,0 +1,24 @@
+[
+    {
+        "File":  "20261019-141428-3269.sql",
+        "MissingReferencedTables":  [
+
+                                    ],
+        "DefinerCount":  1,
+        "OnlyRootLocalDefiner":  false,
+        "HasDataDirectory":  false,
+        "HasMariaUnsupported":  false,
+        "DumpCompleted":  true
+    },
+    {
+        "File":  "20261019-165115-0036.sql",
+        "MissingReferencedTables":  [
+
+                                    ],
+        "DefinerCount":  2,
+        "OnlyRootLocalDefiner":  false,
+        "HasDataDirectory":  false,
+        "HasMariaUnsupported":  false,
+        "DumpCompleted":  true
+    }
+]

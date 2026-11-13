@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-10-30T17:13:57.560Z",
+  "preservedApplicationAndSqlFiles": 713,
+  "added": [
+    ".github/workflows/staging-package.yml",
+    "infra/staging/Dockerfile.ops",
+    "infra/staging/compose.yaml",
+    "infra/staging/db-bootstrap.sh",
+    "infra/staging/db-health.sh",
+    "infra/staging/host.py",
+    "infra/staging/ops.py",
+    "infra/staging/smoke.py",
+    "tools/StagingSupport/Program.cs",
+    "tools/StagingSupport/StagingSupport.csproj",
+    "tools/StagingSupport/packages.lock.json",
+    "tools/test_staging.py"
+  ],
+  "changed": [
+    ".dockerignore",
+    ".github/workflows/verify.yml",
+    ".gitignore",
+    "infra/Dockerfile",
+    "tools/release-artifacts.cjs"
+  ],
+  "removed": [],
+  "diffCheckExit": 0
+}

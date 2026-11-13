@@ -1,0 +1,20 @@
+{
+  "before": {
+    "exit": 0,
+    "stdout": "{\"ReadOnly\":true,\"IdentityVerified\":true,\"BaseTablesVerified\":66,\"BaseTriggersVerified\":174,\"AdditiveTablesVerified\":5,\"AdditiveTriggersVerified\":6,\"RoutineDefinitionVerified\":true,\"DefinerVerified\":false,\"AdditiveProbeReady\":true,\"Release\":\"er-quality-1\"}",
+    "error": ""
+  },
+  "port": 13454,
+  "missingColumn": {
+    "exit": 1,
+    "stdout": "",
+    "error": "Error: Additive schema definition mismatch: identity_password_attempt\r"
+  },
+  "routine": "0",
+  "httpExit": 0,
+  "restored": {
+    "exit": 0,
+    "stdout": "{\"ReadOnly\":true,\"IdentityVerified\":true,\"BaseTablesVerified\":66,\"BaseTriggersVerified\":174,\"AdditiveTablesVerified\":5,\"AdditiveTriggersVerified\":6,\"RoutineDefinitionVerified\":true,\"DefinerVerified\":false,\"AdditiveProbeReady\":true,\"Release\":\"er-quality-1\"}",
+    "error": ""
+  }
+}

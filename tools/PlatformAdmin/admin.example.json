@@ -1,0 +1,6 @@
+{
+  "ConnectionStrings": { "DefaultConnection": "CHANGE-ME-IN-PRIVATE-OWNER-CONFIGURATION" },
+  "Multitenancy": { "Onboarding": { "Enabled": false }, "Governance": { "Enabled": false } },
+  "PlatformAuthority": { "Enabled": false, "Keys": [] },
+  "InvitationChannel": { "AssemblyPath": "", "SHA256": "", "Type": "" }
+}

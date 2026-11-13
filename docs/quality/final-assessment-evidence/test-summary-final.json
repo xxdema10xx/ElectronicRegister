@@ -1,0 +1,79 @@
+{
+  "suites": [
+    {
+      "suite": "Unit",
+      "path": "C:\\Users\\Lorenzo\\ElectronicRegister\\docs\\quality\\final-assessment-evidence\\Unit\\Lorenzo_DESKTOP-QUOAG32_2026-10-30_13_36_09_net10.0.trx",
+      "sha256": "A15080CB322941C70D475F9909BD411B522C9BE7B4A135072179AEB04FF3CA58",
+      "discovered": 590,
+      "results": 590,
+      "counters": {
+        "total": "590",
+        "executed": "590",
+        "passed": "590",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "baselinePath": "C:\\Users\\Lorenzo\\ElectronicRegister\\docs\\quality\\remediation-evidence\\Unit-final\\result.trx",
+      "baselineSha256": "DD186CC669B47D5865B18F69DCDBF6B0A6E3607BE6EDF332F18030E2102E9AF1",
+      "baselineResults": 590,
+      "removedOrRenamed": {},
+      "added": {},
+      "discoveryOnly": {},
+      "trxOnly": {},
+      "valid": true
+    },
+    {
+      "suite": "Integration",
+      "path": "C:\\Users\\Lorenzo\\ElectronicRegister\\.staff-private\\instance-4063ce7d0a454da090f59ba283875bf7\\assessment-complete\\result.trx",
+      "sha256": "81EEAA170CD4B3789B7E74A6E9D63A86A112545B868BCE911BB6DAB576698B60",
+      "discovered": 1502,
+      "results": 1502,
+      "counters": {
+        "total": "1502",
+        "executed": "1502",
+        "passed": "1502",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "baselinePath": "C:\\Users\\Lorenzo\\ElectronicRegister\\.staff-private\\instance-1f2bcb9002e942c896d9308e0404b362\\final-complete\\result.trx",
+      "baselineSha256": "BAC2FCABD96EA7CBB4A5DB0FB4AB230A5A9E011F2BCCD705D84F481BB99ECDB2",
+      "baselineResults": 1502,
+      "removedOrRenamed": {},
+      "added": {},
+      "discoveryOnly": {},
+      "trxOnly": {},
+      "valid": true
+    }
+  ],
+  "noUnexpectedFailuresOrSkips": true,
+  "mysql": {
+    "version": "5.7.24",
+    "port": 13449,
+    "directory": "C:\\Users\\Lorenzo\\ElectronicRegister\\.staff-private\\instance-4063ce7d0a454da090f59ba283875bf7",
+    "newTaskCreatedInstance": true
+  },
+  "tlsReleaseValidation": "OPEN: local build rejects TLS 1.2; no client weakening",
+  "dockerRuntime": "NOT RUN: engine unavailable"
+}

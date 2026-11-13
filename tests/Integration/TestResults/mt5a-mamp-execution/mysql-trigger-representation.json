@@ -1,0 +1,9 @@
+{
+    "Trigger":  "mt4c_course_event_delete",
+    "CanonicalStandaloneCommentLines":  2,
+    "MySqlMetadataRetainsComments":  false,
+    "Definer":  "root@localhost",
+    "ExecutableBodyIdenticalIgnoringStandaloneCommentsAndWhitespace":  true,
+    "CanonicalSqlModified":  false,
+    "TriggerRecreated":  false
+}

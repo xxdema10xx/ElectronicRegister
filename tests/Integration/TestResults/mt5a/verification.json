@@ -1,0 +1,100 @@
+{
+    "Verdict":  "PARTIAL: schema MT4 missing; no MariaDB certification",
+    "PreviousIdentitiesPreserved":  675,
+    "NewTestsPassedEachFinal":  36,
+    "SourcesUnchangedAcrossFinalRuns":  true,
+    "Summary":  [
+                    {
+                        "Run":  "historical-mt4c",
+                        "Total":  675,
+                        "Passed":  675,
+                        "Failed":  0,
+                        "Other":  0,
+                        "Files":  [
+                                      {
+                                          "Name":  "LorenzoBaracchi_CES01622_2026-10-19_17_20_32_net10.0.trx",
+                                          "SHA256":  "FF9A529784D47697520FBE855DBB94DC4DBA2A866AB7A508BE7AAA2F4767F973",
+                                          "Counters":  [
+
+                                                       ]
+                                      },
+                                      {
+                                          "Name":  "LorenzoBaracchi_CES01622_2026-10-19_17_20_37_net10.0.trx",
+                                          "SHA256":  "A98956ECF1F0FFA064708F0C6FD36A6920F3CA61F0453911FB750104EE5166F0",
+                                          "Counters":  [
+
+                                                       ]
+                                      }
+                                  ]
+                    },
+                    {
+                        "Run":  "baseline",
+                        "Total":  675,
+                        "Passed":  51,
+                        "Failed":  624,
+                        "Other":  0,
+                        "Files":  [
+                                      {
+                                          "Name":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_20_13_31_net10.0.trx",
+                                          "SHA256":  "7968FA263DAD68C9468864D74432FF9A3BC171627311796DF28C1F1BF86B76D2",
+                                          "Counters":  [
+
+                                                       ]
+                                      },
+                                      {
+                                          "Name":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_20_13_35_net10.0.trx",
+                                          "SHA256":  "BD6D5CAC62B2EE70DC40B5D5A95C0E7C12366D9296157B4C442435DD84E7DA7E",
+                                          "Counters":  [
+
+                                                       ]
+                                      }
+                                  ]
+                    },
+                    {
+                        "Run":  "final-1",
+                        "Total":  711,
+                        "Passed":  87,
+                        "Failed":  624,
+                        "Other":  0,
+                        "Files":  [
+                                      {
+                                          "Name":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_20_24_23_net10.0.trx",
+                                          "SHA256":  "B4983ED4AF9B197F549C9A4AA22165C18504E5433ADEE3E9D94C748E46460465",
+                                          "Counters":  [
+
+                                                       ]
+                                      },
+                                      {
+                                          "Name":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_20_24_23_net10.0[1].trx",
+                                          "SHA256":  "05870073C054CFCFB67E86B5F474BA5E80F58FE13EDCA3FA171C935266747AE7",
+                                          "Counters":  [
+
+                                                       ]
+                                      }
+                                  ]
+                    },
+                    {
+                        "Run":  "final-2",
+                        "Total":  711,
+                        "Passed":  87,
+                        "Failed":  624,
+                        "Other":  0,
+                        "Files":  [
+                                      {
+                                          "Name":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_20_24_45_net10.0.trx",
+                                          "SHA256":  "DC11328365C47C018655740805AEEB76E458AE52C32AF707E9DD036B5589A6B9",
+                                          "Counters":  [
+
+                                                       ]
+                                      },
+                                      {
+                                          "Name":  "Lorenzo_DESKTOP-QUOAG32_2026-10-20_20_24_46_net10.0.trx",
+                                          "SHA256":  "ECCCD0D08D6AF6FFC6E49B049786C9A205D21D038F17E52BDD7F2EA3C4B6F736",
+                                          "Counters":  [
+
+                                                       ]
+                                      }
+                                  ]
+                    }
+                ]
+}

@@ -1,0 +1,10 @@
+{
+    "Valid":  true,
+    "FrozenSources":  370,
+    "ChangedSinceFreeze":  0,
+    "ChangedSinceHistoricalFreeze":  2,
+    "ChangesOutsideAllowedTests":  0,
+    "CanonicalSql":  6,
+    "ChangedCanonicalSql":  0,
+    "MembershipAdminApiDefaultFalse":  true
+}

@@ -1,0 +1,16 @@
+[
+    {
+        "Port":  13450,
+        "Run":  "C:\\Users\\Lorenzo\\ElectronicRegister\\.staff-private\\instance-2688c2b747de4992b7657d2fe88b10bf",
+        "IdentityVerified":  true,
+        "Stopped":  true,
+        "PreservedData":  true
+    },
+    {
+        "Port":  13451,
+        "Run":  "C:\\Users\\Lorenzo\\ElectronicRegister\\.staff-private\\instance-538ca8b51b104df5bfb91feb86e46240",
+        "IdentityVerified":  true,
+        "Stopped":  true,
+        "PreservedData":  true
+    }
+]

@@ -1,0 +1,7 @@
+{
+  "all40ActualTriggerBodiesMatchVersionedSqlIgnoringFormatting": true,
+  "partialMt3SqlUnchanged": {
+    "001_profile_expand.sql": "c29ececeb5d4ba9f1ddaec5a5be0f035e79fdae554b4f468a7903da107db161e",
+    "002_profile_backfill.sql": "b2c18321323751d992c6630b25b2adcabcfc5b97ddb1c290fe267ee7281479b9"
+  }
+}
