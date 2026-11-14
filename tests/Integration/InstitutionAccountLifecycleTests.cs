@@ -283,6 +283,8 @@ public sealed partial class InstitutionAccountProvisioningTests
     [Fact]
     public async Task ImportOf600StudentsCreatesLinksAndReactivatesAccountsInOneTransaction()
     {
+        // 600 BCrypt hashes take about a minute of CPU: the client must outlast a small runner.
+        Mt3cHosting.ClientTimeout.Value = TimeSpan.FromMinutes(3);
         await using var host = await StartPlatform();
         // People already on the platform through B: two active, one closed.
         var activeCodes = new[] { PlatformIdentityTestConfig.NewFiscalCode(), PlatformIdentityTestConfig.NewFiscalCode() };

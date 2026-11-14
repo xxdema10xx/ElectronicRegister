@@ -30,6 +30,8 @@ namespace ElectronicRegisterAPI.Tests.Integration;
 internal static class Mt3cHosting
 {
     internal const string Key = "mt3c-local-test-signing-key-only-0123456789abcdef";
+    // HTTP client timeout of hosts started in the current async flow; only long-running tests raise it.
+    internal static readonly System.Threading.AsyncLocal<TimeSpan?> ClientTimeout = new();
     // Executes the real Program, all DI and worker registrations retained; ephemeral Kestrel port.
     internal sealed class ProgramHost(IHost host, Task run, HttpClient client) : IAsyncDisposable
     {
@@ -80,7 +82,7 @@ internal static class Mt3cHosting
             await ready.Task.WaitAsync(TimeSpan.FromSeconds(30));
             Assert.Contains(host.Services.GetServices<IHostedService>(), s => s.GetType().Name == "ExpiredExamSubmissionWorker");
             var address = host.Services.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>()!.Addresses.Single();
-            return new(host, run, new HttpClient { BaseAddress = new Uri(address), Timeout = TimeSpan.FromSeconds(15) });
+            return new(host, run, new HttpClient { BaseAddress = new Uri(address), Timeout = ClientTimeout.Value ?? TimeSpan.FromSeconds(15) });
         }
         public async ValueTask DisposeAsync()
         {

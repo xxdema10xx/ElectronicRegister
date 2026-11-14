@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ElectronicRegisterAPI.Domain.Interfaces.Security.IFiscalCodeProtector, ElectronicRegisterAPI.Application.Services.FiscalCodeProtector>();
         services.AddSingleton<ILifecycleEvaluator, ElectronicRegisterAPI.Application.Services.PlatformLifecycleEvaluator>();
         services.AddScoped<IPlatformLifecycleManager, PlatformLifecycleManager>();
+        services.AddSingleton<ElectronicRegisterAPI.Application.Services.ImportHashBudget>();
         Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions.TryAddSingleton(services, PlatformIdentitySettings.Disabled);
         services.AddScoped<ElectronicRegisterAPI.Application.Services.InstitutionSchoolAuthorization>();
         services.AddScoped<ElectronicRegisterAPI.Domain.Interfaces.Managers.IInstitutionCalendarManager, InstitutionCalendarManager>();

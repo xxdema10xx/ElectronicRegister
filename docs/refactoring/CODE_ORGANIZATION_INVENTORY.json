@@ -1,6 +1,6 @@
 {
-  "filesAnalyzed": 711,
-  "typesClassified": 708,
+  "filesAnalyzed": 714,
+  "typesClassified": 711,
   "entries": [
     {
       "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs",
@@ -1630,6 +1630,22 @@
       "types": [
         {
           "name": "FiscalCodeProtector",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application/Services/ImportHashBudget.cs",
+      "layer": "Application",
+      "project": "Backend/ElectronicRegisterAPI/src/Application/ElectronicRegisterAPI.Application",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Application.Services",
+      "classification": "Services",
+      "types": [
+        {
+          "name": "ImportHashBudget",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -5507,6 +5523,22 @@
       "types": [
         {
           "name": "MembershipConflictException",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Exceptions/PlatformBusyException.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Exceptions",
+      "classification": "Exceptions",
+      "types": [
+        {
+          "name": "PlatformBusyException",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -10417,7 +10449,7 @@
           "nestedTypes": [
             {
               "name": "Stored",
-              "visibility": "\n    private sealed "
+              "visibility": "\r\n    private sealed "
             }
           ]
         }
@@ -10635,7 +10667,7 @@
           "nestedTypes": [
             {
               "name": "Session",
-              "visibility": "\n    private sealed "
+              "visibility": "\r\n    private sealed "
             }
           ]
         }
@@ -11023,6 +11055,22 @@
       "types": [
         {
           "name": "TransactionManager",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Repositories/TransientDatabaseConflict.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Repositories",
+      "classification": "Repositories",
+      "types": [
+        {
+          "name": "TransientDatabaseConflict",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }

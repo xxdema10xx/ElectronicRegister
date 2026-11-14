@@ -22,6 +22,7 @@ public sealed class PlatformIdentityOptions
     public int? StudentClosureAfterMonths { get; set; }
     public TimeSpan? LifecycleInterval { get; set; }
     public int? LifecycleBatchSize { get; set; }
+    public int? ImportHashParallelism { get; set; }
 
     public static PlatformIdentitySettings Read(IConfiguration configuration)
     {
@@ -45,7 +46,8 @@ public sealed class PlatformIdentityOptions
         Require(StudentClosureAfterMonths is >= 1 and <= 240, "StudentClosureAfterMonths");
         Require(LifecycleInterval is { } interval && interval >= TimeSpan.FromMinutes(1) && interval <= TimeSpan.FromDays(7), "LifecycleInterval");
         Require(LifecycleBatchSize is >= 1 and <= 1000, "LifecycleBatchSize");
-        return new(true, EmailDomain!, FiscalCodeHmacKeyId!, hmac, FiscalCodeEncryptionKeyId!, encryption, StudentClosureAfterMonths!.Value, LifecycleInterval!.Value, LifecycleBatchSize!.Value);
+        Require(ImportHashParallelism is null or (>= 1 and <= PlatformIdentitySettings.MaximumImportHashParallelism), "ImportHashParallelism");
+        return new(true, EmailDomain!, FiscalCodeHmacKeyId!, hmac, FiscalCodeEncryptionKeyId!, encryption, StudentClosureAfterMonths!.Value, LifecycleInterval!.Value, LifecycleBatchSize!.Value, ImportHashParallelism ?? 0);
     }
 
     private static byte[] Key(string? value, string name)

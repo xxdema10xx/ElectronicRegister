@@ -82,6 +82,15 @@ Stessi campi in ogni caso (persona nuova, già attiva altrove, riattivata). `tem
 | `409` | Persona già presente nell'istituto (qualsiasi stato della membership), scheda già collegata, `eventId` riusato con altra intenzione |
 | `409 "Indirizzo email non disponibile"` | Esauriti i candidati dell'indirizzo |
 | `422` | Nome e cognome diversi dalla scheda collegata |
+| `503` (`code: "PlatformBusy"`, header `Retry-After: 2`) | Deadlock o lock wait timeout persistenti dopo 4 tentativi automatici. La transazione è annullata per intero: nessun account, membership né indirizzo riservato. Riprovare con lo **stesso** `eventId`. Non è mai il `409` neutro: quello significa "persona già nell'istituto" |
+
+### Conflitti di concorrenza (A21)
+
+La creazione singola e ogni azione dell'import (anteprima, conferma) vengono **ripetute automaticamente** fino a
+4 volte, con attesa casuale di 20-120 ms moltiplicata per il numero del tentativo, quando MySQL annulla la
+transazione per deadlock (1213) o lock wait timeout (1205). È sicuro perché InnoDB annulla l'intera transazione,
+la creazione è idempotente per `eventId` e gli hash BCrypt sono calcolati fuori dalla transazione (una sola volta).
+Esauriti i tentativi la risposta è il `503` sopra, senza dettagli interni (né numero d'errore né testo SQL).
 
 ## Indirizzi
 
@@ -107,3 +116,31 @@ Stessi campi in ogni caso (persona nuova, già attiva altrove, riattivata). `tem
 
 Con `PlatformIdentity` attivo le scritture di `email-policies` e `email-assignments` rispondono come il modulo
 disabilitato (`403`). Le letture e lo storico restano; gli indirizzi già assegnati non vengono rilasciati.
+
+## Import con account: tempi, timeout e dimensione dei file
+
+La conferma di `CreatePlatformAccounts` calcola un hash BCrypt (costo 11, invariato) per **ogni** riga, anche per le
+persone già attive, perché il costo non deve rivelare chi esiste già (A17). Il lavoro è legato alla CPU:
+
+| File da 600 righe (300 coppie di omonimi, 2 persone già attive, 1 chiusa) | Anteprima | Conferma |
+|---|---:|---:|
+| Tutti i core (16), prima della modifica | 1,1 s | 7,1 s |
+| Tutti i core (16), dopo | 0,8 s | 7,8 s |
+| Processo limitato a 2 core, prima | 0,9 s | 32,6 s |
+| Processo limitato a 2 core, dopo | 0,8 s | 33,2 s |
+
+(Misura con affinità di CPU del processo dell'API e del client di test a 2 core, container MySQL non limitato;
+differenze di pochi decimi tra "prima" e "dopo" sono rumore.) I gradi di parallelismo sono ora limitati, ma i tempi
+di una singola importazione non cambiano: il costo è circa **0,055 s per riga su 2 core** (misurato; stimato 0,11 s su 1
+core, misurato 0,013 s su 16).
+
+- `Multitenancy:PlatformIdentity:ImportHashParallelism` (facoltativo, 1-32): thread di hashing; di default uno per
+  core disponibile, mai più dei core. Il limite è **condiviso da tutte le importazioni in corso nel processo**: più
+  conferme contemporanee non possono occupare più thread di quelli configurati. Con meno thread altre richieste
+  restano reattive ma la conferma dura di più.
+- Le importazioni restano sincrone (nessun `202`): **configurare proxy e load balancer con un timeout di almeno
+  120 s** per `POST /api/institution/imports/{id}/confirm`.
+- Limite consigliato: **600 righe per file** su istanze con 2 vCPU (circa 33 s). Il limite tecnico del parser è 2000
+  righe, che su 2 vCPU richiedono circa 110 s (stimato, proporzionale): oltre le 1000 righe o con 1 vCPU serve un
+  timeout maggiore di 120 s. Dividere i file più grandi.
+- L'operazione resta atomica: un errore a metà annulla il file intero, senza password, account o indirizzi riservati.

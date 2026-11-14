@@ -16,7 +16,8 @@ public sealed class PlatformIdentitySettings
         byte[] encryptionKey,
         int studentClosureAfterMonths,
         TimeSpan lifecycleInterval,
-        int lifecycleBatchSize
+        int lifecycleBatchSize,
+        int importHashParallelism = 0
     )
     {
         Enabled = enabled;
@@ -28,6 +29,7 @@ public sealed class PlatformIdentitySettings
         StudentClosureAfterMonths = studentClosureAfterMonths;
         LifecycleInterval = lifecycleInterval;
         LifecycleBatchSize = lifecycleBatchSize;
+        ImportHashParallelism = importHashParallelism;
     }
 
     public static PlatformIdentitySettings Disabled { get; } = new(false, "", "", [], "", [], 0, TimeSpan.Zero, 0);
@@ -39,6 +41,11 @@ public sealed class PlatformIdentitySettings
     public int StudentClosureAfterMonths { get; }
     public TimeSpan LifecycleInterval { get; }
     public int LifecycleBatchSize { get; }
+
+    // Threads that compute BCrypt hashes for imports, shared by every concurrent import of the
+    // process; 0 = one per available core. Never above the available cores nor MaximumImportHashParallelism.
+    public int ImportHashParallelism { get; }
+    public const int MaximumImportHashParallelism = 32;
 
     public ReadOnlySpan<byte> HmacKeyBytes => _hmacKey;
     public ReadOnlySpan<byte> EncryptionKeyBytes => _encryptionKey;

@@ -29,7 +29,8 @@ internal sealed class InstitutionImportManager(
     IInstitutionImportFeature feature,
     PlatformIdentitySettings platform,
     IFiscalCodeProtector fiscalCodes,
-    IPasswordHasher passwords
+    IPasswordHasher passwords,
+    ImportHashBudget hashBudget
 ) : IInstitutionImportManager
 {
     // Headers that carry addresses: with platform accounts the server generates every address.
@@ -432,8 +433,7 @@ internal sealed class InstitutionImportManager(
     private (string Temporary, string Hash)[] Credentials(int count, CancellationToken ct)
     {
         var temporaries = Enumerable.Range(0, count).Select(_ => TemporaryPasswords.New()).ToArray();
-        var hashes = new string[count];
-        Parallel.For(0, count, new ParallelOptions { CancellationToken = ct, MaxDegreeOfParallelism = Environment.ProcessorCount }, i => hashes[i] = passwords.Hash(temporaries[i]));
+        var hashes = hashBudget.Hash(temporaries, passwords.Hash, ct);
         return temporaries.Zip(hashes).ToArray();
     }
 
