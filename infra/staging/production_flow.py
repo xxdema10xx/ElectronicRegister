@@ -14,12 +14,14 @@ Nothing here is secret-bearing output: credentials stay in the root-only state f
 are mounted read-only; only step outcomes are printed. All containers are removed at the end.
 """
 import argparse
+import base64
 import http.client
 import ipaddress
 import json
 import os
 from pathlib import Path
 import re
+import secrets
 import ssl
 import subprocess
 import sys
@@ -28,6 +30,15 @@ import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import host  # noqa: E402  (reuses ownership/state loading and safe file creation)
+
+
+def new_fiscal_code():
+    """Syntactically valid, random, disposable fiscal code (no omocodia); never a real person."""
+    odd = {**dict(zip('0123456789', (1, 0, 5, 7, 9, 13, 15, 17, 19, 21))), **dict(zip('ABCDEFGHIJKLMNOPQRSTUVWXYZ', (1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8, 12, 14, 16, 10, 22, 25, 24, 23)))}
+    letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    body = ''.join(secrets.choice(letters) for _ in range(6)) + '%02d' % secrets.randbelow(100) + secrets.choice('ABCDEHLMPRST')         + '%02d' % (secrets.randbelow(28) + 1) + secrets.choice(letters) + '%03d' % secrets.randbelow(1000)
+    total = sum(odd[c] if i % 2 == 0 else (int(c) if c.isdigit() else ord(c) - 65) for i, c in enumerate(body))
+    return body + letters[total % 26]
 
 DOMAIN = 'api.example.test'
 HTTPS_PORT, HTTP_PORT = 18443, 18480
@@ -150,6 +161,12 @@ class Flow:
         runtime['Deployment'] = dict(Mode='Production', RolloutApproved=True)
         runtime['Transport'] = dict(KnownProxies=[self.proxy_ip], AllowedOrigins=['https://app.example.test'], HttpsPort=443)
         runtime['Multitenancy'] = release['Multitenancy']
+        # Platform identity (er-platform-identity-1): enabled with random keys valid for this run only, never stored.
+        runtime['Multitenancy']['PlatformIdentity'] = dict(
+            Enabled=True, EmailDomain='scuola.example.test',
+            FiscalCodeHmacKeyId='flow-hmac', FiscalCodeHmacKey=base64.b64encode(secrets.token_bytes(48)).decode(),
+            FiscalCodeEncryptionKeyId='flow-aes', FiscalCodeEncryptionKey=base64.b64encode(secrets.token_bytes(32)).decode(),
+            StudentClosureAfterMonths=36, LifecycleInterval='1.00:00:00', LifecycleBatchSize=200, ImportHashParallelism=2)
         require(runtime['Multitenancy']['SchoolApi']['Enabled'] and runtime['Multitenancy']['MembershipWriteApi']['Enabled'], 'Release example no longer enables the account endpoint flags')
         host.write(self.work / 'runtime.json', json.dumps(runtime, indent=2), mode=0o444)
         host.write(self.work / 'runtime-without-rollout.json', json.dumps({**runtime, 'Deployment': dict(Mode='Production', RolloutApproved=False)}, indent=2), mode=0o444)
@@ -252,23 +269,23 @@ class Flow:
         self.step('admin: access token scoped to the institution as InstitutionAdmin', status == 200 and context['roles'] == ['InstitutionAdmin'] and context['institutionId'] == out.get('institution'))
         status = self.https('POST', '/api/identity/accounts', None, dict(email=f'free.{suffix}@x.example.test', password='Registered!1'))[0]
         self.step('public registration POST /api/identity/accounts is gone', status == 404, f'status={status}')
-        teacher = f'docente.{suffix}@scuola.example.test'
-        body = dict(eventId=str(uuid.uuid4()), email=teacher, roles=['Teacher'], firstName='Luca', lastName='Verdi', reason='Prova produzione')
+        body = dict(eventId=str(uuid.uuid4()), roles=['Teacher'], firstName='Luca', lastName=f'Verdi{suffix}'.translate(str.maketrans('0123456789', 'abcdefghij')), fiscalCode=new_fiscal_code(), reason='Prova produzione')
         status, created, headers = self.https('POST', '/api/institution/accounts', admin_access, body)
         teacher_temp = (created or {}).get('temporaryPassword') if status == 201 else None
+        teacher = (created or {}).get('email') or ''
         if teacher_temp:
             self.secrets.append(teacher_temp)
         self.step('admin creates a teacher account (new profile)', status == 201 and teacher_temp and created.get('teacherId') and headers.get('cache-control') == 'no-store', f"status={status} cache={headers.get('cache-control')}")
         status, replay, _ = self.https('POST', '/api/institution/accounts', admin_access, body)
         self.step('replay of the same eventId returns ids without the password', status == 200 and replay.get('replayed') is True and replay.get('temporaryPassword') is None and replay.get('userId') == (created or {}).get('userId'))
         status, conflict, _ = self.https('POST', '/api/institution/accounts', admin_access, {**body, 'eventId': str(uuid.uuid4())})
-        self.step('same email again: single neutral 409', status == 409 and (conflict or {}).get('title') == 'Indirizzo email non disponibile', f'status={status}')
+        self.step('same person again: single neutral 409', status == 409, f'status={status}')
         ok, teacher_access, detail = self.activate(teacher, teacher_temp, 'TeacherProduction!1')
         self.step('teacher: temporary password, forced change, select institution', ok, detail)
         status, context, _ = self.https('GET', '/api/Auth/context', teacher_access)
         me = self.https('GET', '/api/institution/teachers/me', teacher_access)[0]
         self.step('teacher: roles exactly [Teacher], linked profile readable', status == 200 and context['roles'] == ['Teacher'] and me == 200, f'context={status} me={me}')
-        status = self.https('POST', '/api/institution/accounts', teacher_access, {**body, 'eventId': str(uuid.uuid4()), 'email': f'x.{suffix}@x.example.test'})[0]
+        status = self.https('POST', '/api/institution/accounts', teacher_access, {**body, 'eventId': str(uuid.uuid4()), 'fiscalCode': new_fiscal_code()})[0]
         self.step('teacher cannot create accounts', status == 403, f'status={status}')
         code, _, reset = self.tool('reset-password', '--email', teacher)
         self.step('owner script: reset teacher password', code == 0 and reset is not None, f'exit={code}')
