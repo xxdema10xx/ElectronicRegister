@@ -709,7 +709,7 @@
     "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/User.cs": "F4363647AD6C66EA321C120D48CCBB4FEF6E328F86B75DD4A64462C907B7E1C7",
     "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/CalendarIntegrity.cs": "FDA250F0DE96023D42D01FF5F734A6C13AB4D86C44954916C6FE2AFFC4576105",
     "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/FormativePlanIntegrity.cs": "FE40C6D658ED2C8B2A7718CDF800A297BAA06D5FDFB3395549C4BBB3D5470D94",
-    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/IdentityAccountIntegrity.cs": "18D7B72D5D8964AF2D60511BBB7DED05D124CC86EC6FC0551E7B7F3770322624",
+    "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/IdentityAccountIntegrity.cs": "37E9DB00DECAB98D98D42F8B1360E1A71FCDC9AC506ECC8204C09C86C9E2AFC0",
     "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/InstitutionAdministrationIntegrity.cs": "0FCB2BB8F6564C239D908E97AB306EC0B69A47B98D33A291958E728656DC0968",
     "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/InstitutionClassIntegrity.cs": "0DF1E94E7668EB8666AD1080624B98357094152DE7A2B049CD35B345D9D7DD2D",
     "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Migrations/InstitutionEmailIntegrity.cs": "A1281AD1F98A9B2D2BD9E9EBCB8335FD5910814E85D3A9B15C562E5CB2AEFA9A",

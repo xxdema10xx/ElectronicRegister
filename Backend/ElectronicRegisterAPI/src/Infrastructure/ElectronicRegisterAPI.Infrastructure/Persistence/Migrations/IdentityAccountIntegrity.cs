@@ -26,6 +26,14 @@ internal static class IdentityAccountIntegrity
             "identity_account_state",
             "identity_account_event"
         };
+        // Platform identity successor: append-only lifecycle ledger, global like the account tables.
+        if (await Scalar("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='identity_lifecycle_event'") == 1)
+        {
+            if (await Scalar("SELECT COUNT(*) FROM information_schema.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND TABLE_NAME='identity_lifecycle_event' AND REFERENCED_TABLE_NAME='user' AND DELETE_RULE='RESTRICT'") != 1 || await Scalar("SELECT COUNT(*) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA=DATABASE() AND TRIGGER_NAME IN ('lifecycle_event_insert','lifecycle_event_update','lifecycle_event_delete')") != 3)
+                throw new InvalidOperationException("Incomplete identity lifecycle schema; no backfill permitted.");
+            known.Add("identity_lifecycle_event");
+        }
+
         // Optional additive release/operational state, never tenant-owned data.
         foreach (var table in new[] { "identity_password_attempt", "er_schema_release" })
             if (await Scalar($"SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='{table}'") == 1)
