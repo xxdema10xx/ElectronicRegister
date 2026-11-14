@@ -15,6 +15,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import ExamsScreen from "../screens/ExamsScreen";
 import ClassesScreen from "../screens/ClassesScreen";
 import StudentExamsScreen from "../screens/StudentExamsScreen";
+import CalendarImportScreen from "../screens/CalendarImportScreen";
 import NotificationDot from "../components/NotificationDot";
 import Badge from "../components/Badge";
 import { useStudentExams } from "../data/studentExams";
@@ -24,7 +25,7 @@ import { guardedNavigate, isWeb, usePageHeader, useScreenUrl } from "./examRoute
 
 const TITLES = {
   dashboard: "Electronic Register", grades: "Voti", students: "Studenti", myClasses: "Classi", classes: "Classi", exams: "Esami",
-  teachers: "Professori", subjects: "Materie", users: "Membri", profile: "Profilo",
+  teachers: "Professori", subjects: "Materie", users: "Membri", profile: "Profilo", calendar: "Calendario",
 };
 
 // Testo completo nel tooltip del browser, per i titoli che possono essere troncati con "…"
@@ -57,6 +58,7 @@ export default function AppNav({ user, onLogout }) {
     ...(role === "admin" || role === "staff" || role === "student" ? [{ key: "teachers", icon: "pencil-outline", label: "Professori" }] : []),
     ...(role !== "staff" ? [{ key: "subjects", icon: "library-outline", label: "Materie" }] : []),
     { key: "exams", icon: "document-text-outline", label: "Esami", dot: role === "student" && unseenCount > 0 },
+    ...(role === "admin" ? [{ key: "calendar", icon: "calendar-outline", label: "Calendario" }] : []),
     ...(role === "admin" ? [{ key: "users", icon: "people-circle-outline", label: "Membri" }] : []),
     { key: "profile", icon: "person-circle-outline", label: "Profilo" },
   ];
@@ -85,6 +87,7 @@ export default function AppNav({ user, onLogout }) {
     subjects: <SubjectsScreen />,
     exams: role === "student" ? <StudentExamsScreen /> : <ExamsScreen />,
     users: <UsersScreen />,
+    calendar: role === "admin" ? <CalendarImportScreen /> : null,
     profile: <ProfileScreen onLogout={logout} />,
   };
 

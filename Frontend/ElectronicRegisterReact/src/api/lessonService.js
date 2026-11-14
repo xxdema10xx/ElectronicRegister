@@ -9,6 +9,8 @@ export const DAYS = [
   { id: 7, label: "Domenica", short: "Dom" },
 ];
 
+const PAGE_SIZE = 100; // massimo ammesso da CalendarQuery.size
+
 const pad = (n) => String(n).padStart(2, "0");
 const ymd = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
@@ -41,8 +43,15 @@ export async function getSchedule({ role, classId, teacherName }, token) {
     : role === "admin" && classId ? `/institution/calendar/classes/${classId}` : null;
   if (!path) return [];
   const params = { ...currentWeek(), ...(role === "admin" ? { publication: "Published" } : null) };
-  const { data } = await axiosClient.get(path, { headers: authHeader(token), params });
-  return (Array.isArray(data) ? data : []).map(l => toLesson(l, teacherName))
+  // Il server restituisce al massimo PAGE_SIZE lezioni per pagina (size ≤ 100): si leggono tutte le pagine
+  const all = [];
+  for (let page = 1; ; page++) {
+    const { data } = await axiosClient.get(path, { headers: authHeader(token), params: { ...params, page, size: PAGE_SIZE } });
+    const items = Array.isArray(data) ? data : [];
+    all.push(...items);
+    if (items.length < PAGE_SIZE) break;
+  }
+  return all.map(l => toLesson(l, teacherName))
     .sort((a, b) => a.day - b.day || a.start.localeCompare(b.start));
 }
 

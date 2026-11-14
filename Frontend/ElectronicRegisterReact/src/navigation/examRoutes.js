@@ -17,7 +17,7 @@ export const isWeb = Platform.OS === "web" && typeof window !== "undefined" && !
 // ── Sezioni dell'app (AppNav) ───────────────────────────────────────────────────────────────
 const SCREEN_PATHS = {
   dashboard: "/", exams: "/esami", grades: "/voti", students: "/studenti", myClasses: "/classi", classes: "/classi",
-  teachers: "/professori", subjects: "/materie", users: "/membri", profile: "/profilo",
+  teachers: "/professori", subjects: "/materie", users: "/membri", profile: "/profilo", calendar: "/calendario",
 };
 
 function screenFromPath(pathname, role) {
