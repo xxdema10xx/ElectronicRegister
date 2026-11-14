@@ -73,7 +73,7 @@ consigliato (≥120 s) e 600 righe per file in `docs/api/PLATFORM_IDENTITY_ACCOU
 
 ### Suite di integrazione completa (a gruppi, worktree pulito a `a1a191a`)
 
-Gruppi sequenziali di classi, container ripuliti tra un gruppo e l'altro, 3 ore di lavoro complessive mai in un solo
+Gruppi sequenziali di classi, container ripuliti tra un gruppo e l'altro, circa 27 minuti complessivi, mai in un solo
 processo. Picco di memoria (container MySQL + testhost) misurato ogni 5 s: 1,3-3,6 GiB; Docker dispone di 16 GiB.
 
 | Gruppo | Casi | Superati | Falliti | Non eseguiti | Durata | Picco |
