@@ -6,7 +6,9 @@ using MySqlConnector;
 namespace ElectronicRegisterAPI.Api.ExceptionHandling;
 
 // Scope SQL concurrency translation to attributed IAM/invitation actions;
-// unexpected failures stay opaque 500. No automatic mutation retry.
+// unexpected failures stay opaque 500. No automatic mutation retry here: the only retried
+// mutations (account creation and import, TransientDatabaseConflict) retry inside the repository
+// and report exhaustion as PlatformBusyException, which this filter does not translate.
 public sealed class MembershipApiErrorsAttribute : ExceptionFilterAttribute
 {
     public override void OnException(ExceptionContext context)

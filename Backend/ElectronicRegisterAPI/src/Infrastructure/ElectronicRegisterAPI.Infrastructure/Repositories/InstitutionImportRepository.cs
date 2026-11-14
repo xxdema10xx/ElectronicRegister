@@ -39,7 +39,12 @@ internal sealed class InstitutionImportRepository(
             throw new UnauthorizedAccessException();
     }
 
-    public async Task<T> ExecuteAsync<T>(TenantContext actor, Func<IInstitutionImportSession, Task<T>> action, CancellationToken ct)
+    // Deadlocks and lock wait timeouts roll the whole file back: the unit of work is repeated
+    // (see TransientDatabaseConflict) and every action is idempotent by its EventId.
+    public Task<T> ExecuteAsync<T>(TenantContext actor, Func<IInstitutionImportSession, Task<T>> action, CancellationToken ct) =>
+        TransientDatabaseConflict.RunAsync(db, () => ExecuteOnceAsync(actor, action, ct), ct);
+
+    private async Task<T> ExecuteOnceAsync<T>(TenantContext actor, Func<IInstitutionImportSession, Task<T>> action, CancellationToken ct)
     {
         await Access(actor, ct);
         if (db.Database.CurrentTransaction is not null)
@@ -56,11 +61,11 @@ internal sealed class InstitutionImportRepository(
             await tx.CommitAsync(ct);
             return result;
         }
-        catch (MySqlException e)when (e.Number is 1062 or 1451 or 1452 or 1644 or 1213 or 1205)
+        catch (MySqlException e)when (e.Number is 1062 or 1451 or 1452 or 1644)
         {
             throw new ImportConflictException("DatabaseConflict");
         }
-        catch (DbUpdateException e)when (e.InnerException is MySqlException { Number: 1062 or 1451 or 1452 or 1644 or 1213 or 1205 })
+        catch (DbUpdateException e)when (e.InnerException is MySqlException { Number: 1062 or 1451 or 1452 or 1644 })
         {
             throw new ImportConflictException("DatabaseConflict");
         }

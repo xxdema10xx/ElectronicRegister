@@ -80,7 +80,7 @@ internal sealed class InstitutionAccountRepository(
         Guid? TeacherId
     );
 
-    public async Task<InstitutionAccountCreated> CreateAsync(
+    public Task<InstitutionAccountCreated> CreateAsync(
         TenantContext actor,
         CreateInstitutionAccount r,
         ProtectedFiscalCode fiscalCode,
@@ -88,6 +88,16 @@ internal sealed class InstitutionAccountRepository(
         string passwordHash,
         string temporaryPassword,
         CancellationToken ct = default
+    ) => TransientDatabaseConflict.RunAsync(db, () => CreateOnceAsync(actor, r, fiscalCode, localBase, passwordHash, temporaryPassword, ct), ct);
+
+    private async Task<InstitutionAccountCreated> CreateOnceAsync(
+        TenantContext actor,
+        CreateInstitutionAccount r,
+        ProtectedFiscalCode fiscalCode,
+        string localBase,
+        string passwordHash,
+        string temporaryPassword,
+        CancellationToken ct
     )
     {
         var hash = Intent(actor, r, fiscalCode.Hmac);

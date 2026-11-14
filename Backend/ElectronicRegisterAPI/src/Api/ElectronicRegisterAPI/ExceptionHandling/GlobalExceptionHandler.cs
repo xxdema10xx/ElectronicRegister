@@ -30,9 +30,12 @@ internal class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : 
             AccountProfileMismatchException => (StatusCodes.Status422UnprocessableEntity, "Nome e cognome non coincidono con la scheda collegata"),
             BusinessRuleException => (StatusCodes.Status409Conflict, "Operazione non consentita"),
             MembershipConflictException => (StatusCodes.Status409Conflict, "Conflitto sulla membership istituzionale"),
+            PlatformBusyException => (StatusCodes.Status503ServiceUnavailable, "Servizio temporaneamente occupato: riprovare"),
             _ => (StatusCodes.Status500InternalServerError, "Errore interno del server")};
         if (statusCode == 429)
             httpContext.Response.Headers.RetryAfter = "60";
+        if (statusCode == 503)
+            httpContext.Response.Headers.RetryAfter = "2";
         if (statusCode == 500)
         {
             // Allowlisted provider codes and method locations, never exception
@@ -43,7 +46,7 @@ internal class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : 
                 exception.TargetSite?.DeclaringType?.FullName + "." + exception.TargetSite?.Name);
         }
         httpContext.Response.StatusCode = statusCode;
-        await httpContext.Response.WriteAsJsonAsync(new ProblemDetails { Status = statusCode, Title = title, Detail = statusCode == StatusCodes.Status500InternalServerError ? "Si è verificato un errore interno." : title, Extensions = exception is ImportConflictException conflict ? new Dictionary<string, object?> { { "code", conflict.Code } } : exception is ImportInputException input ? input.Rows is null ? new Dictionary<string, object?> { { "code", input.Code } } : new Dictionary<string, object?> { { "code", input.Code }, { "rows", input.Rows } } : new Dictionary<string, object?>() }, cancellationToken);
+        await httpContext.Response.WriteAsJsonAsync(new ProblemDetails { Status = statusCode, Title = title, Detail = statusCode == StatusCodes.Status500InternalServerError ? "Si è verificato un errore interno." : title, Extensions = exception is PlatformBusyException ? new Dictionary<string, object?> { { "code", PlatformBusyException.Code } } : exception is ImportConflictException conflict ? new Dictionary<string, object?> { { "code", conflict.Code } } : exception is ImportInputException input ? input.Rows is null ? new Dictionary<string, object?> { { "code", input.Code } } : new Dictionary<string, object?> { { "code", input.Code }, { "rows", input.Rows } } : new Dictionary<string, object?>() }, cancellationToken);
         return true;
     }
 }

@@ -51,12 +51,13 @@ public sealed partial class InstitutionAccountProvisioningTests(IntegrationFixtu
         public Task BeforeCommitAsync(string action, CancellationToken ct) => action == "AccountCreate" ? throw new InvalidOperationException("injected account fault") : Task.CompletedTask;
     }
 
-    private Task<Mt3cHosting.ProgramHost> Start(bool write = true, bool fault = false, bool platform = true) =>
+    private Task<Mt3cHosting.ProgramHost> Start(bool write = true, bool fault = false, bool platform = true, IOnboardingFaultObserver? observer = null) =>
         Mt3cHosting.ProgramHost.StartAsync(fixture.ConnectionString, Guid.NewGuid(), Array.Empty<Guid>(), enabled: false, school: true, membershipWrite: write,
             configureServices: services =>
             {
                 services.AddSingleton<ILoggerProvider>(new CapturingLogger(_logs));
                 if (fault) services.Replace(ServiceDescriptor.Scoped<IOnboardingFaultObserver, FailingCommit>());
+                if (observer is not null) services.Replace(ServiceDescriptor.Singleton(observer));
             },
             extraArguments: new[] { "--Logging:LogLevel:Default=Trace" }.Concat(PlatformIdentityTestConfig.Arguments(platform)).ToArray());
 
