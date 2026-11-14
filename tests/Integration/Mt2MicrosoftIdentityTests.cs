@@ -37,6 +37,8 @@ public sealed class Mt2MicrosoftIdentityTests(IntegrationFixture fixture)
     [InlineData("missing-object", false)]
     [InlineData("deleted-user", false)]
     [InlineData("duplicate-binding", false)]
+    // A Closed account (er-platform-identity-1) is rejected exactly like an unlinked one.
+    [InlineData("closed-account", false)]
     public async Task MicrosoftRequiresValidatedStableExplicitBinding(string scenario, bool accepted)
     {
         Assert.True(fixture.IsAvailable, fixture.UnavailableReason);
@@ -52,6 +54,8 @@ public sealed class Mt2MicrosoftIdentityTests(IntegrationFixture fixture)
             {
                 db.Users.Add(new() { Id = id, Email = email, PasswordHash = "", Role = "admin" });
                 await db.SaveChangesAsync();
+                if (scenario == "closed-account")
+                    await db.Database.ExecuteSqlInterpolatedAsync($"UPDATE `user` SET lifecycle_state='Closed',closed_at_utc=UTC_TIMESTAMP(6) WHERE id={id}");
             }
         }
         try

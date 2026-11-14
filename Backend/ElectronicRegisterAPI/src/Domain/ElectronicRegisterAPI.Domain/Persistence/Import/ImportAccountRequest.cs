@@ -13,4 +13,12 @@ public sealed record ImportAccountRequest(
     ProtectedFiscalCode FiscalCode,
     string PasswordHash,
     string TemporaryPassword
-);
+)
+{
+    // The default ToString would print every member: a logged instance must never reveal the fiscal code, the hash or the temporary password.
+    private bool PrintMembers(System.Text.StringBuilder builder)
+    {
+        builder.Append("RowNumber = ").Append(RowNumber).Append(", Secrets = <redacted>");
+        return true;
+    }
+}

@@ -14,4 +14,12 @@ public sealed record CreateInstitutionAccount(
     Guid? TeacherId,
     Guid? ClassId,
     string Reason
-);
+)
+{
+    // The default ToString would print every member: a logged instance must never reveal the fiscal code.
+    private bool PrintMembers(System.Text.StringBuilder builder)
+    {
+        builder.Append("EventId = ").Append(EventId).Append(", FiscalCode = <redacted>");
+        return true;
+    }
+}

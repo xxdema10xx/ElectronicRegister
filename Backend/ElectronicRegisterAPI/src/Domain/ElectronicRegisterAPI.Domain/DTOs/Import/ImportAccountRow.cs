@@ -12,4 +12,12 @@ public sealed record ImportAccountRow(
     Guid MembershipId,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Email,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.Never)] string? TemporaryPassword
-);
+)
+{
+    // The default ToString would print every member: a logged instance must never reveal the address or the temporary password.
+    private bool PrintMembers(System.Text.StringBuilder builder)
+    {
+        builder.Append("RowNumber = ").Append(RowNumber).Append(", UserId = ").Append(UserId).Append(", Secrets = <redacted>");
+        return true;
+    }
+}
