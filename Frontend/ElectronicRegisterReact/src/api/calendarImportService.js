@@ -152,13 +152,15 @@ const ISSUE_MESSAGES = {
   "calendar.teaching-configuration-required": "La classe non ha un piano formativo pubblicato",
 };
 
+const GENERIC_ISSUES = ["RequiredColumnMissing", "RequiredFieldMissing", "InvalidValue", "AmbiguousMapping"];
 const FIELD_LABELS = { Date: "Data", StartsAt: "Ora inizio", EndsAt: "Ora fine", Class: "Classe", Module: "Modulo", Teacher: "Docente", Room: "Aula", Description: "Descrizione", ExternalReference: "Riferimento esterno" };
 
 export function issueMessage(issue, columns) {
   const text = ISSUE_MESSAGES[issue.code] || issue.message || issue.code;
   // Per le colonne ignorate "field" è l'indice della colonna
   if (issue.code === "IgnoredColumn" && columns && /^\d+$/.test(issue.field)) return `${text}: "${columns[Number(issue.field)]}"`;
-  const field = FIELD_LABELS[issue.field];
+  // Il nome del campo si aggiunge solo ai messaggi generici ("Data: valore non valido"), non a quelli che lo dicono già
+  const field = ISSUE_MESSAGES[issue.code] && !GENERIC_ISSUES.includes(issue.code) ? null : FIELD_LABELS[issue.field];
   return field ? `${field}: ${text.charAt(0).toLowerCase()}${text.slice(1)}` : text;
 }
 

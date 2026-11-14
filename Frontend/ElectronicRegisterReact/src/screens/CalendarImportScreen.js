@@ -204,7 +204,12 @@ export default function CalendarImportScreen() {
         <Text style={s.label}>Classi</Text>
         {classes.length === 0 ? <Note>Nessuna classe disponibile.</Note> : (
           <View style={{ flexDirection: "row", flexWrap: "wrap", columnGap: 24 }}>
-            {classes.map(c => <CheckboxField key={c.id} label={c.name} value={classIds.includes(c.id)} onChange={() => toggleClass(c.id)} />)}
+            {classes.map(c => (
+              // maxWidth: i nomi lunghi vanno a capo invece di uscire dal riquadro (telefono)
+              <View key={c.id} style={{ maxWidth: "100%" }}>
+                <CheckboxField label={c.name} value={classIds.includes(c.id)} onChange={() => toggleClass(c.id)} />
+              </View>
+            ))}
           </View>
         )}
         <Input label="Motivazione (obbligatoria, resta nello storico)" value={reason} onChangeText={setReason} maxLength={500} placeholder={`Es. Orario di ${monthName.toLowerCase()}`} />
@@ -277,8 +282,9 @@ export default function CalendarImportScreen() {
                 const projected = h.publishedMinutes + h.draftMinutesAfterImport;
                 const diff = projected - h.plannedMinutes;
                 return (
-                  <View key={`${h.classId}-${h.moduleId}`} style={s.profileRow}>
-                    <Text style={[s.profileKey, { flex: 1 }]} numberOfLines={2}>{className(h.classId)} · {moduleNames[h.moduleId] || "Modulo"}</Text>
+                  // flexWrap: su telefono le ore vanno sotto il nome del modulo invece di troncarlo
+                  <View key={`${h.classId}-${h.moduleId}`} style={[s.profileRow, { flexWrap: "wrap", columnGap: 12, rowGap: 2 }]}>
+                    <Text style={[s.profileKey, { flex: 1, minWidth: 200 }]}>{className(h.classId)} · {moduleNames[h.moduleId] || "Modulo"}</Text>
                     <Text style={{ fontSize: 13, color: diff > 0 ? C.danger : C.textMuted }}>{hours(projected)} su {hours(h.plannedMinutes)} ({diff > 0 ? "+" : ""}{hours(diff)})</Text>
                   </View>
                 );
