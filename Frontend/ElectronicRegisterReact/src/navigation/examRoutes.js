@@ -9,7 +9,7 @@
 // Rotte degli esami:  /esami?tab=bozze|attivi|storico · /esami/nuovo · /esami/recuperi?classe=… · /esami/{id} ·
 //                     /esami/{id}/modifica · /esami/{id}/consegne · /esami/{id}/consegne/{idConsegna}
 // Nell'editor lo step è nell'URL (?step=2) con replaceState: "indietro" torna alla lista, non allo step prima.
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
 
 export const isWeb = Platform.OS === "web" && typeof window !== "undefined" && !!window.history;
@@ -26,28 +26,83 @@ function screenFromPath(pathname, role) {
   return Object.keys(SCREEN_PATHS).find(k => SCREEN_PATHS[k] === first) || null;
 }
 
+// URL della pagina corrente, aggiornato da ogni scrittura nella cronologia fatta qui (sezioni, esami,
+// studenti) e da ogni "indietro"/"avanti": serve per rimettere la pagina se l'utente annulla l'uscita.
+let currentUrl = isWeb ? window.location.pathname + window.location.search : null;
+const here = () => window.location.pathname + window.location.search;
+function writeUrl(mode, state, url) {
+  if (mode === "push") window.history.pushState(state, "", url);
+  else window.history.replaceState(state, "", url);
+  currentUrl = here();
+}
+
+// Pagina di arrivo di un "indietro"/"avanti", letta una volta sola per evento: a ogni popstate rispondono
+// più gestori (sezioni ed esami) e il primo può rimettere subito la pagina lasciata. Gli altri devono
+// vedere dove andava il browser, non l'URL rimesso, altrimenti chiederebbero conferma una seconda volta.
+const popTargets = new WeakMap();
+function popTarget(e) {
+  if (!popTargets.has(e)) popTargets.set(e, { pathname: window.location.pathname, search: window.location.search });
+  return popTargets.get(e);
+}
+
 // Su web l'URL segue la sezione scelta (sidebar, tab, Home) e, all'avvio, la sceglie: ricaricando su
-// /esami/123 si riapre Esami. Si usa replaceState: cambiare sezione non aggiunge voci alla cronologia.
+// /esami/123 si riapre Esami. Ogni cambio di sezione aggiunge una voce alla cronologia, così "indietro" e
+// "avanti" del browser passano da una sezione all'altra; all'avvio e dentro la stessa sezione si sostituisce.
 // Lo studente che arriva su /esami/… (rotte del docente) resta sulla sua schermata esami, su /esami.
 export function useScreenUrl(screen, setScreen, allowedKeys, role) {
   const started = useRef(false);
-  useEffect(() => {
+  const screenRef = useRef(screen);
+  screenRef.current = screen;
+  const allowedRef = useRef(allowedKeys);
+  allowedRef.current = allowedKeys;
+  const skipGuardRef = useRef(false); // uscita già confermata: il prossimo "indietro" non chiede di nuovo
+
+  // Layout effect: la nuova voce va aggiunta prima che le rotte di Esami e Studenti (effetti normali delle
+  // schermate figlie) allineino l'URL con replaceState, altrimenti sostituirebbero la voce della sezione lasciata.
+  useLayoutEffect(() => {
     if (!isWeb) return;
-    if (!started.current) {
+    const first = !started.current;
+    if (first) {
       started.current = true;
       const key = screenFromPath(window.location.pathname, role);
       if (key && key !== screen && allowedKeys.includes(key)) { setScreen(key); return; }
     }
     const { pathname, search } = window.location;
+    const mode = first || screenFromPath(pathname, role) === screen ? "replace" : "push";
+    const go = (url) => writeUrl(mode, null, url);
     if (screen === "exams") {
-      if (role === "student") { if (pathname !== "/esami" || search) window.history.replaceState(null, "", "/esami"); }
-      else if (!pathname.startsWith("/esami")) window.history.replaceState(null, "", "/esami");
+      if (role === "student") { if (pathname !== "/esami" || search) go("/esami"); }
+      else if (!pathname.startsWith("/esami")) go("/esami");
       return; // il resto dell'URL lo gestisce useExamRoute (ExamsScreen)
     }
     if (screen === "students" && pathname.startsWith("/studenti")) return; // il resto lo gestisce useStudentRoute
     const target = SCREEN_PATHS[screen] || "/";
-    if (pathname !== target || search) window.history.replaceState(null, "", target);
+    if (pathname !== target || search) go(target);
   }, [screen]);
+
+  // "Indietro"/"avanti" verso un'altra sezione. Dentro la stessa sezione decidono le sue rotte (useRouteStack).
+  useEffect(() => {
+    if (!isWeb) return;
+    const onPop = (e) => {
+      const target = popTarget(e);
+      const skip = skipGuardRef.current;
+      skipGuardRef.current = false;
+      const key = screenFromPath(target.pathname, role) || "dashboard";
+      if (key === screenRef.current) { currentUrl = here(); return; }
+      if (!allowedRef.current.includes(key)) { writeUrl("replace", null, currentUrl); return; } // sezione non del ruolo
+      if (!skip && leaveGuard) {
+        // Modifiche non salvate: il browser non permette di annullare "indietro", quindi si rimette subito la
+        // pagina lasciata e si chiede; confermando si torna di nuovo indietro, stavolta senza domande.
+        writeUrl("push", { section: screenRef.current }, currentUrl);
+        leaveGuard(() => { skipGuardRef.current = true; window.history.back(); });
+        return;
+      }
+      currentUrl = target.pathname + target.search;
+      setScreen(key);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
 }
 
 // ── Rotte degli esami ───────────────────────────────────────────────────────────────────────
@@ -103,16 +158,17 @@ function useRouteStack(parse, format, listRoute) {
   useEffect(() => {
     if (!isWeb) return;
     // Arrivando dalla sidebar l'URL è "/": si allinea alla lista
-    if (!parse(window.location.pathname)) window.history.replaceState({ exam: true }, "", format(routeRef.current));
-    const onPop = () => {
-      const next = parse(window.location.pathname, window.location.search);
+    if (!parse(window.location.pathname)) writeUrl("replace", { exam: true }, format(routeRef.current));
+    const onPop = (e) => {
+      const { pathname, search } = popTarget(e);
+      const next = parse(pathname, search);
       const skip = skipGuardRef.current;
       skipGuardRef.current = false;
       if (!next) return; // si è usciti dagli esami: la sezione la decide AppNav
       if (!skip && leaveGuard) {
         // Il browser non permette di annullare "indietro": si rimette subito l'URL dell'editor e si chiede;
         // scegliendo di uscire si torna di nuovo indietro, stavolta senza domande.
-        window.history.pushState({ exam: true, pushed: true }, "", format(routeRef.current));
+        writeUrl("push", { exam: true, pushed: true }, format(routeRef.current));
         leaveGuard(() => { skipGuardRef.current = true; window.history.back(); });
         return;
       }
@@ -123,12 +179,12 @@ function useRouteStack(parse, format, listRoute) {
   }, []);
 
   const push = useCallback((r) => {
-    if (isWeb) { window.history.pushState({ exam: true, pushed: true }, "", format(r)); setStack([r]); }
+    if (isWeb) { writeUrl("push", { exam: true, pushed: true }, format(r)); setStack([r]); }
     else setStack(s => [...s, r]);
   }, []);
 
   const replace = useCallback((r) => {
-    if (isWeb) { window.history.replaceState({ exam: true, pushed: !!window.history.state?.pushed }, "", format(r)); setStack([r]); }
+    if (isWeb) { writeUrl("replace", { exam: true, pushed: !!window.history.state?.pushed }, format(r)); setStack([r]); }
     else setStack(s => [...s.slice(0, -1), r]);
   }, []);
 
