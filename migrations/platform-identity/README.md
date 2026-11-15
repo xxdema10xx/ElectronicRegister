@@ -77,6 +77,10 @@ configures the new entity.
 
 ## Limits
 
-Not applied to staging/production by any automated release path: an existing er-quality-2 deployment needs a
-reviewed execution of this successor with its own migration identity. Key rotation, fiscal code backfill for
+Not applied to existing staging/production deployments by any automated path: an existing er-quality-2 deployment needs a
+reviewed execution of this successor with its own migration identity. The only automated application is on the NEW,
+disposable database of a staging prepared with `host.py prepare --enable-platform-identity` (EC2 release rehearsal, CI
+flows): `host.py successor` runs after the er-quality-2 certification, never on a database that already carries the
+marker, and checks `002_validate.sql` (13/13 at zero). `tools/release-preflight.cjs` accepts the successor only through the
+reviewed delta of `predecessor-contract.json` (user DDL, ledger table, six triggers). Key rotation, fiscal code backfill for
 existing users and any change to the immutable columns require a new reviewed migration.

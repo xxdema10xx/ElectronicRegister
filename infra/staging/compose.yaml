@@ -102,6 +102,8 @@ services:
       - { source: api-connection, target: ConnectionStrings__DefaultConnection }
       - { source: api-jwt, target: Jwt__Key }
       - { source: api-ca, target: mysql-ca.pem }
+      - { source: api-fiscal-hmac, target: Multitenancy__PlatformIdentity__FiscalCodeHmacKey }
+      - { source: api-fiscal-enc, target: Multitenancy__PlatformIdentity__FiscalCodeEncryptionKey }
     ports:
       - "127.0.0.1:${API_PORT:?required}:8080"
     networks: [backend]
@@ -171,6 +173,8 @@ secrets:
   api-connection: { file: "${STATE_DIR}/secrets/api/connection" }
   api-jwt: { file: "${STATE_DIR}/secrets/api/jwt-key" }
   api-ca: { file: "${STATE_DIR}/secrets/api/ca.pem" }
+  api-fiscal-hmac: { file: "${STATE_DIR}/secrets/api/fiscal-code-hmac-key" }
+  api-fiscal-enc: { file: "${STATE_DIR}/secrets/api/fiscal-code-encryption-key" }
   migrator-client: { file: "${STATE_DIR}/secrets/ops/migrator.cnf" }
   reviewer-client: { file: "${STATE_DIR}/secrets/ops/reviewer.cnf" }
   ops-ca: { file: "${STATE_DIR}/secrets/ops/ca.pem" }

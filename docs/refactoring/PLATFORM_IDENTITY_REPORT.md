@@ -117,7 +117,7 @@ mentre modificavo i sorgenti nello stesso albero. La esecuzione valida è stata 
 ## Cosa non è stato verificato
 
 - Nessuna esecuzione su MySQL reale di staging o produzione, né sull'istanza 13306 storica (vietata).
-- Nessun percorso di rilascio automatico (EC2/staging) applica il successore: va eseguito in modo rivisto con
+- Il successore è applicato automaticamente solo al database NUOVO del rilascio EC2/staging con `--enable-platform-identity` (A44); per gli ambienti esistenti va eseguito in modo rivisto con
   l'identità di migrazione del deployment. La certificazione runtime di er-quality-2 (`mysql84_release.py`) non è
   stata rieseguita, perché non cambia.
 - Comportamento sotto carico reale e con più repliche dell'API (il mutex globale serializza le creazioni); i tempi su 2 core sono

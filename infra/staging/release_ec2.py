@@ -51,7 +51,7 @@ MIN_DISK_GIB = 8
 MIN_MEM_BEFORE_MIB = 2048     # API build + new MySQL while the old version keeps running
 MIN_MEM_AFTER_MIB = 768
 MIN_NODE_VERSION = (18, 0)   # structuredClone/replaceAll/randomUUID in tools/mysql84-release.cjs
-HOST_STEPS = ['config', 'build', 'db', 'sql-check', 'provision', 'compatibility', 'release-preflight', 'tls', 'seed', 'preflight', 'start']
+HOST_STEPS = ['config', 'build', 'db', 'sql-check', 'provision', 'compatibility', 'release-preflight', 'successor', 'tls', 'seed', 'preflight', 'start']
 PY = sys.executable
 
 
@@ -702,7 +702,7 @@ def phase_deploy():
             save_record(record)
             r.warn('stato parziale conservato e sostituito da uno nuovo', record['abandoned'][-1])
         require(port_free(record['port']) and record['port'] not in docker_published_ports() | nginx_ports(), f"porta {record['port']} occupata")
-        host_py(record, 'prepare', '--domain', DOMAIN, '--port', str(record['port']), '--subnet', record['subnet'], '--enable-import')
+        host_py(record, 'prepare', '--domain', DOMAIN, '--port', str(record['port']), '--subnet', record['subnet'], '--enable-import', '--enable-platform-identity')
     new_state = json.loads((state / 'state.json').read_text())
     require(new_state['revision'] == REV and new_state['project'] != old['project'], 'stato nuovo incoerente')
     record['project'] = new_state['project']

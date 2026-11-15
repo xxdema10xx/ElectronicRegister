@@ -80,6 +80,16 @@ def student_csv(inst, class_index, roster):
     return ('\n'.join(lines) + '\n').encode('utf-8')
 
 
+def fiscal_code(seed):
+    """Deterministic, syntactically valid fiscal code for an invented person (no omocodia; never a real one)."""
+    digest = hashlib.sha256(('er-demo-fiscal-code:' + seed).encode()).digest()
+    letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    body = ''.join(letters[digest[i] % 26] for i in range(6)) + '%02d' % (digest[6] % 100) + 'ABCDEHLMPRST'[digest[7] % 12]         + '%02d' % (digest[8] % 28 + 1) + letters[digest[9] % 26] + '%03d' % (int.from_bytes(digest[10:12], 'big') % 1000)
+    odd = (1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8, 12, 14, 16, 10, 22, 25, 24, 23)
+    total = sum(odd[int(c) if c.isdigit() else ord(c) - 65] if i % 2 == 0 else (int(c) if c.isdigit() else ord(c) - 65) for i, c in enumerate(body))
+    return body + letters[total % 26]
+
+
 def new_password():
     # API rule: 8-72 bytes with at least one special character.
     return 'Demo-' + secrets.token_urlsafe(15) + '!7'
@@ -256,8 +266,12 @@ class Seeder:
         self.private.save('credentials.json', self.creds)
 
     # ---- identity ------------------------------------------------------------
+    def address(self, email):
+        """Platform identity derives the address (nome.cognome[N]); the planned e-mail stays the local key."""
+        return self.creds['accounts'].get(email, {}).get('address', email)
+
     def login(self, email, password):
-        status, body, _ = self.api.call('POST', '/api/Auth/identity/login', body=dict(email=email, password=password))
+        status, body, _ = self.api.call('POST', '/api/Auth/identity/login', body=dict(email=self.address(email), password=password))
         return (body if status == 200 else None), status
 
     def select(self, ticket, institution):
@@ -311,7 +325,7 @@ class Seeder:
             if body:
                 return self.activate(email, temporary, institution)
         print('  password temporanea non disponibile: reset con OwnerProvisioning', flush=True)
-        _, temporary = self.owner('reset-password', '--email', email, '--reason', 'Demo staging: password temporanea persa')
+        _, temporary = self.owner('reset-password', '--email', self.address(email), '--reason', 'Demo staging: password temporanea persa')
         require(temporary, 'Reset senza password temporanea')
         self.remember(email, temporary=temporary)
         self.activate(email, temporary, institution)
@@ -339,12 +353,14 @@ class Seeder:
                       institute=self.institute_name(record))
         if key in accounts and self.usable(person['email']):
             return accounts[key]
-        body = dict(eventId=self.event('account', person['email']), email=person['email'], roles=[person['role']],
-                    reason='Demo staging (dati finti)', **extra)
+        body = dict(eventId=self.event('account', person['email']), firstName=person['first'], lastName=person['last'],
+                    fiscalCode=fiscal_code(person['email']), roles=[person['role']], reason='Demo staging (dati finti)', **extra)
         status, created, headers = self.api.call('POST', '/api/institution/accounts', self.token(actor), body, expect=(200, 201))
         if status == 201:
             require(created.get('temporaryPassword') and headers.get('cache-control') == 'no-store', 'Risposta 201 inattesa')
             self.remember(person['email'], temporary=created['temporaryPassword'])
+        require(created.get('email'), 'Risposta di creazione account senza indirizzo')
+        self.remember(person['email'], address=created['email'])
         accounts[key] = {k: created.get(k) for k in ('userId', 'membershipId', 'teacherId', 'studentId') if created.get(k)}
         if person['role'] == 'Teacher' and 'teacherId' not in accounts[key]:
             _, listed, _ = self.api.call('GET', '/api/institution/teachers', self.token(actor), expect=200)
@@ -511,7 +527,7 @@ class Seeder:
             self.ensure_account(a, record, admins[1], 'admin1')
             self.ensure_account(a, record, staff, 'staff')
             for i, person in enumerate(teachers):
-                self.ensure_account(a, record, person, f'teacher{i}', firstName=person['first'], lastName=person['last'])
+                self.ensure_account(a, record, person, f'teacher{i}')
             print(f"  {inst['code']}: 2 InstitutionAdmin (il secondo creato dal primo), 1 Staff, 3 Teacher", flush=True)
             self.structure(inst, record, a, teachers)
             self.import_students(inst, record, a, students)
@@ -527,7 +543,7 @@ class Seeder:
             lines.append(f"== {inst['name']} (codice {inst['code']})")
             for email, a in self.creds['accounts'].items():
                 if a.get('institute') == inst['name']:
-                    lines.append(f"{a['role']:<17} {a['name']:<24} {email:<56} {a.get('password') or '(password non impostata)'}")
+                    lines.append(f"{a['role']:<17} {a['name']:<24} {a.get('address', email):<56} {a.get('password') or '(password non impostata)'}")
             lines.append('')
         path = self.private.folder / 'credenziali-demo.txt'
         fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)

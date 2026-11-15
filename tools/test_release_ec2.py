@@ -238,5 +238,56 @@ class DemoTests(unittest.TestCase):
         self.assertEqual(demo_seed.route('/api/institution/exams/0f8fad5b-d9cb-469f-a165-70867728950e/start?x=1'), '/api/institution/exams/{id}/start')
 
 
+class PlatformIdentityStagingTests(unittest.TestCase):
+    """Staging contract of er-platform-identity-1: opt-in runtime, secret keys, successor step order, seed fiscal codes."""
+
+    @staticmethod
+    def check_char(code):
+        odd = (1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8, 12, 14, 16, 10, 22, 25, 24, 23)
+        value = lambda c: int(c) if c.isdigit() else ord(c) - 65
+        return chr(65 + sum(odd[value(c)] if i % 2 == 0 else value(c) for i, c in enumerate(code[:15])) % 26)
+
+    def test_check_character_matches_the_documented_example(self):
+        self.assertEqual(self.check_char('RSSMRA80A01H501U'), 'U')
+
+    def test_demo_fiscal_codes_are_valid_deterministic_and_distinct(self):
+        codes = []
+        for inst in demo_seed.INSTITUTES:
+            admins, staff, teachers, students = demo_seed.people(inst)
+            codes += [demo_seed.fiscal_code(p['email']) for p in [*admins, staff, *teachers, *students[0], *students[1]]]
+        self.assertEqual(len(codes), len(set(codes)))
+        for code in codes:
+            self.assertRegex(code, r'^[A-Z]{6}[0-9]{2}[ABCDEHLMPRST][0-9]{2}[A-Z][0-9]{3}[A-Z]$')
+            self.assertEqual(code[15], self.check_char(code))
+        self.assertEqual(demo_seed.fiscal_code('a@b'), demo_seed.fiscal_code('a@b'))
+
+    def test_runtime_is_opt_in_and_never_carries_key_material(self):
+        plain = host.runtime_configuration('staging.example.test', '172.30.252.1')
+        self.assertNotIn('PlatformIdentity', plain['Multitenancy'])
+        on = host.runtime_configuration('staging.example.test', '172.30.252.1', platform_identity=True)['Multitenancy']['PlatformIdentity']
+        self.assertTrue(on['Enabled'])
+        self.assertEqual(on['EmailDomain'], host.PLATFORM_EMAIL_DOMAIN)
+        self.assertFalse([k for k in on if k in ('FiscalCodeHmacKey', 'FiscalCodeEncryptionKey')])
+
+    def test_keys_are_mounted_as_api_secrets_only(self):
+        compose = (ROOT / 'infra/staging/compose.yaml').read_text()
+        api = compose.split('  api:')[1].split('  ops:')[0]
+        self.assertIn('target: Multitenancy__PlatformIdentity__FiscalCodeHmacKey', api)
+        self.assertIn('target: Multitenancy__PlatformIdentity__FiscalCodeEncryptionKey', api)
+        self.assertNotIn('FiscalCode', compose.split('  ops:')[1].split('  root-password:')[0])
+
+    def test_successor_runs_after_the_er_quality_2_certification_and_before_any_schema_audit(self):
+        steps = rel.HOST_STEPS
+        self.assertLess(steps.index('release-preflight'), steps.index('successor'))
+        self.assertLess(steps.index('successor'), steps.index('seed'))
+        self.assertLess(steps.index('successor'), steps.index('start'))
+
+    def test_successor_is_skipped_unless_the_state_enables_it(self):
+        with mock.patch('sys.stdout', new_callable=io.StringIO) as out, mock.patch.object(host, 'compose') as compose:
+            host.apply_successor(Path('.'), dict(id='a' * 32))
+        compose.assert_not_called()
+        self.assertIn('skipped', out.getvalue())
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=1)

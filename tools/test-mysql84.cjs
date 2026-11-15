@@ -83,6 +83,7 @@ simulate(null,true);
  function modern(mutant){
   const output=[];
   const read=sql=>{
+   if(sql.includes("version='er-platform-identity-1'"))return '0';
    if(sql.includes("version='er-quality-2-mysql84'"))return '1';
    if(sql.startsWith('SELECT VERSION'))return '8.4.13\t3306\t/data/\tdb';
    if(sql.startsWith('SELECT TABLE_NAME'))return Object.keys(corrective.tables).sort().join('\n');

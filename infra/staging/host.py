@@ -1,5 +1,6 @@
 """Host-side staging preparation/control. No SSH, Nginx edits, deletion or DDL."""
 import argparse
+import base64
 import hashlib
 import http.client
 import ipaddress
@@ -12,10 +13,12 @@ import shutil
 import socket
 import subprocess
 import sys
+import time
 import uuid
 
 ROOT = Path(__file__).resolve().parents[2]
 COMPOSE = ROOT / 'infra/staging/compose.yaml'
+PLATFORM_EMAIL_DOMAIN = 'demo.example.test'  # single platform domain of the demo staging (fake data)
 MYSQL = json.loads((ROOT / 'infra/staging/mysql-image.json').read_text())
 
 def require(value, message):
@@ -85,7 +88,7 @@ server {{
 }}
 '''
 
-def runtime_configuration(domain, gateway, institution_import=False):
+def runtime_configuration(domain, gateway, institution_import=False, platform_identity=False):
     """Runtime for the isolated Docker staging only.
 
     InstitutionImport stays off unless the operator asks for it explicitly at prepare time
@@ -98,6 +101,12 @@ def runtime_configuration(domain, gateway, institution_import=False):
                'Multitenancy':{k:{'Enabled':k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar')} for k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar','Onboarding','Governance','InstitutionWorker')}}
     if institution_import:
         runtime['Multitenancy']['InstitutionImport'] = {'Enabled': True}
+    if platform_identity:
+        # Public part only. The two keys are mounted as secret files (Multitenancy__PlatformIdentity__*, see compose.yaml)
+        # and never appear in runtime.json, state.json, logs or the repository.
+        runtime['Multitenancy']['PlatformIdentity'] = {'Enabled': True, 'EmailDomain': PLATFORM_EMAIL_DOMAIN,
+            'FiscalCodeHmacKeyId': 'stage-hmac-1', 'FiscalCodeEncryptionKeyId': 'stage-aes-1', 'StudentClosureAfterMonths': 36,
+            'LifecycleInterval': '1.00:00:00', 'LifecycleBatchSize': 200, 'ImportHashParallelism': 2}
     return runtime
 
 def prepare(args):
@@ -115,7 +124,7 @@ def prepare(args):
     state = dict(format=3, mysql_version=MYSQL['version'], id=identity, project='er-stage-'+identity[:12], domain=args.domain,
                  subnet=str(net), gateway=str(net.network_address+1), sql_host=str(net.network_address).rsplit('.', 1)[0]+'.%',
                  port=args.port, mysql_image=args.mysql_image, revision=revision, source_dirty=dirty,
-                 manifest=digest(ROOT/'migrations/release/manifest.json'), repository=str(ROOT))
+                 manifest=digest(ROOT/'migrations/release/manifest.json'), repository=str(ROOT), platform_identity=bool(getattr(args, 'enable_platform_identity', False)))
     folder.mkdir(mode=0o700, parents=True)
     for name in ('public', 'ops', 'pki', 'secrets/db', 'secrets/api', 'secrets/ops'):
         (folder/name).mkdir(parents=True, mode=0o700)
@@ -150,7 +159,11 @@ def prepare(args):
         write(folder/f'secrets/{name}/jwt-key', jwt, uid, uid)
     connection = 'Server=er-stage-db;Port=3306;Database=electronic_register_staging;User ID=er_api;Password='+passwords['api']+';SslMode=VerifyFull;SslCa=/run/secrets/mysql-ca.pem;TlsVersion=TLS 1.2'
     write(folder/'secrets/api/connection', connection, 1654, 1654)
-    runtime = runtime_configuration(args.domain, state['gateway'], getattr(args, 'enable_import', False))
+    # Fiscal-code keys of platform identity: random for this staging only, readable by the API user alone. Always created
+    # (compose mounts them); they only take effect when the state enables platform identity.
+    write(folder/'secrets/api/fiscal-code-hmac-key', base64.b64encode(secrets.token_bytes(48)).decode(), 1654, 1654)
+    write(folder/'secrets/api/fiscal-code-encryption-key', base64.b64encode(secrets.token_bytes(32)).decode(), 1654, 1654)
+    runtime = runtime_configuration(args.domain, state['gateway'], getattr(args, 'enable_import', False), state['platform_identity'])
     public = dict(state)
     write(folder/'public/staging.json', json.dumps(public, indent=2), mode=0o444)
     write(folder/'public/runtime.json', json.dumps(runtime, indent=2), mode=0o444)
@@ -270,7 +283,7 @@ def check_mysql_openssl(linkage):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--state',required=True)
-    p.add_argument('command',choices=['prepare','config','build','db','sql-check','provision','compatibility','release-preflight','seed','preflight','tls','start','verify','http','smoke','logs','diagnostics','stop','restart'])
+    p.add_argument('command',choices=['prepare','config','build','db','sql-check','provision','compatibility','release-preflight','successor','seed','preflight','tls','start','verify','http','smoke','logs','diagnostics','stop','restart'])
     p.add_argument('--domain',default='staging.consoliprojects.dev')
     p.add_argument('--subnet',default='172.30.252.0/24')
     p.add_argument('--port',type=int,default=18080)
@@ -279,6 +292,8 @@ def main():
     p.add_argument('--mysql-image',default=MYSQL['image'])
     # prepare only: also enable Multitenancy:InstitutionImport (off by default).
     p.add_argument('--enable-import',action='store_true')
+    # prepare only: enable Multitenancy:PlatformIdentity (needs the er-platform-identity-1 successor, command 'successor').
+    p.add_argument('--enable-platform-identity',action='store_true')
     a=p.parse_args()
     if a.command=='prepare':return prepare(a)
     folder,s=load(a.state)
@@ -351,6 +366,8 @@ def main():
         return compose(folder,'run','--rm','--no-deps','ops',a.command)
     if a.command=='release-preflight':
         return release_preflight(folder,s)
+    if a.command=='successor':
+        return apply_successor(folder,s)
     if a.command in ('start','restart'):
         if a.command=='restart':compose(folder,'up','-d','--wait','--wait-timeout','180','db')
         with socket.socket() as probe:
@@ -399,6 +416,43 @@ def release_preflight(folder,s):
     result=output([sys.executable,ROOT/'tools/mysql84_release.py','preflight','--config',path])
     require(json.loads(result.splitlines()[-1])==dict(release='er-quality-2-mysql84',action='preflight',verified=True),'Corrective release preflight did not verify')
     print(result.splitlines()[-1])
+
+def apply_successor(folder,s):
+    """Applies er-platform-identity-1 once, after the er-quality-2 runtime certification, to this staging's own NEW
+    database (never an existing deployment). Same reviewed SQL as migrations/platform-identity, bound to the staging
+    definer by tools/mysql84-release.cjs, executed through the root socket of this staging's DB container and followed
+    by the read-only 002_validate.sql. Skipped unless the state enables platform identity; a second run changes nothing."""
+    if not s.get('platform_identity'):
+        print('Platform identity not enabled for this staging: successor skipped.')
+        return
+    cid=compose(folder,'ps','-q','db',capture=True)
+    require(cid,'Missing db')
+    full=output(['docker','inspect','--format','{{.Id}}',cid])
+    require(re.fullmatch(r'[a-f0-9]{64}',full),'Unexpected DB container identity')
+    labels=json.loads(output(['docker','inspect','--format','{{json .Config.Labels}}',full]))
+    require(labels.get('io.er.staging.id')==s['id'],'DB container is not owned by this staging')
+    client=['docker','exec','-i',full,'mysql','--defaults-extra-file=/run/secrets/root.cnf','--protocol=SOCKET','--default-character-set=utf8mb4']
+    def query(sql):
+        done=subprocess.run(client+['--batch','--skip-column-names','electronic_register_staging'],input=sql,text=True,capture_output=True,timeout=300)
+        require(done.returncode==0,'Successor SQL failed: '+done.stderr.strip()[:300])
+        return done.stdout.strip()
+    marker=lambda name: query("SELECT COUNT(*) FROM er_schema_release WHERE version='"+name+"'")
+    if marker('er-platform-identity-1')=='1':
+        print('er-platform-identity-1 already applied: nothing to do.')
+        return
+    require(marker('er-quality-2-mysql84')=='1','Predecessor er-quality-2-mysql84 is missing: successor refused')
+    stamp=time.strftime('%Y%m%dT%H%M%SZ',time.gmtime())
+    binding=folder/'ops'/f'successor-binding-{stamp}.json'
+    write(binding,json.dumps(dict(database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%')),mode=0o444)
+    bound=folder/'ops'/f'successor-{stamp}'
+    run(['node',ROOT/'tools/mysql84-release.cjs','successor',binding,bound],stdout=subprocess.DEVNULL)
+    sql=(bound/'01-platform-identity.sql').read_text(encoding='utf-8')
+    done=subprocess.run(client+['--batch'],input=sql,text=True,capture_output=True,timeout=300)
+    require(done.returncode==0,'Successor SQL failed: '+done.stderr.strip()[:300])
+    require(marker('er-platform-identity-1')=='1','Successor marker missing after apply')
+    checks=[line for line in query((ROOT/'migrations/platform-identity/002_validate.sql').read_text(encoding='utf-8')).splitlines() if line]
+    require(len(checks)==13 and all(line.split(chr(9))[-1]=='0' for line in checks),'Successor postflight validation failed; preserve the staging for review')
+    print('er-platform-identity-1 applied and validated (13/13 checks at zero).')
 
 def verify(folder,s,readiness=True):
     for service,uid in [('api','1654'),('db','999')]:

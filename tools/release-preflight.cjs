@@ -53,27 +53,40 @@ const modern=mysql84&&read("SELECT COUNT(*) FROM er_schema_release WHERE version
 if(modern){
  const corrective=require('./mysql84-release.cjs').contract(true);
  const crlf=v=>v.replaceAll('\r\n','\n');
+ // er-platform-identity-1 is an additive successor: with its marker the expected schema is the corrective contract
+ // plus the reviewed delta of migrations/platform-identity/predecessor-contract.json (user DDL, the ledger table and six
+ // triggers). Without the marker the check is unchanged; the er-quality-2 contract itself is never modified.
+ identify('contract','release','platform-identity-marker');
+ const successor=read("SELECT COUNT(*) FROM er_schema_release WHERE version='er-platform-identity-1'")==='1';
+ const target=successor?JSON.parse(fs.readFileSync(path.join(root,'migrations/platform-identity/predecessor-contract.json'),'utf8').replace(/^﻿/,'')).target:{tables:{},triggers:{}};
+ const successorTables=Object.keys(target.tables).filter(t=>!(t in corrective.tables));
  const tableDdl=v=>crlf(v).replace(/ AUTO_INCREMENT=\d+/g,'')
   .replace(/(^  `[^`]+` (?:(?:char|varchar)\(\d+\)|enum\('[^']*'(?:,'[^']*')*\)|tinytext|text|mediumtext|longtext)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci/gm,'$1 COLLATE utf8mb4_unicode_ci')
   .replaceAll(' CHARACTER SET ascii COLLATE ascii_general_ci',' CHARACTER SET ascii');
  const sorted=o=>JSON.stringify(Object.fromEntries(Object.entries(o).sort(([a],[b])=>a<b?-1:a>b?1:0)));
  const inventory=(category,id,actual,expected)=>{identify(category,'inventory',id);equal(JSON.stringify([...actual].sort()),JSON.stringify([...expected].sort()),'inventory');};
- inventory('table','corrective-table-inventory',read('SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() ORDER BY TABLE_NAME').split('\n'),Object.keys(corrective.tables));
+ inventory('table','corrective-table-inventory',read('SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() ORDER BY TABLE_NAME').split('\n'),[...Object.keys(corrective.tables),...successorTables]);
  identify('schema','database','corrective-database-collation');
  equal(read('SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME=DATABASE()'),'utf8mb4_unicode_ci','collation');
- for(const [table,ddl]of Object.entries(corrective.tables)){
-  identify('table',table,'corrective-table-ddl');
-  equal(tableDdl(read('SHOW CREATE TABLE `'+table+'`;').split('\t').slice(1).join('\t')),crlf(ddl),'ddl');
+ for(const [table,ddl]of Object.entries({...corrective.tables,...target.tables})){
+  identify('table',table,table in target.tables?'platform-identity-table-ddl':'corrective-table-ddl');
+  equal(tableDdl(read('SHOW CREATE TABLE `'+table+'`;').split('\t').slice(1).join('\t')),table in target.tables?tableDdl(ddl):crlf(ddl),'ddl');
  }
  for(const [section,table,where] of [['columns','COLUMNS','TABLE_SCHEMA=DATABASE()'],['indexes','STATISTICS','TABLE_SCHEMA=DATABASE()'],
   ['foreignKeys','REFERENTIAL_CONSTRAINTS','CONSTRAINT_SCHEMA=DATABASE()'],['keyColumns','KEY_COLUMN_USAGE','TABLE_SCHEMA=DATABASE() AND REFERENCED_TABLE_NAME IS NOT NULL']]){
   identify('metadata','inventory','corrective-'+section);
-  const rows=corrective.metadata[section],keys=Object.keys(rows[0]),names=[...new Set(rows.map(r=>r.TABLE_NAME))].sort();
+  const rows=corrective.metadata[section].filter(r=>!(r.TABLE_NAME in target.tables)),keys=Object.keys(rows[0]),names=[...new Set(rows.map(r=>r.TABLE_NAME))].sort();
   const actual=JSON.parse(read('SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT('+keys.map(k=>"'"+k+"',`"+k+"`").join(',')+')),JSON_ARRAY()) FROM information_schema.'+table+' WHERE '+where+" AND TABLE_NAME IN ("+names.map(n=>"'"+n+"'").join(',')+')'));
   equal(JSON.stringify(actual.map(sorted).sort()),JSON.stringify(rows.map(sorted).sort()),section);
  }
  const triggers=JSON.parse(read("SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT('name',TRIGGER_NAME,'body',ACTION_STATEMENT,'mode',SQL_MODE,'definer',DEFINER,'charset',CHARACTER_SET_CLIENT,'collation',COLLATION_CONNECTION,'database_collation',DATABASE_COLLATION,'table',EVENT_OBJECT_TABLE,'event',EVENT_MANIPULATION,'timing',ACTION_TIMING,'order',ACTION_ORDER)),JSON_ARRAY()) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA=DATABASE()"));
- inventory('trigger','corrective-trigger-inventory',triggers.map(t=>t.name),Object.keys(corrective.triggers));
+ inventory('trigger','corrective-trigger-inventory',triggers.map(t=>t.name),[...Object.keys(corrective.triggers),...Object.keys(target.triggers)]);
+ for(const [name,t]of Object.entries(target.triggers)){
+  identify('trigger',name,'platform-identity-trigger');
+  const row=triggers.find(r=>r.name===name)||{};
+  const sha=crypto.createHash('sha256').update((row.body||'').replaceAll('\r','')).digest('hex').toUpperCase();
+  equal(sorted({table:row.table,event:row.event,timing:row.timing,mode:row.mode,order:row.order,definer:row.definer,charset:row.charset,collation:row.collation,database_collation:row.database_collation,sha}),sorted({table:t.table,event:t.event,timing:t.timing,mode:t.mode,order:t.order,definer:config.schemaDefiner,charset:t.charset,collation:t.collation,database_collation:t.database_collation,sha:t.unboundStatementSha256}),'trigger');
+ }
  for(const [name,t]of Object.entries(corrective.triggers)){
   identify('trigger',name,'corrective-trigger');
   // ACTION_STATEMENT exposes the parsed literal's single backslash before z.
@@ -97,7 +110,7 @@ if(modern){
  const gate=crlf(corrective.routine.body);
  equal(read(audit?gate.slice('BEGIN\n'.length,-'\nEND'.length).trim():'CALL er_schema_ready();'),'1','ready');
  if(audit){for(const item of mismatches)console.log(JSON.stringify(item));if(mismatches.length)process.exitCode=1;}
- else console.log(JSON.stringify({ReadOnly:true,IdentityVerified:true,Release:'er-quality-2-mysql84',TablesVerified:Object.keys(corrective.tables).length,TriggersVerified:Object.keys(corrective.triggers).length,RoutineVerified:true,ReadinessVerified:true}));
+ else console.log(JSON.stringify({ReadOnly:true,IdentityVerified:true,Release:'er-quality-2-mysql84',TablesVerified:Object.keys(corrective.tables).length+successorTables.length,TriggersVerified:Object.keys(corrective.triggers).length+Object.keys(target.triggers).length,PlatformIdentity:successor,RoutineVerified:true,ReadinessVerified:true}));
 }else{
 for(const [table,ddl]of Object.entries(contract.tables)){
  identify('table',table,'base-table-ddl');
