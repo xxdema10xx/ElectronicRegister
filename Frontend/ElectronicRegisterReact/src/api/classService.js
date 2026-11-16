@@ -54,7 +54,7 @@ export const getClasses = (bienniumStudyPathId, token) => getAll("/institution/c
 // Assegnazioni classe-materia-docente (forma usata dalle schermate)
 const toSubject = cs => ({
   classSubjectId: cs.id, subjectId: cs.subjectId, subjectName: cs.subjectName,
-  teacherId: cs.teacherId, teacherFirstName: cs.teacherFirstName, teacherLastName: cs.teacherLastName,
+  teacherId: cs.teacherId, teacherFirstName: cs.teacherFirstName, teacherLastName: cs.teacherLastName, revision: cs.revision,
 });
 
 // Dettaglio classe: { id, name, students: [{id, firstName, lastName}],
@@ -101,3 +101,32 @@ export async function getMyClasses(teacherId, token) {
   }));
   return classes.sort((a, b) => a.name.localeCompare(b.name));
 }
+
+// ── Scritture del catalogo e delle assegnazioni (solo admin, docs/api/INSTITUTION_ACADEMIC_MANAGEMENT.md) ─────
+// POST restituisce l'id (GUID). Duplicati o dipendenze: 409. I PUT richiedono If-Match con la revisione letta.
+const post = async (path, body, token) => (await axiosClient.post(path, body, { headers: authHeader(token) })).data;
+const del = async (path, token) => (await axiosClient.delete(path, { headers: authHeader(token) })).data;
+
+// Biennio: date AAAA-MM-GG (DateOnly), fine non prima dell'inizio
+export const createBiennium = ({ startDate, endDate }, token) => post("/institution/biennia", { startYear: startDate, endYear: endDate }, token);
+
+// Aree e corsi di studio dell'istituto (riusabili tra i bienni) e loro collegamento al biennio / all'area
+export const getAllStudyAreas = (token) => getAll("/institution/study-areas", token);
+export const getAllStudyPaths = (token) => getAll("/institution/study-paths", token);
+export const createStudyArea = ({ name, description }, token) => post("/institution/study-areas", { name: name.trim(), description: (description || "").trim() }, token);
+export const createStudyPath = ({ name, description }, token) => post("/institution/study-paths", { name: name.trim(), description: description?.trim() || null }, token);
+export const linkStudyArea = (bienniumId, studyAreaId, token) => post("/institution/biennium-study-areas", { bienniumId, studyAreaId }, token);
+export const linkStudyPath = (bienniumStudyAreaId, studyPathId, token) => post("/institution/biennium-study-paths", { bienniumStudyAreaId, studyPathId }, token);
+
+// Classe del corso (nome 1–20 caratteri)
+export const createClass = ({ name, bienniumStudyPathId }, token) => post("/institution/classes", { name: name.trim(), bienniumStudyPathId }, token);
+export const deleteClass = (id, token) => del(`/institution/classes/${id}`, token);
+
+// Materia della classe con il suo docente. Cambiare docente o togliere la materia è bloccato (409) se ci sono
+// esami o voti collegati.
+export const addClassSubject = ({ classId, subjectId, teacherId }, token) => post("/institution/class-subjects", { classId, subjectId, teacherId }, token);
+export async function changeClassSubjectTeacher(classSubjectId, teacherId, revision, token) {
+  await axiosClient.put(`/institution/class-subjects/${classSubjectId}`, { teacherId },
+    { headers: { ...authHeader(token), "If-Match": `"${revision}"` } });
+}
+export const removeClassSubject = (classSubjectId, token) => del(`/institution/class-subjects/${classSubjectId}`, token);

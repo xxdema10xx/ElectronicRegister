@@ -5,12 +5,12 @@ import { ActivityIndicator, Alert, Platform, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { C, s } from "./src/constants/theme";
 import { AuthContext } from "./src/hooks/useAuth";
-import { buildUser, getAccount, getContext, getInstitutions, login, selectInstitution } from "./src/api/authService";
+import { buildUser, changePassword, getAccount, getContext, getInstitutions, login, selectInstitution } from "./src/api/authService";
 import { session } from "./src/api/session";
 import { setUnauthorizedHandler } from "./src/api/axiosClient";
 import { clearUserStorage, purgeLegacyStorage, setStorageUser } from "./src/utils/userStorage";
 import LoginScreen from "./src/screens/LoginScreen";
-import RegisterScreen from "./src/screens/RegisterScreen";
+import FirstPasswordScreen from "./src/screens/FirstPasswordScreen";
 import InstitutionPickerScreen from "./src/screens/InstitutionPickerScreen";
 import AppNav from "./src/navigation/AppNav";
 
@@ -30,7 +30,7 @@ purgeLegacyStorage();
 export default function App() {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
-  const [authScreen, setAuthScreen] = useState("login");
+  const [mustChangePassword, setMustChangePassword] = useState(null); // { email, password }: primo accesso con password temporanea
   const [booting, setBooting] = useState(true);
   const [choices, setChoices] = useState(null); // istituti tra cui scegliere dopo il login
   const pendingAccount = useRef(null);
@@ -50,7 +50,7 @@ export default function App() {
     if (!message) clearUserStorage();
     session.clear();
     sessionStore.clear();
-    setToken(null); setUser(null); setChoices(null); setAuthScreen("login");
+    setToken(null); setUser(null); setChoices(null); setMustChangePassword(null);
     if (message) Alert.alert("Sessione terminata", message);
   }, []);
 
@@ -101,8 +101,14 @@ export default function App() {
   }
 
   // Dopo il login (password o Microsoft) si ha solo il ticket: si cercano gli istituti dell'utente.
-  async function handleLogin({ ticket, credentials }) {
+  // Con la password temporanea il ticket vale solo per cambiarla: prima si sceglie la nuova password.
+  async function handleLogin({ ticket, credentials, passwordChangeRequired }) {
     session.setCredentials(credentials || null);
+    if (passwordChangeRequired) {
+      if (!credentials) { session.clear(); Alert.alert("Accesso non riuscito", "Devi prima cambiare la password temporanea: accedi con email e password."); return; }
+      setMustChangePassword(credentials);
+      return;
+    }
     setBooting(true);
     try {
       pendingAccount.current = await getAccount(ticket).catch(() => null);
@@ -127,11 +133,29 @@ export default function App() {
     );
   }
 
+  // Nuova password al primo accesso: il cambio revoca il ticket, quindi si rifà il login con la nuova
+  async function changeTemporaryPassword(newPassword) {
+    const { email, password } = mustChangePassword;
+    try {
+      await changePassword(session.ticket, password, newPassword);
+    } catch (e) {
+      if (e.status === 401 || e.status === 403) {
+        throw new Error("La sessione è scaduta (il primo accesso va completato entro 5 minuti): torna al login e accedi di nuovo con la password temporanea.");
+      }
+      throw e;
+    }
+    setMustChangePassword(null);
+    const data = await login(email, newPassword);
+    await handleLogin({ ticket: data.ticket, credentials: { email, password: newPassword }, passwordChangeRequired: data.passwordChangeRequired });
+  }
+
   if (!token) {
+    if (mustChangePassword) {
+      return <FirstPasswordScreen email={mustChangePassword.email} temporaryPassword={mustChangePassword.password}
+        onSubmit={changeTemporaryPassword} onBack={() => logout()} />;
+    }
     if (choices) return <InstitutionPickerScreen institutions={choices} onSelect={enter} onBack={() => logout()} />;
-    return authScreen === "register"
-      ? <RegisterScreen onBack={() => setAuthScreen("login")} />
-      : <LoginScreen onLogin={handleLogin} goRegister={() => setAuthScreen("register")} />;
+    return <LoginScreen onLogin={handleLogin} />;
   }
 
   return (

@@ -1,6 +1,6 @@
 // src/api/userService.js
-// Membri dell'istituto (solo amministratore, docs/API.md §5–6). Gli account si creano con la registrazione;
-// l'ingresso nell'istituto avviene tramite invito, quindi qui si gestiscono ruoli e sospensioni dei membri esistenti.
+// Membri dell'istituto (solo amministratore): elenco, ruoli, sospensioni. I nuovi account li crea l'istituto
+// (accountService.js), che li rende anche membri.
 import * as Crypto from "expo-crypto";
 import axiosClient, { authHeader } from "./axiosClient";
 
@@ -25,8 +25,10 @@ export async function getMembers(token, { status, role, search } = {}) {
 // Compatibilità con la dashboard (conteggio utenti)
 export const getUsers = (_search, token) => getMembers(token);
 
-// La revisione attesa dal server non è nel dettaglio del membro: si ricava dall'ultimo evento di audit
-// (revisionAfter). Senza eventi si parte da 0. Vedi docs/OPEN_QUESTIONS.md Q-06.
+// La revisione attesa (security generation della membership) non è nel dettaglio del membro: si ricava
+// dall'ultimo evento di audit (revisionAfter), 0 senza eventi. TODO(API): il server la incrementa anche per
+// cambi fatti fuori dalle mutazioni (es. ruoli assegnati alla creazione dell'account); in quel caso risponde
+// 409 e serve che il DTO del membro esponga la revisione.
 async function currentRevision(membershipId, token) {
   const res = await axiosClient.get("/institution/admin/audit", { headers: authHeader(token), params: { target: membershipId, page: 1, size: 100 } });
   const events = Array.isArray(res.data) ? res.data : [];

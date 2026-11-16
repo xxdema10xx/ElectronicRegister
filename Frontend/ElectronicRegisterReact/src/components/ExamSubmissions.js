@@ -31,7 +31,9 @@ const REASON_LABEL = { manual: "consegna volontaria", time_expired: "tempo scadu
 const LEAVE_MESSAGE = "Le correzioni non salvate andranno perse.";
 
 // ── Correzione di una consegna ──────────────────────────────────────────────────────────────
-export function SubmissionReview({ submissionId, displayName, api, onClose, onChanged }) {
+// canGrade: correggere e assegnare il voto spetta a docente e amministratore (PUT /review e /finalize);
+// la segreteria può solo consultare la consegna.
+export function SubmissionReview({ submissionId, displayName, api, onClose, onChanged, canGrade = true }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -88,7 +90,8 @@ export function SubmissionReview({ submissionId, displayName, api, onClose, onCh
   if (loading || !data) return <Loader />;
 
   const status = fromEnum(data.status, SUBMISSION_STATUS);
-  const editable = status === "pending_review" || status === "failed_auto" || status === "graded";
+  const correctable = status === "pending_review" || status === "failed_auto" || status === "graded";
+  const editable = canGrade && correctable;
   const openAnswers = data.answers.filter(a => fromEnum(a.questionType, QUESTION_TYPE) === "open");
   const reviewedCount = openAnswers.filter(a => points[a.answerId] !== "").length;
   const suggested = data.suggestedGrade;
@@ -214,7 +217,10 @@ export function SubmissionReview({ submissionId, displayName, api, onClose, onCh
             </Card>
           ) : (
             <Card style={{ marginBottom: 32 }}>
-              <Text style={{ color: C.text, fontWeight: "700" }}>{status === "finalized" ? `Voto assegnato: ${fmt(data.finalGrade)}` : "Consegna non ancora correggibile"}</Text>
+              <Text style={{ color: C.text, fontWeight: "700" }}>
+                {status === "finalized" ? `Voto assegnato: ${fmt(data.finalGrade)}`
+                  : correctable ? "La correzione e il voto spettano al docente o all'amministratore" : "Consegna non ancora correggibile"}
+              </Text>
               {!!data.finalizedAt && <Text style={s.itemSub}>Il {formatDateTime(data.finalizedAt)}</Text>}
             </Card>
           )}

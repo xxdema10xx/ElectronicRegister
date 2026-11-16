@@ -12,6 +12,7 @@ import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
 import SectionHeader from "../components/SectionHeader";
 import FormModal from "../components/FormModal";
+import AccountFormModal from "../components/AccountFormModal";
 import { getTeachers, createTeacher, updateTeacher, deleteTeacher } from "../api/teacherService";
 
 const emptyForm = { firstName: "", lastName: "" };
@@ -26,6 +27,7 @@ export default function TeachersScreen() {
   const [showAdd, setShowAdd] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [showEdit, setShowEdit] = useState(null);
+  const [accountFor, setAccountFor] = useState(null); // scheda per cui creare l'account di accesso
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
@@ -93,6 +95,7 @@ export default function TeachersScreen() {
               </View>
               {canEdit && (
                 <View style={{ flexDirection: "row", gap: 8 }}>
+                  <IconButton icon="person-add-outline" label="Crea account di accesso" onPress={() => setAccountFor(t)} />
                   <IconButton icon="create-outline" label="Modifica" onPress={() => setShowEdit({ ...t })} />
                   {canDelete && <IconButton icon="trash-outline" label="Elimina" onPress={() => remove(t.id)} />}
                 </View>
@@ -101,6 +104,9 @@ export default function TeachersScreen() {
           )}
         />
       }
+      {/* La scheda non è un account: per accedere il docente serve un account collegato alla scheda */}
+      <AccountFormModal visible={!!accountFor} onClose={() => setAccountFor(null)} allowedRoles={["Teacher"]}
+        preset={accountFor && { firstName: accountFor.firstName, lastName: accountFor.lastName, teacherId: accountFor.id, roles: ["Teacher"] }} />
       <FormModal visible={showAdd} title="Nuovo professore" onClose={() => setShowAdd(false)}>
         <Input label="Nome" value={form.firstName} onChangeText={v => setForm(f => ({ ...f, firstName: v }))} />
         <Input label="Cognome" value={form.lastName} onChangeText={v => setForm(f => ({ ...f, lastName: v }))} />

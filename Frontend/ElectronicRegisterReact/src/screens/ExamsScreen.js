@@ -497,7 +497,8 @@ export default function ExamsScreen() {
     page = (
       <SubmissionReview key={route.submissionId} submissionId={route.submissionId} api={api}
         displayName={exam ? examNameWithDate(exam, classSubjects) : ""}
-        onClose={() => nav.back({ name: "submissions", id: route.id })} onChanged={() => invalidateExamInsights(route.id)} />
+        onClose={() => nav.back({ name: "submissions", id: route.id })} onChanged={() => invalidateExamInsights(route.id)}
+        canGrade={canDestroy} />
     );
   } else if (route.name === "new" && picking) {
     page = (

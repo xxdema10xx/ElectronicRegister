@@ -72,10 +72,23 @@ export default function ExamTaker({ run, api, onFinish }) {
   // ── Salvataggio ──
   const save = useCallback(async () => {
     if (finishedRef.current || submittingRef.current) return;
-    const revision = revisionRef.current + 1;
+    let revision = revisionRef.current + 1;
     setSaveState("saving");
+    const send = (clientRevision) => api.saveAnswers(run.submissionId, { clientRevision, answers: answersToDto(questions, answersRef.current) });
     try {
-      const res = await api.saveAnswers(run.submissionId, { clientRevision: revision, answers: answersToDto(questions, answersRef.current) });
+      let res = await send(revision);
+      // accepted:false = revisione più vecchia di quella del server (es. un salvataggio da un'altra scheda):
+      // il salvataggio NON è avvenuto. Si riparte dopo la revisione del server e si invia una volta ancora
+      // lo stato attuale delle risposte, che è quello che lo studente vede.
+      if (res?.accepted === false) {
+        revision = Math.max(revision, Number(res.currentRevision) || 0) + 1;
+        res = await send(revision);
+      }
+      if (res?.accepted === false) {
+        revisionRef.current = Math.max(revisionRef.current, Number(res.currentRevision) || 0);
+        setSaveState("error");
+        return;
+      }
       revisionRef.current = Math.max(revision, res?.currentRevision ?? revision);
       saveRun(run.examId, { revision: revisionRef.current });
       setSaveState("saved");

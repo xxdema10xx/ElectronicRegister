@@ -16,11 +16,9 @@ export async function loginWithMicrosoft(msAccessToken) {
   return res.data;
 }
 
-// Il backend accetta solo email e password: nome e cognome appartengono all'anagrafica dell'istituto
-export async function register({ email, password }) {
-  const res = await axiosClient.post("/identity/accounts", { email: email.trim(), password });
-  return res.data; // userId
-}
+// Non esiste la registrazione da parte degli utenti: gli account li crea l'istituto (accountService.js).
+// Il login restituisce anche passwordChangeRequired: con la password temporanea il ticket serve solo a
+// cambiarla (PUT /identity/account/password), ogni altra chiamata risponde 401.
 
 // ── Istituti ────────────────────────────────────────────────────────────────────────────────
 export async function getInstitutions(ticket) {

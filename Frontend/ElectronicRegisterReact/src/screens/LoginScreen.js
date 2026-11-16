@@ -1,6 +1,6 @@
 // src/screens/LoginScreen.js
 import { useEffect, useState } from "react";
-import { Alert, Image, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, Platform, SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import { s } from "../constants/theme";
 import Card from "../components/Card";
@@ -12,7 +12,8 @@ import { useLayout } from "../hooks/useLayout";
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function LoginScreen({ onLogin, goRegister }) {
+// Gli account li crea l'istituto: niente registrazione. Al primo accesso si usa la password temporanea ricevuta.
+export default function LoginScreen({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,7 @@ export default function LoginScreen({ onLogin, goRegister }) {
   async function submitMicrosoftToken(msAccessToken) {
     try {
       const data = await loginWithMicrosoft(msAccessToken);
-      await onLogin({ ticket: data.ticket });
+      await onLogin({ ticket: data.ticket, passwordChangeRequired: data.passwordChangeRequired });
     } catch (e) {
       Alert.alert("Errore login Microsoft", String(e.message));
     } finally {
@@ -56,7 +57,7 @@ export default function LoginScreen({ onLogin, goRegister }) {
     setLoading(true);
     try {
       const data = await login(email.trim(), password);
-      await onLogin({ ticket: data.ticket, credentials: { email: email.trim(), password } });
+      await onLogin({ ticket: data.ticket, credentials: { email: email.trim(), password }, passwordChangeRequired: data.passwordChangeRequired });
     } catch (e) { Alert.alert("Errore login", e.message); }
     finally { setLoading(false); }
   }
@@ -87,9 +88,9 @@ export default function LoginScreen({ onLogin, goRegister }) {
               style={{ marginTop: 10, backgroundColor: "#2F2F2F" }}
             />
 
-            <TouchableOpacity onPress={goRegister} style={{ marginTop: 14, alignItems: "center" }}>
-              <Text style={{ color: s.authBg.backgroundColor, fontWeight: "600" }}>Non hai un account? Registrati</Text>
-            </TouchableOpacity>
+            <Text style={[s.itemSub, { marginTop: 14, textAlign: "center" }]}>
+              Non hai un account? Lo crea la segreteria del tuo istituto, che ti darà l'email e una password temporanea.
+            </Text>
           </Card>
         </View>
       </ScrollView>

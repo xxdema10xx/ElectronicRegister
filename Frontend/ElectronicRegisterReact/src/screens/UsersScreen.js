@@ -1,6 +1,6 @@
 // src/screens/UsersScreen.js
-// Membri dell'istituto (solo admin): ruoli, sospensione e riattivazione. Nuovi utenti: si registrano
-// da soli dalla schermata di login e poi vengono invitati nell'istituto.
+// Membri dell'istituto (solo admin): nuovi account, ruoli, sospensione e riattivazione. Gli utenti non si
+// registrano da soli: l'account lo crea l'istituto (POST /api/institution/accounts) con una password temporanea.
 import { useCallback, useEffect, useState } from "react";
 import { Alert, FlatList, Text, TextInput, View } from "react-native";
 import { C, s } from "../constants/theme";
@@ -14,6 +14,8 @@ import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
 import SectionHeader from "../components/SectionHeader";
 import FormModal from "../components/FormModal";
+import AccountFormModal from "../components/AccountFormModal";
+import { getClassesForPicker } from "../api/lessonService";
 import { filterBySearch } from "../utils/search";
 import { getMembers, mutateMember } from "../api/userService";
 
@@ -34,6 +36,9 @@ export default function UsersScreen() {
   const [editing, setEditing] = useState(null); // membro aperto
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
+  const [creating, setCreating] = useState(false); // modulo "Nuovo account"
+  const [classOptions, setClassOptions] = useState([]); // per assegnare subito la classe a un nuovo studente
+  useEffect(() => { getClassesForPicker(token).then(setClassOptions).catch(() => setClassOptions([])); }, [token]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -64,7 +69,9 @@ export default function UsersScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
-        <SectionHeader title="Membri dell'istituto" />
+        <SectionHeader title="Membri dell'istituto" action={
+          <Btn label="+ Account" onPress={() => setCreating(true)} style={s.smBtn} textStyle={s.smBtnText} />
+        } />
         <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per email…"
           placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
       </View>
@@ -88,6 +95,8 @@ export default function UsersScreen() {
           )}
         />
       }
+      <AccountFormModal visible={creating} onClose={() => setCreating(false)} onCreated={() => load()}
+        allowedRoles={["Student", "Teacher", "Staff", "InstitutionAdmin"]} classOptions={classOptions} />
       <FormModal visible={!!editing} title="Gestisci membro" onClose={() => setEditing(null)}>
         {editing && <>
           <Text style={s.itemTitle}>{editing.email}</Text>

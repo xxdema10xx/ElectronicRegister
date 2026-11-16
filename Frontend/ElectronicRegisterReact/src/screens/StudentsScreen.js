@@ -12,6 +12,7 @@ import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
 import SectionHeader from "../components/SectionHeader";
 import FormModal from "../components/FormModal";
+import AccountFormModal from "../components/AccountFormModal";
 import StudentGrades from "../components/StudentGrades";
 import { filterBySearch } from "../utils/search";
 import { getStudents, createStudent, updateStudent, deleteStudent } from "../api/studentService";
@@ -32,6 +33,7 @@ export default function StudentsScreen() {
   const [showAdd, setShowAdd] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [showEdit, setShowEdit] = useState(null);
+  const [accountFor, setAccountFor] = useState(null); // scheda per cui creare l'account di accesso
   const [saving, setSaving] = useState(false);
   const nav = useStudentRoute(); // /studenti oppure /studenti/{id}/voti
   const route = nav.route;
@@ -125,6 +127,7 @@ export default function StudentsScreen() {
               </View>
               {canEdit && (
                 <View style={{ flexDirection: "row", gap: 8 }}>
+                  <IconButton icon="person-add-outline" label="Crea account di accesso" onPress={() => setAccountFor(st)} />
                   <IconButton icon="create-outline" label="Modifica" onPress={() => setShowEdit({ ...st })} />
                   {canDelete && <IconButton icon="trash-outline" label="Elimina" onPress={() => remove(st.id)} />}
                 </View>
@@ -133,6 +136,9 @@ export default function StudentsScreen() {
           )}
         />
       }
+      {/* La scheda non è un account: per accedere allo studente serve un account collegato alla scheda */}
+      <AccountFormModal visible={!!accountFor} onClose={() => setAccountFor(null)} allowedRoles={["Student"]}
+        preset={accountFor && { firstName: accountFor.firstName, lastName: accountFor.lastName, studentId: accountFor.id, roles: ["Student"] }} />
       <FormModal visible={showAdd} title="Nuovo studente" onClose={() => setShowAdd(false)}>
         <Input label="Nome" value={form.firstName} onChangeText={v => setForm(f => ({ ...f, firstName: v }))} />
         <Input label="Cognome" value={form.lastName} onChangeText={v => setForm(f => ({ ...f, lastName: v }))} />

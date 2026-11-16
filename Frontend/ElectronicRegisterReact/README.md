@@ -73,3 +73,26 @@ con modifiche non ancora inviate al server.
 Le versioni precedenti salvavano anche le bozze vuote. Al caricamento della sezione Esami una bozza di quel
 tipo, cioè un nuovo esame senza contenuto, viene scartata: non riapre l'editor con una classe vecchia, non
 chiede conferma all'uscita e non crea la card "Riprendi bozza".
+
+## Backend in sviluppo
+
+Il frontend segue il backend del branch `refactor-database-entities`. Senza `EXPO_PUBLIC_API_BASE`, in sviluppo
+chiama `http://127.0.0.1:5000/api` (indirizzo predefinito del backend). Il CORS del backend è chiuso di default:
+nel browser usare `EXPO_PUBLIC_DEV_PROXY` (vedi `.env.example`) oppure aggiungere l'origine a
+`Transport:AllowedOrigins`.
+
+Non esiste la registrazione: gli account li crea l'istituto (Membri, oppure Studenti e Professori dalla scheda), e
+al primo accesso con la password temporanea l'app chiede subito di sceglierne una nuova. La creazione degli
+account richiede i flag `SchoolApi`, `MembershipWriteApi` e `PlatformIdentity` attivi sul server.
+
+## Test
+
+Jest con `jest-expo` e React Native Testing Library. I test sono in [`__tests__/`](__tests__/README.md).
+
+```bash
+npm test                 # tutti i test
+npm run test:watch       # rilancia i test a ogni modifica
+npm run test:coverage    # con la copertura (cartella coverage/, ignorata da git)
+```
+
+Non serve il backend: le chiamate HTTP sono simulate.

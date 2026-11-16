@@ -1,6 +1,7 @@
 // src/screens/ClassesScreen.js
 // Solo admin. Navigazione a scendere: biennio → area di studio → corso di studio → classe → dettaglio
-// (insegnanti, materie, studenti).
+// (insegnanti, materie, studenti). A ogni livello si può aggiungere un elemento; nel dettaglio si assegnano
+// le materie della classe con il loro docente (senza assegnazioni il docente non vede la classe).
 import { useEffect, useState } from "react";
 import { FlatList, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -9,14 +10,17 @@ import { useAuth } from "../hooks/useAuth";
 import ListRow, { listProps } from "../components/ListRow";
 import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
-import { getActiveBienni, getStudyAreas, getStudyPaths, getClasses, getClassDetail } from "../api/classService";
-import { notify } from "../utils/dialogs";
+import Btn from "../components/Btn";
+import IconButton from "../components/IconButton";
+import { CatalogAddModal, ClassSubjectModal } from "../components/ClassCatalogForms";
+import { getActiveBienni, getStudyAreas, getStudyPaths, getClasses, getClassDetail, removeClassSubject } from "../api/classService";
+import { confirmAction, notify } from "../utils/dialogs";
 
 const LEVELS = {
-  bienni: { title: "Bienni attivi", empty: "Nessun biennio attivo" },
-  areas: { title: "Aree di studio", empty: "Nessuna area di studio per questo biennio" },
-  paths: { title: "Corsi di studio", empty: "Nessun corso di studio per questa area" },
-  classes: { title: "Classi", empty: "Nessuna classe per questo corso" },
+  bienni: { title: "Bienni", empty: "Nessun biennio: aggiungine uno", add: "+ Biennio" },
+  areas: { title: "Aree di studio", empty: "Nessuna area di studio per questo biennio", add: "+ Area" },
+  paths: { title: "Corsi di studio", empty: "Nessun corso di studio per questa area", add: "+ Corso" },
+  classes: { title: "Classi", empty: "Nessuna classe per questo corso", add: "+ Classe" },
 };
 const DETAIL_TABS = [
   { key: "teachers", label: "Insegnanti" },
@@ -35,6 +39,10 @@ export default function ClassesScreen() {
   const [detail, setDetail] = useState(null);
   const [tab, setTab] = useState("teachers");
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(0); // dopo un'aggiunta o una modifica si rilegge il livello corrente
+  const [adding, setAdding] = useState(false); // modulo "+ Biennio / Area / Corso / Classe"
+  const [subjectForm, setSubjectForm] = useState(null); // { current? }: aggiungi materia o cambia docente
+  const refresh = () => setReload(n => n + 1);
 
   const level = !sel.biennium ? "bienni" : !sel.area ? "areas" : !sel.path ? "paths" : !sel.klass ? "classes" : "detail";
 
@@ -59,7 +67,7 @@ export default function ClassesScreen() {
     }
     load();
     return () => { cancelled = true; };
-  }, [level, sel, token]);
+  }, [level, sel, token, reload]);
 
   if (!isAdmin) return <EmptyState message="Sezione riservata agli amministratori" />;
 
@@ -86,6 +94,13 @@ export default function ClassesScreen() {
     t.subjects.push(sb.subjectName);
   });
 
+  function removeSubject(item) {
+    confirmAction("Togliere la materia?", `${item.subjectName} non sarà più insegnata in questa classe.`, async () => {
+      try { await removeClassSubject(item.classSubjectId, token); refresh(); }
+      catch (e) { notify("Errore", e.status === 409 ? "Non si può togliere: ci sono esami o voti collegati a questa materia nella classe." : e.message); }
+    }, "Togli", { destructive: true });
+  }
+
   const itemTitle = (it) => level === "bienni" ? `Biennio ${it.startYear}-${it.endYear}` : it.name;
   const itemIcon = level === "bienni" ? "calendar-outline" : level === "areas" ? "layers-outline" : level === "paths" ? "git-branch-outline" : "people-outline";
 
@@ -96,9 +111,12 @@ export default function ClassesScreen() {
           {level !== "bienni" && (
             <TouchableOpacity onPress={goBack}><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
           )}
-          <Text style={{ fontSize: 20, fontWeight: "700", color: C.text }}>
+          <Text style={{ fontSize: 20, fontWeight: "700", color: C.text, flex: 1 }}>
             {level === "detail" ? `Classe ${sel.klass.name}` : LEVELS[level].title}
           </Text>
+          {level === "detail"
+            ? <Btn label="+ Materia" onPress={() => setSubjectForm({})} style={s.smBtn} textStyle={s.smBtnText} />
+            : <Btn label={LEVELS[level].add} onPress={() => setAdding(true)} style={s.smBtn} textStyle={s.smBtnText} />}
         </View>
 
         {/* Percorso: tocca un elemento per tornare a quel livello */}
@@ -169,6 +187,10 @@ export default function ClassesScreen() {
                   <Text style={s.itemTitle}>{item.subjectName}</Text>
                   <Text style={s.itemSub}>Prof. {item.teacherFirstName} {item.teacherLastName}</Text>
                 </View>
+                <View style={{ flexDirection: "row", gap: 8 }}>
+                  <IconButton icon="swap-horizontal-outline" label="Cambia docente" onPress={() => setSubjectForm({ current: item })} />
+                  <IconButton icon="trash-outline" label="Togli materia" onPress={() => removeSubject(item)} />
+                </View>
               </ListRow>
             ) : (
               <ListRow>
@@ -181,6 +203,10 @@ export default function ClassesScreen() {
           />
         </View>
       )}
+
+      <CatalogAddModal visible={adding} level={level} sel={sel} linked={items} onClose={() => setAdding(false)} onDone={refresh} />
+      <ClassSubjectModal visible={!!subjectForm} classId={sel.klass?.id} current={subjectForm?.current}
+        taken={(detail?.subjects || []).map(x => x.subjectId)} onClose={() => setSubjectForm(null)} onDone={refresh} />
     </View>
   );
 }
