@@ -13,6 +13,7 @@ import DateField from "./DateField";
 import Btn from "./Btn";
 import { getGradesPage, getGradeFilters, createGrade, updateGrade, deleteGrade } from "../api/gradeService";
 import { getSubjects } from "../api/subjectService";
+import { getStudentClassSubjects } from "../api/classService";
 import { formatDateForDisplay, toISODate } from "../utils/dateUtils";
 import { notify, confirmAction } from "../utils/dialogs";
 
@@ -22,6 +23,8 @@ const emptyForm = () => ({ id: null, subjectId: "", value: "", date: toISODate(n
 export default function StudentGrades({ student, token, canDelete = true }) {
   const [grades, setGrades] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  // Materie della classe dello studente (le sole ammesse dal server); null = non note (es. Staff), si mostrano tutte
+  const [classSubjects, setClassSubjects] = useState(null);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(null); // null = elenco; oggetto = form di aggiunta/modifica
   const [saving, setSaving] = useState(false);
@@ -29,14 +32,16 @@ export default function StudentGrades({ student, token, canDelete = true }) {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [page, subs] = await Promise.all([
+      const [page, subs, ofClass] = await Promise.all([
         getGradesPage({ pageNumber: 1, pageSize: 100, studentId: student.id }, token),
         // lo Staff non può leggere /subjects: si ripiega sulle materie presenti nei filtri dei voti
         getSubjects(undefined, token).catch(() => getGradeFilters(token).then(f => f?.subjects || []).catch(() => [])),
+        getStudentClassSubjects(student.id, token).catch(() => null),
       ]);
       const items = Array.isArray(page?.items) ? page.items : [];
       setGrades(items.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))));
       setSubjects(Array.isArray(subs) ? subs : []);
+      setClassSubjects(ofClass);
     } catch (e) {
       if (e.status !== 404) notify("Errore", e.message);
       setGrades([]);
@@ -58,9 +63,23 @@ export default function StudentGrades({ student, token, canDelete = true }) {
       else await createGrade({ studentId: student.id, subjectId: form.subjectId, value, date: form.date }, token);
       setForm(null);
       load();
-    } catch (e) { notify("Errore", e.message); }
+    } catch (e) {
+      // 409 dal server (docs/API.md §21): materia non assegnata alla classe, studente senza classe o voto d'esame
+      const conflict = form.id
+        ? "Il voto non si può modificare: è stato generato da un esame, oppure la materia non è assegnata alla classe dello studente."
+        : "La materia non è assegnata alla classe dello studente, oppure lo studente non è in nessuna classe.";
+      notify("Errore", e.status === 409 ? conflict : e.message);
+    }
     finally { setSaving(false); }
   }
+
+  // Materie proponibili: quelle della classe; in modifica resta anche la materia attuale del voto
+  const subjectOptions = (() => {
+    if (!classSubjects) return subjects;
+    const current = form?.subjectId && !classSubjects.some(x => x.id === form.subjectId)
+      ? subjects.filter(x => x.id === form.subjectId) : [];
+    return [...current, ...classSubjects];
+  })();
 
   function remove(g) {
     confirmAction("Conferma", "Eliminare questo voto?", async () => {
@@ -103,8 +122,9 @@ export default function StudentGrades({ student, token, canDelete = true }) {
           <View>
             <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
               <View style={{ flex: 1, minWidth: 200 }}>
-                <SelectField label="Materia" value={form.subjectId} options={subjects} getLabel={(sub) => sub.name}
-                  onSelect={(subjectId) => setForm(f => ({ ...f, subjectId }))} placeholder="Seleziona materia…" emptyMessage="Nessuna materia disponibile" />
+                <SelectField label="Materia" value={form.subjectId} options={subjectOptions} getLabel={(sub) => sub.name}
+                  onSelect={(subjectId) => setForm(f => ({ ...f, subjectId }))} placeholder="Seleziona materia…"
+                  emptyMessage={classSubjects ? "Lo studente non è in una classe, o la sua classe non ha materie" : "Nessuna materia disponibile"} />
               </View>
               <View style={{ flex: 1, minWidth: 200 }}>
                 <DateField label="Data" value={form.date} onChange={(date) => setForm(f => ({ ...f, date }))} />

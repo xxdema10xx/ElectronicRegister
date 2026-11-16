@@ -139,9 +139,13 @@ export default function DashboardScreen({ navigate }) {
   const myRetakes = (studentBooklet || []).filter(b => b.r.status === "failed_auto" || (b.r.showGrade && b.r.passed === false));
 
   const now = Date.now();
+  const notEnded = (e) => parseUtc(e.availableUntil).getTime() >= now;
+  // Elenco "Prossimi esami": bozze e pubblicati non ancora terminati, solo i primi
   const upcomingExams = (exams || [])
-    .filter(e => ["draft", "published"].includes(fromEnum(e.status, EXAM_STATUS)) && parseUtc(e.availableUntil).getTime() >= now)
+    .filter(e => ["draft", "published"].includes(fromEnum(e.status, EXAM_STATUS)) && notEnded(e))
     .sort((a, b) => parseUtc(a.availableFrom) - parseUtc(b.availableFrom)).slice(0, isDesktop ? 8 : 5);
+  // Contatore "Esami in programma": tutti i pubblicati ancora aperti agli studenti (niente bozze, niente limite)
+  const openExamsCount = (exams || []).filter(e => fromEnum(e.status, EXAM_STATUS) === "published" && notEnded(e)).length;
   const pendingTests = assigned.filter(a => a.canStart);
 
   // Card delle sezioni: servono solo quando non c'è la sidebar (la tab bar mobile ha solo Home e Profilo)
@@ -253,7 +257,7 @@ export default function DashboardScreen({ navigate }) {
             <StatTile icon="stats-chart-outline" label="Media voti" hint="Calcolata sugli esami già valutati" value={studentBooklet ? average : null} onPress={() => navigate("grades")} />
           </>}
           {role === "teacher" && <>
-            <StatTile icon="document-text-outline" label="Esami in programma" hint="Pubblicati, ancora aperti agli studenti" value={exams ? upcomingExams.length : null} onPress={() => navigate("exams")} />
+            <StatTile icon="document-text-outline" label="Esami in programma" hint="Pubblicati, ancora aperti agli studenti" value={exams ? openExamsCount : null} onPress={() => navigate("exams")} />
             <StatTile icon="create-outline" label="Da correggere" hint={submissionsFailed ? "Impossibile caricare le consegne" : "Domande aperte in attesa di valutazione"} value={submissionsFailed ? "—" : pendingReview} onPress={() => navigate("exams")} />
             <StatTile icon="alert-circle-outline" label="Studenti da recuperare" hint={submissionsFailed ? "Impossibile caricare le consegne" : retakeGroups ? `${retakeSummary(retakeGroups)} · non in regola su almeno un esame` : "Non in regola su almeno un esame"} value={submissionsFailed ? "—" : retakeGroups ? retakeGroups.length : null} onPress={() => navigate("exams")} />
           </>}
@@ -266,7 +270,7 @@ export default function DashboardScreen({ navigate }) {
           {role === "staff" && <>
             <StatTile icon="school-outline" label="Studenti" value={counts.students} onPress={() => navigate("students")} />
             <StatTile icon="pencil-outline" label="Professori" value={counts.teachers} onPress={() => navigate("teachers")} />
-            <StatTile icon="document-text-outline" label="Esami in programma" value={exams ? upcomingExams.length : null} onPress={() => navigate("exams")} />
+            <StatTile icon="document-text-outline" label="Esami in programma" hint="Pubblicati, ancora aperti agli studenti" value={exams ? openExamsCount : null} onPress={() => navigate("exams")} />
           </>}
         </View>
 

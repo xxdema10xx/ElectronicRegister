@@ -67,6 +67,23 @@ export async function getClassDetail(classId, className, token) {
   return { id: classId, name: className, students: Array.isArray(students) ? students : [], subjects: subjects.map(toSubject) };
 }
 
+// Materie assegnate alla classe di uno studente: [{ id, name }] (ordinate), oppure [] se lo studente non ha
+// una classe. Lo studente non porta la classe nel DTO: la si trova tra le classi che hanno materie assegnate.
+// Riservato all'admin (classi-materie): per gli altri ruoli la chiamata fallisce e il chiamante ripiega.
+export async function getStudentClassSubjects(studentId, token) {
+  const assignments = await getAll("/institution/class-subjects", token);
+  const classIds = [...new Set(assignments.map(cs => cs.classId))];
+  const rosters = await Promise.all(classIds.map(async classId => {
+    const st = await get("/institution/students", token, { classId });
+    return { classId, has: Array.isArray(st) && st.some(x => x.id === studentId) };
+  }));
+  const classId = rosters.find(r => r.has)?.classId;
+  if (!classId) return [];
+  const byId = new Map();
+  for (const cs of assignments) if (cs.classId === classId) byId.set(cs.subjectId, { id: cs.subjectId, name: cs.subjectName });
+  return [...byId.values()].sort((a, b) => String(a.name).localeCompare(String(b.name)));
+}
+
 // Classi in cui insegna il docente: { id, name, students, subjects } per ciascuna.
 // "subjects" contiene solo le materie insegnate DA LUI in quella classe, non quelle dei colleghi.
 export async function getMyClasses(teacherId, token) {
