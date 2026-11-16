@@ -1,6 +1,6 @@
 // src/screens/DashboardScreen.js
 import { useEffect, useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import Badge from "../components/Badge";
@@ -65,6 +65,7 @@ export default function DashboardScreen({ navigate }) {
   const { assigned, loaded: examsLoaded, unseenCount, isSeen } = useStudentExams();
   const examApi = useExamApi();
   const { isDesktop, isWide } = useLayout();
+  const webPage = isDesktop || Platform.OS === "web"; // sul web la navigazione è nella sidebar o nel menu: niente intestazione e card delle sezioni da app
 
   const [subjects, setSubjects] = useState([]);
   const [exams, setExams] = useState(null);
@@ -232,7 +233,7 @@ export default function DashboardScreen({ navigate }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
-      {!isDesktop && <View style={[s.dashHeader, { position: "relative" }]}>
+      {!webPage && <View style={[s.dashHeader, { position: "relative" }]}>
         <View style={{ flex: 1, marginRight: 8 }}>
           <Text style={s.dashWelcome}>Benvenuto,</Text>
           <Text style={s.dashName}>{name}</Text>
@@ -243,7 +244,7 @@ export default function DashboardScreen({ navigate }) {
         </View>
       </View>}
       <ScrollView contentContainerStyle={{ padding: isDesktop ? 32 : 16, gap: isDesktop ? 24 : 16 }}>
-        {isDesktop && (
+        {webPage && (
           <View>
             <Text style={{ fontSize: 26, fontWeight: "800", color: C.text }}>Benvenuto, {name}</Text>
             <Text style={[s.itemSub, { fontSize: 15 }]}>Ecco una panoramica di oggi.</Text>
@@ -282,7 +283,7 @@ export default function DashboardScreen({ navigate }) {
         </View>
 
         {/* Sezioni (solo senza sidebar) */}
-        {!isDesktop && (
+        {!webPage && (
           <View style={s.dashGrid}>
             {cards.map(c => (
               <TouchableOpacity key={c.screen} style={[s.dashCard, { position: "relative" }, isWide && { width: "23.5%" }]} onPress={() => navigate(c.screen)}>

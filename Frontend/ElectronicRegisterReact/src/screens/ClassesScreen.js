@@ -6,7 +6,7 @@ import { FlatList, ScrollView, Text, TouchableOpacity, View } from "react-native
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
-import Card from "../components/Card";
+import ListRow, { listProps } from "../components/ListRow";
 import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
 import { getActiveBienni, getStudyAreas, getStudyPaths, getClasses, getClassDetail } from "../api/classService";
@@ -122,18 +122,16 @@ export default function ClassesScreen() {
         <FlatList
           data={items}
           keyExtractor={it => String(it.id)}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          {...listProps()}
           renderItem={({ item }) => (
-            <TouchableOpacity activeOpacity={0.7} onPress={() => choose(item)}>
-              <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
-                <View style={s.avatar}><Ionicons name={itemIcon} size={24} color="#1D4ED8" /></View>
-                <View style={{ flex: 1, marginLeft: 12 }}>
-                  <Text style={s.itemTitle}>{itemTitle(item)}</Text>
-                  {!!item.description && <Text style={s.itemSub}>{item.description}</Text>}
-                </View>
-                <Ionicons name="chevron-forward" size={22} color={C.textLight} />
-              </Card>
-            </TouchableOpacity>
+            <ListRow onPress={() => choose(item)}>
+              <View style={s.avatar}><Ionicons name={itemIcon} size={20} color="#1D4ED8" /></View>
+              <View style={{ flex: 1, marginLeft: 12 }}>
+                <Text style={s.itemTitle}>{itemTitle(item)}</Text>
+                {!!item.description && <Text style={s.itemSub}>{item.description}</Text>}
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={C.textLight} />
+            </ListRow>
           )}
         />
       ) : !detail ? <EmptyState message="Dettaglio non disponibile" /> : (
@@ -154,31 +152,31 @@ export default function ClassesScreen() {
           <FlatList
             data={tab === "teachers" ? teachers : tab === "subjects" ? detail.subjects : detail.students}
             keyExtractor={(it, i) => String(it.id ?? it.subjectId) + i}
-            contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+            {...listProps()}
             ListEmptyComponent={<EmptyState message="Nessun elemento" />}
             renderItem={({ item }) => tab === "teachers" ? (
-              <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+              <ListRow>
                 <View style={[s.avatar, { backgroundColor: "#D1FAE5" }]}><Text style={[s.avatarText, { color: "#065F46" }]}>{initials(item.firstName, item.lastName)}</Text></View>
                 <View style={{ flex: 1, marginLeft: 12 }}>
                   <Text style={s.itemTitle}>{item.firstName} {item.lastName}</Text>
                   <Text style={s.itemSub}>{item.subjects.join(" · ")}</Text>
                 </View>
-              </Card>
+              </ListRow>
             ) : tab === "subjects" ? (
-              <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
-                <View style={[s.avatar, { backgroundColor: "#FDE68A" }]}><Ionicons name="book-outline" size={22} color="#92400E" /></View>
+              <ListRow>
+                <View style={[s.avatar, { backgroundColor: "#FDE68A" }]}><Ionicons name="book-outline" size={20} color="#92400E" /></View>
                 <View style={{ flex: 1, marginLeft: 12 }}>
                   <Text style={s.itemTitle}>{item.subjectName}</Text>
                   <Text style={s.itemSub}>Prof. {item.teacherFirstName} {item.teacherLastName}</Text>
                 </View>
-              </Card>
+              </ListRow>
             ) : (
-              <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+              <ListRow>
                 <View style={s.avatar}><Text style={s.avatarText}>{initials(item.firstName, item.lastName)}</Text></View>
                 <View style={{ flex: 1, marginLeft: 12 }}>
                   <Text style={s.itemTitle}>{item.firstName} {item.lastName}</Text>
                 </View>
-              </Card>
+              </ListRow>
             )}
           />
         </View>

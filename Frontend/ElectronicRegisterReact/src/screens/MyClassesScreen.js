@@ -2,11 +2,12 @@
 // Solo insegnanti: elenco delle classi in cui insegnano (non tutti gli studenti del registro).
 // Toccando una classe si vedono le materie insegnate in quella classe e gli studenti che la frequentano.
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
-import Card from "../components/Card";
+import ListRow, { listProps } from "../components/ListRow";
+import IconButton from "../components/IconButton";
 import Btn from "../components/Btn";
 import Input from "../components/Input";
 import Loader from "../components/Loader";
@@ -85,16 +86,16 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
         <FlatList
           data={grades}
           keyExtractor={g => g.id}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          {...listProps()}
           renderItem={({ item: g }) => (
-            <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+            <ListRow>
               <GradeCircle value={g.value} />
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>{subjectName(g)}</Text>
                 <Text style={s.itemSub}>{g.date}</Text>
               </View>
-              <TouchableOpacity onPress={() => setShowEdit({ ...g })}><Ionicons name="create-outline" size={26} color={C.footer} /></TouchableOpacity>
-            </Card>
+              <IconButton icon="create-outline" label="Modifica voto" size={26} onPress={() => setShowEdit({ ...g })} />
+            </ListRow>
           )}
         />
       )}
@@ -172,26 +173,24 @@ export default function MyClassesScreen() {
         <FlatList
           data={list}
           keyExtractor={(it, i) => String(it.id ?? it.subjectId) + i}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          {...listProps()}
           ListEmptyComponent={<EmptyState message="Nessun elemento" />}
           renderItem={({ item }) => tab === "subjects" ? (
-            <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
-              <View style={[s.avatar, { backgroundColor: "#FDE68A" }]}><Ionicons name="book-outline" size={22} color="#92400E" /></View>
+            <ListRow>
+              <View style={[s.avatar, { backgroundColor: "#FDE68A" }]}><Ionicons name="book-outline" size={20} color="#92400E" /></View>
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>{item.subjectName}</Text>
               </View>
-            </Card>
+            </ListRow>
           ) : (
-            <TouchableOpacity activeOpacity={0.7} onPress={() => setOpenStudent(item)}>
-              <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
-                <View style={s.avatar}><Text style={s.avatarText}>{initials(item.firstName, item.lastName)}</Text></View>
-                <View style={{ flex: 1, marginLeft: 12 }}>
-                  <Text style={s.itemTitle}>{item.firstName} {item.lastName}</Text>
-                  <Text style={s.itemSub}>Tocca per vedere i voti</Text>
-                </View>
-                <Ionicons name="chevron-forward" size={20} color={C.textLight} />
-              </Card>
-            </TouchableOpacity>
+            <ListRow onPress={() => setOpenStudent(item)}>
+              <View style={s.avatar}><Text style={s.avatarText}>{initials(item.firstName, item.lastName)}</Text></View>
+              <View style={{ flex: 1, marginLeft: 12 }}>
+                <Text style={s.itemTitle}>{item.firstName} {item.lastName}</Text>
+                <Text style={s.itemSub}>{Platform.OS === "web" ? "Clicca" : "Tocca"} per vedere i voti</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={C.textLight} />
+            </ListRow>
           )}
         />
       </View>
@@ -210,18 +209,16 @@ export default function MyClassesScreen() {
         <FlatList
           data={visibleClasses}
           keyExtractor={k => k.id}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          {...listProps()}
           renderItem={({ item: k }) => (
-            <TouchableOpacity activeOpacity={0.7} onPress={() => { setTab("subjects"); setKlass(k); }}>
-              <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
-                <View style={s.avatar}><Ionicons name="people-outline" size={24} color="#1D4ED8" /></View>
-                <View style={{ flex: 1, marginLeft: 12 }}>
-                  <Text style={s.itemTitle}>{k.name}</Text>
-                  <Text style={s.itemSub}>{k.students.length} studenti · {k.subjects.length} materie</Text>
-                </View>
-                <Ionicons name="chevron-forward" size={22} color={C.textLight} />
-              </Card>
-            </TouchableOpacity>
+            <ListRow onPress={() => { setTab("subjects"); setKlass(k); }}>
+              <View style={s.avatar}><Ionicons name="people-outline" size={20} color="#1D4ED8" /></View>
+              <View style={{ flex: 1, marginLeft: 12 }}>
+                <Text style={s.itemTitle}>{k.name}</Text>
+                <Text style={s.itemSub}>{k.students.length} studenti · {k.subjects.length} materie</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={C.textLight} />
+            </ListRow>
           )}
         />
       }

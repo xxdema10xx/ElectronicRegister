@@ -1,6 +1,6 @@
 // src/navigation/AppNav.js
-import { useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Image, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { C, s } from "../constants/theme";
@@ -36,6 +36,13 @@ const sideIcon = name => <Ionicons name={name} size={22} color={C.white} />;
 
 export default function AppNav({ user, onLogout }) {
   const [screen, setScreen] = useState("dashboard");
+  const [menuOpen, setMenuOpen] = useState(false); // menu a tendina del web su finestra stretta
+  useEffect(() => {
+    if (!menuOpen || !isWeb) return;
+    const onKey = (e) => { if (e.key === "Escape") setMenuOpen(false); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
   const insets = useSafeAreaInsets();
   const { isDesktop, width } = useLayout();
   const headerSize = width < 720 ? 18 : 22; // con la sidebar lo spazio per il titolo è poco
@@ -106,25 +113,27 @@ export default function AppNav({ user, onLogout }) {
             {sideTabs.map(t => {
               const active = screen === t.key;
               return (
-                <TouchableOpacity key={t.key} onPress={() => go(t.key)}
-                  style={{ flexDirection: "row", alignItems: "center", paddingVertical: 12, paddingHorizontal: 20, marginHorizontal: 10, marginBottom: 2, borderRadius: 10,
-                    backgroundColor: active ? "rgba(255,255,255,0.18)" : "transparent" }}>
+                <Pressable key={t.key} onPress={() => go(t.key)} accessibilityRole="link" accessibilityState={{ selected: active }}
+                  style={({ hovered }) => ({ flexDirection: "row", alignItems: "center", paddingVertical: 12, paddingHorizontal: 20, marginHorizontal: 10, marginBottom: 2, borderRadius: 10,
+                    backgroundColor: active ? "rgba(255,255,255,0.18)" : hovered ? "rgba(255,255,255,0.08)" : "transparent" })}>
                   <View style={{ position: "relative", width: 28 }}>
                     {sideIcon(t.icon)}
                     <NotificationDot visible={t.dot} style={{ top: -4, right: 0, borderColor: C.footer }} />
                   </View>
                   <Text style={{ color: C.white, fontSize: 15, marginLeft: 12, fontWeight: active ? "800" : "500" }}>{t.label}</Text>
-                </TouchableOpacity>
+                </Pressable>
               );
             })}
           </ScrollView>
 
           {/* Utente e uscita in fondo alla sidebar */}
           <View style={{ borderTopWidth: 1, borderTopColor: "rgba(255,255,255,0.18)", marginHorizontal: 10, paddingTop: 12 }}>
-            <TouchableOpacity onPress={logout} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 10, paddingHorizontal: 10 }}>
+            <Pressable onPress={logout} accessibilityRole="button"
+              style={({ hovered }) => ({ flexDirection: "row", alignItems: "center", paddingVertical: 10, paddingHorizontal: 10, borderRadius: 10,
+                backgroundColor: hovered ? "rgba(255,255,255,0.08)" : "transparent" })}>
               <Ionicons name="log-out-outline" size={22} color={C.white} />
               <Text style={{ color: C.white, fontSize: 15, marginLeft: 12, fontWeight: "500" }}>Esci</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
 
@@ -156,6 +165,69 @@ export default function AppNav({ user, onLogout }) {
             {content}
           </View>
         </View>
+      </View>
+    );
+  }
+
+  // Web con finestra stretta: intestazione da sito (logo, titolo, menu ☰ a tendina con tutte le sezioni)
+  // invece della barra in alto e della tab bar in basso tipiche di un'app.
+  if (isWeb) {
+    const title = pageHeader ? pageHeader.title : screen === "dashboard" ? "Dashboard" : TITLES[screen];
+    const anyDot = sideTabs.some(t => t.dot);
+    return (
+      <View style={{ flex: 1, backgroundColor: C.bg }}>
+        <View style={{ zIndex: 20 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 12, height: 56, paddingHorizontal: 16, backgroundColor: C.footer }}>
+            <Pressable onPress={() => go("dashboard")} accessibilityRole="link" accessibilityLabel="Home">
+              <Image source={require("../../assets/images/logoitsTrim.png")} style={{ width: 90, height: 40 }} resizeMode="contain" />
+            </Pressable>
+            <View style={{ flex: 1 }} />
+            <Pressable onPress={() => setMenuOpen(o => !o)} accessibilityRole="button" accessibilityLabel="Menu" accessibilityState={{ expanded: menuOpen }}
+              style={({ hovered }) => ({ flexDirection: "row", alignItems: "center", gap: 6, paddingVertical: 6, paddingHorizontal: 10, borderRadius: 8,
+                backgroundColor: menuOpen || hovered ? "rgba(255,255,255,0.15)" : "transparent" })}>
+              <View style={{ position: "relative" }}>
+                <Ionicons name={menuOpen ? "close" : "menu"} size={24} color={C.white} />
+                <NotificationDot visible={anyDot && !menuOpen} style={{ top: -2, right: -2, borderColor: C.footer }} />
+              </View>
+              <Text style={{ color: C.white, fontSize: 15, fontWeight: "600" }}>Menu</Text>
+            </Pressable>
+          </View>
+
+          {/* Titolo della pagina, con "← sezione" sulle pagine interne */}
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, height: 48, paddingHorizontal: 16, backgroundColor: C.white, borderBottomWidth: 1, borderBottomColor: C.border }}>
+            {pageHeader && (
+              <Pressable onPress={pageHeader.onBack} accessibilityRole="link" accessibilityLabel={`Torna a ${TITLES[screen]}`}>
+                <Ionicons name="arrow-back" size={20} color={C.primary} />
+              </Pressable>
+            )}
+            <Text ref={fullTextTip(title)} style={{ fontSize: 17, fontWeight: "800", color: C.text, flexShrink: 1 }} numberOfLines={1}>{title}</Text>
+          </View>
+
+          {menuOpen && (
+            <View accessibilityRole="menu" style={{ position: "absolute", top: 56, left: 0, right: 0, backgroundColor: C.footer, paddingVertical: 8,
+              shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 12, shadowOffset: { width: 0, height: 6 } }}>
+              <View style={{ paddingHorizontal: 16, paddingBottom: 8, flexDirection: "row", alignItems: "center", gap: 8 }}>
+                <Text style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, flexShrink: 1 }} numberOfLines={1}>{userName}</Text>
+                <Badge text={role} role={role} />
+              </View>
+              {[...sideTabs, { key: "logout", icon: "log-out-outline", label: "Esci" }].map(t => {
+                const active = screen === t.key;
+                return (
+                  <Pressable key={t.key} onPress={() => { setMenuOpen(false); t.key === "logout" ? logout() : go(t.key); }}
+                    style={({ hovered }) => ({ flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 10, paddingHorizontal: 16,
+                      backgroundColor: active ? "rgba(255,255,255,0.18)" : hovered ? "rgba(255,255,255,0.08)" : "transparent" })}>
+                    <View style={{ position: "relative" }}>
+                      {sideIcon(t.icon)}
+                      <NotificationDot visible={t.dot} style={{ top: -4, right: -4, borderColor: C.footer }} />
+                    </View>
+                    <Text style={{ color: C.white, fontSize: 15, fontWeight: active ? "800" : "500" }}>{t.label}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          )}
+        </View>
+        <View style={{ flex: 1 }}>{content}</View>
       </View>
     );
   }

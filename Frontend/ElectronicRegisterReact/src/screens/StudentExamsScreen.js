@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useExamApi } from "../hooks/useExamApi";
 import Card from "../components/Card";
+import ListRow, { listProps } from "../components/ListRow";
 import Btn from "../components/Btn";
 import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
@@ -226,13 +227,12 @@ export default function StudentExamsScreen() {
           <FlatList
             data={assigned}
             keyExtractor={a => String(a.id)}
-            contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+            {...listProps()}
             renderItem={({ item }) => {
               const st = stateOf(item);
               const isNew = newOnEntry.current?.has(item.id) && item.canStart;
               return (
-                <TouchableOpacity activeOpacity={st.action && st.action !== "resume" ? 0.7 : 1} onPress={() => st.action !== "resume" && press(item)}>
-                  <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+                <ListRow onPress={st.action && st.action !== "resume" ? () => press(item) : undefined}>
                     <View style={[s.avatar, { backgroundColor: st.tone === "green" ? "#D1FAE5" : "#FDE68A" }]}>
                       <Ionicons name={st.tone === "green" ? "checkmark" : "document-text-outline"} size={24} color={st.tone === "green" ? "#065F46" : "#92400E"} />
                     </View>
@@ -249,8 +249,7 @@ export default function StudentExamsScreen() {
                         <StatusChip label={st.label} tone={st.tone} />
                       </View>
                     )}
-                  </Card>
-                </TouchableOpacity>
+                </ListRow>
               );
             }}
           />

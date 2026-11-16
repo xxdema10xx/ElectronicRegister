@@ -4,7 +4,8 @@ import { ActivityIndicator, Alert, FlatList, Image, RefreshControl, Text, Toucha
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
-import Card from "../components/Card";
+import ListRow, { listProps } from "../components/ListRow";
+import IconButton from "../components/IconButton";
 import Btn from "../components/Btn";
 import Input from "../components/Input";
 import Loader from "../components/Loader";
@@ -42,9 +43,9 @@ function StudentBooklet() {
         <FlatList
           data={booklet}
           keyExtractor={x => String(x.item.id)}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          {...listProps()}
           renderItem={({ item: { item, r } }) => (
-            <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+            <ListRow>
               <View style={{ flex: 1 }}>
                 <Text style={s.itemTitle}>{examDisplayName(item)}{item.isRetake ? " · Recupero" : ""}</Text>
                 <Text style={s.itemSub}>{formatDateTime(item.submittedAt) || formatDateTime(item.availableFrom)}</Text>
@@ -57,7 +58,7 @@ function StudentBooklet() {
               ) : (
                 <StatusChip label={r.title} tone={r.status === "pending_review" ? "amber" : r.status === "failed_auto" ? "red" : "gray"} />
               )}
-            </Card>
+            </ListRow>
           )}
         />
       )}
@@ -261,7 +262,7 @@ function TeacherAdminGrades() {
         <FlatList
           data={grades}
           keyExtractor={g => g.id}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32, flexGrow: 1 }}
+          {...listProps(grades.length === 0 && { flexGrow: 1 })}
           ListEmptyComponent={<EmptyState message="Nessun voto trovato" />}
           onEndReached={loadMoreGrades}
           onEndReachedThreshold={0.4}
@@ -272,7 +273,7 @@ function TeacherAdminGrades() {
             </View>
           ) : null}
           renderItem={({ item: g }) => (
-            <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+            <ListRow>
               <GradeCircle value={g.value} />
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>{subjectName(g)}</Text>
@@ -281,17 +282,11 @@ function TeacherAdminGrades() {
               </View>
               {(role === "teacher" || role === "admin" || role === "staff") && (
                 <View style={{ flexDirection: "row", gap: 6 }}>
-                  <TouchableOpacity onPress={() => setShowEdit({ ...g })}>
-                    <Ionicons name="create-outline" size={32} color={C.footer} />
-                  </TouchableOpacity>
-                  {role === "admin" && (
-                    <TouchableOpacity onPress={() => removeGrade(g.id)}>
-                      <Ionicons name="trash-outline" size={32} color={C.footer} />
-                    </TouchableOpacity>
-                  )}
+                  <IconButton icon="create-outline" label="Modifica" onPress={() => setShowEdit({ ...g })} />
+                  {role === "admin" && <IconButton icon="trash-outline" label="Elimina" onPress={() => removeGrade(g.id)} />}
                 </View>
               )}
-            </Card>
+            </ListRow>
           )}
         />
       }

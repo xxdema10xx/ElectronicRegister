@@ -2,7 +2,7 @@
 // Account dell'utente (docs/AUTH.md §2.8): nome visualizzato e cambio password. Entrambe le operazioni
 // richiedono il ticket di accesso: per la password se ne ottiene uno nuovo con la password attuale.
 import { useState } from "react";
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Alert, Platform, ScrollView, Text, View } from "react-native";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
 import Card from "../components/Card";
@@ -13,7 +13,10 @@ import FormModal from "../components/FormModal";
 import { getPasswordErrors } from "../utils/passwordValidation";
 import { changePassword, freshTicket, login, updateDisplayName } from "../api/authService";
 
-const ROLE_LABEL = { InstitutionAdmin: "Amministratore", Staff: "Segreteria", Teacher: "Docente", Student: "Studente" };
+const isWeb = Platform.OS === "web";
+const WEB_BTN = { paddingVertical: 10, paddingHorizontal: 18 };
+
+const ROLE_LABEL ={ InstitutionAdmin: "Amministratore", Staff: "Segreteria", Teacher: "Docente", Student: "Studente" };
 
 export default function ProfileScreen({ onLogout }) {
   const { user, logout, updateUser } = useAuth();
@@ -74,15 +77,29 @@ export default function ProfileScreen({ onLogout }) {
   }
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 16 }}>
-      <View style={s.profileHeader}>
-        <View style={s.profileAvatar}>
-          <Text style={s.profileAvatarText}>{(user?.email || "?")[0].toUpperCase()}</Text>
+    <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={isWeb ? { padding: 24, width: "100%", maxWidth: 760 } : { padding: 16 }}>
+      {isWeb ? (
+        // Web: intestazione a sinistra in una card, come la pagina "account" di un sito
+        <Card style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
+          <View style={[s.profileAvatar, { width: 56, height: 56, borderRadius: 28, marginBottom: 0 }]}>
+            <Text style={[s.profileAvatarText, { fontSize: 22 }]}>{(user?.email || "?")[0].toUpperCase()}</Text>
+          </View>
+          <View style={{ flex: 1, minWidth: 0, alignItems: "flex-start" }}>
+            {!!name && <Text style={[s.profileName, { marginBottom: 2 }]}>{name}</Text>}
+            <Text style={[s.profileEmail, { marginBottom: 6 }]}>{user?.email}</Text>
+            <Badge text={role} role={role} />
+          </View>
+        </Card>
+      ) : (
+        <View style={s.profileHeader}>
+          <View style={s.profileAvatar}>
+            <Text style={s.profileAvatarText}>{(user?.email || "?")[0].toUpperCase()}</Text>
+          </View>
+          {!!name && <Text style={s.profileName}>{name}</Text>}
+          <Text style={s.profileEmail}>{user?.email}</Text>
+          <Badge text={role} role={role} />
         </View>
-        {!!name && <Text style={s.profileName}>{name}</Text>}
-        <Text style={s.profileEmail}>{user?.email}</Text>
-        <Badge text={role} role={role} />
-      </View>
+      )}
 
       <Card style={{ marginTop: 16 }}>
         <Text style={[s.cardTitle, { fontSize: 14 }]}>Dettagli account</Text>
@@ -94,9 +111,18 @@ export default function ProfileScreen({ onLogout }) {
         {user?.teacherId && <View style={s.profileRow}><Text style={s.profileKey}>ID Docente</Text><Text style={s.profileVal}>{user.teacherId.slice(0, 16)}…</Text></View>}
       </Card>
 
-      <Btn label="Modifica nome visualizzato" onPress={() => { setDisplayName(shownName); setModal("name"); }} style={{ marginTop: 16 }} variant="primary" />
-      <Btn label="Cambia password" onPress={() => setModal("password")} style={{ marginTop: 10 }} variant="primary" />
-      <Btn label="Logout" onPress={onLogout} style={{ marginTop: 10 }} variant="danger" />
+      {isWeb ? (
+        // Web: pulsanti affiancati della loro misura, non barre a tutta larghezza
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 16 }}>
+          <Btn label="Modifica nome visualizzato" onPress={() => { setDisplayName(shownName); setModal("name"); }} style={WEB_BTN} variant="primary" />
+          <Btn label="Cambia password" onPress={() => setModal("password")} style={WEB_BTN} variant="ghost" />
+          <Btn label="Esci" onPress={onLogout} style={[WEB_BTN, { marginLeft: "auto" }]} variant="danger" />
+        </View>
+      ) : <>
+        <Btn label="Modifica nome visualizzato" onPress={() => { setDisplayName(shownName); setModal("name"); }} style={{ marginTop: 16 }} variant="primary" />
+        <Btn label="Cambia password" onPress={() => setModal("password")} style={{ marginTop: 10 }} variant="primary" />
+        <Btn label="Logout" onPress={onLogout} style={{ marginTop: 10 }} variant="danger" />
+      </>}
 
       <FormModal visible={modal === "name"} title="Nome visualizzato" onClose={close}>
         <Input label="Nome" value={displayName} onChangeText={setDisplayName} placeholder="Mario Rossi" />

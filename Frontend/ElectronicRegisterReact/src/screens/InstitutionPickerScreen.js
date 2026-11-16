@@ -1,6 +1,6 @@
 // src/screens/InstitutionPickerScreen.js
 // Dopo il login: l'utente è membro di più istituti e sceglie in quale entrare (GET /Auth/institutions).
-import { Image, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { Image, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import Card from "../components/Card";
@@ -9,7 +9,7 @@ import { useLayout } from "../hooks/useLayout";
 const ROLE_LABEL = { InstitutionAdmin: "Amministratore", Staff: "Segreteria", Teacher: "Docente", Student: "Studente" };
 
 export default function InstitutionPickerScreen({ institutions, onSelect, onBack }) {
-  const { isDesktop } = useLayout();
+  const isDesktop = useLayout().isDesktop || Platform.OS === "web"; // sul web sempre la card centrata, mai il foglio da app
 
   return (
     <SafeAreaView style={s.authBg}>

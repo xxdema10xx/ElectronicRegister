@@ -2,11 +2,11 @@
 // Membri dell'istituto (solo admin): ruoli, sospensione e riattivazione. Nuovi utenti: si registrano
 // da soli dalla schermata di login e poi vengono invitati nell'istituto.
 import { useCallback, useEffect, useState } from "react";
-import { Alert, FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Alert, FlatList, Text, TextInput, View } from "react-native";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
-import Card from "../components/Card";
+import ListRow, { listProps } from "../components/ListRow";
+import IconButton from "../components/IconButton";
 import Input from "../components/Input";
 import Btn from "../components/Btn";
 import Badge from "../components/Badge";
@@ -72,23 +72,19 @@ export default function UsersScreen() {
         <FlatList
           data={visible}
           keyExtractor={m => m.membershipId}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          {...listProps()}
           renderItem={({ item: m }) => (
-            <Card style={{ marginBottom: 10 }}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <View style={s.avatar}><Text style={s.avatarText}>{(m.email || "?")[0].toUpperCase()}</Text></View>
-                <View style={{ flex: 1, marginLeft: 12 }}>
-                  <Text style={s.itemTitle}>{m.email}{isMe(m) ? " (tu)" : ""}</Text>
-                  <Text style={s.itemSub}>{STATUS_LABEL[m.status] || m.status}</Text>
-                </View>
-                <TouchableOpacity onPress={() => { setReason(""); setEditing({ ...m }); }}>
-                  <Ionicons name="create-outline" size={32} color={C.footer} />
-                </TouchableOpacity>
+            <ListRow style={{ flexWrap: "wrap", rowGap: 8 }}>
+              <View style={s.avatar}><Text style={s.avatarText}>{(m.email || "?")[0].toUpperCase()}</Text></View>
+              <View style={{ flex: 1, minWidth: 160, marginLeft: 12 }}>
+                <Text style={s.itemTitle}>{m.email}{isMe(m) ? " (tu)" : ""}</Text>
+                <Text style={s.itemSub}>{STATUS_LABEL[m.status] || m.status}</Text>
               </View>
-              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6, marginHorizontal: 12 }}>
                 {(m.roles || []).map(r => { const def = ROLES.find(x => x.id === r); return <Badge key={r} text={def?.label || r} role={def?.badge} />; })}
               </View>
-            </Card>
+              <IconButton icon="create-outline" label="Gestisci membro" onPress={() => { setReason(""); setEditing({ ...m }); }} />
+            </ListRow>
           )}
         />
       }

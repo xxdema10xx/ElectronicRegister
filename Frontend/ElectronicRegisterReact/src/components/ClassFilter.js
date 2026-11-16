@@ -1,14 +1,13 @@
 // src/components/ClassFilter.js
 // Filtro per classe compatto, per le barre dei filtri: "Classe: Tutte" a riposo; con una classe scelta
 // diventa "attivo" (bordo e sfondo leggero nel colore primario) e mostra una ✕ per tornare a "Tutte".
-// Scelta: su web con finestra larga un menu sotto il campo, largo quanto il campo (si chiude con Esc o
-// cliccando fuori); su mobile e finestre strette la stessa finestra dal basso di SelectField (stessi stili
+// Scelta: su web un menu sotto il campo, largo quanto il campo (si chiude con Esc o
+// cliccando fuori); sulle app native la stessa finestra dal basso di SelectField (stessi stili
 // del tema). Da tastiera: Tab per arrivarci, Invio o Spazio per aprire, Tab tra le voci, Esc per chiudere.
 import { useEffect, useRef, useState } from "react";
 import { FlatList, Modal, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
-import { useLayout } from "../hooks/useLayout";
 
 const ACTIVE_BG = "#E0EEF8"; // stesso azzurro della domanda selezionata nell'editor
 
@@ -19,8 +18,8 @@ export default function ClassFilter({ value, options = [], onChange, style, heig
   const active = !!selected;
   const choose = (id) => { onChange(id); setOpen(false); };
   const items = [{ id: null, name: "Tutte le classi" }, ...options];
-  const { isDesktop } = useLayout();
-  const dropdown = Platform.OS === "web" && isDesktop;
+
+  const dropdown = Platform.OS === "web"; // sul web sempre menu a tendina, mai la finestra dal basso da app
 
   // Menu a tendina (web largo): chiusura con Esc o con un clic fuori dal filtro
   const boxRef = useRef(null);

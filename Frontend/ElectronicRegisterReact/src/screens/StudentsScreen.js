@@ -1,11 +1,11 @@
 // src/screens/StudentsScreen.js
 // Anagrafica studenti. Admin e Staff creano e modificano; solo l'admin elimina (docs/AUTH.md §4).
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, BackHandler, FlatList, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Alert, BackHandler, FlatList, Platform, Text, TextInput, View } from "react-native";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
-import Card from "../components/Card";
+import ListRow, { listProps } from "../components/ListRow";
+import IconButton from "../components/IconButton";
 import Input from "../components/Input";
 import Btn from "../components/Btn";
 import Loader from "../components/Loader";
@@ -115,10 +115,9 @@ export default function StudentsScreen() {
         <FlatList
           data={visibleStudents}
           keyExtractor={st => st.id}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          {...listProps()}
           renderItem={({ item: st }) => (
-            <TouchableOpacity activeOpacity={canEdit ? 0.7 : 1} onPress={() => canEdit && nav.push({ name: "grades", id: st.id })}>
-            <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+            <ListRow onPress={canEdit ? () => nav.push({ name: "grades", id: st.id }) : undefined}>
               <View style={s.avatar}><Text style={s.avatarText}>{st.firstName[0]}{st.lastName[0]}</Text></View>
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>{st.firstName} {st.lastName}</Text>
@@ -126,12 +125,11 @@ export default function StudentsScreen() {
               </View>
               {canEdit && (
                 <View style={{ flexDirection: "row", gap: 8 }}>
-                  <TouchableOpacity onPress={() => setShowEdit({ ...st })}><Ionicons name="create-outline" size={32} color={C.footer} /></TouchableOpacity>
-                  {canDelete && <TouchableOpacity onPress={() => remove(st.id)}><Ionicons name="trash-outline" size={32} color={C.footer} /></TouchableOpacity>}
+                  <IconButton icon="create-outline" label="Modifica" onPress={() => setShowEdit({ ...st })} />
+                  {canDelete && <IconButton icon="trash-outline" label="Elimina" onPress={() => remove(st.id)} />}
                 </View>
               )}
-            </Card>
-            </TouchableOpacity>
+            </ListRow>
           )}
         />
       }

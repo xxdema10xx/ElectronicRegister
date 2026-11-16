@@ -1,6 +1,6 @@
 // src/screens/LoginScreen.js
 import { useEffect, useState } from "react";
-import { Alert, Image, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import { s } from "../constants/theme";
 import Card from "../components/Card";
@@ -18,7 +18,7 @@ export default function LoginScreen({ onLogin, goRegister }) {
   const [loading, setLoading] = useState(false);
   const [msLoading, setMsLoading] = useState(false);
 
-  const { isDesktop } = useLayout();
+  const isDesktop = useLayout().isDesktop || Platform.OS === "web"; // sul web sempre la card centrata, mai il foglio da app
   const { request, response, promptAsync, exchangeCode } = useMicrosoftLogin();
 
   useEffect(() => {

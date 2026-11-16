@@ -2,7 +2,7 @@
 // Registrazione dell'account (solo email e password, POST /identity/accounts). Nome, cognome e ruolo
 // non fanno parte dell'account: li assegna l'istituto quando l'utente ne diventa membro.
 import { useState } from "react";
-import { Alert, Image, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import { C, s } from "../constants/theme";
 import Card from "../components/Card";
 import Input from "../components/Input";
@@ -15,7 +15,7 @@ export default function RegisterScreen({ onBack }) {
   const [form, setForm] = useState({ email: "", password: "", confirmPassword: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const { isDesktop } = useLayout();
+  const isDesktop = useLayout().isDesktop || Platform.OS === "web"; // sul web sempre la card centrata, mai il foglio da app
 
   function set(k, v) {
     setForm(f => {

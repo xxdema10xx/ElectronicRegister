@@ -1,11 +1,11 @@
 // src/screens/TeachersScreen.js
 // Anagrafica docenti. Admin e Staff creano e modificano; solo l'admin elimina (docs/AUTH.md §4).
 import { useCallback, useEffect, useState } from "react";
-import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Alert, FlatList, Text, View } from "react-native";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
-import Card from "../components/Card";
+import ListRow, { listProps } from "../components/ListRow";
+import IconButton from "../components/IconButton";
 import Input from "../components/Input";
 import Btn from "../components/Btn";
 import Loader from "../components/Loader";
@@ -84,20 +84,20 @@ export default function TeachersScreen() {
         <FlatList
           data={teachers}
           keyExtractor={t => t.id}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          {...listProps()}
           renderItem={({ item: t }) => (
-            <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+            <ListRow>
               <View style={[s.avatar, { backgroundColor: "#C7D2FE" }]}><Text style={[s.avatarText, { color: "#4338CA" }]}>{t.firstName[0]}{t.lastName[0]}</Text></View>
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>Prof. {t.firstName} {t.lastName}</Text>
               </View>
               {canEdit && (
                 <View style={{ flexDirection: "row", gap: 8 }}>
-                  <TouchableOpacity onPress={() => setShowEdit({ ...t })}><Ionicons name="create-outline" size={32} color={C.footer} /></TouchableOpacity>
-                  {canDelete && <TouchableOpacity onPress={() => remove(t.id)}><Ionicons name="trash-outline" size={32} color={C.footer} /></TouchableOpacity>}
+                  <IconButton icon="create-outline" label="Modifica" onPress={() => setShowEdit({ ...t })} />
+                  {canDelete && <IconButton icon="trash-outline" label="Elimina" onPress={() => remove(t.id)} />}
                 </View>
               )}
-            </Card>
+            </ListRow>
           )}
         />
       }

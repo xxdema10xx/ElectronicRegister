@@ -1,5 +1,7 @@
 // src/constants/theme.js
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
+
+const isWeb = Platform.OS === "web";
 
 export const C = {
   primary: "#154f78",
@@ -33,7 +35,9 @@ export const s = StyleSheet.create({
   authTitle: { fontSize: 26, fontWeight: "800", color: C.white },
   authSubtitle: { fontSize: 14, color: "rgba(255,255,255,0.7)", marginTop: 4 },
   authBody: { backgroundColor: C.bg, borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 24, flexGrow: 1 },
-  authBodyDesktop: { borderRadius: 28, alignSelf: "center", width: "100%", maxWidth: 420, flexGrow: 0, marginBottom: 0, padding: 16 },
+  // Sul web la card del form sta direttamente sullo sfondo, senza il "foglio" chiaro dietro
+  authBodyDesktop: { borderRadius: 28, alignSelf: "center", width: "100%", maxWidth: 420, flexGrow: 0, marginBottom: 0, padding: 16,
+    ...(isWeb && { backgroundColor: "transparent", padding: 0 }) },
   // Card
   card: { backgroundColor: C.card, borderRadius: 14, padding: 16, shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 }, elevation: 3 },
   cardTitle: { fontSize: 18, fontWeight: "700", color: C.text, marginBottom: 16 },
@@ -79,8 +83,9 @@ export const s = StyleSheet.create({
   itemTitle: { fontSize: 15, fontWeight: "600", color: C.text },
   itemSub: { fontSize: 13, color: C.textMuted, marginTop: 2 },
   actionIcon: { fontSize: 18 },
-  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: "#DBEAFE", alignItems: "center", justifyContent: "center" },
-  avatarText: { fontWeight: "700", color: "#1D4ED8", fontSize: 15 },
+  // Sul web righe più compatte, come in una tabella
+  avatar: { width: isWeb ? 36 : 44, height: isWeb ? 36 : 44, borderRadius: isWeb ? 18 : 22, backgroundColor: "#DBEAFE", alignItems: "center", justifyContent: "center" },
+  avatarText: { fontWeight: "700", color: "#1D4ED8", fontSize: isWeb ? 13 : 15 },
   // Grade circle
   gradeCircle: { width: 48, height: 48, borderRadius: 24, alignItems: "center", justifyContent: "center" },
   gradeValue: { color: C.white, fontWeight: "800", fontSize: 16 },

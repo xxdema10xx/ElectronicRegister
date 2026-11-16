@@ -2,11 +2,12 @@
 // Materie dell'istituto. La materia non ha un docente: chi la insegna si decide classe per classe
 // (classi-materie, visibili nel dettaglio di una classe).
 import { useCallback, useEffect, useState } from "react";
-import { Alert, FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Text, TextInput, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
-import Card from "../components/Card";
+import ListRow, { listProps } from "../components/ListRow";
+import IconButton from "../components/IconButton";
 import Input from "../components/Input";
 import Btn from "../components/Btn";
 import Loader from "../components/Loader";
@@ -79,20 +80,20 @@ export default function SubjectsScreen() {
         <FlatList
           data={visibleSubjects}
           keyExtractor={sub => sub.id}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          {...listProps()}
           renderItem={({ item: sub }) => (
-            <Card style={{ marginBottom: 10, flexDirection: "row", alignItems: "center" }}>
+            <ListRow>
               <View style={[s.avatar, { backgroundColor: "#FDE68A" }]}><Text style={[s.avatarText, { color: "#92400E" }]}><Ionicons name="book-outline" size={24} /></Text></View>
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>{sub.name}</Text>
               </View>
               {role === "admin" && (
                 <View style={{ flexDirection: "row", gap: 8 }}>
-                  <TouchableOpacity onPress={() => setShowEdit({ ...sub })}><Ionicons name="create-outline" size={32} color={C.footer} /></TouchableOpacity>
-                  <TouchableOpacity onPress={() => remove(sub.id)}><Ionicons name="trash-outline" size={32} color={C.footer} /></TouchableOpacity>
+                  <IconButton icon="create-outline" label="Modifica" onPress={() => setShowEdit({ ...sub })} />
+                  <IconButton icon="trash-outline" label="Elimina" onPress={() => remove(sub.id)} />
                 </View>
               )}
-            </Card>
+            </ListRow>
           )}
         />
       }
