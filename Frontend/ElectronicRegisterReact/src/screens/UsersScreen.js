@@ -17,7 +17,7 @@ import FormModal from "../components/FormModal";
 import AccountFormModal from "../components/AccountFormModal";
 import { getClassesForPicker } from "../api/lessonService";
 import { filterBySearch } from "../utils/search";
-import { getMembers, mutateMember } from "../api/userService";
+import { getMember, getMembers, mutateMember } from "../api/userService";
 
 const ROLES = [
   { id: "InstitutionAdmin", label: "Amministratore", badge: "admin" },
@@ -49,13 +49,27 @@ export default function UsersScreen() {
 
   useEffect(() => { load(); }, [load]);
 
+  // Il dialog lavora sul dettaglio appena letto dal server: ruoli, stato e revisione (expectedRevision)
+  async function refreshEditing(membershipId) {
+    const fresh = await getMember(membershipId, token);
+    setEditing(m => (m && m.membershipId === membershipId ? { ...m, ...fresh } : m));
+    return fresh;
+  }
+
+  function openMember(m) {
+    setReason("");
+    setEditing({ ...m });
+    refreshEditing(m.membershipId).catch(() => { /* resta la riga dell'elenco: la revisione si rilegge alla modifica */ });
+  }
+
   async function apply(action, role) {
     if (!reason.trim()) { Alert.alert("Attenzione", "Indica il motivo della modifica (resta nello storico)."); return; }
     setBusy(true);
     try {
-      const res = await mutateMember(editing.membershipId, { action, role, reason }, token);
-      setEditing(m => ({ ...m, status: res.status, roles: res.roles }));
+      const res = await mutateMember(editing.membershipId, { action, role, reason, expectedRevision: editing.revision }, token);
+      setEditing(m => ({ ...m, status: res.status, roles: res.roles, revision: res.revision ?? m.revision }));
       setReason("");
+      refreshEditing(editing.membershipId).catch(() => {});
       load();
     } catch (e) {
       Alert.alert("Errore", e.status === 409
@@ -90,7 +104,7 @@ export default function UsersScreen() {
               <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6, marginHorizontal: 12 }}>
                 {(m.roles || []).map(r => { const def = ROLES.find(x => x.id === r); return <Badge key={r} text={def?.label || r} role={def?.badge} />; })}
               </View>
-              <IconButton icon="create-outline" label="Gestisci membro" onPress={() => { setReason(""); setEditing({ ...m }); }} />
+              <IconButton icon="create-outline" label="Gestisci membro" onPress={() => openMember(m)} />
             </ListRow>
           )}
         />

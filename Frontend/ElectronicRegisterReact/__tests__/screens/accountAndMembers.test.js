@@ -19,7 +19,7 @@ describe("Membri", () => {
     lessonService.getClassesForPicker.mockResolvedValue([]);
     userService.getMembers.mockResolvedValue([
       { membershipId: "m1", userId: "u-admin", email: "admin@scuola.it", status: "active", roles: ["InstitutionAdmin"] },
-      { membershipId: "m2", userId: "u2", email: "anna@scuola.it", status: "active", roles: ["Teacher"] },
+      { membershipId: "m2", userId: "u2", email: "anna@scuola.it", status: "active", roles: ["Teacher"], revision: 3 },
       { membershipId: "m3", userId: "u3", email: "luca@scuola.it", status: "suspended", roles: ["Student"] },
     ]);
   });
@@ -45,8 +45,22 @@ describe("Membri", () => {
     expect(Alert.alert).toHaveBeenLastCalledWith("Attenzione", "Indica il motivo della modifica (resta nello storico).");
     fireEvent.changeText(screen.getByPlaceholderText("Es. incarico di segreteria"), "Incarico di segreteria");
     await act(async () => { fireEvent.press(screen.getAllByText("Aggiungi")[1]); });
-    expect(userService.mutateMember).toHaveBeenCalledWith("m2", { action: "AddRole", role: "Staff", reason: "Incarico di segreteria" }, "tok");
+    expect(userService.mutateMember).toHaveBeenCalledWith("m2", { action: "AddRole", role: "Staff", reason: "Incarico di segreteria", expectedRevision: 3 }, "tok");
     expect(await screen.findAllByText("Togli")).toHaveLength(2);
+  });
+
+  test("il dialog usa la revisione del dettaglio appena letto e lo rilegge dopo la modifica", async () => {
+    userService.getMember.mockResolvedValueOnce({ membershipId: "m2", userId: "u2", email: "anna@scuola.it", status: "active", roles: ["Teacher"], revision: 7 })
+      .mockResolvedValueOnce({ membershipId: "m2", userId: "u2", email: "anna@scuola.it", status: "suspended", roles: ["Teacher"], revision: 8 });
+    userService.mutateMember.mockResolvedValue({ status: "suspended", roles: ["Teacher"], revision: 8 });
+    renderAs("admin", <UsersScreen />);
+    await flush();
+    await act(async () => { fireEvent.press(screen.getAllByLabelText("Gestisci membro")[1]); });
+    expect(userService.getMember).toHaveBeenCalledWith("m2", "tok");
+    fireEvent.changeText(screen.getByPlaceholderText("Es. incarico di segreteria"), "Assenza");
+    await act(async () => { fireEvent.press(screen.getByText("Sospendi membro")); });
+    expect(userService.mutateMember).toHaveBeenCalledWith("m2", expect.objectContaining({ action: "Suspend", expectedRevision: 7 }), "tok");
+    expect(userService.getMember).toHaveBeenCalledTimes(2);
   });
 
   test("sospensione e riattivazione; non su se stessi", async () => {

@@ -25,19 +25,28 @@ export async function getMembers(token, { status, role, search } = {}) {
 // Compatibilità con la dashboard (conteggio utenti)
 export const getUsers = (_search, token) => getMembers(token);
 
-// La revisione attesa (security generation della membership) non è nel dettaglio del membro: si ricava
-// dall'ultimo evento di audit (revisionAfter), 0 senza eventi. TODO(API): il server la incrementa anche per
-// cambi fatti fuori dalle mutazioni (es. ruoli assegnati alla creazione dell'account); in quel caso risponde
-// 409 e serve che il DTO del membro esponga la revisione.
-async function currentRevision(membershipId, token) {
-  const res = await axiosClient.get("/institution/admin/audit", { headers: authHeader(token), params: { target: membershipId, page: 1, size: 100 } });
-  const events = Array.isArray(res.data) ? res.data : [];
-  return events.reduce((max, e) => Math.max(max, Number(e.revisionAfter) || 0), 0);
+// Dettaglio di un membro: { membershipId, userId, email, status, roles, joinedAt, revision }
+export async function getMember(membershipId, token) {
+  const res = await axiosClient.get(`/institution/admin/members/${membershipId}`, { headers: authHeader(token) });
+  return res.data;
 }
 
-// action: "AddRole" | "RemoveRole" | "Suspend" | "Reactivate"; role solo per AddRole/RemoveRole
-export async function mutateMember(membershipId, { action, role, reason }, token) {
-  const body = { eventId: newEventId(), expectedRevision: await currentRevision(membershipId, token), action, reason: reason.trim() };
+// revision del DTO del membro = security generation della membership, cioè il valore che le mutazioni
+// confrontano con expectedRevision (docs/api/MEMBERSHIP_ADMIN_FRONTEND_CONTRACTS.md).
+function revisionOf(member) {
+  const revision = Number(member?.revision);
+  if (member?.revision === undefined || member?.revision === null || !Number.isFinite(revision)) {
+    throw new Error("Il server non ha restituito la revisione del membro: impossibile modificarlo.");
+  }
+  return revision;
+}
+
+// action: "AddRole" | "RemoveRole" | "Suspend" | "Reactivate"; role solo per AddRole/RemoveRole.
+// expectedRevision: revisione del membro appena letto (dettaglio aperto nel dialog); se manca si rilegge
+// il membro con GET /institution/admin/members/{id} subito prima della mutazione.
+export async function mutateMember(membershipId, { action, role, reason, expectedRevision }, token) {
+  const revision = expectedRevision ?? revisionOf(await getMember(membershipId, token));
+  const body = { eventId: newEventId(), expectedRevision: revision, action, reason: reason.trim() };
   if (action === "AddRole" || action === "RemoveRole") body.role = role;
   const res = await axiosClient.post(`/institution/admin/members/${membershipId}/mutations`, body, { headers: authHeader(token) });
   return res.data; // { eventId, revision, status, roles }

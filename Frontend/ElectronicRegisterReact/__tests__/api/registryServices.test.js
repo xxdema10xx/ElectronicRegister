@@ -133,20 +133,34 @@ describe("membri dell'istituto", () => {
     await expect(users.getUsers("ignorato", "tok")).resolves.toEqual([{ membershipId: "m1" }]);
   });
 
-  test("mutazione: revisione attesa dall'ultimo evento di audit, ruolo solo per Add/RemoveRole", async () => {
-    axiosClient.get.mockReturnValue(ok([{ revisionAfter: 2 }, { revisionAfter: 5 }, { revisionAfter: "x" }]));
+  test("mutazione: expectedRevision = revision del membro letto subito prima, ruolo solo per Add/RemoveRole", async () => {
+    axiosClient.get.mockReturnValue(ok({ membershipId: "m1", roles: ["Student"], revision: 5 }));
     axiosClient.post.mockReturnValue(ok({ status: "active", roles: ["Teacher"] }));
     await users.mutateMember("m1", { action: "AddRole", role: "Teacher", reason: "  incarico  " }, "tok");
-    expect(axiosClient.get).toHaveBeenCalledWith("/institution/admin/audit", { ...H, params: { target: "m1", page: 1, size: 100 } });
+    expect(axiosClient.get).toHaveBeenCalledWith("/institution/admin/members/m1", H);
+    expect(axiosClient.get).not.toHaveBeenCalledWith("/institution/admin/audit", expect.anything());
     const body = axiosClient.post.mock.calls[0][1];
     expect(axiosClient.post.mock.calls[0][0]).toBe("/institution/admin/members/m1/mutations");
     expect(body).toMatchObject({ expectedRevision: 5, action: "AddRole", role: "Teacher", reason: "incarico" });
     expect(typeof body.eventId).toBe("string");
 
-    axiosClient.get.mockReturnValue(ok([]));
+    axiosClient.get.mockReturnValue(ok({ membershipId: "m1", revision: 0 }));
     await users.mutateMember("m1", { action: "Suspend", reason: "r" }, "tok");
     const suspend = axiosClient.post.mock.calls[1][1];
     expect(suspend.expectedRevision).toBe(0);
     expect(suspend).not.toHaveProperty("role");
+  });
+
+  test("mutazione con la revisione del dettaglio già letto: nessuna rilettura", async () => {
+    axiosClient.post.mockReturnValue(ok({ status: "active", roles: [] }));
+    await users.mutateMember("m1", { action: "Suspend", reason: "r", expectedRevision: 9 }, "tok");
+    expect(axiosClient.get).not.toHaveBeenCalled();
+    expect(axiosClient.post.mock.calls[0][1].expectedRevision).toBe(9);
+  });
+
+  test("mutazione senza revisione nel DTO: errore chiaro, nessuna POST", async () => {
+    axiosClient.get.mockReturnValue(ok({ membershipId: "m1" }));
+    await expect(users.mutateMember("m1", { action: "Suspend", reason: "r" }, "tok")).rejects.toThrow(/revisione del membro/);
+    expect(axiosClient.post).not.toHaveBeenCalled();
   });
 });
