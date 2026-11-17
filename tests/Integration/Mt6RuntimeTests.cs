@@ -166,6 +166,36 @@ public sealed class Mt6RuntimeTests
     }
 
     [Fact]
+    public async Task CorsExposesCorrelationIdOnlyToAdmittedOrigins()
+    {
+        static async Task<HttpResponseMessage> Get(Mt3cHosting.ProgramHost host, string origin)
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get, "/health/live");
+            request.Headers.Add("Origin", origin);
+            return await host.Client.SendAsync(request);
+        }
+        await using (var host = await Start("--Transport:AllowedOrigins:0=https://approved.example.test"))
+        {
+            using var admitted = await Get(host, "https://approved.example.test");
+            Assert.Equal(HttpStatusCode.OK, admitted.StatusCode);
+            Assert.Equal("https://approved.example.test", admitted.Headers.GetValues("Access-Control-Allow-Origin").Single());
+            Assert.Contains("X-Correlation-ID", admitted.Headers.GetValues("Access-Control-Expose-Headers").SelectMany(v => v.Split(',', StringSplitOptions.TrimEntries)), StringComparer.OrdinalIgnoreCase);
+            Assert.True(admitted.Headers.Contains("X-Correlation-ID"));
+            using var foreign = await Get(host, "https://evil.example.test");
+            Assert.Equal(HttpStatusCode.OK, foreign.StatusCode);
+            Assert.False(foreign.Headers.Contains("Access-Control-Allow-Origin"));
+            Assert.False(foreign.Headers.Contains("Access-Control-Expose-Headers"));
+        }
+        // No configured origin: no CORS header at all, even for an origin admitted elsewhere.
+        await using (var closed = await Start())
+        {
+            using var response = await Get(closed, "https://approved.example.test");
+            Assert.False(response.Headers.Contains("Access-Control-Allow-Origin"));
+            Assert.False(response.Headers.Contains("Access-Control-Expose-Headers"));
+        }
+    }
+
+    [Fact]
     public async Task SensitivePostRateLimitCannotBeEvadedWithForwardedIpAndDoesNotBlockHealth()
     {
         await using var host = await Start("--Transport:SensitivePermitLimit=3");

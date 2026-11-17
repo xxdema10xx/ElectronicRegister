@@ -39,8 +39,10 @@ public static class OperationalPipeline
         });
         builder.Services.AddCors(o => o.AddPolicy("ConfiguredOrigins", p =>
         {
+            // X-Correlation-ID is readable by browser clients of the admitted origins only;
+            // without configured origins no CORS header is ever emitted.
             if (policy.Origins.Length != 0)
-                p.WithOrigins(policy.Origins).AllowAnyHeader().AllowAnyMethod();
+                p.WithOrigins(policy.Origins).AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("X-Correlation-ID");
         }));
         builder.Services.AddHttpsRedirection(o => o.HttpsPort = builder.Configuration.GetValue<int?>("Transport:HttpsPort") ?? 443);
         builder.Services.AddHsts(o =>

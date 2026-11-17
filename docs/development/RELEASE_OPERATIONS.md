@@ -26,6 +26,8 @@ and service identities with OS ACLs. No default signing key, DB password, operat
 authority or invitation provider is shipped.
 
 CORS defaults closed; list exact approved HTTPS origins. Credentials are not enabled.
+For the approved origins only, responses expose `X-Correlation-ID` (`Access-Control-Expose-Headers`),
+so browser clients can quote it when reporting an error; other origins receive no CORS header.
 TLS must terminate at an owner-selected proxy or Kestrel certificate. Configure only
 the proxy's exact IP addresses in Transport:KnownProxies, one forwarding hop.
 Restrict network access so clients cannot bypass that proxy. No trust-all forwarded
