@@ -162,6 +162,9 @@ __pycache__/
 # Platform identity successor er-platform-identity-1 (reviewed public SQL only).
 !/migrations/platform-identity/001_expand.sql
 !/migrations/platform-identity/002_validate.sql
+# Grade scale successor er-grade-scale-1 (reviewed public SQL only).
+!/migrations/grade-scale/001_expand.sql
+!/migrations/grade-scale/002_validate.sql
 /infra/staging/__pycache__/
 
 /.migration-tools/
