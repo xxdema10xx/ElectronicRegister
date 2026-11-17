@@ -27,10 +27,19 @@ const ROLES = [
 ];
 const STATUS_LABEL = { active: "Attivo", suspended: "Sospeso", pending: "In attesa", left: "Uscito" };
 export const MEMBER_CHANGED_MESSAGE = "Il membro è stato modificato nel frattempo: ho ricaricato i dati, controlla e riprova.";
-export const LAST_ADMIN_MESSAGE = "Non si può togliere l'ultimo amministratore attivo dell'istituto.";
+export const LAST_ADMIN_MESSAGE = "Non si può togliere l'ultimo amministratore attivo dell'istituto: prima assegna il ruolo di amministratore a un altro membro.";
+export const NO_OP_MESSAGE = "La modifica non ha effetto: il membro ha già questo ruolo o questo stato. Ho ricaricato i dati.";
+export const EVENT_CONFLICT_MESSAGE = "La stessa richiesta risulta già inviata con dati diversi: ho ricaricato i dati, controlla e riprova.";
+// Motivo del 409 dal `code` del server (POST /institution/admin/members/{id}/mutations); senza code, testo neutro
+const CONFLICT_MESSAGES = {
+  LastAdministrator: LAST_ADMIN_MESSAGE,
+  StaleRevision: MEMBER_CHANGED_MESSAGE,
+  NoOp: NO_OP_MESSAGE,
+  EventIdConflict: EVENT_CONFLICT_MESSAGE,
+};
+export const memberConflictMessage = (e) => CONFLICT_MESSAGES[e?.code] || MEMBER_CHANGED_MESSAGE;
 // Il 409 delle mutazioni è generico (revisione cambiata, transizione non valida, ultimo amministratore):
 // il caso "ultimo amministratore" si dice solo se è il server a indicarlo (titolo/detail o code)
-const isLastAdmin = (e) => /ultimo\s+amministratore|last[\s._-]?admin/i.test(`${e?.problem || ""} ${e?.code || ""}`);
 
 export default function UsersScreen() {
   const { token, user } = useAuth();
@@ -81,7 +90,7 @@ export default function UsersScreen() {
         // Ruoli, stato e revisione possono essere cambiati: si ricaricano prima di far riprovare
         await refreshEditing(editing.membershipId).catch(() => {});
         load();
-        Alert.alert("Modifica non applicata", isLastAdmin(e) ? LAST_ADMIN_MESSAGE : MEMBER_CHANGED_MESSAGE);
+        Alert.alert("Modifica non applicata", memberConflictMessage(e));
       } else Alert.alert("Errore", e.message);
     } finally { setBusy(false); }
   }

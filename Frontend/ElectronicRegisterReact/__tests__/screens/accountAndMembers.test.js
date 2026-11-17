@@ -1,7 +1,7 @@
 // Membri dell'istituto (admin) e profilo dell'utente.
 import { Alert } from "react-native";
 import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
-import UsersScreen, { LAST_ADMIN_MESSAGE, MEMBER_CHANGED_MESSAGE } from "../../src/screens/UsersScreen";
+import UsersScreen, { EVENT_CONFLICT_MESSAGE, LAST_ADMIN_MESSAGE, MEMBER_CHANGED_MESSAGE, NO_OP_MESSAGE } from "../../src/screens/UsersScreen";
 import ProfileScreen from "../../src/screens/ProfileScreen";
 import * as userService from "../../src/api/userService";
 import * as authService from "../../src/api/authService";
@@ -161,15 +161,22 @@ describe("Membri", () => {
     expect(screen.getAllByText("Togli")).toHaveLength(2);
   });
 
-  test("409 che il server indica come ultimo amministratore: messaggio specifico", async () => {
-    userService.mutateMember.mockRejectedValue(Object.assign(new Error("x"), { status: 409, code: "membership.last-admin" }));
+  test.each([
+    ["LastAdministrator", LAST_ADMIN_MESSAGE],
+    ["StaleRevision", MEMBER_CHANGED_MESSAGE],
+    ["NoOp", NO_OP_MESSAGE],
+    ["EventIdConflict", EVENT_CONFLICT_MESSAGE],
+    ["CodiceSconosciuto", MEMBER_CHANGED_MESSAGE],
+  ])("409 con code %s: messaggio dedicato e membro ricaricato", async (code, message) => {
+    userService.mutateMember.mockRejectedValue(Object.assign(new Error("x"), { status: 409, code }));
     userService.getMember.mockResolvedValue({ membershipId: "m1", userId: "u-admin", email: "admin@scuola.it", status: "active", roles: ["InstitutionAdmin"], revision: 1 });
     renderAs("admin", <UsersScreen />);
     await flush();
     await act(async () => { fireEvent.press(screen.getAllByLabelText("Gestisci membro")[0]); });
     fireEvent.changeText(screen.getByPlaceholderText("Es. incarico di segreteria"), "prova");
     await act(async () => { fireEvent.press(screen.getAllByText("Togli")[0]); });
-    expect(Alert.alert).toHaveBeenLastCalledWith("Modifica non applicata", LAST_ADMIN_MESSAGE);
+    expect(Alert.alert).toHaveBeenLastCalledWith("Modifica non applicata", message);
+    expect(userService.getMember).toHaveBeenCalledTimes(2); // apertura + ricarica dopo il 409
   });
 });
 
