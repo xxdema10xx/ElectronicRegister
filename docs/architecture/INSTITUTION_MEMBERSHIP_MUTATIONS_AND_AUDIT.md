@@ -29,7 +29,31 @@ regolate dal solo flag directory. Nessun endpoint di provisioning/onboarding agg
 
 400 input invalido, 401 autenticazione invalida, 403 autorizzazione/revoca/self,
 404 target invisibile/assente, 409 conflitto di dominio o concorrenza SQL riconosciuta.
-Errori imprevisti restano 500 opachi. Tutte le regole, il mutex, Last Admin, revision,
+Errori imprevisti restano 500 opachi.
+
+### 409 di POST /api/institution/admin/members/{membershipId}/mutations
+
+Titolo invariato (`Conflitto sulla membership istituzionale`); il ProblemDetails porta in piu un
+campo `code` che distingue il conflitto. Nessun 409 cambia la revision ne aggiunge eventi di audit.
+
+| `code` | Quando |
+|---|---|
+| `LastAdministrator` | Sospensione o rimozione del ruolo InstitutionAdmin dell'ultimo amministratore attivo. Difensivo: via HTTP l'attore e sempre un altro admin attivo (l'autoamministrazione e 403), quindi oggi non si presenta. |
+| `StaleRevision` | `expectedRevision` diversa dalla revision corrente (`InstitutionMemberDto.revision`), anche se esaurita. Rileggere il membro e decidere di nuovo. |
+| `EventIdConflict` | `eventId` gia usato nell'istituto per un intento diverso (azione, ruolo, target, revision o motivo). Stesso intento: 200 con il risultato originale. |
+| `NoOp` | Lo stato richiesto c'e gia: ruolo gia presente/assente, membro gia sospeso/attivo. |
+| `InvalidTransition` | Azione non ammessa dallo stato corrente (`pending`, `left`): niente onboarding o rejoin impliciti. |
+| `ConcurrentChange` | Conflitto di scrittura concorrente rilevato (riga non aggiornata, chiave duplicata, deadlock/lock timeout SQL). Rileggere e riprovare. |
+
+```json
+{ "title": "Conflitto sulla membership istituzionale", "status": 409, "detail": "Conflitto sulla membership istituzionale", "code": "StaleRevision" }
+```
+
+Il `code` `ConcurrentChange` compare anche sui 409 SQL delle altre azioni con `MembershipApiErrors`
+(solo aggiunta di un campo). Le altre `MembershipConflictException` senza codice (onboarding,
+governance, account) restano invariate.
+
+Tutte le regole, il mutex, Last Admin, revision,
 idempotenza e audit rimangono nel flusso D, con rivalidazione sotto lock e incremento
 della sola security generation SQL. Le proposte storiche di quattro POST sotto
 non descrivono la superficie effettivamente implementata in E.
@@ -41,7 +65,8 @@ rimozione ruolo e sospensione/riattivazione. Il protocollo sotto è implementato
 dal repository IAM separato dai writer tecnici Provisioning. ExpectedRevision è
 esattamente la security generation persistita: lettura separata sotto lock,
 avanzamento dei soli trigger, nessun secondo contatore C#. No-op, revision obsolete
-e riutilizzi conflittuali di EventId producono MembershipConflictException.
+e riutilizzi conflittuali di EventId producono MembershipConflictException, con codice
+`NoOp`, `StaleRevision` o `EventIdConflict` (vedi tabella dei 409).
 Pending/Left non sono onboarding o rejoin impliciti. Tutte le automutazioni sono negate.
 
 Il ledger `institution_membership_event` conserva intento SHA256, attore verificato,
@@ -261,8 +286,8 @@ Audit e mutazione devono condividere commit/rollback; testare fault prima/dopo a
 L'identita dell'attore tecnico resta da definire prima di ammettere quel writer nel ledger.
 
 Replay: hash canonico di tenant, attore, target, action, ruolo/stato, motivo, revision.
-Stesso EventId+intento -> risultato originale; intento diverso ->409; revision obsoleta
-->409. Conservare unicita EventId nel tenant e serializzare il controllo con il mutex.
+Stesso EventId+intento -> risultato originale; intento diverso ->409 `EventIdConflict`;
+revision obsoleta ->409 `StaleRevision`. Conservare unicita EventId nel tenant e serializzare il controllo con il mutex.
 Nessun tentativo rifiutato viene registrato come mutazione riuscita.
 
 ## API previste, tutte non implementate e chiuse

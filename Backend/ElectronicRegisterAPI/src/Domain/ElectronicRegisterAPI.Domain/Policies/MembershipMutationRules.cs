@@ -16,7 +16,7 @@ public static class MembershipMutationRules
     public static void RequireLastAdmin(bool removesActiveAdmin, long otherActiveAdmins)
     {
         if (removesActiveAdmin && otherActiveAdmins < 1)
-            throw new MembershipConflictException();
+            throw new MembershipConflictException(MembershipConflictException.LastAdministrator);
     }
 
     public static void RequireTransition(MembershipMutation request, MembershipStatus status, IReadOnlyCollection<InstitutionRole> roles)
@@ -29,7 +29,17 @@ public static class MembershipMutationRules
             MembershipMutationAction.Reactivate => status == MembershipStatus.Suspended,
             _ => false
         };
-        if (!valid)
-            throw new MembershipConflictException();
+        if (valid)
+            return;
+        // Already in the requested state: the same request would change nothing.
+        var noOp = request.Action switch
+        {
+            MembershipMutationAction.AddRole => (status is MembershipStatus.Active or MembershipStatus.Suspended) && roles.Contains(request.Role!.Value),
+            MembershipMutationAction.RemoveRole => (status is MembershipStatus.Active or MembershipStatus.Suspended) && !roles.Contains(request.Role!.Value),
+            MembershipMutationAction.Suspend => status == MembershipStatus.Suspended,
+            MembershipMutationAction.Reactivate => status == MembershipStatus.Active,
+            _ => false
+        };
+        throw new MembershipConflictException(noOp ? MembershipConflictException.NoOp : MembershipConflictException.InvalidTransition);
     }
 }

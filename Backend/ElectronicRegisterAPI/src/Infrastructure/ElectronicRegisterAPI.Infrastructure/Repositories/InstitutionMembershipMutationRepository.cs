@@ -40,7 +40,7 @@ internal sealed partial class InstitutionMembershipMutationRepository(
         // Detect conflicting EventId reuse independently of whether the proposed new
         // target exists. Neither a foreign nor an absent ID can change this outcome.
         if (prior is not null && prior.RequestHash != hash)
-            throw new MembershipConflictException();
+            throw new MembershipConflictException(MembershipConflictException.EventIdConflict);
         var target = await db.InstitutionMemberships.AsNoTracking().Where(m => m.InstitutionId == actor.InstitutionId && m.Id == request.MembershipId).Select(m => new { m.Status, Roles = m.InstitutionMembershipRoles.Select(r => r.Role).ToList() }).SingleOrDefaultAsync(ct) ?? throw new KeyNotFoundException("Membership non disponibile.");
         var revision = await db.InstitutionMembershipSecurityStates.AsNoTracking().Where(s => s.InstitutionId == actor.InstitutionId && s.MembershipId == request.MembershipId).Select(s => (long? )s.SecurityGeneration).SingleOrDefaultAsync(ct);
         if (revision is null || revision < 0)
@@ -52,7 +52,7 @@ internal sealed partial class InstitutionMembershipMutationRepository(
         }
 
         if (revision != request.ExpectedRevision || revision == long.MaxValue)
-            throw new MembershipConflictException();
+            throw new MembershipConflictException(MembershipConflictException.StaleRevision);
         var status = Enum.Parse<MembershipStatus>(target.Status, true);
         var roles = target.Roles.Select(Enum.Parse<InstitutionRole>).OrderBy(x => x.ToString(), StringComparer.Ordinal).ToArray();
         MembershipMutationRules.RequireTransition(request, status, roles);
@@ -83,7 +83,7 @@ internal sealed partial class InstitutionMembershipMutationRepository(
         }
 
         if (affected != 1)
-            throw new MembershipConflictException();
+            throw new MembershipConflictException(MembershipConflictException.ConcurrentChange);
         // D-C: a membership active again reopens its Closed account in this transaction
         // (password unchanged, identity generation advanced once, lifecycle event appended).
         if (request.Action == MembershipMutationAction.Reactivate)

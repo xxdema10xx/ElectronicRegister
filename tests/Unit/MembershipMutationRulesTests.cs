@@ -26,18 +26,35 @@ public sealed class MembershipMutationRulesTests
     [InlineData(true,0,true)][InlineData(true,1,false)][InlineData(false,0,false)]
     public void LastAdminRequiresAnotherActiveAdmin(bool removes,long others,bool denied)
     {
-        if(denied)Assert.Throws<MembershipConflictException>(()=>MembershipMutationRules.RequireLastAdmin(removes,others));
+        if(denied)Assert.Equal(MembershipConflictException.LastAdministrator,Assert.Throws<MembershipConflictException>(()=>MembershipMutationRules.RequireLastAdmin(removes,others)).Code);
         else MembershipMutationRules.RequireLastAdmin(removes,others);
     }
     [Theory]
     [InlineData(MembershipStatus.Pending)][InlineData(MembershipStatus.Left)]
-    public void IamDoesNotImplementOnboardingOrRejoin(MembershipStatus status)=>
-        Assert.Throws<MembershipConflictException>(()=>MembershipMutationRules.RequireTransition(Request(),status,Array.Empty<InstitutionRole>()));
+    public void IamDoesNotImplementOnboardingOrRejoin(MembershipStatus status)
+    {
+        foreach(var r in new[]{Request(),Request() with{Action=MembershipMutationAction.Suspend,Role=null},Request() with{Action=MembershipMutationAction.Reactivate,Role=null}})
+            Assert.Equal(MembershipConflictException.InvalidTransition,Assert.Throws<MembershipConflictException>(()=>MembershipMutationRules.RequireTransition(r,status,Array.Empty<InstitutionRole>())).Code);
+        // A role already present is not a no-op outside Active/Suspended: the action itself is not allowed.
+        Assert.Equal(MembershipConflictException.InvalidTransition,Assert.Throws<MembershipConflictException>(()=>MembershipMutationRules.RequireTransition(Request(),status,new[]{InstitutionRole.Teacher})).Code);
+    }
     [Fact]
     public void NoopRoleAndStatusChangesAreConflicts()
     {
-        Assert.Throws<MembershipConflictException>(()=>MembershipMutationRules.RequireTransition(Request(),MembershipStatus.Active,new[]{InstitutionRole.Teacher}));
-        Assert.Throws<MembershipConflictException>(()=>MembershipMutationRules.RequireTransition(Request() with{Action=MembershipMutationAction.RemoveRole},MembershipStatus.Active,Array.Empty<InstitutionRole>()));
-        Assert.Throws<MembershipConflictException>(()=>MembershipMutationRules.RequireTransition(Request() with{Action=MembershipMutationAction.Reactivate,Role=null},MembershipStatus.Active,new[]{InstitutionRole.Teacher}));
+        string? Code(MembershipMutation r,MembershipStatus status,params InstitutionRole[] roles)=>Assert.Throws<MembershipConflictException>(()=>MembershipMutationRules.RequireTransition(r,status,roles)).Code;
+        Assert.Equal(MembershipConflictException.NoOp,Code(Request(),MembershipStatus.Active,InstitutionRole.Teacher));
+        Assert.Equal(MembershipConflictException.NoOp,Code(Request(),MembershipStatus.Suspended,InstitutionRole.Teacher));
+        Assert.Equal(MembershipConflictException.NoOp,Code(Request() with{Action=MembershipMutationAction.RemoveRole},MembershipStatus.Active));
+        Assert.Equal(MembershipConflictException.NoOp,Code(Request() with{Action=MembershipMutationAction.Reactivate,Role=null},MembershipStatus.Active,InstitutionRole.Teacher));
+        Assert.Equal(MembershipConflictException.NoOp,Code(Request() with{Action=MembershipMutationAction.Suspend,Role=null},MembershipStatus.Suspended,InstitutionRole.Teacher));
+    }
+    [Fact]
+    public void ConflictCodesAreTheDocumentedContract()
+    {
+        Assert.Equal(new[]{"LastAdministrator","StaleRevision","EventIdConflict","NoOp","InvalidTransition","ConcurrentChange"},
+            new[]{MembershipConflictException.LastAdministrator,MembershipConflictException.StaleRevision,MembershipConflictException.EventIdConflict,
+                MembershipConflictException.NoOp,MembershipConflictException.InvalidTransition,MembershipConflictException.ConcurrentChange});
+        Assert.Null(new MembershipConflictException().Code);
+        Assert.Equal("Conflitto sulla membership istituzionale.",new MembershipConflictException(MembershipConflictException.NoOp).Message);
     }
 }

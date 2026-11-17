@@ -16,7 +16,9 @@ public sealed class MembershipApiErrorsAttribute : ExceptionFilterAttribute
         var ex = context.Exception;
         if (ex is DbUpdateConcurrencyException || ex is MySqlException { Number: 1062 or 1205 or 1213 } || ex is DbUpdateException { InnerException: MySqlException { Number: 1062 or 1205 or 1213 } })
         {
-            context.Result = new ObjectResult(new ProblemDetails { Status = 409, Title = "Conflitto sulla membership istituzionale" })
+            var problem = new ProblemDetails { Status = 409, Title = "Conflitto sulla membership istituzionale" };
+            problem.Extensions["code"] = ElectronicRegisterAPI.Domain.Exceptions.MembershipConflictException.ConcurrentChange;
+            context.Result = new ObjectResult(problem)
             {
                 StatusCode = 409
             };

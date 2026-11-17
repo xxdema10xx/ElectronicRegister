@@ -110,17 +110,18 @@ public sealed class Mt5dMembershipMutationTests : IAsyncLifetime
         var r=await Request();var first=await Apply(r);
         await Apply(await Request(MembershipMutationAction.Suspend,null));
         var replay=await Apply(r);Assert.Equal(first.EventId,replay.EventId);Assert.Equal(first.Revision,replay.Revision);Assert.Equal(first.Status,replay.Status);Assert.Equal(first.Roles,replay.Roles);
-        await Assert.ThrowsAsync<MembershipConflictException>(()=>Apply(r with{Reason="Different intent"}));
-        await Assert.ThrowsAsync<MembershipConflictException>(()=>Apply(r with{ExpectedRevision=r.ExpectedRevision+1}));
-        await Assert.ThrowsAsync<MembershipConflictException>(()=>Apply(r with{MembershipId=_members[3]}));Assert.Equal(2,await Events());
-        await Assert.ThrowsAsync<MembershipConflictException>(()=>Apply(r with{MembershipId=Guid.NewGuid()}));
+        Assert.Equal(MembershipConflictException.EventIdConflict,(await Assert.ThrowsAsync<MembershipConflictException>(()=>Apply(r with{Reason="Different intent"}))).Code);
+        Assert.Equal(MembershipConflictException.EventIdConflict,(await Assert.ThrowsAsync<MembershipConflictException>(()=>Apply(r with{ExpectedRevision=r.ExpectedRevision+1}))).Code);
+        Assert.Equal(MembershipConflictException.EventIdConflict,(await Assert.ThrowsAsync<MembershipConflictException>(()=>Apply(r with{MembershipId=_members[3]}))).Code);Assert.Equal(2,await Events());
+        Assert.Equal(MembershipConflictException.EventIdConflict,(await Assert.ThrowsAsync<MembershipConflictException>(()=>Apply(r with{MembershipId=Guid.NewGuid()}))).Code);
     }
     [Theory]
     [InlineData("stale")][InlineData("noop-role")][InlineData("noop-status")]
     public async Task ConflictDoesNotAdvanceRevisionOrAppendAudit(string kind)
     {
         var r=await Request();r=kind switch{"stale"=>r with{ExpectedRevision=0},"noop-role"=>r with{Role=InstitutionRole.Teacher},_=>r with{Action=MembershipMutationAction.Reactivate,Role=null}};
-        await Assert.ThrowsAsync<MembershipConflictException>(()=>Apply(r));Assert.Equal(1,await Generation());Assert.Equal(0,await Events());
+        var conflict=await Assert.ThrowsAsync<MembershipConflictException>(()=>Apply(r));Assert.Equal(1,await Generation());Assert.Equal(0,await Events());
+        Assert.Equal(kind=="stale"?MembershipConflictException.StaleRevision:MembershipConflictException.NoOp,conflict.Code);
     }
     [Theory]
     [InlineData("non-admin")][InlineData("cross-tenant")][InlineData("self")][InlineData("suspended")][InlineData("stale-context")]

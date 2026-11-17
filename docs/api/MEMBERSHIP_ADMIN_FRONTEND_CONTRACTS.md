@@ -57,7 +57,8 @@ Esempio di elemento (JoinedAt e il timestamp persistito, non data di invito):
 `revision` (intero, campo additivo) e la security generation persistita della membership
 nel tenant selezionato: e esattamente il valore che POST
 `/api/institution/admin/members/{membershipId}/mutations` confronta con `ExpectedRevision`.
-Inviare il valore appena letto; un valore diverso -> 409 senza modifiche, e dopo una mutazione
+Inviare il valore appena letto; un valore diverso -> 409 senza modifiche (`code: "StaleRevision"`;
+gli altri codici dei 409 sono nella tabella del documento sulle mutazioni), e dopo una mutazione
 riuscita rileggere il membro per ottenere la revisione aggiornata (il replay con lo stesso
 `eventId` restituisce lo stesso esito). Non e un contatore separato ne un dato di sessione,
 token o credenziale. Le mutazioni (azioni, Last Admin, audit, errori) sono descritte in
