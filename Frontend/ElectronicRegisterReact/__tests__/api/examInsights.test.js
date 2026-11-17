@@ -120,7 +120,7 @@ describe("candidati al recupero (step Studenti)", () => {
 
 describe("libretto dello studente", () => {
   test("una riga per esame consegnato, dal più recente; esito letto solo se corretto", async () => {
-    const api = fakeApi({ results: { s1: { status: 1, passed: true, grade: 9 } } });
+    const api = fakeApi({ results: { s1: { status: 1, passed: true, grade: 27 } } });
     const assigned = [
       { id: "e1", submissionStatus: "graded", submissionId: "s1", submittedAt: "2026-11-10T10:00:00Z" },
       { id: "e2", submissionStatus: "pending_review", submissionId: "s2", submittedAt: "2026-11-12T10:00:00Z" },
@@ -128,7 +128,7 @@ describe("libretto dello studente", () => {
     ];
     const rows = await getStudentBooklet(api, assigned);
     expect(rows.map(r => r.item.id)).toEqual(["e2", "e1"]);
-    expect(rows[1].r).toMatchObject({ title: "Esame superato", grade: 9, showGrade: true });
+    expect(rows[1].r).toMatchObject({ title: "Esame superato", grade: 27, showGrade: true });
     expect(rows[0].r.title).toBe("In correzione");
     expect(api.getResult).toHaveBeenCalledTimes(1);
   });

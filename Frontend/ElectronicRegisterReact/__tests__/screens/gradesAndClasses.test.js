@@ -117,11 +117,11 @@ describe("Voti: libretto dello studente", () => {
   test("un esame per riga con voto o stato", async () => {
     studentExams.useStudentExams.mockReturnValue({ assigned: [], loaded: true, error: null });
     studentExams.useStudentBooklet.mockReturnValue([
-      { item: { id: "e1", name: "Reti", submittedAt: "2026-11-10T10:00:00Z" }, r: { showGrade: true, grade: 8, passed: true } },
+      { item: { id: "e1", name: "Reti", submittedAt: "2026-11-10T10:00:00Z" }, r: { showGrade: true, grade: 24, passed: true } },
       { item: { id: "e2", name: "Java", isRetake: true }, r: { showGrade: false, title: "In correzione", status: "pending_review" } },
     ]);
     renderAs("student", <GradesScreen />);
-    ["Libretto", "Reti", "8", "Superato", "Java · Recupero", "In correzione"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
+    ["Libretto", "Reti", "24", "Superato", "Java · Recupero", "In correzione"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
   });
 
   test("nessun esame svolto", () => {

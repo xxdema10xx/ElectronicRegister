@@ -42,8 +42,8 @@ beforeEach(() => {
     getSession: jest.fn().mockResolvedValue({ submissionId: "sub2", deadlineAt: iso(hour), currentRevision: 4,
       exam: { name: "Java", questions: [{ id: "qa", position: 0, type: 1, options: [] }, { id: "qb", position: 1, type: 2, options: [] }] },
       answers: [{ questionId: "qa", selectedOptionIds: ["o1", "o2"] }, { questionId: "qb", openText: "risposta" }] }),
-    submitExpired: jest.fn().mockResolvedValue({ status: "graded", passed: false, grade: 4, totalScore: 4, maxScore: 10 }),
-    getResult: jest.fn().mockResolvedValue({ status: "graded", passed: true, grade: 8, totalScore: 16, maxScore: 20, submittedAt: "2026-11-10T09:00:00Z" }),
+    submitExpired: jest.fn().mockResolvedValue({ status: "graded", passed: false, grade: 12, totalScore: 4, maxScore: 10 }),
+    getResult: jest.fn().mockResolvedValue({ status: "graded", passed: true, grade: 24, totalScore: 16, maxScore: 20, submittedAt: "2026-11-10T09:00:00Z" }),
   });
 });
 afterEach(() => setStorageUser(null));
@@ -158,7 +158,7 @@ test("esame scaduto: consegna con le risposte già salvate", async () => {
   await act(async () => { fireEvent.press(screen.getByText("Inglese")); });
   expect(mockApi.submitExpired).toHaveBeenCalledWith("sub3");
   expect(screen.getByText("Consegna automatica: tempo scaduto")).toBeTruthy();
-  expect(screen.getByText("Voto: 4")).toBeTruthy();
+  expect(screen.getByText("Voto: 12")).toBeTruthy();
 });
 
 test("esito di un esame valutato, poi ritorno all'elenco", async () => {
@@ -166,7 +166,7 @@ test("esito di un esame valutato, poi ritorno all'elenco", async () => {
   await flush();
   await act(async () => { fireEvent.press(screen.getByText("Basi di dati")); });
   expect(mockApi.getResult).toHaveBeenCalledWith("sub4");
-  ["Esame superato", "Punteggio: 16 / 20", "Voto: 8"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
+  ["Esame superato", "Punteggio: 16 / 20", "Voto: 24"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
   await act(async () => { fireEvent.press(screen.getByText("Torna agli esami")); });
   expect(screen.getByText("I miei esami")).toBeTruthy();
 });

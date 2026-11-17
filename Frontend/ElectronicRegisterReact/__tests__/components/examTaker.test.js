@@ -192,13 +192,13 @@ test("le risposte non ancora inviate si salvano prima di segnalare l'uscita", as
 
 test("409 su una violazione con la prova già consegnata: si mostra il risultato, nessun errore generico", async () => {
   const conflict = Object.assign(new Error("Operazione non consentita"), { status: 409 });
-  const getResult = jest.fn().mockResolvedValue({ status: 1, submitReason: 0, passed: true, grade: 8 });
+  const getResult = jest.fn().mockResolvedValue({ status: 1, submitReason: 0, passed: true, grade: 24 });
   const { api, onFinish } = setup({ api: { reportViolation: jest.fn().mockRejectedValue(conflict), getResult } });
   await act(async () => appStateChange()("background"));
   expect(getResult).toHaveBeenCalledWith("sub1");
   expect(api.submitExam).not.toHaveBeenCalled();
   expect(onFinish).toHaveBeenCalledWith(expect.objectContaining({
-    auto: true, excluded: false, notice: ALREADY_SUBMITTED_MESSAGE, result: { status: 1, submitReason: 0, passed: true, grade: 8 },
+    auto: true, excluded: false, notice: ALREADY_SUBMITTED_MESSAGE, result: { status: 1, submitReason: 0, passed: true, grade: 24 },
   }));
 });
 

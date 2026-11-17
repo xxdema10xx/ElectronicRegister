@@ -182,19 +182,19 @@ describe("risposte dello studente", () => {
 
 describe("esito per lo studente", () => {
   test("in correzione: niente voto", () => {
-    expect(resultView({ status: 2, grade: 8 })).toMatchObject({ status: "pending_review", title: "In correzione", showGrade: false });
+    expect(resultView({ status: 2, grade: 24 })).toMatchObject({ status: "pending_review", title: "In correzione", showGrade: false });
   });
 
   test("FailedAuto non è un esito didattico: 'In attesa di valutazione', mai 'non superato'", () => {
     expect(resultView({ status: "FailedAuto" })).toMatchObject({ title: "In attesa di valutazione", showGrade: false });
-    expect(resultView({ status: 3, passed: false, grade: 4 }).title).not.toMatch(/non superato/i);
+    expect(resultView({ status: 3, passed: false, grade: 12 }).title).not.toMatch(/non superato/i);
     expect(SUBMISSION_STATUS_LABEL.failed_auto).toBe("Da valutare");
   });
 
   test("valutato: superato o no, voto se rilasciato", () => {
-    expect(resultView({ status: 1, passed: true, grade: 8, totalScore: 16, maxScore: 20 }))
-      .toMatchObject({ title: "Esame superato", showGrade: true, grade: 8, totalScore: 16, maxScore: 20 });
-    expect(resultView({ status: 4, passed: false, grade: 4 })).toMatchObject({ title: "Esame non superato", showGrade: true });
+    expect(resultView({ status: 1, passed: true, grade: 24, totalScore: 16, maxScore: 20 }))
+      .toMatchObject({ title: "Esame superato", showGrade: true, grade: 24, totalScore: 16, maxScore: 20 });
+    expect(resultView({ status: 4, passed: false, grade: 12 })).toMatchObject({ title: "Esame non superato", showGrade: true });
     expect(resultView({ status: 1, passed: true, grade: null })).toMatchObject({ showGrade: false });
   });
 
