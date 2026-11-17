@@ -349,6 +349,7 @@ public sealed class Mt5bSecurityStateTests : IAsyncLifetime
     [Fact]
     public async Task Sql_FixtureGuardExcludesRealLegacyHolding()
     {
+        await LegacyTestHolding.EnsureAsync(_connection); // INC-012
         await using var c = await Open(); await using var tx = await c.BeginTransactionAsync();
         // 8.4 rejects BINARY with REGEXP; the owned branch uses the expression the
         // reviewed release derives for the same guard (tools/mysql84-remediation.cjs).

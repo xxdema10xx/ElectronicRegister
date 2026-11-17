@@ -281,6 +281,7 @@ public sealed class Mt5dMembershipMutationTests : IAsyncLifetime
     [Fact]
     public async Task OfflineGraphClassifiesValidatedIamLedgerWithoutChangingData()
     {
+        await LegacyTestHolding.EnsureAsync(_connection); // INC-012
         await Apply(await Request());var revision=await Generation();
         await using var c=await Open();await using var cmd=new MySqlCommand("SELECT id FROM institution WHERE code='MT3A_LEGACY_TEST'",c);
         var holding=Guid.Parse((await cmd.ExecuteScalarAsync())!.ToString()!);

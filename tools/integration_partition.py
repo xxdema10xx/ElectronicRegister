@@ -32,18 +32,6 @@ IAM_SECURITY_CLASSES = ('.Mt5bJwtTests', '.Mt5bSecurityStateTests', '.Mt5dMember
 # Reviewed exclusions: discovered and reported as SKIPPED with ID and reason, never
 # executed in CI. Any change must also update test_integration_partition.py.
 EXCLUDED_METHODS = {
-    'ElectronicRegisterAPI.Tests.Integration.Mt5bSecurityStateTests.Sql_FixtureGuardExcludesRealLegacyHolding':
-        ('INC-012', 'Observes the real legacy holding MT3A_LEGACY_TEST, absent from the fresh MySQL 8.4 bootstrap; decision in Lotto 6'),
-    'ElectronicRegisterAPI.Tests.Integration.Mt5dMembershipMutationTests.OfflineGraphClassifiesValidatedIamLedgerWithoutChangingData':
-        ('INC-012', 'Validates the offline ownership graph of the legacy holding MT3A_LEGACY_TEST, absent from the fresh MySQL 8.4 bootstrap; decision in Lotto 6'),
-    'ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_IdentityProfileFaultIsAtomicAndCannotChangeDidacticProfile':
-        ('INC-012', 'Legacy EF insert without explicit owner relies on the MT3A legacy holding, absent from the fresh MySQL 8.4 bootstrap'),
-    'ElectronicRegisterAPI.Tests.Integration.HistoricalExpiryBoundaryTests.HistoricalOwnerRemainsTechnicalOnlyAndDeliveryIsIdempotent':
-        ('INC-012', 'Reads mt3a_legacy_scope of the legacy holding, absent from the fresh MySQL 8.4 bootstrap'),
-    'ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph':
-        ('INC-012', 'Requires the legacy holding; with one database per method it is always absent'),
-    'ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.LegacyEfWritersStillReceiveTriggerDerivedOwners':
-        ('INC-012', 'Legacy EF writers need the MT3A legacy holding; with one database per method it is always absent'),
     'ElectronicRegisterAPI.Tests.Integration.Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched':
         ('INC-012', 'Legacy backfill tooling needs a local MySQL 8.0 mysqldump.exe (Windows), absent on the Linux runner'),
     'ElectronicRegisterAPI.Tests.Integration.Mysql84ReleaseTests.PublishedReleaseAndEmbeddedOnboardingValidationRunOnExactServer':
@@ -55,12 +43,7 @@ EXCLUDED_METHODS = {
 }
 # Reviewed theory-case exclusions (display names as listed by dotnet test --list-tests); the
 # other cases of the same method still run. Any change must also update the locking test.
-EXCLUDED_CASES = {
-    'ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Release_WorkerDispatchRevalidatesTenantStateUnderLock(state: "holding-active", workerFirst: True)':
-        ('INC-012', 'The holding-active state needs mt3a_legacy_scope of the legacy holding, absent from the fresh MySQL 8.4 bootstrap'),
-    'ElectronicRegisterAPI.Tests.Integration.Mt3dHttpTests.Release_WorkerDispatchRevalidatesTenantStateUnderLock(state: "holding-active", workerFirst: False)':
-        ('INC-012', 'The holding-active state needs mt3a_legacy_scope of the legacy holding, absent from the fresh MySQL 8.4 bootstrap'),
-}
+EXCLUDED_CASES = {}
 
 
 def owner(method):

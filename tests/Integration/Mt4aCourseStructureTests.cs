@@ -221,6 +221,7 @@ public sealed class Mt4aCourseStructureTests(IntegrationFixture fixture)
     });
 
     [Fact] public Task ExistingBackfillIsIdempotentWithAttributedMt4Graph()=>Pair(async(a,b)=>{
+        await LegacyTestHolding.EnsureAsync(fixture.ConnectionString); // INC-012
         var enrollment=Enrollment(a);
         await Repo(async r=>{await r.AddEnrollmentAsync(a.Tenant,enrollment);await r.LinkCampusAsync(a.Tenant,a.Edition,a.Campus);await r.AssignClassAsync(a.Tenant,a.Class,a.Edition);});
         var holding=Guid.Parse("4d543341-0000-4000-8000-000000000001");
@@ -235,6 +236,7 @@ public sealed class Mt4aCourseStructureTests(IntegrationFixture fixture)
     [Fact] public async Task LegacyEfWritersStillReceiveTriggerDerivedOwners()
     {
         Assert.True(fixture.IsAvailable,fixture.UnavailableReason);
+        await LegacyTestHolding.EnsureAsync(fixture.ConnectionString); // INC-012
         var pathId=Guid.NewGuid();var studentId=Guid.NewGuid();var holding=Guid.Parse("4d543341-0000-4000-8000-000000000001");
         try
         {

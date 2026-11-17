@@ -26,6 +26,7 @@ public sealed partial class Mt3dHttpTests
         Guid? oldHolding=null;
         if(state=="holding-active")
         {
+            await LegacyTestHolding.EnsureAsync(fixture.ConnectionString); // INC-012
             await Db(async db=>oldHolding=await db.Database.SqlQuery<Guid>($"SELECT institution_id AS Value FROM mt3a_legacy_scope WHERE scope='legacy'").SingleAsync());
             await Execute("UPDATE institution SET status='provisioning' WHERE id=@t; UPDATE mt3a_legacy_scope SET institution_id=@t WHERE scope='legacy'",("@t",_a));
         }

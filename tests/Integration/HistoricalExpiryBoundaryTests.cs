@@ -18,6 +18,7 @@ public sealed class HistoricalExpiryBoundaryTests(IntegrationFixture fixture)
     [Fact]
     public async Task HistoricalOwnerRemainsTechnicalOnlyAndDeliveryIsIdempotent()
     {
+        await LegacyTestHolding.EnsureAsync(fixture.ConnectionString); // INC-012
         var studentActor = Phase3.Student(await fixture.ResetScenarioAsync(IntegrationScenario.ExamRegression));
         Guid owner, submission;
         using (var scope = fixture.ScopeFactory.CreateScope())

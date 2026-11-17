@@ -31,18 +31,6 @@ class PartitionTests(unittest.TestCase):
     def test_reviewed_exclusions_are_exactly_the_locked_methods(self):
         # Changing the exclusion list requires changing this test in the same review.
         self.assertEqual(EXCLUDED_METHODS, {
-            PREFIX+'Mt5bSecurityStateTests.Sql_FixtureGuardExcludesRealLegacyHolding':
-                ('INC-012', 'Observes the real legacy holding MT3A_LEGACY_TEST, absent from the fresh MySQL 8.4 bootstrap; decision in Lotto 6'),
-            PREFIX+'Mt5dMembershipMutationTests.OfflineGraphClassifiesValidatedIamLedgerWithoutChangingData':
-                ('INC-012', 'Validates the offline ownership graph of the legacy holding MT3A_LEGACY_TEST, absent from the fresh MySQL 8.4 bootstrap; decision in Lotto 6'),
-            PREFIX+'Phase4_ExamLifecycleTests.Audit_IdentityProfileFaultIsAtomicAndCannotChangeDidacticProfile':
-                ('INC-012', 'Legacy EF insert without explicit owner relies on the MT3A legacy holding, absent from the fresh MySQL 8.4 bootstrap'),
-            PREFIX+'HistoricalExpiryBoundaryTests.HistoricalOwnerRemainsTechnicalOnlyAndDeliveryIsIdempotent':
-                ('INC-012', 'Reads mt3a_legacy_scope of the legacy holding, absent from the fresh MySQL 8.4 bootstrap'),
-            PREFIX+'Mt4aCourseStructureTests.ExistingBackfillIsIdempotentWithAttributedMt4Graph':
-                ('INC-012', 'Requires the legacy holding; with one database per method it is always absent'),
-            PREFIX+'Mt4aCourseStructureTests.LegacyEfWritersStillReceiveTriggerDerivedOwners':
-                ('INC-012', 'Legacy EF writers need the MT3A legacy holding; with one database per method it is always absent'),
             PREFIX+'Mt3aOwnershipTests.AmbiguousLegacyAuditAbortsBackfillAndLeavesEveryRealCellUntouched':
                 ('INC-012', 'Legacy backfill tooling needs a local MySQL 8.0 mysqldump.exe (Windows), absent on the Linux runner'),
             PREFIX+'Mysql84ReleaseTests.PublishedReleaseAndEmbeddedOnboardingValidationRunOnExactServer':
@@ -55,19 +43,17 @@ class PartitionTests(unittest.TestCase):
 
     def test_reviewed_case_exclusions_are_exactly_the_locked_cases(self):
         method = PREFIX+'Mt3dHttpTests.Release_WorkerDispatchRevalidatesTenantStateUnderLock'
-        reason = ('INC-012', 'The holding-active state needs mt3a_legacy_scope of the legacy holding, absent from the fresh MySQL 8.4 bootstrap')
-        self.assertEqual(EXCLUDED_CASES, {
-            method+'(state: "holding-active", workerFirst: True)': reason,
-            method+'(state: "holding-active", workerFirst: False)': reason,
-        })
+        # INC-012 resolved: the tests create the legacy holding in the owned fixture container.
+        self.assertEqual(EXCLUDED_CASES, {})
+        self.assertEqual({}, case_exclusions([method+'(state: "holding-active", workerFirst: True)'], 'full'))
 
     def test_case_filters_select_exactly_the_excluded_cases_or_fail_closed(self):
         method = PREFIX+'Mt3dHttpTests.Release_WorkerDispatchRevalidatesTenantStateUnderLock'
         cases = [method+'(state: "'+state+'", workerFirst: '+first+')' for state in ('archived', 'suspended', 'holding-active') for first in ('True', 'False')]
-        self.assertEqual(['DisplayName!~holding-active'], case_filters(cases, set(EXCLUDED_CASES)))
-        self.assertEqual(set(EXCLUDED_CASES), set(case_exclusions(cases, 'full')))
+        # The mechanism stays covered with an explicit set, independent of the (now empty) reviewed list.
+        excluded = {c for c in cases if 'holding-active' in c}
+        self.assertEqual(['DisplayName!~holding-active'], case_filters(cases, excluded))
         with self.assertRaises(ValueError): case_filters(cases, {cases[0]})
-        with self.assertRaises(ValueError): case_exclusions(cases[:4], 'full')
 
     def test_full_suite_is_separate_and_owns_only_its_explicit_classes(self):
         self.assertEqual({'full': 14}, EXTENDED_SHARDS)
@@ -84,7 +70,7 @@ class PartitionTests(unittest.TestCase):
         self.assertEqual(4, SHARDS['iam-security'])
         classes = ['Mt5bJwtTests', 'Mt5bSecurityStateTests', 'Mt5dMembershipMutationTests', 'Mysql84CapabilityScopeTests']
         excluded = {m for m in EXCLUDED_METHODS if m.rsplit('.', 2)[-2] in classes}
-        self.assertEqual(2, len(excluded))
+        self.assertEqual(0, len(excluded))  # INC-012 resolved for Mt5b/Mt5d
         methods = [PREFIX+c+'.Case'+str(n) for c in classes for n in range(5)] + sorted(excluded)
         for method in methods: self.assertEqual('iam-security', owner(method))
         shards = [partition(methods, 'iam-security', i, 4)[1] for i in range(4)]
@@ -92,7 +78,10 @@ class PartitionTests(unittest.TestCase):
         self.assertEqual(sorted(assigned), sorted(set(methods) - excluded))
         self.assertEqual(excluded, set(exclusions(methods, 'iam-security')))
         self.assertEqual({}, exclusions(methods, 'iam'))
-        with self.assertRaises(ValueError): exclusions(methods[:-1], 'iam-security')
+        # A stale reviewed exclusion still fails closed (checked on the domain that keeps exclusions).
+        full = [PREFIX+'Mt3dHttpTests.Case0'] + sorted(m for m in EXCLUDED_METHODS if owner(m) == 'full')
+        self.assertEqual(4, len(full) - 1)
+        with self.assertRaises(ValueError): exclusions(full[:-1], 'full')
         with self.assertRaises(ValueError): partition(methods, 'iam-security', 0, 3)
 
     def test_iam_owns_identity_account_and_provisioning_classes_in_two_shards(self):
@@ -132,7 +121,7 @@ class PartitionTests(unittest.TestCase):
         ok = evaluate(reports())
         self.assertEqual('PASS', ok['status'], ok['problems'])
         self.assertEqual(ok['cases'], ok['casesRun'] + ok['casesOfExcludedMethods'] + ok['casesExcluded'])
-        self.assertEqual((2, len([m for m in EXCLUDED_METHODS if owner(m) == 'full'])), (ok['casesExcluded'], ok['methodsExcluded']))
+        self.assertEqual((len(EXCLUDED_CASES), len([m for m in EXCLUDED_METHODS if owner(m) == 'full'])), (ok['casesExcluded'], ok['methodsExcluded']))
         self.assertEqual('FAIL', evaluate(reports(drop=3))['status'])
         self.assertEqual('FAIL', evaluate(reports(status='FAIL'))['status'])
         self.assertEqual('FAIL', evaluate(reports(short=dispatch))['status'])

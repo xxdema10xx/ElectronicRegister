@@ -42,6 +42,7 @@ public partial class Phase4_ExamLifecycleTests
     [InlineData(true)]
     public async Task Audit_IdentityProfileFaultIsAtomicAndCannotChangeDidacticProfile(bool teacherProfile)
     {
+        await LegacyTestHolding.EnsureAsync(fixture.ConnectionString); // INC-012: legacy EF writer derives its owner
         var id = Guid.NewGuid();
         var profile = Guid.NewGuid();
         var email = "audit-user-" + id.ToString("N") + "@example.test";
