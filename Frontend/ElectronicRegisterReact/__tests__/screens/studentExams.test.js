@@ -96,13 +96,48 @@ test("ripresa da un altro dispositivo: risposte lette dalla sessione sul server"
   expect(getRun("a2")).toMatchObject({ revision: 4, answers: { qa: ["o1", "o2"], qb: "risposta" } });
 });
 
-test("ripresa dopo un refresh: consegna locale, senza chiamare il server", async () => {
-  saveRun("a2", { submissionId: "sub2", exam: { name: "Java", questions: [{ id: "local" }] }, answers: {}, finished: false });
+test("ripresa dopo un refresh: chiama sempre il server e ignora una copia locale diversa", async () => {
+  saveRun("a2", { submissionId: "sub2", exam: { name: "Java", questions: [{ id: "local" }] }, answers: { local: "vecchia" }, revision: 99, finished: false });
   renderAs("student", <StudentExamsScreen />);
   await flush();
   await act(async () => { fireEvent.press(screen.getByText("Riprendi l'esame")); });
-  expect(mockApi.getSession).not.toHaveBeenCalled();
-  expect(screen.getByText("TAKER sub2 local")).toBeTruthy();
+  expect(mockApi.getSession).toHaveBeenCalledWith("sub2");
+  expect(screen.getByText("TAKER sub2 qa,qb")).toBeTruthy();
+  expect(getRun("a2")).toMatchObject({ revision: 4, answers: { qa: ["o1", "o2"], qb: "risposta" } });
+  expect(getRun("a2").answers.local).toBeUndefined();
+});
+
+test("ripresa: sessione non leggibile → errore con 'Riprova', mai la copia locale", async () => {
+  saveRun("a2", { submissionId: "sub2", exam: { name: "Java", questions: [{ id: "local" }] }, answers: {}, finished: false });
+  mockApi.getSession.mockRejectedValueOnce(Object.assign(new Error("Impossibile contattare il server."), { status: undefined }));
+  renderAs("student", <StudentExamsScreen />);
+  await flush();
+  await act(async () => { fireEvent.press(screen.getByText("Riprendi l'esame")); });
+  expect(screen.queryByText(/^TAKER/)).toBeNull();
+  expect(screen.getByText("Impossibile contattare il server.")).toBeTruthy();
+  await act(async () => { fireEvent.press(screen.getByText("Riprova")); });
+  expect(mockApi.getSession).toHaveBeenCalledTimes(2);
+  expect(screen.getByText("TAKER sub2 qa,qb")).toBeTruthy();
+});
+
+test("ripresa di una prova già consegnata (altro dispositivo): si mostra l'esito", async () => {
+  mockApi.getSession.mockResolvedValueOnce({ submissionId: "sub2", status: 1, deadlineAt: iso(hour), exam: { questions: [] }, answers: [] });
+  renderAs("student", <StudentExamsScreen />);
+  await flush();
+  await act(async () => { fireEvent.press(screen.getByText("Riprendi l'esame")); });
+  expect(screen.queryByText(/^TAKER/)).toBeNull();
+  expect(mockApi.getResult).toHaveBeenCalledWith("sub2");
+  expect(screen.getByText("Esame superato")).toBeTruthy();
+});
+
+test("ripresa di una prova scaduta: si consegnano le risposte salvate e si mostra l'esito", async () => {
+  mockApi.getSession.mockResolvedValueOnce({ submissionId: "sub2", status: 0, deadlineAt: iso(-1000), exam: { questions: [] }, answers: [] });
+  renderAs("student", <StudentExamsScreen />);
+  await flush();
+  await act(async () => { fireEvent.press(screen.getByText("Riprendi l'esame")); });
+  expect(screen.queryByText(/^TAKER/)).toBeNull();
+  expect(mockApi.submitExpired).toHaveBeenCalledWith("sub2");
+  expect(screen.getByText("Consegna automatica: tempo scaduto")).toBeTruthy();
 });
 
 test("fine dello svolgimento: pagina dell'esito", async () => {

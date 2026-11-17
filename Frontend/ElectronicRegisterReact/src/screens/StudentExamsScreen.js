@@ -31,8 +31,8 @@ function stateOf(a) {
   if (sub === "in_progress") {
     // Scaduto ma non ancora consegnato: si consegnano le risposte salvate (il server lo chiude solo se il worker è attivo)
     if (a.deadlineAt && parseUtc(a.deadlineAt).getTime() <= now) return { label: "Scaduto: tocca per consegnare", tone: "red", action: "expire" };
-    // Si riprende dai dati locali o, se mancano (altro dispositivo), dalla sessione sul server
-    return { label: "In corso", tone: "amber", action: a.submissionId || getRun(a.id)?.exam ? "resume" : null };
+    // Si riprende sempre dalla sessione sul server (fonte autorevole per risposte, revisione e scadenza)
+    return { label: "In corso", tone: "amber", action: a.submissionId || getRun(a.id)?.submissionId ? "resume" : null };
   }
   if (sub === "pending_review") return { label: "In correzione", tone: "amber", action: "result" };
   if (sub === "failed_auto") return { label: "Non superato", tone: "red", action: "result" };
@@ -50,6 +50,7 @@ export default function StudentExamsScreen() {
   const [starting, setStarting] = useState(false);
   const [taking, setTaking] = useState(null); // consegna in svolgimento (schermo bloccato)
   const [view, setView] = useState(null); // esito: { item, result, meta, loading }
+  const [resumeError, setResumeError] = useState(null); // { item, message }: sessione non leggibile, si può riprovare
 
   // Gli esami nuovi si evidenziano in questa visita; entrando nella sezione il pallino sparisce
   const newOnEntry = useRef(null);
@@ -80,13 +81,26 @@ export default function StudentExamsScreen() {
     } finally { setStarting(false); }
   }
 
+  // Ripresa: SEMPRE dalla sessione sul server (risposte, currentRevision, scadenza). La copia locale è solo
+  // una cache e non sostituisce mai ciò che arriva dal server; se la sessione non si legge si mostra un
+  // errore con "Riprova", non la copia locale. Già consegnata o scaduta → esito invece dello svolgimento.
+  // L'ordine delle domande arriva già personalizzato dal server (position riscritta): si ordina per position.
   async function resume(item) {
     enterFullscreen(); // va chiamato direttamente dal click, prima di qualunque attesa
-    const local = getRun(item.id);
-    if (local?.exam && !local.finished) return setTaking(local);
+    setResumeError(null);
     setStarting(true);
     try {
-      const session = await api.getSession(item.submissionId);
+      const submissionId = item.submissionId || getRun(item.id)?.submissionId;
+      const session = await api.getSession(submissionId);
+      const status = fromEnum(session.status, SUBMISSION_STATUS);
+      if (status && status !== "in_progress") {
+        exitFullscreen();
+        return openResult({ ...item, submissionId: session.submissionId || submissionId, submissionStatus: session.status, submittedAt: session.submittedAt });
+      }
+      if (session.deadlineAt && parseUtc(session.deadlineAt).getTime() <= Date.now()) {
+        exitFullscreen();
+        return expire({ ...item, submissionId: session.submissionId || submissionId });
+      }
       const questions = [...session.exam.questions].sort((a, b) => a.position - b.position).map(studentQuestionFromDto);
       // Risposte salvate sul server → forma dello svolgimento ({ [questionId]: optionId | [optionId] | testo })
       const answers = {};
@@ -104,7 +118,7 @@ export default function StudentExamsScreen() {
       setTaking(run);
     } catch (e) {
       exitFullscreen();
-      notify("Impossibile riprendere", examErrorMessage("load", e));
+      setResumeError({ item, message: examErrorMessage("load", e) });
     } finally { setStarting(false); }
   }
 
@@ -224,6 +238,16 @@ export default function StudentExamsScreen() {
       <View style={s.screenPad}>
         <Text style={{ fontSize: 20, fontWeight: "700", color: C.text, marginBottom: 12 }}>I miei esami</Text>
         {!!error && <Text style={{ color: C.danger, marginBottom: 8 }}>{error}</Text>}
+        {resumeError && (
+          <Card style={{ marginBottom: 12, borderLeftWidth: 5, borderLeftColor: C.danger }}>
+            <Text style={s.itemTitle}>Impossibile riprendere {examDisplayName(resumeError.item)}</Text>
+            <Text style={[s.itemSub, { marginTop: 4 }]}>{resumeError.message}</Text>
+            <View style={{ flexDirection: "row", gap: 8, marginTop: 10 }}>
+              <Btn label="Riprova" onPress={() => resume(resumeError.item)} loading={starting} style={s.smBtn} textStyle={s.smBtnText} />
+              <Btn label="Chiudi" variant="ghost" onPress={() => setResumeError(null)} style={s.smBtn} textStyle={s.smBtnText} />
+            </View>
+          </Card>
+        )}
       </View>
 
       {
