@@ -27,7 +27,7 @@ const emptyForm = () => ({ id: null, subjectId: "", value: "", date: toISODate(n
 export default function StudentGrades({ student, token, canDelete = true }) {
   const [grades, setGrades] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  // Materie della classe dello studente (le sole ammesse dal server); null = non note (es. Staff), si mostrano tutte
+  // Materie della classe dello studente (le sole ammesse dal server); null = non note (lettura non riuscita), si mostrano tutte
   const [classSubjects, setClassSubjects] = useState(null);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(null); // null = elenco; oggetto = form di aggiunta/modifica

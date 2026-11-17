@@ -32,6 +32,14 @@ test("classi-materia: etichetta classe · materia, filtro per docente; 403 (segr
   ]));
   await expect(getGradeClassSubjects("tok", { teacherId: "t1" })).resolves.toEqual([{ classSubjectId: "cs1", classId: "c1", label: "SW-25A · Java" }]);
   expect(axiosClient.get).toHaveBeenCalledWith("/institution/class-subjects", { ...H, params: { pageNumber: 1, pageSize: 100 } });
+  // segreteria/admin: nessun filtro, tutto l'istituto
+  axiosClient.get.mockReturnValueOnce(ok([
+    { id: "cs2", classId: "c2", className: "SW-25B", subjectName: "Reti", teacherId: "t2" },
+    { id: "cs1", classId: "c1", className: "SW-25A", subjectName: "Java", teacherId: "t1" },
+  ]));
+  await expect(getGradeClassSubjects("tok")).resolves.toEqual([
+    { classSubjectId: "cs1", classId: "c1", label: "SW-25A · Java" }, { classSubjectId: "cs2", classId: "c2", label: "SW-25B · Reti" },
+  ]);
   axiosClient.get.mockReturnValueOnce(Promise.reject(Object.assign(new Error("x"), { status: 403 })));
   await expect(getGradeClassSubjects("tok")).resolves.toBeNull();
 });

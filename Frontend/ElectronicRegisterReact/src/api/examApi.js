@@ -31,9 +31,8 @@ export function createExamApi(token) {
     // Chiave della cache di examInsights: le schermate hanno oggetti api diversi ma la stessa sessione
     cacheKey: () => token || "anon",
 
-    // Elenco classi-materia [{ id, classId, className, subjectName, label, ... }]
-    // null = non disponibile per il ruolo (lo Staff riceve 403): dell'esame resta la materia, senza errori a schermo
-    // TODO(API): lo Staff gestisce gli esami ma non può leggere classe e materia
+    // Elenco classi-materia [{ id, classId, className, subjectName, label, ... }]: admin e segreteria leggono tutto
+    // l'istituto, il docente le proprie. null = non disponibile (403/404): dell'esame resta la materia, senza errori
     getClassSubjects: async () => {
       try { return await classSubjects(); }
       catch (e) { if (e.status === 404 || e.status === 403) return null; throw e; }

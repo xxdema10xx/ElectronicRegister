@@ -29,7 +29,8 @@ import {
 } from "../constants/gradeScale";
 
 export const ROW_INVALID = "Intero tra 0 e 30";
-export const STAFF_UNAVAILABLE = "Il server non consente al tuo ruolo di leggere le classi e le materie: l'inserimento in blocco non è disponibile.";
+// Elenco delle classi-materia non leggibile per il ruolo (403/404): niente tabella, solo l'avviso
+export const OPTIONS_UNAVAILABLE = "Il server non consente al tuo ruolo di leggere le classi e le materie: l'inserimento in blocco non è disponibile.";
 const LEAVE_MESSAGE = "I voti inseriti non sono stati salvati e andranno persi.";
 const NOT_FOUND_MESSAGE = "La classe-materia non esiste più oppure non è tra quelle che insegni.";
 const CONFLICT_MESSAGE = "Il blocco potrebbe essere già stato salvato: ho ricaricato i voti. Controlla l'elenco prima di inviare di nuovo.";
@@ -56,7 +57,7 @@ export default function ClassGradesForm({ visible, onClose, onSaved, token, teac
     if (!visible || fixedOptions) return;
     let alive = true;
     getGradeClassSubjects(token, { teacherId })
-      .then((list) => { if (!alive) return; if (list === null) setOptionsError(STAFF_UNAVAILABLE); else setOptions(list); })
+      .then((list) => { if (!alive) return; if (list === null) setOptionsError(OPTIONS_UNAVAILABLE); else setOptions(list); })
       .catch((e) => { if (alive) setOptionsError(e.message); });
     return () => { alive = false; };
   }, [visible, token, teacherId, fixedOptions]);

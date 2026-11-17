@@ -184,6 +184,18 @@ test("nuovo esame: scelta di classe e materia, poi l'editor", async () => {
   expect(screen.getByText("HEADER: Java · SW-25A")).toBeTruthy();
 });
 
+test("segreteria: nuovo esame con la stessa scelta di classe e materia (elenco dell'istituto)", async () => {
+  renderScreen("staff");
+  await flush();
+  fireEvent.press(screen.getByText("Crea esame"));
+  expect(await screen.findByText("Per quale classe e materia è l'esame?")).toBeTruthy();
+  expect(screen.queryByText("ID classe-materia")).toBeNull();
+  fireEvent.press(screen.getByText("Es. SW-25A"));
+  fireEvent.press(screen.getAllByText("SW-25B").at(-1));
+  fireEvent.press(screen.getByText("Continua →"));
+  expect(await screen.findByText("SW-25B · Reti")).toBeTruthy();
+});
+
 test("nuovo esame su una classe con una sola materia: materia preselezionata", async () => {
   renderScreen();
   await flush();

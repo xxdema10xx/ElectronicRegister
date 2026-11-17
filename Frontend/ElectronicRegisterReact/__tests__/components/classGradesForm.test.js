@@ -1,7 +1,7 @@
 // "Voti alla classe": tabella degli studenti, validazione per riga, una sola richiesta batch, eventId stabile tra i
 // retry dello stesso payload e nuovo dopo una correzione, errori per riga, 404, 409, guardia "modifiche non salvate".
 import { act, fireEvent, screen } from "@testing-library/react-native";
-import ClassGradesForm, { ROW_INVALID, STAFF_UNAVAILABLE } from "../../src/components/ClassGradesForm";
+import ClassGradesForm, { OPTIONS_UNAVAILABLE, ROW_INVALID } from "../../src/components/ClassGradesForm";
 import * as batch from "../../src/api/gradeBatchService";
 import { flush, pressDialog, renderAs } from "../helpers/render";
 
@@ -151,11 +151,25 @@ test("classi-materia passate dal docente: studenti già noti, nessuna lettura", 
   expect(batch.createGradesBatch).toHaveBeenCalledWith(expect.objectContaining({ classSubjectId: "cs9" }), "tok");
 });
 
-test("segreteria: classi-materia non leggibili → messaggio, niente modulo", async () => {
+test("segreteria: tutte le classi-materia dell'istituto, senza filtro per docente; salva il blocco", async () => {
+  renderAs("staff", <ClassGradesForm visible token="tok" onClose={jest.fn()} onSaved={jest.fn()} />);
+  await flush();
+  expect(batch.getGradeClassSubjects).toHaveBeenCalledWith("tok", { teacherId: undefined });
+  fireEvent.press(screen.getByText("Scegli classe e materia…"));
+  expect(screen.getByText("SW-25A · Reti")).toBeTruthy();
+  fireEvent.press(screen.getByText("SW-25B · Java"));
+  await flush();
+  expect(batch.getClassStudents).toHaveBeenCalledWith("c2", "tok");
+  fireEvent.changeText(cell("Bianchi Anna"), "26");
+  await save();
+  expect(batch.createGradesBatch).toHaveBeenCalledWith(expect.objectContaining({ classSubjectId: "cs2", grades: [{ studentId: "s2", value: 26 }] }), "tok");
+});
+
+test("classi-materia non leggibili dal ruolo (403) → avviso, niente modulo", async () => {
   batch.getGradeClassSubjects.mockResolvedValue(null);
   renderAs("staff", <ClassGradesForm visible token="tok" onClose={jest.fn()} />);
   await flush();
-  expect(screen.getByText(STAFF_UNAVAILABLE)).toBeTruthy();
+  expect(screen.getByText(OPTIONS_UNAVAILABLE)).toBeTruthy();
   expect(screen.queryByText("Salva")).toBeNull();
 });
 

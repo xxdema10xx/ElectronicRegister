@@ -14,8 +14,8 @@ export const newBatchEventId = () => globalThis.crypto?.randomUUID?.() ?? Crypto
 const PAGE = 100;
 
 // Classi-materia tra cui scegliere: [{ classSubjectId, classId, label }], ordinate per classe e materia.
-// Il docente riceve dal server solo le proprie (teacherId filtra comunque per sicurezza).
-// null = il ruolo non può leggerle (la segreteria riceve 403: il server non espone un catalogo per lo Staff).
+// Admin e segreteria ricevono tutte quelle dell'istituto; il docente solo le proprie (teacherId filtra comunque).
+// null = il ruolo non può leggerle (403/404): il modulo mostra un avviso invece della tabella.
 export async function getGradeClassSubjects(token, { teacherId } = {}) {
   const all = [];
   try {
