@@ -332,7 +332,7 @@ public partial class Phase4_ExamLifecycleTests(IntegrationFixture fixture) : IAs
         Assert.NotEqual(originalSubmission, retakeSubmission);
         Assert.Equal(originalBefore, await SubmissionJsonAsync(originalSubmission));
         var result = await _host.As(Phase3.Student(_ids)).GetFromJsonAsync<SubmissionResultDto>($"/api/institution/submissions/{retakeSubmission}/result");
-        Assert.Equal(9m, result!.Grade);
+        Assert.Equal(27m, result!.Grade);
         Assert.True(result.Passed);
         var assigned = await _host.As(Phase3.Student(_ids)).GetFromJsonAsync<AssignedExamDto[]>("/api/institution/exams/assigned");
         Assert.Contains(assigned!, e => e.Id == retake && e.IsRetake && !e.CanStart);
@@ -342,7 +342,7 @@ public partial class Phase4_ExamLifecycleTests(IntegrationFixture fixture) : IAs
         var submissions = await ctx.ExamSubmissions.Where(s => s.Id == originalSubmission || s.Id == retakeSubmission).ToListAsync();
         Assert.Equal(2, submissions.Select(s => s.GradeId).Distinct().Count());
         var originalGrade = await ctx.Grades.FindAsync(submissions.Single(s => s.Id == originalSubmission).GradeId);
-        Assert.Equal(5m, originalGrade!.Value);
+        Assert.Equal(14m, originalGrade!.Value);
         foreach (var submission in submissions)
         {
             Assert.Single(await ctx.AuditEvents.Where(a => a.EntityId == submission.Id && a.Action == "submission.submit").ToListAsync());

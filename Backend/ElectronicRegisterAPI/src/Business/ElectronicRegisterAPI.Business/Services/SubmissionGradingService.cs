@@ -114,44 +114,24 @@ public class SubmissionGradingService : ISubmissionGradingService
         if (passingPercent <= 0 || passingPercent >= 100)
             throw new ArgumentOutOfRangeException(nameof(passingPercent), "passingPercent must be between 0 and 100 (exclusive)");
         // decimal arithmetic only
-        // p = TotalScore / MaxScore
-        var p = maxScore == 0m ? 0m : Decimal.Divide(totalScore, maxScore);
-        // s = PassingPercent / 100
+        // p = TotalScore / MaxScore, s = PassingPercent / 100
+        var p = Decimal.Divide(totalScore, maxScore);
         var s = Decimal.Divide(passingPercent, 100m);
         decimal grade;
-        if (p <= s)
+        if (p < s)
         {
-            // grade = 1 + 5 * (p / s)
-            // avoid division by zero (s validated to be >0)
-            grade = 1m + 5m * Decimal.Divide(p, s);
-            // requirement: when totalScore < passingScore, rounded grade must never be >= 6
-            // we therefore cap raw grade to a value strictly below 6 when p < s
-            if (p < s && GradeRules.IsPassing(grade))
-            {
-                grade = 5.99m;
-            }
+            // below the threshold: 0..Passing scaled on p / s, never reaching the passing grade
+            grade = Decimal.Round(GradeRules.Passing * Decimal.Divide(p, s), 0, MidpointRounding.AwayFromZero);
+            if (grade > GradeRules.HighestFailing)
+                grade = GradeRules.HighestFailing;
         }
         else
         {
-            // grade = 6 + 4 * ((p - s) / (1 - s))
-            grade = 6m + 4m * Decimal.Divide((p - s), (1m - s));
+            // at or above the threshold: Passing..Maximum scaled on (p - s) / (1 - s)
+            grade = Decimal.Round(GradeRules.Passing + (GradeRules.Maximum - GradeRules.Passing) * Decimal.Divide(p - s, 1m - s), 0, MidpointRounding.AwayFromZero);
         }
 
-        // clamp to [1,10]
-        if (grade < 1m)
-            grade = 1m;
-        if (grade > 10m)
-            grade = 10m;
-        // round to 2 decimals using MidpointRounding.AwayFromZero
-        var rounded = Decimal.Round(grade, 2, MidpointRounding.AwayFromZero);
-        // enforce the rule: if totalScore < passingScore, rounded must be < 6
-        if (totalScore < Decimal.Multiply(maxScore, s) && GradeRules.IsPassing(rounded))
-        {
-            // set to 5.99 explicitly
-            return 5.99m;
-        }
-
-        return rounded;
+        return Math.Clamp(grade, GradeRules.Minimum, GradeRules.Maximum);
     }
 
     public void EnsureReviewPointsValid(Question question, decimal awardedPoints)

@@ -104,8 +104,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var grades = await ctxv.Grades.Where(g => g.StudentId == ids.StudentId).ToListAsync();
             Assert.NotEmpty(grades);
             var g = grades.First();
-            Assert.Equal(7.00m, g.Value);
-            Assert.True(g.Value >= 6m);
+            Assert.Equal(21m, g.Value);
+            Assert.True(g.Value >= 18m);
         }
 
         [SkippableFact]
@@ -144,8 +144,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var grades = await ctxv.Grades.Where(g => g.StudentId == ids.StudentId).ToListAsync();
             Assert.NotEmpty(grades);
             var g = grades.First();
-            Assert.True(g.Value < 6m);
-            Assert.False(g.Value >= 6m);
+            Assert.True(g.Value < 18m);
+            Assert.False(g.Value >= 18m);
         }
 
         [SkippableFact]
@@ -183,7 +183,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var grades = await ctxv.Grades.Where(g => g.StudentId == ids.StudentId).ToListAsync();
             Assert.NotEmpty(grades);
             var g = grades.First();
-            Assert.Equal(6.00m, g.Value);
+            Assert.Equal(18m, g.Value);
         }
 
         // B. Lifecycle of submissions -------------------------------------------
@@ -256,7 +256,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             await mgr.ReviewAsync(ids.SubmissionId, reviewDto, TeacherCaller());
 
             // perform override
-            var dto = new FinalizeSubmissionDto { FinalGrade = 5m, OverrideReason = "Teacher adjusted due to behavior" };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 15m, OverrideReason = "Teacher adjusted due to behavior" };
             await mgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
 
             using var verify = _fixture.ScopeFactory.CreateScope();
@@ -264,8 +264,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var res = await em.GetResultAsync(ids.SubmissionId, TeacherCaller());
             var ctxVerify = verify.ServiceProvider.GetRequiredService<ElectronicRegisterAPI.Infrastructure.Persistence.ElectronicRegisterContext>();
             var subEntity = await ctxVerify.ExamSubmissions.FindAsync(ids.SubmissionId);
-            Assert.Equal(7m, subEntity!.SuggestedGrade);
-            Assert.Equal(5m, res.Grade);
+            Assert.Equal(21m, subEntity!.SuggestedGrade);
+            Assert.Equal(15m, res.Grade);
             Assert.False(res.Passed.Value);
         }
 
@@ -281,7 +281,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
 
-            var dto = new FinalizeSubmissionDto { FinalGrade = 7m, OverrideReason = "Teacher adjusted upward" };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 21m, OverrideReason = "Teacher adjusted upward" };
             await mgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
 
             using var verify = _fixture.ScopeFactory.CreateScope();
@@ -289,8 +289,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var res = await em.GetResultAsync(ids.SubmissionId, TeacherCaller());
             var ctxVerify = verify.ServiceProvider.GetRequiredService<ElectronicRegisterAPI.Infrastructure.Persistence.ElectronicRegisterContext>();
             var subEntity = await ctxVerify.ExamSubmissions.FindAsync(ids.SubmissionId);
-            Assert.Equal(5m, subEntity!.SuggestedGrade);
-            Assert.Equal(7m, res.Grade);
+            Assert.Equal(14m, subEntity!.SuggestedGrade);
+            Assert.Equal(21m, res.Grade);
             Assert.True(res.Passed.Value);
         }
 
@@ -304,7 +304,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
 
-            var dto = new FinalizeSubmissionDto { FinalGrade = 5m };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 29m };
             await Assert.ThrowsAsync<ArgumentException>(async () => await mgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller()));
 
             using var verify = _fixture.ScopeFactory.CreateScope();
@@ -324,7 +324,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
 
-            var dto = new FinalizeSubmissionDto { FinalGrade = 5m, OverrideReason = "   " };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 29m, OverrideReason = "   " };
             await Assert.ThrowsAsync<ArgumentException>(async () => await mgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller()));
         }
 
@@ -339,7 +339,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             // Ensure all open answers are reviewed before Finalize
             await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
 
-            var dto = new FinalizeSubmissionDto { FinalGrade = 0m, OverrideReason = "Reason" };
+            var dto = new FinalizeSubmissionDto { FinalGrade = -1m, OverrideReason = "Reason" };
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await mgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller()));
 
             using var verify = _fixture.ScopeFactory.CreateScope();
@@ -357,7 +357,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             using var scope = _fixture.ScopeFactory.CreateScope();
             var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
 
-            var dto = new FinalizeSubmissionDto { FinalGrade = 5m, OverrideReason = "Reason" };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 15m, OverrideReason = "Reason" };
             await Assert.ThrowsAsync<System.Collections.Generic.KeyNotFoundException>(async () => await mgr.FinalizeAsync(ids.SubmissionId, dto, OtherTeacherCaller()));
         }
 
@@ -371,13 +371,13 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
 
             await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
-            var dto = new FinalizeSubmissionDto { FinalGrade = 5m, OverrideReason = "Admin override" };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 15m, OverrideReason = "Admin override" };
             await mgr.FinalizeAsync(ids.SubmissionId, dto, AdminCaller());
 
             using var verify = _fixture.ScopeFactory.CreateScope();
             var em = verify.ServiceProvider.GetRequiredService<FixtureExamClient>();
             var res = await em.GetResultAsync(ids.SubmissionId, TeacherCaller());
-            Assert.Equal(5m, res.Grade);
+            Assert.Equal(15m, res.Grade);
         }
 
         // D. Grade already exists ------------------------------------------------
@@ -410,7 +410,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var gid = gradesBefore.First().Id;
 
             // teacher overrides
-            var dto = new FinalizeSubmissionDto { FinalGrade = 6m, OverrideReason = "Teacher override" };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 18m, OverrideReason = "Teacher override" };
             await subMgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
 
             using var verify2 = _fixture.ScopeFactory.CreateScope();
@@ -418,7 +418,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var gradesAfter = await ctx2.Grades.Where(g => g.StudentId == ids.StudentId).ToListAsync();
             Assert.Single(gradesAfter);
             Assert.Equal(gid, gradesAfter.First().Id);
-            Assert.Equal(6m, gradesAfter.First().Value);
+            Assert.Equal(18m, gradesAfter.First().Value);
         }
 
         // E. Audit and traceability ----------------------------------------------
@@ -430,7 +430,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             using var scope = _fixture.ScopeFactory.CreateScope();
             var subMgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
-            var dto = new FinalizeSubmissionDto { FinalGrade = 5m, OverrideReason = "Reason" };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 15m, OverrideReason = "Reason" };
             // Ensure all open answers are reviewed before Finalize
             await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
             await subMgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
@@ -452,7 +452,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
 
             using var scope = _fixture.ScopeFactory.CreateScope();
             var subMgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
-            var dto = new FinalizeSubmissionDto { FinalGrade = 8m, OverrideReason = "Reason" };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 24m, OverrideReason = "Reason" };
             await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
             await subMgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
 
@@ -465,8 +465,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             Assert.Equal("submission.override", ev.Action);
             using var before = System.Text.Json.JsonDocument.Parse(ev.BeforeJson!);
             using var after = System.Text.Json.JsonDocument.Parse(ev.AfterJson!);
-            Assert.Equal(5m, before.RootElement.GetProperty("SuggestedGrade").GetDecimal());
-            Assert.Equal(8m, after.RootElement.GetProperty("Grade").GetDecimal());
+            Assert.Equal(14m, before.RootElement.GetProperty("SuggestedGrade").GetDecimal());
+            Assert.Equal(24m, after.RootElement.GetProperty("Grade").GetDecimal());
             Assert.Equal("Reason", after.RootElement.GetProperty("OverrideReason").GetString());
         }
 
@@ -481,16 +481,16 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var subMgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
 
             await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
-            var dto = new FinalizeSubmissionDto { FinalGrade = 6m, OverrideReason = "Reason" };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 18m, OverrideReason = "Reason" };
             await subMgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
             using (var retryScope = _fixture.ScopeFactory.CreateScope())
             {
                 var retryMgr = retryScope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
                 await retryMgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
                 await Assert.ThrowsAsync<InvalidOperationException>(() => retryMgr.FinalizeAsync(ids.SubmissionId,
-                    new FinalizeSubmissionDto { FinalGrade = 8m, OverrideReason = "Reason" }, TeacherCaller()));
+                    new FinalizeSubmissionDto { FinalGrade = 24m, OverrideReason = "Reason" }, TeacherCaller()));
                 await Assert.ThrowsAsync<InvalidOperationException>(() => retryMgr.FinalizeAsync(ids.SubmissionId,
-                    new FinalizeSubmissionDto { FinalGrade = 6m, OverrideReason = "Different reason" }, TeacherCaller()));
+                    new FinalizeSubmissionDto { FinalGrade = 18m, OverrideReason = "Different reason" }, TeacherCaller()));
             }
 
             using var verify = _fixture.ScopeFactory.CreateScope();
@@ -515,8 +515,8 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var mgr1 = s1.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var mgr2 = s2.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
 
-            var dto1 = new FinalizeSubmissionDto { FinalGrade = 6m, OverrideReason = "First" };
-            var dto2 = new FinalizeSubmissionDto { FinalGrade = 8m, OverrideReason = "Second" };
+            var dto1 = new FinalizeSubmissionDto { FinalGrade = 18m, OverrideReason = "First" };
+            var dto2 = new FinalizeSubmissionDto { FinalGrade = 24m, OverrideReason = "Second" };
 
             var t1 = Task.Run(async () => { try { await mgr1.FinalizeAsync(ids.SubmissionId, dto1, TeacherCaller()); return (Exception?)null; } catch (Exception ex) { return ex; } });
             var t2 = Task.Run(async () => { try { await mgr2.FinalizeAsync(ids.SubmissionId, dto2, TeacherCaller()); return (Exception?)null; } catch (Exception ex) { return ex; } });
@@ -531,7 +531,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var ctx = verify.ServiceProvider.GetRequiredService<ElectronicRegisterAPI.Infrastructure.Persistence.ElectronicRegisterContext>();
             var grades = await ctx.Grades.Where(g => g.StudentId == ids.StudentId).ToListAsync();
             var grade = Assert.Single(grades);
-            Assert.Equal(results[0] == null ? 6m : 8m, grade.Value);
+            Assert.Equal(results[0] == null ? 18m : 24m, grade.Value);
             var sub = await ctx.ExamSubmissions.FindAsync(ids.SubmissionId);
             Assert.Equal(results[0] == null ? "First" : "Second", sub!.OverrideReason);
             Assert.Single(await ctx.AuditEvents.Where(a => a.EntityId == ids.SubmissionId && (a.Action == "submission.override" || a.Action == "submission.finalize")).ToListAsync());
@@ -548,11 +548,11 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var subMgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
 
             await EnsureAllOpenReviewedAsync(ids, TeacherCaller());
-            var dto = new FinalizeSubmissionDto { FinalGrade = 5m, OverrideReason = "Reason" };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 15m, OverrideReason = "Reason" };
             await subMgr.FinalizeAsync(ids.SubmissionId, dto, TeacherCaller());
 
             var res = await mgr.GetResultAsync(ids.SubmissionId, TeacherCaller());
-            Assert.Equal(5m, res.Grade);
+            Assert.Equal(15m, res.Grade);
             Assert.False(res.Passed.Value);
             using var verify = _fixture.ScopeFactory.CreateScope();
             var ctx = verify.ServiceProvider.GetRequiredService<ElectronicRegisterAPI.Infrastructure.Persistence.ElectronicRegisterContext>();

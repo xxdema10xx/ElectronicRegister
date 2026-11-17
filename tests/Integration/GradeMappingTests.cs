@@ -83,7 +83,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var teacherCaller = new FixtureActor(SeedData.TeacherUserId, null, SeedData.TeacherId);
 
             // Finalize with explicit dto.FinalGrade
-            var dto = new FinalizeSubmissionDto { FinalGrade = 7.5m, OverrideReason = "Teacher confirmed override" };
+            var dto = new FinalizeSubmissionDto { FinalGrade = 22m, OverrideReason = "Teacher confirmed override" };
             var submissionMgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             // Ensure all open answers are reviewed before finalization
             var toReview = await repo.GetByIdAsync(ids.SubmissionId, withAnswers: true);

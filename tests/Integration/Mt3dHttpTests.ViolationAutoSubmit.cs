@@ -78,7 +78,7 @@ public sealed partial class Mt3dHttpTests
         {
             var s = await db.ExamSubmissions.AsNoTracking().SingleAsync(s => s.Id == start.SubmissionId);
             Assert.Equal("graded", s.Status); Assert.Equal("violations", s.SubmitReason); Assert.NotNull(s.SubmittedAt); Assert.NotNull(s.GradeId); Assert.Equal(3, s.ViolationCount);
-            Assert.Equal(10m, (await db.Grades.AsNoTracking().SingleAsync(g => g.Id == s.GradeId)).Value);
+            Assert.Equal(30m, (await db.Grades.AsNoTracking().SingleAsync(g => g.Id == s.GradeId)).Value);
             var answer = await db.SubmissionAnswers.AsNoTracking().Include(a => a.Options).SingleAsync(a => a.SubmissionId == s.Id);
             Assert.Equal(Answers(exam)[0].SelectedOptionIds, answer.Options.Select(o => o.Id).ToList());
             var audit = await db.AuditEvents.AsNoTracking().SingleAsync(a => a.EntityId == s.Id && a.Action == "submission.submit");
@@ -89,10 +89,10 @@ public sealed partial class Mt3dHttpTests
         var manual = await Request(Submission(start.SubmissionId, "submit"), student, new SubmitExamDto { ClientRevision = 3, Answers = Answers(exam, false) }, "POST", host);
         await Expect(manual, HttpStatusCode.OK);
         var persisted = (await manual.Content.ReadFromJsonAsync<SubmissionResultDto>())!;
-        Assert.Equal(SubmissionStatus.Graded, persisted.Status); Assert.Equal(SubmitReason.Violations, persisted.SubmitReason); Assert.Equal(10m, persisted.Grade);
+        Assert.Equal(SubmissionStatus.Graded, persisted.Status); Assert.Equal(SubmitReason.Violations, persisted.SubmitReason); Assert.Equal(30m, persisted.Grade);
         var result = await Request(Submission(start.SubmissionId, "result"), student, host: host); await Expect(result, HttpStatusCode.OK);
         var read = (await result.Content.ReadFromJsonAsync<SubmissionResultDto>())!;
-        Assert.Equal(SubmitReason.Violations, read.SubmitReason); Assert.Equal(10m, read.Grade); Assert.Equal(persisted.SubmittedAt, read.SubmittedAt);
+        Assert.Equal(SubmitReason.Violations, read.SubmitReason); Assert.Equal(30m, read.Grade); Assert.Equal(persisted.SubmittedAt, read.SubmittedAt);
         Assert.Equal(3, (await ArrayResponse(Submission(start.SubmissionId, "violations"), teacher)).Count);
         await Expect(await Request(Exams + "/" + exam.Id + "/close", teacher, method: "POST", host: host), HttpStatusCode.NoContent);
         Assert.Equal((1, 1), await SubmitEffects(start.SubmissionId));
@@ -119,7 +119,7 @@ public sealed partial class Mt3dHttpTests
         }
         else
         {
-            Assert.Equal(SubmissionStatus.Graded, result.Status); Assert.Equal(1m, result.Grade); Assert.False(result.Passed);
+            Assert.Equal(SubmissionStatus.Graded, result.Status); Assert.Equal(0m, result.Grade); Assert.False(result.Passed);
             Assert.Equal((1, 1), await SubmitEffects(start.SubmissionId));
         }
         await Db(async db => Assert.True((await db.ExamSubmissions.AsNoTracking().SingleAsync(s => s.Id == start.SubmissionId)).DeadlineAt > DateTime.UtcNow));

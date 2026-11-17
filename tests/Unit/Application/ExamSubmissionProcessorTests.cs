@@ -75,16 +75,16 @@ namespace ElectronicRegisterAPI.Tests.Unit.Application
             var submission = new ExamSubmission
             {
                 Id = Guid.NewGuid(), StudentId = actor.StudentId!.Value, SubmittedAt = Now,
-                Status = status, SuggestedGrade = 10, TotalScore = 9, MaxScore = 10, Passed = true,
+                Status = status, SuggestedGrade = 30, TotalScore = 9, MaxScore = 10, Passed = true,
                 GradeId = official ? Guid.NewGuid() : null
             };
             if (official)
-                _grades.Add(submission.GradeId!.Value, new Grade { Id = submission.GradeId.Value, Value = 5.99m });
+                _grades.Add(submission.GradeId!.Value, new Grade { Id = submission.GradeId.Value, Value = 17m });
             ConfigureSubmission(submission);
 
             var result = await processor.ProcessInstitutionAsync(submission.Id, null, SubmitReason.Manual, actor);
 
-            Assert.Equal(official ? 5.99m : (decimal?)null, result.Grade);
+            Assert.Equal(official ? 17m : (decimal?)null, result.Grade);
             Assert.Equal(official ? false : (bool?)null, result.Passed);
             Assert.Equal(official ? 9m : (decimal?)null, result.TotalScore);
             Assert.Equal(official ? 10m : (decimal?)null, result.MaxScore);
@@ -260,8 +260,8 @@ namespace ElectronicRegisterAPI.Tests.Unit.Application
 
             _gradeRepoMock.Verify(g => g.AddAsync(It.IsAny<Grade>()), Times.Once);
             Assert.Equal(SubmissionStatus.Graded, res.Status);
-            Assert.Equal(10m, res.Grade);
-            Assert.Equal(10m, submission.SuggestedGrade);
+            Assert.Equal(30m, res.Grade);
+            Assert.Equal(30m, submission.SuggestedGrade);
             Assert.True(res.Passed);
             VerifyPublished(submission, caller);
             _subRepoMock.Verify(r => r.SaveAnswersAsync(submission.Id, 0, It.IsAny<IReadOnlyList<SubmissionAnswer>>()), Times.Once);
@@ -319,7 +319,7 @@ namespace ElectronicRegisterAPI.Tests.Unit.Application
             var proc = CreateProcessor();
             var submission = new ExamSubmission { Id = Guid.NewGuid(), Answers = new List<SubmissionAnswer>(), SubmittedAt = Now };
             submission.GradeId = Guid.NewGuid();
-            _grades.Add(submission.GradeId.Value, new Grade { Id = submission.GradeId.Value, Value = 7m });
+            _grades.Add(submission.GradeId.Value, new Grade { Id = submission.GradeId.Value, Value = 21m });
 
             ConfigureSubmission(submission);
             _subRepoMock.Setup(r => r.GetByIdAsync(submission.Id, true)).ReturnsAsync(submission);
@@ -328,7 +328,7 @@ namespace ElectronicRegisterAPI.Tests.Unit.Application
 
             _gradeRepoMock.Verify(g => g.AddAsync(It.IsAny<Grade>()), Times.Never);
             Assert.NotNull(res);
-            Assert.Equal(7m, res.Grade);
+            Assert.Equal(21m, res.Grade);
             Assert.Single(_grades);
             _subRepoMock.Verify(r => r.SaveAnswersAsync(It.IsAny<Guid>(), It.IsAny<long>(), It.IsAny<IReadOnlyList<SubmissionAnswer>>()), Times.Never);
             _subRepoMock.Verify(r => r.TryBeginSubmitAsync(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<SubmitReason>()), Times.Never);
@@ -398,11 +398,11 @@ namespace ElectronicRegisterAPI.Tests.Unit.Application
             var res = await proc.ProcessCoreAsync(submission.Id, null, SubmitReason.TimeExpired, null, false);
 
             Assert.Equal(SubmissionStatus.Graded, res.Status);
-            Assert.Equal(1m, res.Grade);
+            Assert.Equal(0m, res.Grade);
             Assert.False(res.Passed);
             VerifyPublished(submission);
             _subRepoMock.Verify(r => r.SaveAnswersAsync(It.IsAny<Guid>(), It.IsAny<long>(), It.IsAny<IReadOnlyList<SubmissionAnswer>>()), Times.Never);
-            _gradeRepoMock.Verify(r => r.AddAsync(It.Is<Grade>(g => g.Value == 1m)), Times.Once);
+            _gradeRepoMock.Verify(r => r.AddAsync(It.Is<Grade>(g => g.Value == 0m)), Times.Once);
         }
 
         [Fact]
@@ -421,13 +421,13 @@ namespace ElectronicRegisterAPI.Tests.Unit.Application
             var res = await proc.ProcessCoreAsync(submission.Id, null, SubmitReason.TimeExpired, null, false);
 
             Assert.Equal(SubmissionStatus.Graded, res.Status);
-            Assert.Equal(1m, res.Grade);
+            Assert.Equal(0m, res.Grade);
             Assert.False(res.Passed);
             VerifyPublished(submission);
             _gradingMock.Verify(g => g.GradeClosedQuestions(It.IsAny<Exam>(),
                 It.Is<IReadOnlyList<SubmissionAnswer>>(a => a.Count == 1 && a[0] == ans)), Times.Once);
             _subRepoMock.Verify(r => r.SaveAnswersAsync(It.IsAny<Guid>(), It.IsAny<long>(), It.IsAny<IReadOnlyList<SubmissionAnswer>>()), Times.Never);
-            _gradeRepoMock.Verify(r => r.AddAsync(It.Is<Grade>(g => g.Value == 1m)), Times.Once);
+            _gradeRepoMock.Verify(r => r.AddAsync(It.Is<Grade>(g => g.Value == 0m)), Times.Once);
         }
 
         [Fact]
@@ -476,11 +476,11 @@ namespace ElectronicRegisterAPI.Tests.Unit.Application
             var res = await proc.ProcessCoreAsync(submission.Id, null, SubmitReason.TimeExpired, null, false);
 
             Assert.Equal(SubmissionStatus.Graded, res.Status);
-            Assert.Equal(1m, res.Grade);
+            Assert.Equal(0m, res.Grade);
             Assert.False(res.Passed);
             VerifyPublished(submission);
             _subRepoMock.Verify(r => r.SaveAnswersAsync(It.IsAny<Guid>(), It.IsAny<long>(), It.IsAny<IReadOnlyList<SubmissionAnswer>>()), Times.Never);
-            _gradeRepoMock.Verify(r => r.AddAsync(It.Is<Grade>(g => g.Value == 1m)), Times.Once);
+            _gradeRepoMock.Verify(r => r.AddAsync(It.Is<Grade>(g => g.Value == 0m)), Times.Once);
         }
 
         [Fact]

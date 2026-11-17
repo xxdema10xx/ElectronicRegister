@@ -103,8 +103,9 @@ internal class GradeManager
         var statistics = await _gradeRepository.GetStatisticsAsync(teacherId, studentId);
         return new GradeStatisticsDto
         {
-            YearlyAverage = statistics.YearlyAverage,
-            MonthlyAverage = statistics.MonthlyAverage
+            // Averages of whole grades are reported with two decimals, rounded away from zero.
+            YearlyAverage = Math.Round(statistics.YearlyAverage, 2, MidpointRounding.AwayFromZero),
+            MonthlyAverage = statistics.MonthlyAverage.Select(a => a.HasValue ? Math.Round(a.Value, 2, MidpointRounding.AwayFromZero) : (decimal? )null).ToArray()
         };
     }
 

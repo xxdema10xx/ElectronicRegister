@@ -109,31 +109,31 @@ public class Phase2C_ApiTests : IAsyncLifetime
         Assert.Equal(HttpStatusCode.OK, (await client.GetAsync($"/api/institution/exams/{ids.ExamId}/submissions")).StatusCode);
         Assert.Equal(HttpStatusCode.OK, (await client.GetAsync(ReviewUrl(ids))).StatusCode);
         Assert.Equal(HttpStatusCode.NoContent, (await client.PutAsJsonAsync(ReviewUrl(ids), await ReviewDtoAsync(ids))).StatusCode);
-        var final = new FinalizeSubmissionDto { FinalGrade = 8m, OverrideReason = "Official override" };
+        var final = new FinalizeSubmissionDto { FinalGrade = 24m, OverrideReason = "Official override" };
         Assert.Equal(HttpStatusCode.NoContent, (await client.PostAsJsonAsync(FinalizeUrl(ids), final)).StatusCode);
         var original = await client.GetFromJsonAsync<SubmissionReviewDto>(ReviewUrl(ids));
         Assert.Equal(HttpStatusCode.NoContent, (await client.PostAsJsonAsync(FinalizeUrl(ids), final)).StatusCode);
         foreach (var different in new[]
         {
-            new FinalizeSubmissionDto { FinalGrade = 6m, OverrideReason = final.OverrideReason },
-            new FinalizeSubmissionDto { FinalGrade = 8m, OverrideReason = "Different reason" }
+            new FinalizeSubmissionDto { FinalGrade = 18m, OverrideReason = final.OverrideReason },
+            new FinalizeSubmissionDto { FinalGrade = 24m, OverrideReason = "Different reason" }
         })
             Assert.Equal(HttpStatusCode.Conflict, (await client.PostAsJsonAsync(FinalizeUrl(ids), different)).StatusCode);
         Assert.Equal(HttpStatusCode.Conflict, (await client.PutAsJsonAsync(ReviewUrl(ids), await ReviewDtoAsync(ids))).StatusCode);
         var review = await client.GetFromJsonAsync<SubmissionReviewDto>(ReviewUrl(ids));
-        Assert.Equal(8m, review!.FinalGrade);
+        Assert.Equal(24m, review!.FinalGrade);
         Assert.Equal(original!.FinalizedAt, review.FinalizedAt);
         Assert.Equal(original.ReviewedByUserId, review.ReviewedByUserId);
-        Assert.Equal(7m, review.SuggestedGrade);
+        Assert.Equal(21m, review.SuggestedGrade);
         Assert.True(review.Passed);
         Assert.All(review.Answers.Where(a => a.QuestionType == QuestionType.Open), a => Assert.Equal("Internal review comment", a.TeacherComment));
 
         var result = await _host.As(Student(ids)).GetFromJsonAsync<SubmissionResultDto>(ResultUrl(ids));
-        Assert.Equal(8m, result!.Grade);
+        Assert.Equal(24m, result!.Grade);
         Assert.True(result.Passed);
         using var scope = _fixture.ScopeFactory.CreateScope();
         var ctx = scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
-        Assert.Equal(8m, Assert.Single(await ctx.Grades.Where(g => g.StudentId == ids.StudentId).ToListAsync()).Value);
+        Assert.Equal(24m, Assert.Single(await ctx.Grades.Where(g => g.StudentId == ids.StudentId).ToListAsync()).Value);
         var audit = Assert.Single(await ctx.AuditEvents.Where(a => a.EntityId == ids.SubmissionId && a.Action == "submission.override").ToListAsync());
         Assert.Equal(caller.UserId, audit.ActorUserId);
         Assert.NotNull(audit.BeforeJson);
@@ -141,7 +141,7 @@ public class Phase2C_ApiTests : IAsyncLifetime
         Assert.Single(await ctx.AuditEvents.Where(a => a.EntityId == ids.SubmissionId &&
             (a.Action == "submission.override" || a.Action == "submission.finalize")).ToListAsync());
         var ownReview = await scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>().GetByIdAsync(ids.SubmissionId, Student(ids));
-        Assert.Equal(8m, ownReview.FinalGrade);
+        Assert.Equal(24m, ownReview.FinalGrade);
         Assert.Null(ownReview.SuggestedGrade);
         Assert.All(ownReview.Answers, a =>
         {
@@ -160,7 +160,7 @@ public class Phase2C_ApiTests : IAsyncLifetime
         Assert.Equal(HttpStatusCode.NoContent, (await client.PutAsJsonAsync(ReviewUrl(ids), await ReviewDtoAsync(ids))).StatusCode);
         Assert.Equal(HttpStatusCode.NoContent, (await client.PostAsJsonAsync(FinalizeUrl(ids), new FinalizeSubmissionDto())).StatusCode);
         var result = await client.GetFromJsonAsync<SubmissionReviewDto>(ReviewUrl(ids));
-        Assert.Equal(7m, result!.FinalGrade);
+        Assert.Equal(21m, result!.FinalGrade);
         Assert.Equal(result.SuggestedGrade, result.FinalGrade);
         using var scope = _fixture.ScopeFactory.CreateScope();
         var ctx = scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
@@ -221,8 +221,8 @@ public class Phase2C_ApiTests : IAsyncLifetime
         var client = _host.As(Teacher);
         Assert.Equal(HttpStatusCode.Conflict, (await client.PostAsJsonAsync(FinalizeUrl(ids), new FinalizeSubmissionDto())).StatusCode);
         Assert.Equal(HttpStatusCode.NoContent, (await client.PutAsJsonAsync(ReviewUrl(ids), await ReviewDtoAsync(ids))).StatusCode);
-        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync(FinalizeUrl(ids), new FinalizeSubmissionDto { FinalGrade = 8m })).StatusCode);
-        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync(FinalizeUrl(ids), new FinalizeSubmissionDto { FinalGrade = 11m, OverrideReason = "Reason" })).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync(FinalizeUrl(ids), new FinalizeSubmissionDto { FinalGrade = 24m })).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync(FinalizeUrl(ids), new FinalizeSubmissionDto { FinalGrade = 31m, OverrideReason = "Reason" })).StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, (await client.PutAsJsonAsync(ReviewUrl(ids), new { Answers = (object?)null })).StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, (await client.PutAsJsonAsync(ReviewUrl(ids), new { Answers = new object?[] { null } })).StatusCode);
         var reviewed = await client.GetFromJsonAsync<SubmissionReviewDto>(ReviewUrl(ids));

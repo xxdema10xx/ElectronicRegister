@@ -125,7 +125,7 @@ public class Phase3_WorkerRecoveryTests(IntegrationFixture fixture)
             if (!isOpen)
             {
                 Assert.Equal(sub.GradeId, grades.Single().Id);
-                Assert.Equal(6m, grades.Single().Value);
+                Assert.Equal(18m, grades.Single().Value);
             }
             var audit = Assert.Single(await ctx.AuditEvents.AsNoTracking().Where(a => a.EntityId == id.SubmissionId && a.Action == "submission.submit").ToListAsync());
             Assert.Null(audit.ActorUserId);

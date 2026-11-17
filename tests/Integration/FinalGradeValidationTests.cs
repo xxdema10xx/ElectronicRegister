@@ -22,7 +22,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
         private Task<ScenarioIds> ResetToPendingReviewAsync() => _fixture.PreparePendingReviewScenarioAsync(IntegrationScenario.ExamRegression);
 
         [SkippableFact]
-        public async Task Finalize_WithFinalGradeZero_IsRejectedAndNoPersistence()
+        public async Task Finalize_WithNonIntegerFinalGrade_IsRejectedAndNoPersistence()
         {
             Skip.IfNot(_fixture.IsAvailable, _fixture.UnavailableReason);
             var ids = await ResetToPendingReviewAsync();
@@ -44,7 +44,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             }
             if (reviewDto.Answers.Count > 0) await mgr.ReviewAsync(ids.SubmissionId, reviewDto, caller);
 
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 0m }, caller));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 17.5m }, caller));
 
             // Verify no partial persistence
             using var verifyScope = _fixture.ScopeFactory.CreateScope();
@@ -115,7 +115,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             }
             if (reviewDto.Answers.Count > 0) await mgr.ReviewAsync(ids.SubmissionId, reviewDto, caller);
 
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 10.01m }, caller));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 31m }, caller));
 
             using var verifyScope = _fixture.ScopeFactory.CreateScope();
             var verifyRepo = verifyScope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
@@ -149,7 +149,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             }
             if (reviewDto.Answers.Count > 0) await mgr.ReviewAsync(ids.SubmissionId, reviewDto, caller);
 
-            await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 1m, OverrideReason = "Teacher confirmed boundary grade" }, caller);
+            await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 0m, OverrideReason = "Teacher confirmed boundary grade" }, caller);
 
             using var verifyScope = _fixture.ScopeFactory.CreateScope();
             var verifyRepo = verifyScope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();
@@ -180,7 +180,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             }
             if (reviewDto.Answers.Count > 0) await mgr.ReviewAsync(ids.SubmissionId, reviewDto, caller);
 
-            await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 10m, OverrideReason = "Teacher confirmed boundary grade" }, caller);
+            await mgr.FinalizeAsync(ids.SubmissionId, new FinalizeSubmissionDto { FinalGrade = 30m, OverrideReason = "Teacher confirmed boundary grade" }, caller);
 
             using var verifyScope = _fixture.ScopeFactory.CreateScope();
             var verifyRepo = verifyScope.ServiceProvider.GetRequiredService<Domain.Interfaces.Repositories.IExamSubmissionRepository>();

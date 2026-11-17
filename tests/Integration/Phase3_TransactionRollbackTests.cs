@@ -122,13 +122,13 @@ public class Phase3_TransactionRollbackTests(IntegrationFixture fixture)
         await using (var provider = Phase3.Provider(fixture, null, probe))
         using (var scope = provider.CreateScope())
             await Assert.ThrowsAsync<Phase3.InjectedFailure>(() => scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>()
-                .FinalizeAsync(ids.SubmissionId, isOverride ? new FinalizeSubmissionDto { FinalGrade = 8m, OverrideReason = "Rollback override" } : new(), Phase3.Teacher));
+                .FinalizeAsync(ids.SubmissionId, isOverride ? new FinalizeSubmissionDto { FinalGrade = 24m, OverrideReason = "Rollback override" } : new(), Phase3.Teacher));
         Assert.NotNull(inTransaction);
         using (var written = System.Text.Json.JsonDocument.Parse(inTransaction!))
         {
             Assert.Single(written.RootElement.GetProperty("Grades").EnumerateArray());
             Assert.Equal("finalized", written.RootElement.GetProperty("Submission").GetProperty("Status").GetString());
-            Assert.Equal(isOverride ? 8m : 7m, written.RootElement.GetProperty("Grades")[0].GetProperty("Value").GetDecimal());
+            Assert.Equal(isOverride ? 24m : 21m, written.RootElement.GetProperty("Grades")[0].GetProperty("Value").GetDecimal());
         }
         Assert.Equal(before, await Phase3.SnapshotAsync(fixture.ScopeFactory, ids));
     }
@@ -155,7 +155,7 @@ public class Phase3_TransactionRollbackTests(IntegrationFixture fixture)
         Assert.NotEqual(before, inTransaction);
         using (var written = System.Text.Json.JsonDocument.Parse(inTransaction!))
         {
-            Assert.Equal(10m, written.RootElement.GetProperty("Submission").GetProperty("SuggestedGrade").GetDecimal());
+            Assert.Equal(30m, written.RootElement.GetProperty("Submission").GetProperty("SuggestedGrade").GetDecimal());
             var answer = written.RootElement.GetProperty("Answers").EnumerateArray()
                 .Single(a => a.GetProperty("QuestionId").GetGuid() == ids.OpenQuestionId);
             Assert.Equal(5m, answer.GetProperty("AwardedPoints").GetDecimal());

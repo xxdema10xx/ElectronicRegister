@@ -245,7 +245,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         var exam = await Create(); var start = await Start(exam); var student = await Access("student"); var teacher = await Access("teacher");
         var response = await Request(Submission(start.SubmissionId, "submit"), student, new SubmitExamDto { ClientRevision = 1, Answers = Answers(exam, correct) }, "POST");
         await Expect(response, HttpStatusCode.OK); var result = (await response.Content.ReadFromJsonAsync<SubmissionResultDto>())!;
-        Assert.Equal(SubmissionStatus.Graded, result.Status); Assert.Equal(correct, result.Passed); Assert.Equal(correct ? 10m : 1m, result.Grade);
+        Assert.Equal(SubmissionStatus.Graded, result.Status); Assert.Equal(correct, result.Passed); Assert.Equal(correct ? 30m : 0m, result.Grade);
         Guid grade = default;
         await Db(async db => grade = (await db.ExamSubmissions.AsNoTracking().SingleAsync(s => s.Id == start.SubmissionId)).GradeId!.Value);
         await Expect(await Request("/api/institution/grades/" + grade, teacher, new CreateGradeDto { StudentId = Id("student"), SubjectId = Id("subject"), Value = 9, Date = DateOnly.FromDateTime(DateTime.UtcNow) }, "PUT"), HttpStatusCode.Conflict);
@@ -332,9 +332,9 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
     }
 
     [Theory]
-    [InlineData(5)]
-    [InlineData(6)]
-    [InlineData(9)]
+    [InlineData(15)]
+    [InlineData(18)]
+    [InlineData(27)]
     public async Task OpenReviewFinalizeOverrideAndRetakeKeepOfficialPassedAndOriginalGrade(int grade)
     {
         var exam = await Create(type: QuestionType.Open); var start = await Start(exam); var student = await Access("student"); var teacher = await Access("teacher");
@@ -349,7 +349,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         var concurrent = await Task.WhenAll(Request(Submission(start.SubmissionId, "finalize"), teacher, finalize, "POST"), Request(Submission(start.SubmissionId, "finalize"), await Access(), finalize, "POST"));
         foreach (var r in concurrent) await Expect(r, HttpStatusCode.NoContent);
         var result = (await (await Request(Submission(start.SubmissionId, "result"), student)).Content.ReadFromJsonAsync<SubmissionResultDto>())!;
-        Assert.Equal(grade, result.Grade); Assert.Equal(grade >= 6, result.Passed); Assert.Equal(SubmissionStatus.Finalized, result.Status);
+        Assert.Equal(grade, result.Grade); Assert.Equal(grade >= 18, result.Passed); Assert.Equal(SubmissionStatus.Finalized, result.Status);
         var assigned = await (await Request(Exams + "/assigned", await Access("student"))).Content.ReadFromJsonAsync<List<AssignedExamDto>>();
         Assert.Equal(start.SubmissionId, Assert.Single(assigned!).SubmissionId);
         var originalGradeId = Guid.Empty;

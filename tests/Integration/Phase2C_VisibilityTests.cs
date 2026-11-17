@@ -36,13 +36,13 @@ public class Phase2C_VisibilityTests
             var repository = scope.ServiceProvider.GetRequiredService<IExamSubmissionRepository>();
             var submission = await repository.GetByIdAsync(ids.SubmissionId, true);
             submission!.Status = status;
-            submission.SuggestedGrade = 9m;
+            submission.SuggestedGrade = 27m;
             submission.TotalScore = 9m;
             submission.Passed = true;
             await repository.UpdateAfterGradingAsync(submission);
             var mgr = scope.ServiceProvider.GetRequiredService<FixtureSubmissionClient>();
             var staff = await mgr.GetByIdAsync(ids.SubmissionId, Teacher);
-            Assert.Equal(9m, staff.SuggestedGrade);
+            Assert.Equal(27m, staff.SuggestedGrade);
             var student = await mgr.GetByIdAsync(ids.SubmissionId, Student(ids));
             Assert.Null(student.SuggestedGrade);
             Assert.Null(student.TotalScore);
@@ -88,7 +88,7 @@ public class Phase2C_VisibilityTests
                     .Select(a => new OpenAnswerReviewInputDto { AnswerId = a.AnswerId, AwardedPoints = 5m, Comment = "Private teacher comment" }).ToList()
             }, Teacher);
             var staff = await manager.GetByIdAsync(ids.SubmissionId, Teacher);
-            Assert.Equal(10m, staff.SuggestedGrade);
+            Assert.Equal(30m, staff.SuggestedGrade);
             Assert.True(staff.Passed);
         }
         var own = await manager.GetByIdAsync(ids.SubmissionId, Student(ids));

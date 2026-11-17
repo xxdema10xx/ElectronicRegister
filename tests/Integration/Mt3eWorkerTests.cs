@@ -40,7 +40,7 @@ public sealed partial class Mt3dHttpTests
         if (accessor is not null) Assert.Throws<UnauthorizedAccessException>(() => accessor.Value);
     }
 
-    private async Task AssertTechnical(Guid id, bool b = false, bool open = false, decimal grade = 1)
+    private async Task AssertTechnical(Guid id, bool b = false, bool open = false, decimal grade = 0)
     {
         await Db(async db =>
         {
@@ -58,7 +58,7 @@ public sealed partial class Mt3dHttpTests
             else
             {
                 var g = await db.Grades.AsNoTracking().SingleAsync(g => g.Id == s.GradeId);
-                Assert.Equal(grade, g.Value); Assert.Equal(grade >= 6, s.Passed);
+                Assert.Equal(grade, g.Value); Assert.Equal(grade >= 18, s.Passed);
                 Assert.Equal(s.StudentId,g.StudentId);
                 Assert.Equal(b ? _b : _a, await db.Grades.Where(x => x.Id == g.Id).Select(x => EF.Property<Guid>(x,"InstitutionId")).SingleAsync());
             }
@@ -112,7 +112,7 @@ public sealed partial class Mt3dHttpTests
         else if(revoked=="membership")await Execute("UPDATE institution_membership SET status='suspended' WHERE id=@i",("@i",Id("student-membership")));
         else await Execute("DELETE FROM institution_membership_role WHERE membership_id=@i",("@i",Id("student-membership")));
         await Expire(s.SubmissionId);await Expect(await Request(Submission(s.SubmissionId,"session"),student),HttpStatusCode.Forbidden);
-        await InstitutionWorker().ProcessBatchAsync(default);await AssertTechnical(s.SubmissionId,grade:10);
+        await InstitutionWorker().ProcessBatchAsync(default);await AssertTechnical(s.SubmissionId,grade:30);
         await Db(async db=>{var row=await db.ExamSubmissions.SingleAsync(x=>x.Id==s.SubmissionId);Assert.Equal(7ul,row.LastClientRevision);Assert.Single(await db.SubmissionAnswers.Where(a=>a.SubmissionId==row.Id).ToListAsync());});
     }
 
@@ -154,7 +154,7 @@ public sealed partial class Mt3dHttpTests
             var response=await Request(Submission(s.SubmissionId,suffix),token,body,method);await first;
             Assert.Contains(response.StatusCode,new[]{HttpStatusCode.OK,HttpStatusCode.Conflict});
         }
-        await Db(async db=>{var row=await db.ExamSubmissions.SingleAsync(x=>x.Id==s.SubmissionId);Assert.NotNull(row.GradeId);Assert.Equal(1m,(await db.Grades.SingleAsync(g=>g.Id==row.GradeId)).Value);Assert.Equal(0ul,row.LastClientRevision);Assert.Empty(await db.SubmissionAnswers.Where(a=>a.SubmissionId==row.Id).ToListAsync());Assert.Equal(1,await db.AuditEvents.CountAsync(a=>a.EntityId==row.Id&&a.Action=="submission.submit"));});
+        await Db(async db=>{var row=await db.ExamSubmissions.SingleAsync(x=>x.Id==s.SubmissionId);Assert.NotNull(row.GradeId);Assert.Equal(0m,(await db.Grades.SingleAsync(g=>g.Id==row.GradeId)).Value);Assert.Equal(0ul,row.LastClientRevision);Assert.Empty(await db.SubmissionAnswers.Where(a=>a.SubmissionId==row.Id).ToListAsync());Assert.Equal(1,await db.AuditEvents.CountAsync(a=>a.EntityId==row.Id&&a.Action=="submission.submit"));});
     }
 
     [Fact]
@@ -164,7 +164,7 @@ public sealed partial class Mt3dHttpTests
         await Expect(await Request(Submission(s.SubmissionId,"violations"),student,new InstitutionViolationDto{EventId=Guid.NewGuid(),Type="tab_hidden"},"POST"),HttpStatusCode.OK);
         await Expect(await Request(Submission(s.SubmissionId,"answers"),student,new SaveExamAnswersDto{ClientRevision=1,Answers=Answers(exam)},"PUT"),HttpStatusCode.OK);
         await Expire(s.SubmissionId);await Expect(await Request(Exams+"/"+exam.Id+"/close",teacher,method:"POST"),HttpStatusCode.Conflict);
-        await Technical(s.SubmissionId);await AssertTechnical(s.SubmissionId,grade:10);
+        await Technical(s.SubmissionId);await AssertTechnical(s.SubmissionId,grade:30);
         await Expect(await Request(Exams+"/"+exam.Id+"/close",teacher,method:"POST"),HttpStatusCode.NoContent);
     }
 
@@ -349,7 +349,7 @@ public sealed partial class Mt3dHttpTests
         await Expect(await Request(Exams+"/"+original.Id+"/close",teacher,method:"POST"),HttpStatusCode.NoContent);
         var retake=await Create(retake:original.Id);var second=await Start(retake);await Expire(second.SubmissionId);
         await Technical(second.SubmissionId);await Technical(second.SubmissionId);await AssertTechnical(second.SubmissionId);
-        await Db(async db=>{var one=await db.ExamSubmissions.SingleAsync(s=>s.Id==first.SubmissionId);var two=await db.ExamSubmissions.SingleAsync(s=>s.Id==second.SubmissionId);Assert.NotEqual(one.GradeId,two.GradeId);Assert.Equal(10m,(await db.Grades.SingleAsync(g=>g.Id==one.GradeId)).Value);Assert.Equal(1m,(await db.Grades.SingleAsync(g=>g.Id==two.GradeId)).Value);});
+        await Db(async db=>{var one=await db.ExamSubmissions.SingleAsync(s=>s.Id==first.SubmissionId);var two=await db.ExamSubmissions.SingleAsync(s=>s.Id==second.SubmissionId);Assert.NotEqual(one.GradeId,two.GradeId);Assert.Equal(30m,(await db.Grades.SingleAsync(g=>g.Id==one.GradeId)).Value);Assert.Equal(0m,(await db.Grades.SingleAsync(g=>g.Id==two.GradeId)).Value);});
     }
 
     [Theory]

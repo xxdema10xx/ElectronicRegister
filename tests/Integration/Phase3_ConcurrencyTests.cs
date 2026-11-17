@@ -49,7 +49,7 @@ public class Phase3_ConcurrencyTests(IntegrationFixture fixture)
         var sub = await repo.GetByIdAsync(ids.SubmissionId, true);
         Assert.Equal(SubmissionStatus.Finalized, sub!.Status);
         Assert.Equal(finalizeFirst ? 2m : 5m, sub.Answers.Single(a => a.QuestionId == ids.OpenQuestionId).AwardedPoints);
-        Assert.Equal(finalizeFirst ? 7m : 10m, sub.SuggestedGrade);
+        Assert.Equal(finalizeFirst ? 21m : 30m, sub.SuggestedGrade);
         Assert.True(sub.Passed);
         var ctx = verify.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
         var grade = Assert.Single(await ctx.Grades.Where(g => g.StudentId == ids.StudentId).ToListAsync());

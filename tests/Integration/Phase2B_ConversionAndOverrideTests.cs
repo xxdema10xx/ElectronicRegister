@@ -49,7 +49,7 @@ namespace ElectronicRegisterAPI.Tests.Integration
             var grades = await ctx.Grades.Where(g => g.StudentId == ids.StudentId).ToListAsync();
             Assert.NotEmpty(grades);
             var g = grades.First();
-            Assert.Equal(6.00m, g.Value);
+            Assert.Equal(18m, g.Value);
         }
 
         [SkippableFact]
