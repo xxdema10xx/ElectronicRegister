@@ -322,6 +322,37 @@ class PlatformIdentityStagingTests(unittest.TestCase):
         self.assertIn('er-grade-scale-1 applied and validated (7/7 checks at zero).', out)
         self.assertFalse(any("VALUES('er-platform-identity-1')" in sql for sql in sent))
 
+    def test_production_flow_never_replays_a_successor_already_applied_by_the_staging_step(self):
+        import production_flow
+        flow = object.__new__(production_flow.Flow)
+        applied, nodes, sent = {'er-quality-2-mysql84', 'er-grade-scale-1'}, [], []
+
+        def root_sql(statement):
+            return '1' if statement.split("'")[1] in applied else '0'
+
+        def fake_node(args, **_kwargs):
+            nodes.append(str(args[-1]))
+            file = next(f for r, _s, f, *_ in host.SUCCESSORS if r == str(args[-1]))
+            Path(args[-2]).mkdir(parents=True)
+            Path(args[-2], file).write_text(f"VALUES('{args[-1]}');", encoding='utf-8')
+
+        def fake_mysql(args, input, **_kwargs):
+            sent.append(input)
+            applied.update(r for r, *_ in host.SUCCESSORS if f"VALUES('{r}')" in input)
+            return mock.Mock(returncode=0, stdout='', stderr='')
+
+        with tempfile.TemporaryDirectory() as work:
+            flow.work, flow.folder, flow.root_sql = Path(work), Path(work), root_sql
+            with mock.patch.object(host, 'compose', return_value='c' * 12), \
+                    mock.patch.object(host, 'write', side_effect=lambda path, text, mode=None: Path(path).write_text(text, encoding='utf-8')), \
+                    mock.patch.object(host, 'run', side_effect=fake_node), \
+                    mock.patch.object(production_flow.subprocess, 'run', side_effect=fake_mysql):
+                flow.apply_successor()
+        # er-grade-scale-1 was already applied by `host.py successor`: only platform identity runs.
+        self.assertEqual(['er-platform-identity-1'], nodes)
+        self.assertEqual(1, len(sent))
+        self.assertIn('er-grade-scale-1', applied)
+
     def test_successors_run_in_order_when_platform_identity_is_enabled(self):
         nodes, _sent, out = self._apply_successors(dict(id='a' * 32, platform_identity=True))
         self.assertEqual([n[-1] for n in nodes], ['er-platform-identity-1', 'er-grade-scale-1'])

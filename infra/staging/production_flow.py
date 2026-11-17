@@ -200,15 +200,19 @@ class Flow:
         binding = self.work / 'successor-binding.json'
         host.write(binding, json.dumps(dict(database='electronic_register_staging', definerUser='er_stage_definer', definerHost='%')), mode=0o444)
         cid = host.compose(self.folder, 'ps', '-q', 'db', capture=True)
+        marker = lambda release: self.root_sql("SELECT COUNT(*) FROM er_schema_release WHERE version='" + release + "'")
         for release, source, file, _checks, _platform_only in host.SUCCESSORS:
+            # The staging step `successor` may already have applied it (er-grade-scale-1 is always applied):
+            # a successor is never replayed, its ALTER would fail on the existing columns.
+            if marker(release) == '1':
+                continue
             out = self.work / ('successor-' + source)
             host.run(['node', host.ROOT / 'tools/mysql84-release.cjs', 'successor', binding, out, release], stdout=subprocess.DEVNULL)
             sql = (out / file).read_text(encoding='utf-8')
             done = subprocess.run(['docker', 'exec', '-i', cid, 'mysql', '--defaults-extra-file=/run/secrets/root.cnf', '--protocol=SOCKET', '--batch'],
                                   input=sql, text=True, capture_output=True, timeout=300)
             require(done.returncode == 0, 'Successor SQL failed: ' + done.stderr.strip()[:300])
-            marker = self.root_sql("SELECT COUNT(*) FROM er_schema_release WHERE version='" + release + "'")
-            require(marker == '1', 'Successor marker missing after apply')
+            require(marker(release) == '1', 'Successor marker missing after apply')
 
     def api_container(self, name, runtime):
         return ['run', '-d', '--name', name, '--network', self.network, '--network-alias', 'er-api' if name == self.api else name,
