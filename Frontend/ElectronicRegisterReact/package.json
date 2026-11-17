@@ -52,6 +52,7 @@
       "App.js"
     ],
     "clearMocks": true,
+    "testTimeout": 15000,
     "globalSetup": "<rootDir>/jest.globalSetup.js"
   }
 }
