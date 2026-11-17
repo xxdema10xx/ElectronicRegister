@@ -36,10 +36,6 @@ EXCLUDED_METHODS = {
         ('INC-012', 'Observes the real legacy holding MT3A_LEGACY_TEST, absent from the fresh MySQL 8.4 bootstrap; decision in Lotto 6'),
     'ElectronicRegisterAPI.Tests.Integration.Mt5dMembershipMutationTests.OfflineGraphClassifiesValidatedIamLedgerWithoutChangingData':
         ('INC-012', 'Validates the offline ownership graph of the legacy holding MT3A_LEGACY_TEST, absent from the fresh MySQL 8.4 bootstrap; decision in Lotto 6'),
-    'ElectronicRegisterAPI.Tests.Integration.Mt1IntegrityTests.CanonicalExpandIsRerunnableAndDoesNotChangeLegacyData':
-        ('INC-003', 'Expects MySQL 5.7 delete_rule RESTRICT; MySQL 8.4 reports NO ACTION for the same composite FKs'),
-    'ElectronicRegisterAPI.Tests.Integration.Mt4aCourseStructureTests.InformationSchemaHasCompositeRestrictConstraints':
-        ('INC-003', 'Expects MySQL 5.7 delete_rule RESTRICT; MySQL 8.4 reports NO ACTION for the same composite FKs'),
     'ElectronicRegisterAPI.Tests.Integration.Phase4_ExamLifecycleTests.Audit_IdentityProfileFaultIsAtomicAndCannotChangeDidacticProfile':
         ('INC-012', 'Legacy EF insert without explicit owner relies on the MT3A legacy holding, absent from the fresh MySQL 8.4 bootstrap'),
     'ElectronicRegisterAPI.Tests.Integration.HistoricalExpiryBoundaryTests.HistoricalOwnerRemainsTechnicalOnlyAndDeliveryIsIdempotent':

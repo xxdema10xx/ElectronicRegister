@@ -139,9 +139,37 @@ public sealed class Mt4aCourseStructureTests(IntegrationFixture fixture)
         await Task.WhenAll(Repo(r=>r.AddEnrollmentAsync(a.Tenant,Enrollment(a))),Repo(r=>r.AddEnrollmentAsync(b.Tenant,Enrollment(b))));
         await Task.WhenAll(Repo(async r=>Assert.Equal(a.Owner,Assert.Single(await r.GetEnrollmentsAsync(a.Tenant,a.Student)).InstitutionId)),Repo(async r=>Assert.Equal(b.Owner,Assert.Single(await r.GetEnrollmentsAsync(b.Tenant,b.Student)).InstitutionId)));
     });
-    [Fact] public async Task InformationSchemaHasCompositeRestrictConstraints()
+    [Fact] public Task InformationSchemaHasCompositeRestrictConstraints()=>Pair(async(a,b)=>{
+        await CompositeConstraintMetadataAsync();
+        // INC-003: behaviour, not only metadata. Each parent below has exactly one kind of
+        // dependent row, so the 1451 error must name the constraint under test.
+        Guid linked=Guid.NewGuid(),enrolled=Guid.NewGuid(),assigned=Guid.NewGuid(),path=Guid.NewGuid(),pathEdition=Guid.NewGuid();
+        await Repo(async r=>{await r.AddEditionAsync(a.Tenant,Edition(a,linked) with {Code="LINKED"});await r.AddEditionAsync(a.Tenant,Edition(a,enrolled) with {Code="ENROLLED"});await r.AddEditionAsync(a.Tenant,Edition(a,assigned) with {Code="ASSIGNED"});await r.LinkCampusAsync(a.Tenant,linked,a.Campus);await r.AddEnrollmentAsync(a.Tenant,Enrollment(a) with {CourseEditionId=enrolled});});
+        await Sql("UPDATE class SET course_edition_id=@e WHERE id=@id",("@e",assigned),("@id",a.Class));
+        await Sql("INSERT INTO study_path(id,institution_id,name) VALUES(@id,@o,'Probe path')",("@id",path),("@o",a.Owner));
+        await Sql("INSERT INTO course_edition(id,institution_id,study_path_id,code,name,status) VALUES(@id,@o,@p,'PATH','Probe','planned')",("@id",pathEdition),("@o",a.Owner),("@p",path));
+        await DeleteBlocked("campus",a.Campus,"fk_mt4_ec_campus");
+        await DeleteBlocked("course_edition",linked,"fk_mt4_ec_edition");
+        await DeleteBlocked("course_edition",enrolled,"fk_mt4_enrollment_edition");
+        await DeleteBlocked("course_edition",assigned,"fk_mt4_class_edition");
+        await DeleteBlocked("student",a.Student,"fk_mt4_enrollment_student");
+        await DeleteBlocked("study_path",path,"fk_mt4_edition_path");
+        // An institution is always referenced by several owner FKs, so any of them may be reported.
+        await DeleteBlocked("institution",b.Owner,null);
+    });
+    // A null constraint accepts any FK (1451 is still required): used only for a parent referenced by several FKs.
+    private async Task DeleteBlocked(string table,Guid id,string? constraint)
     {
-        Assert.True(fixture.IsAvailable,fixture.UnavailableReason);
+        await using var c=new MySqlConnection(fixture.ConnectionString);await c.OpenAsync();await TestDatabaseSession.ConfigureAsync(c);
+        await using var delete=new MySqlCommand("DELETE FROM `"+table+"` WHERE id=@id",c);delete.Parameters.AddWithValue("@id",id);
+        var error=await Assert.ThrowsAsync<MySqlException>(()=>delete.ExecuteNonQueryAsync());
+        var named=constraint is null?error.Message.Contains("FOREIGN KEY"):error.Message.Contains("CONSTRAINT `"+constraint+"`");
+        Assert.True(error.Number==1451&&named,table+": "+error.Number+" "+error.Message);
+        await using var count=new MySqlCommand("SELECT COUNT(*) FROM `"+table+"` WHERE id=@id",c);count.Parameters.AddWithValue("@id",id);
+        Assert.Equal(1L,Convert.ToInt64(await count.ExecuteScalarAsync()));
+    }
+    private async Task CompositeConstraintMetadataAsync()
+    {
         await using var c=new MySqlConnection(fixture.ConnectionString);await c.OpenAsync();
         await using var cmd=new MySqlCommand("SELECT constraint_name,COUNT(*) FROM information_schema.key_column_usage WHERE constraint_schema=DATABASE() AND LEFT(constraint_name,7)='fk_mt4_' AND referenced_table_name IS NOT NULL GROUP BY constraint_name",c);
         var counts=new Dictionary<string,int>();await using(var reader=await cmd.ExecuteReaderAsync()){while(await reader.ReadAsync())counts[reader.GetString(0)]=reader.GetInt32(1);}
@@ -158,7 +186,8 @@ public sealed class Mt4aCourseStructureTests(IntegrationFixture fixture)
             {"fk_mt4_class_edition","class.institution_id->course_edition.institution_id,class.course_edition_id->course_edition.id"}
         };
         Assert.Equal(expected.Count,mappings.Count);foreach(var item in expected)Assert.Equal(item.Value,mappings[item.Key]);
-        cmd.CommandText="SELECT COUNT(*) FROM information_schema.referential_constraints WHERE constraint_schema=DATABASE() AND LEFT(constraint_name,7)='fk_mt4_' AND delete_rule='RESTRICT' AND update_rule='RESTRICT'";
+        // INC-003: 5.7 reports RESTRICT, 8.4 NO ACTION for the same FKs without explicit action; InnoDB enforces both identically.
+        cmd.CommandText="SELECT COUNT(*) FROM information_schema.referential_constraints WHERE constraint_schema=DATABASE() AND LEFT(constraint_name,7)='fk_mt4_' AND delete_rule IN ('RESTRICT','NO ACTION') AND update_rule IN ('RESTRICT','NO ACTION')";
         Assert.Equal(7,Convert.ToInt32(await cmd.ExecuteScalarAsync()));
     }
     private sealed class SqlCapture : DbCommandInterceptor

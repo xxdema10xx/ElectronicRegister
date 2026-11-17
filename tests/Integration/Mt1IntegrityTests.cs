@@ -255,10 +255,45 @@ public sealed class Mt1IntegrityTests(IntegrationFixture fixture, ITestOutputHel
         await Mt1SchemaMigration.ExpandAsync(fixture.ConnectionString);
         Assert.Equal(before, await LegacySnapshotAsync());
         using var connection = new MySqlConnection(fixture.ConnectionString); await connection.OpenAsync();
+        // INC-003: MySQL 5.7 reports the restrictive rule as RESTRICT, MySQL 8.4 as NO ACTION
+        // (FKs declared without an explicit action). InnoDB enforces both identically; the
+        // behaviour below proves that each constraint really blocks deleting its parent.
         using var command = new MySqlCommand("SELECT COUNT(*) FROM information_schema.referential_constraints " +
             "WHERE constraint_schema=DATABASE() AND constraint_name IN ('fk_campus_institution','fk_membership_institution','fk_membership_user','fk_membership_role_membership') " +
-            "AND delete_rule='RESTRICT' AND update_rule='RESTRICT'", connection);
+            "AND delete_rule IN ('RESTRICT','NO ACTION') AND update_rule IN ('RESTRICT','NO ACTION')", connection);
         Assert.Equal(4L, Convert.ToInt64(await command.ExecuteScalarAsync()));
+
+        var campusOwner = await InstitutionAsync();
+        var memberOwner = await InstitutionAsync();
+        var membership = await MembershipAsync(memberOwner, InstitutionRole.Teacher);
+        await using var probe = new MySqlConnection(new MySqlConnectionStringBuilder(fixture.ConnectionString) { AllowUserVariables = true }.ConnectionString);
+        await probe.OpenAsync();
+        await using (var insert = new MySqlCommand("INSERT INTO campus(id,institution_id,name) VALUES(@id,@o,'MT-1 FK probe')", probe))
+        {
+            insert.Parameters.AddWithValue("@id", Guid.NewGuid()); insert.Parameters.AddWithValue("@o", campusOwner);
+            await insert.ExecuteNonQueryAsync();
+        }
+        // The fixture purge capability only lifts the trigger guards on these synthetic rows,
+        // so the foreign key is the remaining barrier being observed.
+        await using (var purge = await MembershipFixturePurge.AllowAsync(probe, _institutions))
+        {
+            await ParentDeleteBlockedAsync(probe, "institution", campusOwner, "fk_campus_institution");
+            await ParentDeleteBlockedAsync(probe, "institution", memberOwner, "fk_membership_institution");
+            await ParentDeleteBlockedAsync(probe, "institution_membership", membership, "fk_membership_role_membership");
+        }
+        await using (var exemption = await MembershipFixturePurge.AllowAsync(probe, [_user]))
+            await ParentDeleteBlockedAsync(probe, "user", _user, "fk_membership_user");
+    }
+
+    private static async Task ParentDeleteBlockedAsync(MySqlConnection connection, string table, Guid id, string constraint)
+    {
+        await using var delete = new MySqlCommand("DELETE FROM `" + table + "` WHERE id=@id", connection);
+        delete.Parameters.AddWithValue("@id", id);
+        var error = await Assert.ThrowsAsync<MySqlException>(() => delete.ExecuteNonQueryAsync());
+        Assert.True(error.Number == 1451 && error.Message.Contains("CONSTRAINT `" + constraint + "`"), table + ": " + error.Number + " " + error.Message);
+        await using var count = new MySqlCommand("SELECT COUNT(*) FROM `" + table + "` WHERE id=@id", connection);
+        count.Parameters.AddWithValue("@id", id);
+        Assert.Equal(1L, Convert.ToInt64(await count.ExecuteScalarAsync()));
     }
 
     [Fact]
