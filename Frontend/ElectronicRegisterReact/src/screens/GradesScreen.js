@@ -23,6 +23,7 @@ import { getTeachers } from "../api/teacherService";
 import { useStudentBooklet, useStudentExams } from "../data/studentExams";
 import { examDisplayName, formatDateTime } from "../api/examContract";
 import { gradeErrorMessage } from "../utils/gradeErrors";
+import { GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, isValidGrade } from "../constants/gradeScale";
 
 const GRADES_PAGE_SIZE = 20;
 const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n * 100) / 100));
@@ -184,6 +185,8 @@ function TeacherAdminGrades() {
   }
 
   async function addGrade() {
+    if (!newGrade.studentId || !newGrade.subjectId || !newGrade.date) { Alert.alert("Attenzione", "Compila studente, materia, voto e data."); return; }
+    if (!isValidGrade(newGrade.value)) { Alert.alert("Attenzione", GRADE_ERROR); return; }
     try {
       await createGrade(newGrade, token);
       setShowAdd(false);
@@ -193,6 +196,7 @@ function TeacherAdminGrades() {
   }
 
   async function saveEditedGrade() {
+    if (!isValidGrade(showEdit.value)) { Alert.alert("Attenzione", GRADE_ERROR); return; }
     try {
       await updateGrade(showEdit.id, { subjectId: showEdit.subjectId, value: showEdit.value, date: showEdit.date }, token);
       setShowEdit(null);
@@ -312,7 +316,7 @@ function TeacherAdminGrades() {
           placeholder="Seleziona materia…"
           emptyMessage="Nessuna materia disponibile"
         />
-        <Input label="Voto (1-10)" value={newGrade.value} onChangeText={v => setNewGrade(f => ({ ...f, value: v }))} keyboardType="decimal-pad" />
+        <Input label={GRADE_LABEL} value={newGrade.value} onChangeText={v => setNewGrade(f => ({ ...f, value: v }))} keyboardType={GRADE_KEYBOARD} />
         <DateField label="Data" value={newGrade.date} onChange={(v) => setNewGrade(f => ({ ...f, date: v }))} />
         <Btn label="Salva" onPress={addGrade} />
       </FormModal>
@@ -320,7 +324,7 @@ function TeacherAdminGrades() {
       {/* EDIT MODAL */}
       <FormModal visible={!!showEdit} title="Modifica voto" onClose={() => setShowEdit(null)}>
         {showEdit && <>
-          <Input label="Nuovo voto" value={String(showEdit.value)} onChangeText={v => setShowEdit(f => ({ ...f, value: v }))} keyboardType="decimal-pad" />
+          <Input label={`Nuovo ${GRADE_LABEL.toLowerCase()}`} value={String(showEdit.value)} onChangeText={v => setShowEdit(f => ({ ...f, value: v }))} keyboardType={GRADE_KEYBOARD} />
           <DateField label="Data" value={showEdit.date} onChange={(v) => setShowEdit(f => ({ ...f, date: v }))} />
           <Btn label="Aggiorna" onPress={saveEditedGrade} />
         </>}

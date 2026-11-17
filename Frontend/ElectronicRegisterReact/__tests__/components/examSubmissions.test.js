@@ -44,7 +44,7 @@ describe("correzione di una consegna", () => {
   const review = (over = {}) => ({
     status: "pending_review", studentFirstName: "Mario", studentLastName: "Rossi", examName: "Reti",
     submittedAt: "2026-11-16T09:00:00Z", submitReason: 1, violationCount: 1,
-    closedScore: 2, openMaxPoints: 5, openScore: null, totalScore: 2, maxScore: 7, passingScore: 4.2, suggestedGrade: 6, finalGrade: null,
+    closedScore: 2, openMaxPoints: 5, openScore: null, totalScore: 2, maxScore: 7, passingScore: 4.2, suggestedGrade: 18, finalGrade: null,
     answers: [
       { answerId: "a1", questionText: "Metodo per creare?", questionType: 0, maxPoints: 2, awardedPoints: 2, isCorrect: true,
         options: [{ id: "o1", text: "POST", isSelected: true, isCorrect: true }, { id: "o2", text: "GET" }] },
@@ -103,25 +103,28 @@ describe("correzione di una consegna", () => {
   test("voto diverso dal suggerito: serve il motivo", async () => {
     const { api } = setup();
     await flush();
-    fireEvent.changeText(screen.getByPlaceholderText("1–10"), "8");
+    fireEvent.changeText(screen.getByPlaceholderText("0–30"), "24");
     fireEvent.press(screen.getByText("Assegna il voto"));
     expect(await screen.findByText(/indica il motivo/)).toBeTruthy();
     await pressDialog("OK");
     fireEvent.changeText(screen.getByPlaceholderText("Motivo del voto diverso"), "Ottimo orale");
     fireEvent.press(screen.getByText("Assegna il voto"));
-    await waitFor(() => expect(api.finalizeSubmission).toHaveBeenCalledWith("sub1", { finalGrade: 8, overrideReason: "Ottimo orale" }));
+    await waitFor(() => expect(api.finalizeSubmission).toHaveBeenCalledWith("sub1", { finalGrade: 24, overrideReason: "Ottimo orale" }));
   });
 
   test("voto uguale al suggerito: nessun motivo; voto fuori scala rifiutato", async () => {
     const { api } = setup();
     await flush();
-    fireEvent.changeText(screen.getByPlaceholderText("1–10"), "11");
+    for (const wrong of ["31", "24,5", "-1"]) {
+      fireEvent.changeText(screen.getByPlaceholderText("0–30"), wrong);
+      fireEvent.press(screen.getByText("Assegna il voto"));
+      expect(await screen.findByText("Il voto deve essere un numero intero tra 0 e 30.")).toBeTruthy();
+      await pressDialog("OK");
+    }
+    expect(api.finalizeSubmission).not.toHaveBeenCalled();
+    fireEvent.changeText(screen.getByPlaceholderText("0–30"), "18");
     fireEvent.press(screen.getByText("Assegna il voto"));
-    expect(await screen.findByText("Il voto deve essere compreso tra 1 e 10.")).toBeTruthy();
-    await pressDialog("OK");
-    fireEvent.changeText(screen.getByPlaceholderText("1–10"), "6");
-    fireEvent.press(screen.getByText("Assegna il voto"));
-    await waitFor(() => expect(api.finalizeSubmission).toHaveBeenCalledWith("sub1", { finalGrade: 6, overrideReason: null }));
+    await waitFor(() => expect(api.finalizeSubmission).toHaveBeenCalledWith("sub1", { finalGrade: 18, overrideReason: null }));
   });
 
   test("segreteria: consegna da correggere ma in sola lettura (correzione e voto spettano a docente e admin)", async () => {
@@ -135,9 +138,9 @@ describe("correzione di una consegna", () => {
   });
 
   test("consegna già valutata in via definitiva: sola lettura", async () => {
-    setup(review({ status: "finalized", finalGrade: 7, finalizedAt: "2026-11-17T10:00:00Z", answers: [] }));
+    setup(review({ status: "finalized", finalGrade: 21, finalizedAt: "2026-11-17T10:00:00Z", answers: [] }));
     await flush();
-    expect(screen.getByText("Voto assegnato: 7")).toBeTruthy();
+    expect(screen.getByText("Voto assegnato: 21")).toBeTruthy();
     expect(screen.queryByText("Assegna il voto")).toBeNull();
   });
 

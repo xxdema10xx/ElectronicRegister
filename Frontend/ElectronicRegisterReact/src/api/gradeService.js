@@ -16,7 +16,8 @@ export async function getGradeFilters(token) {
   return res.data;
 }
 
-const toValue = (v) => parseFloat(String(v).replace(",", "."));
+// Voti interi 0–30 (constants/gradeScale.js): le schermate validano prima, il server rifiuta il resto con 400
+const toValue = (v) => Number(String(v).trim());
 
 export async function createGrade({ studentId, subjectId, value, date }, token) {
   const res = await axiosClient.post("/institution/grades",

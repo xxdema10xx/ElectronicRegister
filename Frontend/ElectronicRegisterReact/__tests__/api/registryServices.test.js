@@ -87,11 +87,11 @@ describe("voti", () => {
     expect(axiosClient.get).toHaveBeenCalledWith("/institution/grades/filters", H);
   });
 
-  test("il voto accetta la virgola decimale", async () => {
-    await grades.createGrade({ studentId: "s1", subjectId: "m1", value: "7,5", date: "2026-11-16" }, "tok");
-    expect(axiosClient.post).toHaveBeenCalledWith("/institution/grades", { studentId: "s1", subjectId: "m1", value: 7.5, date: "2026-11-16" }, H);
-    await grades.updateGrade("g1", { subjectId: "m1", value: 8, date: "2026-11-17" }, "tok");
-    expect(axiosClient.put).toHaveBeenCalledWith("/institution/grades/g1", { subjectId: "m1", value: 8, date: "2026-11-17" }, H);
+  test("il voto (intero 0–30) si invia come numero", async () => {
+    await grades.createGrade({ studentId: "s1", subjectId: "m1", value: " 24 ", date: "2026-11-16" }, "tok");
+    expect(axiosClient.post).toHaveBeenCalledWith("/institution/grades", { studentId: "s1", subjectId: "m1", value: 24, date: "2026-11-16" }, H);
+    await grades.updateGrade("g1", { subjectId: "m1", value: 0, date: "2026-11-17" }, "tok");
+    expect(axiosClient.put).toHaveBeenCalledWith("/institution/grades/g1", { subjectId: "m1", value: 0, date: "2026-11-17" }, H);
     await grades.deleteGrade("g1", "tok");
     expect(axiosClient.delete).toHaveBeenCalledWith("/institution/grades/g1", H);
   });

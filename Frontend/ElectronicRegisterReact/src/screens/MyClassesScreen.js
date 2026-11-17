@@ -21,6 +21,7 @@ import { filterBySearch } from "../utils/search";
 import { getMyClasses } from "../api/classService";
 import { getGradesForStudent, addClassGrade, updateClassGrade } from "../api/classGradeService";
 import { notify } from "../utils/dialogs";
+import { GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, isValidGrade } from "../constants/gradeScale";
 
 const initials = (a, b) => `${a?.[0] ?? ""}${b?.[0] ?? ""}`.toUpperCase();
 
@@ -47,11 +48,9 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
   }, [student.id, token, klassSubjects]);
   useEffect(() => { load(); }, [load]);
 
-  const validValue = (v) => { const n = parseFloat(String(v).replace(",", ".")); return n >= 1 && n <= 10; };
-
   async function addGrade() {
     if (!newGrade.subjectId || !newGrade.value || !newGrade.date) return notify("Attenzione", "Compila materia, voto e data.");
-    if (!validValue(newGrade.value)) return notify("Attenzione", "Il voto deve essere compreso tra 1 e 10.");
+    if (!isValidGrade(newGrade.value)) return notify("Attenzione", GRADE_ERROR);
     setSaving(true);
     try {
       await addClassGrade({ studentId: student.id, ...newGrade }, token);
@@ -62,7 +61,7 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
     finally { setSaving(false); }
   }
   async function saveEdit() {
-    if (!validValue(showEdit.value)) return notify("Attenzione", "Il voto deve essere compreso tra 1 e 10.");
+    if (!isValidGrade(showEdit.value)) return notify("Attenzione", GRADE_ERROR);
     setSaving(true);
     try {
       await updateClassGrade(showEdit.id, { subjectId: showEdit.subjectId, value: showEdit.value, date: showEdit.date }, token);
@@ -103,7 +102,7 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
       <FormModal visible={showAdd} title="Aggiungi voto" onClose={() => setShowAdd(false)}>
         <SelectField label="Materia" value={newGrade.subjectId} options={klassSubjects} getLabel={sb => sb.subjectName} getValue={sb => sb.subjectId}
           onSelect={(v) => setNewGrade(f => ({ ...f, subjectId: v }))} placeholder="Seleziona materia…" emptyMessage="Nessuna materia insegnata in questa classe" />
-        <Input label="Voto (1-10)" value={newGrade.value} onChangeText={v => setNewGrade(f => ({ ...f, value: v }))} keyboardType="decimal-pad" />
+        <Input label={GRADE_LABEL} value={newGrade.value} onChangeText={v => setNewGrade(f => ({ ...f, value: v }))} keyboardType={GRADE_KEYBOARD} />
         <DateField label="Data" value={newGrade.date} onChange={(v) => setNewGrade(f => ({ ...f, date: v }))} />
         <Btn label="Salva" onPress={addGrade} loading={saving} />
       </FormModal>
@@ -112,7 +111,7 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
         {showEdit && <>
           <SelectField label="Materia" value={showEdit.subjectId} options={klassSubjects} getLabel={sb => sb.subjectName} getValue={sb => sb.subjectId}
             onSelect={(v) => setShowEdit(f => ({ ...f, subjectId: v }))} placeholder="Seleziona materia…" />
-          <Input label="Voto" value={String(showEdit.value)} onChangeText={v => setShowEdit(f => ({ ...f, value: v }))} keyboardType="decimal-pad" />
+          <Input label={GRADE_LABEL} value={String(showEdit.value)} onChangeText={v => setShowEdit(f => ({ ...f, value: v }))} keyboardType={GRADE_KEYBOARD} />
           <DateField label="Data" value={showEdit.date} onChange={(v) => setShowEdit(f => ({ ...f, date: v }))} />
           <Btn label="Aggiorna" onPress={saveEdit} loading={saving} />
         </>}

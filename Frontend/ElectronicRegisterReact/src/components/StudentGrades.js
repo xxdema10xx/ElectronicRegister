@@ -17,6 +17,7 @@ import { getStudentClassSubjects } from "../api/classService";
 import { formatDateForDisplay, toISODate } from "../utils/dateUtils";
 import { notify, confirmAction } from "../utils/dialogs";
 import { gradeErrorMessage } from "../utils/gradeErrors";
+import { GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, parseGrade } from "../constants/gradeScale";
 
 const emptyForm = () => ({ id: null, subjectId: "", value: "", date: toISODate(new Date()) });
 
@@ -54,9 +55,9 @@ export default function StudentGrades({ student, token, canDelete = true }) {
   const subjectName = g => g.subjectName || subjects.find(x => x.id === g.subjectId)?.name || "—";
 
   async function save() {
-    const value = parseFloat(String(form.value).replace(",", "."));
+    const value = parseGrade(form.value);
     if (!form.subjectId) return notify("Attenzione", "Seleziona la materia.");
-    if (!(value >= 1 && value <= 10)) return notify("Attenzione", "Il voto deve essere tra 1 e 10.");
+    if (value === null) return notify("Attenzione", GRADE_ERROR);
     if (!form.date) return notify("Attenzione", "Seleziona la data.");
     setSaving(true);
     try {
@@ -130,7 +131,7 @@ export default function StudentGrades({ student, token, canDelete = true }) {
                 <DateField label="Data" value={form.date} onChange={(date) => setForm(f => ({ ...f, date }))} />
               </View>
             </View>
-            <Input label="Voto (1-10)" value={String(form.value)} onChangeText={(value) => setForm(f => ({ ...f, value }))} keyboardType="decimal-pad" />
+            <Input label={GRADE_LABEL} value={String(form.value)} onChangeText={(value) => setForm(f => ({ ...f, value }))} keyboardType={GRADE_KEYBOARD} />
             <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: 10 }}>
               <Btn label="Annulla" variant="ghost" onPress={() => setForm(null)} style={{ paddingHorizontal: 22 }} />
               <Btn label={form.id ? "Aggiorna" : "Salva"} onPress={save} loading={saving} style={{ paddingHorizontal: 28 }} />

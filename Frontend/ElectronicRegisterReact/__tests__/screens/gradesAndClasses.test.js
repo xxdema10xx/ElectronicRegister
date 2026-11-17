@@ -79,6 +79,20 @@ describe("Voti: registro (docente, admin, segreteria)", () => {
     expect(lastAlert()).toEqual(["Errore", expect.stringMatching(/non si può eliminare: è un voto generato da un esame/)]);
   });
 
+  test("modifica: voto intero 0–30, altrimenti nessuna richiesta", async () => {
+    renderAs("staff", <GradesScreen />);
+    await flush();
+    fireEvent.press(screen.getAllByLabelText("Modifica")[0]);
+    expect(screen.getByText("Nuovo voto (0-30)")).toBeTruthy();
+    fireEvent.changeText(screen.getByDisplayValue("8"), "28,5");
+    await act(async () => { fireEvent.press(screen.getByText("Aggiorna")); });
+    expect(lastAlert()).toEqual(["Attenzione", "Il voto deve essere un numero intero tra 0 e 30."]);
+    expect(gradeService.updateGrade).not.toHaveBeenCalled();
+    fireEvent.changeText(screen.getByDisplayValue("28,5"), "28");
+    await act(async () => { fireEvent.press(screen.getByText("Aggiorna")); });
+    expect(gradeService.updateGrade).toHaveBeenCalledWith("g1", expect.objectContaining({ value: "28" }), "tok");
+  });
+
   test("docente: modifica sì, eliminazione no", async () => {
     renderAs("teacher", <GradesScreen />);
     await flush();

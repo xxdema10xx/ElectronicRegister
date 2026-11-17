@@ -45,15 +45,21 @@ test("nuovo voto: controlli su materia e valore, poi salvataggio", async () => {
   fireEvent.press(screen.getByText("Seleziona materia…"));
   expect(screen.queryByText("Inglese")).toBeNull(); // solo le materie della classe
   fireEvent.press(screen.getAllByText("Reti").at(-1));
-  fireEvent.changeText(screen.getAllByDisplayValue("")[0], "11"); // campo "Voto (1-10)"
+  expect(screen.getByText("Voto (0-30)")).toBeTruthy();
+  fireEvent.changeText(screen.getAllByDisplayValue("")[0], "31"); // campo "Voto (0-30)"
   fireEvent.press(screen.getByText("Salva"));
-  expect(await screen.findByText("Il voto deve essere tra 1 e 10.")).toBeTruthy();
+  expect(await screen.findByText("Il voto deve essere un numero intero tra 0 e 30.")).toBeTruthy();
   await pressDialog("OK");
 
-  fireEvent.changeText(screen.getAllByDisplayValue("11")[0], "7,5");
+  fireEvent.changeText(screen.getAllByDisplayValue("31")[0], "24,5"); // solo interi
+  fireEvent.press(screen.getByText("Salva"));
+  expect(await screen.findByText("Il voto deve essere un numero intero tra 0 e 30.")).toBeTruthy();
+  await pressDialog("OK");
+
+  fireEvent.changeText(screen.getAllByDisplayValue("24,5")[0], "0");
   fireEvent.press(screen.getByText("Salva"));
   await waitFor(() => expect(gradeService.createGrade).toHaveBeenCalledWith(
-    expect.objectContaining({ studentId: "s1", subjectId: "m1", value: 7.5 }), "tok"));
+    expect.objectContaining({ studentId: "s1", subjectId: "m1", value: 0 }), "tok"));
 });
 
 test("409 in creazione: materia non della classe", async () => {

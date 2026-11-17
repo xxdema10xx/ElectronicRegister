@@ -15,6 +15,7 @@ import { confirmLeave, notify } from "../utils/dialogs";
 import { invalidateExamInsights } from "../api/examInsights";
 import { setLeaveGuard, setPageHeader, useBeforeUnload } from "../navigation/examRoutes";
 import { QUESTION_TYPE, SUBMISSION_STATUS, SUBMISSION_STATUS_LABEL, SUBMIT_REASON, fromEnum, formatDateTime } from "../api/examContract";
+import { GRADE_ERROR, GRADE_KEYBOARD, GRADE_PLACEHOLDER, parseGrade } from "../constants/gradeScale";
 
 const num = (v) => Number(String(v).replace(",", "."));
 const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n * 100) / 100));
@@ -114,8 +115,8 @@ export function SubmissionReview({ submissionId, displayName, api, onClose, onCh
   }
 
   async function finalize() {
-    const n = grade === "" ? null : num(grade);
-    if (n !== null && (isNaN(n) || n < 1 || n > 10)) return notify("Attenzione", "Il voto deve essere compreso tra 1 e 10.");
+    const n = String(grade).trim() === "" ? null : parseGrade(grade);
+    if (String(grade).trim() !== "" && n === null) return notify("Attenzione", GRADE_ERROR);
     if (differs && !reason.trim()) return notify("Attenzione", "Il voto è diverso da quello suggerito: indica il motivo.");
     setBusy(true);
     try {
@@ -208,7 +209,7 @@ export function SubmissionReview({ submissionId, displayName, api, onClose, onCh
                 Suggerito: {fmt(suggested)}. Se scegli un voto diverso devi indicare il motivo. Dopo la conferma lo studente vede il voto.
               </Text>
               <View style={{ flexDirection: "row", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                <TextInput style={[s.input, { width: 100, textAlign: "center" }]} keyboardType="decimal-pad" value={grade} onChangeText={setGrade} placeholder="1–10" placeholderTextColor={C.textLight} />
+                <TextInput style={[s.input, { width: 100, textAlign: "center" }]} keyboardType={GRADE_KEYBOARD} value={grade} onChangeText={setGrade} placeholder={GRADE_PLACEHOLDER} placeholderTextColor={C.textLight} />
                 {differs && (
                   <TextInput style={[s.input, { flex: 1, minWidth: 200 }]} value={reason} onChangeText={setReason} placeholder="Motivo del voto diverso" placeholderTextColor={C.textLight} />
                 )}

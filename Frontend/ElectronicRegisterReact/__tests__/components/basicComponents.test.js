@@ -61,11 +61,14 @@ test("Badge, EmptyState, SectionHeader", () => {
   ["admin", "Nessun dato", "Studenti", "azione"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
 });
 
-test("GradeCircle: verde dal 6, giallo dal 5, rosso sotto", () => {
+test("GradeCircle: verde dal 18, arancione da 15 a 17, rosso sotto", () => {
   const color = (v) => { const { unmount } = render(<GradeCircle value={v} />); const c = bg(screen.getByText(String(v)).parent.parent); unmount(); return c; };
-  expect(color(7)).toBe(C.success);
-  expect(color(5.5)).toBe(C.warning);
-  expect(color(4)).toBe(C.danger);
+  expect(color(30)).toBe(C.success);
+  expect(color(18)).toBe(C.success);
+  expect(color(17)).toBe(C.warning);
+  expect(color(15)).toBe(C.warning);
+  expect(color(14)).toBe(C.danger);
+  expect(color(0)).toBe(C.danger);
 });
 
 test("StatusChip: tono sconosciuto → grigio", () => {
