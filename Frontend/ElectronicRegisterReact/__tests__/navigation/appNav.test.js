@@ -1,5 +1,5 @@
 // Navigazione principale: sezioni per ruolo, cambio di sezione, guardia d'uscita, intestazione delle pagine interne.
-import { act, fireEvent, render, screen } from "@testing-library/react-native";
+import { act, fireEvent, render, screen, within } from "@testing-library/react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AppNav from "../../src/navigation/AppNav";
 import { AuthContext } from "../../src/hooks/useAuth";
@@ -125,4 +125,13 @@ describe("app su telefono (schermo stretto)", () => {
     fireEvent.press(screen.getByLabelText("Torna alla Home"));
     expect(screen.getByText("SCREEN dashboard")).toBeTruthy();
   });
+});
+
+test("accessibilità: la voce attiva della sidebar è 'selected'", () => {
+  renderNav("admin");
+  const selected = () => screen.getAllByRole("link").filter(el => el.props.accessibilityState?.selected).map(el => el.props["aria-current"]);
+  expect(selected()).toEqual(["page"]);
+  fireEvent.press(screen.getByText("Membri"));
+  const active = screen.getAllByRole("link").find(el => el.props.accessibilityState?.selected);
+  expect(within(active).getByText("Membri")).toBeTruthy();
 });

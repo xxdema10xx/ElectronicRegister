@@ -114,6 +114,7 @@ export default function AppNav({ user, onLogout }) {
               const active = screen === t.key;
               return (
                 <Pressable key={t.key} onPress={() => go(t.key)} accessibilityRole="link" accessibilityState={{ selected: active }}
+                  aria-current={active ? "page" : undefined}
                   style={({ hovered }) => ({ flexDirection: "row", alignItems: "center", paddingVertical: 12, paddingHorizontal: 20, marginHorizontal: 10, marginBottom: 2, borderRadius: 10,
                     backgroundColor: active ? "rgba(255,255,255,0.18)" : hovered ? "rgba(255,255,255,0.08)" : "transparent" })}>
                   <View style={{ position: "relative", width: 28 }}>
@@ -214,6 +215,8 @@ export default function AppNav({ user, onLogout }) {
                 const active = screen === t.key;
                 return (
                   <Pressable key={t.key} onPress={() => { setMenuOpen(false); t.key === "logout" ? logout() : go(t.key); }}
+                    accessibilityRole={t.key === "logout" ? "button" : "link"} accessibilityState={{ selected: active }}
+                    aria-current={active ? "page" : undefined}
                     style={({ hovered }) => ({ flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 10, paddingHorizontal: 16,
                       backgroundColor: active ? "rgba(255,255,255,0.18)" : hovered ? "rgba(255,255,255,0.08)" : "transparent" })}>
                     <View style={{ position: "relative" }}>

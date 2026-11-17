@@ -54,7 +54,7 @@ export function DialogHost() {
     // onRequestClose: Esc su web (react-native-web), tasto indietro su Android
     <Modal visible transparent animationType="fade" onRequestClose={cancel}>
       <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.45)", alignItems: "center", justifyContent: "center", padding: 16 }}>
-        <View accessibilityRole="alert" style={[s.card, { width: "100%", maxWidth: 440, padding: 22 }]}>
+        <View testID="app-dialog" accessibilityRole="alert" style={[s.card, { width: "100%", maxWidth: 440, padding: 22 }]}>
           <Text style={{ color: C.text, fontSize: 18, fontWeight: "800" }}>{current.title}</Text>
           {!!current.message && <Text style={{ color: C.textMuted, fontSize: 15, marginTop: 8, lineHeight: 21 }}>{current.message}</Text>}
           <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", gap: 8, marginTop: 20 }}>

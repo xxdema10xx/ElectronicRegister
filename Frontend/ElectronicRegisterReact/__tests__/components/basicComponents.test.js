@@ -194,3 +194,24 @@ test("RouteLink sull'app: un pulsante che chiama onPress", () => {
   act(() => fireEvent.press(screen.getByLabelText("Apri")));
   expect(onPress).toHaveBeenCalled();
 });
+
+describe("accessibilità", () => {
+  test("Btn ha il ruolo 'button' e lo stato disattivato/occupato", () => {
+    render(<><Btn label="Salva" onPress={() => {}} /><Btn label="Invio" loading onPress={() => {}} /></>);
+    expect(screen.getByRole("button", { name: "Salva" })).toBeTruthy();
+    const buttons = screen.getAllByRole("button");
+    expect(buttons[1].props.accessibilityState).toMatchObject({ disabled: true, busy: true });
+  });
+
+  test("ListRow passa il testID (es. righe degli esami)", () => {
+    render(<ListRow testID="exam-row-e1"><Text>Reti</Text></ListRow>);
+    expect(screen.getByTestId("exam-row-e1")).toBeTruthy();
+  });
+
+  test("il dialog dell'app ha testID 'app-dialog'", () => {
+    const { DialogHost, showDialog } = require("../../src/components/AppDialog");
+    render(<DialogHost />);
+    act(() => showDialog({ title: "Avviso", message: "Testo" }));
+    expect(screen.getByTestId("app-dialog")).toBeTruthy();
+  });
+});

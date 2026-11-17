@@ -25,15 +25,18 @@ export function listProps(extra) {
     : { contentContainerStyle: [NATIVE_CONTENT, extra] };
 }
 
-export default function ListRow({ children, onPress, style }) {
+// testID: identificativo stabile della riga per i test (es. "exam-row-<id>")
+export default function ListRow({ children, onPress, style, testID }) {
   if (!isWeb) {
     const card = <Card style={[{ marginBottom: 10 }, ROW, style]}>{children}</Card>;
-    return onPress ? <TouchableOpacity activeOpacity={0.7} onPress={onPress}>{card}</TouchableOpacity> : card;
+    return onPress
+      ? <TouchableOpacity testID={testID} activeOpacity={0.7} onPress={onPress}>{card}</TouchableOpacity>
+      : <View testID={testID}>{card}</View>;
   }
   const base = [ROW, { paddingVertical: 12, paddingHorizontal: 16, backgroundColor: C.card }];
-  if (!onPress) return <View style={[base, style]}>{children}</View>;
+  if (!onPress) return <View testID={testID} style={[base, style]}>{children}</View>;
   return (
-    <Pressable onPress={onPress} style={({ hovered }) => [base, hovered && { backgroundColor: HOVER_BG }, style]}>
+    <Pressable testID={testID} onPress={onPress} style={({ hovered }) => [base, hovered && { backgroundColor: HOVER_BG }, style]}>
       {children}
     </Pressable>
   );

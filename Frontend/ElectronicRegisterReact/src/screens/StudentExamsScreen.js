@@ -261,7 +261,7 @@ export default function StudentExamsScreen() {
               const st = stateOf(item);
               const isNew = newOnEntry.current?.has(item.id) && item.canStart;
               return (
-                <ListRow onPress={st.action && st.action !== "resume" ? () => press(item) : undefined}>
+                <ListRow testID={`exam-row-${item.id}`} onPress={st.action && st.action !== "resume" ? () => press(item) : undefined}>
                     <View style={[s.avatar, { backgroundColor: st.tone === "green" ? "#D1FAE5" : "#FDE68A" }]}>
                       <Ionicons name={st.tone === "green" ? "checkmark" : "document-text-outline"} size={24} color={st.tone === "green" ? "#065F46" : "#92400E"} />
                     </View>

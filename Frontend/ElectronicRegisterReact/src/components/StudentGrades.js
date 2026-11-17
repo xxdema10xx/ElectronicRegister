@@ -102,11 +102,13 @@ export default function StudentGrades({ student, token, canDelete = true }) {
                 <Text style={s.itemTitle}>{subjectName(g)}</Text>
                 <Text style={s.itemSub}>{formatDateForDisplay(g.date)}</Text>
               </View>
-              <TouchableOpacity onPress={() => setForm({ id: g.id, subjectId: g.subjectId, value: String(g.value), date: g.date })} style={{ padding: 6 }}>
+              <TouchableOpacity onPress={() => setForm({ id: g.id, subjectId: g.subjectId, value: String(g.value), date: g.date })} style={{ padding: 6 }}
+                accessibilityRole="button" accessibilityLabel={`Modifica voto di ${subjectName(g)}`}>
                 <Ionicons name="create-outline" size={26} color={C.footer} />
               </TouchableOpacity>
               {canDelete && (
-                <TouchableOpacity onPress={() => remove(g)} style={{ padding: 6 }}>
+                <TouchableOpacity onPress={() => remove(g)} style={{ padding: 6 }}
+                  accessibilityRole="button" accessibilityLabel={`Elimina voto di ${subjectName(g)}`}>
                   <Ionicons name="trash-outline" size={26} color={C.footer} />
                 </TouchableOpacity>
               )}

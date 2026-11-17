@@ -90,3 +90,10 @@ test("lo Staff non legge /subjects: materie dai filtri dei voti", async () => {
   await flush();
   expect(screen.getByText("Reti")).toBeTruthy();
 });
+
+test("accessibilità: icone di modifica ed eliminazione con etichetta", async () => {
+  renderAs("admin", <StudentGrades student={student} token="tok" />);
+  await flush();
+  expect(screen.getByLabelText("Modifica voto di Java")).toBeTruthy();
+  expect(screen.getByLabelText("Elimina voto di Java")).toBeTruthy();
+});

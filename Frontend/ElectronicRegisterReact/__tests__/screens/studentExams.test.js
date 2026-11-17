@@ -216,3 +216,9 @@ describe("esami assegnati e notifiche", () => {
     expect(mockApi.getAssigned).not.toHaveBeenCalled();
   });
 });
+
+test("ogni riga d'esame ha testID 'exam-row-<id>'", async () => {
+  renderAs("student", <StudentExamsScreen />);
+  await flush();
+  ["a1", "a2", "a3", "a4"].forEach(id => expect(screen.getByTestId(`exam-row-${id}`)).toBeTruthy());
+});
