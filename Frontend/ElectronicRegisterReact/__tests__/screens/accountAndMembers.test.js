@@ -1,7 +1,9 @@
 // Membri dell'istituto (admin) e profilo dell'utente.
 import { Alert } from "react-native";
 import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
-import UsersScreen, { EVENT_CONFLICT_MESSAGE, LAST_ADMIN_MESSAGE, MEMBER_CHANGED_MESSAGE, NO_OP_MESSAGE } from "../../src/screens/UsersScreen";
+import UsersScreen, {
+  EVENT_CONFLICT_MESSAGE, INVALID_TRANSITION_MESSAGE, LAST_ADMIN_MESSAGE, MEMBER_CHANGED_MESSAGE, NO_OP_MESSAGE,
+} from "../../src/screens/UsersScreen";
 import ProfileScreen from "../../src/screens/ProfileScreen";
 import * as userService from "../../src/api/userService";
 import * as authService from "../../src/api/authService";
@@ -136,6 +138,13 @@ describe("Membri", () => {
       expect(second).toBe(first);
     });
 
+    test("modifica concorrente (409 ConcurrentChange)", async () => {
+      accountService.createAccount.mockRejectedValue(Object.assign(new Error("x"), { status: 409, code: "ConcurrentChange" }));
+      await openAndFill();
+      await act(async () => { fireEvent.press(screen.getByText("Crea account")); });
+      expect(screen.getByText("Modifica concorrente: ricarica e riprova.")).toBeTruthy();
+    });
+
     test("persona già nell'istituto (409)", async () => {
       accountService.createAccount.mockRejectedValue(Object.assign(new Error("x"), { status: 409 }));
       await openAndFill();
@@ -166,6 +175,8 @@ describe("Membri", () => {
     ["StaleRevision", MEMBER_CHANGED_MESSAGE],
     ["NoOp", NO_OP_MESSAGE],
     ["EventIdConflict", EVENT_CONFLICT_MESSAGE],
+    ["InvalidTransition", INVALID_TRANSITION_MESSAGE],
+    ["ConcurrentChange", MEMBER_CHANGED_MESSAGE],
     ["CodiceSconosciuto", MEMBER_CHANGED_MESSAGE],
   ])("409 con code %s: messaggio dedicato e membro ricaricato", async (code, message) => {
     userService.mutateMember.mockRejectedValue(Object.assign(new Error("x"), { status: 409, code }));

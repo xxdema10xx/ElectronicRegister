@@ -30,10 +30,13 @@ export const MEMBER_CHANGED_MESSAGE = "Il membro è stato modificato nel frattem
 export const LAST_ADMIN_MESSAGE = "Non si può togliere l'ultimo amministratore attivo dell'istituto: prima assegna il ruolo di amministratore a un altro membro.";
 export const NO_OP_MESSAGE = "La modifica non ha effetto: il membro ha già questo ruolo o questo stato. Ho ricaricato i dati.";
 export const EVENT_CONFLICT_MESSAGE = "La stessa richiesta risulta già inviata con dati diversi: ho ricaricato i dati, controlla e riprova.";
+export const INVALID_TRANSITION_MESSAGE = "Questa azione non è possibile nello stato attuale del membro (in attesa o uscito dall'istituto). Ho ricaricato i dati.";
 // Motivo del 409 dal `code` del server (POST /institution/admin/members/{id}/mutations); senza code, testo neutro
 const CONFLICT_MESSAGES = {
   LastAdministrator: LAST_ADMIN_MESSAGE,
   StaleRevision: MEMBER_CHANGED_MESSAGE,
+  ConcurrentChange: MEMBER_CHANGED_MESSAGE, // come StaleRevision: ricarica e riprova
+  InvalidTransition: INVALID_TRANSITION_MESSAGE,
   NoOp: NO_OP_MESSAGE,
   EventIdConflict: EVENT_CONFLICT_MESSAGE,
 };

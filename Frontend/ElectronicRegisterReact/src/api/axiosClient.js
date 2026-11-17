@@ -59,6 +59,9 @@ const NETWORK_MESSAGE = "Impossibile contattare il server. Controlla la connessi
 const GATEWAY_MESSAGE = "Il server non è disponibile in questo momento, riprova tra poco.";
 const NOT_FOUND_MESSAGE = "Elemento non trovato: potrebbe essere stato eliminato.";
 const SERVER_ERROR_MESSAGE = "Si è verificato un errore sul server. Riprova più tardi.";
+// Codici dei 409 con un significato preciso per qualsiasi schermata (account, inviti, membri…)
+export const CONCURRENT_CHANGE_MESSAGE = "Modifica concorrente: ricarica e riprova.";
+const CONFLICT_CODE_MESSAGES = { ConcurrentChange: CONCURRENT_CHANGE_MESSAGE };
 const isHtml = (text) => /<\s*(!doctype|html|head|body)\b/i.test(text);
 
 // Normalizza gli errori di rete/HTTP in un semplice Error con un messaggio
@@ -90,6 +93,7 @@ axiosClient.interceptors.response.use(
       status === 429 ? STATUS_MESSAGES[429] :
       serverError ? `${SERVER_ERROR_MESSAGE}${correlationId ? ` Codice per l'assistenza: ${correlationId}` : ""}` :
       status === 404 ? NOT_FOUND_MESSAGE :
+      status === 409 && CONFLICT_CODE_MESSAGES[code] ? CONFLICT_CODE_MESSAGES[code] :
       (typeof data === "string" && data) ? data :
       problem ? problem :
       code ? `Errore: ${code}` :

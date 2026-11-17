@@ -28,6 +28,7 @@ describe("messaggi di errore", () => {
     ["titolo generico ignorato", { status: 409, data: { title: "Operazione non consentita" } }, "Operazione non consentita nello stato attuale. Ricarica e riprova."],
     ["errori di validazione", { status: 400, data: { title: "x", errors: { Name: ["obbligatorio"] } } }, "Dati non validi: controlla i campi."],
     ["solo codice", { status: 409, data: { code: "calendar.revision-conflict" } }, "Errore: calendar.revision-conflict"],
+    ["409 ConcurrentChange (account, inviti…)", { status: 409, data: { title: "Conflitto", detail: "Concurrency", code: "ConcurrentChange" } }, "Modifica concorrente: ricarica e riprova."],
     ["403", { status: 403, data: {} }, "Non hai i permessi per questa operazione (o la funzione non è attiva)."],
     ["400 senza dettagli", { status: 400, data: {} }, "Dati non validi."],
     ["D-11: 429 con titolo del server", { status: 429, data: { title: "Too Many Requests", detail: "Rate limit" } }, "Troppe richieste: attendi un minuto e riprova."],

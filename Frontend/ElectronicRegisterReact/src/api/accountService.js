@@ -3,7 +3,7 @@
 // L'amministratore crea account di ogni ruolo, la segreteria solo Student o Teacher. L'email la genera il
 // server; la password temporanea arriva una volta sola nella risposta e va cambiata al primo accesso.
 import * as Crypto from "expo-crypto";
-import axiosClient, { authHeader } from "./axiosClient";
+import axiosClient, { CONCURRENT_CHANGE_MESSAGE, authHeader } from "./axiosClient";
 
 export const newEventId = () => globalThis.crypto?.randomUUID?.() ?? Crypto.randomUUID();
 
@@ -49,6 +49,8 @@ export function accountErrorMessage(e) {
   if (e?.status === 404) return "La creazione degli account non è attiva su questo server, oppure la scheda collegata non esiste.";
   if (e?.status === 422) return "Nome e cognome non coincidono con quelli della scheda collegata.";
   if (e?.status === 409) {
+    // Creazione in conflitto con un'altra modifica contemporanea: si ricarica e si riprova
+    if (e.code === "ConcurrentChange") return CONCURRENT_CHANGE_MESSAGE;
     return e.problem && /email/i.test(e.problem)
       ? "Non ci sono più indirizzi email disponibili per questo nome: contatta l'amministratore della piattaforma."
       : "Questa persona è già nell'istituto, oppure la scheda è già collegata a un altro account.";
