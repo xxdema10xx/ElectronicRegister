@@ -33,7 +33,7 @@ const assigned = () => [
 ];
 
 beforeEach(() => {
-  setStorageUser("u-student");
+  setStorageUser("u-student", "i1");
   clearUserStorage(); // notifiche viste e consegne dei test precedenti
   Object.assign(mockApi, {
     getAssigned: jest.fn().mockResolvedValue(assigned()),

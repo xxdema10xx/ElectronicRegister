@@ -35,8 +35,9 @@ export default function App() {
   const [choices, setChoices] = useState(null); // istituti tra cui scegliere dopo il login
   const pendingAccount = useRef(null);
 
-  // Durante il render e non in un effetto: le schermate leggono i dati dell'utente già al primo render
-  setStorageUser(user?.id);
+  // Durante il render e non in un effetto: le schermate leggono i dati dell'utente già al primo render.
+  // L'istituto fa parte della chiave: cambiando istituto non si legge nulla dell'altro.
+  setStorageUser(user?.id, user?.institutionId || session.institution?.institutionId);
 
   const persist = (u) => sessionStore.set({
     accessToken: session.accessToken, accessExpiresAt: session.accessExpiresAt, institution: session.institution, user: u,

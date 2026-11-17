@@ -31,7 +31,7 @@ function setup({ minutesLeft = 30, api: overrides = {} } = {}) {
 
 beforeEach(() => {
   jest.useFakeTimers({ now: new Date("2026-11-16T09:00:00Z") });
-  setStorageUser("u-student");
+  setStorageUser("u-student", "i1");
 });
 afterEach(() => { jest.useRealTimers(); setStorageUser(null); });
 

@@ -24,7 +24,7 @@ const exams = [
 
 beforeEach(() => {
   invalidateExamInsights();
-  setStorageUser("u-teacher");
+  setStorageUser("u-teacher", "i1");
   Object.assign(mockApi, {
     cacheKey: () => "exams-screen",
     listExams: jest.fn().mockResolvedValue(exams),
