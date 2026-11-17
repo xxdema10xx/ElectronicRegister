@@ -104,7 +104,7 @@ export function CatalogAddModal({ visible, level, sel, linked = [], onClose, onD
       {(level === "areas" || level === "paths") && <>
         {reusable.length > 0 && (
           <SelectField label={level === "areas" ? "Area di studio" : "Corso di studio"} value={form.choice}
-            options={[...reusable, { id: NEW, name: `+ Nuova ${level === "areas" ? "area" : "corso"}` }]}
+            options={[...reusable, { id: NEW, name: level === "areas" ? "+ Nuova area" : "+ Nuovo corso" }]}
             getLabel={(x) => x.name} onSelect={(choice) => set({ choice })} placeholder={`Scegli ${level === "areas" ? "un'area" : "un corso"}…`} />
         )}
         {isNew && <>
