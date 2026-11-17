@@ -1,10 +1,13 @@
 // src/components/ExamTaker.js
 // Svolgimento dell'esame a schermo bloccato. Il blocco è "di deterrenza" e non a prova di manomissione:
 // su web usa lo schermo intero, e uscire, cambiare scheda/finestra o perdere il focus conta come uscita;
-// su nativo si controlla che l'app resti in primo piano. Alla terza uscita, o allo scadere del tempo,
-// l'esame viene consegnato automaticamente. Le risposte si salvano da sole sul server; la scadenza è quella
-// decisa dal server (deadlineAt), non un timer del dispositivo. Ogni uscita è segnalata anche al server
-// (POST /violations), che la mostra al docente nella correzione.
+// su nativo si controlla che l'app resti in primo piano. Ogni uscita è segnalata al server (POST /violations),
+// che la conta e la mostra al docente; alla soglia (MAX_VIOLATIONS) è il SERVER a consegnare la prova con le
+// risposte già salvate (autoSubmitted): lo studente è escluso e il client non chiama /submit. Se la soglia sul
+// server è disattivata, lo studente resta in pausa e può riprendere. Allo scadere del tempo si consegnano le
+// risposte salvate (/submit-expired). Le risposte si salvano da sole sul server; la scadenza è quella decisa
+// dal server (deadlineAt), non un timer del dispositivo. Se il server risponde 409 perché la prova risulta già
+// consegnata (altra scheda, altro dispositivo) si legge l'esito e lo svolgimento si chiude.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Animated, AppState, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,10 +15,12 @@ import { C, s } from "../constants/theme";
 import Btn from "./Btn";
 import Card from "./Card";
 import * as Crypto from "expo-crypto";
-import { answersToDto, examDisplayName, isAnswered, parseUtc } from "../api/examContract";
+import { SUBMISSION_STATUS, SUBMIT_REASON, answersToDto, examDisplayName, fromEnum, isAnswered, parseUtc } from "../api/examContract";
 import { saveRun } from "../data/studentExams";
 
 export const MAX_VIOLATIONS = 3;
+export const EXCLUDED_MESSAGE = "Sei stato escluso dall'esame: sono state rilevate troppe uscite dalla finestra. Le risposte salvate sono state consegnate.";
+export const ALREADY_SUBMITTED_MESSAGE = "La prova risulta già consegnata (da un'altra scheda o da un altro dispositivo).";
 const SAVE_DELAY_MS = 2500;
 const isWeb = Platform.OS === "web";
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -46,12 +51,16 @@ export default function ExamTaker({ run, api, onFinish }) {
   const [unanswered, setUnanswered] = useState([]); // tutte le domande senza risposta: solo evidenziate
   const [saveState, setSaveState] = useState(null); // "saving" | "saved" | "error"
   const [submitting, setSubmitting] = useState(false);
-  const [failure, setFailure] = useState(null); // consegna automatica non riuscita
+  const [failure, setFailure] = useState(null); // consegna non riuscita (per la scadenza: schermata "Riprova")
 
   const finishedRef = useRef(false);
   const submittingRef = useRef(false);
   const pausedRef = useRef(false);
   const violationsRef = useRef(0);
+  const closingRef = useRef(false); // lettura dell'esito dopo una consegna fatta dal server, in corso
+  const dirtyRef = useRef(false); // risposte cambiate e non ancora salvate sul server
+  const clockRef = useRef(null);
+  const closedByServerRef = useRef(null);
 
   // Il bottone "Riprendi" pulsa finché l'esame è in pausa, per farlo notare subito.
   const pulse = useRef(new Animated.Value(1)).current;
@@ -74,7 +83,8 @@ export default function ExamTaker({ run, api, onFinish }) {
     if (finishedRef.current || submittingRef.current) return;
     let revision = revisionRef.current + 1;
     setSaveState("saving");
-    const send = (clientRevision) => api.saveAnswers(run.submissionId, { clientRevision, answers: answersToDto(questions, answersRef.current) });
+    const snapshot = answersRef.current;
+    const send = (clientRevision) => api.saveAnswers(run.submissionId, { clientRevision, answers: answersToDto(questions, snapshot) });
     try {
       let res = await send(revision);
       // accepted:false = revisione più vecchia di quella del server (es. un salvataggio da un'altra scheda):
@@ -90,14 +100,20 @@ export default function ExamTaker({ run, api, onFinish }) {
         return;
       }
       revisionRef.current = Math.max(revision, res?.currentRevision ?? revision);
+      if (answersRef.current === snapshot) dirtyRef.current = false;
       saveRun(run.examId, { revision: revisionRef.current });
       setSaveState("saved");
-    } catch { setSaveState("error"); }
+    } catch (e) {
+      // 409: la prova non è più in corso (consegnata altrove o dal server): si legge l'esito e si chiude
+      if (e?.status === 409) await closedByServerRef.current?.();
+      if (!finishedRef.current) setSaveState("error");
+    }
   }, [api, questions, run.examId, run.submissionId]);
 
   // Ogni modifica si tiene subito sul dispositivo (ripresa dopo un refresh) e si invia al server dopo una breve pausa
   useEffect(() => {
     if (firstRender.current) { firstRender.current = false; return; }
+    dirtyRef.current = true;
     saveRun(run.examId, { answers });
     const id = setTimeout(save, SAVE_DELAY_MS);
     return () => clearTimeout(id);
@@ -135,17 +151,70 @@ export default function ExamTaker({ run, api, onFinish }) {
     }
   }, [api, onFinish, questions, run.submissionId]);
 
-  // type: tab_hidden | window_blur | fullscreen_exit (valori ammessi dal server)
+  // Fine dello svolgimento decisa dal server: niente più salvataggi, timer fermo, fuori dallo schermo intero
+  const endTaking = () => {
+    finishedRef.current = true;
+    clearInterval(clockRef.current);
+    pausedRef.current = false;
+    setPaused(null);
+    exitFullscreen();
+  };
+
+  // La prova è stata consegnata dal server (excluded: per le uscite) o risulta già consegnata altrove (409).
+  // Si legge l'esito persistito e si chiude lo svolgimento. Con un 409 si chiude solo se il server conferma
+  // che la prova non è più in corso: un 409 può essere anche il limite di frequenza delle violazioni.
+  const closeFromServer = useCallback(async (excluded) => {
+    if (finishedRef.current || closingRef.current) return;
+    closingRef.current = true;
+    let result = null;
+    for (let attempt = 0; attempt < 2 && !result; attempt++) {
+      try { result = await api.getResult(run.submissionId); }
+      catch { if (attempt === 0) await sleep(1500); }
+    }
+    const status = fromEnum(result?.status, SUBMISSION_STATUS);
+    if (!excluded && (!result || status === "in_progress")) { closingRef.current = false; return; }
+    if (finishedRef.current) return;
+    const byViolations = excluded || fromEnum(result?.submitReason, SUBMIT_REASON) === "violations";
+    endTaking();
+    onFinish({
+      result: result && status !== "in_progress" ? result : null,
+      auto: true,
+      reason: byViolations ? "troppe uscite dal test" : "prova già consegnata",
+      notice: byViolations ? EXCLUDED_MESSAGE : ALREADY_SUBMITTED_MESSAGE,
+      excluded: byViolations,
+      violations: violationsRef.current,
+    });
+  }, [api, onFinish, run.submissionId]);
+  closedByServerRef.current = () => closeFromServer(false);
+
+  // type: tab_hidden | window_blur | fullscreen_exit (valori ammessi dal server).
+  // L'esame va in pausa; il contatore è quello del server (violationCount), quello locale solo se la
+  // chiamata fallisce. Alla soglia consegna il server (autoSubmitted): mai /submit dal client per le uscite.
   const registerViolation = useCallback((message, type) => {
     if (finishedRef.current || submittingRef.current || pausedRef.current) return;
     pausedRef.current = true;
     violationsRef.current += 1;
     setViolations(violationsRef.current);
-    // Il server registra l'evento per il docente; un errore qui non deve bloccare l'esame
-    api.reportViolation(run.submissionId, { eventId: newEventId(), type }).catch(() => {});
-    if (violationsRef.current >= MAX_VIOLATIONS) return submit(true, "troppe uscite dal test");
     setPaused(message);
-  }, [submit]);
+    const eventId = newEventId();
+    (async () => {
+      // Prima si salvano le risposte non ancora inviate: se il server consegna, consegna quelle salvate
+      if (dirtyRef.current) await save();
+      if (finishedRef.current) return;
+      try {
+        const receipt = await api.reportViolation(run.submissionId, { eventId, type });
+        const count = Number(receipt?.violationCount);
+        if (receipt?.violationCount !== undefined && receipt?.violationCount !== null && Number.isFinite(count)) {
+          violationsRef.current = count;
+          setViolations(count);
+        }
+        if (receipt?.autoSubmitted) await closeFromServer(true);
+      } catch (e) {
+        if (e?.status === 409) await closeFromServer(false);
+        // altri errori: resta il conteggio locale e l'esame non si blocca
+      }
+    })();
+  }, [api, run.submissionId, save, closeFromServer]);
 
   function resume() {
     enterFullscreen();
@@ -163,8 +232,8 @@ export default function ExamTaker({ run, api, onFinish }) {
 
   // Timer: segue la scadenza del server e continua anche durante la pausa
   useEffect(() => {
-    const id = setInterval(() => setRemaining(secondsLeft()), 1000);
-    return () => clearInterval(id);
+    clockRef.current = setInterval(() => setRemaining(secondsLeft()), 1000);
+    return () => clearInterval(clockRef.current);
   }, []);
   const expiredRef = useRef(false);
   const lastSaveRef = useRef(false);
@@ -298,7 +367,7 @@ export default function ExamTaker({ run, api, onFinish }) {
               <Text style={{ color: "#E2E8F0", fontSize: 16, marginTop: 10, textAlign: "center" }}>{paused}</Text>
               <View style={{ backgroundColor: "rgba(252,165,165,0.15)", borderRadius: 10, padding: 12, marginTop: 14 }}>
                 <Text style={{ color: "#FCA5A5", fontWeight: "700", textAlign: "center" }}>
-                  Uscita {violations} di {MAX_VIOLATIONS}: alla {MAX_VIOLATIONS}ª l'esame viene consegnato automaticamente.
+                  Uscita {violations} di {MAX_VIOLATIONS}: alla {MAX_VIOLATIONS}ª sei escluso dall'esame e vengono consegnate le risposte salvate.
                 </Text>
                 <Text style={{ color: "#FCA5A5", textAlign: "center", marginTop: 4 }}>Il tempo continua a scorrere.</Text>
               </View>
@@ -312,7 +381,7 @@ export default function ExamTaker({ run, api, onFinish }) {
           </View>
         )}
 
-        {/* La consegna automatica non è andata a buon fine (rete, domande obbligatorie mancanti…) */}
+        {/* La consegna allo scadere del tempo non è andata a buon fine (rete, server…) */}
         {failure?.reason && (
           <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: C.primary, alignItems: "center", justifyContent: "center", padding: 24, zIndex: 20 }}>
             <Ionicons name="alert-circle-outline" size={56} color="#FCA5A5" />

@@ -123,9 +123,10 @@ export default function StudentExamsScreen() {
     if (outcome.error) {
       notify("Consegna non riuscita", `${outcome.error} L'esame verrà chiuso dal server alla scadenza.`);
     } else {
-      const meta = { auto: outcome.auto, reason: outcome.reason, violations: outcome.violations };
+      const meta = { auto: outcome.auto, reason: outcome.reason, violations: outcome.violations, notice: outcome.notice || null };
       saveRun(run.examId, { finished: true, result: outcome.result, meta });
-      setView({ item: assigned.find(a => a.id === run.examId) || { id: run.examId, name: run.exam.name }, result: outcome.result, meta });
+      const item = assigned.find(a => a.id === run.examId) || { id: run.examId, name: run.exam.name };
+      setView({ item, result: outcome.result || { status: null }, meta });
     }
     notifyStudentExamsChanged();
   }
@@ -174,7 +175,9 @@ export default function StudentExamsScreen() {
           {view.result?.submittedAt && <Text style={s.itemSub}>Consegnato il {formatDateTime(view.result.submittedAt)}</Text>}
           {done && r.totalScore !== null && <Text style={s.itemSub}>Punteggio: {fmt(r.totalScore)} / {fmt(r.maxScore)}</Text>}
           {r.showGrade && <Text style={{ fontSize: 22, fontWeight: "800", color: bad ? C.danger : C.success, marginTop: 8 }}>Voto: {fmt(r.grade)}</Text>}
-          {view.meta?.auto && <Text style={[s.itemSub, { color: C.danger, marginTop: 6 }]}>Consegna automatica: {view.meta.reason}</Text>}
+          {view.meta?.notice
+            ? <Text style={[s.itemSub, { color: C.danger, marginTop: 6 }]}>{view.meta.notice}</Text>
+            : view.meta?.auto && <Text style={[s.itemSub, { color: C.danger, marginTop: 6 }]}>Consegna automatica: {view.meta.reason}</Text>}
           {view.meta?.violations > 0 && <Text style={s.itemSub}>Uscite dall'esame registrate: {view.meta.violations}</Text>}
         </Card>
         <Btn label="Torna agli esami" onPress={() => { setView(null); reload(); }} style={{ marginTop: 20, minWidth: 220 }} />
@@ -204,7 +207,8 @@ export default function StudentExamsScreen() {
               <Text style={{ color: "#92400E" }}>• Lo schermo verrà bloccato: potrai fare solo l'esame.</Text>
               <Text style={{ color: "#92400E" }}>• Non uscire dallo schermo intero, non cambiare scheda o finestra.</Text>
               <Text style={{ color: "#92400E" }}>• Copia e incolla sono disattivati.</Text>
-              <Text style={{ color: "#92400E" }}>• Alla {MAX_VIOLATIONS}ª uscita, o allo scadere del tempo, l'esame viene consegnato automaticamente.</Text>
+              <Text style={{ color: "#92400E" }}>• Alla {MAX_VIOLATIONS}ª uscita sei escluso dall'esame e vengono consegnate le risposte già salvate.</Text>
+              <Text style={{ color: "#92400E" }}>• Allo scadere del tempo l'esame viene consegnato automaticamente.</Text>
               <Text style={{ color: "#92400E" }}>• Puoi svolgerlo una sola volta.</Text>
             </View>
             <Btn label="Inizia l'esame" onPress={() => start(intro)} loading={starting} style={{ marginTop: 16 }} />

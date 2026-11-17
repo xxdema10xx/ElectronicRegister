@@ -1,7 +1,7 @@
 // Svolgimento dell'esame: risposte, salvataggio automatico, consegna, uscite dall'app e scadenza del tempo.
 import { AppState } from "react-native";
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
-import ExamTaker, { MAX_VIOLATIONS } from "../../src/components/ExamTaker";
+import ExamTaker, { ALREADY_SUBMITTED_MESSAGE, EXCLUDED_MESSAGE, MAX_VIOLATIONS } from "../../src/components/ExamTaker";
 import { setStorageUser } from "../../src/utils/userStorage";
 import { getRun } from "../../src/data/studentExams";
 
@@ -17,6 +17,7 @@ function setup({ minutesLeft = 30, api: overrides = {} } = {}) {
     submitExam: jest.fn().mockResolvedValue({ status: "graded" }),
     submitExpired: jest.fn().mockResolvedValue({ status: "graded" }),
     reportViolation: jest.fn().mockResolvedValue({}),
+    getResult: jest.fn().mockResolvedValue({ status: 1, submitReason: 2, passed: false, grade: 4 }),
     ...overrides,
   };
   const run = {
@@ -117,23 +118,107 @@ test("consegna non riuscita: messaggio e si resta nell'esame", async () => {
   expect(onFinish).not.toHaveBeenCalled();
 });
 
-test("uscire dall'app mette in pausa; alla terza uscita consegna in automatico", async () => {
-  const { api, onFinish } = setup();
-  const onChange = AppState.addEventListener.mock.calls.at(-1)[1];
-  await act(async () => onChange("background"));
+const appStateChange = () => AppState.addEventListener.mock.calls.at(-1)[1];
+const receipt = (violationCount, autoSubmitted = false) => ({ eventId: "e", violationCount, duplicate: false, autoSubmitted });
+
+test("uscire dall'app mette in pausa; alla terza il server consegna e lo studente è escluso (niente /submit)", async () => {
+  const reportViolation = jest.fn()
+    .mockResolvedValueOnce(receipt(1)).mockResolvedValueOnce(receipt(2)).mockResolvedValueOnce(receipt(3, true));
+  const { api, onFinish } = setup({ api: { reportViolation } });
+  await act(async () => appStateChange()("background"));
   expect(screen.getByText("Esame in pausa")).toBeTruthy();
   expect(screen.getByText("Hai lasciato l'app durante l'esame.")).toBeTruthy();
-  expect(api.reportViolation).toHaveBeenCalledWith("sub1", expect.objectContaining({ type: "tab_hidden" }));
-  await act(async () => onChange("background")); // in pausa non si contano altre uscite
+  expect(reportViolation).toHaveBeenCalledWith("sub1", expect.objectContaining({ type: "tab_hidden" }));
+  await act(async () => appStateChange()("background")); // in pausa non si contano altre uscite
   expect(screen.getByText(`Uscite: 1/${MAX_VIOLATIONS}`)).toBeTruthy();
 
   fireEvent.press(screen.getByText("▶  Riprendi l'esame"));
   expect(screen.queryByText("Esame in pausa")).toBeNull();
-  await act(async () => onChange("background"));
+  await act(async () => appStateChange()("background"));
   fireEvent.press(screen.getByText("▶  Riprendi l'esame"));
-  await act(async () => onChange("inactive"));
-  expect(api.submitExam).toHaveBeenCalled();
-  expect(onFinish).toHaveBeenCalledWith(expect.objectContaining({ auto: true, reason: "troppe uscite dal test", violations: 3 }));
+  await act(async () => appStateChange()("inactive"));
+  expect(reportViolation).toHaveBeenCalledTimes(3);
+  expect(api.getResult).toHaveBeenCalledWith("sub1");
+  expect(api.submitExam).not.toHaveBeenCalled();
+  expect(api.submitExpired).not.toHaveBeenCalled();
+  expect(onFinish).toHaveBeenCalledWith(expect.objectContaining({
+    auto: true, excluded: true, notice: EXCLUDED_MESSAGE, violations: 3, result: { status: 1, submitReason: 2, passed: false, grade: 4 },
+  }));
+  // dopo l'esclusione niente più salvataggi né timer
+  await act(async () => { jest.advanceTimersByTime(31 * 60000); });
+  expect(api.saveAnswers).not.toHaveBeenCalled();
+  expect(api.submitExpired).not.toHaveBeenCalled();
+});
+
+test("il contatore è quello del server", async () => {
+  setup({ api: { reportViolation: jest.fn().mockResolvedValue(receipt(2)) } });
+  await act(async () => appStateChange()("background"));
+  expect(screen.getByText(`Uscite: 2/${MAX_VIOLATIONS}`)).toBeTruthy();
+  expect(screen.getByText(/Uscita 2 di 3: alla 3ª sei escluso dall'esame/)).toBeTruthy();
+});
+
+test("segnalazione non riuscita (rete): resta il conteggio locale e l'esame non si blocca", async () => {
+  const { onFinish } = setup({ api: { reportViolation: jest.fn().mockRejectedValue(new Error("rete")) } });
+  for (let i = 0; i < 3; i++) {
+    await act(async () => appStateChange()("background"));
+    fireEvent.press(screen.getByText("▶  Riprendi l'esame"));
+  }
+  expect(screen.getByText(`Uscite: 3/${MAX_VIOLATIONS}`)).toBeTruthy();
+  expect(onFinish).not.toHaveBeenCalled();
+});
+
+test("soglia disattivata sul server: alla terza uscita si resta in pausa e si può riprendere, senza consegna dal client", async () => {
+  const reportViolation = jest.fn()
+    .mockResolvedValueOnce(receipt(1)).mockResolvedValueOnce(receipt(2)).mockResolvedValueOnce(receipt(3, false));
+  const { api, onFinish } = setup({ api: { reportViolation } });
+  for (let i = 0; i < 3; i++) {
+    await act(async () => appStateChange()("background"));
+    if (i < 2) fireEvent.press(screen.getByText("▶  Riprendi l'esame"));
+  }
+  expect(screen.getByText("Esame in pausa")).toBeTruthy();
+  expect(api.submitExam).not.toHaveBeenCalled();
+  expect(onFinish).not.toHaveBeenCalled();
+  fireEvent.press(screen.getByText("▶  Riprendi l'esame"));
+  expect(screen.queryByText("Esame in pausa")).toBeNull();
+});
+
+test("le risposte non ancora inviate si salvano prima di segnalare l'uscita", async () => {
+  const { api } = setup({ api: { reportViolation: jest.fn().mockResolvedValue(receipt(1)) } });
+  fireEvent.press(screen.getByText("GET"));
+  await act(async () => appStateChange()("background"));
+  expect(api.saveAnswers).toHaveBeenCalledTimes(1);
+  expect(api.saveAnswers.mock.invocationCallOrder[0]).toBeLessThan(api.reportViolation.mock.invocationCallOrder[0]);
+});
+
+test("409 su una violazione con la prova già consegnata: si mostra il risultato, nessun errore generico", async () => {
+  const conflict = Object.assign(new Error("Operazione non consentita"), { status: 409 });
+  const getResult = jest.fn().mockResolvedValue({ status: 1, submitReason: 0, passed: true, grade: 8 });
+  const { api, onFinish } = setup({ api: { reportViolation: jest.fn().mockRejectedValue(conflict), getResult } });
+  await act(async () => appStateChange()("background"));
+  expect(getResult).toHaveBeenCalledWith("sub1");
+  expect(api.submitExam).not.toHaveBeenCalled();
+  expect(onFinish).toHaveBeenCalledWith(expect.objectContaining({
+    auto: true, excluded: false, notice: ALREADY_SUBMITTED_MESSAGE, result: { status: 1, submitReason: 0, passed: true, grade: 8 },
+  }));
+});
+
+test("409 su una violazione con la prova ancora in corso (limite di frequenza): si resta in pausa", async () => {
+  const conflict = Object.assign(new Error("Operazione non consentita"), { status: 409 });
+  const { onFinish } = setup({ api: { reportViolation: jest.fn().mockRejectedValue(conflict), getResult: jest.fn().mockResolvedValue({ status: 0 }) } });
+  await act(async () => appStateChange()("background"));
+  expect(onFinish).not.toHaveBeenCalled();
+  expect(screen.getByText("Esame in pausa")).toBeTruthy();
+});
+
+test("409 sull'autosave (consegnata da un'altra scheda): si rilegge il risultato e lo svolgimento si chiude", async () => {
+  const conflict = Object.assign(new Error("Operazione non consentita"), { status: 409 });
+  const getResult = jest.fn().mockResolvedValue({ status: 2, submitReason: 0 });
+  const { onFinish } = setup({ api: { saveAnswers: jest.fn().mockRejectedValue(conflict), getResult } });
+  fireEvent.press(screen.getByText("GET"));
+  await act(async () => { jest.advanceTimersByTime(2600); });
+  expect(getResult).toHaveBeenCalledWith("sub1");
+  expect(onFinish).toHaveBeenCalledWith(expect.objectContaining({ notice: ALREADY_SUBMITTED_MESSAGE, result: { status: 2, submitReason: 0 } }));
+  expect(screen.queryByText("Salvataggio non riuscito: riproverò")).toBeNull();
 });
 
 test("allo scadere del tempo consegna le risposte già salvate", async () => {
