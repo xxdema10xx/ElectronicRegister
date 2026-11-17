@@ -32,6 +32,8 @@ builder.Services.AddBusinessServices();
 builder.Services.AddApplicationManagers();
 builder.Services.AddOptions<ElectronicRegisterAPI.Domain.Configuration.AcademicTransferOptions>().Bind(builder.Configuration.GetSection(ElectronicRegisterAPI.Domain.Configuration.AcademicTransferOptions.Section)).Validate(ElectronicRegisterAPI.Domain.Configuration.AcademicTransferOptions.Valid, "Invalid academic transfer configuration").ValidateOnStart();
 builder.Services.AddSingleton(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<ElectronicRegisterAPI.Domain.Configuration.AcademicTransferOptions>>().Value);
+builder.Services.AddOptions<ElectronicRegisterAPI.Domain.Configuration.ExamViolationOptions>().Bind(builder.Configuration.GetSection(ElectronicRegisterAPI.Domain.Configuration.ExamViolationOptions.Section)).Validate(ElectronicRegisterAPI.Domain.Configuration.ExamViolationOptions.Valid, "Invalid exam violation configuration").ValidateOnStart();
+builder.Services.AddSingleton(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<ElectronicRegisterAPI.Domain.Configuration.ExamViolationOptions>>().Value);
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddApiServices();
 builder.Services.AddApiControllers(builder.Configuration);

@@ -125,6 +125,65 @@ namespace ElectronicRegisterAPI.Tests.Unit.Application
         }
         private readonly Dictionary<Guid, Grade> _grades = new();
 
+        [Theory]
+        [InlineData(SubmissionStatus.Graded)]
+        [InlineData(SubmissionStatus.PendingReview)]
+        public async Task ViolationThresholdSubmitIgnoresDeadlineAndRequiredQuestionsAndAuditsReason(SubmissionStatus evaluated)
+        {
+            var actor = new ExamPrincipal(new(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(),
+                new[] { InstitutionRole.Student }, 3), true, Guid.NewGuid(), null);
+            _subRepoMock.As<IInstitutionBoundRepository>().Setup(r => r.Matches(actor)).Returns(true);
+            var processor = CreateProcessor();
+            var submission = new ExamSubmission { Id = Guid.NewGuid(), StudentId = actor.StudentId!.Value, DeadlineAt = Now.AddMinutes(20) };
+            ConfigureSubmission(submission);
+            _examRepoMock.Setup(r => r.GetByIdAsync(submission.ExamId, true)).ReturnsAsync(new Exam
+            {
+                Name = "Required", PassingPercent = 60,
+                Questions = new() { new Question { Id = Guid.NewGuid(), Text = "Required", Type = QuestionType.Single, Required = true, Points = 10 } }
+            });
+            _gradingMock.Setup(g => g.GradeClosedQuestions(It.IsAny<Exam>(), It.IsAny<IReadOnlyList<SubmissionAnswer>>()))
+                .Returns(new ClosedGradingResult { ClosedScore = 0, MaxScore = 10, PassingScore = 6 });
+            _gradingMock.Setup(g => g.EvaluateAfterSubmit(It.IsAny<Exam>(), It.IsAny<ClosedGradingResult>()))
+                .Returns(new SubmissionEvaluation { Status = evaluated, TotalScore = evaluated == SubmissionStatus.Graded ? 0 : null });
+
+            var result = await processor.ProcessViolationsAsync(submission.Id, actor);
+
+            Assert.Equal(evaluated, result.Status);
+            Assert.Equal(SubmitReason.Violations, result.SubmitReason);
+            Assert.Equal(SubmitReason.Violations, submission.SubmitReason);
+            VerifyPublished(submission, actor.UserId);
+            _subRepoMock.Verify(r => r.SaveAnswersAsync(It.IsAny<Guid>(), It.IsAny<long>(), It.IsAny<IReadOnlyList<SubmissionAnswer>>()), Times.Never);
+            _gradeRepoMock.Verify(r => r.AddAsync(It.IsAny<Grade>()), evaluated == SubmissionStatus.Graded ? Times.Once() : Times.Never());
+            _auditRepoMock.Verify(r => r.AddAsync(It.Is<AuditEvent>(a => a.RequestId == null && a.BeforeJson == "{\"status\":\"in_progress\"}" &&
+                a.AfterJson == "{\"source\":\"violation-threshold\",\"reason\":\"Violations\",\"status\":\"" + evaluated + "\"}")), Times.Once);
+
+            var replay = await processor.ProcessViolationsAsync(submission.Id, actor);
+            Assert.Equal(SubmitReason.Violations, replay.SubmitReason);
+            _subRepoMock.Verify(r => r.UpdateAfterGradingAsync(submission), Times.Once);
+            _auditRepoMock.Verify(r => r.AddAsync(It.IsAny<AuditEvent>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task ClientFacingInstitutionalSubmitStillRejectsTheViolationsReason()
+        {
+            var actor = new ExamPrincipal(new(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(),
+                new[] { InstitutionRole.Student }, 3), true, Guid.NewGuid(), null);
+            _subRepoMock.As<IInstitutionBoundRepository>().Setup(r => r.Matches(actor)).Returns(true);
+            var processor = CreateProcessor();
+            await Assert.ThrowsAsync<ArgumentException>(() => processor.ProcessInstitutionAsync(Guid.NewGuid(), null, SubmitReason.Violations, actor));
+            _txMock.Verify(t => t.ExecuteAsync(It.IsAny<Func<Task>>(), default), Times.Never);
+        }
+
+        [Fact]
+        public async Task ViolationThresholdSubmitRequiresTheBoundStudentContext()
+        {
+            var actor = new ExamPrincipal(new(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(),
+                new[] { InstitutionRole.Teacher }, 3), false, null, Guid.NewGuid());
+            var processor = CreateProcessor();
+            await Assert.ThrowsAsync<UnauthorizedAccessException>(() => processor.ProcessViolationsAsync(Guid.NewGuid(), actor));
+            _txMock.Verify(t => t.ExecuteAsync(It.IsAny<Func<Task>>(), default), Times.Never);
+        }
+
         private void ConfigureSubmission(ExamSubmission submission)
         {
             _subRepoMock.Setup(r => r.GetByIdForUpdateAsync(submission.Id, true)).ReturnsAsync(submission);

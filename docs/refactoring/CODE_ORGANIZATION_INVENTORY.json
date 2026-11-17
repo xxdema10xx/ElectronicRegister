@@ -1,6 +1,6 @@
 {
-  "filesAnalyzed": 714,
-  "typesClassified": 711,
+  "filesAnalyzed": 715,
+  "typesClassified": 712,
   "entries": [
     {
       "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs",
@@ -1939,6 +1939,22 @@
       "types": [
         {
           "name": "AcademicTransferOptions",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Configuration/ExamViolationOptions.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Configuration",
+      "classification": "Configuration",
+      "types": [
+        {
+          "name": "ExamViolationOptions",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }

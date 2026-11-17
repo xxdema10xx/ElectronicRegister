@@ -176,11 +176,26 @@ Un recupero e un nuovo Exam con retakeOfExamId, stessa ClassSubject e vincoli di
 
 InstitutionViolationDto: eventId Guid non vuoto, type in `tab_hidden`, `window_blur`, `fullscreen_exit`, metadata stringa JSON facoltativa (oggetto, UTF-8 <=1024 byte, profondita <=4). Il body HTTP e limitato a 4096 byte. Generare EventId una volta e riutilizzarlo soltanto per retry dello stesso evento.
 
-Il server assegna OccurredAt UTC, salva l'evento e incrementa ViolationCount nella stessa transazione/lock della submission. ViolationReceiptDto contiene eventId, violationCount e duplicate. Retry identico -> 200 duplicate=true senza incremento; stesso EventId con contenuto/submission diversi -> 409. Un EventId non puo essere riutilizzato neanche in un altro istituto (PK globale, errore generico senza dati dell'evento esterno).
+Il server assegna OccurredAt UTC, salva l'evento e incrementa ViolationCount nella stessa transazione/lock della submission. ViolationReceiptDto contiene eventId, violationCount, duplicate e autoSubmitted (bool, campo additivo). Retry identico -> 200 duplicate=true senza incremento; stesso EventId con contenuto/submission diversi -> 409. Un EventId non puo essere riutilizzato neanche in un altro istituto (PK globale, errore generico senza dati dell'evento esterno).
 
 Nuovi eventi soltanto prima della deadline e in InProgress. Limiti: massimo 5 nuovi eventi ogni 10 secondi per submission, massimo 128 totali; superamento -> 409 e nessun incremento. Retry gia persistiti non consumano il limite. Non inviare dati personali sensibili nei metadata; il server li tratta come contenuto non attendibile.
 
-**Nessuna penalizzazione, insufficienza, invalidazione o consegna automatica per violazioni e stata introdotta.** SubmitReason.Violations non viene usato automaticamente. Il browser puo produrre eventi involontari o essere manipolato; le eventuali sanzioni richiedono una policy funzionale separata.
+### Consegna automatica alla soglia di violazioni
+
+Opzione server `Multitenancy:ExamApi:ViolationAutoSubmitThreshold` (intero). Default **0 = disattivata**: le violazioni restano soli segnali e il contratto e identico a prima (`autoSubmitted` sempre false). Valori ammessi 0 oppure 1-128; qualsiasi altro valore impedisce l'avvio dell'API.
+
+Con soglia N > 0, quando un POST `/violations` **registra un evento nuovo** (non un retry duplicate) e il ViolationCount risultante e >= N, il server consegna la prova con `submitReason = violations`:
+
+- usa solo le risposte gia salvate con PUT `/answers`; nessun payload di risposte e accettato da questo percorso;
+- non richiede che la deadline sia passata e non applica il controllo sulle domande obbligatorie (come `submit-expired`);
+- valuta come la scadenza: solo domande chiuse -> `Graded` con Grade ufficiale unico creato subito; con domande aperte -> `PendingReview` per la revisione del docente;
+- scrive l'audit `submission.submit` con `reason = "Violations"`.
+
+Risposte: 200 ViolationReceiptDto con `autoSubmitted = true` quando la prova risulta consegnata per violazioni (anche per un retry duplicate dell'evento che l'ha chiusa). Il client deve poi interrompere la prova e leggere l'esito con GET `/submissions/{id}/result`. Dopo la consegna: nuove violazioni e PUT `/answers` -> 409; POST `/submit` -> 200 con il risultato gia persistito (idempotente, il body e ignorato). Violazioni concorrenti che superano la soglia producono una sola consegna, un solo Grade e una sola riga di audit.
+
+L'evento viene salvato in una prima transazione e la consegna avviene in una seconda: se la consegna fallisce l'evento resta registrato (la risposta e un errore) e la consegna viene ritentata alla violazione successiva o alla scadenza. Un retry con lo stesso eventId non ritenta la consegna.
+
+Le violazioni restano **segnali del browser**, non prova certa di scorrettezza: il browser puo produrre eventi involontari o essere manipolato. La soglia e una policy di prodotto configurata dal gestore; non viene introdotta nessuna altra penalizzazione o invalidazione.
 
 ## Limiti dopo MT-3E
 

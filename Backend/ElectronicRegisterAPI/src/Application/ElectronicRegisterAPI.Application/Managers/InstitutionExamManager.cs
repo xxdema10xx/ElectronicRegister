@@ -1,6 +1,7 @@
 using ElectronicRegisterAPI.Domain.Authorization;
 using ElectronicRegisterAPI.Application.Services;
 using ElectronicRegisterAPI.Business.Services;
+using ElectronicRegisterAPI.Domain.Configuration;
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
@@ -18,7 +19,8 @@ internal sealed class InstitutionExamManager(
     ITransactionManager transactions,
     ISubmissionGradingService grading,
     ITimeProvider time,
-    IInstitutionWriteAuthorization writeAuthorization
+    IInstitutionWriteAuthorization writeAuthorization,
+    ExamViolationOptions? violationOptions = null
 ) : IInstitutionExamManager
 {
     private enum Operation
@@ -105,9 +107,15 @@ internal sealed class InstitutionExamManager(
     public Task<SubmissionResultDto> SubmitExpiredAsync(Guid id, CancellationToken ct = default) => Run(Operation.Student, w => w.Processor.ProcessInstitutionAsync(id, null, SubmitReason.TimeExpired, w.Actor), ct);
     public Task<ViolationReceiptDto> ReportViolationAsync(Guid id, InstitutionViolationDto dto, CancellationToken ct = default) => Run(Operation.Student, async w =>
     {
-        ViolationReceiptDto? result = null;
-        await w.Transactions.ExecuteAsync(async () => result = await w.Repositories.ReportViolationAsync(id, dto));
-        return result!;
+        ViolationReceiptDto? receipt = null;
+        await w.Transactions.ExecuteAsync(async () => receipt = await w.Repositories.ReportViolationAsync(id, dto));
+        if (receipt!.Duplicate || violationOptions?.ReachesThreshold(receipt.ViolationCount) != true)
+            return receipt;
+        // Second transaction: the event above is already committed and survives a failed submit,
+        // which is retried by the next violation or by expiry. Row lock + TryBeginSubmitAsync keep
+        // concurrent threshold crossings to a single submit, Grade and audit row.
+        var result = await w.Processor.ProcessViolationsAsync(id, w.Actor);
+        return receipt with { AutoSubmitted = result.SubmitReason == SubmitReason.Violations };
     }, ct);
     public Task<List<ViolationEventDto>> ViolationsAsync(Guid id, CancellationToken ct = default) => Run(Operation.Manage, w => w.Repositories.ViolationsAsync(id), ct);
     public Task<List<SubmissionSummaryDto>> SubmissionsAsync(Guid examId, SubmissionStatus? status, CancellationToken ct = default) => Run(Operation.Manage, w => w.Reviews.GetByExamAsync(examId, status, w.Actor), ct);

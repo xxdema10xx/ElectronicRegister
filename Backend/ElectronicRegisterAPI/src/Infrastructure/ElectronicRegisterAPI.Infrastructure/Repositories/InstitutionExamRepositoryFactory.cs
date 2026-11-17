@@ -2,6 +2,7 @@ using ElectronicRegisterAPI.Domain.Services;
 using System.Text;
 using System.Text.Json;
 using ElectronicRegisterAPI.Domain.DTOs;
+using ElectronicRegisterAPI.Domain.Enums;
 using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
@@ -130,32 +131,45 @@ internal sealed class InstitutionExamRepositoryFactory(
             if (_db.Database.CurrentTransaction is null)
                 throw new InvalidOperationException("Violation requires an ambient transaction.");
             var submission = await _scope.LockSubmission(submissionId).AsTracking().SingleOrDefaultAsync(_scope.CancellationToken) ?? throw new KeyNotFoundException("La risorsa non esiste.");
-            var events = _scope.Owned<E.ExamViolation>();
-            var existing = await events.AsNoTracking().SingleOrDefaultAsync(v => v.Id == dto.EventId, _scope.CancellationToken);
-            if (existing is not null)
-            {
-                if (existing.SubmissionId != submissionId || existing.Type != dto.Type || existing.MetadataJson != dto.Metadata)
-                    throw new BusinessRuleException("EventId gia utilizzato.");
-                return new(dto.EventId, submission.ViolationCount, true);
-            }
-
-            var now = _time.UtcNow;
-            if (submission.Status != "in_progress" || submission.SubmittedAt is not null || submission.DeadlineAt <= now)
-                throw new BusinessRuleException("La submission non accetta nuovi eventi.");
-            if (submission.ViolationCount >= 128 || await events.CountAsync(v => v.SubmissionId == submissionId && v.OccurredAt >= now.AddSeconds(-10), _scope.CancellationToken) >= 5)
-                throw new BusinessRuleException("Limite eventi raggiunto.");
-            _db.ExamViolations.Add(new() { Id = dto.EventId, SubmissionId = submissionId, Type = dto.Type, MetadataJson = dto.Metadata, OccurredAt = now });
-            submission.ViolationCount++;
+            E.ExamViolation? added = null;
             try
             {
-                await _scope.SaveAsync();
-            }
-            catch (DbUpdateException e)when (e.InnerException is MySqlException { Number: 1062 })
-            {
-                throw new BusinessRuleException("EventId gia utilizzato.");
-            }
+                var events = _scope.Owned<E.ExamViolation>();
+                var existing = await events.AsNoTracking().SingleOrDefaultAsync(v => v.Id == dto.EventId, _scope.CancellationToken);
+                if (existing is not null)
+                {
+                    if (existing.SubmissionId != submissionId || existing.Type != dto.Type || existing.MetadataJson != dto.Metadata)
+                        throw new BusinessRuleException("EventId gia utilizzato.");
+                    return new(dto.EventId, submission.ViolationCount, true, submission.SubmitReason == SubmitReasonMapper.ToDbString(SubmitReason.Violations));
+                }
 
-            return new(dto.EventId, submission.ViolationCount, false);
+                var now = _time.UtcNow;
+                if (submission.Status != "in_progress" || submission.SubmittedAt is not null || submission.DeadlineAt <= now)
+                    throw new BusinessRuleException("La submission non accetta nuovi eventi.");
+                if (submission.ViolationCount >= 128 || await events.CountAsync(v => v.SubmissionId == submissionId && v.OccurredAt >= now.AddSeconds(-10), _scope.CancellationToken) >= 5)
+                    throw new BusinessRuleException("Limite eventi raggiunto.");
+                added = new() { Id = dto.EventId, SubmissionId = submissionId, Type = dto.Type, MetadataJson = dto.Metadata, OccurredAt = now };
+                _db.ExamViolations.Add(added);
+                submission.ViolationCount++;
+                try
+                {
+                    await _scope.SaveAsync();
+                }
+                catch (DbUpdateException e)when (e.InnerException is MySqlException { Number: 1062 })
+                {
+                    throw new BusinessRuleException("EventId gia utilizzato.");
+                }
+
+                return new(dto.EventId, submission.ViolationCount, false);
+            }
+            finally
+            {
+                // A threshold submit runs in a second transaction on this context: a tracked
+                // row would be returned stale by its FOR UPDATE read and bypass idempotency.
+                _db.Entry(submission).State = EntityState.Detached;
+                if (added is not null)
+                    _db.Entry(added).State = EntityState.Detached;
+            }
         }
 
         public async Task<List<ViolationEventDto>> ViolationsAsync(Guid submissionId)

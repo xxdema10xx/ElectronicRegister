@@ -46,11 +46,24 @@ public class ExamSubmissionProcessor
         ExamPrincipal principal
     )
     {
-        if (principal.Tenant is null || !principal.IsStudent || principal.StudentId is null || _submissionRepository is not IInstitutionBoundRepository bound || !bound.Matches(principal))
-            throw new UnauthorizedAccessException("Contesto di elaborazione non autorizzato.");
+        RequireStudentContext(principal);
         if (reason is not (SubmitReason.Manual or SubmitReason.TimeExpired))
             throw new ArgumentException("Motivo non valido.");
         return ProcessCoreAsync(submissionId, dto, reason, principal.UserId, principal.IsStudent);
+    }
+
+    // Internal threshold path only (InstitutionExamManager.ReportViolationAsync): no client-chosen
+    // reason or payload; persisted answers only, no deadline or required-question precondition.
+    internal Task<SubmissionResultDto> ProcessViolationsAsync(Guid submissionId, ExamPrincipal principal)
+    {
+        RequireStudentContext(principal);
+        return ProcessCoreAsync(submissionId, null, SubmitReason.Violations, principal.UserId, principal.IsStudent);
+    }
+
+    private void RequireStudentContext(ExamPrincipal principal)
+    {
+        if (principal.Tenant is null || !principal.IsStudent || principal.StudentId is null || _submissionRepository is not IInstitutionBoundRepository bound || !bound.Matches(principal))
+            throw new UnauthorizedAccessException("Contesto di elaborazione non autorizzato.");
     }
 
     internal Task<SubmissionResultDto> ProcessExpiryAsync(SubmissionExpiryWork work, CancellationToken ct)
@@ -199,7 +212,9 @@ public class ExamSubmissionProcessor
             // Set SubmittedAt only when we are actually committing the submit (we are inside transaction and passed checks above)
             submission.SubmittedAt = nowUtc;
             await _submissionRepository.UpdateAfterGradingAsync(submission);
-            await _auditRepository.AddAsync(new Domain.Models.AuditEvent { Id = Guid.NewGuid(), ActorUserId = actorUserId, Action = "submission.submit", EntityType = "exam_submission", EntityId = submission.Id, CreatedAt = nowUtc, RequestId = work is null ? null : "worker:" + work.SubmissionId.ToString("N"), BeforeJson = work is null ? null : System.Text.Json.JsonSerializer.Serialize(new { status = "in_progress" }), AfterJson = work is null ? null : System.Text.Json.JsonSerializer.Serialize(new { source = "institution-worker", reason = "TimeExpired", status = submission.Status.ToString() }) });
+            // Worker and violation-threshold submits carry Before/After; manual and student expiry keep null.
+            var auditSource = work is not null ? "institution-worker" : reason == SubmitReason.Violations ? "violation-threshold" : null;
+            await _auditRepository.AddAsync(new Domain.Models.AuditEvent { Id = Guid.NewGuid(), ActorUserId = actorUserId, Action = "submission.submit", EntityType = "exam_submission", EntityId = submission.Id, CreatedAt = nowUtc, RequestId = work is null ? null : "worker:" + work.SubmissionId.ToString("N"), BeforeJson = auditSource is null ? null : System.Text.Json.JsonSerializer.Serialize(new { status = "in_progress" }), AfterJson = auditSource is null ? null : System.Text.Json.JsonSerializer.Serialize(new { source = auditSource, reason = reason.ToString(), status = submission.Status.ToString() }) });
             result = await ReadResultAsync(submissionId, submission, studentView);
             ct.ThrowIfCancellationRequested();
         }, ct);
