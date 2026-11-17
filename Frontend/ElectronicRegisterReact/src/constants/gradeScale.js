@@ -21,6 +21,15 @@ export function parseGrade(text) {
 }
 export const isValidGrade = (text) => parseGrade(text) !== null;
 
+// Descrizione facoltativa del voto (es. "Verifica scritta in presenza"): 1–200 caratteri; vuota = nessuna
+export const GRADE_DESCRIPTION_MAX = 200;
+export const GRADE_DESCRIPTION_LABEL = "Descrizione (facoltativa)";
+export const GRADE_DESCRIPTION_PLACEHOLDER = "Es. Verifica scritta in presenza";
+export function cleanDescription(text) {
+  const t = String(text ?? "").trim();
+  return t ? t.slice(0, GRADE_DESCRIPTION_MAX) : null;
+}
+
 // Colore del voto: verde se sufficiente, arancione vicino alla soglia, rosso sotto
 export function gradeTone(value) {
   const n = Number(value);

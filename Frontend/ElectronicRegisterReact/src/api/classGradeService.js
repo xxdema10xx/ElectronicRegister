@@ -8,6 +8,6 @@ export async function getGradesForStudent(studentId, token) {
   const items = Array.isArray(page?.items) ? page.items : [];
   return items.sort((a, b) => String(b.date).localeCompare(String(a.date)));
 }
-export const addClassGrade = ({ studentId, subjectId, value, date }, token) => createGrade({ studentId, subjectId, value, date }, token);
-export const updateClassGrade = (id, { subjectId, value, date }, token) => updateGrade(id, { subjectId, value, date }, token);
+export const addClassGrade = ({ studentId, subjectId, value, date, description }, token) => createGrade({ studentId, subjectId, value, date, description }, token);
+export const updateClassGrade = (id, { subjectId, value, date, description }, token) => updateGrade(id, { subjectId, value, date, description }, token);
 export const deleteClassGrade = (id, token) => deleteGrade(id, token);

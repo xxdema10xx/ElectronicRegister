@@ -17,9 +17,11 @@ import { getStudentClassSubjects } from "../api/classService";
 import { formatDateForDisplay, toISODate } from "../utils/dateUtils";
 import { notify, confirmAction } from "../utils/dialogs";
 import { gradeErrorMessage } from "../utils/gradeErrors";
-import { GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, parseGrade } from "../constants/gradeScale";
+import {
+  GRADE_DESCRIPTION_LABEL, GRADE_DESCRIPTION_MAX, GRADE_DESCRIPTION_PLACEHOLDER, GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, parseGrade,
+} from "../constants/gradeScale";
 
-const emptyForm = () => ({ id: null, subjectId: "", value: "", date: toISODate(new Date()) });
+const emptyForm = () => ({ id: null, subjectId: "", value: "", date: toISODate(new Date()), description: "" });
 
 // canDelete: solo l'admin può eliminare un voto (lo Staff può inserirlo e modificarlo)
 export default function StudentGrades({ student, token, canDelete = true }) {
@@ -61,8 +63,9 @@ export default function StudentGrades({ student, token, canDelete = true }) {
     if (!form.date) return notify("Attenzione", "Seleziona la data.");
     setSaving(true);
     try {
-      if (form.id) await updateGrade(form.id, { subjectId: form.subjectId, value, date: form.date }, token);
-      else await createGrade({ studentId: student.id, subjectId: form.subjectId, value, date: form.date }, token);
+      const { description } = form;
+      if (form.id) await updateGrade(form.id, { subjectId: form.subjectId, value, date: form.date, description }, token);
+      else await createGrade({ studentId: student.id, subjectId: form.subjectId, value, date: form.date, description }, token);
       setForm(null);
       load();
     } catch (e) {
@@ -102,8 +105,9 @@ export default function StudentGrades({ student, token, canDelete = true }) {
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>{subjectName(g)}</Text>
                 <Text style={s.itemSub}>{formatDateForDisplay(g.date)}</Text>
+                {!!g.description && <Text style={s.itemSub}>{g.description}</Text>}
               </View>
-              <TouchableOpacity onPress={() => setForm({ id: g.id, subjectId: g.subjectId, value: String(g.value), date: g.date })} style={{ padding: 6 }}
+              <TouchableOpacity onPress={() => setForm({ id: g.id, subjectId: g.subjectId, value: String(g.value), date: g.date, description: g.description || "" })} style={{ padding: 6 }}
                 accessibilityRole="button" accessibilityLabel={`Modifica voto di ${subjectName(g)}`}>
                 <Ionicons name="create-outline" size={26} color={C.footer} />
               </TouchableOpacity>
@@ -132,6 +136,8 @@ export default function StudentGrades({ student, token, canDelete = true }) {
               </View>
             </View>
             <Input label={GRADE_LABEL} value={String(form.value)} onChangeText={(value) => setForm(f => ({ ...f, value }))} keyboardType={GRADE_KEYBOARD} />
+            <Input label={GRADE_DESCRIPTION_LABEL} value={form.description || ""} onChangeText={(description) => setForm(f => ({ ...f, description }))}
+              placeholder={GRADE_DESCRIPTION_PLACEHOLDER} maxLength={GRADE_DESCRIPTION_MAX} />
             <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: 10 }}>
               <Btn label="Annulla" variant="ghost" onPress={() => setForm(null)} style={{ paddingHorizontal: 22 }} />
               <Btn label={form.id ? "Aggiorna" : "Salva"} onPress={save} loading={saving} style={{ paddingHorizontal: 28 }} />

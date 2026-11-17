@@ -1,6 +1,7 @@
 // src/api/gradeService.js
 // Voti (docs/API.md §21). Il server filtra da solo: lo studente vede i propri, il docente quelli delle sue classi-materie.
 import axiosClient, { authHeader } from "./axiosClient";
+import { cleanDescription } from "../constants/gradeScale";
 
 export async function getGradesPage({ pageNumber, pageSize, subjectId, studentId, date }, token) {
   const params = { pageNumber, pageSize };
@@ -19,15 +20,19 @@ export async function getGradeFilters(token) {
 // Voti interi 0–30 (constants/gradeScale.js): le schermate validano prima, il server rifiuta il resto con 400
 const toValue = (v) => Number(String(v).trim());
 
-export async function createGrade({ studentId, subjectId, value, date }, token) {
-  const res = await axiosClient.post("/institution/grades",
-    { studentId, subjectId, value: toValue(value), date }, { headers: authHeader(token) });
+// description: facoltativa (1–200 caratteri); vuota → non inviata
+export async function createGrade({ studentId, subjectId, value, date, description }, token) {
+  const body = { studentId, subjectId, value: toValue(value), date };
+  const desc = cleanDescription(description);
+  if (desc) body.description = desc;
+  const res = await axiosClient.post("/institution/grades", body, { headers: authHeader(token) });
   return res.data; // id
 }
 
-export async function updateGrade(id, { subjectId, value, date }, token) {
+// In modifica la descrizione si invia sempre: null la toglie
+export async function updateGrade(id, { subjectId, value, date, description }, token) {
   const res = await axiosClient.put(`/institution/grades/${id}`,
-    { subjectId, value: toValue(value), date }, { headers: authHeader(token) });
+    { subjectId, value: toValue(value), date, description: cleanDescription(description) }, { headers: authHeader(token) });
   return res.data;
 }
 

@@ -91,7 +91,7 @@ describe("voti", () => {
     await grades.createGrade({ studentId: "s1", subjectId: "m1", value: " 24 ", date: "2026-11-16" }, "tok");
     expect(axiosClient.post).toHaveBeenCalledWith("/institution/grades", { studentId: "s1", subjectId: "m1", value: 24, date: "2026-11-16" }, H);
     await grades.updateGrade("g1", { subjectId: "m1", value: 0, date: "2026-11-17" }, "tok");
-    expect(axiosClient.put).toHaveBeenCalledWith("/institution/grades/g1", { subjectId: "m1", value: 0, date: "2026-11-17" }, H);
+    expect(axiosClient.put).toHaveBeenCalledWith("/institution/grades/g1", { subjectId: "m1", value: 0, date: "2026-11-17", description: null }, H);
     await grades.deleteGrade("g1", "tok");
     expect(axiosClient.delete).toHaveBeenCalledWith("/institution/grades/g1", H);
   });
@@ -108,11 +108,21 @@ describe("voti", () => {
     await expect(classGrades.getGradesForStudent("s1", "tok")).resolves.toEqual([]);
   });
 
+  test("descrizione del voto: ripulita, facoltativa in creazione, sempre inviata in modifica (null la toglie)", async () => {
+    await grades.createGrade({ studentId: "s1", subjectId: "m1", value: "24", date: "d", description: "  Verifica in presenza  " }, "tok");
+    expect(axiosClient.post).toHaveBeenCalledWith("/institution/grades",
+      { studentId: "s1", subjectId: "m1", value: 24, date: "d", description: "Verifica in presenza" }, H);
+    await grades.createGrade({ studentId: "s1", subjectId: "m1", value: "24", date: "d", description: "   " }, "tok");
+    expect(axiosClient.post).toHaveBeenLastCalledWith("/institution/grades", { studentId: "s1", subjectId: "m1", value: 24, date: "d" }, H);
+    await grades.updateGrade("g1", { subjectId: "m1", value: 18, date: "d", description: "Orale" }, "tok");
+    expect(axiosClient.put).toHaveBeenCalledWith("/institution/grades/g1", { subjectId: "m1", value: 18, date: "d", description: "Orale" }, H);
+  });
+
   test("aggiunta/modifica/eliminazione dalla classe passano dal registro", async () => {
-    await classGrades.addClassGrade({ studentId: "s1", subjectId: "m1", value: "6", date: "d" }, "tok");
-    expect(axiosClient.post).toHaveBeenCalledWith("/institution/grades", { studentId: "s1", subjectId: "m1", value: 6, date: "d" }, H);
-    await classGrades.updateClassGrade("g1", { subjectId: "m1", value: "9", date: "d" }, "tok");
-    expect(axiosClient.put).toHaveBeenCalledWith("/institution/grades/g1", { subjectId: "m1", value: 9, date: "d" }, H);
+    await classGrades.addClassGrade({ studentId: "s1", subjectId: "m1", value: "18", date: "d", description: "Orale" }, "tok");
+    expect(axiosClient.post).toHaveBeenCalledWith("/institution/grades", { studentId: "s1", subjectId: "m1", value: 18, date: "d", description: "Orale" }, H);
+    await classGrades.updateClassGrade("g1", { subjectId: "m1", value: "27", date: "d" }, "tok");
+    expect(axiosClient.put).toHaveBeenCalledWith("/institution/grades/g1", { subjectId: "m1", value: 27, date: "d", description: null }, H);
     await classGrades.deleteClassGrade("g1", "tok");
     expect(axiosClient.delete).toHaveBeenCalledWith("/institution/grades/g1", H);
   });

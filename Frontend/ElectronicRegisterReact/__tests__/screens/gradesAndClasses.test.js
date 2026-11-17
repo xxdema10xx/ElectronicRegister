@@ -22,7 +22,7 @@ jest.mock("../../src/data/studentExams");
 describe("Voti: registro (docente, admin, segreteria)", () => {
   beforeEach(() => {
     gradeService.getGradesPage.mockResolvedValue({ totalCount: 2, items: [
-      { id: "g1", subjectName: "Reti", value: 8, date: "2026-11-02", student: { firstName: "Mario", lastName: "Rossi" } },
+      { id: "g1", subjectName: "Reti", value: 8, date: "2026-11-02", student: { firstName: "Mario", lastName: "Rossi" }, description: "Verifica scritta" },
       { id: "g2", subjectId: "m2", value: 5, date: "2026-11-01", studentId: "s2" },
     ] });
     gradeService.getGradeFilters.mockResolvedValue({ subjects: [{ id: "m1", name: "Reti" }], students: [{ id: "s1", firstName: "Mario", lastName: "Rossi" }] });
@@ -36,7 +36,7 @@ describe("Voti: registro (docente, admin, segreteria)", () => {
   test("elenco con materia e studente (anche dalle anagrafiche)", async () => {
     renderAs("teacher", <GradesScreen />);
     await flush();
-    ["Reti", "Java", "👤 Mario Rossi", "👤 Giulia Bianchi", "📅 2026-11-02"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
+    ["Reti", "Java", "👤 Mario Rossi", "👤 Giulia Bianchi", "📅 2026-11-02", "📝 Verifica scritta"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
     expect(gradeService.getGradesPage).toHaveBeenCalledWith({ pageNumber: 1, pageSize: 20, subjectId: "", studentId: "", date: "" }, "tok");
   });
 
@@ -122,6 +122,18 @@ describe("Voti: libretto dello studente", () => {
     ]);
     renderAs("student", <GradesScreen />);
     ["Libretto", "Reti", "24", "Superato", "Java · Recupero", "In correzione"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
+  });
+
+  test("voti del registro con la descrizione, sotto gli esiti d'esame", async () => {
+    studentExams.useStudentExams.mockReturnValue({ assigned: [], loaded: true, error: null });
+    studentExams.useStudentBooklet.mockReturnValue([]);
+    gradeService.getGradesPage.mockResolvedValue({ items: [
+      { id: "r1", subjectName: "Reti", value: 24, date: "2026-11-17", description: "Verifica in presenza" },
+    ] });
+    renderAs("student", <GradesScreen />);
+    await flush();
+    expect(gradeService.getGradesPage).toHaveBeenCalledWith({ pageNumber: 1, pageSize: 100 }, "tok");
+    ["Voti del registro", "24", "📝 Verifica in presenza", "Nessun esame svolto"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
   });
 
   test("nessun esame svolto", () => {

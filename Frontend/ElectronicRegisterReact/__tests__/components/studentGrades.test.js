@@ -1,5 +1,5 @@
 // Pagina dei voti di uno studente (Studenti → studente): elenco, aggiunta, modifica, eliminazione.
-import { fireEvent, screen, waitFor } from "@testing-library/react-native";
+import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 import StudentGrades from "../../src/components/StudentGrades";
 import { flush, pressDialog, renderAs } from "../helpers/render";
 import * as gradeService from "../../src/api/gradeService";
@@ -15,7 +15,7 @@ const student = { id: "s1", firstName: "Mario", lastName: "Rossi" };
 beforeEach(() => {
   gradeService.getGradesPage.mockResolvedValue({ items: [
     { id: "g1", subjectId: "m1", value: 8, date: "2026-10-01" },
-    { id: "g2", subjectId: "m2", subjectName: "Java", value: 4, date: "2026-11-02" },
+    { id: "g2", subjectId: "m2", subjectName: "Java", value: 4, date: "2026-11-02", description: "Verifica in presenza" },
   ] });
   subjectService.getSubjects.mockResolvedValue([{ id: "m1", name: "Reti" }, { id: "m2", name: "Java" }, { id: "m3", name: "Inglese" }]);
   classService.getStudentClassSubjects.mockResolvedValue([{ id: "m1", name: "Reti" }, { id: "m2", name: "Java" }]);
@@ -102,4 +102,15 @@ test("accessibilità: icone di modifica ed eliminazione con etichetta", async ()
   await flush();
   expect(screen.getByLabelText("Modifica voto di Java")).toBeTruthy();
   expect(screen.getByLabelText("Elimina voto di Java")).toBeTruthy();
+});
+
+test("descrizione: mostrata accanto al voto, precompilata in modifica e inviata", async () => {
+  renderAs("admin", <StudentGrades student={student} token="tok" />);
+  await flush();
+  expect(screen.getByText("Verifica in presenza")).toBeTruthy();
+  fireEvent.press(screen.getByLabelText("Modifica voto di Java"));
+  expect(screen.getByDisplayValue("Verifica in presenza")).toBeTruthy();
+  fireEvent.changeText(screen.getByDisplayValue("Verifica in presenza"), "Recupero orale");
+  await act(async () => { fireEvent.press(screen.getByText("Aggiorna")); });
+  expect(gradeService.updateGrade).toHaveBeenCalledWith("g2", expect.objectContaining({ value: 4, description: "Recupero orale" }), "tok");
 });

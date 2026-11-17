@@ -23,17 +23,51 @@ import { getTeachers } from "../api/teacherService";
 import { useStudentBooklet, useStudentExams } from "../data/studentExams";
 import { examDisplayName, formatDateTime } from "../api/examContract";
 import { gradeErrorMessage } from "../utils/gradeErrors";
-import { GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, isValidGrade } from "../constants/gradeScale";
+import {
+  GRADE_DESCRIPTION_LABEL, GRADE_DESCRIPTION_MAX, GRADE_DESCRIPTION_PLACEHOLDER, GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, isValidGrade,
+} from "../constants/gradeScale";
 
 const GRADES_PAGE_SIZE = 20;
 const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n * 100) / 100));
 
-// Libretto dello studente: un esame (appello) per riga, voto o esito a destra, più recenti in alto.
-// Sostituisce l'elenco voti del registro, che per lo studente è meno significativo degli esiti d'esame.
+// Voti del registro dello studente (il server restituisce solo i propri): voti inseriti dal docente o dalla
+// segreteria, anche in blocco, con la loro descrizione (es. "Verifica scritta in presenza").
+function useOwnGrades(token) {
+  const [grades, setGrades] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    getGradesPage({ pageNumber: 1, pageSize: 100 }, token)
+      .then((page) => { if (alive) setGrades((Array.isArray(page?.items) ? page.items : []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)))); })
+      .catch(() => { if (alive) setGrades([]); });
+    return () => { alive = false; };
+  }, [token]);
+  return grades;
+}
+
+// Libretto dello studente: un esame (appello) per riga, voto o esito a destra, più recenti in alto; sotto, i voti
+// del registro con la loro descrizione.
 function StudentBooklet() {
+  const { token } = useAuth();
   const { assigned, loaded, error } = useStudentExams();
 
   const booklet = useStudentBooklet(assigned, loaded);
+  const ownGrades = useOwnGrades(token);
+
+  const registry = ownGrades && ownGrades.length > 0 && (
+    <View style={{ marginTop: 8 }}>
+      <View style={s.screenPad}><SectionHeader title="Voti del registro" /></View>
+      {ownGrades.map(g => (
+        <ListRow key={g.id}>
+          <GradeCircle value={g.value} />
+          <View style={{ flex: 1, marginLeft: 12 }}>
+            <Text style={s.itemTitle}>{g.subjectName || "—"}</Text>
+            <Text style={s.itemSub}>📅 {g.date}</Text>
+            {!!g.description && <Text style={s.itemSub}>📝 {g.description}</Text>}
+          </View>
+        </ListRow>
+      ))}
+    </View>
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
@@ -41,11 +75,12 @@ function StudentBooklet() {
         <SectionHeader title="Libretto" />
         {!!error && <Text style={{ color: C.danger, marginBottom: 8 }}>{error}</Text>}
       </View>
-      {!booklet ? <Loader /> : booklet.length === 0 ? <EmptyState message="Nessun esame svolto" /> : (
+      {!booklet ? <Loader /> : booklet.length === 0 ? <View style={{ flex: 1 }}><EmptyState message="Nessun esame svolto" />{registry}</View> : (
         <FlatList
           data={booklet}
           keyExtractor={x => String(x.item.id)}
           {...listProps()}
+          ListFooterComponent={registry || null}
           renderItem={({ item: { item, r } }) => (
             <ListRow>
               <View style={{ flex: 1 }}>
@@ -92,7 +127,7 @@ function TeacherAdminGrades() {
   const [filterDate, setFilterDate] = useState("");
   const [filterOptions, setFilterOptions] = useState({ subjects: [], students: [] });
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [newGrade, setNewGrade] = useState({ studentId: "", subjectId: "", teacherId: "", value: "", date: "" });
+  const [newGrade, setNewGrade] = useState({ studentId: "", subjectId: "", teacherId: "", value: "", date: "", description: "" });
   // Paginazione lato server (come sul web): carichiamo GRADES_PAGE_SIZE voti
   // alla volta, aggiungendo altre pagine man mano che l'utente scorre verso
   // il basso.
@@ -190,7 +225,7 @@ function TeacherAdminGrades() {
     try {
       await createGrade(newGrade, token);
       setShowAdd(false);
-      setNewGrade({ studentId: "", subjectId: "", teacherId: "", value: "", date: "" });
+      setNewGrade({ studentId: "", subjectId: "", teacherId: "", value: "", date: "", description: "" });
       refreshAll();
     } catch (e) { Alert.alert("Errore", e.message); }
   }
@@ -198,7 +233,7 @@ function TeacherAdminGrades() {
   async function saveEditedGrade() {
     if (!isValidGrade(showEdit.value)) { Alert.alert("Attenzione", GRADE_ERROR); return; }
     try {
-      await updateGrade(showEdit.id, { subjectId: showEdit.subjectId, value: showEdit.value, date: showEdit.date }, token);
+      await updateGrade(showEdit.id, { subjectId: showEdit.subjectId, value: showEdit.value, date: showEdit.date, description: showEdit.description }, token);
       setShowEdit(null);
       refreshAll();
     } catch (e) { Alert.alert("Errore", gradeErrorMessage("update", e)); }
@@ -284,10 +319,11 @@ function TeacherAdminGrades() {
                 <Text style={s.itemTitle}>{subjectName(g)}</Text>
                 {role !== "student" && <Text style={s.itemSub}>👤 {studentName(g)}</Text>}
                 <Text style={s.itemSub}>📅 {g.date}</Text>
+                {!!g.description && <Text style={s.itemSub}>📝 {g.description}</Text>}
               </View>
               {(role === "teacher" || role === "admin" || role === "staff") && (
                 <View style={{ flexDirection: "row", gap: 6 }}>
-                  <IconButton icon="create-outline" label="Modifica" onPress={() => setShowEdit({ ...g })} />
+                  <IconButton icon="create-outline" label="Modifica" onPress={() => setShowEdit({ ...g, description: g.description || "" })} />
                   {role === "admin" && <IconButton icon="trash-outline" label="Elimina" onPress={() => removeGrade(g.id)} />}
                 </View>
               )}
@@ -318,6 +354,8 @@ function TeacherAdminGrades() {
         />
         <Input label={GRADE_LABEL} value={newGrade.value} onChangeText={v => setNewGrade(f => ({ ...f, value: v }))} keyboardType={GRADE_KEYBOARD} />
         <DateField label="Data" value={newGrade.date} onChange={(v) => setNewGrade(f => ({ ...f, date: v }))} />
+        <Input label={GRADE_DESCRIPTION_LABEL} value={newGrade.description} onChangeText={v => setNewGrade(f => ({ ...f, description: v }))}
+          placeholder={GRADE_DESCRIPTION_PLACEHOLDER} maxLength={GRADE_DESCRIPTION_MAX} />
         <Btn label="Salva" onPress={addGrade} />
       </FormModal>
 
@@ -326,6 +364,8 @@ function TeacherAdminGrades() {
         {showEdit && <>
           <Input label={`Nuovo ${GRADE_LABEL.toLowerCase()}`} value={String(showEdit.value)} onChangeText={v => setShowEdit(f => ({ ...f, value: v }))} keyboardType={GRADE_KEYBOARD} />
           <DateField label="Data" value={showEdit.date} onChange={(v) => setShowEdit(f => ({ ...f, date: v }))} />
+          <Input label={GRADE_DESCRIPTION_LABEL} value={showEdit.description} onChangeText={v => setShowEdit(f => ({ ...f, description: v }))}
+            placeholder={GRADE_DESCRIPTION_PLACEHOLDER} maxLength={GRADE_DESCRIPTION_MAX} />
           <Btn label="Aggiorna" onPress={saveEditedGrade} />
         </>}
       </FormModal>

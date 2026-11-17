@@ -21,7 +21,9 @@ import { filterBySearch } from "../utils/search";
 import { getMyClasses } from "../api/classService";
 import { getGradesForStudent, addClassGrade, updateClassGrade } from "../api/classGradeService";
 import { notify } from "../utils/dialogs";
-import { GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, isValidGrade } from "../constants/gradeScale";
+import {
+  GRADE_DESCRIPTION_LABEL, GRADE_DESCRIPTION_MAX, GRADE_DESCRIPTION_PLACEHOLDER, GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, isValidGrade,
+} from "../constants/gradeScale";
 
 const initials = (a, b) => `${a?.[0] ?? ""}${b?.[0] ?? ""}`.toUpperCase();
 
@@ -36,7 +38,7 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
   const [grades, setGrades] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(null);
-  const [newGrade, setNewGrade] = useState({ subjectId: "", value: "", date: "" });
+  const [newGrade, setNewGrade] = useState({ subjectId: "", value: "", date: "", description: "" });
   const [saving, setSaving] = useState(false);
 
   const subjectName = (g) => klassSubjects.find(sb => sb.subjectId === g.subjectId)?.subjectName || g.subjectName || "—";
@@ -55,7 +57,7 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
     try {
       await addClassGrade({ studentId: student.id, ...newGrade }, token);
       setShowAdd(false);
-      setNewGrade({ subjectId: "", value: "", date: "" });
+      setNewGrade({ subjectId: "", value: "", date: "", description: "" });
       load();
     } catch (e) { notify("Errore", e.message); }
     finally { setSaving(false); }
@@ -64,7 +66,7 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
     if (!isValidGrade(showEdit.value)) return notify("Attenzione", GRADE_ERROR);
     setSaving(true);
     try {
-      await updateClassGrade(showEdit.id, { subjectId: showEdit.subjectId, value: showEdit.value, date: showEdit.date }, token);
+      await updateClassGrade(showEdit.id, { subjectId: showEdit.subjectId, value: showEdit.value, date: showEdit.date, description: showEdit.description }, token);
       setShowEdit(null);
       load();
     } catch (e) { notify("Errore", e.message); }
@@ -92,8 +94,9 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>{subjectName(g)}</Text>
                 <Text style={s.itemSub}>{g.date}</Text>
+                {!!g.description && <Text style={s.itemSub}>{g.description}</Text>}
               </View>
-              <IconButton icon="create-outline" label="Modifica voto" size={26} onPress={() => setShowEdit({ ...g })} />
+              <IconButton icon="create-outline" label="Modifica voto" size={26} onPress={() => setShowEdit({ ...g, description: g.description || "" })} />
             </ListRow>
           )}
         />
@@ -104,6 +107,8 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
           onSelect={(v) => setNewGrade(f => ({ ...f, subjectId: v }))} placeholder="Seleziona materia…" emptyMessage="Nessuna materia insegnata in questa classe" />
         <Input label={GRADE_LABEL} value={newGrade.value} onChangeText={v => setNewGrade(f => ({ ...f, value: v }))} keyboardType={GRADE_KEYBOARD} />
         <DateField label="Data" value={newGrade.date} onChange={(v) => setNewGrade(f => ({ ...f, date: v }))} />
+        <Input label={GRADE_DESCRIPTION_LABEL} value={newGrade.description} onChangeText={v => setNewGrade(f => ({ ...f, description: v }))}
+          placeholder={GRADE_DESCRIPTION_PLACEHOLDER} maxLength={GRADE_DESCRIPTION_MAX} />
         <Btn label="Salva" onPress={addGrade} loading={saving} />
       </FormModal>
 
@@ -113,6 +118,8 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
             onSelect={(v) => setShowEdit(f => ({ ...f, subjectId: v }))} placeholder="Seleziona materia…" />
           <Input label={GRADE_LABEL} value={String(showEdit.value)} onChangeText={v => setShowEdit(f => ({ ...f, value: v }))} keyboardType={GRADE_KEYBOARD} />
           <DateField label="Data" value={showEdit.date} onChange={(v) => setShowEdit(f => ({ ...f, date: v }))} />
+          <Input label={GRADE_DESCRIPTION_LABEL} value={showEdit.description} onChangeText={v => setShowEdit(f => ({ ...f, description: v }))}
+            placeholder={GRADE_DESCRIPTION_PLACEHOLDER} maxLength={GRADE_DESCRIPTION_MAX} />
           <Btn label="Aggiorna" onPress={saveEdit} loading={saving} />
         </>}
       </FormModal>
