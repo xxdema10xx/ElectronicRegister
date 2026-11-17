@@ -35,7 +35,7 @@ function stateOf(a) {
     return { label: "In corso", tone: "amber", action: a.submissionId || getRun(a.id)?.submissionId ? "resume" : null };
   }
   if (sub === "pending_review") return { label: "In correzione", tone: "amber", action: "result" };
-  if (sub === "failed_auto") return { label: "Non superato", tone: "red", action: "result" };
+  if (sub === "failed_auto") return { label: "In attesa di valutazione", tone: "amber", action: "result" }; // non è un esito
   if (sub) return { label: "Valutato", tone: "green", action: "result" };
   if (a.canStart) return { label: "Da svolgere", tone: "blue", action: "intro" };
   if (st === "cancelled") return { label: "Annullato", tone: "red", action: null };
@@ -172,8 +172,9 @@ export default function StudentExamsScreen() {
   if (view) {
     const r = resultView(view.result);
     const done = r.status === "graded" || r.status === "finalized";
-    const bad = r.status === "failed_auto" || (done && r.passed === false);
-    const icon = r.status === "pending_review" ? ["hourglass-outline", "#D97706"] : bad ? ["close-circle", C.danger]
+    const bad = done && r.passed === false;
+    const waiting = r.status === "pending_review" || r.status === "failed_auto";
+    const icon = waiting ? ["hourglass-outline", "#D97706"] : bad ? ["close-circle", C.danger]
       : done && r.passed === null ? ["help-circle-outline", C.textMuted] : ["checkmark-circle", C.success];
     return (
       <View style={{ flex: 1, backgroundColor: C.bg, alignItems: "center", justifyContent: "center", padding: 24 }}>

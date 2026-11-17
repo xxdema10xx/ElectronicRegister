@@ -137,7 +137,8 @@ export default function DashboardScreen({ navigate }) {
   const studentBooklet = useStudentBooklet(assigned, examsLoaded);
   const bookletGraded = (studentBooklet || []).filter(b => b.r.showGrade);
   const average = bookletGraded.length ? (bookletGraded.reduce((sum, b) => sum + Number(b.r.grade), 0) / bookletGraded.length).toFixed(1) : "—";
-  const myRetakes = (studentBooklet || []).filter(b => b.r.status === "failed_auto" || (b.r.showGrade && b.r.passed === false));
+  // Solo voti ufficiali insufficienti: FailedAuto non è un esito didattico
+  const myRetakes = (studentBooklet || []).filter(b => b.r.showGrade && b.r.passed === false);
 
   const now = Date.now();
   const notEnded = (e) => parseUtc(e.availableUntil).getTime() >= now;

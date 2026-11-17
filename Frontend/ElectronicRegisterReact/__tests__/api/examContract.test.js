@@ -1,6 +1,6 @@
 // Contratto esami: enum, date UTC ⇄ locali, nomi, domande, bozza ⇄ DTO, risposte ed esito per lo studente.
 import {
-  EXAM_STATUS, QUESTION_TYPE, SUBMISSION_STATUS, answersToDto, availableFromLabel, detailToDraft, draftAsExam, draftToDto,
+  EXAM_STATUS, QUESTION_TYPE, SUBMISSION_STATUS, SUBMISSION_STATUS_LABEL, answersToDto, availableFromLabel, detailToDraft, draftAsExam, draftToDto,
   examDisplayName, examNameWithDate, formatDate, formatDateTime, fromEnum, fromLocalInput, isAnswered, parseUtc,
   questionFromDto, questionToDto, resultView, studentQuestionFromDto, toEnum, toLocalInput,
 } from "../../src/api/examContract";
@@ -185,8 +185,10 @@ describe("esito per lo studente", () => {
     expect(resultView({ status: 2, grade: 8 })).toMatchObject({ status: "pending_review", title: "In correzione", showGrade: false });
   });
 
-  test("non superabile in automatico", () => {
-    expect(resultView({ status: "FailedAuto" })).toMatchObject({ title: "Esame non superato", showGrade: false });
+  test("FailedAuto non è un esito didattico: 'In attesa di valutazione', mai 'non superato'", () => {
+    expect(resultView({ status: "FailedAuto" })).toMatchObject({ title: "In attesa di valutazione", showGrade: false });
+    expect(resultView({ status: 3, passed: false, grade: 4 }).title).not.toMatch(/non superato/i);
+    expect(SUBMISSION_STATUS_LABEL.failed_auto).toBe("Da valutare");
   });
 
   test("valutato: superato o no, voto se rilasciato", () => {

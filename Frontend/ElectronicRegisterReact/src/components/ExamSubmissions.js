@@ -22,7 +22,7 @@ const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n 
 const FILTERS = [
   { key: "all", label: "Tutte" },
   { key: "pending_review", label: "In correzione" },
-  { key: "failed_auto", label: "Non superate" },
+  { key: "failed_auto", label: "Da valutare" },
   { key: "done", label: "Valutate", match: ["graded", "finalized"] },
   { key: "in_progress", label: "In corso" },
 ];
@@ -150,7 +150,7 @@ export function SubmissionReview({ submissionId, displayName, api, onClose, onCh
             </View>
             {status === "failed_auto" && (
               <Text style={{ color: C.danger, marginTop: 10 }}>
-                Esame non superabile: i punti delle chiuse più il massimo delle aperte non raggiungono la soglia. Lo studente non vede il voto finché non lo definisci.
+                Da valutare: il server non ha assegnato un esito. Lo studente vede "In attesa di valutazione" finché non definisci il voto.
               </Text>
             )}
           </Card>

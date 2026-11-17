@@ -33,7 +33,7 @@ describe("riepilogo", () => {
 });
 
 describe("chi deve recuperare", () => {
-  test("insufficienti e non superabili; assenti solo negli esami chiusi", async () => {
+  test("insufficienti (voto ufficiale) e assenti solo negli esami chiusi; FailedAuto non è un esito", async () => {
     const api = fakeApi({
       subs: {
         pub: [sub("a", "graded", { passed: false }), sub("b", "graded", { passed: true }), sub("c", "in_progress"), sub("d", "pending_review")],
@@ -45,11 +45,10 @@ describe("chi deve recuperare", () => {
     expect(failed).toBe(0);
     expect(groups.map(g => [g.studentId, g.exams.map(e => e.reason), g.absentOnly])).toEqual([
       ["a", ["failed"], false],
-      ["e", ["failed"], false],
       ["f", ["missing"], true],
       ["g", ["missing"], true],
     ]);
-    expect(retakeSummary(groups)).toBe("4 da recuperare (2 assenti)");
+    expect(retakeSummary(groups)).toBe("3 da recuperare (2 assenti)");
     expect(api.getExam).toHaveBeenCalledTimes(1); // dettaglio solo per l'esame chiuso
   });
 
@@ -66,7 +65,7 @@ describe("chi deve recuperare", () => {
   test("insights per la dashboard in una sola serie di chiamate", async () => {
     const api = fakeApi({ subs: { a: [sub("1", "pending_review"), sub("2", "failed_auto")] } });
     const res = await getExamInsights(api, [{ id: "a", status: 1 }]);
-    expect(res).toMatchObject({ pendingReviewCount: 1, failed: 0, retakeSummary: "1 da recuperare" });
+    expect(res).toMatchObject({ pendingReviewCount: 1, failed: 0, retakeSummary: "Nessuno da recuperare" });
     expect(api.listSubmissions).toHaveBeenCalledTimes(1);
   });
 
@@ -114,7 +113,7 @@ describe("candidati al recupero (step Studenti)", () => {
     });
     const { closed, byStudent } = await getRetakeCandidates(api, "o");
     expect(closed).toBe(false);
-    expect(byStudent.get("a")).toEqual({ reason: "failed", proposed: false });
+    expect(byStudent.get("a")).toEqual({ reason: "pending", proposed: false }); // FailedAuto: da valutare
     expect(byStudent.has("b")).toBe(false);
   });
 });

@@ -57,7 +57,7 @@ function StudentBooklet() {
                   {r.passed === true && <StatusChip label="Superato" tone="green" />}
                 </View>
               ) : (
-                <StatusChip label={r.title} tone={r.status === "pending_review" ? "amber" : r.status === "failed_auto" ? "red" : "gray"} />
+                <StatusChip label={r.title} tone={r.status === "pending_review" || r.status === "failed_auto" ? "amber" : "gray"} />
               )}
             </ListRow>
           )}

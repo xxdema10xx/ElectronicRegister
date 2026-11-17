@@ -171,6 +171,18 @@ test("esito di un esame valutato, poi ritorno all'elenco", async () => {
   expect(screen.getByText("I miei esami")).toBeTruthy();
 });
 
+test("FailedAuto: lo studente vede 'In attesa di valutazione', mai 'Non superato'", async () => {
+  mockApi.getAssigned.mockResolvedValue([{ id: "f1", name: "Chimica", submissionStatus: 3, submissionId: "subF", durationMinutes: 30, availableFrom: iso(-hour), availableUntil: iso(-1) }]);
+  mockApi.getResult.mockResolvedValue({ status: 3, passed: false, grade: null, submittedAt: "2026-11-10T09:00:00Z" });
+  renderAs("student", <StudentExamsScreen />);
+  await flush();
+  expect(screen.getByText("In attesa di valutazione")).toBeTruthy();
+  expect(screen.queryByText(/Non superato/)).toBeNull();
+  await act(async () => { fireEvent.press(screen.getByText("Chimica")); });
+  expect(screen.getAllByText("In attesa di valutazione").length).toBeGreaterThan(0);
+  expect(screen.queryByText(/non superato/i)).toBeNull();
+});
+
 test("nessun esame assegnato", async () => {
   mockApi.getAssigned.mockResolvedValue([]);
   renderAs("student", <StudentExamsScreen />);

@@ -20,8 +20,9 @@ export function fromEnum(value, names) {
 export const toEnum = (key, names) => Math.max(0, names.indexOf(key));
 
 export const EXAM_STATUS_LABEL = { draft: "Bozza", published: "Pubblicato", closed: "Chiuso", cancelled: "Annullato" };
+// failed_auto NON è un esito didattico (docs/api/EXAM_FRONTEND_CONTRACTS.md): per il docente è "Da valutare"
 export const SUBMISSION_STATUS_LABEL = {
-  in_progress: "In corso", graded: "Valutato", pending_review: "In correzione", failed_auto: "Non superato", finalized: "Valutato",
+  in_progress: "In corso", graded: "Valutato", pending_review: "In correzione", failed_auto: "Da valutare", finalized: "Valutato",
 };
 
 // ── Date ────────────────────────────────────────────────────────────────────────────────────
@@ -182,7 +183,8 @@ export function resultView(result) {
   const status = fromEnum(result?.status, SUBMISSION_STATUS);
   const base = { status, totalScore: result?.totalScore ?? null, maxScore: result?.maxScore ?? null, grade: result?.grade ?? null, passed: result?.passed ?? null };
   if (status === "pending_review") return { ...base, title: "In correzione", detail: "L'insegnante sta correggendo le risposte aperte.", showGrade: false };
-  if (status === "failed_auto") return { ...base, title: "Esame non superato", detail: "Il punteggio massimo raggiungibile è inferiore alla soglia di sufficienza. L'insegnante definirà la valutazione.", showGrade: false };
+  // FailedAuto senza voto ufficiale non autorizza un esito: lo studente non vede "non superato"
+  if (status === "failed_auto") return { ...base, title: "In attesa di valutazione", detail: "L'insegnante definirà la valutazione.", showGrade: false };
   if (status === "graded" || status === "finalized") {
     // Senza l'esito del server non si afferma nulla: mai "superato" per mancanza di dati
     if (base.passed === null) return { ...base, title: "Esito non disponibile", detail: null, showGrade: false };

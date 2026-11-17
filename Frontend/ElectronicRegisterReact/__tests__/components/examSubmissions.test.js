@@ -18,14 +18,14 @@ describe("elenco delle consegne", () => {
     const onOpen = jest.fn();
     renderAs("teacher", <ExamSubmissions exam={{ id: "e1" }} subtitle="Reti · SW-25A" api={api} hrefOf={(id) => id} onOpen={onOpen} />);
     await flush();
-    ["Tutte (3)", "In correzione (1)", "Valutate (1)", "In corso (1)", "Non superate (0)"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
+    ["Tutte (3)", "In correzione (1)", "Valutate (1)", "In corso (1)", "Da valutare (0)"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
     expect(screen.getByText(/6\/10 · 2 uscite/)).toBeTruthy();
     expect(screen.getByText("Non ancora consegnato")).toBeTruthy();
 
     fireEvent.press(screen.getByText("Valutate (1)"));
     expect(screen.queryByText("Rossi Mario")).toBeNull();
     expect(screen.getByText("Bianchi Giulia")).toBeTruthy();
-    fireEvent.press(screen.getByText("Non superate (0)"));
+    fireEvent.press(screen.getByText("Da valutare (0)"));
     expect(screen.getByText("Nessuna consegna")).toBeTruthy();
 
     fireEvent.press(screen.getByText("Tutte (3)"));

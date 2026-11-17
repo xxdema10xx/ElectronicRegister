@@ -46,9 +46,9 @@ export function invalidateExamInsights(examId) {
 }
 
 // ── Chi deve recuperare: una sola regola per step 3, lista e Home ──────────────────────────────
-//   "failed"  Deve recuperare: non sufficiente o "non superabile"
+//   "failed"  Deve recuperare: voto ufficiale non sufficiente
 //   "missing" Non ha consegnato: nessuna consegna (o non finita) e l'esame è CHIUSO
-//   "pending" In correzione: si saprà dopo la correzione
+//   "pending" In correzione: si saprà dopo la correzione (anche FailedAuto, che non è un esito didattico)
 //   "passed"  Superato
 // Gli "assenti" esistono solo per gli esami chiusi: per gli altri basta l'elenco delle consegne.
 export const RETAKE_LABEL = { failed: "Deve recuperare", missing: "Non ha consegnato", pending: "In correzione", passed: "Superato" };
@@ -56,8 +56,8 @@ export const RETAKE_TONE = { failed: "red", missing: "amber", pending: "gray", p
 
 function submissionReason(sub) {
   const s = fromEnum(sub?.status, SUBMISSION_STATUS);
-  if (s === "failed_auto" || ((s === "graded" || s === "finalized") && sub.passed === false)) return "failed";
-  if (s === "pending_review") return "pending";
+  if ((s === "graded" || s === "finalized") && sub.passed === false) return "failed";
+  if (s === "pending_review" || s === "failed_auto") return "pending";
   if (s === "graded" || s === "finalized") return "passed";
   return null; // in corso
 }

@@ -20,4 +20,4 @@ export default function StatusChip({ label, tone = "gray", style }) {
 }
 
 export const EXAM_TONE = { draft: "gray", published: "green", closed: "blue", cancelled: "red" };
-export const SUBMISSION_TONE = { in_progress: "gray", graded: "green", pending_review: "amber", failed_auto: "red", finalized: "green" };
+export const SUBMISSION_TONE = { in_progress: "gray", graded: "green", pending_review: "amber", failed_auto: "amber", finalized: "green" };

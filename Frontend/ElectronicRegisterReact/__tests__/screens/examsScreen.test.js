@@ -158,7 +158,7 @@ test("segreteria: apre la correzione ma non può assegnare punti o voto", async 
 });
 
 test("'Chi deve recuperare'", async () => {
-  mockApi.listSubmissions.mockImplementation(async (id) => (id === "e2" ? [{ studentId: "s1", studentFirstName: "Mario", studentLastName: "Rossi", status: "failed_auto" }] : []));
+  mockApi.listSubmissions.mockImplementation(async (id) => (id === "e2" ? [{ studentId: "s1", studentFirstName: "Mario", studentLastName: "Rossi", status: "graded", passed: false }] : []));
   renderScreen();
   await flush();
   fireEvent.press(screen.getByText("Chi deve recuperare"));

@@ -95,13 +95,14 @@ test("studente: esami da svolgere, da recuperare e media dal libretto", async ()
   studentExams.useStudentBooklet.mockReturnValue([
     { r: { showGrade: true, grade: 8, passed: true, status: "graded" } },
     { r: { showGrade: true, grade: 5, passed: false, status: "graded" } },
+    { r: { showGrade: true, grade: 4, passed: false, status: "finalized" } },
     { r: { showGrade: false, status: "failed_auto" } },
   ]);
   const navigate = jest.fn();
   renderAs("student", <DashboardScreen navigate={navigate} />);
   await flush();
-  expect(screen.getByText("6.5")).toBeTruthy(); // media
-  expect(screen.getByText("2")).toBeTruthy(); // da recuperare
+  expect(screen.getByText("5.7")).toBeTruthy(); // media
+  expect(screen.getByText("2")).toBeTruthy(); // da recuperare: solo i voti ufficiali insufficienti, non FailedAuto
   expect(screen.getAllByText("Esami da svolgere")).toHaveLength(2); // numero chiave e pannello
   expect(screen.getByText(/60 min/)).toBeTruthy();
   fireEvent.press(screen.getByText("I miei voti"));
