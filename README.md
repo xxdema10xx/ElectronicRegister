@@ -28,6 +28,7 @@ App Expo (web, Android, iOS) in [`Frontend/ElectronicRegisterReact/`](Frontend/E
 cd Frontend/ElectronicRegisterReact
 npm ci
 npm test        # test Jest
+npm run test:coverage   # test Jest con report di copertura
 npm run web     # avvio in browser (expo start --web)
 ```
 
