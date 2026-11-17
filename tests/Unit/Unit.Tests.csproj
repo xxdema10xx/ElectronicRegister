@@ -12,5 +12,8 @@
   <ItemGroup>
 	<Compile Include="../../tools/CodeOrganization/NamespacePath.cs" Link="CodeOrganization/NamespacePath.cs" />
 	<ProjectReference Include="..\..\Backend\ElectronicRegisterAPI\src\Application\ElectronicRegisterAPI.Application\ElectronicRegisterAPI.Application.csproj" />
+	<!-- Api: unit tests of MVC filters (e.g. MembershipApiErrors) without a host or a database. -->
+	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	<ProjectReference Include="..\..\Backend\ElectronicRegisterAPI\src\Api\ElectronicRegisterAPI\ElectronicRegisterAPI.csproj" />
   </ItemGroup>
 </Project>

@@ -74,6 +74,8 @@ legacy, token o segreto. Email visibile solo per identita gia associate al tenan
 200 letture valide; 400 filtri/binding invalidi; 401 assenza/token non valido, legacy, selection,
 scaduto; 403 ruolo/stato/revoca/rollout; 404 GUID valido assente o esterno con stesso corpo pubblico.
 Un segmento non GUID non corrisponde alla route dettaglio (404). Errori sanitizzati, nessun SQL.
+Su tutte le azioni membership/inviti/account (filtro `MembershipApiErrors`), i 409 dovuti a modifiche
+concorrenti hanno `code: "ConcurrentChange"` (titolo invariato): rileggere e riprovare.
 Un ruolo aggiunto dopo emissione invalida il vecchio JWT quanto un ruolo rimosso: ripetere selezione
 istituto soltanto se ancora autorizzati, senza tentare fallback al login legacy.
 
