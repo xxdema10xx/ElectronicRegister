@@ -1,0 +1,44 @@
+// src/constants/gradeScale.js
+// Scala dei voti: trentesimi, solo interi, senza lode (il server rifiuta altri valori con 400). Unico punto in cui
+// sono definiti limiti, sufficienza e messaggi: schermate, validazioni e colori usano queste costanti.
+export const GRADE_MIN = 0;
+export const GRADE_MAX = 30;
+export const GRADE_PASS = 18; // voto >= 18: sufficiente
+export const GRADE_NEAR_PASS = 15; // 15–17: vicino alla sufficienza (arancione)
+
+export const GRADE_LABEL = `Voto (${GRADE_MIN}-${GRADE_MAX})`;
+export const GRADE_PLACEHOLDER = `${GRADE_MIN}–${GRADE_MAX}`;
+export const GRADE_ERROR = `Il voto deve essere un numero intero tra ${GRADE_MIN} e ${GRADE_MAX}.`;
+// Tastiera numerica senza separatore decimale
+export const GRADE_KEYBOARD = "number-pad";
+
+// Testo inserito → intero, oppure null se non è un voto valido (vuoto, decimali, fuori scala, altri caratteri)
+export function parseGrade(text) {
+  const t = String(text ?? "").trim();
+  if (!/^\d{1,2}$/.test(t)) return null;
+  const n = Number(t);
+  return n >= GRADE_MIN && n <= GRADE_MAX ? n : null;
+}
+export const isValidGrade = (text) => parseGrade(text) !== null;
+
+// Descrizione facoltativa del voto (es. "Verifica scritta in presenza"): 1–200 caratteri; vuota = nessuna
+export const GRADE_DESCRIPTION_MAX = 200;
+export const GRADE_DESCRIPTION_LABEL = "Descrizione (facoltativa)";
+export const GRADE_DESCRIPTION_PLACEHOLDER = "Es. Verifica scritta in presenza";
+export function cleanDescription(text) {
+  const t = String(text ?? "").trim();
+  return t ? t.slice(0, GRADE_DESCRIPTION_MAX) : null;
+}
+
+// Colore del voto: verde se sufficiente, arancione vicino alla soglia, rosso sotto
+export function gradeTone(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "neutral";
+  return n >= GRADE_PASS ? "pass" : n >= GRADE_NEAR_PASS ? "near" : "fail";
+}
+
+// Origine del voto (GradeDto.source): "exam" = voto ufficiale di una consegna d'esame (con examId e submissionId),
+// "manual" = inserito a mano, singolo o in blocco. I voti d'esame si cambiano solo dalla correzione dell'esame.
+export const isExamGrade = (grade) => grade?.source === "exam";
+export const EXAM_GRADE_LABEL = "da esame";
+export const EXAM_GRADE_HINT = "si modifica dalla correzione dell'esame";

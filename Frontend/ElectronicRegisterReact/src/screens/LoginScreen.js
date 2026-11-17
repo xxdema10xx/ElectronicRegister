@@ -1,0 +1,99 @@
+// src/screens/LoginScreen.js
+import { useEffect, useState } from "react";
+import { Alert, Image, Platform, SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
+import * as WebBrowser from "expo-web-browser";
+import { s } from "../constants/theme";
+import Card from "../components/Card";
+import Input from "../components/Input";
+import Btn from "../components/Btn";
+import { login, loginWithMicrosoft } from "../api/authService";
+import { useMicrosoftLogin } from "../hooks/useMicrosoftLogin";
+import { useLayout } from "../hooks/useLayout";
+
+WebBrowser.maybeCompleteAuthSession();
+
+// Gli account li crea l'istituto: niente registrazione. Al primo accesso si usa la password temporanea ricevuta.
+export default function LoginScreen({ onLogin }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [msLoading, setMsLoading] = useState(false);
+
+  const isDesktop = useLayout().isDesktop || Platform.OS === "web"; // sul web sempre la card centrata, mai il foglio da app
+  const { request, response, promptAsync, exchangeCode } = useMicrosoftLogin();
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { code } = response.params;
+      setMsLoading(true);
+      (async () => {
+        try {
+          const tokenResponse = await exchangeCode(code);
+          await submitMicrosoftToken(tokenResponse.accessToken);
+        } catch (err) {
+          Alert.alert("Errore login Microsoft", err?.message || JSON.stringify(err));
+          setMsLoading(false);
+        }
+      })();
+    } else if (response?.type === "error") {
+      Alert.alert("Errore login Microsoft", response.error?.message || "Login annullato");
+      setMsLoading(false);
+    }
+  }, [response]);
+
+  async function submitMicrosoftToken(msAccessToken) {
+    try {
+      const data = await loginWithMicrosoft(msAccessToken);
+      await onLogin({ ticket: data.ticket, passwordChangeRequired: data.passwordChangeRequired });
+    } catch (e) {
+      Alert.alert("Errore login Microsoft", String(e.message));
+    } finally {
+      setMsLoading(false);
+    }
+  }
+
+  async function submit() {
+    if (!email || !password) { Alert.alert("Attenzione", "Compila tutti i campi"); return; }
+    setLoading(true);
+    try {
+      const data = await login(email.trim(), password);
+      await onLogin({ ticket: data.ticket, credentials: { email: email.trim(), password }, passwordChangeRequired: data.passwordChangeRequired });
+    } catch (e) { Alert.alert("Errore login", e.message); }
+    finally { setLoading(false); }
+  }
+
+  return (
+    <SafeAreaView style={s.authBg}>
+      <StatusBar barStyle="light-content" backgroundColor={s.authBg.backgroundColor} />
+      <ScrollView contentContainerStyle={[{ flexGrow: 1 }, isDesktop && { justifyContent: "center", alignItems: "center", padding: 24 }]}
+        keyboardShouldPersistTaps="handled">
+        <View style={[s.authHeader, isDesktop && s.authHeaderDesktop]}>
+          <Image source={require("../../assets/images/logoits.png")} style={isDesktop ? { width: 100, height: 66 } : { width: 150, height: 100 }} />
+          <Text style={[s.authTitle, isDesktop && { fontSize: 20 }]}>Electronic Register</Text>
+          <Text style={s.authSubtitle}>ITS Umbria</Text>
+        </View>
+        <View style={[s.authBody, isDesktop && s.authBodyDesktop]}>
+          <Card>
+            <Text style={s.cardTitle}>Accedi</Text>
+            <Input label="Email" value={email} onChangeText={setEmail} keyboardType="email-address"
+              autoCapitalize="none" placeholder="allievo_nome@itsumbria.it" />
+            <Input label="Password" value={password} onChangeText={setPassword} secureTextEntry placeholder="••••••••" />
+            <Btn label="Entra" onPress={submit} loading={loading} style={{ marginTop: 4 }} />
+
+            <Btn
+              label="Accedi con Microsoft"
+              onPress={() => promptAsync()}
+              loading={msLoading}
+              disabled={!request}
+              style={{ marginTop: 10, backgroundColor: "#2F2F2F" }}
+            />
+
+            <Text style={[s.itemSub, { marginTop: 14, textAlign: "center" }]}>
+              Non hai un account? Lo crea la segreteria del tuo istituto, che ti darà l'email e una password temporanea.
+            </Text>
+          </Card>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}

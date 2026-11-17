@@ -1,0 +1,402 @@
+// src/components/ExamTaker.js
+// Svolgimento dell'esame a schermo bloccato. Il blocco è "di deterrenza" e non a prova di manomissione:
+// su web usa lo schermo intero, e uscire, cambiare scheda/finestra o perdere il focus conta come uscita;
+// su nativo si controlla che l'app resti in primo piano. Ogni uscita è segnalata al server (POST /violations),
+// che la conta e la mostra al docente; alla soglia (MAX_VIOLATIONS) è il SERVER a consegnare la prova con le
+// risposte già salvate (autoSubmitted): lo studente è escluso e il client non chiama /submit. Se la soglia sul
+// server è disattivata, lo studente resta in pausa e può riprendere. Allo scadere del tempo si consegnano le
+// risposte salvate (/submit-expired). Le risposte si salvano da sole sul server; la scadenza è quella decisa
+// dal server (deadlineAt), non un timer del dispositivo. Se il server risponde 409 perché la prova risulta già
+// consegnata (altra scheda, altro dispositivo) si legge l'esito e lo svolgimento si chiude.
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Animated, AppState, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { C, s } from "../constants/theme";
+import Btn from "./Btn";
+import Card from "./Card";
+import * as Crypto from "expo-crypto";
+import { SUBMISSION_STATUS, SUBMIT_REASON, answersToDto, examDisplayName, fromEnum, isAnswered, parseUtc } from "../api/examContract";
+import { saveRun } from "../data/studentExams";
+
+export const MAX_VIOLATIONS = 3;
+export const EXCLUDED_MESSAGE = "Sei stato escluso dall'esame: sono state rilevate troppe uscite dalla finestra. Le risposte salvate sono state consegnate.";
+export const ALREADY_SUBMITTED_MESSAGE = "La prova risulta già consegnata (da un'altra scheda o da un altro dispositivo).";
+const SAVE_DELAY_MS = 2500;
+const isWeb = Platform.OS === "web";
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const newEventId = () => globalThis.crypto?.randomUUID?.() ?? Crypto.randomUUID();
+
+export function enterFullscreen() {
+  if (isWeb) return document.documentElement.requestFullscreen?.().catch(() => {});
+}
+export function exitFullscreen() {
+  if (isWeb && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+}
+
+const fmt = (sec) => `${String(Math.floor(sec / 60)).padStart(2, "0")}:${String(sec % 60).padStart(2, "0")}`;
+
+// run: { examId, submissionId, deadlineAt, exam: { name, description, questions }, answers, revision }
+export default function ExamTaker({ run, api, onFinish }) {
+  const { exam } = run;
+  const questions = exam.questions;
+  const deadline = parseUtc(run.deadlineAt).getTime();
+  const secondsLeft = () => Math.ceil((deadline - Date.now()) / 1000);
+
+  const [answers, setAnswers] = useState(run.answers || {});
+  const [remaining, setRemaining] = useState(secondsLeft);
+  const [violations, setViolations] = useState(0);
+  const [paused, setPaused] = useState(null); // messaggio mostrato mentre l'esame è in pausa per un'uscita
+  const [confirming, setConfirming] = useState(false);
+  const [missing, setMissing] = useState([]); // domande obbligatorie senza risposta: bloccano la consegna
+  const [unanswered, setUnanswered] = useState([]); // tutte le domande senza risposta: solo evidenziate
+  const [saveState, setSaveState] = useState(null); // "saving" | "saved" | "error"
+  const [submitting, setSubmitting] = useState(false);
+  const [failure, setFailure] = useState(null); // consegna non riuscita (per la scadenza: schermata "Riprova")
+
+  const finishedRef = useRef(false);
+  const submittingRef = useRef(false);
+  const pausedRef = useRef(false);
+  const violationsRef = useRef(0);
+  const closingRef = useRef(false); // lettura dell'esito dopo una consegna fatta dal server, in corso
+  const dirtyRef = useRef(false); // risposte cambiate e non ancora salvate sul server
+  const clockRef = useRef(null);
+  const closedByServerRef = useRef(null);
+
+  // Il bottone "Riprendi" pulsa finché l'esame è in pausa, per farlo notare subito.
+  const pulse = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    if (!paused) return;
+    const loop = Animated.loop(Animated.sequence([
+      Animated.timing(pulse, { toValue: 1.06, duration: 550, useNativeDriver: true }),
+      Animated.timing(pulse, { toValue: 1, duration: 550, useNativeDriver: true }),
+    ]));
+    loop.start();
+    return () => loop.stop();
+  }, [paused, pulse]);
+  const answersRef = useRef(answers);
+  answersRef.current = answers;
+  const revisionRef = useRef(run.revision || 0);
+  const firstRender = useRef(true);
+
+  // ── Salvataggio ──
+  const save = useCallback(async () => {
+    if (finishedRef.current || submittingRef.current) return;
+    let revision = revisionRef.current + 1;
+    setSaveState("saving");
+    const snapshot = answersRef.current;
+    const send = (clientRevision) => api.saveAnswers(run.submissionId, { clientRevision, answers: answersToDto(questions, snapshot) });
+    try {
+      let res = await send(revision);
+      // accepted:false = revisione più vecchia di quella del server (es. un salvataggio da un'altra scheda):
+      // il salvataggio NON è avvenuto. Si riparte dopo la revisione del server e si invia una volta ancora
+      // lo stato attuale delle risposte, che è quello che lo studente vede.
+      if (res?.accepted === false) {
+        revision = Math.max(revision, Number(res.currentRevision) || 0) + 1;
+        res = await send(revision);
+      }
+      if (res?.accepted === false) {
+        revisionRef.current = Math.max(revisionRef.current, Number(res.currentRevision) || 0);
+        setSaveState("error");
+        return;
+      }
+      revisionRef.current = Math.max(revision, res?.currentRevision ?? revision);
+      if (answersRef.current === snapshot) dirtyRef.current = false;
+      saveRun(run.examId, { revision: revisionRef.current });
+      setSaveState("saved");
+    } catch (e) {
+      // 409: la prova non è più in corso (consegnata altrove o dal server): si legge l'esito e si chiude
+      if (e?.status === 409) await closedByServerRef.current?.();
+      if (!finishedRef.current) setSaveState("error");
+    }
+  }, [api, questions, run.examId, run.submissionId]);
+
+  // Ogni modifica si tiene subito sul dispositivo (ripresa dopo un refresh) e si invia al server dopo una breve pausa
+  useEffect(() => {
+    if (firstRender.current) { firstRender.current = false; return; }
+    dirtyRef.current = true;
+    saveRun(run.examId, { answers });
+    const id = setTimeout(save, SAVE_DELAY_MS);
+    return () => clearTimeout(id);
+  }, [answers, save, run.examId]);
+
+  // ── Consegna ──
+  const submit = useCallback(async (auto, reason) => {
+    if (finishedRef.current || submittingRef.current) return;
+    submittingRef.current = true;
+    setSubmitting(true);
+    setFailure(null);
+    try {
+      let result;
+      if (reason === "tempo scaduto") {
+        // Scaduto il tempo il server non accetta più risposte: consegna quelle già salvate. L'orologio del
+        // dispositivo può essere qualche secondo avanti rispetto al server (409 "non è ancora tempo"): si riprova.
+        for (let attempt = 0; ; attempt++) {
+          try { result = await api.submitExpired(run.submissionId); break; }
+          catch (e) { if (e.status !== 409 || attempt >= 4) throw e; await sleep(3000); }
+        }
+      } else {
+        // +2: resta maggiore anche di un salvataggio automatico ancora in volo (altrimenti il server risponde 409)
+        const clientRevision = revisionRef.current + 2;
+        result = await api.submitExam(run.submissionId, { clientRevision, answers: answersToDto(questions, answersRef.current) });
+        revisionRef.current = clientRevision;
+      }
+      finishedRef.current = true;
+      exitFullscreen();
+      onFinish({ result, auto, reason, violations: violationsRef.current });
+    } catch (e) {
+      submittingRef.current = false;
+      setSubmitting(false);
+      if (auto) setFailure({ message: e.message, reason });
+      else { setConfirming(false); setFailure({ message: e.message, reason: null }); }
+    }
+  }, [api, onFinish, questions, run.submissionId]);
+
+  // Fine dello svolgimento decisa dal server: niente più salvataggi, timer fermo, fuori dallo schermo intero
+  const endTaking = () => {
+    finishedRef.current = true;
+    clearInterval(clockRef.current);
+    pausedRef.current = false;
+    setPaused(null);
+    exitFullscreen();
+  };
+
+  // La prova è stata consegnata dal server (excluded: per le uscite) o risulta già consegnata altrove (409).
+  // Si legge l'esito persistito e si chiude lo svolgimento. Con un 409 si chiude solo se il server conferma
+  // che la prova non è più in corso: un 409 può essere anche il limite di frequenza delle violazioni.
+  const closeFromServer = useCallback(async (excluded) => {
+    if (finishedRef.current || closingRef.current) return;
+    closingRef.current = true;
+    let result = null;
+    for (let attempt = 0; attempt < 2 && !result; attempt++) {
+      try { result = await api.getResult(run.submissionId); }
+      catch { if (attempt === 0) await sleep(1500); }
+    }
+    const status = fromEnum(result?.status, SUBMISSION_STATUS);
+    if (!excluded && (!result || status === "in_progress")) { closingRef.current = false; return; }
+    if (finishedRef.current) return;
+    const byViolations = excluded || fromEnum(result?.submitReason, SUBMIT_REASON) === "violations";
+    endTaking();
+    onFinish({
+      result: result && status !== "in_progress" ? result : null,
+      auto: true,
+      reason: byViolations ? "troppe uscite dal test" : "prova già consegnata",
+      notice: byViolations ? EXCLUDED_MESSAGE : ALREADY_SUBMITTED_MESSAGE,
+      excluded: byViolations,
+      violations: violationsRef.current,
+    });
+  }, [api, onFinish, run.submissionId]);
+  closedByServerRef.current = () => closeFromServer(false);
+
+  // type: tab_hidden | window_blur | fullscreen_exit (valori ammessi dal server).
+  // L'esame va in pausa; il contatore è quello del server (violationCount), quello locale solo se la
+  // chiamata fallisce. Alla soglia consegna il server (autoSubmitted): mai /submit dal client per le uscite.
+  const registerViolation = useCallback((message, type) => {
+    if (finishedRef.current || submittingRef.current || pausedRef.current) return;
+    pausedRef.current = true;
+    violationsRef.current += 1;
+    setViolations(violationsRef.current);
+    setPaused(message);
+    const eventId = newEventId();
+    (async () => {
+      // Prima si salvano le risposte non ancora inviate: se il server consegna, consegna quelle salvate
+      if (dirtyRef.current) await save();
+      if (finishedRef.current) return;
+      try {
+        const receipt = await api.reportViolation(run.submissionId, { eventId, type });
+        const count = Number(receipt?.violationCount);
+        if (receipt?.violationCount !== undefined && receipt?.violationCount !== null && Number.isFinite(count)) {
+          violationsRef.current = count;
+          setViolations(count);
+        }
+        if (receipt?.autoSubmitted) await closeFromServer(true);
+      } catch (e) {
+        if (e?.status === 409) await closeFromServer(false);
+        // altri errori: resta il conteggio locale e l'esame non si blocca
+      }
+    })();
+  }, [api, run.submissionId, save, closeFromServer]);
+
+  function resume() {
+    enterFullscreen();
+    pausedRef.current = false;
+    setPaused(null);
+  }
+
+  function askConfirm() {
+    const notDone = questions.map((q, i) => (q.required && !isAnswered(q, answers[q.id]) ? i + 1 : null)).filter(Boolean);
+    const notAnswered = questions.map((q, i) => (!isAnswered(q, answers[q.id]) ? i + 1 : null)).filter(Boolean);
+    setMissing(notDone);
+    setUnanswered(notAnswered);
+    if (notDone.length === 0) { setFailure(null); setConfirming(true); }
+  }
+
+  // Timer: segue la scadenza del server e continua anche durante la pausa
+  useEffect(() => {
+    clockRef.current = setInterval(() => setRemaining(secondsLeft()), 1000);
+    return () => clearInterval(clockRef.current);
+  }, []);
+  const expiredRef = useRef(false);
+  const lastSaveRef = useRef(false);
+  useEffect(() => {
+    // Ultimo salvataggio poco prima della fine: dopo la scadenza contano solo le risposte già sul server
+    if (remaining <= 5 && remaining > 0 && !lastSaveRef.current) { lastSaveRef.current = true; save(); }
+    if (remaining <= 0 && !expiredRef.current) { expiredRef.current = true; submit(true, "tempo scaduto"); }
+  }, [remaining, submit, save]);
+
+  // Controlli anti-uscita
+  useEffect(() => {
+    if (isWeb) {
+      const onFullscreen = () => { if (!document.fullscreenElement) registerViolation("Sei uscito dalla modalità a schermo intero.", "fullscreen_exit"); };
+      const onVisibility = () => { if (document.visibilityState === "hidden") registerViolation("Hai cambiato scheda o finestra.", "tab_hidden"); };
+      const onBlur = () => registerViolation("La finestra dell'esame ha perso il focus.", "window_blur");
+      const stop = (e) => e.preventDefault();
+      const onKey = (e) => {
+        const k = e.key.toLowerCase();
+        if (k === "f5" || k === "f12" || ((e.ctrlKey || e.metaKey) && ["c", "v", "x", "p", "s", "u", "r", "f"].includes(k))) e.preventDefault();
+      };
+      const onUnload = (e) => { e.preventDefault(); e.returnValue = ""; };
+      document.addEventListener("fullscreenchange", onFullscreen);
+      document.addEventListener("visibilitychange", onVisibility);
+      window.addEventListener("blur", onBlur);
+      window.addEventListener("beforeunload", onUnload);
+      document.addEventListener("keydown", onKey);
+      ["contextmenu", "copy", "cut", "paste", "dragstart"].forEach(ev => document.addEventListener(ev, stop));
+      return () => {
+        document.removeEventListener("fullscreenchange", onFullscreen);
+        document.removeEventListener("visibilitychange", onVisibility);
+        window.removeEventListener("blur", onBlur);
+        window.removeEventListener("beforeunload", onUnload);
+        document.removeEventListener("keydown", onKey);
+        ["contextmenu", "copy", "cut", "paste", "dragstart"].forEach(ev => document.removeEventListener(ev, stop));
+      };
+    }
+    const sub = AppState.addEventListener("change", (st) => { if (st !== "active") registerViolation("Hai lasciato l'app durante l'esame.", "tab_hidden"); });
+    return () => sub.remove();
+  }, [registerViolation]);
+
+  const setAnswer = (qid, value) => { setMissing([]); setUnanswered([]); setAnswers(a => ({ ...a, [qid]: value })); };
+  const toggleMulti = (qid, oid) => { setMissing([]); setUnanswered([]); setAnswers(a => {
+    const cur = a[qid] || [];
+    return { ...a, [qid]: cur.includes(oid) ? cur.filter(x => x !== oid) : [...cur, oid] };
+  }); };
+  const answered = questions.filter(q => isAnswered(q, answers[q.id])).length;
+
+  return (
+    // onRequestClose vuoto: il tasto indietro di Android non chiude l'esame
+    <Modal visible animationType="none" statusBarTranslucent onRequestClose={() => {}}>
+      <View style={{ flex: 1, backgroundColor: "#EEEBF9" }}>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: C.primary, paddingHorizontal: 16, paddingVertical: 12 }}>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: C.white, fontSize: 16, fontWeight: "700" }} numberOfLines={1}>{examDisplayName(exam)}</Text>
+            <Text style={{ color: "#CBD5E1", fontSize: 12 }} numberOfLines={1}>
+              {saveState === "saving" ? "Salvataggio…" : saveState === "saved" ? "Risposte salvate" : saveState === "error" ? "Salvataggio non riuscito: riproverò" : " "}
+            </Text>
+          </View>
+          <View style={{ alignItems: "flex-end" }}>
+            <Text style={{ color: remaining <= 60 ? "#FCA5A5" : C.white, fontSize: 20, fontWeight: "700" }}>{fmt(Math.max(remaining, 0))}</Text>
+            <Text style={{ color: "#CBD5E1", fontSize: 11 }}>Uscite: {violations}/{MAX_VIOLATIONS}</Text>
+          </View>
+        </View>
+
+        <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }} keyboardShouldPersistTaps="handled">
+          <View style={[{ width: "100%", maxWidth: 760 }, isWeb && { userSelect: "none" }]}>
+            {!!exam.description && <Text style={{ color: C.textMuted, marginBottom: 12 }}>{exam.description}</Text>}
+
+            {questions.map((q, i) => (
+              <Card key={q.id} style={{ marginBottom: 12, borderLeftWidth: 5, borderLeftColor: unanswered.includes(i + 1) ? C.danger : C.primary }}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10 }}>
+                  <Text style={{ flex: 1, color: C.text, fontSize: 15, fontWeight: "600" }}>{i + 1}. {q.text}{q.required ? " *" : ""}</Text>
+                  <Text style={{ color: C.textMuted }}>{q.points} pt</Text>
+                </View>
+                <Text style={{ color: C.textLight, fontSize: 12, marginBottom: 6 }}>
+                  {q.type === "single" ? "Una sola risposta" : q.type === "multiple" ? "Una o più risposte" : "Risposta scritta"}
+                </Text>
+
+                {q.type === "open" ? (
+                  <TextInput style={[s.input, { minHeight: 90, textAlignVertical: "top" }]} multiline placeholder="Scrivi qui la tua risposta"
+                    placeholderTextColor={C.textLight} value={answers[q.id] || ""} onChangeText={(v) => setAnswer(q.id, v)} />
+                ) : q.options.map(o => {
+                  const multi = q.type === "multiple";
+                  const on = multi ? (answers[q.id] || []).includes(o.id) : answers[q.id] === o.id;
+                  return (
+                    <TouchableOpacity key={o.id} activeOpacity={0.7} onPress={() => multi ? toggleMulti(q.id, o.id) : setAnswer(q.id, o.id)}
+                      style={{ flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 6 }}>
+                      <Ionicons name={on ? (multi ? "checkbox" : "radio-button-on") : (multi ? "square-outline" : "radio-button-off")}
+                        size={24} color={on ? C.primary : C.textLight} />
+                      <Text style={{ flex: 1, color: C.text }}>{o.text}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Card>
+            ))}
+
+            {missing.length > 0 ? (
+              <Text style={{ color: C.danger, marginBottom: 12 }}>
+                Rispondi alle domande obbligatorie (*): {missing.join(", ")}.
+              </Text>
+            ) : unanswered.length > 0 && (
+              <Text style={{ color: C.danger, marginBottom: 12 }}>
+                Domande senza risposta (evidenziate): {unanswered.join(", ")}.
+              </Text>
+            )}
+            {failure && !failure.reason && <Text style={{ color: C.danger, marginBottom: 12 }}>{failure.message}</Text>}
+
+            {confirming ? (
+              <Card style={{ marginBottom: 32 }}>
+                <Text style={{ color: C.text, fontWeight: "600", marginBottom: 4 }}>Consegnare l'esame?</Text>
+                <Text style={{ color: C.textMuted, marginBottom: 12 }}>
+                  Hai risposto a {answered} domande su {questions.length}. Dopo la consegna non potrai modificare le risposte.
+                </Text>
+                <View style={{ gap: 8 }}>
+                  <Btn label="Sì, consegna" variant="success" onPress={() => submit(false, null)} loading={submitting} />
+                  <Btn label="Torna all'esame" variant="ghost" onPress={() => setConfirming(false)} disabled={submitting} />
+                </View>
+              </Card>
+            ) : (
+              <Btn label={`Consegna (${answered}/${questions.length})`} variant="success" onPress={askConfirm} style={{ marginBottom: 32 }} />
+            )}
+          </View>
+        </ScrollView>
+
+        {/* Esame in pausa dopo un'uscita: non si vede né si fa nulla finché non si riprende */}
+        {paused && (
+          <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(10,20,35,0.97)", alignItems: "center", justifyContent: "center", padding: 24, zIndex: 10 }}>
+            <View style={{ width: "100%", maxWidth: 480, borderRadius: 20, borderWidth: 3, borderColor: "#FCD34D", backgroundColor: C.primary, padding: 28, alignItems: "center" }}>
+              <Ionicons name="warning" size={76} color="#FCD34D" />
+              <Text style={{ color: C.white, fontSize: 26, fontWeight: "800", marginTop: 14, textAlign: "center" }}>Esame in pausa</Text>
+              <Text style={{ color: "#E2E8F0", fontSize: 16, marginTop: 10, textAlign: "center" }}>{paused}</Text>
+              <View style={{ backgroundColor: "rgba(252,165,165,0.15)", borderRadius: 10, padding: 12, marginTop: 14 }}>
+                <Text style={{ color: "#FCA5A5", fontWeight: "700", textAlign: "center" }}>
+                  Uscita {violations} di {MAX_VIOLATIONS}: alla {MAX_VIOLATIONS}ª sei escluso dall'esame e vengono consegnate le risposte salvate.
+                </Text>
+                <Text style={{ color: "#FCA5A5", textAlign: "center", marginTop: 4 }}>Il tempo continua a scorrere.</Text>
+              </View>
+
+              <Animated.View style={{ transform: [{ scale: pulse }], width: "100%", marginTop: 24 }}>
+                <Btn label="▶  Riprendi l'esame" variant="success" onPress={resume}
+                  style={{ width: "100%", paddingVertical: 18, shadowColor: "#000", shadowOpacity: 0.3, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 6 }}
+                  textStyle={{ fontSize: 19, fontWeight: "800" }} />
+              </Animated.View>
+            </View>
+          </View>
+        )}
+
+        {/* La consegna allo scadere del tempo non è andata a buon fine (rete, server…) */}
+        {failure?.reason && (
+          <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: C.primary, alignItems: "center", justifyContent: "center", padding: 24, zIndex: 20 }}>
+            <Ionicons name="alert-circle-outline" size={56} color="#FCA5A5" />
+            <Text style={{ color: C.white, fontSize: 20, fontWeight: "700", marginTop: 12, textAlign: "center" }}>Consegna automatica non riuscita</Text>
+            <Text style={{ color: "#E2E8F0", marginTop: 8, textAlign: "center", maxWidth: 420 }}>Motivo: {failure.reason}. {failure.message}</Text>
+            <Text style={{ color: "#CBD5E1", marginTop: 8, textAlign: "center", maxWidth: 420 }}>
+              Le risposte salvate restano sul server. Riprova: se non riesce, l'esame verrà chiuso dal server alla scadenza.
+            </Text>
+            <View style={{ gap: 8, marginTop: 20, minWidth: 220 }}>
+              <Btn label="Riprova la consegna" onPress={() => submit(true, failure.reason)} loading={submitting} />
+              <Btn label="Esci dall'esame" variant="ghost" style={{ backgroundColor: C.white }} onPress={() => { finishedRef.current = true; exitFullscreen(); onFinish({ error: failure.message, auto: true, reason: failure.reason, violations: violationsRef.current }); }} />
+            </View>
+          </View>
+        )}
+      </View>
+    </Modal>
+  );
+}

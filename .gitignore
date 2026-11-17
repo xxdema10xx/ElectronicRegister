@@ -170,3 +170,9 @@ __pycache__/
 /.migration-tools/
 
 /.diagnostics/
+
+# Frontend React: test end-to-end (dipendenze, report e credenziali locali).
+Frontend/ElectronicRegisterReact/e2e/node_modules/
+Frontend/ElectronicRegisterReact/e2e/reports/
+.env.e2e
+**/.env.e2e

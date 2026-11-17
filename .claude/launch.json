@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "fantacalcio-mobile-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "C:\\Users\\damde\\source\\repos\\xxdema10xx\\Fantacalcio\\mobile", "run", "web"],
+      "port": 8081
+    },
+    {
+      "name": "fantacalcio-backend",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "C:\\Users\\damde\\source\\repos\\xxdema10xx\\Fantacalcio\\backend\\Fantacalcio.Api.csproj", "--urls", "http://localhost:5000"],
+      "port": 5000
+    }
+  ]
+}

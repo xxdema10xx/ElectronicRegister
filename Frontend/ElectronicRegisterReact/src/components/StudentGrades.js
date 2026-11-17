@@ -1,0 +1,154 @@
+// src/components/StudentGrades.js
+// Pagina dei voti di un singolo studente (/studenti/{id}/voti): elenco, aggiunta, modifica ed eliminazione.
+import { useCallback, useEffect, useState } from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { C, s } from "../constants/theme";
+import Card from "./Card";
+import FormModal from "./FormModal";
+import GradeCircle from "./GradeCircle";
+import ExamGradeTag from "./ExamGradeTag";
+import Input from "./Input";
+import SelectField from "./SelectField";
+import DateField from "./DateField";
+import Btn from "./Btn";
+import { getGradesPage, getGradeFilters, createGrade, updateGrade, deleteGrade } from "../api/gradeService";
+import { getSubjects } from "../api/subjectService";
+import { getStudentClassSubjects } from "../api/classService";
+import { formatDateForDisplay, toISODate } from "../utils/dateUtils";
+import { notify, confirmAction } from "../utils/dialogs";
+import { gradeErrorMessage } from "../utils/gradeErrors";
+import {
+  GRADE_DESCRIPTION_LABEL, GRADE_DESCRIPTION_MAX, GRADE_DESCRIPTION_PLACEHOLDER, GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, parseGrade,
+  isExamGrade,
+} from "../constants/gradeScale";
+
+const emptyForm = () => ({ id: null, subjectId: "", value: "", date: toISODate(new Date()), description: "" });
+
+// canDelete: solo l'admin può eliminare un voto (lo Staff può inserirlo e modificarlo)
+export default function StudentGrades({ student, token, canDelete = true }) {
+  const [grades, setGrades] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  // Materie della classe dello studente (le sole ammesse dal server); null = non note (lettura non riuscita), si mostrano tutte
+  const [classSubjects, setClassSubjects] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState(null); // null = elenco; oggetto = form di aggiunta/modifica
+  const [saving, setSaving] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [page, subs, ofClass] = await Promise.all([
+        getGradesPage({ pageNumber: 1, pageSize: 100, studentId: student.id }, token),
+        // lo Staff non può leggere /subjects: si ripiega sulle materie presenti nei filtri dei voti
+        getSubjects(undefined, token).catch(() => getGradeFilters(token).then(f => f?.subjects || []).catch(() => [])),
+        getStudentClassSubjects(student.id, token).catch(() => null),
+      ]);
+      const items = Array.isArray(page?.items) ? page.items : [];
+      setGrades(items.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))));
+      setSubjects(Array.isArray(subs) ? subs : []);
+      setClassSubjects(ofClass);
+    } catch (e) {
+      if (e.status !== 404) notify("Errore", e.message);
+      setGrades([]);
+    } finally { setLoading(false); }
+  }, [student, token]);
+
+  useEffect(() => { setForm(null); load(); }, [load]);
+
+  const subjectName = g => g.subjectName || subjects.find(x => x.id === g.subjectId)?.name || "—";
+
+  async function save() {
+    const value = parseGrade(form.value);
+    if (!form.subjectId) return notify("Attenzione", "Seleziona la materia.");
+    if (value === null) return notify("Attenzione", GRADE_ERROR);
+    if (!form.date) return notify("Attenzione", "Seleziona la data.");
+    setSaving(true);
+    try {
+      const { description } = form;
+      if (form.id) await updateGrade(form.id, { subjectId: form.subjectId, value, date: form.date, description }, token);
+      else await createGrade({ studentId: student.id, subjectId: form.subjectId, value, date: form.date, description }, token);
+      setForm(null);
+      load();
+    } catch (e) {
+      // 409 dal server (docs/API.md §21): materia non assegnata alla classe, studente senza classe o voto d'esame
+      notify("Errore", gradeErrorMessage(form.id ? "update" : "create", e));
+    }
+    finally { setSaving(false); }
+  }
+
+  // Materie proponibili: quelle della classe; in modifica resta anche la materia attuale del voto
+  const subjectOptions = (() => {
+    if (!classSubjects) return subjects;
+    const current = form?.subjectId && !classSubjects.some(x => x.id === form.subjectId)
+      ? subjects.filter(x => x.id === form.subjectId) : [];
+    return [...current, ...classSubjects];
+  })();
+
+  function remove(g) {
+    confirmAction("Conferma", "Eliminare questo voto?", async () => {
+      try { await deleteGrade(g.id, token); load(); }
+      catch (e) { notify("Errore", gradeErrorMessage("delete", e)); }
+    });
+  }
+
+  return (
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
+      <ScrollView contentContainerStyle={{ padding: 16, alignItems: "center" }}>
+        <Card style={{ width: "100%", maxWidth: 760 }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+            <Text style={s.itemSub}>{loading ? "Caricamento…" : `${grades.length} ${grades.length === 1 ? "voto" : "voti"}`}</Text>
+            <Btn label="Aggiungi voto" onPress={() => setForm(emptyForm())} style={s.smBtn} textStyle={s.smBtnText} />
+          </View>
+          {!loading && grades.length === 0 && <Text style={[s.emptyText, { paddingVertical: 24, textAlign: "center" }]}>Nessun voto per questo studente</Text>}
+          {grades.map(g => (
+            <View key={g.id} style={[s.profileRow, { alignItems: "center", paddingVertical: 10 }]}>
+              <GradeCircle value={g.value} />
+              <View style={{ flex: 1, marginLeft: 12 }}>
+                <Text style={s.itemTitle}>{subjectName(g)}</Text>
+                <Text style={s.itemSub}>{formatDateForDisplay(g.date)}</Text>
+                {!!g.description && <Text style={s.itemSub}>{g.description}</Text>}
+              </View>
+              {isExamGrade(g) ? <ExamGradeTag /> : <>
+              <TouchableOpacity onPress={() => setForm({ id: g.id, subjectId: g.subjectId, value: String(g.value), date: g.date, description: g.description || "" })} style={{ padding: 6 }}
+                accessibilityRole="button" accessibilityLabel={`Modifica voto di ${subjectName(g)}`}>
+                <Ionicons name="create-outline" size={26} color={C.footer} />
+              </TouchableOpacity>
+              {canDelete && (
+                <TouchableOpacity onPress={() => remove(g)} style={{ padding: 6 }}
+                  accessibilityRole="button" accessibilityLabel={`Elimina voto di ${subjectName(g)}`}>
+                  <Ionicons name="trash-outline" size={26} color={C.footer} />
+                </TouchableOpacity>
+              )}
+              </>}
+            </View>
+          ))}
+        </Card>
+      </ScrollView>
+
+      <FormModal wide visible={!!form} title={form?.id ? "Modifica voto" : "Nuovo voto"} onClose={() => setForm(null)}>
+        {!!form && (
+          <View>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
+              <View style={{ flex: 1, minWidth: 200 }}>
+                <SelectField label="Materia" value={form.subjectId} options={subjectOptions} getLabel={(sub) => sub.name}
+                  onSelect={(subjectId) => setForm(f => ({ ...f, subjectId }))} placeholder="Seleziona materia…"
+                  emptyMessage={classSubjects ? "Lo studente non è in una classe, o la sua classe non ha materie" : "Nessuna materia disponibile"} />
+              </View>
+              <View style={{ flex: 1, minWidth: 200 }}>
+                <DateField label="Data" value={form.date} onChange={(date) => setForm(f => ({ ...f, date }))} />
+              </View>
+            </View>
+            <Input label={GRADE_LABEL} value={String(form.value)} onChangeText={(value) => setForm(f => ({ ...f, value }))} keyboardType={GRADE_KEYBOARD} />
+            <Input label={GRADE_DESCRIPTION_LABEL} value={form.description || ""} onChangeText={(description) => setForm(f => ({ ...f, description }))}
+              placeholder={GRADE_DESCRIPTION_PLACEHOLDER} maxLength={GRADE_DESCRIPTION_MAX} />
+            <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: 10 }}>
+              <Btn label="Annulla" variant="ghost" onPress={() => setForm(null)} style={{ paddingHorizontal: 22 }} />
+              <Btn label={form.id ? "Aggiorna" : "Salva"} onPress={save} loading={saving} style={{ paddingHorizontal: 28 }} />
+            </View>
+          </View>
+        )}
+      </FormModal>
+    </View>
+  );
+}

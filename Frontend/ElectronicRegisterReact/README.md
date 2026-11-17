@@ -49,3 +49,50 @@ Join our community of developers creating universal apps.
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
 # ElectronicRegisterReact
+
+## Pubblicazione web: rimandare ogni percorso a index.html
+
+Sul web l'app usa URL veri (History API, senza librerie di routing): per esempio `/esami`, `/esami?tab=bozze`,
+`/esami/nuovo`, `/esami/{id}`, `/esami/{id}/modifica?step=2`, `/classi`, `/profilo`. Sono percorsi gestiti
+dall'app nel browser, non file sul server.
+
+Il server web che pubblica la build (`npx expo export --platform web`, cartella `dist/`) deve quindi rispondere
+con `index.html` a ogni percorso che non corrisponde a un file esistente (JS, immagini, font). Senza questa regola,
+ricaricando la pagina o aprendo un link su `/esami/123` si ottiene un 404. Nella configurazione del server
+(nginx, Apache, IIS, hosting statico) cerca "SPA fallback" o "rewrite to index.html".
+
+In sviluppo (`npx expo start --web`) il server di Metro lo fa già.
+
+## Bozze degli esami salvate nel browser
+
+Su web la bozza di un esame in preparazione si conserva in `sessionStorage` (chiave `examDraft4`) e compare
+in "Riprendi bozza". Viene salvata solo se c'è qualcosa da riprendere: un nuovo esame con contenuto (titolo,
+descrizione, date o una domanda; la sola scelta di classe e materia non conta) oppure un esame già salvato
+con modifiche non ancora inviate al server.
+
+Le versioni precedenti salvavano anche le bozze vuote. Al caricamento della sezione Esami una bozza di quel
+tipo, cioè un nuovo esame senza contenuto, viene scartata: non riapre l'editor con una classe vecchia, non
+chiede conferma all'uscita e non crea la card "Riprendi bozza".
+
+## Backend in sviluppo
+
+Il frontend segue il backend del branch `refactor-database-entities`. Senza `EXPO_PUBLIC_API_BASE`, in sviluppo
+chiama `http://127.0.0.1:5000/api` (indirizzo predefinito del backend). Il CORS del backend è chiuso di default:
+nel browser usare `EXPO_PUBLIC_DEV_PROXY` (vedi `.env.example`) oppure aggiungere l'origine a
+`Transport:AllowedOrigins`.
+
+Non esiste la registrazione: gli account li crea l'istituto (Membri, oppure Studenti e Professori dalla scheda), e
+al primo accesso con la password temporanea l'app chiede subito di sceglierne una nuova. La creazione degli
+account richiede i flag `SchoolApi`, `MembershipWriteApi` e `PlatformIdentity` attivi sul server.
+
+## Test
+
+Jest con `jest-expo` e React Native Testing Library. I test sono in [`__tests__/`](__tests__/README.md).
+
+```bash
+npm test                 # tutti i test
+npm run test:watch       # rilancia i test a ogni modifica
+npm run test:coverage    # con la copertura (cartella coverage/, ignorata da git)
+```
+
+Non serve il backend: le chiamate HTTP sono simulate.
