@@ -85,7 +85,11 @@ Uscire da `tail` con Ctrl+C quando compare `ESITO deploy: ...`. Il deploy:
 
 - clona il commit in `/srv/electronicregister-staging/source-$REV` e crea lo stato `state-$REV-<UTC>`;
 - esegue host.py `prepare` (namespace, credenziali, volume e rete nuovi, porta `18081`), `config`, `build`, `db`,
-  `sql-check`, `provision`, `compatibility`, `release-preflight`, `tls`, `seed`, `preflight`, `start`, `verify`;
+  `sql-check`, `provision`, `compatibility`, `release-preflight`, `successor`, `tls`, `seed`, `preflight`, `start`, `verify`;
+  `successor` applica una volta sola al database nuovo `er-platform-identity-1` (se abilitato) e poi sempre
+  `er-grade-scale-1` (voti in trentesimi, [migrations/grade-scale](../../migrations/grade-scale/README.md)), ciascuno
+  seguito dal suo `002_validate.sql`; nel log compare `er-grade-scale-1 applied and validated (7/7 checks at zero).`
+  senza quel marker `/health/ready` resta 503 (`GRADE_SCALE_SCHEMA`) e la verifica di readiness fallisce;
 - copia il certificato attivo in `/etc/nginx/<nuovo-namespace>/versions/<stesso nome>/` con verifica SHA-256
   e gli stessi permessi, senza toccare `/etc/nginx/er-stage-14d2fd709a09/`.
 
@@ -113,7 +117,8 @@ sleep 3; sudo tail -F "$LOG/latest-seed-demo.log"
 ```
 
 Atteso, per ciascuno dei due istituti: istituto e primo admin, 2 admin/1 Staff/3 Teacher, struttura, 12 studenti
-importati, calendario, 3 esami; poi `demoSeed: OK` ed `ESITO seed-demo: OK`. Rilanciarlo non duplica nulla.
+importati, calendario, 3 esami, 6 voti manuali in trentesimi inseriti in blocco; poi `demoSeed: OK` ed
+`ESITO seed-demo: OK`. Rilanciarlo non duplica nulla.
 
 ## 6. verify (~3 minuti)
 

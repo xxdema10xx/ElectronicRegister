@@ -58,6 +58,7 @@ Tutte le route sotto iniziano con `/api/institution`.
 | GET /grades/statistics | A,T,S | nessuno | 200 GradeStatisticsDto; 404 senza voti |
 | GET /grades/paged | A,T,S | pageNumber, pageSize, subjectId?, studentId?, date? | 200 GradePageDto |
 | POST /grades | A,T | CreateGradeDto | 201 Guid + Location |
+| POST /grades/batch | A,S,T + GradeCreate | CreateGradeBatchDto | 201 GradeBatchResultDto; 400 con errori per riga; 409 eventId riusato |
 | PUT /grades/{id} | A,T | UpdateGradeDto | 204 |
 | DELETE /grades/{id} | A | nessuno | 204 |
 
@@ -160,7 +161,22 @@ altrimenti       -> Esito non ancora disponibile
 
 Non aggiungere SubmissionStatus.Failed. FailedAuto e uno stato operativo preesistente e non una conversione del voto insufficiente. Il servizio reale attuale usa Graded per chiuse e PendingReview per aperte; un eventuale FailedAuto senza voto ufficiale non autorizza un esito didattico.
 
-Quando il Grade e ufficiale, Passed segue **Grade.Value >= 6**, compresi override motivati: 5 false, 6/9 true. Prima del voto ufficiale, lo studente non riceve punteggi/esito provvisori. Un esame solo chiuso corretto automaticamente puo avere Graded e Passed=false: non e un errore di consegna.
+Quando il Grade e ufficiale, Passed segue **Grade.Value >= 18**, compresi override motivati: 17 false, 18/30 true. Prima del voto ufficiale, lo studente non riceve punteggi/esito provvisori. Un esame solo chiuso corretto automaticamente puo avere Graded e Passed=false: non e un errore di consegna.
+
+## Scala dei voti (dalla release di schema er-grade-scale-1)
+
+Tutti i voti ufficiali (manuali, da esame, finalize e override) sono **interi da 0 a 30**; sufficienza **18** (`Passed` = voto >= 18); niente lode. Un valore fuori intervallo o non intero produce 400 con messaggio italiano. I voti salvati in decimi prima della release sono stati convertiti una volta sola: `ROUND(vecchio x 3)`, con un insufficiente (vecchio < 6) limitato a 17 (5.99 -> 17, 6 -> 18, 7.33 -> 22, 10 -> 30).
+
+Voto suggerito da un esame in piattaforma, con `p = totalScore / maxScore` e `s = passingPercent / 100`:
+
+```text
+p <  s : voto = 18 * p / s,                    arrotondato all'intero, mai oltre 17
+p >= s : voto = 18 + 12 * (p - s) / (1 - s),   arrotondato all'intero, al massimo 30
+```
+
+Arrotondamento all'intero con i mezzi lontano da zero (`MidpointRounding.AwayFromZero`); `p = s` da esattamente 18, punteggio nullo 0, punteggio pieno 30. Esempio con soglia 60%: 59/100 -> 17, 60/100 -> 18, 70/100 -> 21, 100/100 -> 30.
+
+Le medie di `/grades/statistics` (annuale e mensili) sono calcolate sui voti interi e restituite con **due decimali**, arrotondate con i mezzi lontano da zero (es. 24, 25, 25 -> 24.67).
 
 ## Review, finalize, voti e recuperi
 
@@ -168,7 +184,7 @@ Review amministrativa: SubmissionReviewDto con stato, studente, risposte, punteg
 
 GET `/submissions/{id}/violations` consente al docente autorizzato di consultare i segnali del browser. Non considerarli prova certa di scorrettezza.
 
-CRUD Grade generico: CreateGradeDto studentId, subjectId, value (1..10), date; UpdateGradeDto subjectId, value, date. Classe e assegnazione vengono verificate dal backend. Non puo modificare/cancellare Grade associati a submission ufficiali: 409, usare review/finalize. Teacher vede solo assegnazioni, Student propri voti. Nelle letture Grade, Teacher+Student puo leggere sia classi insegnate sia voti personali, entro la stessa membership.
+CRUD Grade generico: CreateGradeDto studentId, subjectId, value (intero 0..30), date, description facoltativa; UpdateGradeDto subjectId, value, date, description facoltativa (assente = invariata, stringa vuota = rimossa). `description` (1-200 caratteri dopo il trim, niente caratteri di controllo) identifica per esempio una prova svolta fuori piattaforma ed e restituita da GET `/grades`, `/grades/{id}` e `/grades/paged`. Classe e assegnazione vengono verificate dal backend. Non puo modificare/cancellare Grade associati a submission ufficiali: 409, usare review/finalize. Teacher vede solo assegnazioni, Student propri voti. Nelle letture Grade, Teacher+Student puo leggere sia classi insegnate sia voti personali, entro la stessa membership.
 
 Un recupero e un nuovo Exam con retakeOfExamId, stessa ClassSubject e vincoli di stato esistenti. Il Grade del recupero **affianca** quello originale: nessuna sostituzione, modifica o media automatica, nessuna ammissione subordinata all'insufficienza introdotta.
 
