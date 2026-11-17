@@ -24,6 +24,19 @@ beforeEach(() => {
   gradeService.deleteGrade.mockResolvedValue();
 });
 
+test("voto d'esame: 'da esame', senza modifica né eliminazione", async () => {
+  gradeService.getGradesPage.mockResolvedValue({ items: [
+    { id: "g1", subjectId: "m1", value: 18, date: "2026-10-01" },
+    { id: "g2", subjectId: "m2", subjectName: "Java", value: 26, date: "2026-11-02", source: "exam", examId: "e1", submissionId: "sub1" },
+  ] });
+  renderAs("admin", <StudentGrades student={student} token="tok" />);
+  await flush();
+  expect(screen.getByText("da esame")).toBeTruthy();
+  expect(screen.queryByLabelText("Modifica voto di Java")).toBeNull();
+  expect(screen.queryByLabelText("Elimina voto di Java")).toBeNull();
+  expect(screen.getByLabelText("Modifica voto di Reti")).toBeTruthy();
+});
+
 test("elenco dal più recente con materia e data", async () => {
   renderAs("admin", <StudentGrades student={student} token="tok" />);
   await flush();

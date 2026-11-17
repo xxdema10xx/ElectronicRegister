@@ -36,3 +36,9 @@ export function gradeTone(value) {
   if (!Number.isFinite(n)) return "neutral";
   return n >= GRADE_PASS ? "pass" : n >= GRADE_NEAR_PASS ? "near" : "fail";
 }
+
+// Origine del voto (GradeDto.source): "exam" = voto ufficiale di una consegna d'esame (con examId e submissionId),
+// "manual" = inserito a mano, singolo o in blocco. I voti d'esame si cambiano solo dalla correzione dell'esame.
+export const isExamGrade = (grade) => grade?.source === "exam";
+export const EXAM_GRADE_LABEL = "da esame";
+export const EXAM_GRADE_HINT = "si modifica dalla correzione dell'esame";

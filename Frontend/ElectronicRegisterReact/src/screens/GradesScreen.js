@@ -24,21 +24,24 @@ import { useStudentBooklet, useStudentExams } from "../data/studentExams";
 import { examDisplayName, formatDateTime } from "../api/examContract";
 import { gradeErrorMessage } from "../utils/gradeErrors";
 import ClassGradesForm from "../components/ClassGradesForm";
+import ExamGradeTag from "../components/ExamGradeTag";
 import {
   GRADE_DESCRIPTION_LABEL, GRADE_DESCRIPTION_MAX, GRADE_DESCRIPTION_PLACEHOLDER, GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, isValidGrade,
+  isExamGrade,
 } from "../constants/gradeScale";
 
 const GRADES_PAGE_SIZE = 20;
 const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n * 100) / 100));
 
 // Voti del registro dello studente (il server restituisce solo i propri): voti inseriti dal docente o dalla
-// segreteria, anche in blocco, con la loro descrizione (es. "Verifica scritta in presenza").
+// segreteria, anche in blocco, con la loro descrizione (es. "Verifica scritta in presenza"). I voti d'esame
+// (source "exam") sono già nel libretto come esito dell'esame: qui non si ripetono.
 function useOwnGrades(token) {
   const [grades, setGrades] = useState(null);
   useEffect(() => {
     let alive = true;
     getGradesPage({ pageNumber: 1, pageSize: 100 }, token)
-      .then((page) => { if (alive) setGrades((Array.isArray(page?.items) ? page.items : []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)))); })
+      .then((page) => { if (alive) setGrades((Array.isArray(page?.items) ? page.items : []).filter(g => !isExamGrade(g)).sort((a, b) => String(b.date).localeCompare(String(a.date)))); })
       .catch(() => { if (alive) setGrades([]); });
     return () => { alive = false; };
   }, [token]);
@@ -327,12 +330,12 @@ function TeacherAdminGrades() {
                 <Text style={s.itemSub}>📅 {g.date}</Text>
                 {!!g.description && <Text style={s.itemSub}>📝 {g.description}</Text>}
               </View>
-              {(role === "teacher" || role === "admin" || role === "staff") && (
+              {(role === "teacher" || role === "admin" || role === "staff") && (isExamGrade(g) ? <ExamGradeTag /> : (
                 <View style={{ flexDirection: "row", gap: 6 }}>
                   <IconButton icon="create-outline" label="Modifica" onPress={() => setShowEdit({ ...g, description: g.description || "" })} />
                   {role === "admin" && <IconButton icon="trash-outline" label="Elimina" onPress={() => removeGrade(g.id)} />}
                 </View>
-              )}
+              ))}
             </ListRow>
           )}
         />

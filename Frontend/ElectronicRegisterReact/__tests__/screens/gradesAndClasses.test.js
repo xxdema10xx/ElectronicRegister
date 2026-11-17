@@ -72,7 +72,23 @@ describe("Voti: registro (docente, admin, segreteria)", () => {
     expect(gradeService.deleteGrade).toHaveBeenCalledWith("g2", "tok");
   });
 
-  test("D-09: 409 su modifica ed eliminazione → voto generato da un esame", async () => {
+  test("D-09: voto d'esame (source \"exam\") → 'da esame', senza Modifica né Elimina", async () => {
+    gradeService.getGradesPage.mockResolvedValue({ totalCount: 2, items: [
+      { id: "g1", subjectName: "Reti", value: 24, date: "2026-11-02", source: "exam", examId: "e1", submissionId: "sub1" },
+      { id: "g2", subjectName: "Java", value: 18, date: "2026-11-01", source: "manual" },
+    ] });
+    renderAs("admin", <GradesScreen />);
+    await flush();
+    expect(screen.getByText("da esame")).toBeTruthy();
+    expect(screen.getByLabelText("Voto da esame: si modifica dalla correzione dell'esame")).toBeTruthy();
+    expect(screen.getAllByLabelText("Modifica")).toHaveLength(1);
+    expect(screen.getAllByLabelText("Elimina")).toHaveLength(1);
+    fireEvent.press(screen.getByLabelText("Elimina"));
+    await pressAlertButton("Elimina");
+    expect(gradeService.deleteGrade).toHaveBeenCalledWith("g2", "tok");
+  });
+
+  test("D-09: 409 su modifica ed eliminazione (server senza source) → voto generato da un esame", async () => {
     const conflict = () => Object.assign(new Error("Operazione non consentita nello stato attuale. Ricarica e riprova."), { status: 409 });
     gradeService.updateGrade.mockRejectedValue(conflict());
     gradeService.deleteGrade.mockRejectedValue(conflict());
@@ -121,6 +137,8 @@ describe("Voti: registro (docente, admin, segreteria)", () => {
 });
 
 describe("Voti: libretto dello studente", () => {
+  beforeEach(() => gradeService.getGradesPage.mockResolvedValue({ items: [] }));
+
   test("un esame per riga con voto o stato", async () => {
     studentExams.useStudentExams.mockReturnValue({ assigned: [], loaded: true, error: null });
     studentExams.useStudentBooklet.mockReturnValue([
@@ -128,6 +146,7 @@ describe("Voti: libretto dello studente", () => {
       { item: { id: "e2", name: "Java", isRetake: true }, r: { showGrade: false, title: "In correzione", status: "pending_review" } },
     ]);
     renderAs("student", <GradesScreen />);
+    await flush();
     ["Libretto", "Reti", "24", "Superato", "Java · Recupero", "In correzione"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
   });
 
@@ -143,10 +162,38 @@ describe("Voti: libretto dello studente", () => {
     ["Voti del registro", "24", "📝 Verifica in presenza", "Nessun esame svolto"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
   });
 
-  test("nessun esame svolto", () => {
+  test("un voto d'esame compare solo come esito dell'esame, non anche tra i voti del registro", async () => {
+    studentExams.useStudentExams.mockReturnValue({ assigned: [], loaded: true, error: null });
+    studentExams.useStudentBooklet.mockReturnValue([
+      { item: { id: "e1", name: "Reti", submittedAt: "2026-11-10T10:00:00Z" }, r: { showGrade: true, grade: 27, passed: true } },
+    ]);
+    gradeService.getGradesPage.mockResolvedValue({ items: [
+      { id: "x1", subjectName: "Reti", value: 27, date: "2026-11-10", source: "exam", examId: "e1", submissionId: "sub1" },
+      { id: "r1", subjectName: "Java", value: 20, date: "2026-11-17", source: "manual", description: "Orale" },
+    ] });
+    renderAs("student", <GradesScreen />);
+    await flush();
+    expect(screen.getAllByText("27")).toHaveLength(1);
+    expect(screen.getByText("Voti del registro")).toBeTruthy();
+    expect(screen.getByText("📝 Orale")).toBeTruthy();
+  });
+
+  test("solo voti d'esame: niente sezione 'Voti del registro'", async () => {
+    studentExams.useStudentExams.mockReturnValue({ assigned: [], loaded: true, error: null });
+    studentExams.useStudentBooklet.mockReturnValue([
+      { item: { id: "e1", name: "Reti", submittedAt: "2026-11-10T10:00:00Z" }, r: { showGrade: true, grade: 27, passed: true } },
+    ]);
+    gradeService.getGradesPage.mockResolvedValue({ items: [{ id: "x1", subjectName: "Reti", value: 27, date: "2026-11-10", source: "exam" }] });
+    renderAs("student", <GradesScreen />);
+    await flush();
+    expect(screen.queryByText("Voti del registro")).toBeNull();
+  });
+
+  test("nessun esame svolto", async () => {
     studentExams.useStudentExams.mockReturnValue({ assigned: [], loaded: true, error: "Rete assente" });
     studentExams.useStudentBooklet.mockReturnValue([]);
     renderAs("student", <GradesScreen />);
+    await flush();
     expect(screen.getByText("Nessun esame svolto")).toBeTruthy();
     expect(screen.getByText("Rete assente")).toBeTruthy();
   });
@@ -223,6 +270,19 @@ describe("Classi del docente", () => {
     fireEvent.press(screen.getByText("Conferma"));
     await act(async () => { fireEvent.press(screen.getByText("Salva")); });
     await waitFor(() => expect(gradeService.createGrade).toHaveBeenCalledWith(expect.objectContaining({ studentId: "s1", subjectId: "m1", value: "9" }), "tok"));
+  });
+
+  test("voto d'esame dello studente: 'da esame' al posto di 'Modifica voto'", async () => {
+    gradeService.getGradesPage.mockResolvedValue({ items: [
+      { id: "g1", subjectId: "m1", value: 7, date: "2026-11-01" },
+      { id: "g9", subjectId: "m1", value: 25, date: "2026-11-05", source: "exam", examId: "e1", submissionId: "sub1" },
+    ] });
+    renderAs("teacher", <MyClassesScreen />);
+    fireEvent.press(await screen.findByText("SW-25A"));
+    fireEvent.press(screen.getByText(/Studenti \(2\)/));
+    fireEvent.press(screen.getByText("Mario Rossi"));
+    expect(await screen.findByText("da esame")).toBeTruthy();
+    expect(screen.getAllByLabelText("Modifica voto")).toHaveLength(1);
   });
 
   test("docente senza profilo collegato", async () => {

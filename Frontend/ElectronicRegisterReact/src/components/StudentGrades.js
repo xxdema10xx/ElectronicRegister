@@ -7,6 +7,7 @@ import { C, s } from "../constants/theme";
 import Card from "./Card";
 import FormModal from "./FormModal";
 import GradeCircle from "./GradeCircle";
+import ExamGradeTag from "./ExamGradeTag";
 import Input from "./Input";
 import SelectField from "./SelectField";
 import DateField from "./DateField";
@@ -19,6 +20,7 @@ import { notify, confirmAction } from "../utils/dialogs";
 import { gradeErrorMessage } from "../utils/gradeErrors";
 import {
   GRADE_DESCRIPTION_LABEL, GRADE_DESCRIPTION_MAX, GRADE_DESCRIPTION_PLACEHOLDER, GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, parseGrade,
+  isExamGrade,
 } from "../constants/gradeScale";
 
 const emptyForm = () => ({ id: null, subjectId: "", value: "", date: toISODate(new Date()), description: "" });
@@ -107,6 +109,7 @@ export default function StudentGrades({ student, token, canDelete = true }) {
                 <Text style={s.itemSub}>{formatDateForDisplay(g.date)}</Text>
                 {!!g.description && <Text style={s.itemSub}>{g.description}</Text>}
               </View>
+              {isExamGrade(g) ? <ExamGradeTag /> : <>
               <TouchableOpacity onPress={() => setForm({ id: g.id, subjectId: g.subjectId, value: String(g.value), date: g.date, description: g.description || "" })} style={{ padding: 6 }}
                 accessibilityRole="button" accessibilityLabel={`Modifica voto di ${subjectName(g)}`}>
                 <Ionicons name="create-outline" size={26} color={C.footer} />
@@ -117,6 +120,7 @@ export default function StudentGrades({ student, token, canDelete = true }) {
                   <Ionicons name="trash-outline" size={26} color={C.footer} />
                 </TouchableOpacity>
               )}
+              </>}
             </View>
           ))}
         </Card>

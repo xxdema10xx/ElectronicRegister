@@ -17,6 +17,7 @@ import SelectField from "../components/SelectField";
 import DateField from "../components/DateField";
 import FormModal from "../components/FormModal";
 import GradeCircle from "../components/GradeCircle";
+import ExamGradeTag from "../components/ExamGradeTag";
 import { filterBySearch } from "../utils/search";
 import { getMyClasses } from "../api/classService";
 import { getGradesForStudent, addClassGrade, updateClassGrade } from "../api/classGradeService";
@@ -24,6 +25,7 @@ import { notify } from "../utils/dialogs";
 import ClassGradesForm from "../components/ClassGradesForm";
 import {
   GRADE_DESCRIPTION_LABEL, GRADE_DESCRIPTION_MAX, GRADE_DESCRIPTION_PLACEHOLDER, GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, isValidGrade,
+  isExamGrade,
 } from "../constants/gradeScale";
 
 const initials = (a, b) => `${a?.[0] ?? ""}${b?.[0] ?? ""}`.toUpperCase();
@@ -97,7 +99,9 @@ function StudentGradesSheet({ student, klassSubjects, token, onClose }) {
                 <Text style={s.itemSub}>{g.date}</Text>
                 {!!g.description && <Text style={s.itemSub}>{g.description}</Text>}
               </View>
-              <IconButton icon="create-outline" label="Modifica voto" size={26} onPress={() => setShowEdit({ ...g, description: g.description || "" })} />
+              {isExamGrade(g) ? <ExamGradeTag /> : (
+                <IconButton icon="create-outline" label="Modifica voto" size={26} onPress={() => setShowEdit({ ...g, description: g.description || "" })} />
+              )}
             </ListRow>
           )}
         />
