@@ -10,4 +10,7 @@ public class Grade
     public string? Description { get; set; }
     /// <summary>Client event of the batch that created this grade; null for single or exam grades.</summary>
     public Guid? BatchEventId { get; set; }
+    /// <summary>Submission whose finalization produced this grade; null for manual grades.</summary>
+    public Guid? SubmissionId { get; set; }
+    public Guid? ExamId { get; set; }
 }

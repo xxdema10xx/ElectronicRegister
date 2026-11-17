@@ -25,7 +25,7 @@ internal static class GradeMapper
 
             subjects.TryGetValue(classSubject.SubjectId, out var subject);
             students.TryGetValue(grade.StudentId, out var student);
-            result.Add(new GradeDto { Id = grade.Id, StudentId = grade.StudentId, SubjectId = classSubject.SubjectId, SubjectName = subject?.Name, TeacherId = classSubject.TeacherId, Value = grade.Value, Date = grade.Date, Description = grade.Description, Student = student is null ? null : new StudentDto { Id = student.Id, FirstName = student.FirstName, LastName = student.LastName } });
+            result.Add(new GradeDto { Id = grade.Id, StudentId = grade.StudentId, SubjectId = classSubject.SubjectId, SubjectName = subject?.Name, TeacherId = classSubject.TeacherId, Value = grade.Value, Date = grade.Date, Description = grade.Description, Source = grade.SubmissionId.HasValue ? GradeSources.Exam : GradeSources.Manual, ExamId = grade.ExamId, SubmissionId = grade.SubmissionId, Student = student is null ? null : new StudentDto { Id = student.Id, FirstName = student.FirstName, LastName = student.LastName } });
         }
 
         return result;

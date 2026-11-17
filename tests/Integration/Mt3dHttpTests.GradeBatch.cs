@@ -197,6 +197,46 @@ public sealed partial class Mt3dHttpTests
     }
 
     [Fact]
+    public async Task GradeReadsDistinguishExamGradesFromManualGrades()
+    {
+        // Official grade of a closed-only exam (graded at submit) next to a manual grade of the same student.
+        var exam = await Create(); var start = await Start(exam); var student = await Access("student");
+        var submit = await Request(Submission(start.SubmissionId, "submit"), student, new SubmitExamDto { ClientRevision = 1, Answers = Answers(exam) }, "POST");
+        await Expect(submit, HttpStatusCode.OK);
+        var admin = await Access();
+        var manualResponse = await Request("/api/institution/grades", admin, new CreateGradeDto { StudentId = Id("student"), SubjectId = Id("subject"), Value = 24, Date = BatchDate }, "POST");
+        await Expect(manualResponse, HttpStatusCode.Created);
+        var manualId = await manualResponse.Content.ReadFromJsonAsync<Guid>();
+        Guid examGradeId = default;
+        await Db(async db => examGradeId = (await db.ExamSubmissions.Where(s => s.Id == start.SubmissionId).Select(s => s.GradeId).SingleAsync())!.Value);
+
+        void AssertExam(JsonNode? g)
+        {
+            Assert.Equal("exam", g!["source"]!.GetValue<string>());
+            Assert.Equal(exam.Id, g["examId"]!.GetValue<Guid>());
+            Assert.Equal(start.SubmissionId, g["submissionId"]!.GetValue<Guid>());
+        }
+        void AssertManual(JsonNode? g)
+        {
+            Assert.Equal("manual", g!["source"]!.GetValue<string>());
+            Assert.Null(g["examId"]); Assert.Null(g["submissionId"]);
+        }
+        foreach (var token in new[] { admin, await Access("teacher"), student })
+        {
+            var list = await ArrayResponse("/api/institution/grades", token);
+            AssertExam(list.Single(g => RowId(g) == examGradeId)); AssertManual(list.Single(g => RowId(g) == manualId));
+            var paged = await Request("/api/institution/grades/paged?pageSize=100&studentId=" + Id("student"), token);
+            await Expect(paged, HttpStatusCode.OK);
+            var items = (await paged.Content.ReadFromJsonAsync<JsonObject>())!["items"]!.AsArray();
+            AssertExam(items.Single(g => RowId(g) == examGradeId)); AssertManual(items.Single(g => RowId(g) == manualId));
+            var examDetail = await Request("/api/institution/grades/" + examGradeId, token); await Expect(examDetail, HttpStatusCode.OK);
+            AssertExam(await examDetail.Content.ReadFromJsonAsync<JsonObject>());
+            var manualDetail = await Request("/api/institution/grades/" + manualId, token); await Expect(manualDetail, HttpStatusCode.OK);
+            AssertManual(await manualDetail.Content.ReadFromJsonAsync<JsonObject>());
+        }
+    }
+
+    [Fact]
     public async Task SingleGradeAcceptsAndExposesAnOptionalDescription()
     {
         var admin = await Access();

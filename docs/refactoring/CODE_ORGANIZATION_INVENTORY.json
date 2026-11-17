@@ -1,6 +1,6 @@
 {
-  "filesAnalyzed": 723,
-  "typesClassified": 720,
+  "filesAnalyzed": 724,
+  "typesClassified": 721,
   "entries": [
     {
       "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs",
@@ -3459,6 +3459,22 @@
       "types": [
         {
           "name": "GradePageDto",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/GradeSources.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.DTOs",
+      "classification": "DTOs",
+      "types": [
+        {
+          "name": "GradeSources",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
