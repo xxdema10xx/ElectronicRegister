@@ -23,6 +23,7 @@ import { getTeachers } from "../api/teacherService";
 import { useStudentBooklet, useStudentExams } from "../data/studentExams";
 import { examDisplayName, formatDateTime } from "../api/examContract";
 import { gradeErrorMessage } from "../utils/gradeErrors";
+import ClassGradesForm from "../components/ClassGradesForm";
 import {
   GRADE_DESCRIPTION_LABEL, GRADE_DESCRIPTION_MAX, GRADE_DESCRIPTION_PLACEHOLDER, GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, isValidGrade,
 } from "../constants/gradeScale";
@@ -120,6 +121,7 @@ function TeacherAdminGrades() {
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(null);
+  const [showBatch, setShowBatch] = useState(false); // "Voti alla classe"
   // Filtri come su grades.html: materia e allievo sono select (solo tra le
   // materie/allievi che hanno almeno un voto), la data è un calendario.
   const [filterSubjectId, setFilterSubjectId] = useState("");
@@ -253,8 +255,12 @@ function TeacherAdminGrades() {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
         <SectionHeader title="Voti" action={
-          (role === "teacher" || role === "admin" || role === "staff") &&
-          <Btn label="+ Voto" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
+          (role === "teacher" || role === "admin" || role === "staff") && (
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              <Btn label="Voti alla classe" variant="ghost" onPress={() => setShowBatch(true)} style={s.smBtn} textStyle={s.smBtnText} />
+              <Btn label="+ Voto" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
+            </View>
+          )
         } />
         {/* Filters */}
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: filtersOpen ? 8 : 4 }}>
@@ -331,6 +337,10 @@ function TeacherAdminGrades() {
           )}
         />
       }
+
+      {/* Montato solo quando è aperto: ogni compilazione parte da zero con un nuovo eventId */}
+      {showBatch && <ClassGradesForm visible token={token} teacherId={role === "teacher" ? user?.teacherId : undefined}
+        onClose={() => setShowBatch(false)} onSaved={() => refreshAll()} />}
 
       {/* ADD MODAL */}
       <FormModal visible={showAdd} title="Aggiungi voto" onClose={() => setShowAdd(false)}>

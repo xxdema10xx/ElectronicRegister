@@ -21,6 +21,7 @@ import { filterBySearch } from "../utils/search";
 import { getMyClasses } from "../api/classService";
 import { getGradesForStudent, addClassGrade, updateClassGrade } from "../api/classGradeService";
 import { notify } from "../utils/dialogs";
+import ClassGradesForm from "../components/ClassGradesForm";
 import {
   GRADE_DESCRIPTION_LABEL, GRADE_DESCRIPTION_MAX, GRADE_DESCRIPTION_PLACEHOLDER, GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, isValidGrade,
 } from "../constants/gradeScale";
@@ -135,6 +136,7 @@ export default function MyClassesScreen() {
   const [klass, setKlass] = useState(null); // classe aperta
   const [tab, setTab] = useState("subjects");
   const [openStudent, setOpenStudent] = useState(null); // studente aperto (voti)
+  const [showBatch, setShowBatch] = useState(false); // "Voti alla classe" della classe aperta
   const visibleClasses = filterBySearch(classes, search, c => [c.name]);
 
   const load = useCallback(async () => {
@@ -160,8 +162,15 @@ export default function MyClassesScreen() {
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 8 }}>
             <TouchableOpacity onPress={() => setKlass(null)}><Ionicons name="arrow-back" size={26} color={C.text} /></TouchableOpacity>
             <Text style={{ fontSize: 20, fontWeight: "700", color: C.text, flex: 1 }}>Classe {klass.name}</Text>
+            {klass.subjects.length > 0 && klass.students.length > 0 && (
+              <Btn label="Voti alla classe" onPress={() => setShowBatch(true)} style={s.smBtn} textStyle={s.smBtnText} />
+            )}
           </View>
         </View>
+        {/* Solo le materie che il docente insegna in questa classe, con gli studenti già letti */}
+        {showBatch && <ClassGradesForm visible token={token} students={klass.students}
+          classSubjects={klass.subjects.map(sb => ({ classSubjectId: sb.classSubjectId, classId: klass.id, label: `${klass.name} · ${sb.subjectName}` }))}
+          onClose={() => setShowBatch(false)} />}
 
         <View style={{ flexDirection: "row", marginHorizontal: 16, marginBottom: 10, backgroundColor: "#E2E8F0", borderRadius: 10, padding: 3 }}>
           {DETAIL_TABS.map(t => {

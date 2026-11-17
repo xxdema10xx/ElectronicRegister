@@ -14,6 +14,7 @@ import SectionHeader from "../components/SectionHeader";
 import FormModal from "../components/FormModal";
 import AccountFormModal from "../components/AccountFormModal";
 import StudentGrades from "../components/StudentGrades";
+import ClassGradesForm from "../components/ClassGradesForm";
 import { filterBySearch } from "../utils/search";
 import { getStudents, createStudent, updateStudent, deleteStudent } from "../api/studentService";
 import { setPageHeader, useStudentRoute } from "../navigation/examRoutes";
@@ -35,6 +36,7 @@ export default function StudentsScreen() {
   const [showEdit, setShowEdit] = useState(null);
   const [accountFor, setAccountFor] = useState(null); // scheda per cui creare l'account di accesso
   const [saving, setSaving] = useState(false);
+  const [showBatch, setShowBatch] = useState(false); // "Voti alla classe"
   const nav = useStudentRoute(); // /studenti oppure /studenti/{id}/voti
   const route = nav.route;
   const loadFailed = useRef(false); // senza elenco non si può dire che uno studente non esiste
@@ -108,7 +110,12 @@ export default function StudentsScreen() {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
         <SectionHeader title="Studenti" action={
-          canEdit && <Btn label="+ Studente" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
+          canEdit && (
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              <Btn label="Voti alla classe" variant="ghost" onPress={() => setShowBatch(true)} style={s.smBtn} textStyle={s.smBtnText} />
+              <Btn label="+ Studente" onPress={() => setShowAdd(true)} style={s.smBtn} textStyle={s.smBtnText} />
+            </View>
+          )
         } />
         <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca per nome o cognome…"
           placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
@@ -136,6 +143,7 @@ export default function StudentsScreen() {
           )}
         />
       }
+      {showBatch && <ClassGradesForm visible token={token} onClose={() => setShowBatch(false)} />}
       {/* La scheda non è un account: per accedere allo studente serve un account collegato alla scheda */}
       <AccountFormModal visible={!!accountFor} onClose={() => setAccountFor(null)} allowedRoles={["Student"]}
         preset={accountFor && { firstName: accountFor.firstName, lastName: accountFor.lastName, studentId: accountFor.id, roles: ["Student"] }} />

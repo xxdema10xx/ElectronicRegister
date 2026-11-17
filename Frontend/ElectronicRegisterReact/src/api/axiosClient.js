@@ -94,7 +94,9 @@ axiosClient.interceptors.response.use(
       problem ? problem :
       code ? `Errore: ${code}` :
       STATUS_MESSAGES[status] || (status === 400 ? "Dati non validi." : error.message || "Errore di rete");
-    const err = Object.assign(new Error(message), { status, problem, code });
+    // errors: dettaglio della validazione (es. errori per riga del POST /grades/batch), mai per i 5xx
+    const errors = !serverError && data && typeof data === "object" ? data.errors : undefined;
+    const err = Object.assign(new Error(message), { status, problem, code, errors });
     if (error.config?.skipAuthHandling) return Promise.reject(err);
     const sentToken = bearerOf(error.config);
     if (sentToken && endedTokens.has(sentToken)) return Promise.reject(markHandled(err));

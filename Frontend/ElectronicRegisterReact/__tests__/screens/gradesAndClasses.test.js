@@ -18,6 +18,13 @@ jest.mock("../../src/api/studentService");
 jest.mock("../../src/api/teacherService");
 jest.mock("../../src/api/classService");
 jest.mock("../../src/data/studentExams");
+// "Voti alla classe" ha i suoi test: qui basta sapere che si apre e con quali dati
+jest.mock("../../src/components/ClassGradesForm", () => {
+  const { Text } = require("react-native");
+  return { __esModule: true, default: ({ teacherId, classSubjects, students }) => (
+    <Text>{`BATCH teacher=${teacherId || "-"} options=${(classSubjects || []).map(o => `${o.classSubjectId}:${o.label}`).join(",") || "-"} students=${(students || []).length}`}</Text>
+  ) };
+});
 
 describe("Voti: registro (docente, admin, segreteria)", () => {
   beforeEach(() => {
@@ -223,4 +230,25 @@ describe("Classi del docente", () => {
     renderAs("teacher", <MyClassesScreen />, { user: { role: "teacher" } });
     expect(await screen.findByText(/non è collegato a un profilo docente/)).toBeTruthy();
   });
+});
+
+test("'Voti alla classe' dal registro (segreteria) e dalla classe del docente (solo le sue materie)", async () => {
+  gradeService.getGradesPage.mockResolvedValue({ totalCount: 0, items: [] });
+  gradeService.getGradeFilters.mockResolvedValue({ subjects: [], students: [] });
+  subjectService.getSubjects.mockResolvedValue([]);
+  studentService.getStudents.mockResolvedValue([]);
+  teacherService.getTeachers.mockResolvedValue([]);
+  const { unmount } = renderAs("staff", <GradesScreen />);
+  await flush();
+  fireEvent.press(screen.getByText("Voti alla classe"));
+  expect(screen.getByText("BATCH teacher=- options=- students=0")).toBeTruthy();
+  unmount();
+
+  classService.getMyClasses.mockResolvedValue([{ id: "c1", name: "SW-25A",
+    subjects: [{ classSubjectId: "cs1", subjectId: "m1", subjectName: "Reti" }],
+    students: [{ id: "s1", firstName: "Mario", lastName: "Rossi" }] }]);
+  renderAs("teacher", <MyClassesScreen />);
+  fireEvent.press(await screen.findByText("SW-25A"));
+  fireEvent.press(screen.getByText("Voti alla classe"));
+  expect(screen.getByText("BATCH teacher=- options=cs1:SW-25A · Reti students=1")).toBeTruthy();
 });

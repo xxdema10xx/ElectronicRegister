@@ -15,6 +15,13 @@ jest.mock("../../src/api/teacherService");
 jest.mock("../../src/api/accountService", () => ({ ...jest.requireActual("../../src/api/accountService"), createAccount: jest.fn() }));
 const accountService = require("../../src/api/accountService");
 // La pagina voti di uno studente ha i suoi test (components/studentGrades)
+// "Voti alla classe" ha i suoi test: qui basta sapere che si apre e con quali dati
+jest.mock("../../src/components/ClassGradesForm", () => {
+  const { Text } = require("react-native");
+  return { __esModule: true, default: ({ teacherId, classSubjects, students }) => (
+    <Text>{`BATCH teacher=${teacherId || "-"} options=${(classSubjects || []).map(o => `${o.classSubjectId}:${o.label}`).join(",") || "-"} students=${(students || []).length}`}</Text>
+  ) };
+});
 jest.mock("../../src/components/StudentGrades", () => {
   const { Text } = require("react-native");
   return ({ student }) => <Text>Voti di {student.firstName}</Text>;
@@ -30,6 +37,13 @@ describe("Studenti", () => {
     studentService.createStudent.mockResolvedValue("s3");
     studentService.updateStudent.mockResolvedValue();
     studentService.deleteStudent.mockResolvedValue();
+  });
+
+  test("'Voti alla classe' per admin e segreteria", async () => {
+    renderAs("admin", <StudentsScreen />);
+    await flush();
+    fireEvent.press(screen.getByText("Voti alla classe"));
+    expect(screen.getByText(/^BATCH /)).toBeTruthy();
   });
 
   test("elenco e ricerca per nome o cognome", async () => {
