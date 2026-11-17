@@ -24,6 +24,7 @@ import {
 
 const MONTH_NAMES = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 const MAX_ROWS_SHOWN = 100;
+const MAX_FILE_BYTES = 10 * 1024 * 1024; // limite del server per l'import (10 MiB)
 const FILE_TYPES = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "text/comma-separated-values",
   "application/vnd.ms-excel", ".xlsx", ".csv",
@@ -127,7 +128,9 @@ export default function CalendarImportScreen() {
       if (res.canceled || !res.assets?.length) return;
       const asset = res.assets[0];
       if (!/\.(xlsx|csv)$/i.test(asset.name || "")) { notify("File non supportato", "Scegli un file .xlsx o .csv."); return; }
-      if (asset.size && asset.size > 12 * 1024 * 1024) { notify("File troppo grande", "Il file può essere al massimo di 12 MB."); return; }
+      // Stesso limite del server (10 MiB): si avvisa prima dell'invio invece di ricevere un errore di rete
+      const size = asset.size ?? asset.file?.size;
+      if (size && size > MAX_FILE_BYTES) { notify("File troppo grande", "Il file può essere al massimo di 10 MB."); return; }
       setFile(asset); setPreview(null); setAck(false);
     } catch (e) { notify("Errore", e.message); }
   }
@@ -215,7 +218,7 @@ export default function CalendarImportScreen() {
         <Input label="Motivazione (obbligatoria, resta nello storico)" value={reason} onChangeText={setReason} maxLength={500} placeholder={`Es. Orario di ${monthName.toLowerCase()}`} />
       </Section>
 
-      <Section title="2. Carica il file" subtitle="File .xlsx o .csv, al massimo 12 MB e 2000 righe. La prima riga contiene le intestazioni.">
+      <Section title="2. Carica il file" subtitle="File .xlsx o .csv, al massimo 10 MB e 2000 righe. La prima riga contiene le intestazioni.">
         <Note>Colonne obbligatorie: <Text style={{ fontWeight: "700" }}>Data</Text> (AAAA-MM-GG), <Text style={{ fontWeight: "700" }}>Ora inizio</Text> e <Text style={{ fontWeight: "700" }}>Ora fine</Text> (HH:mm), <Text style={{ fontWeight: "700" }}>Classe</Text> (nome), <Text style={{ fontWeight: "700" }}>Modulo</Text> (codice o nome del modulo del piano formativo), <Text style={{ fontWeight: "700" }}>Docente</Text>.</Note>
         <Note>Facoltative: Aula, Descrizione, RiferimentoEsterno. Le altre colonne vengono ignorate.</Note>
         <Note color={C.text}>Il docente si indica con il suo <Text style={{ fontWeight: "700" }}>ID</Text> (o con un riferimento esterno già registrato), non con il nome.</Note>

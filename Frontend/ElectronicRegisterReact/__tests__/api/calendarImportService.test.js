@@ -94,7 +94,7 @@ describe("mese della classe", () => {
 
 describe("messaggi", () => {
   test("codici noti, 404, 409 con codice e messaggio di ripiego", () => {
-    expect(calendarErrorMessage({ code: "FileTooLarge" })).toMatch(/12 MB/);
+    expect(calendarErrorMessage({ code: "FileTooLarge" })).toMatch(/10 MB/);
     expect(calendarErrorMessage({ status: 404 })).toMatch(/non è attivo/);
     expect(calendarErrorMessage({ status: 409, code: "calendar.altro" })).toBe("Operazione non consentita (calendar.altro).");
     expect(calendarErrorMessage({ message: "Boom" })).toBe("Boom");

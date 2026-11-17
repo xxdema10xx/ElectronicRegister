@@ -50,9 +50,19 @@ test("file non supportato o troppo grande", async () => {
   await act(async () => { fireEvent.press(screen.getByText("Scegli file")); });
   expect(await screen.findByText("Scegli un file .xlsx o .csv.")).toBeTruthy();
   await pressDialog("OK");
-  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "x.csv", size: 13 * 1024 * 1024 }] });
+  // D-10: tra 10 e 12 MB il server rifiuta il file: il client avvisa prima dell'invio
+  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "x.csv", size: 11 * 1024 * 1024 }] });
   await act(async () => { fireEvent.press(screen.getByText("Scegli file")); });
-  expect(await screen.findByText("Il file può essere al massimo di 12 MB.")).toBeTruthy();
+  expect(await screen.findByText("Il file può essere al massimo di 10 MB.")).toBeTruthy();
+  await pressDialog("OK");
+  // su web la dimensione può arrivare solo dal File
+  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "y.csv", file: { size: 10 * 1024 * 1024 + 1 } }] });
+  await act(async () => { fireEvent.press(screen.getByText("Scegli file")); });
+  expect(await screen.findByText("Il file può essere al massimo di 10 MB.")).toBeTruthy();
+  await pressDialog("OK");
+  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "ok.csv", size: 10 * 1024 * 1024 }] });
+  await act(async () => { fireEvent.press(screen.getByText("Scegli file")); });
+  expect(screen.queryByText("File troppo grande")).toBeNull();
 });
 
 test("anteprima: serve la motivazione", async () => {

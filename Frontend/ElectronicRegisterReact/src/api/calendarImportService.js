@@ -115,7 +115,7 @@ const CODE_MESSAGES = {
   "calendar.revision-conflict": "Il mese è stato modificato nel frattempo: ricarica e riprova.",
   "calendar.no-draft-lessons": "Non ci sono lezioni in bozza da pubblicare per questo mese.",
   "calendar.teaching-configuration-required": "La classe non ha un piano formativo pubblicato.",
-  FileTooLarge: "Il file è troppo grande (massimo 12 MB).",
+  FileTooLarge: "Il file è troppo grande (massimo 10 MB).",
   UnsupportedFormat: "Formato non supportato: usa un file .xlsx o .csv.",
   NoDataRows: "Il file non contiene righe di dati.",
   InvalidEncoding: "Il file CSV non è in UTF-8.",
