@@ -29,10 +29,12 @@ export async function createGrade({ studentId, subjectId, value, date, descripti
   return res.data; // id
 }
 
-// In modifica la descrizione si invia sempre: null la toglie
+// PUT: description assente o null = invariata; "" = cancellata; testo = sostituito (il server fa il trim).
+// Dal form la descrizione si invia sempre (campo vuoto → ""); undefined (chiamante che non la conosce) → non inviata.
 export async function updateGrade(id, { subjectId, value, date, description }, token) {
-  const res = await axiosClient.put(`/institution/grades/${id}`,
-    { subjectId, value: toValue(value), date, description: cleanDescription(description) }, { headers: authHeader(token) });
+  const body = { subjectId, value: toValue(value), date };
+  if (description !== undefined) body.description = cleanDescription(description) ?? "";
+  const res = await axiosClient.put(`/institution/grades/${id}`, body, { headers: authHeader(token) });
   return res.data;
 }
 
