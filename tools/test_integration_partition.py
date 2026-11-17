@@ -121,10 +121,60 @@ class PartitionTests(unittest.TestCase):
         ok = evaluate(reports())
         self.assertEqual('PASS', ok['status'], ok['problems'])
         self.assertEqual(ok['cases'], ok['casesRun'] + ok['casesOfExcludedMethods'] + ok['casesExcluded'])
-        self.assertEqual((len(EXCLUDED_CASES), len([m for m in EXCLUDED_METHODS if owner(m) == 'full'])), (ok['casesExcluded'], ok['methodsExcluded']))
+        self.assertEqual((0, 4), (ok['casesExcluded'], ok['methodsExcluded']))  # reviewed numbers, written by hand
         self.assertEqual('FAIL', evaluate(reports(drop=3))['status'])
         self.assertEqual('FAIL', evaluate(reports(status='FAIL'))['status'])
         self.assertEqual('FAIL', evaluate(reports(short=dispatch))['status'])
+
+    def test_full_gate_expected_excluded_cases_is_a_reviewed_literal(self):
+        import integration_full_gate
+        source = (Path(__file__).resolve().parent / 'integration_full_gate.py').read_text(encoding='utf-8')
+        # A plain integer literal, never len(EXCLUDED_CASES) or any other derivation.
+        self.assertRegex(source, r'(?m)^EXPECTED_EXCLUDED_CASES = \d+$')
+        self.assertNotIn('EXCLUDED_CASES)', source)
+        self.assertEqual(0, integration_full_gate.EXPECTED_EXCLUDED_CASES)
+
+    def test_full_gate_fails_on_an_unreviewed_case_exclusion(self):
+        from unittest import mock
+        import integration_partition
+        from integration_full_gate import evaluate
+        dispatch = PREFIX+'Mt3dHttpTests.Release_WorkerDispatchRevalidatesTenantStateUnderLock'
+        cases = [PREFIX+c[1:]+'.Case0' for c in FULL_CLASSES] + [m+'(value: 1)' for m in EXCLUDED_METHODS if owner(m) == 'full']
+        cases += [dispatch+'(state: "'+state+'", workerFirst: True)' for state in ('archived', 'holding-active')]
+        listing = chr(10).join('    '+c for c in cases)
+        methods = sorted({c.split('(', 1)[0] for c in cases})
+        extra = {dispatch+'(state: "holding-active", workerFirst: True)': ('INC-999', 'unreviewed')}
+        with mock.patch.dict(integration_partition.EXCLUDED_CASES, extra):
+            reports = []
+            for shard in range(14):
+                inventory, selected = partition(methods, 'full', shard, 14)
+                expected = {m: sum(c.split('(', 1)[0] == m and c not in integration_partition.EXCLUDED_CASES for c in cases) for m in selected}
+                rows = [dict(id='discovery', status='PASS', error=listing)] + [dict(id=m, status='PASS', cases=expected[m]) for m in selected]
+                reports.append(dict(suite='full-'+str(shard), problems=rows, assignment=dict(shard=shard, inventory=inventory, methods=selected, expectedCases=expected)))
+            result = evaluate(reports)
+        # Accounting alone still adds up: only the reviewed literal catches the new exclusion.
+        self.assertEqual(result['cases'], result['casesRun'] + result['casesOfExcludedMethods'] + result['casesExcluded'])
+        self.assertEqual('FAIL', result['status'])
+        self.assertIn('excluded cases 1 != reviewed 0', result['problems'])
+
+    def test_complete_discovery_fails_on_a_method_owned_by_no_domain(self):
+        from integration_partition import ensure_assigned, unassigned
+        owned = [PREFIX+'Mt3dHttpTests.A', PREFIX+'InstitutionClassCrudTests.B', PREFIX+'Mt5bJwtTests.C', PREFIX+'Mt5cOnboardingTests.D']
+        self.assertEqual(4, ensure_assigned(owned))
+        orphans = [PREFIX+'BrandNewUnassignedTests.One', PREFIX+'BrandNewUnassignedTests.Two']
+        self.assertEqual(orphans, unassigned(owned + list(reversed(orphans))))
+        with self.assertRaises(ValueError) as error:
+            ensure_assigned(owned + orphans)
+        self.assertIn('Unassigned integration methods (2)', str(error.exception))
+        self.assertIn(orphans[0], str(error.exception))
+        with self.assertRaises(ValueError):
+            ensure_assigned([])
+
+    def test_complete_discovery_check_runs_in_the_static_ci_checks(self):
+        from ci_diagnostic import static_checks
+        check = next(c for c in static_checks() if c['id'] == 'integration-ownership')
+        self.assertEqual(['build'], check['needs'])
+        self.assertEqual(['tools/integration_partition.py', '--verify-discovery'], check['command'][1:])
 
     def test_partial_theory_cannot_certify_method(self):
         from ci_diagnostic import batch_methods

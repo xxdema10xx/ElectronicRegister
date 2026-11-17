@@ -225,6 +225,7 @@ def static_checks():
         dict(id='restore',command=['dotnet','restore','Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx','--locked-mode']),
         dict(id='build',needs=['restore'],command=['dotnet','build','Backend/ElectronicRegisterAPI/ElectronicRegisterAPI.slnx','-c','Release','--no-restore']),
         dict(id='unit',needs=['build'],command=['dotnet','test','tests/Unit/Unit.Tests.csproj','-c','Release','--no-build']),
+        dict(id='integration-ownership',needs=['build'],timeout=300,command=[sys.executable,'tools/integration_partition.py','--verify-discovery']),
         dict(id='fixture-config',needs=['build'],timeout=120,command=['dotnet','test','tests/Integration/Integration.Tests.csproj','-c','Release','--no-build','--filter','FullyQualifiedName~MysqlFixtureConfigurationTests']),
         dict(id='organization-restore',command=['dotnet','restore','tools/CodeOrganization/CodeOrganization.csproj','--locked-mode']),
         dict(id='organization',needs=['organization-restore'],command=['dotnet','run','--project','tools/CodeOrganization','--no-restore','--','check','.']),

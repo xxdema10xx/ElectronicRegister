@@ -63,6 +63,28 @@ def owner(method):
     raise ValueError('Unassigned integration method: '+method)
 
 
+def unassigned(methods):
+    """Methods of a discovery that no domain owns, sorted."""
+    missing = []
+    for method in methods:
+        try:
+            owner(method)
+        except ValueError:
+            missing.append(method)
+    return sorted(set(missing))
+
+
+def ensure_assigned(methods):
+    """Fails closed on the COMPLETE discovery: CI discovers each domain with its own filter, so a
+    class owned by no domain would otherwise never be discovered, run or reported."""
+    if not methods:
+        raise ValueError('Empty complete integration discovery')
+    missing = unassigned(methods)
+    if missing:
+        raise ValueError(f'Unassigned integration methods ({len(missing)}): ' + ', '.join(missing))
+    return len(methods)
+
+
 def partition(methods, domain, index, count):
     if count != {**SHARDS, **EXTENDED_SHARDS}.get(domain) or not 0 <= index < count:
         raise ValueError('Unreviewed shard configuration')
@@ -111,3 +133,25 @@ def case_filters(method_cases, excluded):
     if sorted(covered) != sorted(excluded):
         raise ValueError('Case exclusion filter does not match exactly the reviewed cases')
     return clauses
+
+
+def main(argv):
+    """--verify-discovery [--configuration C]: unfiltered `dotnet test --list-tests` must map every
+    discovered method to a domain (static CI check, after the build)."""
+    import subprocess
+    import sys
+    from pathlib import Path
+    if not argv or argv[0] != '--verify-discovery':
+        raise SystemExit('usage: integration_partition.py --verify-discovery [--configuration Release]')
+    configuration = argv[2] if len(argv) > 2 and argv[1] == '--configuration' else 'Release'
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from ci_diagnostic import discovered_methods
+    root = Path(__file__).resolve().parents[1]
+    listing = subprocess.run(['dotnet', 'test', 'tests/Integration/Integration.Tests.csproj', '-c', configuration, '--no-build', '--list-tests'],
+                             cwd=root, capture_output=True, text=True, check=True).stdout
+    print(f'{ensure_assigned(discovered_methods(listing))} integration methods, each owned by one domain')
+
+
+if __name__ == '__main__':
+    import sys
+    main(sys.argv[1:])

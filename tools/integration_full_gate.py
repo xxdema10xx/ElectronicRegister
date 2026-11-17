@@ -14,6 +14,9 @@ from ci_diagnostic import discovered_methods  # noqa: E402
 from integration_partition import EXTENDED_SHARDS, case_exclusions, exclusions, partition  # noqa: E402
 
 DOMAIN = 'full'
+# Reviewed by hand, never derived from EXCLUDED_CASES: adding or removing a case exclusion of the
+# full domain must change this number in the same review, or the gate fails.
+EXPECTED_EXCLUDED_CASES = 0
 PREFIX = '    ElectronicRegisterAPI.Tests.Integration.'
 
 
@@ -72,6 +75,8 @@ def evaluate(reports):
             problems.append('shard union does not cover the inventory exactly')
         if len(own_cases) != len(executed) + len(of_excluded_methods) + len(excluded_cases):
             problems.append('case accounting mismatch')
+        if len(excluded_cases) != EXPECTED_EXCLUDED_CASES:
+            problems.append(f'excluded cases {len(excluded_cases)} != reviewed {EXPECTED_EXCLUDED_CASES}')
         summary.update(methods=len(inventory) + len(excluded), methodsRun=len(methods), methodsExcluded=len(excluded),
                        cases=len(own_cases), casesRun=len(executed), casesOfExcludedMethods=len(of_excluded_methods),
                        casesExcluded=len(excluded_cases),
