@@ -1,7 +1,7 @@
 // Membri dell'istituto (admin) e profilo dell'utente.
 import { Alert } from "react-native";
 import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
-import UsersScreen from "../../src/screens/UsersScreen";
+import UsersScreen, { LAST_ADMIN_MESSAGE, MEMBER_CHANGED_MESSAGE } from "../../src/screens/UsersScreen";
 import ProfileScreen from "../../src/screens/ProfileScreen";
 import * as userService from "../../src/api/userService";
 import * as authService from "../../src/api/authService";
@@ -144,14 +144,32 @@ describe("Membri", () => {
     });
   });
 
-  test("409: non si può togliere l'ultimo amministratore", async () => {
-    userService.mutateMember.mockRejectedValue(Object.assign(new Error("x"), { status: 409 }));
+  test("409 generico: ricarica il membro e messaggio neutro (niente 'ultimo amministratore')", async () => {
+    userService.mutateMember.mockRejectedValue(Object.assign(new Error("Conflitto sulla membership istituzionale"),
+      { status: 409, problem: "Conflitto sulla membership istituzionale" }));
+    userService.getMember.mockResolvedValueOnce({ membershipId: "m2", email: "anna@scuola.it", status: "active", roles: ["Teacher"], revision: 3 })
+      .mockResolvedValueOnce({ membershipId: "m2", email: "anna@scuola.it", status: "active", roles: ["Teacher", "Staff"], revision: 4 });
     renderAs("admin", <UsersScreen />);
     await flush();
-    fireEvent.press(screen.getAllByLabelText("Gestisci membro")[0]);
+    await act(async () => { fireEvent.press(screen.getAllByLabelText("Gestisci membro")[1]); });
+    fireEvent.changeText(screen.getByPlaceholderText("Es. incarico di segreteria"), "prova");
+    await act(async () => { fireEvent.press(screen.getAllByText("Aggiungi")[1]); });
+    expect(userService.getMember).toHaveBeenCalledTimes(2);
+    expect(Alert.alert).toHaveBeenLastCalledWith("Modifica non applicata", MEMBER_CHANGED_MESSAGE);
+    expect(Alert.alert).not.toHaveBeenLastCalledWith(expect.anything(), expect.stringMatching(/ultimo amministratore/));
+    // i dati ricaricati sono quelli mostrati: ora la Segreteria risulta già assegnata
+    expect(screen.getAllByText("Togli")).toHaveLength(2);
+  });
+
+  test("409 che il server indica come ultimo amministratore: messaggio specifico", async () => {
+    userService.mutateMember.mockRejectedValue(Object.assign(new Error("x"), { status: 409, code: "membership.last-admin" }));
+    userService.getMember.mockResolvedValue({ membershipId: "m1", userId: "u-admin", email: "admin@scuola.it", status: "active", roles: ["InstitutionAdmin"], revision: 1 });
+    renderAs("admin", <UsersScreen />);
+    await flush();
+    await act(async () => { fireEvent.press(screen.getAllByLabelText("Gestisci membro")[0]); });
     fireEvent.changeText(screen.getByPlaceholderText("Es. incarico di segreteria"), "prova");
     await act(async () => { fireEvent.press(screen.getAllByText("Togli")[0]); });
-    expect(Alert.alert).toHaveBeenLastCalledWith("Errore", expect.stringMatching(/ultimo amministratore/));
+    expect(Alert.alert).toHaveBeenLastCalledWith("Modifica non applicata", LAST_ADMIN_MESSAGE);
   });
 });
 

@@ -26,6 +26,11 @@ const ROLES = [
   { id: "Student", label: "Studente", badge: "student" },
 ];
 const STATUS_LABEL = { active: "Attivo", suspended: "Sospeso", pending: "In attesa", left: "Uscito" };
+export const MEMBER_CHANGED_MESSAGE = "Il membro è stato modificato nel frattempo: ho ricaricato i dati, controlla e riprova.";
+export const LAST_ADMIN_MESSAGE = "Non si può togliere l'ultimo amministratore attivo dell'istituto.";
+// Il 409 delle mutazioni è generico (revisione cambiata, transizione non valida, ultimo amministratore):
+// il caso "ultimo amministratore" si dice solo se è il server a indicarlo (titolo/detail o code)
+const isLastAdmin = (e) => /ultimo\s+amministratore|last[\s._-]?admin/i.test(`${e?.problem || ""} ${e?.code || ""}`);
 
 export default function UsersScreen() {
   const { token, user } = useAuth();
@@ -72,9 +77,12 @@ export default function UsersScreen() {
       refreshEditing(editing.membershipId).catch(() => {});
       load();
     } catch (e) {
-      Alert.alert("Errore", e.status === 409
-        ? "Modifica non consentita (ad esempio non si può togliere l'ultimo amministratore). Ricarica e riprova."
-        : e.message);
+      if (e.status === 409) {
+        // Ruoli, stato e revisione possono essere cambiati: si ricaricano prima di far riprovare
+        await refreshEditing(editing.membershipId).catch(() => {});
+        load();
+        Alert.alert("Modifica non applicata", isLastAdmin(e) ? LAST_ADMIN_MESSAGE : MEMBER_CHANGED_MESSAGE);
+      } else Alert.alert("Errore", e.message);
     } finally { setBusy(false); }
   }
 
