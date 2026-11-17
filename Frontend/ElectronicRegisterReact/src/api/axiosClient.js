@@ -10,13 +10,37 @@ const axiosClient = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-// Chiamato quando il token istituzionale non è più valido (401): l'app torna al login.
+// Chiamato quando il token istituzionale non è più valido (401) o la membership è stata sospesa/revocata:
+// l'app torna al login. Riceve il messaggio da mostrare (assente = sessione scaduta).
 let onUnauthorized = null;
+export const REVOKED_MESSAGE = "Il tuo accesso a questo istituto è stato sospeso o revocato.";
 export function setUnauthorizedHandler(fn) { onUnauthorized = fn; }
 // Token per cui l'app è già tornata al login: gli errori delle richieste ancora in volo con quel token sono
 // "già gestiti" (un solo dialog "Sessione terminata", nessun "Errore" in più dalle schermate)
 const endedTokens = new Set();
 const bearerOf = (config) => String(config?.headers?.Authorization || "").replace(/^Bearer\s+/i, "");
+const isInstitutionRoute = (config) => /(^|\/)institution(\/|$)/i.test(String(config?.url || "").replace(/^https?:\/\/[^/]+/i, ""));
+
+// Un 403 su /institution/** può voler dire "permesso mancante" oppure "membership sospesa/revocata".
+// Si chiede una volta GET /Auth/context con lo stesso token: 401/403 → accesso non più valido (logout);
+// 200 → normale permesso mancante. Una sola verifica alla volta, condivisa dai 403 arrivati in parallelo;
+// la richiesta di verifica non passa dalla gestione del 401 (skipAuthHandling), quindi niente cicli.
+let membershipCheck = null; // { token, promise }
+function checkMembership(token) {
+  if (membershipCheck?.token === token) return membershipCheck.promise;
+  const promise = axiosClient.get("/Auth/context", { headers: { Authorization: `Bearer ${token}` }, skipAuthHandling: true })
+    .then(() => false, (e) => e.status === 401 || e.status === 403)
+    .then((revoked) => {
+      if (revoked && onUnauthorized && session.accessToken === token && !endedTokens.has(token)) {
+        endedTokens.add(token);
+        onUnauthorized(REVOKED_MESSAGE);
+      }
+      return revoked;
+    })
+    .finally(() => { if (membershipCheck?.promise === promise) membershipCheck = null; });
+  membershipCheck = { token, promise };
+  return promise;
+}
 
 // Messaggi leggibili per gli errori che il backend restituisce solo con un titolo generico (docs/CONVENTIONS.md §2)
 const STATUS_MESSAGES = {
@@ -41,7 +65,7 @@ const isHtml = (text) => /<\s*(!doctype|html|head|body)\b/i.test(text);
 // `Alert.alert("Errore", e.message)` esattamente come prima.
 axiosClient.interceptors.response.use(
   (res) => res,
-  (error) => {
+  async (error) => {
     const data = error.response?.data;
     const status = error.response?.status;
     const code = data && typeof data === "object" ? data.code : undefined;
@@ -63,8 +87,13 @@ axiosClient.interceptors.response.use(
       code ? `Errore: ${code}` :
       STATUS_MESSAGES[status] || (status === 400 ? "Dati non validi." : error.message || "Errore di rete");
     const err = Object.assign(new Error(message), { status, problem, code });
+    if (error.config?.skipAuthHandling) return Promise.reject(err);
     const sentToken = bearerOf(error.config);
     if (sentToken && endedTokens.has(sentToken)) return Promise.reject(markHandled(err));
+    if (status === 403 && onUnauthorized && sentToken && sentToken === session.accessToken && isInstitutionRoute(error.config)) {
+      if (await checkMembership(sentToken)) return Promise.reject(markHandled(err));
+      return Promise.reject(err);
+    }
     if (status === 401 && onUnauthorized && session.accessToken && sentToken === session.accessToken) {
       endedTokens.add(sentToken);
       onUnauthorized();

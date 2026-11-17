@@ -65,7 +65,10 @@ export default function App() {
       .finally(() => setBooting(false));
   }, []);
 
-  useEffect(() => { setUnauthorizedHandler(() => logout("La sessione è scaduta o è stata revocata: accedi di nuovo.")); }, [logout]);
+  // 401, oppure 403 con la membership sospesa/revocata (api/axiosClient.js): il messaggio arriva dal client HTTP
+  useEffect(() => {
+    setUnauthorizedHandler((message) => logout(message || "La sessione è scaduta o è stata revocata: accedi di nuovo."));
+  }, [logout]);
 
   // Il token istituzionale dura 15 minuti e non esiste un refresh: poco prima della scadenza si richiede
   // con il ticket (se ancora valido) o rifacendo il login con le credenziali tenute in memoria.

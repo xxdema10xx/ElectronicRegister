@@ -148,6 +148,16 @@ test("token rifiutato dal server (401): si torna al login con un avviso", async 
   expect(Alert.alert).toHaveBeenCalledWith("Sessione terminata", "La sessione è scaduta o è stata revocata: accedi di nuovo.");
 });
 
+test("membership sospesa o revocata (403 + /Auth/context rifiutato): login con il messaggio dedicato", async () => {
+  render(<App />);
+  await login();
+  await screen.findByText(/^APP /);
+  const { getHandler } = require("../../src/api/axiosClient");
+  await act(async () => { getHandler()("Il tuo accesso a questo istituto è stato sospeso o revocato."); });
+  expect(await screen.findByText("Accedi")).toBeTruthy();
+  expect(Alert.alert).toHaveBeenCalledWith("Sessione terminata", "Il tuo accesso a questo istituto è stato sospeso o revocato.");
+});
+
 test("rinnovo del token un minuto prima della scadenza, con le credenziali in memoria", async () => {
   jest.useFakeTimers();
   try {

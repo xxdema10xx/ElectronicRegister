@@ -1,5 +1,5 @@
 // Normalizzazione degli errori HTTP in messaggi leggibili e logout automatico sul 401.
-import axiosClient, { authHeader, setUnauthorizedHandler, ticketHeader } from "../../src/api/axiosClient";
+import axiosClient, { REVOKED_MESSAGE, authHeader, setUnauthorizedHandler, ticketHeader } from "../../src/api/axiosClient";
 import { session } from "../../src/api/session";
 import { isHandledError } from "../../src/utils/handledErrors";
 
@@ -92,5 +92,55 @@ describe("header", () => {
     expect(authHeader()).toEqual({});
     expect(ticketHeader()).toEqual({});
     expect(ticketHeader("t")).toEqual({ Authorization: "Bearer t" });
+  });
+});
+
+describe("D-04: 403 su /institution/** con la membership sospesa o revocata", () => {
+  // Risposte diverse per URL: la route istituzionale risponde 403, /Auth/context come indicato
+  function route(contextStatus) {
+    const calls = [];
+    axiosClient.defaults.adapter = (config) => {
+      calls.push(config.url);
+      const status = config.url === "/Auth/context" ? contextStatus : 403;
+      const response = { status, data: {}, headers: {}, config };
+      if (status < 400) return Promise.resolve(response);
+      return Promise.reject(Object.assign(new Error(`status ${status}`), { config, response }));
+    };
+    return calls;
+  }
+  const call = (url) => axiosClient.get(url, { headers: authHeader() }).catch(e => e);
+
+  test.each([401, 403])("/Auth/context %i → logout con il messaggio della sospensione", async (contextStatus) => {
+    const handler = jest.fn(() => session.clear());
+    setUnauthorizedHandler(handler);
+    session.setAccess(`token-revoked-${contextStatus}`, 900);
+    const calls = route(contextStatus);
+    // tre 403 in parallelo: una sola verifica, un solo logout, nessun errore da mostrare
+    const errors = await Promise.all([call("/institution/students"), call("/institution/classes"), call("/institution/exams")]);
+    expect(calls.filter(u => u === "/Auth/context")).toHaveLength(1);
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith(REVOKED_MESSAGE);
+    errors.forEach(e => expect(e.handled).toBe(true));
+  });
+
+  test("/Auth/context 200 → normale permesso mancante: messaggio attuale, nessun logout", async () => {
+    const handler = jest.fn();
+    setUnauthorizedHandler(handler);
+    session.setAccess("token-ok", 900);
+    const calls = route(200);
+    const e = await call("/institution/admin/members");
+    expect(calls).toEqual(["/institution/admin/members", "/Auth/context"]);
+    expect(handler).not.toHaveBeenCalled();
+    expect(e.handled).toBeUndefined();
+    expect(e.message).toBe("Non hai i permessi per questa operazione (o la funzione non è attiva).");
+  });
+
+  test("403 fuori da /institution o con un altro token: nessuna verifica", async () => {
+    setUnauthorizedHandler(jest.fn());
+    session.setAccess("token-x", 900);
+    const calls = route(401);
+    await axiosClient.get("/identity/account", { headers: authHeader() }).catch(() => {});
+    await axiosClient.get("/institution/students", { headers: ticketHeader("ticket") }).catch(() => {});
+    expect(calls).not.toContain("/Auth/context");
   });
 });
