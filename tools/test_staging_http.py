@@ -83,8 +83,8 @@ class HttpAuditTests(unittest.TestCase):
             elif name=='teacher-draft':data={'questions':[{'id':question,'options':[{'id':option,'isCorrect':True}]}]}
             elif name=='student-start':data={'submissionId':resource,'exam':{'questions':[{'options':[{'id':option}]}]}}
             elif name=='autosave':data={'accepted':True,'currentRevision':1}
-            elif name in ('submit','submit-replay'):data={'passed':True,'grade':10}
-            elif name=='official-grades':data=[{'studentId':ids['student'],'value':10,'subjectId':ids['subject'],'teacherId':ids['teacher']}]
+            elif name in ('submit','submit-replay'):data={'passed':True,'grade':30}
+            elif name=='official-grades':data=[{'studentId':ids['student'],'value':30,'subjectId':ids['subject'],'teacherId':ids['teacher']}]
             elif name=='foreign-grade-filter':data={'items':[]}
             elif name=='cors-allowed':response_headers={'Access-Control-Allow-Origin':'https://consoliprojects.dev'}
             return case['expected'],response_headers,b'' if data is None else json.dumps(data).encode()

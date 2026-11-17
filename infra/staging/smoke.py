@@ -149,7 +149,8 @@ def plan(seed, key):
     def save_check(d,h,c): require(d['accepted'] and d['currentRevision']==1,'Autosave revision mismatch')
     add('submission','autosave','/api/institution/submissions/{id:guid}/answers',method='PUT',actor='student',deps=['student-start','teacher-draft'],
         path=lambda c:sub_path(c)+'/answers',body=lambda c:answers(c,1),check=save_check)
-    def submit_check(d,h,c): require(d['passed'] and d['grade']==10,'Submission grade mismatch')
+    # Full score of a closed-only exam: the top of the 0-30 scale (er-grade-scale-1).
+    def submit_check(d,h,c): require(d['passed'] and d['grade']==30,'Submission grade mismatch')
     add('submission','submit','/api/institution/submissions/{id:guid}/submit',method='POST',actor='student',deps=['autosave'],
         path=lambda c:sub_path(c)+'/submit',body=lambda c:answers(c,2),check=submit_check)
     add('submission','submit-replay','/api/institution/submissions/{id:guid}/submit',method='POST',actor='student',deps=['submit'],
@@ -157,7 +158,7 @@ def plan(seed, key):
     add('authorization','foreign-submission-hidden','/api/institution/submissions/{id:guid}/result',404,actor='admin_b',deps=['student-start'],path=lambda c:sub_path(c)+'/result')
     def grade_check(d,h,c):
         own=[g for g in d if g['studentId']==ids['student']]
-        require(len(own)==1 and own[0]['value']==10 and own[0]['subjectId']==ids['subject'] and own[0]['teacherId']==ids['teacher'],'Official grade persistence mismatch')
+        require(len(own)==1 and own[0]['value']==30 and own[0]['subjectId']==ids['subject'] and own[0]['teacherId']==ids['teacher'],'Official grade persistence mismatch')
     add('grades','official-grades','/api/institution/grades',actor='admin_a',deps=['submit'],check=grade_check)
     add('grades','foreign-grade-filter','/api/institution/grades/paged',actor='admin_b',path=lambda c:'/api/institution/grades/paged?studentId='+ids['student'],
         check=lambda d,h,c:require(not d['items'],'Foreign grade leaked'))
