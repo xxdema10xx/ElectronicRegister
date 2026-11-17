@@ -83,6 +83,9 @@ jobs:
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" release-preflight
           # A completed journal verifies and skips every DDL step; it must not replay SQL.
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" provision
+          # Additive successors, same order as release_ec2.HOST_STEPS: er-grade-scale-1 always
+          # (the API is not ready without it), er-platform-identity-1 only if enabled.
+          sudo python3 infra/staging/host.py --state "$STAGE_STATE" successor
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" tls
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" seed
           sudo python3 infra/staging/host.py --state "$STAGE_STATE" preflight
