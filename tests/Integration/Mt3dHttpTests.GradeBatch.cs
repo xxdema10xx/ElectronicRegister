@@ -237,6 +237,27 @@ public sealed partial class Mt3dHttpTests
     }
 
     [Fact]
+    public async Task PutDescriptionAbsentOrNullKeepsItAndBlankClearsIt()
+    {
+        var admin = await Access();
+        var created = await Request("/api/institution/grades", admin, new CreateGradeDto { StudentId = Id("student"), SubjectId = Id("subject"), Value = 20, Date = BatchDate, Description = "Prova orale" }, "POST");
+        await Expect(created, HttpStatusCode.Created);
+        var id = await created.Content.ReadFromJsonAsync<Guid>();
+        async Task<string?> Put(JsonObject body)
+        {
+            body["subjectId"] = Id("subject"); body["value"] = 21; body["date"] = BatchDate.ToString("yyyy-MM-dd");
+            await Expect(await Request("/api/institution/grades/" + id, admin, body, "PUT"), HttpStatusCode.NoContent);
+            return (await (await Request("/api/institution/grades/" + id, admin)).Content.ReadFromJsonAsync<GradeDto>())!.Description;
+        }
+        Assert.Equal("Prova orale", await Put(new JsonObject()));                              // field absent: unchanged
+        Assert.Equal("Prova orale", await Put(new JsonObject { ["description"] = null }));     // explicit null: unchanged
+        Assert.Equal("Prova scritta", await Put(new JsonObject { ["description"] = " Prova scritta " }));
+        Assert.Null(await Put(new JsonObject { ["description"] = "" }));                       // empty string: cleared
+        Assert.Equal("Di nuovo", await Put(new JsonObject { ["description"] = "Di nuovo" }));
+        Assert.Null(await Put(new JsonObject { ["description"] = "   " }));                    // blank: cleared
+    }
+
+    [Fact]
     public async Task SingleGradeAcceptsAndExposesAnOptionalDescription()
     {
         var admin = await Access();
