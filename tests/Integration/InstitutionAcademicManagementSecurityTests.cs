@@ -159,7 +159,14 @@ public sealed partial class InstitutionClassCrudTests
             var policy = school is not null ? InstitutionSchoolEndpointAttribute.PolicyName : exam is not null ? InstitutionExamEndpointAttribute.PolicyName : InstitutionCourseEndpointAttribute.PolicyName;
             Assert.Equal(policy, Assert.Single(auth.Where(a => a.Policy is not null)).Policy);
             var role = Assert.Single(auth.Where(a => a.Roles is not null)).Roles;
-            Assert.Equal(verb == "GET" && endpoint.RoutePattern.RawText == "api/institution/class-subjects" ? "InstitutionAdmin,Teacher" : "InstitutionAdmin", role);
+            // Class-subject reads: Staff for the whole institution, Teacher (list only) for own assignments.
+            var expected = verb != "GET" ? "InstitutionAdmin" : endpoint.RoutePattern.RawText switch
+            {
+                "api/institution/class-subjects" => "InstitutionAdmin,Staff,Teacher",
+                "api/institution/class-subjects/{id:guid}" => "InstitutionAdmin,Staff",
+                _ => "InstitutionAdmin"
+            };
+            Assert.Equal(expected, role);
         }
     }
 }
