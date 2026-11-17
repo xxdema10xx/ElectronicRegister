@@ -9,11 +9,14 @@ import { useEffect, useState } from "react";
 import { Modal, Platform, Text, View } from "react-native";
 import { C, s } from "../constants/theme";
 import Btn from "./Btn";
+import { isHandledError } from "../utils/handledErrors";
 
 const queue = [];
 let listener = null;
 
 export function showDialog(dialog) {
+  // Errore già spiegato dal dialog "Sessione terminata" (utils/handledErrors.js): niente secondo dialog
+  if (isHandledError(dialog.message)) return;
   queue.push({ ...dialog, buttons: dialog.buttons?.length ? dialog.buttons : [{ text: "OK", style: "primary" }] });
   listener?.();
 }

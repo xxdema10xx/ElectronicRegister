@@ -75,3 +75,13 @@ test("svolgimento esame sull'app: Alert di sistema", () => {
   buttons[1].onPress();
   expect(onOk).toHaveBeenCalled();
 });
+
+test("D-01: errori già gestiti (sessione terminata) non aprono un secondo dialog", () => {
+  const { HANDLED_MESSAGE } = require("../../src/utils/handledErrors");
+  act(() => { showDialog({ title: "Errore", message: HANDLED_MESSAGE }); notify("Errore", `Salvataggio: ${HANDLED_MESSAGE}`); });
+  expect(shown("Errore")).toBe(false);
+  act(() => notifyBrowser("Errore", HANDLED_MESSAGE));
+  expect(Alert.alert).not.toHaveBeenCalled();
+  act(() => notify("Errore", "Altro problema"));
+  expect(shown("Altro problema")).toBe(true);
+});

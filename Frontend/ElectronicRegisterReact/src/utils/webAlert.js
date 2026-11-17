@@ -5,6 +5,13 @@
 // gli altri → azione primaria (Invio).
 import { Alert, Platform } from "react-native";
 import { showDialog } from "../components/AppDialog";
+import { isHandledError } from "./handledErrors";
+
+if (Platform.OS !== "web") {
+  // Sull'app resta l'Alert di sistema, ma senza i dialog di errori già gestiti (utils/handledErrors.js)
+  const systemAlert = Alert.alert;
+  Alert.alert = (title, message, ...rest) => { if (!isHandledError(message)) systemAlert(title, message, ...rest); };
+}
 
 if (Platform.OS === "web") {
   Alert.alert = (title, message, buttons) => {

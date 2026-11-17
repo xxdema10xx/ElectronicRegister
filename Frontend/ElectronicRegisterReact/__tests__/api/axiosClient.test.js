@@ -1,6 +1,7 @@
 // Normalizzazione degli errori HTTP in messaggi leggibili e logout automatico sul 401.
 import axiosClient, { authHeader, setUnauthorizedHandler, ticketHeader } from "../../src/api/axiosClient";
 import { session } from "../../src/api/session";
+import { isHandledError } from "../../src/utils/handledErrors";
 
 // Risposta finta del server: { status, data } oppure un errore di rete ({ code } senza risposta)
 function respond(fake) {
@@ -59,8 +60,24 @@ describe("401: torna al login solo se è stato rifiutato il token corrente", () 
     const handler = jest.fn();
     setUnauthorizedHandler(handler);
     session.setAccess("current", 900);
-    await fail({ status: 401, data: {} }, { headers: ticketHeader("ticket") });
+    const e = await fail({ status: 401, data: {} }, { headers: ticketHeader("ticket") });
     expect(handler).not.toHaveBeenCalled();
+    expect(isHandledError(e)).toBe(false);
+  });
+
+  test("D-01: l'errore del 401 che ha chiuso la sessione è già gestito (un solo dialog)", async () => {
+    const handler = jest.fn(() => session.clear());
+    setUnauthorizedHandler(handler);
+    session.setAccess("token-d01", 900);
+    const headers = authHeader();
+    // più richieste in volo con lo stesso token: un solo logout, tutti gli errori già gestiti
+    const errors = [await fail({ status: 401, data: {} }, { headers }), await fail({ status: 401, data: {} }, { headers }),
+      await fail({ status: 500, data: {} }, { headers })];
+    expect(handler).toHaveBeenCalledTimes(1);
+    errors.forEach(e => {
+      expect(e.handled).toBe(true);
+      expect(isHandledError(e.message)).toBe(true);
+    });
   });
 });
 

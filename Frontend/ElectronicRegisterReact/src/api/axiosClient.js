@@ -2,6 +2,7 @@
 import axios from "axios";
 import { API_BASE } from "../appConfig";
 import { session } from "./session";
+import { markHandled } from "../utils/handledErrors";
 
 const axiosClient = axios.create({
   baseURL: API_BASE,
@@ -12,6 +13,10 @@ const axiosClient = axios.create({
 // Chiamato quando il token istituzionale non è più valido (401): l'app torna al login.
 let onUnauthorized = null;
 export function setUnauthorizedHandler(fn) { onUnauthorized = fn; }
+// Token per cui l'app è già tornata al login: gli errori delle richieste ancora in volo con quel token sono
+// "già gestiti" (un solo dialog "Sessione terminata", nessun "Errore" in più dalle schermate)
+const endedTokens = new Set();
+const bearerOf = (config) => String(config?.headers?.Authorization || "").replace(/^Bearer\s+/i, "");
 
 // Messaggi leggibili per gli errori che il backend restituisce solo con un titolo generico (docs/CONVENTIONS.md §2)
 const STATUS_MESSAGES = {
@@ -57,9 +62,15 @@ axiosClient.interceptors.response.use(
       problem ? problem :
       code ? `Errore: ${code}` :
       STATUS_MESSAGES[status] || (status === 400 ? "Dati non validi." : error.message || "Errore di rete");
-    const sentToken = String(error.config?.headers?.Authorization || "");
-    if (status === 401 && onUnauthorized && session.accessToken && sentToken.endsWith(session.accessToken)) onUnauthorized();
-    return Promise.reject(Object.assign(new Error(message), { status, problem, code }));
+    const err = Object.assign(new Error(message), { status, problem, code });
+    const sentToken = bearerOf(error.config);
+    if (sentToken && endedTokens.has(sentToken)) return Promise.reject(markHandled(err));
+    if (status === 401 && onUnauthorized && session.accessToken && sentToken === session.accessToken) {
+      endedTokens.add(sentToken);
+      onUnauthorized();
+      return Promise.reject(markHandled(err));
+    }
+    return Promise.reject(err);
   }
 );
 

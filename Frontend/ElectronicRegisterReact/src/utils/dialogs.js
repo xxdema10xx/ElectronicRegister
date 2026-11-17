@@ -7,6 +7,7 @@
 // non cambiare avvisi, focus, schermo intero e conteggio delle violazioni.
 import { Alert, Platform } from "react-native";
 import { showDialog } from "../components/AppDialog";
+import { isHandledError } from "./handledErrors";
 
 // Etichette di azioni che distruggono o annullano: pulsante rosso e mai scelte con Invio
 const DESTRUCTIVE = /elimin|annulla esame|rimuov|cancell|revoc|esci senza|scarta/i;
@@ -40,6 +41,7 @@ export function confirmLeave(onLeave, { message, onStay } = {}) {
 
 // ── Comportamento precedente (solo svolgimento lato studente) ───────────────────────────────
 export function notifyBrowser(title, message) {
+  if (isHandledError(message)) return; // già spiegato dal dialog "Sessione terminata"
   if (Platform.OS === "web") window.alert(message ? `${title}\n\n${message}` : title);
   else Alert.alert(title, message);
 }
