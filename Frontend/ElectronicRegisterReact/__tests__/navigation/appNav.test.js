@@ -46,7 +46,7 @@ const labels = () => ["Home", "Voti", "Classi", "Studenti", "Professori", "Mater
 
 describe("sidebar per ruolo (schermo largo)", () => {
   test.each([
-    ["admin", ["Home", "Classi", "Studenti", "Professori", "Materie", "Esami", "Calendario", "Membri", "Profilo"]],
+    ["admin", ["Home", "Voti", "Classi", "Studenti", "Professori", "Materie", "Esami", "Calendario", "Membri", "Profilo"]],
     ["staff", ["Home", "Voti", "Studenti", "Professori", "Esami", "Profilo"]],
     ["teacher", ["Home", "Classi", "Materie", "Esami", "Profilo"]],
     ["student", ["Home", "Voti", "Professori", "Materie", "Esami", "Profilo"]],
@@ -134,4 +134,10 @@ test("accessibilità: la voce attiva della sidebar è 'selected'", () => {
   fireEvent.press(screen.getByText("Membri"));
   const active = screen.getAllByRole("link").find(el => el.props.accessibilityState?.selected);
   expect(within(active).getByText("Membri")).toBeTruthy();
+});
+
+test("admin: 'Voti' apre il registro dei voti, come per la segreteria", () => {
+  renderNav("admin");
+  fireEvent.press(screen.getByText("Voti"));
+  expect(screen.getByText("SCREEN Grades")).toBeTruthy();
 });

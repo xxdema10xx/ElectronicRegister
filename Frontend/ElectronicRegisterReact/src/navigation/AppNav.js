@@ -58,7 +58,8 @@ export default function AppNav({ user, onLogout }) {
   // staff = segreteria: anagrafiche, voti ed esami, ma non catalogo, materie e membri (docs/AUTH.md §4.2)
   const sideTabs = [
     { key: "dashboard", icon: "home-outline", label: "Home" },
-    ...(role === "student" || role === "staff" ? [{ key: "grades", icon: "ribbon-outline", label: "Voti" }] : []),
+    // Voti: libretto per lo studente, registro (stessa schermata) per segreteria e admin
+    ...(role === "student" || role === "staff" || role === "admin" ? [{ key: "grades", icon: "ribbon-outline", label: "Voti" }] : []),
     ...(role === "admin" ? [{ key: "classes", icon: "people-outline", label: "Classi" }] : []),
     ...(role === "teacher" ? [{ key: "myClasses", icon: "school-outline", label: "Classi" }] : []),
     ...(role === "admin" || role === "staff" ? [{ key: "students", icon: "school-outline", label: "Studenti" }] : []),
