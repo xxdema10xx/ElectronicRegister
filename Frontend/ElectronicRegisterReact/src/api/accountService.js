@@ -45,15 +45,17 @@ export async function createAccount({ eventId, firstName, lastName, fiscalCode, 
 }
 
 // Messaggio per gli errori della creazione (409 e 422 hanno significati precisi in questo endpoint)
+export const ACCOUNT_CONFLICT_MESSAGE = "Impossibile creare l'account: conflitto con dati esistenti.";
+
 export function accountErrorMessage(e) {
   if (e?.status === 404) return "La creazione degli account non è attiva su questo server, oppure la scheda collegata non esiste.";
   if (e?.status === 422) return "Nome e cognome non coincidono con quelli della scheda collegata.";
   if (e?.status === 409) {
     // Creazione in conflitto con un'altra modifica contemporanea: si ricarica e si riprova
     if (e.code === "ConcurrentChange") return CONCURRENT_CHANGE_MESSAGE;
-    return e.problem && /email/i.test(e.problem)
-      ? "Non ci sono più indirizzi email disponibili per questo nome: contatta l'amministratore della piattaforma."
-      : "Questa persona è già nell'istituto, oppure la scheda è già collegata a un altro account.";
+    // Altri 409 senza code: il titolo del server è in italiano e dice il motivo (es. "Indirizzo email non
+    // disponibile"); senza titolo, un testo neutro che non presume la causa
+    return e.problem || ACCOUNT_CONFLICT_MESSAGE;
   }
   if (e?.status === 503) return "Il server è occupato: riprova tra qualche secondo (la richiesta non è stata registrata).";
   return e?.message || "Errore imprevisto.";

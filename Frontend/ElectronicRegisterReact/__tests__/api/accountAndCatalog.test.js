@@ -47,8 +47,10 @@ describe("account dell'istituto", () => {
   test.each([
     [{ status: 404 }, /non è attiva/],
     [{ status: 422 }, /non coincidono con quelli della scheda/],
-    [{ status: 409, problem: "Indirizzo email non disponibile" }, /indirizzi email disponibili/],
-    [{ status: 409 }, /già nell'istituto/],
+    [{ status: 409, problem: "Indirizzo email non disponibile" }, /^Indirizzo email non disponibile$/],
+    [{ status: 409, problem: "Persona già nell'istituto" }, /^Persona già nell'istituto$/],
+    [{ status: 409 }, /^Impossibile creare l'account: conflitto con dati esistenti\.$/],
+    [{ status: 409, code: "ConcurrentChange", problem: "Conflitto sulla membership istituzionale" }, /^Modifica concorrente: ricarica e riprova\.$/],
     [{ status: 503 }, /occupato/],
     [{ status: 400, message: "Codice fiscale non valido." }, /Codice fiscale non valido/],
   ])("errore %o", (e, msg) => {

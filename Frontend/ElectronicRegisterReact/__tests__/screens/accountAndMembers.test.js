@@ -145,11 +145,19 @@ describe("Membri", () => {
       expect(screen.getByText("Modifica concorrente: ricarica e riprova.")).toBeTruthy();
     });
 
-    test("persona già nell'istituto (409)", async () => {
+    test("409 senza code: titolo del server", async () => {
+      accountService.createAccount.mockRejectedValue(Object.assign(new Error("x"), { status: 409, problem: "Indirizzo email non disponibile" }));
+      await openAndFill();
+      await act(async () => { fireEvent.press(screen.getByText("Crea account")); });
+      expect(screen.getByText("Indirizzo email non disponibile")).toBeTruthy();
+    });
+
+    test("409 senza code né titolo: messaggio neutro", async () => {
       accountService.createAccount.mockRejectedValue(Object.assign(new Error("x"), { status: 409 }));
       await openAndFill();
       await act(async () => { fireEvent.press(screen.getByText("Crea account")); });
-      expect(screen.getByText(/già nell'istituto/)).toBeTruthy();
+      expect(screen.getByText("Impossibile creare l'account: conflitto con dati esistenti.")).toBeTruthy();
+      expect(screen.queryByText(/già nell'istituto/)).toBeNull();
     });
   });
 
