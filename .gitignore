@@ -176,3 +176,6 @@ Frontend/ElectronicRegisterReact/e2e/node_modules/
 Frontend/ElectronicRegisterReact/e2e/reports/
 .env.e2e
 **/.env.e2e
+
+# Configurazioni locali dell'editor/agente, non del repository.
+.claude/launch.json
