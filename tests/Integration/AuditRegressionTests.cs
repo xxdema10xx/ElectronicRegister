@@ -170,9 +170,14 @@ public partial class Phase4_ExamLifecycleTests
         var exam = await CreateAsync(Draft());
         var submission = await CompleteAsync(exam, 7m);
         Guid grade;
+        decimal official;
         using (var scope = fixture.ScopeFactory.CreateScope())
-            grade = (await scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().ExamSubmissions
-                .Where(s => s.Id == submission).Select(s => s.GradeId).SingleAsync())!.Value;
+        {
+            var db = scope.ServiceProvider.GetRequiredService<ElectronicRegisterContext>();
+            grade = (await db.ExamSubmissions.Where(s => s.Id == submission).Select(s => s.GradeId).SingleAsync())!.Value;
+            official = await db.Grades.Where(g => g.Id == grade).Select(g => g.Value).SingleAsync();
+        }
+        Assert.NotEqual(2m, official); // the attempted PUT value must differ from the official grade
         var before = await SubmissionJsonAsync(submission);
         var client = _host.As(operation == "update-teacher" ? Teacher : Admin);
         var response = operation.StartsWith("delete") ? await client.DeleteAsync($"/api/institution/grades/{grade}") :
@@ -181,7 +186,7 @@ public partial class Phase4_ExamLifecycleTests
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.Equal(before, await SubmissionJsonAsync(submission));
         using var verify = fixture.ScopeFactory.CreateScope();
-        Assert.Equal(7m, await verify.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().Grades
+        Assert.Equal(official, await verify.ServiceProvider.GetRequiredService<ElectronicRegisterContext>().Grades
             .Where(g => g.Id == grade).Select(g => g.Value).SingleAsync());
     }
 

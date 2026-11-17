@@ -105,3 +105,30 @@ try{
  }finally{fs.rmSync(path.dirname(out),{recursive:true});}
  console.log('platform identity successor binding verified');
 }
+// er-grade-scale-1 successor: independent of platform identity, applied after it; no triggers, conversion and
+// marker in one transaction, every UPDATE guarded by the marker, bundled after platform identity.
+{
+ const os=require('os');
+ const base={database:'electronic_register_test',definerUser:'er_definer',definerHost:'localhost'};
+ assert.deepEqual(release.successors.map(s=>s.release),['er-platform-identity-1','er-grade-scale-1']);
+ assert.deepEqual(release.successors.map(s=>s.bundleFile),[...release.successors.map(s=>s.bundleFile)].sort(),'bundle files sort in application order');
+ assert(release.successors.every(s=>s.bundleFile<'98-new-release.sql'));
+ const sql=release.successorSql(base,'er-grade-scale-1');
+ assert(sql.startsWith('USE `electronic_register_test`;\n'));
+ assert(!/TRIGGER /.test(sql));
+ const block=sql.slice(sql.indexOf('START TRANSACTION;'));
+ assert(block.trimEnd().endsWith("INSERT INTO er_schema_release(version) VALUES('er-grade-scale-1');\nCOMMIT;"),'marker committed with the conversion');
+ const code=block.split('\n').filter(l=>!l.startsWith('--')).join('\n');
+ const updates=code.split(';').filter(s=>/^\s*UPDATE /.test(s));
+ assert.equal(updates.length,3);
+ for(const u of updates)assert(u.includes("NOT EXISTS(SELECT 1 FROM er_schema_release WHERE version='er-grade-scale-1')"),'conversion guarded by the marker');
+ assert.throws(()=>release.successorSql(base,'er-unknown-1'),/Unknown successor release/);
+ const out=path.join(fs.mkdtempSync(path.join(os.tmpdir(),'er84-grade-scale-')),'bundle');
+ try{
+  release.successor(base,out,'er-grade-scale-1');
+  const binding=JSON.parse(fs.readFileSync(path.join(out,'binding.json')));
+  assert.equal(binding.release,'er-grade-scale-1');assert.equal(binding.predecessor,'er-quality-2-mysql84');
+  assert.equal(binding.files['01-grade-scale.sql'],release.sha(fs.readFileSync(path.join(out,'01-grade-scale.sql'))));
+ }finally{fs.rmSync(path.dirname(out),{recursive:true});}
+ console.log('grade scale successor binding verified');
+}

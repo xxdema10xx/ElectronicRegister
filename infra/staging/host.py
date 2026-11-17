@@ -417,14 +417,17 @@ def release_preflight(folder,s):
     require(json.loads(result.splitlines()[-1])==dict(release='er-quality-2-mysql84',action='preflight',verified=True),'Corrective release preflight did not verify')
     print(result.splitlines()[-1])
 
+# Additive successors after er-quality-2-mysql84, in application order: (release, migration folder, bound file,
+# expected 002_validate.sql checks, applied only when platform identity is enabled).
+SUCCESSORS=[('er-platform-identity-1','platform-identity','01-platform-identity.sql',13,True),
+            ('er-grade-scale-1','grade-scale','01-grade-scale.sql',7,False)]
+
 def apply_successor(folder,s):
-    """Applies er-platform-identity-1 once, after the er-quality-2 runtime certification, to this staging's own NEW
-    database (never an existing deployment). Same reviewed SQL as migrations/platform-identity, bound to the staging
-    definer by tools/mysql84-release.cjs, executed through the root socket of this staging's DB container and followed
-    by the read-only 002_validate.sql. Skipped unless the state enables platform identity; a second run changes nothing."""
-    if not s.get('platform_identity'):
-        print('Platform identity not enabled for this staging: successor skipped.')
-        return
+    """Applies the additive successors once each, after the er-quality-2 runtime certification, to this staging's own
+    NEW database (never an existing deployment): er-platform-identity-1 when the state enables platform identity, then
+    always er-grade-scale-1 (grades in thirtieths; the API is not ready without it). Same reviewed SQL as
+    migrations/<folder>, bound to the staging definer by tools/mysql84-release.cjs, executed through the root socket of
+    this staging's DB container and followed by the read-only 002_validate.sql. A second run changes nothing."""
     cid=compose(folder,'ps','-q','db',capture=True)
     require(cid,'Missing db')
     full=output(['docker','inspect','--format','{{.Id}}',cid])
@@ -437,22 +440,26 @@ def apply_successor(folder,s):
         require(done.returncode==0,'Successor SQL failed: '+done.stderr.strip()[:300])
         return done.stdout.strip()
     marker=lambda name: query("SELECT COUNT(*) FROM er_schema_release WHERE version='"+name+"'")
-    if marker('er-platform-identity-1')=='1':
-        print('er-platform-identity-1 already applied: nothing to do.')
-        return
-    require(marker('er-quality-2-mysql84')=='1','Predecessor er-quality-2-mysql84 is missing: successor refused')
-    stamp=time.strftime('%Y%m%dT%H%M%SZ',time.gmtime())
-    binding=folder/'ops'/f'successor-binding-{stamp}.json'
-    write(binding,json.dumps(dict(database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%')),mode=0o444)
-    bound=folder/'ops'/f'successor-{stamp}'
-    run(['node',ROOT/'tools/mysql84-release.cjs','successor',binding,bound],stdout=subprocess.DEVNULL)
-    sql=(bound/'01-platform-identity.sql').read_text(encoding='utf-8')
-    done=subprocess.run(client+['--batch'],input=sql,text=True,capture_output=True,timeout=300)
-    require(done.returncode==0,'Successor SQL failed: '+done.stderr.strip()[:300])
-    require(marker('er-platform-identity-1')=='1','Successor marker missing after apply')
-    checks=[line for line in query((ROOT/'migrations/platform-identity/002_validate.sql').read_text(encoding='utf-8')).splitlines() if line]
-    require(len(checks)==13 and all(line.split(chr(9))[-1]=='0' for line in checks),'Successor postflight validation failed; preserve the staging for review')
-    print('er-platform-identity-1 applied and validated (13/13 checks at zero).')
+    for release,source,file,expected,platform_only in SUCCESSORS:
+        if platform_only and not s.get('platform_identity'):
+            print(f'Platform identity not enabled for this staging: {release} skipped.')
+            continue
+        if marker(release)=='1':
+            print(f'{release} already applied: nothing to do.')
+            continue
+        require(marker('er-quality-2-mysql84')=='1','Predecessor er-quality-2-mysql84 is missing: successor refused')
+        stamp=time.strftime('%Y%m%dT%H%M%SZ',time.gmtime())
+        binding=folder/'ops'/f'successor-binding-{source}-{stamp}.json'
+        write(binding,json.dumps(dict(database='electronic_register_staging',definerUser='er_stage_definer',definerHost='%')),mode=0o444)
+        bound=folder/'ops'/f'successor-{source}-{stamp}'
+        run(['node',ROOT/'tools/mysql84-release.cjs','successor',binding,bound,release],stdout=subprocess.DEVNULL)
+        sql=(bound/file).read_text(encoding='utf-8')
+        done=subprocess.run(client+['--batch'],input=sql,text=True,capture_output=True,timeout=300)
+        require(done.returncode==0,'Successor SQL failed: '+done.stderr.strip()[:300])
+        require(marker(release)=='1','Successor marker missing after apply')
+        checks=[line for line in query((ROOT/'migrations'/source/'002_validate.sql').read_text(encoding='utf-8')).splitlines() if line]
+        require(len(checks)==expected and all(line.split(chr(9))[-1]=='0' for line in checks),'Successor postflight validation failed; preserve the staging for review')
+        print(f'{release} applied and validated ({expected}/{expected} checks at zero).')
 
 def verify(folder,s,readiness=True):
     for service,uid in [('api','1654'),('db','999')]:

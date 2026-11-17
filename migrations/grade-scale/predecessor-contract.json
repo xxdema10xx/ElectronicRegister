@@ -1,0 +1,48 @@
+{
+  "format": 1,
+  "migration": "er-grade-scale-1",
+  "mysql": "8.4.13",
+  "database": "electronic_register_test",
+  "charset": "utf8mb4",
+  "collation": "utf8mb4_unicode_ci",
+  "predecessor": {
+    "release": "er-quality-2-mysql84",
+    "contract": "migrations/mysql84-remediation/contract.json",
+    "note": "Independent of er-platform-identity-1; markers and inventory are those of the reference fixture, which applies platform identity first.",
+    "markers": [
+      "er-platform-identity-1",
+      "er-quality-1",
+      "er-quality-1-closure-1",
+      "er-quality-2-mysql84"
+    ],
+    "absentMarkers": [
+      "er-grade-scale-1"
+    ],
+    "inventory": {
+      "tables": 72,
+      "triggers": 186,
+      "fks": 201,
+      "indexes": 308
+    }
+  },
+  "target": {
+    "markers": [
+      "er-grade-scale-1",
+      "er-platform-identity-1",
+      "er-quality-1",
+      "er-quality-1-closure-1",
+      "er-quality-2-mysql84"
+    ],
+    "inventory": {
+      "tables": 72,
+      "triggers": 186,
+      "fks": 201,
+      "indexes": 309
+    },
+    "tables": {
+      "grade": "CREATE TABLE `grade` (\n  `id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,\n  `student_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,\n  `class_subject_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,\n  `value` decimal(4,2) NOT NULL,\n  `date` date NOT NULL,\n  `institution_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',\n  `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,\n  `batch_event_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `uq_mt3a_grade_owner` (`institution_id`,`id`),\n  UNIQUE KEY `uq_grade_batch_student` (`institution_id`,`batch_event_id`,`student_id`),\n  KEY `idx_grade_class_subject` (`class_subject_id`),\n  KEY `idx_grade_student` (`student_id`),\n  KEY `idx_mt3a_grade_student` (`institution_id`,`student_id`),\n  KEY `idx_mt3a_grade_class_subject` (`institution_id`,`class_subject_id`),\n  CONSTRAINT `fk_grade_class_subject` FOREIGN KEY (`class_subject_id`) REFERENCES `class_subject` (`id`),\n  CONSTRAINT `fk_grade_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE,\n  CONSTRAINT `fk_mt3a_grade_class_subject` FOREIGN KEY (`institution_id`, `class_subject_id`) REFERENCES `class_subject` (`institution_id`, `id`),\n  CONSTRAINT `fk_mt3a_grade_owner` FOREIGN KEY (`institution_id`) REFERENCES `institution` (`id`),\n  CONSTRAINT `fk_mt3a_grade_student` FOREIGN KEY (`institution_id`, `student_id`) REFERENCES `student` (`institution_id`, `id`) ON DELETE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+    },
+    "triggers": {},
+    "validation": "migrations/grade-scale/002_validate.sql"
+  }
+}

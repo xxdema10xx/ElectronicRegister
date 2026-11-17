@@ -174,6 +174,16 @@ public static class OperationalPipeline
                         return Results.StatusCode(503);
                     }
                 }
+                // Grades in thirtieths read grade.description/batch_event_id: the er-grade-scale-1 successor
+                // (columns and one-time conversion of the stored tenths) is required on every database.
+                await using (var gradeScale = new MySqlCommand("SELECT COUNT(*) FROM er_schema_release WHERE version='er-grade-scale-1'", sql))
+                {
+                    if (Convert.ToInt64(await gradeScale.ExecuteScalarAsync(timeout.Token)) != 1)
+                    {
+                        loggerFactory.CreateLogger("Readiness").LogWarning("Readiness failed {ErrorCode}", "GRADE_SCALE_SCHEMA");
+                        return Results.StatusCode(503);
+                    }
+                }
                 await using var schema = new MySqlCommand("CALL er_schema_ready()", sql);
                 if (Convert.ToInt32(await schema.ExecuteScalarAsync(timeout.Token)) != 1)
                 {

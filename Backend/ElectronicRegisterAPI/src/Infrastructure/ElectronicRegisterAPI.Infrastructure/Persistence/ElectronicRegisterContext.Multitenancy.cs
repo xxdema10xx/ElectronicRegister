@@ -16,6 +16,7 @@ public partial class ElectronicRegisterContext
     {
         ConfigureMt3Profiles(modelBuilder);
         ConfigureMt3aOwnership(modelBuilder);
+        ConfigureGradeBatches(modelBuilder);
         modelBuilder.Entity<Campus>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");

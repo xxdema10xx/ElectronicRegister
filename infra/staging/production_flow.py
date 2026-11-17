@@ -194,20 +194,21 @@ class Flow:
         self.apply_successor()
 
     def apply_successor(self):
-        """Applies er-platform-identity-1 once to this staging's own disposable database (the corrective
-        release leaves er-quality-2). Same reviewed SQL as migrations/platform-identity, bound to the
-        staging definer, through the root socket of the staging DB container; never an existing deployment."""
+        """Applies er-platform-identity-1 and then er-grade-scale-1, once each, to this staging's own disposable
+        database (the corrective release leaves er-quality-2). Same reviewed SQL as migrations/<folder>, bound
+        to the staging definer, through the root socket of the staging DB container; never an existing deployment."""
         binding = self.work / 'successor-binding.json'
         host.write(binding, json.dumps(dict(database='electronic_register_staging', definerUser='er_stage_definer', definerHost='%')), mode=0o444)
-        out = self.work / 'successor'
-        host.run(['node', host.ROOT / 'tools/mysql84-release.cjs', 'successor', binding, out], stdout=subprocess.DEVNULL)
         cid = host.compose(self.folder, 'ps', '-q', 'db', capture=True)
-        sql = (out / '01-platform-identity.sql').read_text(encoding='utf-8')
-        done = subprocess.run(['docker', 'exec', '-i', cid, 'mysql', '--defaults-extra-file=/run/secrets/root.cnf', '--protocol=SOCKET', '--batch'],
-                              input=sql, text=True, capture_output=True, timeout=300)
-        require(done.returncode == 0, 'Successor SQL failed: ' + done.stderr.strip()[:300])
-        marker = self.root_sql("SELECT COUNT(*) FROM er_schema_release WHERE version='er-platform-identity-1'")
-        require(marker == '1', 'Successor marker missing after apply')
+        for release, source, file, _checks, _platform_only in host.SUCCESSORS:
+            out = self.work / ('successor-' + source)
+            host.run(['node', host.ROOT / 'tools/mysql84-release.cjs', 'successor', binding, out, release], stdout=subprocess.DEVNULL)
+            sql = (out / file).read_text(encoding='utf-8')
+            done = subprocess.run(['docker', 'exec', '-i', cid, 'mysql', '--defaults-extra-file=/run/secrets/root.cnf', '--protocol=SOCKET', '--batch'],
+                                  input=sql, text=True, capture_output=True, timeout=300)
+            require(done.returncode == 0, 'Successor SQL failed: ' + done.stderr.strip()[:300])
+            marker = self.root_sql("SELECT COUNT(*) FROM er_schema_release WHERE version='" + release + "'")
+            require(marker == '1', 'Successor marker missing after apply')
 
     def api_container(self, name, runtime):
         return ['run', '-d', '--name', name, '--network', self.network, '--network-alias', 'er-api' if name == self.api else name,

@@ -282,11 +282,50 @@ class PlatformIdentityStagingTests(unittest.TestCase):
         self.assertLess(steps.index('successor'), steps.index('seed'))
         self.assertLess(steps.index('successor'), steps.index('start'))
 
-    def test_successor_is_skipped_unless_the_state_enables_it(self):
-        with mock.patch('sys.stdout', new_callable=io.StringIO) as out, mock.patch.object(host, 'compose') as compose:
-            host.apply_successor(Path('.'), dict(id='a' * 32))
-        compose.assert_not_called()
-        self.assertIn('skipped', out.getvalue())
+    def _apply_successors(self, state):
+        """Runs host.apply_successor against a fake DB container; returns (node calls, SQL sent, stdout)."""
+        applied, nodes, sent = set(), [], []
+
+        def fake_sql(args, input, **_kwargs):
+            sent.append(input)
+            if input.startswith("SELECT COUNT(*) FROM er_schema_release WHERE version='"):
+                name = input.split("'")[1]
+                return mock.Mock(returncode=0, stdout='1' if name == 'er-quality-2-mysql84' or name in applied else '0', stderr='')
+            for _r, source, _f, checks, _p in host.SUCCESSORS:
+                if input == (host.ROOT / 'migrations' / source / '002_validate.sql').read_text(encoding='utf-8'):
+                    return mock.Mock(returncode=0, stdout='\n'.join(f'check{i}\t0' for i in range(checks)), stderr='')
+            applied.update(r for r, *_ in host.SUCCESSORS if f"VALUES('{r}')" in input)
+            return mock.Mock(returncode=0, stdout='', stderr='')
+
+        def fake_node(args, **_kwargs):
+            nodes.append([str(a) for a in args])
+            release = str(args[-1])
+            file = next(f for r, _s, f, *_ in host.SUCCESSORS if r == release)
+            Path(args[-2]).mkdir(parents=True)
+            Path(args[-2], file).write_text(f"INSERT INTO er_schema_release(version) VALUES('{release}');", encoding='utf-8')
+
+        labels = json.dumps({'io.er.staging.id': state['id']})
+        with tempfile.TemporaryDirectory() as folder, mock.patch('sys.stdout', new_callable=io.StringIO) as out, \
+                mock.patch.object(host, 'compose', return_value='c' * 12), \
+                mock.patch.object(host, 'output', side_effect=['f' * 64, labels]), \
+                mock.patch.object(host, 'run', side_effect=fake_node), \
+                mock.patch.object(host, 'write', side_effect=lambda path, text, mode=None: Path(path).write_text(text, encoding='utf-8')), \
+                mock.patch.object(host.subprocess, 'run', side_effect=fake_sql):
+            (Path(folder) / 'ops').mkdir()
+            host.apply_successor(Path(folder), state)
+        return nodes, sent, out.getvalue()
+
+    def test_grade_scale_successor_is_applied_even_without_platform_identity(self):
+        nodes, sent, out = self._apply_successors(dict(id='a' * 32))
+        self.assertIn('er-platform-identity-1 skipped', out)
+        self.assertEqual([n[-1] for n in nodes], ['er-grade-scale-1'])
+        self.assertIn('er-grade-scale-1 applied and validated (7/7 checks at zero).', out)
+        self.assertFalse(any("VALUES('er-platform-identity-1')" in sql for sql in sent))
+
+    def test_successors_run_in_order_when_platform_identity_is_enabled(self):
+        nodes, _sent, out = self._apply_successors(dict(id='a' * 32, platform_identity=True))
+        self.assertEqual([n[-1] for n in nodes], ['er-platform-identity-1', 'er-grade-scale-1'])
+        self.assertIn('er-platform-identity-1 applied and validated (13/13 checks at zero).', out)
 
 
 if __name__ == '__main__':

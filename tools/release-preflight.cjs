@@ -59,6 +59,14 @@ if(modern){
  identify('contract','release','platform-identity-marker');
  const successor=read("SELECT COUNT(*) FROM er_schema_release WHERE version='er-platform-identity-1'")==='1';
  const target=successor?JSON.parse(fs.readFileSync(path.join(root,'migrations/platform-identity/predecessor-contract.json'),'utf8').replace(/^﻿/,'')).target:{tables:{},triggers:{}};
+ // er-grade-scale-1 (after platform identity): its reviewed delta replaces the grade DDL (description,
+ // batch_event_id and uq_grade_batch_student); it adds no table and no trigger.
+ identify('contract','release','grade-scale-marker');
+ const gradeScale=read("SELECT COUNT(*) FROM er_schema_release WHERE version='er-grade-scale-1'")==='1';
+ if(gradeScale){
+  const delta=JSON.parse(fs.readFileSync(path.join(root,'migrations/grade-scale/predecessor-contract.json'),'utf8').replace(/^﻿/,'')).target;
+  target.tables={...target.tables,...delta.tables};target.triggers={...target.triggers,...delta.triggers};
+ }
  const successorTables=Object.keys(target.tables).filter(t=>!(t in corrective.tables));
  const tableDdl=v=>crlf(v).replace(/ AUTO_INCREMENT=\d+/g,'')
   .replace(/(^  `[^`]+` (?:(?:char|varchar)\(\d+\)|enum\('[^']*'(?:,'[^']*')*\)|tinytext|text|mediumtext|longtext)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci/gm,'$1 COLLATE utf8mb4_unicode_ci')
@@ -69,7 +77,7 @@ if(modern){
  identify('schema','database','corrective-database-collation');
  equal(read('SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME=DATABASE()'),'utf8mb4_unicode_ci','collation');
  for(const [table,ddl]of Object.entries({...corrective.tables,...target.tables})){
-  identify('table',table,table in target.tables?'platform-identity-table-ddl':'corrective-table-ddl');
+  identify('table',table,table in target.tables?'successor-table-ddl':'corrective-table-ddl');
   equal(tableDdl(read('SHOW CREATE TABLE `'+table+'`;').split('\t').slice(1).join('\t')),table in target.tables?tableDdl(ddl):crlf(ddl),'ddl');
  }
  for(const [section,table,where] of [['columns','COLUMNS','TABLE_SCHEMA=DATABASE()'],['indexes','STATISTICS','TABLE_SCHEMA=DATABASE()'],
@@ -110,7 +118,7 @@ if(modern){
  const gate=crlf(corrective.routine.body);
  equal(read(audit?gate.slice('BEGIN\n'.length,-'\nEND'.length).trim():'CALL er_schema_ready();'),'1','ready');
  if(audit){for(const item of mismatches)console.log(JSON.stringify(item));if(mismatches.length)process.exitCode=1;}
- else console.log(JSON.stringify({ReadOnly:true,IdentityVerified:true,Release:'er-quality-2-mysql84',TablesVerified:Object.keys(corrective.tables).length+successorTables.length,TriggersVerified:Object.keys(corrective.triggers).length+Object.keys(target.triggers).length,PlatformIdentity:successor,RoutineVerified:true,ReadinessVerified:true}));
+ else console.log(JSON.stringify({ReadOnly:true,IdentityVerified:true,Release:'er-quality-2-mysql84',TablesVerified:Object.keys(corrective.tables).length+successorTables.length,TriggersVerified:Object.keys(corrective.triggers).length+Object.keys(target.triggers).length,PlatformIdentity:successor,GradeScale:gradeScale,RoutineVerified:true,ReadinessVerified:true}));
 }else{
 for(const [table,ddl]of Object.entries(contract.tables)){
  identify('table',table,'base-table-ddl');

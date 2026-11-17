@@ -80,20 +80,22 @@ simulate(null,true);
  const corrective=require('./mysql84-release.cjs').contract(true);
  const crlf=v=>v.replaceAll('\r\n','\n');
  const bodyOf=t=>t.body?crlf(t.body):crlf(t.statement).replace(/^[\s\S]*? FOR EACH ROW\s+/,'').replace(/(REGEXP_LIKE\([^\n]*?)\\\\z(')/g,'$1\\z$2');
- function modern(mutant){
+ const gradeTarget=JSON.parse(fs.readFileSync(path.join(__dirname,'../migrations/grade-scale/predecessor-contract.json'),'utf8')).target;
+ function modern(mutant,gradeScale=false){
   const output=[];
   const read=sql=>{
    if(sql.includes("version='er-platform-identity-1'"))return '0';
+   if(sql.includes("version='er-grade-scale-1'"))return gradeScale?'1':'0';
    if(sql.includes("version='er-quality-2-mysql84'"))return '1';
    if(sql.startsWith('SELECT VERSION'))return '8.4.13\t3306\t/data/\tdb';
    if(sql.startsWith('SELECT TABLE_NAME'))return Object.keys(corrective.tables).sort().join('\n');
    if(sql.startsWith('SELECT DEFAULT_COLLATION_NAME'))return 'utf8mb4_unicode_ci';
-   if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];let ddl=corrective.tables[name];if(mutant==='table'&&name==='identity_account_state')ddl=ddl.replace('NOT NULL','NULL');return name+'\t'+ddl;}
+   if(sql.startsWith('SHOW CREATE TABLE')){const name=/`([^`]+)`/.exec(sql)[1];let ddl=gradeScale&&name in gradeTarget.tables&&mutant!=='grade-scale'?gradeTarget.tables[name]:corrective.tables[name];if(mutant==='table'&&name==='identity_account_state')ddl=ddl.replace('NOT NULL','NULL');return name+'\t'+ddl;}
    if(sql.includes('information_schema.TRIGGERS'))return JSON.stringify(Object.entries(corrective.triggers).map(([name,t])=>{const {statement,body,...meta}=t;return {name,...meta,body:mutant==='trigger'&&name==='mt5b_security_delete'?bodyOf(t)+' ':bodyOf(t),definer:config.schemaDefiner};}));
    if(sql.includes('information_schema.ROUTINES'))return JSON.stringify([{name:'er_schema_ready',type:'PROCEDURE',body:crlf(corrective.routine.body)+(mutant==='routine'?' ':''),definer:config.schemaDefiner,mode:corrective.routine.mode,security:'DEFINER',access:'READS SQL DATA',charset:'utf8mb4',collation:'utf8mb4_unicode_ci',dbcollation:'utf8mb4_unicode_ci',deterministic:'NO',comment:''}]);
    if(sql.includes('information_schema.PARAMETERS'))return '0';
    for(const [section,table] of Object.entries({columns:'COLUMNS',indexes:'STATISTICS',foreignKeys:'REFERENTIAL_CONSTRAINTS',keyColumns:'KEY_COLUMN_USAGE'}))
-    if(sql.includes('FROM information_schema.'+table+' ')){const rows=structuredClone(corrective.metadata[section]);if(mutant==='metadata'&&section==='foreignKeys')rows[0].DELETE_RULE='CASCADE';return JSON.stringify(rows);}
+    if(sql.includes('FROM information_schema.'+table+' ')){const names=/TABLE_NAME IN \(([^)]*)\)/.exec(sql)[1].split(',').map(n=>n.slice(1,-1));const rows=structuredClone(corrective.metadata[section]).filter(r=>names.includes(r.TABLE_NAME));if(mutant==='metadata'&&section==='foreignKeys')rows[0].DELETE_RULE='CASCADE';return JSON.stringify(rows);}
    if(sql.startsWith('SELECT COUNT(*) FROM mysql.user'))return '1';
    if(sql==='CALL er_schema_ready();')return mutant==='readiness'?'0':'1';
    throw Error('Unexpected corrective query: '+sql.slice(0,80));
@@ -105,6 +107,11 @@ simulate(null,true);
  }
  const passed=modern();
  assert.equal(passed.exitCode,undefined);assert.equal(JSON.parse(passed.output[0]).Release,'er-quality-2-mysql84');
+ // er-grade-scale-1: with its marker the grade DDL must be the reviewed delta, never the predecessor's.
+ const graded=modern(undefined,true);
+ assert.equal(graded.exitCode,undefined,graded.output.join(' | '));assert.equal(JSON.parse(graded.output[0]).GradeScale,true);
+ const stale=modern('grade-scale',true);assert.equal(stale.exitCode,1);
+ assert.deepEqual([JSON.parse(stale.output[0].replace('ER_PREFLIGHT_FAILURE ','')).id,JSON.parse(stale.output[0].replace('ER_PREFLIGHT_FAILURE ','')).object],['successor-table-ddl','grade']);
  for(const [mutant,id] of [['table','corrective-table-ddl'],['trigger','corrective-trigger'],['routine','corrective-routine'],['metadata','corrective-metadata'],['readiness','corrective-readiness-probe']]){
   const failed=modern(mutant);assert.equal(failed.exitCode,1,mutant);assert.equal(failed.output.length,1);
   const check=JSON.parse(failed.output[0].replace('ER_PREFLIGHT_FAILURE ',''));assert(check.id===id||check.id==='corrective-'+mutant||(mutant==='metadata'&&check.id==='corrective-foreignKeys'),mutant+': '+check.id);

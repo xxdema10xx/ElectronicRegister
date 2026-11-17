@@ -14,7 +14,7 @@ EXTENDED_SHARDS = {'full': 14}
 FULL_CLASSES = tuple('.' + name for name in (
     'AuditBootstrapTests', 'AuditMicrosoftTests', 'ConcurrencyIntegrationTests', 'DiagnosticPreflightTests',
     'ExamRegressionTests', 'ExamSecurityTests', 'ExamValidationTests', 'FinalGradeValidationTests',
-    'FinalizeConcurrencyTests', 'GradeMappingTests', 'HistoricalExpiryBoundaryTests', 'HistoricalProfileAcquisitionTests',
+    'FinalizeConcurrencyTests', 'GradeMappingTests', 'GradeScaleMigrationTests', 'HistoricalExpiryBoundaryTests', 'HistoricalProfileAcquisitionTests',
     'IdentityDiagnosticPreflightTests', 'InstitutionCalendarFileReaderTests', 'InstitutionImportCsvReaderTests',
     'InstitutionImportXlsxReaderTests', 'LocalDatabasePortabilityTests', 'Mt1IntegrityTests', 'Mt2MicrosoftIdentityTests',
     'Mt3ProfileTests', 'Mt3aOwnershipTests', 'Mt3bSchoolTests', 'Mt3cHttpTests', 'Mt3cPreflightTests', 'Mt3dHttpTests',
