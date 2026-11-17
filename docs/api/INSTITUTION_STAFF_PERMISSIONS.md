@@ -24,6 +24,8 @@ restano condizioni aggiuntive. Non confrontare numericamente i ruoli.
 | Creare Student/Teacher | Sì | Sì | No | No |
 | Modificare nome/cognome Student/Teacher | Sì | Sì | No | No |
 | Eliminare Student/Teacher | Vincoli esistenti | No | No | No |
+| Leggere classi-materia (`GET /class-subjects`, lista e dettaglio) | Tenant | Tenant (sola lettura) | Assegnazioni proprie (solo lista) | No |
+| Creare/modificare/eliminare classi-materia | Sì | No | No | No |
 | Leggere voti | Tenant | Tenant | Assegnazioni e carriera autorizzate | Propri |
 | Creare/modificare voti | Regole esistenti | Regole esistenti, riferimenti immutabili | Permessi esistenti | No |
 | Eliminare voti | Sì, esclusi voti di esame protetti | No | No | No |
@@ -86,7 +88,8 @@ Non inviare InstitutionId, MembershipId dell'attore o ruoli nel corpo delle riso
   gli elenchi non paginati esistenti, filtrati dal tenant in SQL.
 * `/api/institution/exams`: GET elenco/dettaglio, `/{id}/eligible-students`, POST e PUT
   con i DTO esistenti; PUT `/{id}/students`, POST `/{id}/publish` e `/{id}/close`.
-  Il client deve fornire un ClassSubjectId noto: non viene aggiunto un endpoint catalogo Staff.
+  Il ClassSubjectId si sceglie da GET `/api/institution/class-subjects` (lista e dettaglio, tutto l'istituto,
+  sola lettura); POST, PUT e DELETE delle classi-materia restano InstitutionAdmin.
   ClassSubjectId dell'esame esistente è immutabile. Le modifiche Draft non possono toccare storico.
 * GET `/api/institution/exams/{id}/submissions` e
   `/api/institution/submissions/{id}/review`, `/result`, `/violations` sono letture amministrative.

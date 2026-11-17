@@ -603,7 +603,7 @@
     {
         "controller":  "InstitutionClassSubjectController",
         "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionClassSubjectController.cs",
-        "sourceSha256":  "08143fd9548883e6d2c29c2a827f4dd597480f575c86ed9fd1d553a4b8808d48",
+        "sourceSha256":  "36c82809d1eca1f24f95e6e1df1dedd068374ed106000e0dc7aae5222f270f3d",
         "contractLines":  [
                               {
                                   "line":  10,
@@ -615,7 +615,7 @@
                               },
                               {
                                   "line":  13,
-                                  "text":  "[HttpGet, Authorize(Roles = \"InstitutionAdmin,Teacher\")]"
+                                  "text":  "[HttpGet, Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
                               },
                               {
                                   "line":  14,
@@ -623,7 +623,7 @@
                               },
                               {
                                   "line":  31,
-                                  "text":  "[HttpGet(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                                  "text":  "[HttpGet(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff\")]"
                               },
                               {
                                   "line":  32,

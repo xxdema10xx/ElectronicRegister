@@ -27,7 +27,8 @@ internal sealed class InstitutionClassSubjectRepository(ElectronicRegisterContex
         CancellationToken ct
     )
     {
-        var rows = q.VisibleAssignments(t);
+        // Staff reads the whole institution, like the admin (grades by class, exam class-subject choice).
+        var rows = StaffReader(t) ? q.Assignments(t) : q.VisibleAssignments(t);
         if (classId.HasValue)
             rows = rows.Where(r => r.ClassId == classId);
         if (subjectId.HasValue)
@@ -39,9 +40,19 @@ internal sealed class InstitutionClassSubjectRepository(ElectronicRegisterContex
 
     public Task<InstitutionClassSubjectDto?> GetAsync(TenantContext t, Guid id, CancellationToken ct)
     {
+        if (!StaffReader(t))
+            InstitutionSchoolQueries.Admin(t);
+        return Project(t, q.Assignments(t).Where(r => r.Id == id)).SingleOrDefaultAsync(ct);
+    }
+
+    // Writes stay administrative: Staff may read class-subjects, never change them.
+    private Task<InstitutionClassSubjectDto?> LoadForWriteAsync(TenantContext t, Guid id, CancellationToken ct)
+    {
         InstitutionSchoolQueries.Admin(t);
         return Project(t, q.Assignments(t).Where(r => r.Id == id)).SingleOrDefaultAsync(ct);
     }
+
+    private static bool StaffReader(TenantContext t) => t.Roles.Contains(Domain.Enums.InstitutionRole.Staff);
 
     public async Task<Guid> CreateAsync(TenantContext t, CreateInstitutionClassSubjectDto dto, CancellationToken ct)
     {
@@ -68,7 +79,7 @@ internal sealed class InstitutionClassSubjectRepository(ElectronicRegisterContex
         await audit.WriteAsync(t, async () =>
         {
             await audit.LockAsync(t, "class_subject", id, ct);
-            var row = await GetAsync(t, id, ct) ?? throw InstitutionSchoolQueries.Missing();
+            var row = await LoadForWriteAsync(t, id, ct) ?? throw InstitutionSchoolQueries.Missing();
             if (row.Revision != revision)
                 throw new BusinessRuleException("Risorsa modificata. Ricaricare il dettaglio.");
             if (!await q.Owned<E.Teacher>(t).AnyAsync(r => r.Id == dto.TeacherId, ct))
@@ -84,7 +95,7 @@ internal sealed class InstitutionClassSubjectRepository(ElectronicRegisterContex
         await audit.WriteAsync(t, async () =>
         {
             await audit.LockAsync(t, "class_subject", id, ct);
-            var row = await GetAsync(t, id, ct) ?? throw InstitutionSchoolQueries.Missing();
+            var row = await LoadForWriteAsync(t, id, ct) ?? throw InstitutionSchoolQueries.Missing();
             await audit.NoDependentsAsync(t, "class_subject", id, ct);
             await q.Owned<E.ClassSubject>(t).Where(r => r.Id == id).ExecuteDeleteAsync(ct);
             await audit.EventAsync(t, "class_subject", id, checked(row.Revision + 1), "deleted", JsonSerializer.Serialize(row), null, ct);

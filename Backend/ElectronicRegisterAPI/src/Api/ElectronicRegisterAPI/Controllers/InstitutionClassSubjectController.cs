@@ -10,7 +10,7 @@ namespace ElectronicRegisterAPI.Api.Controllers;
 [ApiController, InstitutionExamEndpoint, Route("api/institution/class-subjects")]
 public sealed class InstitutionClassSubjectController(IInstitutionClassSubjectManager manager) : ControllerBase
 {
-    [HttpGet, Authorize(Roles = "InstitutionAdmin,Teacher")]
+    [HttpGet, Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     public async Task<IActionResult> GetAll(
         CancellationToken ct,
         int pageNumber = 1,
@@ -28,7 +28,7 @@ public sealed class InstitutionClassSubjectController(IInstitutionClassSubjectMa
         return Ok(page.Items);
     }
 
-    [HttpGet("{id:guid}"), Authorize(Roles = "InstitutionAdmin")]
+    [HttpGet("{id:guid}"), Authorize(Roles = "InstitutionAdmin,Staff")]
     public async Task<IActionResult> Get(Guid id, CancellationToken ct)
     {
         var row = await manager.GetAsync(id, ct);

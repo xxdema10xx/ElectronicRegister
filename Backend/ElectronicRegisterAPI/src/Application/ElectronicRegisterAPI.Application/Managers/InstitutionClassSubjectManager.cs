@@ -26,7 +26,8 @@ internal sealed class InstitutionClassSubjectManager(
     )
     {
         var t = await authorization.RequireAsync(ct);
-        if (!t.Roles.Contains(InstitutionRole.InstitutionAdmin))
+        // Admin and Staff read the whole institution; a Teacher only their own assignments.
+        if (!t.Roles.Contains(InstitutionRole.InstitutionAdmin) && !t.Roles.Contains(InstitutionRole.Staff))
             await profiles.RequireTeacherAsync(t, ct);
         InstitutionClassRules.Page(page, size);
         if (classId == Guid.Empty || subjectId == Guid.Empty || teacherId == Guid.Empty)
@@ -34,7 +35,13 @@ internal sealed class InstitutionClassSubjectManager(
         return await repository.ListAsync(t, page, size, classId, subjectId, teacherId, ct);
     }
 
-    public async Task<InstitutionClassSubjectDto?> GetAsync(Guid id, CancellationToken ct) => await repository.GetAsync(await authorization.AdminAsync(ct), id, ct);
+    public async Task<InstitutionClassSubjectDto?> GetAsync(Guid id, CancellationToken ct)
+    {
+        var t = await authorization.RequireAsync(ct);
+        if (!t.Roles.Contains(InstitutionRole.InstitutionAdmin) && !t.Roles.Contains(InstitutionRole.Staff))
+            throw new UnauthorizedAccessException("Permesso amministrativo richiesto.");
+        return await repository.GetAsync(t, id, ct);
+    }
     public async Task<Guid> CreateAsync(CreateInstitutionClassSubjectDto dto, CancellationToken ct)
     {
         var t = await authorization.AdminAsync(ct);

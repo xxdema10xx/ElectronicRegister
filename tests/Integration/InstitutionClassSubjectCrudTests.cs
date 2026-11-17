@@ -104,6 +104,38 @@ public sealed partial class InstitutionClassCrudTests
         await Expect(await Request(Assignments + "/" + Id("assignment"), token), HttpStatusCode.Forbidden);
     }
 
+    [Theory]
+    [InlineData("")]
+    [InlineData("Teacher")]
+    public async Task StaffReadsEveryAssignmentOfTheInstitutionButCannotChangeThem(string extra)
+    {
+        var admin = await Access();
+        var adminList = await Request(Assignments + "?pageSize=100", admin);
+        await Expect(adminList, HttpStatusCode.OK);
+        var expected = (await adminList.Content.ReadFromJsonAsync<JsonArray>())!.Select(r => r!["id"]!.GetValue<Guid>()).OrderBy(x => x).ToArray();
+        Assert.True(expected.Length >= 2, "setup must contain assignments of more than one teacher");
+        var adminDetail = await Request(Assignments + "/" + Id("assignment"), admin);
+        await Expect(adminDetail, HttpStatusCode.OK);
+
+        var staff = await StaffToken(extra);
+        var before = await Digest(false);
+        // Staff (also with a Teacher role) reads the whole institution, like the admin.
+        var list = await Request(Assignments + "?pageSize=100", staff);
+        await Expect(list, HttpStatusCode.OK);
+        Assert.Equal(expected, (await list.Content.ReadFromJsonAsync<JsonArray>())!.Select(r => r!["id"]!.GetValue<Guid>()).OrderBy(x => x).ToArray());
+        Assert.Equal(adminList.Headers.GetValues("X-Total-Count").Single(), list.Headers.GetValues("X-Total-Count").Single());
+        var detail = await Request(Assignments + "/" + Id("assignment"), staff);
+        await Expect(detail, HttpStatusCode.OK);
+        Assert.Equal(adminDetail.Headers.ETag!.Tag, detail.Headers.ETag!.Tag);
+        Assert.Equal(await adminDetail.Content.ReadAsStringAsync(), await detail.Content.ReadAsStringAsync());
+        await Expect(await Request(Assignments + "/" + Id("assignment", true), staff), HttpStatusCode.NotFound);
+        // Writes stay InstitutionAdmin-only.
+        await Expect(await Request(Assignments, staff, AssignmentInput(), "POST"), HttpStatusCode.Forbidden);
+        await Expect(await Request(Assignments + "/" + Id("assignment"), staff, new { TeacherId = Id("teacher-other") }, "PUT", etag: detail.Headers.ETag!.Tag), HttpStatusCode.Forbidden);
+        await Expect(await Request(Assignments + "/" + Id("assignment"), staff, method: "DELETE"), HttpStatusCode.Forbidden);
+        Assert.Equal(before, await Digest(false));
+    }
+
     [Fact]
     public async Task AssignmentOwnershipAndSqlPagingPreserveTeacherChoices()
     {
@@ -158,7 +190,7 @@ public sealed partial class InstitutionClassCrudTests
         await Expect(await Request(Submission(start.SubmissionId, "submit"), student, new SubmitExamDto { ClientRevision = 1, Answers = new() { new() { QuestionId = start.Exam.Questions[0].Id, SelectedOptionIds = new() { correct } } } }, "POST"), HttpStatusCode.OK);
         await Db(async db =>
         {
-            Assert.True(await db.Grades.AnyAsync(g => g.ClassSubjectId == id && g.StudentId == Id("student") && g.Value == 10));
+            Assert.True(await db.Grades.AnyAsync(g => g.ClassSubjectId == id && g.StudentId == Id("student") && g.Value == 30)); // full score: 30/30
             Assert.NotNull(await db.ExamSubmissions.Where(s => s.Id == start.SubmissionId).Select(s => s.DisplayOrderJson).SingleAsync());
         });
         var before = await Digest(false);

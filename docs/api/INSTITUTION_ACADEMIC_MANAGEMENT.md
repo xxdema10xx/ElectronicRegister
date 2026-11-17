@@ -47,8 +47,10 @@ GET list preserves the previous array shape and the `classSubjectId` field used
 by exam selectors. Each item additionally has `id` and `revision`. Existing names
 and teacher fields remain available. Pagination defaults to 1/20, max 100;
 `X-Total-Count` contains the filtered total. Optional `classId`, `subjectId` and
-`teacherId` filters execute in SQL. Teachers retain access only to their own
-assignments; other operations require InstitutionAdmin. Detail returns ETag.
+`teacherId` filters execute in SQL. Staff reads list and detail for the whole
+institution, like InstitutionAdmin (grades by class, class-subject choice for exams).
+Teachers retain access only to their own assignments (list only). POST, PUT and
+DELETE require InstitutionAdmin. Detail returns ETag.
 
 Any Exam, Grade or other incoming dependency blocks teacher reassignment and
 DELETE with 409, even before a student starts the exam. No attempt, result or
