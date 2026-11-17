@@ -22,7 +22,8 @@ FULL_CLASSES = tuple('.' + name for name in (
     'Mysql84ForeignKeyMetadataTests', 'Mysql84GuidMetadataTests', 'Mysql84PurgeCapabilityTests', 'Mysql84ReleaseTests',
     'MysqlFixtureConfigurationTests', 'OpenScoreDoubleCountTests', 'Phase2B_AdditionalTests',
     'Phase2B_ConversionAndOverrideTests', 'Phase2C_ApiTests', 'Phase2C_VisibilityTests', 'Phase3_ConcurrencyTests',
-    'Phase3_TransactionRollbackTests', 'Phase3_WorkerRecoveryTests', 'Phase4_ExamLifecycleTests', 'PrivateTestFilesTests',
+    'Phase3_TransactionRollbackTests', 'Phase3_WorkerRecoveryTests', 'Phase4_ExamLifecycleTests', 'PlatformIdentitySchemaTests',
+    'PrivateTestFilesTests',
     'QualityPasswordQuotaTests', 'QualitySafeLoggingTests', 'ReleaseLockObserverTests', 'RuntimeFeatureAvailabilityTests',
     'StagingCalendarFeatureTests', 'UnavailableFixtureGuardTests'))
 # Classes of the extended suite that use the identity-only fixture collection.

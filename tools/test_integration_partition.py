@@ -58,7 +58,7 @@ class PartitionTests(unittest.TestCase):
     def test_full_suite_is_separate_and_owns_only_its_explicit_classes(self):
         self.assertEqual({'full': 14}, EXTENDED_SHARDS)
         self.assertNotIn('full', SHARDS)  # main workflow and final gate unchanged
-        self.assertEqual(51, len(FULL_CLASSES))
+        self.assertEqual(52, len(FULL_CLASSES))
         methods = [PREFIX+c[1:]+'.Case'+str(n) for c in FULL_CLASSES for n in range(2)]
         for method in methods: self.assertEqual('full', owner(method))
         shards = [partition(methods, 'full', i, 14)[1] for i in range(14)]
