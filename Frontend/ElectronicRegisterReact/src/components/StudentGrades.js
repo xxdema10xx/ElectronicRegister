@@ -16,6 +16,7 @@ import { getSubjects } from "../api/subjectService";
 import { getStudentClassSubjects } from "../api/classService";
 import { formatDateForDisplay, toISODate } from "../utils/dateUtils";
 import { notify, confirmAction } from "../utils/dialogs";
+import { gradeErrorMessage } from "../utils/gradeErrors";
 
 const emptyForm = () => ({ id: null, subjectId: "", value: "", date: toISODate(new Date()) });
 
@@ -65,10 +66,7 @@ export default function StudentGrades({ student, token, canDelete = true }) {
       load();
     } catch (e) {
       // 409 dal server (docs/API.md §21): materia non assegnata alla classe, studente senza classe o voto d'esame
-      const conflict = form.id
-        ? "Il voto non si può modificare: è stato generato da un esame, oppure la materia non è assegnata alla classe dello studente."
-        : "La materia non è assegnata alla classe dello studente, oppure lo studente non è in nessuna classe.";
-      notify("Errore", e.status === 409 ? conflict : e.message);
+      notify("Errore", gradeErrorMessage(form.id ? "update" : "create", e));
     }
     finally { setSaving(false); }
   }
@@ -84,7 +82,7 @@ export default function StudentGrades({ student, token, canDelete = true }) {
   function remove(g) {
     confirmAction("Conferma", "Eliminare questo voto?", async () => {
       try { await deleteGrade(g.id, token); load(); }
-      catch (e) { notify("Errore", e.message); }
+      catch (e) { notify("Errore", gradeErrorMessage("delete", e)); }
     });
   }
 

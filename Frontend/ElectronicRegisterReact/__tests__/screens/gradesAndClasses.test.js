@@ -65,6 +65,20 @@ describe("Voti: registro (docente, admin, segreteria)", () => {
     expect(gradeService.deleteGrade).toHaveBeenCalledWith("g2", "tok");
   });
 
+  test("D-09: 409 su modifica ed eliminazione → voto generato da un esame", async () => {
+    const conflict = () => Object.assign(new Error("Operazione non consentita nello stato attuale. Ricarica e riprova."), { status: 409 });
+    gradeService.updateGrade.mockRejectedValue(conflict());
+    gradeService.deleteGrade.mockRejectedValue(conflict());
+    renderAs("admin", <GradesScreen />);
+    await flush();
+    fireEvent.press(screen.getAllByLabelText("Modifica")[0]);
+    await act(async () => { fireEvent.press(screen.getByText("Aggiorna")); });
+    expect(lastAlert()).toEqual(["Errore", expect.stringMatching(/generato da un esame \(si modifica dalla correzione/)]);
+    fireEvent.press(screen.getAllByLabelText("Elimina")[1]);
+    await pressAlertButton("Elimina");
+    expect(lastAlert()).toEqual(["Errore", expect.stringMatching(/non si può eliminare: è un voto generato da un esame/)]);
+  });
+
   test("docente: modifica sì, eliminazione no", async () => {
     renderAs("teacher", <GradesScreen />);
     await flush();

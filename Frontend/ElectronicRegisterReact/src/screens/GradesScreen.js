@@ -22,6 +22,7 @@ import { getStudents } from "../api/studentService";
 import { getTeachers } from "../api/teacherService";
 import { useStudentBooklet, useStudentExams } from "../data/studentExams";
 import { examDisplayName, formatDateTime } from "../api/examContract";
+import { gradeErrorMessage } from "../utils/gradeErrors";
 
 const GRADES_PAGE_SIZE = 20;
 const fmt = (n) => (n === null || n === undefined ? "—" : String(Math.round(n * 100) / 100));
@@ -196,7 +197,7 @@ function TeacherAdminGrades() {
       await updateGrade(showEdit.id, { subjectId: showEdit.subjectId, value: showEdit.value, date: showEdit.date }, token);
       setShowEdit(null);
       refreshAll();
-    } catch (e) { Alert.alert("Errore", e.message); }
+    } catch (e) { Alert.alert("Errore", gradeErrorMessage("update", e)); }
   }
 
   async function removeGrade(id) {
@@ -204,7 +205,7 @@ function TeacherAdminGrades() {
       { text: "Annulla" },
       { text: "Elimina", style: "destructive", onPress: async () => {
         try { await deleteGrade(id, token); refreshAll(); }
-        catch (e) { Alert.alert("Errore", e.message); }
+        catch (e) { Alert.alert("Errore", gradeErrorMessage("delete", e)); }
       }},
     ]);
   }
