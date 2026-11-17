@@ -180,7 +180,7 @@ public sealed class Mt5aMembershipAdminTests : IAsyncLifetime
         var dto = (await own.Content.ReadFromJsonAsync<InstitutionMemberDto>())!;
         Assert.Equal(_users["teacher"], dto.UserId); Assert.Equal("active", dto.Status); Assert.Equal(DateTimeKind.Utc, dto.JoinedAt.Kind);
         var json = JsonDocument.Parse(await own.Content.ReadAsStringAsync()).RootElement;
-        Assert.Equal(new[] { "email", "joinedAt", "membershipId", "roles", "status", "userId" }, json.EnumerateObject().Select(p => p.Name).Order());
+        Assert.Equal(new[] { "email", "joinedAt", "membershipId", "revision", "roles", "status", "userId" }, json.EnumerateObject().Select(p => p.Name).Order());
         var foreign = await Request(Route + "/" + Member("teacher", true), a);
         var absent = await Request(Route + "/" + Guid.NewGuid(), a);
         await Expect(foreign, HttpStatusCode.NotFound); await Expect(absent, HttpStatusCode.NotFound);

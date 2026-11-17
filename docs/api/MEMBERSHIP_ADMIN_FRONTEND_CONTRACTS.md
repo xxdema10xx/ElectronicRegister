@@ -49,9 +49,20 @@ Esempio di elemento (JoinedAt e il timestamp persistito, non data di invito):
   "email": "membro@example.test",
   "status": "active",
   "roles": ["InstitutionAdmin", "Teacher"],
-  "joinedAt": "2026-01-01T00:00:00Z"
+  "joinedAt": "2026-01-01T00:00:00Z",
+  "revision": 1
 }
 ```
+
+`revision` (intero, campo additivo) e la security generation persistita della membership
+nel tenant selezionato: e esattamente il valore che POST
+`/api/institution/admin/members/{membershipId}/mutations` confronta con `ExpectedRevision`.
+Inviare il valore appena letto; un valore diverso -> 409 senza modifiche, e dopo una mutazione
+riuscita rileggere il membro per ottenere la revisione aggiornata (il replay con lo stesso
+`eventId` restituisce lo stesso esito). Non e un contatore separato ne un dato di sessione,
+token o credenziale. Le mutazioni (azioni, Last Admin, audit, errori) sono descritte in
+[mutazioni e audit membership](../architecture/INSTITUTION_MEMBERSHIP_MUTATIONS_AND_AUDIT.md);
+questo documento resta limitato alle letture.
 
 SuspendedAt presente come UTC quando disponibile, omesso quando null (configurazione JSON
 esistente). Roles e il set corrente ordinato ordinalmente; nessun ruolo implica automaticamente

@@ -54,9 +54,11 @@ internal sealed class InstitutionMembershipDirectoryRepository(ElectronicRegiste
     }
 
     public async Task<InstitutionMemberDto?> GetAsync(Guid institutionId, Guid membershipId, CancellationToken ct) => (await ReadAsync(Scoped(institutionId).Where(m => m.Id == membershipId), ct)).SingleOrDefault();
-    private static async Task<IReadOnlyList<InstitutionMemberDto>> ReadAsync(IQueryable<Member> query, CancellationToken ct)
+    // Revision is the persisted security generation that MutateAsync compares with
+    // ExpectedRevision, read in the same statement as the row (same tenant key, no second counter).
+    private async Task<IReadOnlyList<InstitutionMemberDto>> ReadAsync(IQueryable<Member> query, CancellationToken ct)
     {
-        var rows = await query.AsSingleQuery().Select(m => new { MembershipId = m.Id, m.UserId, m.User.Email, m.Status, m.JoinedAt, m.SuspendedAt, Roles = m.InstitutionMembershipRoles.OrderBy(r => r.Role).Select(r => r.Role).ToList() }).ToListAsync(ct);
-        return rows.Select(m => new InstitutionMemberDto(m.MembershipId, m.UserId, m.Email, m.Status, m.Roles.Order(StringComparer.Ordinal).ToArray(), DateTime.SpecifyKind(m.JoinedAt, DateTimeKind.Utc), m.SuspendedAt.HasValue ? DateTime.SpecifyKind(m.SuspendedAt.Value, DateTimeKind.Utc) : null)).ToArray();
+        var rows = await query.AsSingleQuery().Select(m => new { MembershipId = m.Id, m.UserId, m.User.Email, m.Status, m.JoinedAt, m.SuspendedAt, Roles = m.InstitutionMembershipRoles.OrderBy(r => r.Role).Select(r => r.Role).ToList(), Revision = db.InstitutionMembershipSecurityStates.Where(x => x.InstitutionId == m.InstitutionId && x.MembershipId == m.Id).Select(x => (long? )x.SecurityGeneration).FirstOrDefault() }).ToListAsync(ct);
+        return rows.Select(m => new InstitutionMemberDto(m.MembershipId, m.UserId, m.Email, m.Status, m.Roles.Order(StringComparer.Ordinal).ToArray(), DateTime.SpecifyKind(m.JoinedAt, DateTimeKind.Utc), m.SuspendedAt.HasValue ? DateTime.SpecifyKind(m.SuspendedAt.Value, DateTimeKind.Utc) : null, m.Revision ?? 0L)).ToArray();
     }
 }
