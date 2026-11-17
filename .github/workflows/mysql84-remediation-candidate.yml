@@ -2,9 +2,9 @@ name: MySQL 8.4 corrective release and upgrade
 on:
   workflow_dispatch:
   push:
-    branches: [refactor-database-entities]
+    branches: [main]
   pull_request:
-    branches: [refactor-database-entities]
+    branches: [main]
 permissions: { contents: read }
 jobs:
   release:

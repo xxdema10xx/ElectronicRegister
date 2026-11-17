@@ -2,7 +2,7 @@ name: Historical er-quality-1 package and real SQL TLS
 on:
   push:
     branches:
-      - refactor-database-entities
+      - main
 
   workflow_dispatch:
     inputs:

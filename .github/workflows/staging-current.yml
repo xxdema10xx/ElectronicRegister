@@ -4,7 +4,7 @@ name: Staging package on current code (MySQL 8.4 corrective release)
 # (staging-package.yml) and its SHA stay unchanged.
 on:
   push:
-    branches: [refactor-database-entities, main]
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
