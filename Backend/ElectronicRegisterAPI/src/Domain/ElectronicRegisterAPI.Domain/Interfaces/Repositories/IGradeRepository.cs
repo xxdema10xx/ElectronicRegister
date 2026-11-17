@@ -26,6 +26,10 @@ public interface IGradeRepository
     );
     Task<GradeStatistics> GetStatisticsAsync(Guid? teacherId, Guid? studentId);
     Task AddAsync(Grade grade);
+    /// <summary>Adds all grades with a single save, inside the caller's transaction.</summary>
+    Task AddRangeAsync(IReadOnlyCollection<Grade> grades);
+    /// <summary>Grades of the caller's institution created by the given batch event (untracked).</summary>
+    Task<List<Grade>> GetByBatchEventAsync(Guid eventId);
     Task UpdateAsync(Grade grade);
     Task DeleteAsync(Grade grade);
     Task<bool> ExistsForStudentAsync(Guid studentId);

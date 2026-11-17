@@ -6,4 +6,5 @@ public class CreateGradeDto
     public Guid SubjectId { get; set; }
     public decimal Value { get; set; }
     public DateOnly Date { get; set; }
+    public string? Description { get; set; }
 }

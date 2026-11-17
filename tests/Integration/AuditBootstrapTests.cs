@@ -161,7 +161,7 @@ public class AuditBootstrapTests(IntegrationFixture fixture)
         var schoolEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionSchoolEndpointAttribute>() is not null).ToList();
         Assert.Equal(77, schoolEndpoints.Count); // includes POST api/institution/accounts
         var examEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionExamEndpointAttribute>() is not null).ToList();
-        Assert.Equal(38, examEndpoints.Count);
+        Assert.Equal(39, examEndpoints.Count); // includes POST api/institution/grades/batch
         var courseEndpoints = endpoints.Where(e => e.Metadata.GetMetadata<ElectronicRegisterAPI.Api.Security.InstitutionCourseEndpointAttribute>() is not null).ToList();
         Assert.Equal(23, courseEndpoints.Count);
         Assert.All(courseEndpoints, e => Assert.Contains(e.Metadata.GetOrderedMetadata<Microsoft.AspNetCore.Authorization.IAuthorizeData>(),

@@ -11,8 +11,8 @@ internal static class MembershipHttpSurface
     internal const int AdminCount=10;
     // 43 global actions retired; four canonical identity/account actions added;
     // POST api/institution/accounts (school surface) added; POST api/identity/accounts
-    // (public registration) removed.
-    internal const int MvcCount=157;
+    // (public registration) removed; POST api/institution/grades/batch added.
+    internal const int MvcCount=158;
     internal const int IdentityCount=9;
     internal const int LegacyCount=0;
     internal static void AssertRoutes(IEnumerable<RouteEndpoint> endpoints)

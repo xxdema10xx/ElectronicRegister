@@ -40,6 +40,15 @@ internal class ClassSubjectRepository : IClassSubjectRepository
         return entity is null ? null : MapToModel(entity);
     }
 
+    public async Task<List<DomainClassSubject>> GetBySubjectAsync(Guid subjectId, Guid? teacherId = null)
+    {
+        var query = Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.ClassSubject>().Include(cs => cs.Subject).AsNoTracking().Where(cs => cs.SubjectId == subjectId);
+        if (teacherId.HasValue)
+            query = query.Where(cs => cs.TeacherId == teacherId.Value);
+        var entities = await query.ToListAsync(Ct);
+        return entities.Select(MapToModel).ToList();
+    }
+
     private static DomainClassSubject MapToModel(ClassSubjectEntity entity)
     {
         return new DomainClassSubject

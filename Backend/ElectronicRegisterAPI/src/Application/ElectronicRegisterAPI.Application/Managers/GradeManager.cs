@@ -6,6 +6,7 @@ using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
 using ElectronicRegisterAPI.Domain.Models;
+using ElectronicRegisterAPI.Domain.Policies;
 
 namespace ElectronicRegisterAPI.Application.Managers;
 
@@ -134,6 +135,7 @@ internal class GradeManager
     public async Task<Guid?> AddAsync(CreateGradeDto dto, ExamPrincipal caller)
     {
         _gradeService.EnsureValidGradeValue(dto.Value);
+        var description = GradeRules.NormalizeDescription(dto.Description);
         var student = await _studentRepository.GetByIdAsync(dto.StudentId);
         if (student is null)
             return null;
@@ -156,11 +158,113 @@ internal class GradeManager
             StudentId = student.Id,
             ClassSubjectId = classSubject.Id,
             Value = dto.Value,
-            Date = dto.Date
+            Date = dto.Date,
+            Description = description
         };
         await _gradeRepository.AddAsync(grade);
         return grade.Id;
     }
+
+    /// <summary>
+    /// Creates manual grades for one class-subject and date, all or nothing. A replay of the same
+    /// EventId with the same payload returns the stored grades; a different payload is a conflict.
+    /// Must run inside the caller's transaction.
+    /// </summary>
+    public async Task<(GradeBatchResultDto Result, Guid ClassSubjectId, bool Replayed)> AddBatchAsync(CreateGradeBatchDto dto, ExamPrincipal caller)
+    {
+        var description = ValidateBatchShape(dto);
+        var classSubject = await ResolveBatchClassSubjectAsync(dto, caller);
+        if (await ReplayBatchAsync(dto, classSubject.Id, description) is { } replay)
+            return (replay, classSubject.Id, true);
+        var items = dto.Grades!;
+        var students = (await _studentRepository.GetByIdsAsync(items.Select(i => i.StudentId).Distinct())).ToDictionary(s => s.Id);
+        var errors = new List<GradeBatchRowErrorDto>();
+        var seen = new HashSet<Guid>();
+        for (var index = 0; index < items.Count; index++)
+        {
+            var item = items[index];
+            var row = index;
+            GradeBatchRowErrorDto Error(string code, string message) => new() { Index = row, StudentId = item.StudentId, Code = code, Message = message };
+            if (!seen.Add(item.StudentId))
+                errors.Add(Error("duplicate_student", "Lo studente compare più di una volta nel blocco."));
+            // Missing and other-institution students are indistinguishable: the scoped read returns neither.
+            else if (!students.TryGetValue(item.StudentId, out var student))
+                errors.Add(Error("student_not_found", "Lo studente non esiste."));
+            else if (student.ClassId != classSubject.ClassId)
+                errors.Add(Error("student_not_in_class", "Lo studente non appartiene alla classe della materia."));
+            if (!GradeRules.IsValidValue(item.Value))
+                errors.Add(Error("invalid_value", GradeRules.InvalidValueMessage));
+        }
+
+        if (errors.Count > 0)
+            throw new GradeBatchValidationException(errors);
+        var grades = items.Select(item => new Grade { Id = Guid.NewGuid(), StudentId = item.StudentId, ClassSubjectId = classSubject.Id, Value = item.Value, Date = dto.Date, Description = description, BatchEventId = dto.EventId }).ToList();
+        await _gradeRepository.AddRangeAsync(grades);
+        return (ToBatchResult(dto.EventId, grades), classSubject.Id, false);
+    }
+
+    /// <summary>Returns the stored result when EventId was already used; throws on a different payload.</summary>
+    public async Task<GradeBatchResultDto?> ReplayBatchAsync(CreateGradeBatchDto dto, Guid classSubjectId, string? description)
+    {
+        var stored = await _gradeRepository.GetByBatchEventAsync(dto.EventId);
+        if (stored.Count == 0)
+            return null;
+        var requested = dto.Grades!;
+        var byStudent = stored.ToDictionary(g => g.StudentId);
+        var same = stored.Count == requested.Count && requested.All(i => byStudent.TryGetValue(i.StudentId, out var g) && g.Value == i.Value) && stored.All(g => g.ClassSubjectId == classSubjectId && g.Date == dto.Date && g.Description == description);
+        if (!same)
+            throw new BusinessRuleException("EventId già usato per un blocco di voti diverso.");
+        return ToBatchResult(dto.EventId, requested.Select(i => byStudent[i.StudentId]).ToList());
+    }
+
+    /// <summary>Checks the request shape and returns the normalized description.</summary>
+    public static string? ValidateBatchShape(CreateGradeBatchDto dto)
+    {
+        if (dto.EventId == Guid.Empty)
+            throw new ArgumentException("EventId obbligatorio.");
+        if (dto.Grades is null || dto.Grades.Count is < 1 or > GradeRules.MaxBatchSize)
+            throw new ArgumentException($"Il blocco deve contenere da 1 a {GradeRules.MaxBatchSize} voti.");
+        if (dto.Date == default)
+            throw new ArgumentException("Data del voto obbligatoria.");
+        if (dto.Grades.Any(g => g is null))
+            throw new ArgumentException("Riga del blocco mancante.");
+        return GradeRules.NormalizeDescription(dto.Description);
+    }
+
+    public async Task<ClassSubject> ResolveBatchClassSubjectAsync(CreateGradeBatchDto dto, ExamPrincipal caller)
+    {
+        var teacher = caller.IsTeacher && !caller.CombinedRead;
+        if (teacher && !caller.TeacherId.HasValue)
+            throw new UnauthorizedAccessException();
+        ClassSubject? classSubject;
+        if (dto.ClassSubjectId is { } classSubjectId && classSubjectId != Guid.Empty)
+        {
+            classSubject = await _classSubjectRepository.GetByIdAsync(classSubjectId);
+            if (classSubject is not null && (dto.SubjectId is { } s && s != classSubject.SubjectId || dto.ClassId is { } c && c != classSubject.ClassId))
+                throw new ArgumentException("ClassSubjectId non coerente con SubjectId o ClassId.");
+        }
+        else if (dto.SubjectId is { } subjectId && subjectId != Guid.Empty)
+        {
+            if (dto.ClassId is { } classId && classId != Guid.Empty)
+                classSubject = await _classSubjectRepository.GetAsync(classId, subjectId);
+            else
+            {
+                var candidates = await _classSubjectRepository.GetBySubjectAsync(subjectId, teacher ? caller.TeacherId : null);
+                if (candidates.Count > 1)
+                    throw new ArgumentException("La materia è assegnata a più classi: indicare classId o classSubjectId.");
+                classSubject = candidates.SingleOrDefault();
+            }
+        }
+        else
+            throw new ArgumentException("Indicare classSubjectId oppure subjectId.");
+        if (classSubject is null)
+            throw new KeyNotFoundException("La risorsa non esiste.");
+        if (teacher)
+            await _gradeService.EnsureTeacherTeachesClassSubjectAsync(caller.TeacherId!.Value, classSubject.Id);
+        return classSubject;
+    }
+
+    private static GradeBatchResultDto ToBatchResult(Guid eventId, IEnumerable<Grade> grades) => new() { EventId = eventId, Created = grades.Select(g => new GradeBatchCreatedDto { StudentId = g.StudentId, GradeId = g.Id }).ToList() };
 
     public async Task<bool> UpdateAsync(Guid id, UpdateGradeDto dto, ExamPrincipal caller)
     {
@@ -196,6 +300,8 @@ internal class GradeManager
         grade.ClassSubjectId = classSubject.Id;
         grade.Value = dto.Value;
         grade.Date = dto.Date;
+        if (dto.Description is not null)
+            grade.Description = GradeRules.NormalizeDescription(dto.Description);
         await _gradeRepository.UpdateAsync(grade);
         return true;
     }

@@ -108,7 +108,7 @@ internal class GradeRepository : IGradeRepository
         if (pageNumber < 1 || pageSize is < 1 or > 100 || offset > int.MaxValue)
             throw new ArgumentException("Paginazione non valida.");
         var totalCount = await query.CountAsync(Ct);
-        var items = await query.OrderByDescending(g => g.Date).ThenBy(g => g.ClassSubjectId).ThenBy(g => g.Value).ThenBy(g => g.StudentId).ThenBy(g => g.Id).Skip((int)offset).Take(pageSize).Select(g => new Grade { Id = g.Id, StudentId = g.StudentId, ClassSubjectId = g.ClassSubjectId, Value = g.Value, Date = g.Date }).ToListAsync(Ct);
+        var items = await query.OrderByDescending(g => g.Date).ThenBy(g => g.ClassSubjectId).ThenBy(g => g.Value).ThenBy(g => g.StudentId).ThenBy(g => g.Id).Skip((int)offset).Take(pageSize).Select(g => new Grade { Id = g.Id, StudentId = g.StudentId, ClassSubjectId = g.ClassSubjectId, Value = g.Value, Date = g.Date, Description = g.Description, BatchEventId = g.BatchEventId }).ToListAsync(Ct);
         return (items, totalCount);
     }
 
@@ -149,11 +149,30 @@ internal class GradeRepository : IGradeRepository
             StudentId = grade.StudentId,
             ClassSubjectId = grade.ClassSubjectId,
             Value = grade.Value,
-            Date = grade.Date
+            Date = grade.Date,
+            Description = grade.Description,
+            BatchEventId = grade.BatchEventId
         };
         await _context.Grades.AddAsync(gradeEntity);
         await SaveAsync();
     }
+
+    public async Task AddRangeAsync(IReadOnlyCollection<Grade> grades)
+    {
+        await _context.Grades.AddRangeAsync(grades.Select(grade => new GradeEntity
+        {
+            Id = grade.Id,
+            StudentId = grade.StudentId,
+            ClassSubjectId = grade.ClassSubjectId,
+            Value = grade.Value,
+            Date = grade.Date,
+            Description = grade.Description,
+            BatchEventId = grade.BatchEventId
+        }), Ct);
+        await SaveAsync();
+    }
+
+    public Task<List<Grade>> GetByBatchEventAsync(Guid eventId) => Rows<ElectronicRegisterAPI.Infrastructure.Persistence.Entities.Grade>().AsNoTracking().Where(g => g.BatchEventId == eventId).Select(g => MapToModel(g)).ToListAsync(Ct);
 
     public async Task UpdateAsync(Grade grade)
     {
@@ -187,7 +206,9 @@ internal class GradeRepository : IGradeRepository
             StudentId = gradeEntity.StudentId,
             ClassSubjectId = gradeEntity.ClassSubjectId,
             Value = gradeEntity.Value,
-            Date = gradeEntity.Date
+            Date = gradeEntity.Date,
+            Description = gradeEntity.Description,
+            BatchEventId = gradeEntity.BatchEventId
         };
     }
 
@@ -201,6 +222,7 @@ internal class GradeRepository : IGradeRepository
         entity.ClassSubjectId = grade.ClassSubjectId;
         entity.Value = grade.Value;
         entity.Date = grade.Date;
+        entity.Description = grade.Description;
         return entity;
     }
 }

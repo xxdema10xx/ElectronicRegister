@@ -44,6 +44,7 @@ public interface IInstitutionExamManager
     Task<GradeFiltersDto> GradeFiltersAsync(CancellationToken ct = default);
     Task<GradeStatisticsDto?> GradeStatisticsAsync(CancellationToken ct = default);
     Task<Guid?> AddGradeAsync(CreateGradeDto dto, CancellationToken ct = default);
+    Task<GradeBatchResultDto> AddGradeBatchAsync(CreateGradeBatchDto dto, CancellationToken ct = default);
     Task<bool> UpdateGradeAsync(Guid id, UpdateGradeDto dto, CancellationToken ct = default);
     Task<bool> DeleteGradeAsync(Guid id, CancellationToken ct = default);
 }

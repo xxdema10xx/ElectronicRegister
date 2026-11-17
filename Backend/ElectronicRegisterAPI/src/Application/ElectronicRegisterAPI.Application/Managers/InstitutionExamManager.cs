@@ -4,6 +4,7 @@ using ElectronicRegisterAPI.Business.Services;
 using ElectronicRegisterAPI.Domain.Configuration;
 using ElectronicRegisterAPI.Domain.DTOs;
 using ElectronicRegisterAPI.Domain.Enums;
+using ElectronicRegisterAPI.Domain.Exceptions;
 using ElectronicRegisterAPI.Domain.Interfaces.Managers;
 using ElectronicRegisterAPI.Domain.Interfaces.Repositories;
 using ElectronicRegisterAPI.Domain.Interfaces.Services;
@@ -173,6 +174,32 @@ internal sealed class InstitutionExamManager(
         return result;
     }, ct);
     public Task<Guid?> AddGradeAsync(CreateGradeDto dto, CancellationToken ct = default) => GradeWrite(InstitutionPermission.GradeCreate, w => w.Grades.AddAsync(dto, w.Actor), ct: ct);
+    public Task<GradeBatchResultDto> AddGradeBatchAsync(CreateGradeBatchDto dto, CancellationToken ct = default) => Run(Operation.Manage, async w =>
+    {
+        InstitutionPermissions.Require(w.Actor.Tenant!, InstitutionPermission.GradeCreate);
+        GradeBatchResultDto result = null!;
+        try
+        {
+            await w.Transactions.ExecuteAsync(async () =>
+            {
+                var (batch, classSubjectId, replayed) = await w.Grades.AddBatchAsync(dto, w.Actor);
+                result = batch;
+                if (replayed)
+                    return;
+                // One audit row per batch: actor, size, class-subject and date. Grade values are never logged.
+                await w.Repositories.Audit.AddAsync(new AuditEvent { Id = Guid.NewGuid(), ActorUserId = w.Actor.UserId, EntityType = "grade", EntityId = batch.Created[0].GradeId, Action = "grade.batch.create", AfterJson = JsonSerializer.Serialize(new { ActorMembershipId = w.Actor.Tenant!.MembershipId, dto.EventId, ClassSubjectId = classSubjectId, dto.Date, Count = batch.Created.Count }), CreatedAt = time.UtcNow });
+            });
+        }
+        catch (Exception error) when (error is not (GradeBatchValidationException or ArgumentException or KeyNotFoundException or UnauthorizedAccessException or BusinessRuleException or OperationCanceledException))
+        {
+            // A concurrent request with the same EventId won the unique key: answer as its replay.
+            var description = GradeManager.ValidateBatchShape(dto);
+            var classSubject = await w.Grades.ResolveBatchClassSubjectAsync(dto, w.Actor);
+            result = await w.Grades.ReplayBatchAsync(dto, classSubject.Id, description) ?? throw error;
+        }
+
+        return result;
+    }, ct);
     public Task<bool> UpdateGradeAsync(Guid id, UpdateGradeDto dto, CancellationToken ct = default) => GradeWrite(InstitutionPermission.GradeUpdate, w => w.Grades.UpdateAsync(id, dto, w.Actor), id, ct: ct);
     public Task<bool> DeleteGradeAsync(Guid id, CancellationToken ct = default) => Run(Operation.Manage, async w =>
     {

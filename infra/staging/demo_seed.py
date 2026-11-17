@@ -50,6 +50,10 @@ INSTITUTES = [
 SUBJECTS = ['Matematica', 'Informatica', 'Inglese']
 EXAMS = [  # (class index, subject index == teacher index, title)
     (0, 0, 'Verifica di algebra'), (0, 1, 'Verifica di programmazione'), (1, 2, 'Reading comprehension')]
+# Manual grades in thirtieths (whole 0-30, pass 18) for an off-platform test of class 0, subject 0,
+# created with POST /api/institution/grades/batch: one value per student of the class, in roster order.
+BATCH_GRADES = [24, 17, 28, 18, 30, 21]
+BATCH_DESCRIPTION = 'Interrogazione orale (fuori piattaforma)'
 QUESTIONS = [
     ('Quanto fa 7 x 8?', ['56', '54', '64']), ('Quale numero e primo?', ['13', '15', '21']),
     ('Quanti lati ha un esagono?', ['6', '5', '8']), ('Quanto fa 2 elevato alla 5?', ['32', '16', '64'])]
@@ -495,6 +499,18 @@ class Seeder:
                 self.submit(person['email'], exam_id, questions, correct=(i + n) % 4 + 1)
         print(f"  {inst['code']}: 3 esami pubblicati, {SUBMITTERS} consegne ciascuno con voto ufficiale", flush=True)
 
+    def manual_grades(self, inst, record, teachers):
+        """One batch of manual grades in thirtieths. The event id is derived from the staging id and the date is
+        stored on first use, so a rerun replays the same payload (201, no duplicates) instead of a 409."""
+        roster = record['imports']['import0']
+        date = record.setdefault('grade_batch_date', datetime.date.today().isoformat())
+        self.save()
+        body = dict(eventId=self.event('grade-batch', inst['code']), classSubjectId=record['ids']['cs00'], date=date,
+                    description=BATCH_DESCRIPTION, grades=[dict(studentId=s, value=v) for s, v in zip(roster, BATCH_GRADES)])
+        _, result, _ = self.api.call('POST', '/api/institution/grades/batch', self.token(teachers[0]['email']), body, expect=201)
+        require(len(result['created']) == len(roster), 'Blocco di voti incompleto')
+        print(f"  {inst['code']}: {len(roster)} voti manuali in trentesimi inseriti in blocco", flush=True)
+
     def submit(self, email, exam_id, questions, correct):
         t = self.token(email)
         _, assigned, _ = self.api.call('GET', '/api/institution/exams/assigned', t, expect=200)
@@ -533,6 +549,7 @@ class Seeder:
             self.import_students(inst, record, a, students)
             self.calendar(inst, record, a)
             self.exams(inst, record, teachers, students)
+            self.manual_grades(inst, record, teachers)
         self.write_summary()
         print(json.dumps(dict(demoSeed='OK', institutes=len(INSTITUTES), accounts=len(self.creds['accounts']), http=self.api.counts)), flush=True)
 
@@ -601,6 +618,10 @@ class Verifier(Seeder):
             _, grades, _ = self.api.call('GET', '/api/institution/grades', t, expect=200)
             student_ids = {x for c in range(2) for x in record['imports'][f'import{c}']}
             self.check(f"{inst['code']}: voti ufficiali registrati", sum(1 for g in grades if g['studentId'] in student_ids) >= len(EXAMS) * SUBMITTERS, f'voti={len(grades)}')
+            outside = [g['value'] for g in grades if not (0 <= g['value'] <= 30 and g['value'] == int(g['value']))]
+            self.check(f"{inst['code']}: voti interi in trentesimi (0-30)", not outside, f'fuori scala={len(outside)}')
+            manual = [g for g in grades if g.get('description') == BATCH_DESCRIPTION]
+            self.check(f"{inst['code']}: blocco di voti manuali", len(manual) == len(record['imports']['import0']), f'voti={len(manual)}')
         self.isolation(records)
         failed = [r for r in self.results if not r['ok']]
         self.private.save('demo-verify.json', dict(stage=self.s['id'], results=self.results))

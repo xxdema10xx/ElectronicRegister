@@ -7,4 +7,7 @@ public class Grade
     public Guid ClassSubjectId { get; set; }
     public decimal Value { get; set; }
     public DateOnly Date { get; set; }
+    public string? Description { get; set; }
+    /// <summary>Client event of the batch that created this grade; null for single or exam grades.</summary>
+    public Guid? BatchEventId { get; set; }
 }

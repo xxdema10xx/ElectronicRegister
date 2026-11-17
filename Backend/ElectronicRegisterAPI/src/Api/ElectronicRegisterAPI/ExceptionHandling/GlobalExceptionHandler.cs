@@ -22,6 +22,7 @@ internal class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : 
                 "RowsInvalid" => 422,
                 _ => 400
             }, "Importazione non valida"),
+            GradeBatchValidationException => (StatusCodes.Status400BadRequest, "Voti del blocco non validi"),
             ArgumentException => (StatusCodes.Status400BadRequest, "Richiesta non valida"),
             UnauthorizedAccessException => (httpContext.User.Identity?.IsAuthenticated == true ? StatusCodes.Status403Forbidden : StatusCodes.Status401Unauthorized, "Non autorizzato"),
             InvalidOperationException when SubmissionErrors.IsInvalidRequest(exception) => (StatusCodes.Status400BadRequest, "Richiesta non valida"),
@@ -46,7 +47,7 @@ internal class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : 
                 exception.TargetSite?.DeclaringType?.FullName + "." + exception.TargetSite?.Name);
         }
         httpContext.Response.StatusCode = statusCode;
-        await httpContext.Response.WriteAsJsonAsync(new ProblemDetails { Status = statusCode, Title = title, Detail = statusCode == StatusCodes.Status500InternalServerError ? "Si è verificato un errore interno." : title, Extensions = exception is PlatformBusyException ? new Dictionary<string, object?> { { "code", PlatformBusyException.Code } } : exception is ImportConflictException conflict ? new Dictionary<string, object?> { { "code", conflict.Code } } : exception is ImportInputException input ? input.Rows is null ? new Dictionary<string, object?> { { "code", input.Code } } : new Dictionary<string, object?> { { "code", input.Code }, { "rows", input.Rows } } : new Dictionary<string, object?>() }, cancellationToken);
+        await httpContext.Response.WriteAsJsonAsync(new ProblemDetails { Status = statusCode, Title = title, Detail = statusCode == StatusCodes.Status500InternalServerError ? "Si è verificato un errore interno." : title, Extensions = exception is GradeBatchValidationException batch ? new Dictionary<string, object?> { { "code", "GradeBatchInvalid" }, { "errors", batch.Rows } } : exception is PlatformBusyException ? new Dictionary<string, object?> { { "code", PlatformBusyException.Code } } : exception is ImportConflictException conflict ? new Dictionary<string, object?> { { "code", conflict.Code } } : exception is ImportInputException input ? input.Rows is null ? new Dictionary<string, object?> { { "code", input.Code } } : new Dictionary<string, object?> { { "code", input.Code }, { "rows", input.Rows } } : new Dictionary<string, object?>() }, cancellationToken);
         return true;
     }
 }

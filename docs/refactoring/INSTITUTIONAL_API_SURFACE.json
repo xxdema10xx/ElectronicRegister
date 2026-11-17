@@ -2,7 +2,7 @@
     {
         "controller":  "IdentityAccountController",
         "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/IdentityAccountController.cs",
-        "sourceSha256":  "7195b84b7bedfc7a66c866d42a26357d6e7afc4f6e9e63ea93ea31201c5c2004",
+        "sourceSha256":  "a4180ff188218d26abdc4581e8f5ecc665d70f30bfe4efbf0bb69f5074b896c5",
         "contractLines":  [
                               {
                                   "line":  10,
@@ -34,7 +34,7 @@
                               },
                               {
                                   "line":  25,
-                                  "text":  "[HttpPut(\"password\")]"
+                                  "text":  "[HttpPut(\"password\"), PasswordChangeEndpoint]"
                               },
                               {
                                   "line":  26,
@@ -50,30 +50,34 @@
         "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
     },
     {
-        "controller":  "IdentityRegistrationController",
-        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/IdentityRegistrationController.cs",
-        "sourceSha256":  "ab3b430f42853826f08679d92d013dfd205d11b2622cc29e0d2de83a56a3e111",
+        "controller":  "InstitutionAccountController",
+        "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionAccountController.cs",
+        "sourceSha256":  "26c534fd667e84fe1ac71087166607ef29beb3a6f6c0c40127333369d3a1b02c",
         "contractLines":  [
                               {
-                                  "line":  8,
-                                  "text":  "[ApiController, InstitutionIdentityEndpoint, Route(\"api/identity/accounts\")]"
+                                  "line":  17,
+                                  "text":  "[ApiController, Route(\"api/institution/accounts\"), InstitutionSchoolEndpoint, RequestSizeLimit(16384), MembershipApiErrors]"
                               },
                               {
-                                  "line":  9,
-                                  "text":  "public sealed class IdentityRegistrationController(IIdentityAccountManager manager) : ControllerBase"
+                                  "line":  18,
+                                  "text":  "public sealed class InstitutionAccountController(IInstitutionAccountManager manager) : ControllerBase"
                               },
                               {
-                                  "line":  11,
-                                  "text":  "[HttpPost]"
+                                  "line":  20,
+                                  "text":  "[HttpPost, Authorize(Roles = \"InstitutionAdmin,Staff\")]"
                               },
                               {
-                                  "line":  12,
-                                  "text":  "public async Task\u003cActionResult\u003cGuid\u003e\u003e Register(RegisterIdentityAccountDto input, CancellationToken ct)"
+                                  "line":  21,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.UserCreate)]"
+                              },
+                              {
+                                  "line":  22,
+                                  "text":  "public async Task\u003cIActionResult\u003e Create("
                               }
                           ],
         "signatures":  [
-                           "public sealed class IdentityRegistrationController(IIdentityAccountManager manager) : ControllerBase",
-                           "public async Task\u003cActionResult\u003cGuid\u003e\u003e Register(RegisterIdentityAccountDto input, CancellationToken ct)"
+                           "public sealed class InstitutionAccountController(IInstitutionAccountManager manager) : ControllerBase",
+                           "public async Task\u003cIActionResult\u003e Create("
                        ],
         "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
     },
@@ -999,7 +1003,7 @@
     {
         "controller":  "InstitutionExamController",
         "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionExamController.cs",
-        "sourceSha256":  "c314cc0fdef10f64a773713f69614be1a04cd889dcaf7424a548f286c0e77fc1",
+        "sourceSha256":  "cd0c09e96dcff96285e3af24608822ad69fa34a39380820919f09ee7cb4426dd",
         "contractLines":  [
                               {
                                   "line":  11,
@@ -1015,7 +1019,7 @@
                               },
                               {
                                   "line":  15,
-                                  "text":  "public async Task\u003cActionResult\u003cList\u003cExamSummaryDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.ExamsAsync());"
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cExamSummaryDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.ExamsAsync(HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  16,
@@ -1023,7 +1027,7 @@
                               },
                               {
                                   "line":  17,
-                                  "text":  "public async Task\u003cActionResult\u003cExamDetailDto\u003e\u003e GetById(Guid id) =\u003e await manager.ExamAsync(id)is { } row ? Ok(row) : NotFound();"
+                                  "text":  "public async Task\u003cActionResult\u003cExamDetailDto\u003e\u003e GetById(Guid id) =\u003e await manager.ExamAsync(id, HttpContext.RequestAborted)is { } row ? Ok(row) : NotFound();"
                               },
                               {
                                   "line":  18,
@@ -1031,7 +1035,7 @@
                               },
                               {
                                   "line":  19,
-                                  "text":  "public async Task\u003cActionResult\u003cList\u003cAssignedExamDto\u003e\u003e\u003e Assigned() =\u003e Ok(await manager.AssignedAsync());"
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cAssignedExamDto\u003e\u003e\u003e Assigned() =\u003e Ok(await manager.AssignedAsync(HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  20,
@@ -1039,7 +1043,7 @@
                               },
                               {
                                   "line":  21,
-                                  "text":  "public async Task\u003cActionResult\u003cList\u003cStudentDto\u003e\u003e\u003e EligibleStudents(Guid id) =\u003e Ok(await manager.EligibleStudentsAsync(id));"
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cStudentDto\u003e\u003e\u003e EligibleStudents(Guid id) =\u003e Ok(await manager.EligibleStudentsAsync(id, HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  22,
@@ -1131,7 +1135,7 @@
                               },
                               {
                                   "line":  79,
-                                  "text":  "public async Task\u003cActionResult\u003cStartExamDto\u003e\u003e Start(Guid id) =\u003e Ok(await manager.StartAsync(id));"
+                                  "text":  "public async Task\u003cActionResult\u003cStartExamDto\u003e\u003e Start(Guid id) =\u003e Ok(await manager.StartAsync(id, HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  80,
@@ -1139,15 +1143,15 @@
                               },
                               {
                                   "line":  81,
-                                  "text":  "public async Task\u003cActionResult\u003cList\u003cSubmissionSummaryDto\u003e\u003e\u003e Submissions(Guid id, [FromQuery] SubmissionStatus? status) =\u003e Ok(await manager.SubmissionsAsync(id, status));"
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cSubmissionSummaryDto\u003e\u003e\u003e Submissions(Guid id, [FromQuery] SubmissionStatus? status) =\u003e Ok(await manager.SubmissionsAsync(id, status, HttpContext.RequestAborted));"
                               }
                           ],
         "signatures":  [
                            "public sealed class InstitutionExamController(IInstitutionExamManager manager) : ControllerBase",
-                           "public async Task\u003cActionResult\u003cList\u003cExamSummaryDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.ExamsAsync());",
-                           "public async Task\u003cActionResult\u003cExamDetailDto\u003e\u003e GetById(Guid id) =\u003e await manager.ExamAsync(id)is { } row ? Ok(row) : NotFound();",
-                           "public async Task\u003cActionResult\u003cList\u003cAssignedExamDto\u003e\u003e\u003e Assigned() =\u003e Ok(await manager.AssignedAsync());",
-                           "public async Task\u003cActionResult\u003cList\u003cStudentDto\u003e\u003e\u003e EligibleStudents(Guid id) =\u003e Ok(await manager.EligibleStudentsAsync(id));",
+                           "public async Task\u003cActionResult\u003cList\u003cExamSummaryDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.ExamsAsync(HttpContext.RequestAborted));",
+                           "public async Task\u003cActionResult\u003cExamDetailDto\u003e\u003e GetById(Guid id) =\u003e await manager.ExamAsync(id, HttpContext.RequestAborted)is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cList\u003cAssignedExamDto\u003e\u003e\u003e Assigned() =\u003e Ok(await manager.AssignedAsync(HttpContext.RequestAborted));",
+                           "public async Task\u003cActionResult\u003cList\u003cStudentDto\u003e\u003e\u003e EligibleStudents(Guid id) =\u003e Ok(await manager.EligibleStudentsAsync(id, HttpContext.RequestAborted));",
                            "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateExamDto dto)",
                            "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateExamDto dto)",
                            "public async Task\u003cIActionResult\u003e Assign(Guid id, UpdateExamStudentsDto dto)",
@@ -1155,8 +1159,8 @@
                            "public async Task\u003cIActionResult\u003e Close(Guid id)",
                            "public async Task\u003cIActionResult\u003e Cancel(Guid id)",
                            "public async Task\u003cIActionResult\u003e Delete(Guid id)",
-                           "public async Task\u003cActionResult\u003cStartExamDto\u003e\u003e Start(Guid id) =\u003e Ok(await manager.StartAsync(id));",
-                           "public async Task\u003cActionResult\u003cList\u003cSubmissionSummaryDto\u003e\u003e\u003e Submissions(Guid id, [FromQuery] SubmissionStatus? status) =\u003e Ok(await manager.SubmissionsAsync(id, status));"
+                           "public async Task\u003cActionResult\u003cStartExamDto\u003e\u003e Start(Guid id) =\u003e Ok(await manager.StartAsync(id, HttpContext.RequestAborted));",
+                           "public async Task\u003cActionResult\u003cList\u003cSubmissionSummaryDto\u003e\u003e\u003e Submissions(Guid id, [FromQuery] SubmissionStatus? status) =\u003e Ok(await manager.SubmissionsAsync(id, status, HttpContext.RequestAborted));"
                        ],
         "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
     },
@@ -1326,7 +1330,7 @@
     {
         "controller":  "InstitutionGradeController",
         "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionGradeController.cs",
-        "sourceSha256":  "008a7de9bbe2bb2474e1a4a155bfebcceccdf71268b971c80eb970a994757313",
+        "sourceSha256":  "29ac57810ec82e0b2ee50199c24f1282ae70d7e840025439f6a52de53e653798",
         "contractLines":  [
                               {
                                   "line":  11,
@@ -1342,7 +1346,7 @@
                               },
                               {
                                   "line":  15,
-                                  "text":  "public async Task\u003cActionResult\u003cList\u003cGradeDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.GradesAsync());"
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cGradeDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.GradesAsync(HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  16,
@@ -1350,7 +1354,7 @@
                               },
                               {
                                   "line":  17,
-                                  "text":  "public async Task\u003cActionResult\u003cGradeDto\u003e\u003e GetById(Guid id) =\u003e await manager.GradeAsync(id)is { } row ? Ok(row) : NotFound();"
+                                  "text":  "public async Task\u003cActionResult\u003cGradeDto\u003e\u003e GetById(Guid id) =\u003e await manager.GradeAsync(id, HttpContext.RequestAborted)is { } row ? Ok(row) : NotFound();"
                               },
                               {
                                   "line":  18,
@@ -1358,7 +1362,7 @@
                               },
                               {
                                   "line":  19,
-                                  "text":  "public async Task\u003cActionResult\u003cint\u003e\u003e Count() =\u003e Ok(await manager.GradeCountAsync());"
+                                  "text":  "public async Task\u003cActionResult\u003cint\u003e\u003e Count() =\u003e Ok(await manager.GradeCountAsync(HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  20,
@@ -1374,7 +1378,7 @@
                               },
                               {
                                   "line":  29,
-                                  "text":  "public async Task\u003cActionResult\u003cGradeFiltersDto\u003e\u003e Filters() =\u003e Ok(await manager.GradeFiltersAsync());"
+                                  "text":  "public async Task\u003cActionResult\u003cGradeFiltersDto\u003e\u003e Filters() =\u003e Ok(await manager.GradeFiltersAsync(HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  30,
@@ -1382,7 +1386,7 @@
                               },
                               {
                                   "line":  31,
-                                  "text":  "public async Task\u003cActionResult\u003cGradeStatisticsDto\u003e\u003e Statistics() =\u003e await manager.GradeStatisticsAsync()is { } row ? Ok(row) : NotFound();"
+                                  "text":  "public async Task\u003cActionResult\u003cGradeStatisticsDto\u003e\u003e Statistics() =\u003e await manager.GradeStatisticsAsync(HttpContext.RequestAborted)is { } row ? Ok(row) : NotFound();"
                               },
                               {
                                   "line":  32,
@@ -1394,44 +1398,57 @@
                               },
                               {
                                   "line":  34,
-                                  "text":  "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateGradeDto dto) =\u003e await manager.AddGradeAsync(dto)is { } id ? CreatedAtAction(nameof(GetById), new { id }, id) : NotFound();"
+                                  "text":  "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateGradeDto dto) =\u003e await manager.AddGradeAsync(dto, HttpContext.RequestAborted)is { } id ? CreatedAtAction(nameof(GetById), new { id }, id) : NotFound();"
                               },
                               {
                                   "line":  35,
-                                  "text":  "[HttpPut(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
+                                  "text":  "[HttpPost(\"batch\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
                               },
                               {
                                   "line":  36,
-                                  "text":  "[InstitutionPermission(InstitutionPermission.GradeUpdate)]"
+                                  "text":  "[InstitutionPermission(InstitutionPermission.GradeCreate)]"
                               },
                               {
                                   "line":  37,
-                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateGradeDto dto) =\u003e await manager.UpdateGradeAsync(id, dto) ? NoContent() : NotFound();"
+                                  "text":  "public async Task\u003cActionResult\u003cGradeBatchResultDto\u003e\u003e AddBatch(CreateGradeBatchDto dto) =\u003e StatusCode(StatusCodes.Status201Created, await manager.AddGradeBatchAsync(dto, HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  38,
-                                  "text":  "[HttpDelete(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                                  "text":  "[HttpPut(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin,Staff,Teacher\")]"
                               },
                               {
                                   "line":  39,
-                                  "text":  "[InstitutionPermission(InstitutionPermission.GradeDelete)]"
+                                  "text":  "[InstitutionPermission(InstitutionPermission.GradeUpdate)]"
                               },
                               {
                                   "line":  40,
-                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id) =\u003e await manager.DeleteGradeAsync(id) ? NoContent() : NotFound();"
+                                  "text":  "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateGradeDto dto) =\u003e await manager.UpdateGradeAsync(id, dto, HttpContext.RequestAborted) ? NoContent() : NotFound();"
+                              },
+                              {
+                                  "line":  41,
+                                  "text":  "[HttpDelete(\"{id:guid}\"), Authorize(Roles = \"InstitutionAdmin\")]"
+                              },
+                              {
+                                  "line":  42,
+                                  "text":  "[InstitutionPermission(InstitutionPermission.GradeDelete)]"
+                              },
+                              {
+                                  "line":  43,
+                                  "text":  "public async Task\u003cIActionResult\u003e Delete(Guid id) =\u003e await manager.DeleteGradeAsync(id, HttpContext.RequestAborted) ? NoContent() : NotFound();"
                               }
                           ],
         "signatures":  [
                            "public sealed class InstitutionGradeController(IInstitutionExamManager manager) : ControllerBase",
-                           "public async Task\u003cActionResult\u003cList\u003cGradeDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.GradesAsync());",
-                           "public async Task\u003cActionResult\u003cGradeDto\u003e\u003e GetById(Guid id) =\u003e await manager.GradeAsync(id)is { } row ? Ok(row) : NotFound();",
-                           "public async Task\u003cActionResult\u003cint\u003e\u003e Count() =\u003e Ok(await manager.GradeCountAsync());",
+                           "public async Task\u003cActionResult\u003cList\u003cGradeDto\u003e\u003e\u003e GetAll() =\u003e Ok(await manager.GradesAsync(HttpContext.RequestAborted));",
+                           "public async Task\u003cActionResult\u003cGradeDto\u003e\u003e GetById(Guid id) =\u003e await manager.GradeAsync(id, HttpContext.RequestAborted)is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cint\u003e\u003e Count() =\u003e Ok(await manager.GradeCountAsync(HttpContext.RequestAborted));",
                            "public async Task\u003cActionResult\u003cGradePageDto\u003e\u003e Paged(",
-                           "public async Task\u003cActionResult\u003cGradeFiltersDto\u003e\u003e Filters() =\u003e Ok(await manager.GradeFiltersAsync());",
-                           "public async Task\u003cActionResult\u003cGradeStatisticsDto\u003e\u003e Statistics() =\u003e await manager.GradeStatisticsAsync()is { } row ? Ok(row) : NotFound();",
-                           "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateGradeDto dto) =\u003e await manager.AddGradeAsync(dto)is { } id ? CreatedAtAction(nameof(GetById), new { id }, id) : NotFound();",
-                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateGradeDto dto) =\u003e await manager.UpdateGradeAsync(id, dto) ? NoContent() : NotFound();",
-                           "public async Task\u003cIActionResult\u003e Delete(Guid id) =\u003e await manager.DeleteGradeAsync(id) ? NoContent() : NotFound();"
+                           "public async Task\u003cActionResult\u003cGradeFiltersDto\u003e\u003e Filters() =\u003e Ok(await manager.GradeFiltersAsync(HttpContext.RequestAborted));",
+                           "public async Task\u003cActionResult\u003cGradeStatisticsDto\u003e\u003e Statistics() =\u003e await manager.GradeStatisticsAsync(HttpContext.RequestAborted)is { } row ? Ok(row) : NotFound();",
+                           "public async Task\u003cActionResult\u003cGuid\u003e\u003e Add(CreateGradeDto dto) =\u003e await manager.AddGradeAsync(dto, HttpContext.RequestAborted)is { } id ? CreatedAtAction(nameof(GetById), new { id }, id) : NotFound();",
+                           "public async Task\u003cActionResult\u003cGradeBatchResultDto\u003e\u003e AddBatch(CreateGradeBatchDto dto) =\u003e StatusCode(StatusCodes.Status201Created, await manager.AddGradeBatchAsync(dto, HttpContext.RequestAborted));",
+                           "public async Task\u003cIActionResult\u003e Update(Guid id, UpdateGradeDto dto) =\u003e await manager.UpdateGradeAsync(id, dto, HttpContext.RequestAborted) ? NoContent() : NotFound();",
+                           "public async Task\u003cIActionResult\u003e Delete(Guid id) =\u003e await manager.DeleteGradeAsync(id, HttpContext.RequestAborted) ? NoContent() : NotFound();"
                        ],
         "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
     },
@@ -1502,7 +1519,7 @@
     {
         "controller":  "InstitutionImportController",
         "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionImportController.cs",
-        "sourceSha256":  "971633fc0ff11754287113031c43b99f6645975a35c8654194e05ba1f1407e56",
+        "sourceSha256":  "dffad7a56b925e3de4c180938b04520ad9e7f6109a08328a15542dc049fd679a",
         "contractLines":  [
                               {
                                   "line":  13,
@@ -1517,77 +1534,77 @@
                                   "text":  "[HttpGet(\"templates/students.csv\")]"
                               },
                               {
-                                  "line":  21,
-                                  "text":  "public async Task\u003cIActionResult\u003e StudentTemplate(CancellationToken ct) =\u003e File(await manager.TemplateAsync(ImportCategory.Student, ct), \"text/csv; charset=utf-8\", \"students.csv\");"
+                                  "line":  22,
+                                  "text":  "public async Task\u003cIActionResult\u003e StudentTemplate(CancellationToken ct, [FromQuery] string? emailMode = null)"
                               },
                               {
-                                  "line":  22,
+                                  "line":  29,
                                   "text":  "[HttpGet(\"templates/teachers.csv\")]"
                               },
                               {
-                                  "line":  23,
+                                  "line":  30,
                                   "text":  "public async Task\u003cIActionResult\u003e TeacherTemplate(CancellationToken ct) =\u003e File(await manager.TemplateAsync(ImportCategory.Teacher, ct), \"text/csv; charset=utf-8\", \"teachers.csv\");"
                               },
                               {
-                                  "line":  24,
+                                  "line":  31,
                                   "text":  "[HttpPost(\"preview\"), Consumes(\"multipart/form-data\"), RequestSizeLimit(64 * 1024 * 1024 + 262144), RequestFormLimits(MultipartBodyLengthLimit = 64 * 1024 * 1024 + 262144), EnableRateLimiting(\"InstitutionImportUpload\")]"
                               },
                               {
-                                  "line":  25,
+                                  "line":  32,
                                   "text":  "public async Task\u003cIActionResult\u003e Preview("
                               },
                               {
-                                  "line":  51,
+                                  "line":  58,
                                   "text":  "[HttpGet]"
                               },
                               {
-                                  "line":  52,
+                                  "line":  59,
                                   "text":  "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int page = 1, int size = 20) =\u003e Ok(await manager.ListAsync(page, size, ct));"
                               },
                               {
-                                  "line":  53,
+                                  "line":  60,
                                   "text":  "[HttpGet(\"{id:guid}\")]"
                               },
                               {
-                                  "line":  54,
+                                  "line":  61,
                                   "text":  "public async Task\u003cIActionResult\u003e Get(Guid id, CancellationToken ct) =\u003e Ok(await manager.GetAsync(id, ct));"
                               },
                               {
-                                  "line":  55,
+                                  "line":  62,
                                   "text":  "[HttpGet(\"{id:guid}/rows\")]"
                               },
                               {
-                                  "line":  56,
+                                  "line":  63,
                                   "text":  "public async Task\u003cIActionResult\u003e Rows("
                               },
                               {
-                                  "line":  62,
+                                  "line":  69,
                                   "text":  "[HttpPut(\"{id:guid}/mapping\")]"
                               },
                               {
-                                  "line":  63,
+                                  "line":  70,
                                   "text":  "public async Task\u003cIActionResult\u003e Remap(Guid id, ImportRemap request, CancellationToken ct) =\u003e Ok(await manager.RemapAsync(id, request, ct));"
                               },
                               {
-                                  "line":  64,
+                                  "line":  71,
                                   "text":  "[HttpPost(\"{id:guid}/confirm\")]"
                               },
                               {
-                                  "line":  65,
+                                  "line":  72,
                                   "text":  "public async Task\u003cIActionResult\u003e Confirm(Guid id, ImportConfirmation request, CancellationToken ct) =\u003e Ok(await manager.ConfirmAsync(id, request, ct));"
                               },
                               {
-                                  "line":  66,
+                                  "line":  73,
                                   "text":  "[HttpGet(\"{id:guid}/result\")]"
                               },
                               {
-                                  "line":  67,
+                                  "line":  74,
                                   "text":  "public async Task\u003cIActionResult\u003e Result(Guid id, CancellationToken ct) =\u003e Ok(await manager.ResultAsync(id, ct));"
                               }
                           ],
         "signatures":  [
                            "public sealed class InstitutionImportController(IInstitutionImportManager manager) : ControllerBase",
-                           "public async Task\u003cIActionResult\u003e StudentTemplate(CancellationToken ct) =\u003e File(await manager.TemplateAsync(ImportCategory.Student, ct), \"text/csv; charset=utf-8\", \"students.csv\");",
+                           "public async Task\u003cIActionResult\u003e StudentTemplate(CancellationToken ct, [FromQuery] string? emailMode = null)",
                            "public async Task\u003cIActionResult\u003e TeacherTemplate(CancellationToken ct) =\u003e File(await manager.TemplateAsync(ImportCategory.Teacher, ct), \"text/csv; charset=utf-8\", \"teachers.csv\");",
                            "public async Task\u003cIActionResult\u003e Preview(",
                            "public async Task\u003cIActionResult\u003e List(CancellationToken ct, int page = 1, int size = 20) =\u003e Ok(await manager.ListAsync(page, size, ct));",
@@ -2108,7 +2125,7 @@
     {
         "controller":  "InstitutionSubmissionController",
         "source":  "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/Controllers/InstitutionSubmissionController.cs",
-        "sourceSha256":  "9a37ce285c30b69ea3b03f87cb99215f3e899a5f10696d5435c8e35b56354cf3",
+        "sourceSha256":  "7a979f37ec8c1412421764c548af9c0e870cc6e7aea4a65789edbbac5d50dcb1",
         "contractLines":  [
                               {
                                   "line":  9,
@@ -2124,7 +2141,7 @@
                               },
                               {
                                   "line":  13,
-                                  "text":  "public async Task\u003cActionResult\u003cSubmissionSessionDto\u003e\u003e Session(Guid id) =\u003e Ok(await manager.SessionAsync(id));"
+                                  "text":  "public async Task\u003cActionResult\u003cSubmissionSessionDto\u003e\u003e Session(Guid id) =\u003e Ok(await manager.SessionAsync(id, HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  14,
@@ -2132,7 +2149,7 @@
                               },
                               {
                                   "line":  15,
-                                  "text":  "public async Task\u003cActionResult\u003cSaveAnswersResponseDto\u003e\u003e Save(Guid id, SaveExamAnswersDto dto) =\u003e Ok(await manager.SaveAsync(id, dto));"
+                                  "text":  "public async Task\u003cActionResult\u003cSaveAnswersResponseDto\u003e\u003e Save(Guid id, SaveExamAnswersDto dto) =\u003e Ok(await manager.SaveAsync(id, dto, HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  16,
@@ -2140,7 +2157,7 @@
                               },
                               {
                                   "line":  17,
-                                  "text":  "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Submit(Guid id, SubmitExamDto dto) =\u003e Ok(await manager.SubmitAsync(id, dto));"
+                                  "text":  "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Submit(Guid id, SubmitExamDto dto) =\u003e Ok(await manager.SubmitAsync(id, dto, HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  18,
@@ -2156,7 +2173,7 @@
                               },
                               {
                                   "line":  27,
-                                  "text":  "public async Task\u003cActionResult\u003cViolationReceiptDto\u003e\u003e ReportViolation(Guid id, InstitutionViolationDto dto) =\u003e Ok(await manager.ReportViolationAsync(id, dto));"
+                                  "text":  "public async Task\u003cActionResult\u003cViolationReceiptDto\u003e\u003e ReportViolation(Guid id, InstitutionViolationDto dto) =\u003e Ok(await manager.ReportViolationAsync(id, dto, HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  28,
@@ -2164,7 +2181,7 @@
                               },
                               {
                                   "line":  29,
-                                  "text":  "public async Task\u003cActionResult\u003cList\u003cViolationEventDto\u003e\u003e\u003e Violations(Guid id) =\u003e Ok(await manager.ViolationsAsync(id));"
+                                  "text":  "public async Task\u003cActionResult\u003cList\u003cViolationEventDto\u003e\u003e\u003e Violations(Guid id) =\u003e Ok(await manager.ViolationsAsync(id, HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  30,
@@ -2172,7 +2189,7 @@
                               },
                               {
                                   "line":  31,
-                                  "text":  "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e OwnWork(Guid id) =\u003e Ok(await manager.OwnWorkAsync(id));"
+                                  "text":  "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e OwnWork(Guid id) =\u003e Ok(await manager.OwnWorkAsync(id, HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  32,
@@ -2180,7 +2197,7 @@
                               },
                               {
                                   "line":  33,
-                                  "text":  "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e Review(Guid id) =\u003e Ok(await manager.ReviewAsync(id));"
+                                  "text":  "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e Review(Guid id) =\u003e Ok(await manager.ReviewAsync(id, HttpContext.RequestAborted));"
                               },
                               {
                                   "line":  34,
@@ -2204,22 +2221,22 @@
                               },
                               {
                                   "line":  49,
-                                  "text":  "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Result(Guid id) =\u003e Ok(await manager.ResultAsync(id));"
+                                  "text":  "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Result(Guid id) =\u003e Ok(await manager.ResultAsync(id, HttpContext.RequestAborted));"
                               }
                           ],
         "signatures":  [
                            "public sealed class InstitutionSubmissionController(IInstitutionExamManager manager) : ControllerBase",
-                           "public async Task\u003cActionResult\u003cSubmissionSessionDto\u003e\u003e Session(Guid id) =\u003e Ok(await manager.SessionAsync(id));",
-                           "public async Task\u003cActionResult\u003cSaveAnswersResponseDto\u003e\u003e Save(Guid id, SaveExamAnswersDto dto) =\u003e Ok(await manager.SaveAsync(id, dto));",
-                           "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Submit(Guid id, SubmitExamDto dto) =\u003e Ok(await manager.SubmitAsync(id, dto));",
+                           "public async Task\u003cActionResult\u003cSubmissionSessionDto\u003e\u003e Session(Guid id) =\u003e Ok(await manager.SessionAsync(id, HttpContext.RequestAborted));",
+                           "public async Task\u003cActionResult\u003cSaveAnswersResponseDto\u003e\u003e Save(Guid id, SaveExamAnswersDto dto) =\u003e Ok(await manager.SaveAsync(id, dto, HttpContext.RequestAborted));",
+                           "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Submit(Guid id, SubmitExamDto dto) =\u003e Ok(await manager.SubmitAsync(id, dto, HttpContext.RequestAborted));",
                            "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e SubmitExpired(Guid id)",
-                           "public async Task\u003cActionResult\u003cViolationReceiptDto\u003e\u003e ReportViolation(Guid id, InstitutionViolationDto dto) =\u003e Ok(await manager.ReportViolationAsync(id, dto));",
-                           "public async Task\u003cActionResult\u003cList\u003cViolationEventDto\u003e\u003e\u003e Violations(Guid id) =\u003e Ok(await manager.ViolationsAsync(id));",
-                           "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e OwnWork(Guid id) =\u003e Ok(await manager.OwnWorkAsync(id));",
-                           "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e Review(Guid id) =\u003e Ok(await manager.ReviewAsync(id));",
+                           "public async Task\u003cActionResult\u003cViolationReceiptDto\u003e\u003e ReportViolation(Guid id, InstitutionViolationDto dto) =\u003e Ok(await manager.ReportViolationAsync(id, dto, HttpContext.RequestAborted));",
+                           "public async Task\u003cActionResult\u003cList\u003cViolationEventDto\u003e\u003e\u003e Violations(Guid id) =\u003e Ok(await manager.ViolationsAsync(id, HttpContext.RequestAborted));",
+                           "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e OwnWork(Guid id) =\u003e Ok(await manager.OwnWorkAsync(id, HttpContext.RequestAborted));",
+                           "public async Task\u003cActionResult\u003cSubmissionReviewDto\u003e\u003e Review(Guid id) =\u003e Ok(await manager.ReviewAsync(id, HttpContext.RequestAborted));",
                            "public async Task\u003cIActionResult\u003e Review(Guid id, ReviewOpenAnswersDto dto)",
                            "public async Task\u003cIActionResult\u003e FinalizeSubmission(Guid id, FinalizeSubmissionDto dto)",
-                           "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Result(Guid id) =\u003e Ok(await manager.ResultAsync(id));"
+                           "public async Task\u003cActionResult\u003cSubmissionResultDto\u003e\u003e Result(Guid id) =\u003e Ok(await manager.ResultAsync(id, HttpContext.RequestAborted));"
                        ],
         "kind":  "Source contract index; policy composition and runtime discovery additionally verified by HTTP suites"
     },

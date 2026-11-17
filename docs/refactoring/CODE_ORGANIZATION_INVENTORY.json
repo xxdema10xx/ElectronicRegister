@@ -1,6 +1,6 @@
 {
-  "filesAnalyzed": 715,
-  "typesClassified": 712,
+  "filesAnalyzed": 723,
+  "typesClassified": 720,
   "entries": [
     {
       "file": "Backend/ElectronicRegisterAPI/src/Api/ElectronicRegisterAPI/BackgroundServices/ExpiredExamSubmissionWorker.cs",
@@ -1321,7 +1321,7 @@
             },
             {
               "name": "Work",
-              "visibility": "\n    private sealed "
+              "visibility": "\r\n    private sealed "
             },
             {
               "name": "AuthorizedTransaction",
@@ -2585,6 +2585,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/CreateGradeBatchDto.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.DTOs",
+      "classification": "DTOs",
+      "types": [
+        {
+          "name": "CreateGradeBatchDto",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/CreateGradeDto.cs",
       "layer": "Domain",
       "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
@@ -3332,6 +3348,70 @@
         {
           "name": "MembershipAuditEntry",
           "kind": "RecordDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/GradeBatchCreatedDto.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.DTOs",
+      "classification": "DTOs",
+      "types": [
+        {
+          "name": "GradeBatchCreatedDto",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/GradeBatchItemDto.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.DTOs",
+      "classification": "DTOs",
+      "types": [
+        {
+          "name": "GradeBatchItemDto",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/GradeBatchResultDto.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.DTOs",
+      "classification": "DTOs",
+      "types": [
+        {
+          "name": "GradeBatchResultDto",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/DTOs/GradeBatchRowErrorDto.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.DTOs",
+      "classification": "DTOs",
+      "types": [
+        {
+          "name": "GradeBatchRowErrorDto",
+          "kind": "ClassDeclaration",
           "nestedTypes": []
         }
       ]
@@ -5475,6 +5555,22 @@
       "types": [
         {
           "name": "FormativePublicationException",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain/Exceptions/GradeBatchValidationException.cs",
+      "layer": "Domain",
+      "project": "Backend/ElectronicRegisterAPI/src/Domain/ElectronicRegisterAPI.Domain",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Domain.Exceptions",
+      "classification": "Exceptions",
+      "types": [
+        {
+          "name": "GradeBatchValidationException",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -8803,6 +8899,22 @@
       ]
     },
     {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.GradeBatches.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Persistence",
+      "classification": "Persistence",
+      "types": [
+        {
+          "name": "ElectronicRegisterContext",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
       "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/ElectronicRegisterContext.InstitutionAdministration.cs",
       "layer": "Infrastructure",
       "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
@@ -9357,6 +9469,22 @@
       "types": [
         {
           "name": "FormativeUnit",
+          "kind": "ClassDeclaration",
+          "nestedTypes": []
+        }
+      ]
+    },
+    {
+      "file": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure/Persistence/Entities/Grade.Batch.cs",
+      "layer": "Infrastructure",
+      "project": "Backend/ElectronicRegisterAPI/src/Infrastructure/ElectronicRegisterAPI.Infrastructure",
+      "generated": false,
+      "exclusionReason": "",
+      "namespace": "ElectronicRegisterAPI.Infrastructure.Persistence.Entities",
+      "classification": "Persistence/Entities",
+      "types": [
+        {
+          "name": "Grade",
           "kind": "ClassDeclaration",
           "nestedTypes": []
         }
@@ -10630,7 +10758,7 @@
           "nestedTypes": [
             {
               "name": "BoundRepositories",
-              "visibility": "\n    private sealed "
+              "visibility": "\r\n    private sealed "
             }
           ]
         }

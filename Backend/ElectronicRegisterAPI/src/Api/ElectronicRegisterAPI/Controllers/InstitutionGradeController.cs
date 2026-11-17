@@ -32,6 +32,9 @@ public sealed class InstitutionGradeController(IInstitutionExamManager manager) 
     [HttpPost, Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     [InstitutionPermission(InstitutionPermission.GradeCreate)]
     public async Task<ActionResult<Guid>> Add(CreateGradeDto dto) => await manager.AddGradeAsync(dto, HttpContext.RequestAborted)is { } id ? CreatedAtAction(nameof(GetById), new { id }, id) : NotFound();
+    [HttpPost("batch"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
+    [InstitutionPermission(InstitutionPermission.GradeCreate)]
+    public async Task<ActionResult<GradeBatchResultDto>> AddBatch(CreateGradeBatchDto dto) => StatusCode(StatusCodes.Status201Created, await manager.AddGradeBatchAsync(dto, HttpContext.RequestAborted));
     [HttpPut("{id:guid}"), Authorize(Roles = "InstitutionAdmin,Staff,Teacher")]
     [InstitutionPermission(InstitutionPermission.GradeUpdate)]
     public async Task<IActionResult> Update(Guid id, UpdateGradeDto dto) => await manager.UpdateGradeAsync(id, dto, HttpContext.RequestAborted) ? NoContent() : NotFound();

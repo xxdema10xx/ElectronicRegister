@@ -285,7 +285,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         var result = (await response.Content.ReadFromJsonAsync<SubmissionResultDto>())!;
         Assert.Equal(type == QuestionType.Open ? SubmissionStatus.PendingReview : SubmissionStatus.Graded, result.Status);
         Assert.Equal(type == QuestionType.Open ? null : (bool?)false, result.Passed);
-        if (type == QuestionType.Open) Assert.Null(result.Grade); else Assert.Equal(1, result.Grade);
+        if (type == QuestionType.Open) Assert.Null(result.Grade); else Assert.Equal(0, result.Grade); // no points: the scale minimum, 0/30
         await Expect(await Request(Submission(start.SubmissionId, "submit-expired"), student, method: "POST"), HttpStatusCode.OK);
         await Db(async db =>
         {
@@ -469,7 +469,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
     {
         var endpoints = _host.Host.Services.GetRequiredService<Microsoft.AspNetCore.Routing.EndpointDataSource>().Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<InstitutionExamEndpointAttribute>() is not null).ToArray();
-        Assert.Equal(38, endpoints.Length);
+        Assert.Equal(39, endpoints.Length); // 38 + POST grades/batch
         foreach (var endpoint in endpoints)
         foreach (var method in endpoint.Metadata.GetMetadata<Microsoft.AspNetCore.Routing.HttpMethodMetadata>()!.HttpMethods)
             yield return (method, "/" + Regex.Replace(endpoint.RoutePattern.RawText!, "\\{[^}]+\\}", _ => Guid.NewGuid().ToString()));
@@ -683,7 +683,7 @@ public sealed partial class Mt3dHttpTests(IntegrationFixture fixture) : IAsyncLi
         Assert.Equal(new[] { InstitutionTokenContract.AccessScheme }, policy!.AuthenticationSchemes);
         var endpoints = host.Host.Services.GetRequiredService<Microsoft.AspNetCore.Routing.EndpointDataSource>().Endpoints.OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
             .Where(e => e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>() is not null).ToArray();
-        Assert.Equal(123, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null && e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null && e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()!.ControllerName!="InvitationAcceptance"));
+        Assert.Equal(124, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is null && e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is null && e.Metadata.GetMetadata<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()!.ControllerName!="InvitationAcceptance"));
         MembershipHttpSurface.AssertRoutes(endpoints); Assert.Equal(MembershipHttpSurface.AdminCount, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionMembershipAdminEndpointAttribute>() is not null));
         Assert.Equal(23, endpoints.Count(e => e.Metadata.GetMetadata<InstitutionCourseEndpointAttribute>() is not null));
         Assert.Equal(MembershipHttpSurface.MvcCount, endpoints.Length);
