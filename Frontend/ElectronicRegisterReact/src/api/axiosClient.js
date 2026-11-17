@@ -58,6 +58,7 @@ const TIMEOUT_MESSAGE = "Il server non risponde, riprova";
 const NETWORK_MESSAGE = "Impossibile contattare il server. Controlla la connessione e riprova.";
 const GATEWAY_MESSAGE = "Il server non è disponibile in questo momento, riprova tra poco.";
 const NOT_FOUND_MESSAGE = "Elemento non trovato: potrebbe essere stato eliminato.";
+const SERVER_ERROR_MESSAGE = "Si è verificato un errore sul server. Riprova più tardi.";
 const isHtml = (text) => /<\s*(!doctype|html|head|body)\b/i.test(text);
 
 // Normalizza gli errori di rete/HTTP in un semplice Error con un messaggio
@@ -74,6 +75,11 @@ axiosClient.interceptors.response.use(
     if (problem && GENERIC_TITLES.includes(problem)) problem = null;
     if (data?.errors && typeof data.errors === "object") problem = "Dati non validi: controlla i campi.";
     const timedOut = error.code === "ECONNABORTED" || error.code === "ETIMEDOUT";
+    // 5xx: il detail del server può contenere dettagli interni e non si mostra mai; si dà il codice di
+    // correlazione (X-Correlation-ID) da comunicare all'assistenza
+    const serverError = status >= 500;
+    if (serverError) problem = null;
+    const correlationId = error.response?.headers?.["x-correlation-id"] || error.response?.headers?.["X-Correlation-ID"];
     // Mai testo grezzo: errori di rete e risposte del gateway diventano un messaggio comprensibile.
     // Per i casi 404 e 409 degli esami le schermate usano utils/examErrors.js.
     const message =
@@ -81,6 +87,8 @@ axiosClient.interceptors.response.use(
       !error.response ? NETWORK_MESSAGE :
       status >= 502 && status <= 504 ? GATEWAY_MESSAGE :
       (typeof data === "string" && isHtml(data)) ? GATEWAY_MESSAGE :
+      status === 429 ? STATUS_MESSAGES[429] :
+      serverError ? `${SERVER_ERROR_MESSAGE}${correlationId ? ` Codice per l'assistenza: ${correlationId}` : ""}` :
       status === 404 ? NOT_FOUND_MESSAGE :
       (typeof data === "string" && data) ? data :
       problem ? problem :

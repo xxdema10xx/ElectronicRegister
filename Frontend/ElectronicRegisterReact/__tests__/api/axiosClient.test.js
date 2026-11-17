@@ -7,7 +7,7 @@ import { isHandledError } from "../../src/utils/handledErrors";
 function respond(fake) {
   axiosClient.defaults.adapter = (config) => {
     if (fake.network) return Promise.reject(Object.assign(new Error("Network Error"), { config, code: fake.code }));
-    const response = { status: fake.status, data: fake.data, headers: {}, config };
+    const response = { status: fake.status, data: fake.data, headers: fake.headers || {}, config };
     if (fake.status < 400) return Promise.resolve(response);
     return Promise.reject(Object.assign(new Error(`Request failed with status code ${fake.status}`), { config, response }));
   };
@@ -30,6 +30,12 @@ describe("messaggi di errore", () => {
     ["solo codice", { status: 409, data: { code: "calendar.revision-conflict" } }, "Errore: calendar.revision-conflict"],
     ["403", { status: 403, data: {} }, "Non hai i permessi per questa operazione (o la funzione non è attiva)."],
     ["400 senza dettagli", { status: 400, data: {} }, "Dati non validi."],
+    ["D-11: 429 con titolo del server", { status: 429, data: { title: "Too Many Requests", detail: "Rate limit" } }, "Troppe richieste: attendi un minuto e riprova."],
+    ["D-11: 429 senza corpo", { status: 429, data: "" }, "Troppe richieste: attendi un minuto e riprova."],
+    ["D-12: 500 con detail interno", { status: 500, data: { title: "Errore", detail: "SqlException: Timeout at Db.Query" } }, "Si è verificato un errore sul server. Riprova più tardi."],
+    ["D-12: 500 con codice di correlazione", { status: 500, data: { detail: "NullReferenceException" }, headers: { "x-correlation-id": "abc-123" } },
+      "Si è verificato un errore sul server. Riprova più tardi. Codice per l'assistenza: abc-123"],
+    ["D-12: 501 testo semplice", { status: 501, data: "stack trace…" }, "Si è verificato un errore sul server. Riprova più tardi."],
   ])("%s", async (_, fake, message) => {
     const e = await fail(fake);
     expect(e).toBeInstanceOf(Error);
@@ -39,6 +45,12 @@ describe("messaggi di errore", () => {
   test("l'errore porta status, problem e code", async () => {
     const e = await fail({ status: 409, data: { detail: "Motivo", code: "exam.locked" } });
     expect(e).toMatchObject({ status: 409, problem: "Motivo", code: "exam.locked" });
+  });
+
+  test("D-12: per i 5xx il detail del server non arriva alle schermate", async () => {
+    const e = await fail({ status: 500, data: { detail: "SqlException", code: "db.error" } });
+    expect(e.problem).toBeNull();
+    expect(e.message).not.toMatch(/SqlException|db\.error/);
   });
 
   test("le risposte riuscite passano invariate", async () => {
