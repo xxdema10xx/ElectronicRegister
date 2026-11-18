@@ -20,7 +20,7 @@ import LessonActions from "../components/LessonActions";
 import CalendarImportScreen from "./CalendarImportScreen";
 import CalendarSettingsForm from "../components/CalendarSettingsForm";
 import ClassHoursReport from "../components/ClassHoursReport";
-import { getClassesForPicker, getSchedule } from "../api/lessonService";
+import { classListErrorMessage, getClassesForPicker, getSchedule } from "../api/lessonService";
 import { getTeachers } from "../api/teacherService";
 import { calendarErrorMessage, getCalendarSettings } from "../api/calendarImportService";
 import { useLessons, useWeek } from "../hooks/useWeekSchedule";
@@ -72,7 +72,12 @@ function Tabs({ value, onChange, views }) {
 
 // showCancelled vive nella pagina (e su web nell'URL, ?annullate=1): resta attivo cambiando settimana,
 // classe o scheda e dopo una ricarica
-function LessonsView({ role, classes, classId, setClassId, teachers, showCancelled, setShowCancelled }) {
+// Errore sull'elenco delle classi, mostrato sopra il selettore (es. 403)
+const ClassesError = ({ message }) => (message
+  ? <Text accessibilityRole="alert" style={{ color: C.danger, fontSize: 13, marginBottom: 8 }}>{message}</Text>
+  : null);
+
+function LessonsView({ role, classes, classesError, classId, setClassId, teachers, showCancelled, setShowCancelled }) {
   const { token } = useAuth();
   const { week, prev, next, today } = useWeek();
   const [openLessonId, setOpenLessonId] = useState(null);
@@ -90,6 +95,7 @@ function LessonsView({ role, classes, classId, setClassId, teachers, showCancell
     <Card>
       <Text style={s.sectionTitle}>Lezioni della classe</Text>
       <Text style={[s.itemSub, { marginBottom: 12 }]}>Bozze e lezioni pubblicate. Tocca una lezione per vederne i dettagli, annullarla, spostarla o sostituire il docente.</Text>
+      <ClassesError message={classesError} />
       <SelectField label="Classe" value={classId} options={classes} onSelect={setClassId} getLabel={c => c.name} placeholder="Seleziona classe" emptyMessage="Nessuna classe" />
       {!classId ? <Text style={s.itemSub}>Scegli una classe.</Text> : (
         <>
@@ -111,6 +117,7 @@ export default function CalendarScreen({ role }) {
   const initial = readSearchParams();
   const [view, setView] = useState(views.some(v => v.key === initial.vista) ? initial.vista : "lezioni");
   const [classes, setClasses] = useState([]);
+  const [classesError, setClassesError] = useState(null);
   const [classId, setClassId] = useState(initial.classe || null);
   const [teachers, setTeachers] = useState([]);
   const [showCancelled, setShowCancelled] = useState(initial.annullate === "1");
@@ -121,12 +128,13 @@ export default function CalendarScreen({ role }) {
 
   useEffect(() => {
     let alive = true;
-    getClassesForPicker(token)
-      .then(list => { if (alive) { setClasses(list); setClassId(prev => (prev && list.some(c => c.id === prev) ? prev : list[0]?.id || null)); } })
-      .catch(() => { if (alive) setClasses([]); });
+    getClassesForPicker(token, role)
+      .then(list => { if (alive) { setClasses(list); setClassesError(null); setClassId(prev => (prev && list.some(c => c.id === prev) ? prev : list[0]?.id || null)); } })
+      // Mai in silenzio: senza l'elenco la pagina sembrerebbe un istituto senza classi
+      .catch(e => { if (alive) { setClasses([]); setClassesError(classListErrorMessage(e)); } });
     getTeachers(token).then(d => { if (alive) setTeachers(Array.isArray(d) ? d : []); }).catch(() => {});
     return () => { alive = false; };
-  }, [token]);
+  }, [token, role]);
 
   useEffect(() => {
     replaceSearchParams({
@@ -148,12 +156,13 @@ export default function CalendarScreen({ role }) {
       )}
       {view !== "importa" && (
         <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 32 }}>
-          {view === "lezioni" && <LessonsView role={role} classes={classes} classId={classId} setClassId={setClassId} teachers={teachers}
+          {view === "lezioni" && <LessonsView role={role} classes={classes} classesError={classesError} classId={classId} setClassId={setClassId} teachers={teachers}
             showCancelled={showCancelled} setShowCancelled={setShowCancelled} />}
           {view === "ore" && (
             <Card>
               <Text style={s.sectionTitle}>Monte ore</Text>
               <Text style={[s.itemSub, { marginBottom: 12 }]}>Per ogni modulo del piano formativo: ore previste, programmate (lezioni pubblicate non annullate) e svolte. Contano tutti i docenti, titolari e supplenti.</Text>
+              <ClassesError message={classesError} />
               <SelectField label="Classe" value={classId} options={classes} onSelect={setClassId} getLabel={c => c.name} placeholder="Seleziona classe" emptyMessage="Nessuna classe" />
               <ClassHoursReport classId={classId} />
             </Card>

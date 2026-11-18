@@ -4,7 +4,9 @@ import { session } from "../../src/api/session";
 import {
   getActiveBienni, getAllClasses, getClassDetail, getClasses, getMyClasses, getStudentClassSubjects, getStudyAreas, getStudyPaths,
 } from "../../src/api/classService";
-import { DAYS, currentWeek, formatWeekRange, getClassesForPicker, getSchedule, lessonLabels, parseYmd, shiftWeek, toLesson, weekOf } from "../../src/api/lessonService";
+import {
+  CLASS_LIST_FORBIDDEN_MESSAGE, DAYS, classListErrorMessage, currentWeek, formatWeekRange, getClassesForPicker, getSchedule, lessonLabels, parseYmd, shiftWeek, toLesson, weekOf,
+} from "../../src/api/lessonService";
 
 // Server finto: path → dati (o funzione dei params)
 function serve(routes) {
@@ -191,5 +193,31 @@ describe("orario delle lezioni", () => {
   test("classi per il selettore: solo id e nome, in ordine", async () => {
     serve({ "/institution/classes": [{ id: "2", name: "SW-25B", x: 1 }, { id: "1", name: "SW-25A" }] });
     await expect(getClassesForPicker("tok")).resolves.toEqual([{ id: "1", name: "SW-25A" }, { id: "2", name: "SW-25B" }]);
+  });
+
+  test("admin: le classi arrivano dal catalogo, non dalle classi-materie", async () => {
+    serve({ "/institution/classes": [{ id: "1", name: "SW-25A" }] });
+    await expect(getClassesForPicker("tok", "admin")).resolves.toEqual([{ id: "1", name: "SW-25A" }]);
+    expect(axiosClient.get.mock.calls.map(c => c[0])).toEqual(["/institution/classes"]);
+  });
+
+  test("staff: classi distinte dalle classi-materie, ordinate per nome, senza chiamare il catalogo (403 per lo staff)", async () => {
+    serve({
+      "/institution/class-subjects": [
+        { id: "cs1", classId: "c2", className: "SW-25B", subjectId: "s1" },
+        { id: "cs2", classId: "c1", className: "SW-25A", subjectId: "s1" },
+        { id: "cs3", classId: "c2", className: "SW-25B", subjectId: "s2" },
+      ],
+    });
+    await expect(getClassesForPicker("tok", "staff")).resolves.toEqual([{ id: "c1", name: "SW-25A" }, { id: "c2", name: "SW-25B" }]);
+    expect(axiosClient.get.mock.calls.map(c => c[0])).not.toContain("/institution/classes");
+  });
+
+  test("staff: un 403 sulle classi-materie arriva al chiamante, con un messaggio chiaro", async () => {
+    jest.spyOn(axiosClient, "get").mockRejectedValue(Object.assign(new Error("Non hai i permessi per questa operazione (o la funzione non è attiva)."), { status: 403 }));
+    const error = await getClassesForPicker("tok", "staff").catch(e => e);
+    expect(error.status).toBe(403);
+    expect(classListErrorMessage(error)).toBe(CLASS_LIST_FORBIDDEN_MESSAGE);
+    expect(classListErrorMessage({ status: 500, message: "Errore sul server." })).toBe("Impossibile caricare l'elenco delle classi. Errore sul server.");
   });
 });

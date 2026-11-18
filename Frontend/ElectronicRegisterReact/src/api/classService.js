@@ -48,6 +48,9 @@ export async function getStudyPaths(bienniumStudyAreaId, token) {
 // Tutte le classi dell'istituto: id, name
 export const getAllClasses = (token) => getAll("/institution/classes", token);
 
+// Tutte le classi-materie dell'istituto (leggibili anche dallo staff, a differenza del catalogo delle classi)
+export const getAllClassSubjects = (token) => getAll("/institution/class-subjects", token);
+
 // Classi del corso: id, name
 export const getClasses = (bienniumStudyPathId, token) => getAll("/institution/classes", token, { bienniumStudyPathId });
 

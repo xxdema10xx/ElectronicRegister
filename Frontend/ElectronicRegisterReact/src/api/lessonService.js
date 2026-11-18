@@ -1,7 +1,7 @@
 // src/api/lessonService.js
 // Orario delle lezioni dal calendario del server (docs/api/INSTITUTION_CALENDAR.md), una settimana alla volta.
 import axiosClient, { authHeader } from "./axiosClient";
-import { getAllClasses } from "./classService";
+import { getAllClasses, getAllClassSubjects } from "./classService";
 
 export const DAYS = [
   { id: 1, label: "Lunedì", short: "Lun" }, { id: 2, label: "Martedì", short: "Mar" }, { id: 3, label: "Mercoledì", short: "Mer" },
@@ -119,7 +119,19 @@ export async function getSchedule({ role, classId, teacherName, from, to, includ
     .sort((a, b) => String(a.date).localeCompare(String(b.date)) || a.day - b.day || a.start.localeCompare(b.start));
 }
 
-export async function getClassesForPicker(token) {
-  const classes = await getAllClasses(token);
-  return classes.map(c => ({ id: c.id, name: c.name })).sort((a, b) => a.name.localeCompare(b.name));
+// Classi per i selettori: [{ id, name }] ordinate per nome.
+// L'admin legge il catalogo (/institution/classes), che è riservato all'admin: lo staff riceverebbe 403.
+// Per lo staff le classi si ricavano dalle classi-materie, che lo staff può leggere.
+// TODO(API): lo staff vede solo le classi con almeno una materia assegnata (le altre non possono comunque
+// avere lezioni nel calendario, perché ogni lezione richiede la materia della classe).
+export async function getClassesForPicker(token, role) {
+  const list = role === "staff"
+    ? [...new Map((await getAllClassSubjects(token)).filter(cs => cs.classId).map(cs => [cs.classId, { id: cs.classId, name: cs.className || "Classe" }])).values()]
+    : (await getAllClasses(token)).map(c => ({ id: c.id, name: c.name }));
+  return list.sort((a, b) => String(a.name).localeCompare(String(b.name)));
 }
+
+// Errore sull'elenco delle classi: non si ignora mai, la schermata lo mostra al posto dell'elenco
+export const CLASS_LIST_FORBIDDEN_MESSAGE = "Non hai i permessi per vedere l'elenco delle classi: chiedi all'amministratore dell'istituto.";
+export const classListErrorMessage = (e) =>
+  e?.status === 403 ? CLASS_LIST_FORBIDDEN_MESSAGE : `Impossibile caricare l'elenco delle classi. ${e?.message || "Riprova."}`;

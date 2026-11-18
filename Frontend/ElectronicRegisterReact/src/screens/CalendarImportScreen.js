@@ -18,7 +18,7 @@ import Loader from "../components/Loader";
 import CalendarSettingsForm from "../components/CalendarSettingsForm";
 import { calendarTemplateCsv, canDownload, downloadCsv, teachersCsv } from "../utils/csvDownload";
 import { notify, confirmAction } from "../utils/dialogs";
-import { getClassesForPicker } from "../api/lessonService";
+import { classListErrorMessage, getClassesForPicker } from "../api/lessonService";
 import { getTeachers } from "../api/teacherService";
 import {
   FILE_TOO_LARGE_MESSAGE, HOUR_WARNING_LABELS, IMPORT_MODES, MAX_UPLOAD_BYTES, calendarErrorMessage, confirmImport, confirmLabel, conflictMessage,
@@ -67,13 +67,15 @@ function Stat({ label, value, color }) {
 const Note = ({ children, color = C.textMuted }) => <Text style={{ color, fontSize: 13, marginBottom: 6 }}>{children}</Text>;
 
 export default function CalendarImportScreen() {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
+  const role = user?.role;
   const months = useMemo(() => monthOptions(), []);
 
   const [settings, setSettings] = useState(undefined); // undefined: caricamento · null: da configurare
   const [settingsError, setSettingsError] = useState(null);
   const [settingsVersion, setSettingsVersion] = useState(0);
   const [classes, setClasses] = useState([]);
+  const [classesError, setClassesError] = useState(null);
   const [teachers, setTeachers] = useState([]);
   const [showTeacherIds, setShowTeacherIds] = useState(false);
 
@@ -104,12 +106,15 @@ export default function CalendarImportScreen() {
 
   useEffect(() => {
     let alive = true;
-    getClassesForPicker(token).then(d => { if (alive) setClasses(d); }).catch(() => {});
+    getClassesForPicker(token, role)
+      .then(d => { if (alive) { setClasses(d); setClassesError(null); } })
+      // Mai in silenzio: un 403 non deve sembrare "nessuna classe"
+      .catch(e => { if (alive) { setClasses([]); setClassesError(classListErrorMessage(e)); } });
     getTeachers(token)
       .then(d => { if (alive) setTeachers((Array.isArray(d) ? d : []).slice().sort((a, b) => `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`))); })
       .catch(() => {});
     return () => { alive = false; };
-  }, [token]);
+  }, [token, role]);
 
   // L'anteprima vale solo per mese, classi e modalità con cui è stata generata
   useEffect(() => { setPreview(null); setAck(false); }, [monthId, classIds, mode]);
@@ -240,7 +245,8 @@ export default function CalendarImportScreen() {
       <Section title="1. Mese e classi" subtitle="Le lezioni del file devono cadere tutte nel mese scelto e riguardare solo le classi selezionate.">
         <SelectField label="Mese" value={monthId} options={months} onSelect={setMonthId} getLabel={m => m.name} />
         <Text style={s.label}>Classi</Text>
-        {classes.length === 0 ? <Note>Nessuna classe disponibile.</Note> : (
+        {classesError ? <Text accessibilityRole="alert" style={{ color: C.danger, fontSize: 13, marginBottom: 8 }}>{classesError}</Text>
+          : classes.length === 0 ? <Note>Nessuna classe disponibile.</Note> : (
           <View style={{ flexDirection: "row", flexWrap: "wrap", columnGap: 24 }}>
             {classes.map(c => (
               // maxWidth: i nomi lunghi vanno a capo invece di uscire dal riquadro (telefono)

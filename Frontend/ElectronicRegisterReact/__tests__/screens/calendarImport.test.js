@@ -11,7 +11,7 @@ jest.mock("../../src/api/calendarImportService", () => ({
   ...jest.requireActual("../../src/api/calendarImportService"),
   getCalendarSettings: jest.fn(), previewImport: jest.fn(), confirmImport: jest.fn(), getMonthStatus: jest.fn(), publishPeriod: jest.fn(),
 }));
-jest.mock("../../src/api/lessonService");
+jest.mock("../../src/api/lessonService", () => ({ ...jest.requireActual("../../src/api/lessonService"), getClassesForPicker: jest.fn() }));
 jest.mock("../../src/api/calendarService", () => ({ ...jest.requireActual("../../src/api/calendarService"), saveCalendarSettings: jest.fn() }));
 const calendarService = require("../../src/api/calendarService");
 jest.mock("../../src/api/teacherService");
@@ -58,6 +58,23 @@ test("calendario non raggiungibile (403): messaggio chiaro, niente modulo", asyn
   renderAs("staff", <CalendarImportScreen />);
   expect(await screen.findByText("Calendario non disponibile")).toBeTruthy();
   expect(screen.getByText(/Non hai i permessi/)).toBeTruthy();
+});
+
+test("classi secondo il ruolo: l'admin dal catalogo, lo staff dalle classi-materie", async () => {
+  renderAs("admin", <CalendarImportScreen />);
+  expect(await screen.findByText("SW-25A", {}, { timeout: 5000 })).toBeTruthy();
+  expect(lessonService.getClassesForPicker).toHaveBeenLastCalledWith("tok", "admin");
+  renderAs("staff", <CalendarImportScreen />);
+  await flush();
+  expect(lessonService.getClassesForPicker).toHaveBeenLastCalledWith("tok", "staff");
+});
+
+test("403 sull'elenco delle classi: errore chiaro al posto di \"Nessuna classe disponibile\"", async () => {
+  lessonService.getClassesForPicker.mockRejectedValue(Object.assign(new Error("Non hai i permessi"), { status: 403 }));
+  renderAs("staff", <CalendarImportScreen />);
+  expect(await screen.findByText(lessonService.CLASS_LIST_FORBIDDEN_MESSAGE, {}, { timeout: 5000 })).toBeTruthy();
+  expect(screen.queryByText("Nessuna classe disponibile.")).toBeNull();
+  expect(screen.getByRole("button", { name: "Genera anteprima" }).props.accessibilityState.disabled).toBe(true);
 });
 
 test("ID dei docenti visibili a richiesta", async () => {
