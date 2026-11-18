@@ -178,7 +178,7 @@ describe("sezioni nell'URL (AppNav)", () => {
     const onBack = jest.fn();
     act(() => routes.setPageHeader({ title: "Nuovo esame", onBack }));
     expect(screen.getByText("Nuovo esame")).toBeTruthy();
-    fireEvent.press(screen.getByLabelText("Torna a Electronic Register"));
+    fireEvent.press(screen.getByLabelText("Torna a ITSPlatform"));
     expect(onBack).toHaveBeenCalled();
   });
 });

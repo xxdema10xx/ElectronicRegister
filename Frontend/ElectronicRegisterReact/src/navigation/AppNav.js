@@ -24,7 +24,7 @@ import { userDisplayName } from "../utils/userName";
 import { guardedNavigate, isWeb, usePageHeader, useScreenUrl } from "./examRoutes";
 
 const TITLES = {
-  dashboard: "Electronic Register", grades: "Voti", students: "Studenti", myClasses: "Classi", classes: "Classi", exams: "Esami",
+  dashboard: "ITSPlatform", grades: "Voti", students: "Studenti", myClasses: "Classi", classes: "Classi", exams: "Esami",
   teachers: "Professori", subjects: "Materie", users: "Membri", profile: "Profilo", calendar: "Calendario",
 };
 

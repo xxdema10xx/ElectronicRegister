@@ -21,7 +21,7 @@ describe("Login", () => {
     authService.login.mockResolvedValue({ ticket: "tk", passwordChangeRequired: false });
     const onLogin = jest.fn();
     render(<LoginScreen onLogin={onLogin} />);
-    fireEvent.changeText(screen.getByPlaceholderText("allievo_nome@itsumbria.it"), " mario@its.it ");
+    fireEvent.changeText(screen.getByPlaceholderText("Inserisci la tua email"), " mario@its.it ");
     fireEvent.changeText(screen.getByPlaceholderText("••••••••"), "Segreta1!");
     await act(async () => { fireEvent.press(screen.getByText("Entra")); });
     expect(authService.login).toHaveBeenCalledWith("mario@its.it", "Segreta1!");
@@ -31,7 +31,7 @@ describe("Login", () => {
   test("credenziali errate: messaggio del server", async () => {
     authService.login.mockRejectedValue(new Error("Email o password non validi"));
     render(<LoginScreen onLogin={jest.fn()} />);
-    fireEvent.changeText(screen.getByPlaceholderText("allievo_nome@itsumbria.it"), "a@b.it");
+    fireEvent.changeText(screen.getByPlaceholderText("Inserisci la tua email"), "a@b.it");
     fireEvent.changeText(screen.getByPlaceholderText("••••••••"), "x");
     await act(async () => { fireEvent.press(screen.getByText("Entra")); });
     expect(Alert.alert).toHaveBeenCalledWith("Errore login", "Email o password non validi");
@@ -41,7 +41,7 @@ describe("Login", () => {
     authService.login.mockResolvedValue({ ticket: "tk", passwordChangeRequired: true });
     const onLogin = jest.fn();
     render(<LoginScreen onLogin={onLogin} />);
-    fireEvent.changeText(screen.getByPlaceholderText("allievo_nome@itsumbria.it"), "nuovo@its.it");
+    fireEvent.changeText(screen.getByPlaceholderText("Inserisci la tua email"), "nuovo@its.it");
     fireEvent.changeText(screen.getByPlaceholderText("••••••••"), "Temp-AbC");
     await act(async () => { fireEvent.press(screen.getByText("Entra")); });
     expect(onLogin).toHaveBeenCalledWith(expect.objectContaining({ passwordChangeRequired: true }));
