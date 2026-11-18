@@ -4,7 +4,8 @@ import ClassHoursReport from "../../src/components/ClassHoursReport";
 import TeacherHours from "../../src/components/TeacherHours";
 import * as calendarService from "../../src/api/calendarService";
 import * as lessonService from "../../src/api/lessonService";
-import { formatMinutes, getTeacherHours, rangeError, schoolYear } from "../../src/api/calendarService";
+import { formatMinutes, getTeacherHours, rangeError, schoolYear, sortByPlan } from "../../src/api/calendarService";
+import axiosClient from "../../src/api/axiosClient";
 import { flush, renderAs } from "../helpers/render";
 
 jest.mock("../../src/api/calendarService", () => ({
@@ -19,7 +20,10 @@ describe("formato e intervalli", () => {
     expect(formatMinutes(599)).toBe("9 h 59 min");
     expect(formatMinutes(45)).toBe("45 min");
     expect(formatMinutes(600)).toBe("10 h");
-    expect(formatMinutes(0)).toBe("0 min");
+    expect(formatMinutes(0)).toBe("0 h"); // lo zero in ore, come gli altri valori
+    expect(formatMinutes(-0.4)).toBe("0 h");
+    expect(formatMinutes(-90)).toBe("-1 h 30 min");
+    expect(formatMinutes(undefined)).toBe("0 h");
   });
 
   test("anno scolastico e limite di 366 giorni", () => {
@@ -109,5 +113,63 @@ describe("le mie ore (docente)", () => {
     await act(async () => { fireEvent.press(screen.getByText("Aggiorna")); });
     expect(lessonService.getAllLessons).toHaveBeenLastCalledWith("/institution/calendar/teachers/me", { from: "2026-11-01", to: "2026-11-30" }, "tok");
     expect(calendarService.getLessonModule).toHaveBeenCalledTimes(2); // ore previste già in cache
+  });
+});
+
+describe("ordine del piano e formato", () => {
+  test("getPlanNames: nomi e posizione per displayOrder, poi codice (anche se il piano arriva disordinato)", async () => {
+    const real = jest.requireActual("../../src/api/calendarService");
+    jest.spyOn(axiosClient, "get").mockResolvedValue({ data: { units: [
+      { id: "u2", code: "UF2", name: "Web", displayOrder: 1, modules: [{ id: "m3", code: "M3", name: "Sviluppo Web", displayOrder: 0 }] },
+      { id: "u1", code: "UF1", name: "Programmazione", displayOrder: 0, modules: [
+        { id: "m2", code: "M2", name: "Database MySQL", displayOrder: 1 }, { id: "m1", code: "M1", name: "Programmazione C#", displayOrder: 0 }] },
+    ] } });
+    const names = await real.getPlanNames("v1", "tok");
+    expect(names.modules.m1).toBe("M1 · Programmazione C#");
+    expect(names.order.units).toEqual({ u1: 0, u2: 1 });
+    expect(names.order.modules).toEqual({ m1: 0, m2: 1, m3: 2 });
+    axiosClient.get.mockRestore();
+  });
+
+  test("sortByPlan: ordine del piano, gli sconosciuti in fondo nell'ordine ricevuto", () => {
+    const items = [{ id: "x" }, { id: "m3" }, { id: "y" }, { id: "m1" }, { id: "m2" }];
+    expect(sortByPlan(items, "id", { m1: 0, m2: 1, m3: 2 }).map(i => i.id)).toEqual(["m1", "m2", "m3", "x", "y"]);
+    expect(sortByPlan(items, "id").map(i => i.id)).toEqual(["x", "m3", "y", "m1", "m2"]);
+  });
+
+  test("monte ore: moduli e unità nell'ordine del piano (non M3, M2, M1 come dal server); zero come «0 h»", async () => {
+    calendarService.getClassHours.mockResolvedValue({
+      classId: "c1", versionId: "v1", plannedMinutes: 10800, scheduledMinutes: 1320, deliveredMinutes: 0,
+      modules: [
+        { moduleId: "m3", plannedMinutes: 3600, scheduledMinutes: 420, deliveredMinutes: 0, warnings: [] },
+        { moduleId: "m2", plannedMinutes: 2400, scheduledMinutes: 420, deliveredMinutes: 0, warnings: [] },
+        { moduleId: "m1", plannedMinutes: 4800, scheduledMinutes: 480, deliveredMinutes: 0, warnings: [] },
+      ],
+      units: [{ unitId: "u2", plannedMinutes: 3600, scheduledMinutes: 420, deliveredMinutes: 0 }, { unitId: "u1", plannedMinutes: 7200, scheduledMinutes: 900, deliveredMinutes: 0 }],
+      months: [],
+    });
+    calendarService.getPlanNames.mockResolvedValue({
+      modules: { m1: "M1 · Programmazione C#", m2: "M2 · Database MySQL", m3: "M3 · Sviluppo Web" }, units: { u1: "UF1 · Programmazione", u2: "UF2 · Web" },
+      order: { modules: { m1: 0, m2: 1, m3: 2 }, units: { u1: 0, u2: 1 } },
+    });
+    renderAs("admin", <ClassHoursReport classId="c1" />);
+    await flush();
+    expect(screen.getAllByText(/^M\d · /).map(n => n.props.children)).toEqual(["M1 · Programmazione C#", "M2 · Database MySQL", "M3 · Sviluppo Web"]);
+    expect(screen.getAllByText(/^UF\d · /).map(n => n.props.children)).toEqual(["UF1 · Programmazione", "UF2 · Web"]);
+    expect(screen.getAllByText("0 h").length).toBeGreaterThan(0); // svolte = 0
+    expect(screen.queryByText("0 min")).toBeNull();
+    expect(screen.getAllByText("7 h").length).toBeGreaterThan(0);
+  });
+
+  test("le mie ore: stesso formatter (zero «0 h», minuti solo quando servono)", async () => {
+    lessonService.getAllLessons.mockResolvedValue([
+      { id: "a1", classId: "c1", moduleId: "m1", className: "E2E-1A", moduleName: "Sviluppo Web", status: "Scheduled", durationMinutes: 750 },
+    ]);
+    calendarService.getLessonModule.mockResolvedValue({ plannedMinutes: 3600 });
+    renderAs("teacher", <TeacherHours />);
+    await flush();
+    expect(screen.getByText("60 h")).toBeTruthy();
+    expect(screen.getByText("12 h 30 min")).toBeTruthy();
+    expect(screen.getByText("0 h")).toBeTruthy();
   });
 });
