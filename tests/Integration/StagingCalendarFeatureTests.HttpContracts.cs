@@ -78,7 +78,8 @@ public sealed partial class StagingCalendarFeatureTests
         // hosted services, opening SQL or replacing application responses.
         var endpoints = ((IEndpointRouteBuilder)app).DataSources.SelectMany(s => s.Endpoints).OfType<RouteEndpoint>().ToArray();
         Assert.NotEmpty(endpoints);
-        Assert.DoesNotContain(endpoints, e => e.Metadata.GetMetadata<ControllerActionDescriptor>()?.ControllerName == "InstitutionFormativePlan");
+        Assert.True(builder.Configuration.GetValue<bool>("Multitenancy:FormativePlans:Enabled"));
+        Assert.Contains(endpoints, e => e.Metadata.GetMetadata<ControllerActionDescriptor>()?.ControllerName == "InstitutionFormativePlan");
         var options = new JsonSerializerOptions(JsonSerializerDefaults.Web) { UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow };
         var policyProvider = app.Services.GetRequiredService<IAuthorizationPolicyProvider>();
         foreach (var item in document.RootElement.EnumerateArray())

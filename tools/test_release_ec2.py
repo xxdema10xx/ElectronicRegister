@@ -183,7 +183,7 @@ class MiscTests(unittest.TestCase):
         runtime = host.runtime_configuration('x.example.invalid', '172.30.253.1', True)
         self.assertIs(runtime['Multitenancy']['InstitutionImport']['Enabled'], True)
         self.assertEqual({k for k, v in runtime['Multitenancy'].items() if v['Enabled']},
-                         {'SchoolApi', 'CourseApi', 'ExamApi', 'MembershipAdminApi', 'MembershipWriteApi', 'InstitutionCalendar', 'InstitutionImport'})
+                         {'SchoolApi', 'CourseApi', 'ExamApi', 'MembershipAdminApi', 'MembershipWriteApi', 'InstitutionCalendar', 'FormativePlans', 'InstitutionImport'})
         self.assertEqual(runtime['Deployment'], dict(Mode='Staging', RolloutApproved=True))
         self.assertEqual(runtime['Readiness']['ExpectedVersion'], '8.4.13')
 
