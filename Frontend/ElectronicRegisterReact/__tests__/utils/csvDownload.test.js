@@ -12,6 +12,21 @@ test("elenco docenti: Cognome;Nome;ID in ordine alfabetico, valori con ; tra vir
   expect(csvCell('a"b')).toBe('"a""b"');
 });
 
+test("formule di Excel neutralizzate con un apostrofo, prima delle virgolette", () => {
+  expect(csvCell("=1+1")).toBe("'=1+1");
+  expect(csvCell("+39 333")).toBe("'+39 333");
+  expect(csvCell("-x")).toBe("'-x");
+  expect(csvCell("@a")).toBe("'@a");
+  expect(csvCell("\tx")).toBe("'\tx");
+  expect(csvCell("\rx")).toBe("\"'\rx\""); // CR: apostrofo, poi tra virgolette
+  expect(csvCell('=HYPERLINK("x";"y")')).toBe('"\'=HYPERLINK(""x"";""y"")"');
+  expect(csvCell("a=b")).toBe("a=b"); // solo all'inizio
+  expect(csvCell("Rossi")).toBe("Rossi");
+  // elenco docenti scaricabile
+  const csv = teachersCsv([{ id: "g1", firstName: "+39…", lastName: "=1+1" }, { id: "g2", firstName: "@a", lastName: "-x" }]);
+  expect(csv).toBe("﻿Cognome;Nome;ID\r\n'-x;'@a;g2\r\n'=1+1;'+39…;g1\r\n");
+});
+
 test("errori di riga dell'import tradotti", () => {
   const msg = (code) => issueMessage({ code, field: "Teacher" });
   expect(msg("calendar.reason-required")).toMatch(/non è il titolare/);
