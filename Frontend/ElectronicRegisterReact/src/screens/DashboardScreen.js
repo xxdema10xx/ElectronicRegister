@@ -20,6 +20,8 @@ import { getMyClasses } from "../api/classService";
 import { getExamInsights, retakeSummary } from "../api/examInsights";
 import { getClassesForPicker, getSchedule } from "../api/lessonService";
 import LessonCalendar from "../components/LessonCalendar";
+import WeekNavigator from "../components/WeekNavigator";
+import { useLessons, useWeek } from "../hooks/useWeekSchedule";
 import SelectField from "../components/SelectField";
 
 const toList = d => Array.isArray(d) ? d : d ? [d] : [];
@@ -77,7 +79,7 @@ export default function DashboardScreen({ navigate }) {
   const [submissionsFailed, setSubmissionsFailed] = useState(false); // i numeri qui sotto sarebbero incompleti
   const [classOptions, setClassOptions] = useState([]);
   const [calClassId, setCalClassId] = useState(null);
-  const [lessons, setLessons] = useState(null);
+  const { week, prev, next, today } = useWeek();
 
   // Ogni richiesta è indipendente: se una fallisce il riquadro resta vuoto, la home si apre comunque.
   useEffect(() => {
@@ -121,16 +123,13 @@ export default function DashboardScreen({ navigate }) {
     return () => { alive = false; };
   }, [role, token]);
 
-  // Se il calendario non risponde si mostra "Orario non ancora disponibile", senza errori a schermo
-  useEffect(() => {
-    let alive = true;
-    setLessons(null);
-    const teacherName = role === "teacher" ? [user?.teacherFirstName, user?.teacherLastName].filter(Boolean).join(" ") : "";
-    getSchedule({ role, classId: calClassId, teacherName }, token)
-      .then((list) => { if (alive) setLessons(list); })
-      .catch(() => { if (alive) setLessons([]); });
-    return () => { alive = false; };
-  }, [role, calClassId, token, user]);
+  // Lezioni della settimana scelta. Se il calendario non risponde la settimana risulta vuota, senza errori a
+  // schermo. Le annullate si vedono (barrate) anche a docenti e studenti; l'admin vede solo le pubblicate.
+  const teacherName = role === "teacher" ? [user?.teacherFirstName, user?.teacherLastName].filter(Boolean).join(" ") : "";
+  const { lessons } = useLessons(
+    (signal) => getSchedule({ role, classId: calClassId, teacherName, from: week.from, to: week.to, includeCancelled: true, signal }, token),
+    [role, calClassId, token, teacherName, week.from],
+  );
 
   // Media voti e "da recuperare": dal libretto (esiti degli esami), non dai voti del registro — è la
   // stessa fonte che lo studente vede in "Voti", niente numeri che non tornano tra le due schermate.
@@ -186,7 +185,10 @@ export default function DashboardScreen({ navigate }) {
             getLabel={c => c.name} placeholder="Seleziona classe" emptyMessage="Nessuna classe" />
         )}
         {role === "admin" && !calClassId ? <Empty text="Nessuna classe disponibile" /> : (
-          <LessonCalendar lessons={lessons} />
+          <>
+            <WeekNavigator week={week} onPrev={prev} onNext={next} onToday={today} />
+            <LessonCalendar lessons={lessons} week={week} />
+          </>
         )}
       </Card>
     </View>

@@ -123,5 +123,22 @@ test("un servizio che non risponde non blocca la home", async () => {
   renderAs("admin", <DashboardScreen navigate={jest.fn()} />);
   await flush();
   expect(screen.getByText(/Benvenuto/)).toBeTruthy();
-  expect(await screen.findByText("Orario non ancora disponibile")).toBeTruthy();
+  expect(await screen.findByText("Nessuna lezione in questa settimana")).toBeTruthy();
+});
+
+test("orario: settimana successiva e precedente, annullate incluse", async () => {
+  renderAs("student", <DashboardScreen navigate={jest.fn()} />);
+  await flush();
+  const { from } = lessonService.currentWeek();
+  expect(lessonService.getSchedule).toHaveBeenLastCalledWith(expect.objectContaining({ role: "student", from, includeCancelled: true }), "tok");
+  fireEvent.press(screen.getByLabelText("Settimana successiva"));
+  await flush();
+  expect(lessonService.getSchedule).toHaveBeenLastCalledWith(expect.objectContaining(lessonService.shiftWeek(from, 1)), "tok");
+  fireEvent.press(screen.getByLabelText("Settimana precedente"));
+  fireEvent.press(screen.getByLabelText("Settimana precedente"));
+  await flush();
+  expect(lessonService.getSchedule).toHaveBeenLastCalledWith(expect.objectContaining(lessonService.shiftWeek(from, -1)), "tok");
+  fireEvent.press(screen.getByLabelText("Torna alla settimana corrente"));
+  await flush();
+  expect(lessonService.getSchedule).toHaveBeenLastCalledWith(expect.objectContaining({ from }), "tok");
 });

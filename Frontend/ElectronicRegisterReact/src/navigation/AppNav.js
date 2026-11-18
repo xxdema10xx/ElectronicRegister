@@ -81,6 +81,9 @@ export default function AppNav({ user, onLogout }) {
     if (key !== screen) return setScreen(key);
     if (isWeb && key === "exams") window.history.replaceState(null, "", "/esami");
     if (isWeb && key === "students") window.history.replaceState(null, "", "/studenti");
+    // Home e Calendario ripartono dalla settimana corrente e dalla vista iniziale
+    if (isWeb && key === "dashboard") window.history.replaceState(null, "", "/");
+    if (isWeb && key === "calendar") window.history.replaceState(null, "", "/calendario");
     setVisit(v => v + 1);
   });
   const logout = () => guardedNavigate(onLogout);
