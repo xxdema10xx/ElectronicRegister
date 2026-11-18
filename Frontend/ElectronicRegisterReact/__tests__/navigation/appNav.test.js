@@ -19,6 +19,7 @@ jest.mock("../../src/screens/ExamsScreen", () => require("../helpers/placeholder
 jest.mock("../../src/screens/ClassesScreen", () => require("../helpers/placeholder")("Classes"));
 jest.mock("../../src/screens/StudentExamsScreen", () => require("../helpers/placeholder")("StudentExams"));
 jest.mock("../../src/screens/CalendarImportScreen", () => require("../helpers/placeholder")("CalendarImport"));
+jest.mock("../../src/screens/CalendarScreen", () => require("../helpers/placeholder")("Calendar"));
 jest.mock("../../src/data/studentExams", () => ({ useStudentExams: () => ({ unseenCount: 0 }) }));
 
 // Larghezza della finestra: sidebar da 900 px in su (useLayout)

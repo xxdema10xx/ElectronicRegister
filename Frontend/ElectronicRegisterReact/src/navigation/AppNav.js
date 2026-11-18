@@ -15,7 +15,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import ExamsScreen from "../screens/ExamsScreen";
 import ClassesScreen from "../screens/ClassesScreen";
 import StudentExamsScreen from "../screens/StudentExamsScreen";
-import CalendarImportScreen from "../screens/CalendarImportScreen";
+import CalendarScreen from "../screens/CalendarScreen";
 import NotificationDot from "../components/NotificationDot";
 import Badge from "../components/Badge";
 import { useStudentExams } from "../data/studentExams";
@@ -98,7 +98,7 @@ export default function AppNav({ user, onLogout }) {
     subjects: <SubjectsScreen />,
     exams: role === "student" ? <StudentExamsScreen /> : <ExamsScreen />,
     users: <UsersScreen />,
-    calendar: role === "admin" ? <CalendarImportScreen /> : null,
+    calendar: role === "admin" ? <CalendarScreen role={role} /> : null,
     profile: <ProfileScreen onLogout={logout} />,
   };
 

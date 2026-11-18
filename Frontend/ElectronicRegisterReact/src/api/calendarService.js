@@ -92,3 +92,42 @@ export function describeHistory(entry, teacherName = () => null) {
     operation, reason: entry.reason || "", change,
   };
 }
+
+// ── Comandi (admin e staff) ─────────────────────────────────────────────────────────────────
+// JSON rigoroso: solo i campi del contratto. expectedRevision = revision letta; eventId riusato nei
+// retry dello stesso payload (vedi useIntentId). Dopo la receipt la lezione va riletta.
+const toTime = (t) => (/^\d{2}:\d{2}$/.test(t) ? `${t}:00` : t);
+
+export async function cancelLesson(id, { eventId, expectedRevision, reason }, token) {
+  const body = { eventId, expectedRevision, reason };
+  return (await axiosClient.post(`${BASE}/lessons/${id}/cancel`, body, { headers: authHeader(token) })).data;
+}
+
+export async function rescheduleLesson(id, { eventId, expectedRevision, date, startsAt, endsAt, reason }, token) {
+  const body = { eventId, expectedRevision, date, startsAt: toTime(startsAt), endsAt: toTime(endsAt), reason };
+  return (await axiosClient.post(`${BASE}/lessons/${id}/reschedule`, body, { headers: authHeader(token) })).data;
+}
+
+export async function substituteLesson(id, { eventId, expectedRevision, teacherId, reason }, token) {
+  const body = { eventId, expectedRevision, teacherId, reason };
+  return (await axiosClient.post(`${BASE}/lessons/${id}/substitute`, body, { headers: authHeader(token) })).data;
+}
+
+// Il backend accetta la lezione solo se modificabile: le Completed (e le annullate) non hanno comandi
+export const canManageLesson = (lesson) => !!lesson && lesson.status === "Scheduled";
+
+export const REASON_MAX = 500;
+export const validReason = (reason) => {
+  const t = String(reason || "").trim();
+  return t.length >= 1 && t.length <= REASON_MAX;
+};
+
+// "AAAA-MM-GG" e "HH:mm" (00–23, 00–59); fine dopo l'inizio, nello stesso giorno
+export function rescheduleError({ date, startsAt, endsAt }) {
+  if (!parseYmd(date)) return "Data non valida: usa AAAA-MM-GG.";
+  const time = /^([01]\d|2[0-3]):[0-5]\d$/;
+  if (!time.test(startsAt || "")) return "Ora di inizio non valida: usa HH:mm.";
+  if (!time.test(endsAt || "")) return "Ora di fine non valida: usa HH:mm.";
+  if (endsAt <= startsAt) return "L'ora di fine deve essere dopo l'ora di inizio.";
+  return null;
+}

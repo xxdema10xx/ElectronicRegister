@@ -46,6 +46,7 @@ jest.mock("../../src/screens/ClassesScreen", () => require("../helpers/placehold
 jest.mock("../../src/screens/TeachersScreen", () => require("../helpers/placeholder")("Teachers"));
 jest.mock("../../src/screens/SubjectsScreen", () => require("../helpers/placeholder")("Subjects"));
 jest.mock("../../src/screens/CalendarImportScreen", () => require("../helpers/placeholder")("CalendarImport"));
+jest.mock("../../src/screens/CalendarScreen", () => require("../helpers/placeholder")("Calendar"));
 jest.mock("../../src/data/studentExams", () => ({ useStudentExams: () => ({ unseenCount: 0 }) }));
 let mockWidth = 1280;
 jest.mock("react-native/Libraries/Utilities/useWindowDimensions", () => ({
