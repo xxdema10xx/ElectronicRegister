@@ -15,6 +15,10 @@ import { calendarErrorMessage } from "../api/calendarImportService";
 
 export const PROPOSED_TIME_ZONE = "Europe/Rome";
 
+// Il codice calendar.revision-conflict vale anche per il mese: qui il testo parla delle impostazioni
+export const SETTINGS_CONFLICT_MESSAGE = "Le impostazioni sono state modificate nel frattempo: ricarica e riprova.";
+export const settingsErrorMessage = (e) => (e?.code === "calendar.revision-conflict" ? SETTINGS_CONFLICT_MESSAGE : calendarErrorMessage(e));
+
 // settings: null = da configurare, altrimenti { timeZoneId, approvalLeadDays, revision }. onSaved(): rileggere.
 export default function CalendarSettingsForm({ settings, onSaved }) {
   const { token } = useAuth();
@@ -42,7 +46,7 @@ export default function CalendarSettingsForm({ settings, onSaved }) {
       await saveCalendarSettings({ eventId: idFor(payload), ...payload }, token);
       reset(); setReason(""); setSaved(true);
       onSaved?.();
-    } catch (e) { setError(calendarErrorMessage(e)); }
+    } catch (e) { setError(settingsErrorMessage(e)); }
     finally { setSaving(false); }
   }
 
