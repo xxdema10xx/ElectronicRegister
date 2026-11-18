@@ -34,7 +34,8 @@ async function chooseClassAndFile() {
 test("calendario non configurato: modulo di configurazione, prima volta con expectedRevision -1", async () => {
   cal.getCalendarSettings.mockResolvedValueOnce(null).mockResolvedValue({ timeZoneId: "Europe/Rome", approvalLeadDays: 7, revision: 0 });
   renderAs("staff", <CalendarImportScreen />);
-  expect((await screen.findAllByText("Configura il calendario")).length).toBe(2); // titolo e pulsante
+  // Primo render del file (caricamento dei moduli): sulle macchine lente supera l'attesa predefinita di 1 s
+  expect((await screen.findAllByText("Configura il calendario", {}, { timeout: 5000 })).length).toBe(2); // titolo e pulsante
   expect(screen.getByText(/Il fuso orario non si può più cambiare/)).toBeTruthy();
   expect(screen.getByLabelText("Fuso orario (es. Europe/Rome)").props.value).toBe("Europe/Rome");
   // il fuso proposto va confermato
