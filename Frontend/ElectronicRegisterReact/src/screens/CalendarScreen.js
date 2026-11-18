@@ -112,6 +112,10 @@ export default function CalendarScreen({ role }) {
   const [classes, setClasses] = useState([]);
   const [classId, setClassId] = useState(initial.classe || null);
   const [teachers, setTeachers] = useState([]);
+  // La vista Importa resta montata (nascosta) dopo la prima apertura: cambiando scheda non si perdono
+  // mese, classi, motivazione, file e anteprima. Prima si smontava e ogni ritorno ripartiva da zero.
+  const [importOpened, setImportOpened] = useState(view === "importa");
+  useEffect(() => { if (view === "importa") setImportOpened(true); }, [view]);
 
   useEffect(() => {
     let alive = true;
@@ -129,7 +133,12 @@ export default function CalendarScreen({ role }) {
       <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
         <Tabs value={view} onChange={setView} views={views} />
       </View>
-      {view === "importa" ? <CalendarImportScreen /> : (
+      {(importOpened || view === "importa") && (
+        <View style={{ flex: 1, display: view === "importa" ? "flex" : "none" }} accessibilityElementsHidden={view !== "importa"} importantForAccessibility={view === "importa" ? "auto" : "no-hide-descendants"}>
+          <CalendarImportScreen />
+        </View>
+      )}
+      {view !== "importa" && (
         <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 32 }}>
           {view === "lezioni" && <LessonsView role={role} classes={classes} classId={classId} setClassId={setClassId} teachers={teachers} />}
           {view === "ore" && (
