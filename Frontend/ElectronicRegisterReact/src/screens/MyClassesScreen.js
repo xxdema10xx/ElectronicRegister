@@ -23,6 +23,7 @@ import { getMyClasses } from "../api/classService";
 import { getGradesForStudent, addClassGrade, updateClassGrade } from "../api/classGradeService";
 import { notify } from "../utils/dialogs";
 import ClassGradesForm from "../components/ClassGradesForm";
+import TeacherHours from "../components/TeacherHours";
 import {
   GRADE_DESCRIPTION_LABEL, GRADE_DESCRIPTION_MAX, GRADE_DESCRIPTION_PLACEHOLDER, GRADE_ERROR, GRADE_KEYBOARD, GRADE_LABEL, isValidGrade,
   isExamGrade,
@@ -141,6 +142,8 @@ export default function MyClassesScreen() {
   const [tab, setTab] = useState("subjects");
   const [openStudent, setOpenStudent] = useState(null); // studente aperto (voti)
   const [showBatch, setShowBatch] = useState(false); // "Voti alla classe" della classe aperta
+  // "Le mie ore": qui perché le ore sono per classe e modulo; una scheda a parte lascia intatto l'elenco
+  const [showHours, setShowHours] = useState(false);
   const visibleClasses = filterBySearch(classes, search, c => [c.name]);
 
   const load = useCallback(async () => {
@@ -220,6 +223,8 @@ export default function MyClassesScreen() {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <View style={s.screenPad}>
         <SectionHeader title="Classi" />
+        <Btn variant="ghost" label="Le mie ore" accessibilityLabel="Le mie ore per classe e modulo" onPress={() => setShowHours(true)}
+          style={{ alignSelf: "flex-start", paddingVertical: 8, marginBottom: 12 }} />
         <TextInput style={[s.input, { marginBottom: 12 }]} placeholder="Cerca classe…"
           placeholderTextColor={C.textLight} value={search} onChangeText={setSearch} />
       </View>
@@ -241,6 +246,9 @@ export default function MyClassesScreen() {
           )}
         />
       }
+      <FormModal visible={showHours} title="Le mie ore" onClose={() => setShowHours(false)} wide>
+        {showHours && <TeacherHours />}
+      </FormModal>
     </View>
   );
 }

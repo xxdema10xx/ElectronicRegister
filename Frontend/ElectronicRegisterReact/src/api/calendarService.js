@@ -139,3 +139,89 @@ export async function saveCalendarSettings({ eventId, expectedRevision, timeZone
   const body = { eventId, expectedRevision, timeZoneId, approvalLeadDays, reason };
   return (await axiosClient.put(`${BASE}/settings`, body, { headers: authHeader(token) })).data;
 }
+
+// ── Monte ore ───────────────────────────────────────────────────────────────────────────────
+// Minuti → "12 h 30 min" · "45 min" · "12 h". Nessun arrotondamento: 599 minuti restano "9 h 59 min".
+export function formatMinutes(minutes) {
+  const n = Number(minutes) || 0;
+  const sign = n < 0 ? "-" : "";
+  const abs = Math.abs(Math.trunc(n));
+  const h = Math.floor(abs / 60), m = abs % 60;
+  if (!h) return `${sign}${m} min`;
+  return m ? `${sign}${h} h ${m} min` : `${sign}${h} h`;
+}
+
+export const HOURS_WARNING_LABELS = {
+  "calendar.under-scheduled": "Ore da programmare",
+  "calendar.over-scheduled": "Programmate oltre il previsto",
+  "calendar.delivery-incomplete": "Ore ancora da svolgere",
+  "calendar.over-delivered": "Svolte oltre il previsto",
+};
+
+// Admin e staff: monte ore della classe per modulo, unità formativa e mese
+export async function getClassHours(classId, token) {
+  return (await axiosClient.get(`${BASE}/hours`, { headers: authHeader(token), params: { classId } })).data;
+}
+
+// Nomi di moduli e unità formative dalla versione del piano usata dal report (admin e staff).
+// Se il piano non si legge (rollout spento, permessi) si restituiscono mappe vuote: i nomi mancanti
+// diventano "Modulo" / "Unità formativa".
+export async function getPlanNames(versionId, token) {
+  const names = { modules: {}, units: {} };
+  if (!versionId) return names;
+  try {
+    const { data } = await axiosClient.get(`/institution/formative-plan-versions/${versionId}`, { headers: authHeader(token) });
+    for (const u of data?.units || []) {
+      names.units[u.id] = [u.code, u.name].filter(Boolean).join(" · ") || null;
+      for (const m of u.modules || []) names.modules[m.id] = [m.code, m.name].filter(Boolean).join(" · ") || null;
+    }
+  } catch { /* nomi facoltativi */ }
+  return names;
+}
+
+// Anno scolastico corrente: 1 settembre – 31 agosto (al massimo 366 giorni, limite del server)
+export function schoolYear(now = new Date()) {
+  const start = now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1;
+  return { from: `${start}-09-01`, to: `${start + 1}-08-31` };
+}
+
+export function rangeError({ from, to }) {
+  const a = parseYmd(from), b = parseYmd(to);
+  if (!a || !b) return "Date non valide: usa AAAA-MM-GG.";
+  if (b < a) return "La data finale deve essere uguale o successiva a quella iniziale.";
+  const days = Math.round((Date.UTC(b.getFullYear(), b.getMonth(), b.getDate()) - Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())) / 86400000);
+  if (days > 366) return "Intervallo troppo ampio: al massimo 366 giorni.";
+  return null;
+}
+
+const lessonMinutes = (l) => {
+  if (Number.isFinite(l.durationMinutes)) return l.durationMinutes;
+  const a = parseUtc(l.startUtc), b = parseUtc(l.endUtc);
+  return a && b && !isNaN(a) && !isNaN(b) ? Math.round((b - a) / 60000) : 0;
+};
+
+// Docente: "Le mie ore" dalle sole lezioni che può leggere (GET teachers/me, paginato) raggruppate per
+// classe + modulo, con le ore previste del modulo (GET lessons/{id}/module, una chiamata per modulo).
+// Non è il totale del modulo: le lezioni dei supplenti non sono visibili al docente.
+// loadLessons(range) e loadModule(lessonId) sono iniettabili per i test; moduleCache: Map moduleId → Promise.
+export async function getTeacherHours(range, token, { loadLessons, loadModule, moduleCache = new Map() } = {}) {
+  const lessons = await loadLessons(range);
+  const groups = new Map();
+  for (const l of lessons) {
+    if (l.status === "Cancelled") continue;
+    const key = `${l.classId}|${l.moduleId}`;
+    if (!groups.has(key)) groups.set(key, { classId: l.classId, moduleId: l.moduleId, className: l.className || "Classe", moduleName: l.moduleName || "Modulo", sampleLessonId: l.id, scheduledMinutes: 0, deliveredMinutes: 0, lessons: 0 });
+    const g = groups.get(key);
+    g.lessons += 1;
+    g.scheduledMinutes += lessonMinutes(l);
+    if (l.status === "Completed") g.deliveredMinutes += Number(l.deliveredMinutes) || 0;
+  }
+  const rows = [...groups.values()];
+  await Promise.all(rows.map(async (g) => {
+    if (!moduleCache.has(g.moduleId)) moduleCache.set(g.moduleId, loadModule(g.sampleLessonId).catch(() => null));
+    const mod = await moduleCache.get(g.moduleId);
+    g.plannedMinutes = mod && Number.isFinite(mod.plannedMinutes) ? mod.plannedMinutes : null;
+    if (mod?.name && g.moduleName === "Modulo") g.moduleName = mod.name;
+  }));
+  return rows.sort((a, b) => a.className.localeCompare(b.className) || a.moduleName.localeCompare(b.moduleName));
+}

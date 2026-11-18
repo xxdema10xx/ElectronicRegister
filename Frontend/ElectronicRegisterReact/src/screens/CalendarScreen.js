@@ -3,6 +3,7 @@
 //  - Lezioni: classe + settimana, bozze e pubblicate, "Mostra annullate"; dal dettaglio si annulla, sposta,
 //    sostituisce il docente (LessonActions).
 //  - Importa: caricamento del mese da file e pubblicazione (CalendarImportScreen).
+//  - Monte ore: ore previste, programmate e svolte per modulo della classe (ClassHoursReport).
 //  - Impostazioni: fuso orario e giorni di anticipo (CalendarSettingsForm).
 // Su web vista, classe e settimana stanno nell'URL (?vista=…&classe=…&settimana=…).
 import { useCallback, useEffect, useState } from "react";
@@ -18,6 +19,7 @@ import LessonDetail from "../components/LessonDetail";
 import LessonActions from "../components/LessonActions";
 import CalendarImportScreen from "./CalendarImportScreen";
 import CalendarSettingsForm from "../components/CalendarSettingsForm";
+import ClassHoursReport from "../components/ClassHoursReport";
 import { getClassesForPicker, getSchedule } from "../api/lessonService";
 import { getTeachers } from "../api/teacherService";
 import { calendarErrorMessage, getCalendarSettings } from "../api/calendarImportService";
@@ -27,6 +29,7 @@ import { readSearchParams, replaceSearchParams } from "../navigation/examRoutes"
 export const CALENDAR_VIEWS = [
   { key: "lezioni", label: "Lezioni" },
   { key: "importa", label: "Importa" },
+  { key: "ore", label: "Monte ore" },
   { key: "impostazioni", label: "Impostazioni" },
 ];
 
@@ -129,6 +132,14 @@ export default function CalendarScreen({ role }) {
       {view === "importa" ? <CalendarImportScreen /> : (
         <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 32 }}>
           {view === "lezioni" && <LessonsView role={role} classes={classes} classId={classId} setClassId={setClassId} teachers={teachers} />}
+          {view === "ore" && (
+            <Card>
+              <Text style={s.sectionTitle}>Monte ore</Text>
+              <Text style={[s.itemSub, { marginBottom: 12 }]}>Per ogni modulo del piano formativo: ore previste, programmate (lezioni pubblicate non annullate) e svolte. Contano tutti i docenti, titolari e supplenti.</Text>
+              <SelectField label="Classe" value={classId} options={classes} onSelect={setClassId} getLabel={c => c.name} placeholder="Seleziona classe" emptyMessage="Nessuna classe" />
+              <ClassHoursReport classId={classId} />
+            </Card>
+          )}
           {view === "impostazioni" && <SettingsView />}
         </ScrollView>
       )}

@@ -75,3 +75,11 @@ test("impostazioni: modifica con la revisione letta", async () => {
   expect(save).toHaveBeenCalledWith({ eventId: expect.any(String), expectedRevision: 3, timeZoneId: "Europe/Rome", approvalLeadDays: 10, reason: "Più tempo per approvare" }, "tok");
   expect(screen.getByText("Impostazioni salvate.")).toBeTruthy();
 });
+
+test("monte ore: vista con la classe scelta", async () => {
+  renderAs("admin", <CalendarScreen role="admin" />);
+  await flush();
+  fireEvent.press(screen.getByText("Monte ore"));
+  await flush();
+  expect(screen.getByText(/Contano tutti i docenti, titolari e supplenti/)).toBeTruthy();
+});
