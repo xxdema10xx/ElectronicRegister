@@ -119,7 +119,7 @@ describe("app su telefono (schermo stretto)", () => {
   test("barra in alto e schede in basso con Home e Profilo", () => {
     mockWidth = 400;
     renderNav("admin");
-    expect(screen.getByText(/Electronic Register/)).toBeTruthy();
+    expect(screen.getByText(/ITSPlatform/)).toBeTruthy();
     expect(screen.queryByText("Membri")).toBeNull();
     fireEvent.press(screen.getByText("Profilo"));
     expect(screen.getByText("SCREEN Profile")).toBeTruthy();

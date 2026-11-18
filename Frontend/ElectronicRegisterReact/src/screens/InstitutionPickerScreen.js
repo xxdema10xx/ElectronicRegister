@@ -17,7 +17,7 @@ export default function InstitutionPickerScreen({ institutions, onSelect, onBack
       <ScrollView contentContainerStyle={[{ flexGrow: 1 }, isDesktop && { justifyContent: "center", alignItems: "center", padding: 24 }]}>
         <View style={[s.authHeader, isDesktop && s.authHeaderDesktop]}>
           <Image source={require("../../assets/images/logoits.png")} style={isDesktop ? { width: 100, height: 66 } : { width: 150, height: 100 }} />
-          <Text style={[s.authTitle, isDesktop && { fontSize: 20 }]}>Electronic Register</Text>
+          <Text style={[s.authTitle, isDesktop && { fontSize: 20 }]}>ITSPlatform</Text>
         </View>
         <View style={[s.authBody, isDesktop && s.authBodyDesktop]}>
           <Card>

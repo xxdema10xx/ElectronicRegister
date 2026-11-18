@@ -31,7 +31,7 @@ beforeEach(() => {
 
 async function login() {
   await waitFor(() => expect(screen.getByText("Accedi")).toBeTruthy());
-  fireEvent.changeText(screen.getByPlaceholderText("allievo_nome@itsumbria.it"), "anna@its.it");
+  fireEvent.changeText(screen.getByPlaceholderText("Inserisci la tua email"), "anna@its.it");
   fireEvent.changeText(screen.getByPlaceholderText("••••••••"), "Segreta1!");
   await act(async () => { fireEvent.press(screen.getByText("Entra")); });
 }

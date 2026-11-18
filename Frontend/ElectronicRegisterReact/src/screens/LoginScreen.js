@@ -69,14 +69,14 @@ export default function LoginScreen({ onLogin }) {
         keyboardShouldPersistTaps="handled">
         <View style={[s.authHeader, isDesktop && s.authHeaderDesktop]}>
           <Image source={require("../../assets/images/logoits.png")} style={isDesktop ? { width: 100, height: 66 } : { width: 150, height: 100 }} />
-          <Text style={[s.authTitle, isDesktop && { fontSize: 20 }]}>Electronic Register</Text>
-          <Text style={s.authSubtitle}>ITS Umbria</Text>
+          <Text style={[s.authTitle, isDesktop && { fontSize: 20 }]}>ITSPlatform</Text>
+          <Text style={s.authSubtitle}>One Platform for All</Text>
         </View>
         <View style={[s.authBody, isDesktop && s.authBodyDesktop]}>
           <Card>
             <Text style={s.cardTitle}>Accedi</Text>
             <Input label="Email" value={email} onChangeText={setEmail} keyboardType="email-address"
-              autoCapitalize="none" placeholder="allievo_nome@itsumbria.it" />
+              autoCapitalize="none" placeholder="Inserisci la tua email" />
             <Input label="Password" value={password} onChangeText={setPassword} secureTextEntry placeholder="••••••••" />
             <Btn label="Entra" onPress={submit} loading={loading} style={{ marginTop: 4 }} />
 
