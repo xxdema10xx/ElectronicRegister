@@ -158,17 +158,32 @@ test("membership sospesa o revocata (403 + /Auth/context rifiutato): login con i
   expect(Alert.alert).toHaveBeenCalledWith("Sessione terminata", "Il tuo accesso a questo istituto è stato sospeso o revocato.");
 });
 
+// Rinnovo: il token dura 15 minuti e si rinnova 1 minuto prima (14 minuti dopo l'ingresso).
+// Niente runOnlyPendingTimersAsync(): eseguirebbe anche il timer del rinnovo (sposta l'orologio di 14
+// minuti e innesca un rinnovo prima delle verifiche). Si avanza di quantità esatte, attendendo le promesse.
+const RENEW_AFTER_MS = 14 * 60 * 1000;
+
+async function loginWithFakeTimers() {
+  render(<App />);
+  await login();
+  // L'ingresso è completo (token istituzionale e app visibile) prima di toccare l'orologio
+  await waitFor(() => expect(session.accessToken).toBe("acc"));
+  expect(screen.getByText(/^APP /)).toBeTruthy();
+  expect(authService.login).toHaveBeenCalledTimes(1);
+  authService.login.mockClear();
+  authService.selectInstitution.mockClear();
+}
+
 test("rinnovo del token un minuto prima della scadenza, con le credenziali in memoria", async () => {
   jest.useFakeTimers();
   try {
-    render(<App />);
-    await login();
-    await act(async () => { await jest.runOnlyPendingTimersAsync(); });
-    expect(screen.getByText(/^APP /)).toBeTruthy();
-    authService.login.mockClear();
-    authService.selectInstitution.mockClear();
-    await act(async () => { jest.advanceTimersByTime(14 * 60 * 1000 + 1000); });
+    await loginWithFakeTimers();
+    await act(async () => { await jest.advanceTimersByTimeAsync(RENEW_AFTER_MS - 1000); });
+    expect(authService.login).not.toHaveBeenCalled();
+    await act(async () => { await jest.advanceTimersByTimeAsync(2000); });
+    expect(authService.login).toHaveBeenCalledTimes(1);
     expect(authService.login).toHaveBeenCalledWith("anna@its.it", "Segreta1!");
+    expect(authService.selectInstitution).toHaveBeenCalledTimes(1);
     expect(authService.selectInstitution).toHaveBeenCalledWith("tk", null);
     expect(screen.getByText(/^APP /)).toBeTruthy();
   } finally { jest.useRealTimers(); }
@@ -177,11 +192,10 @@ test("rinnovo del token un minuto prima della scadenza, con le credenziali in me
 test("rinnovo impossibile: si torna al login con un avviso", async () => {
   jest.useFakeTimers();
   try {
-    render(<App />);
-    await login();
-    await act(async () => { await jest.runOnlyPendingTimersAsync(); });
+    await loginWithFakeTimers();
     authService.login.mockRejectedValue(new Error("password cambiata"));
-    await act(async () => { jest.advanceTimersByTime(14 * 60 * 1000 + 1000); });
+    await act(async () => { await jest.advanceTimersByTimeAsync(RENEW_AFTER_MS + 1000); });
+    expect(authService.login).toHaveBeenCalledTimes(1);
     expect(Alert.alert).toHaveBeenCalledWith("Sessione terminata", "Non è stato possibile rinnovare la sessione: accedi di nuovo.");
     expect(screen.getByText("Accedi")).toBeTruthy();
   } finally { jest.useRealTimers(); }
