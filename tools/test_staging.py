@@ -257,10 +257,10 @@ class StagingTests(unittest.TestCase):
             self.assertEqual(runtime['Readiness']['ExpectedVersion'],'8.4.13')
             self.assertEqual(runtime['Deployment'],dict(Mode='Staging',RolloutApproved=True))
             self.assertEqual({k for k,v in runtime['Multitenancy'].items() if v['Enabled']},
-                             {'SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar'})
+                             {'SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar','FormativePlans'})
             for feature in ('Onboarding','Governance','InstitutionWorker'):
                 self.assertIs(runtime['Multitenancy'][feature]['Enabled'],False)
-            for feature in ('FormativePlans','InstitutionImport'):
+            for feature in ('InstitutionImport',):
                 self.assertFalse(runtime['Multitenancy'].get(feature,{}).get('Enabled',False))
             self.assertIs(runtime['Identity']['Legacy']['Enabled'],False)
             self.assertEqual(json.loads((folder/'public/preflight.json').read_text())['expectedVersion'],'8.4.13')

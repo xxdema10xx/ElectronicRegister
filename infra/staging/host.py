@@ -98,7 +98,7 @@ def runtime_configuration(domain, gateway, institution_import=False, platform_id
                'Readiness':{'ExpectedVersion':MYSQL['version'],'ExpectedHost':'er-stage-db','ExpectedDataDir':'/var/lib/mysql'},
                'Transport':{'KnownProxies':[gateway,'127.0.0.1'], 'AllowedOrigins':['https://consoliprojects.dev'], 'HttpsPort':443},
                'Identity':{'Legacy':{'Enabled':False}},
-               'Multitenancy':{k:{'Enabled':k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar')} for k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar','Onboarding','Governance','InstitutionWorker')}}
+               'Multitenancy':{k:{'Enabled':k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar','FormativePlans')} for k in ('SchoolApi','CourseApi','ExamApi','MembershipAdminApi','MembershipWriteApi','InstitutionCalendar','FormativePlans','Onboarding','Governance','InstitutionWorker')}}
     if institution_import:
         runtime['Multitenancy']['InstitutionImport'] = {'Enabled': True}
     if platform_identity:
