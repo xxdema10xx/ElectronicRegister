@@ -9,7 +9,7 @@ import { flush, renderAs } from "../helpers/render";
 jest.mock("../../src/api/lessonService", () => ({ ...jest.requireActual("../../src/api/lessonService"), getSchedule: jest.fn(), getClassesForPicker: jest.fn() }));
 jest.mock("../../src/api/calendarService", () => ({
   ...jest.requireActual("../../src/api/calendarService"),
-  getLesson: jest.fn(), getLessonHistory: jest.fn(), cancelLesson: jest.fn(),
+  getLesson: jest.fn(), getLessonHistory: jest.fn(), cancelLesson: jest.fn(), saveCalendarSettings: jest.fn(),
 }));
 jest.mock("../../src/api/teacherService");
 jest.mock("../../src/screens/CalendarImportScreen", () => require("../helpers/placeholder")("CalendarImport"));
@@ -58,4 +58,20 @@ test("vista Importa", async () => {
   await flush();
   fireEvent.press(screen.getByText("Importa"));
   expect(screen.getByText("SCREEN CalendarImport")).toBeTruthy();
+});
+
+test("impostazioni: modifica con la revisione letta", async () => {
+  const cal = require("../../src/api/calendarImportService");
+  jest.spyOn(cal, "getCalendarSettings").mockResolvedValue({ timeZoneId: "Europe/Rome", approvalLeadDays: 5, revision: 3 });
+  const save = calendarService.saveCalendarSettings.mockResolvedValue({ revision: 4 });
+  renderAs("staff", <CalendarScreen role="staff" />);
+  await flush();
+  fireEvent.press(screen.getByText("Impostazioni"));
+  await flush();
+  expect(screen.getByLabelText("Giorni di anticipo per l'approvazione del mese (0–366)").props.value).toBe("5");
+  fireEvent.changeText(screen.getByLabelText("Giorni di anticipo per l'approvazione del mese (0–366)"), "10");
+  fireEvent.changeText(screen.getByLabelText("Motivo (obbligatorio, resta nello storico)"), "Più tempo per approvare");
+  await act(async () => { fireEvent.press(screen.getByText("Salva impostazioni")); });
+  expect(save).toHaveBeenCalledWith({ eventId: expect.any(String), expectedRevision: 3, timeZoneId: "Europe/Rome", approvalLeadDays: 10, reason: "Più tempo per approvare" }, "tok");
+  expect(screen.getByText("Impostazioni salvate.")).toBeTruthy();
 });

@@ -29,3 +29,8 @@ export const msDiscovery = {
   authorizationEndpoint: `https://login.microsoftonline.com/${MS_TENANT_ID}/oauth2/v2.0/authorize`,
   tokenEndpoint: `https://login.microsoftonline.com/${MS_TENANT_ID}/oauth2/v2.0/token`,
 };
+
+// Dimensione massima del file per l'import del calendario, in MB. Il backend accetterebbe 10 MiB, ma il
+// server web di produzione (Nginx) chiude le richieste oltre 1 MB: il default è quindi 1.
+const uploadMb = Number(process.env.EXPO_PUBLIC_CALENDAR_MAX_UPLOAD_MB);
+export const CALENDAR_MAX_UPLOAD_MB = Number.isFinite(uploadMb) && uploadMb > 0 ? uploadMb : 1;

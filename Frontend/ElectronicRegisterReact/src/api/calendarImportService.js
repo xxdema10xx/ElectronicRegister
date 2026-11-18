@@ -5,6 +5,7 @@
 import { Platform } from "react-native";
 import * as Crypto from "expo-crypto";
 import axiosClient, { authHeader } from "./axiosClient";
+import { CALENDAR_MAX_UPLOAD_MB } from "../appConfig";
 
 const BASE = "/institution/calendar";
 const PAGE_SIZE = 100; // massimo ammesso da CalendarQuery.size
@@ -98,7 +99,13 @@ export async function getMonthStatus(classId, year, month, token) {
   return { period, drafts, published };
 }
 
-// ── Messaggi ────────────────────────────────────────────────────────────────────────────────
+// ── Messaggi ────
+export const TEACHING_PLAN_MESSAGE = "La classe non ha un piano formativo pubblicato: chiedi all'amministrazione di pubblicarlo, poi riprova.";
+export const FILE_TOO_LARGE_MESSAGE = "File troppo grande per il server: dividilo per classe o salvalo in CSV.";
+export const MAX_UPLOAD_BYTES = CALENDAR_MAX_UPLOAD_MB * 1024 * 1024;
+export const maxUploadLabel = () => `${String(CALENDAR_MAX_UPLOAD_MB).replace(".", ",")} MB`;
+
+// ────────────────────────────────────────────────────────────────────────────────
 const CODE_MESSAGES = {
   "calendar.settings-required": "Il calendario dell'istituto non è ancora configurato (fuso orario e scadenze).",
   "calendar.invalid-import-settings": "Impostazioni dell'import non valide.",
@@ -114,7 +121,8 @@ const CODE_MESSAGES = {
   "calendar.warnings-not-acknowledged": "Conferma di aver letto gli avvisi prima di procedere.",
   "calendar.revision-conflict": "Il mese è stato modificato nel frattempo: ricarica e riprova.",
   "calendar.no-draft-lessons": "Non ci sono lezioni in bozza da pubblicare per questo mese.",
-  "calendar.teaching-configuration-required": "La classe non ha un piano formativo pubblicato.",
+  "calendar.teaching-configuration-required": TEACHING_PLAN_MESSAGE,
+  "calendar.published-plan-required": TEACHING_PLAN_MESSAGE,
   // Comandi sulle lezioni (annulla, sposta, sostituisci)
   "calendar.event-payload-conflict": "La lezione è stata modificata nel frattempo.",
   "calendar.scheduled-required": "Si possono modificare solo le lezioni programmate, non quelle annullate o svolte.",
@@ -131,7 +139,11 @@ const CODE_MESSAGES = {
   "calendar.invalid-time": "Ora non valida: usa HH:mm.",
   "calendar.database-conflict": "Il calendario è occupato da un'altra operazione: riprova.",
   "calendar.range-limit": "Intervallo troppo ampio: al massimo 366 giorni.",
-  FileTooLarge: "Il file è troppo grande (massimo 10 MB).",
+  // Impostazioni
+  "calendar.invalid-time-zone": "Fuso orario non riconosciuto dal server (es. Europe/Rome).",
+  "calendar.invalid-approval-lead-days": "I giorni di anticipo devono essere tra 0 e 366.",
+  "calendar.invalid-lead-days": "I giorni di anticipo devono essere tra 0 e 366.",
+  FileTooLarge: FILE_TOO_LARGE_MESSAGE,
   UnsupportedFormat: "Formato non supportato: usa un file .xlsx o .csv.",
   NoDataRows: "Il file non contiene righe di dati.",
   InvalidEncoding: "Il file CSV non è in UTF-8.",
@@ -142,7 +154,9 @@ const CODE_MESSAGES = {
 };
 
 export function calendarErrorMessage(e) {
+  if (e?.status === 413) return FILE_TOO_LARGE_MESSAGE;
   if (e?.code && CODE_MESSAGES[e.code]) return CODE_MESSAGES[e.code];
+  if (e?.status === 403) return "Non hai i permessi per questa operazione sul calendario (o il calendario non è attivo per il tuo ruolo).";
   if (e?.status === 404) return "Il calendario non è attivo per questo istituto, o l'elemento non esiste.";
   if (e?.status === 409 && e?.code) return `Operazione non consentita (${e.code}).`;
   return e?.message || "Errore imprevisto.";
@@ -165,8 +179,24 @@ const ISSUE_MESSAGES = {
   "calendar.ambiguous-module": "Più moduli con questo nome",
   "calendar.teacher-unavailable": "Docente non trovato: usa l'ID del docente",
   "calendar.row-outside-month": "Data fuori dal mese selezionato",
-  "calendar.teaching-configuration-required": "La classe non ha un piano formativo pubblicato",
+  "calendar.teaching-configuration-required": "La classe non ha un piano formativo pubblicato: chiedilo all'amministrazione",
+  // Nel file non c'è un motivo di sostituzione: un docente diverso dal titolare della materia scarta la riga
+  "calendar.reason-required": "Il docente non è il titolare di questa materia nella classe: importa la lezione con il titolare e poi usa «Sostituisci docente»",
+  "calendar.class-subject-required": "La materia del modulo non è assegnata a questa classe",
+  "calendar.module-or-class-subject-unavailable": "Modulo o materia non disponibili per questa classe",
+  "calendar.under-scheduled": "Ore sotto il previsto",
+  "calendar.over-scheduled": "Ore oltre il previsto",
+  "calendar.overlap": "Sovrapposta a un'altra lezione",
+  "calendar.nonexistent-local-time": "Orario inesistente per il cambio dell'ora legale",
+  "calendar.ambiguous-local-time": "Orario ambiguo per il cambio dell'ora legale",
+  "calendar.invalid-excel-date": "Data di Excel non valida: scrivila come testo (AAAA-MM-GG) o in formato data",
+  "calendar.invalid-excel-time": "Ora di Excel non valida: scrivila come testo (HH:mm) o in formato ora",
+  "calendar.excel-minute-precision-required": "Ora di Excel con secondi: usa ore e minuti",
+  "calendar.minute-precision-required": "Ora con secondi: usa ore e minuti (HH:mm)",
 };
+
+// Avviso del monte ore nell'anteprima (CalendarImportImpact.warning)
+export const HOUR_WARNING_LABELS = { "calendar.under-scheduled": "Ore sotto il previsto", "calendar.over-scheduled": "Ore oltre il previsto" };
 
 const GENERIC_ISSUES = ["RequiredColumnMissing", "RequiredFieldMissing", "InvalidValue", "AmbiguousMapping"];
 const FIELD_LABELS = { Date: "Data", StartsAt: "Ora inizio", EndsAt: "Ora fine", Class: "Classe", Module: "Modulo", Teacher: "Docente", Room: "Aula", Description: "Descrizione", ExternalReference: "Riferimento esterno" };

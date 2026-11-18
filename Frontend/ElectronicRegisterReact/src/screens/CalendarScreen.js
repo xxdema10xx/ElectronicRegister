@@ -3,6 +3,7 @@
 //  - Lezioni: classe + settimana, bozze e pubblicate, "Mostra annullate"; dal dettaglio si annulla, sposta,
 //    sostituisce il docente (LessonActions).
 //  - Importa: caricamento del mese da file e pubblicazione (CalendarImportScreen).
+//  - Impostazioni: fuso orario e giorni di anticipo (CalendarSettingsForm).
 // Su web vista, classe e settimana stanno nell'URL (?vista=…&classe=…&settimana=…).
 import { useCallback, useEffect, useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -16,16 +17,39 @@ import WeekNavigator from "../components/WeekNavigator";
 import LessonDetail from "../components/LessonDetail";
 import LessonActions from "../components/LessonActions";
 import CalendarImportScreen from "./CalendarImportScreen";
+import CalendarSettingsForm from "../components/CalendarSettingsForm";
 import { getClassesForPicker, getSchedule } from "../api/lessonService";
 import { getTeachers } from "../api/teacherService";
-import { calendarErrorMessage } from "../api/calendarImportService";
+import { calendarErrorMessage, getCalendarSettings } from "../api/calendarImportService";
 import { useLessons, useWeek } from "../hooks/useWeekSchedule";
 import { readSearchParams, replaceSearchParams } from "../navigation/examRoutes";
 
 export const CALENDAR_VIEWS = [
   { key: "lezioni", label: "Lezioni" },
   { key: "importa", label: "Importa" },
+  { key: "impostazioni", label: "Impostazioni" },
 ];
+
+function SettingsView() {
+  const { token } = useAuth();
+  const [settings, setSettings] = useState(undefined);
+  const [error, setError] = useState(null);
+  const [version, setVersion] = useState(0);
+  useEffect(() => {
+    let alive = true;
+    getCalendarSettings(token)
+      .then(d => { if (alive) { setSettings(d); setError(null); } })
+      .catch(e => { if (alive) { setSettings(null); setError(calendarErrorMessage(e)); } });
+    return () => { alive = false; };
+  }, [token, version]);
+  return (
+    <Card>
+      {settings === undefined ? <Text style={s.itemSub}>Caricamento…</Text>
+        : error ? <Text style={{ color: C.danger }}>{error}</Text>
+        : <CalendarSettingsForm settings={settings} onSaved={() => setVersion(v => v + 1)} />}
+    </Card>
+  );
+}
 
 function Tabs({ value, onChange, views }) {
   return (
@@ -105,6 +129,7 @@ export default function CalendarScreen({ role }) {
       {view === "importa" ? <CalendarImportScreen /> : (
         <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 32 }}>
           {view === "lezioni" && <LessonsView role={role} classes={classes} classId={classId} setClassId={setClassId} teachers={teachers} />}
+          {view === "impostazioni" && <SettingsView />}
         </ScrollView>
       )}
     </View>

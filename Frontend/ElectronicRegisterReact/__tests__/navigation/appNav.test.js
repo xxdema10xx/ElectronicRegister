@@ -48,7 +48,7 @@ const labels = () => ["Home", "Voti", "Classi", "Studenti", "Professori", "Mater
 describe("sidebar per ruolo (schermo largo)", () => {
   test.each([
     ["admin", ["Home", "Voti", "Classi", "Studenti", "Professori", "Materie", "Esami", "Calendario", "Membri", "Profilo"]],
-    ["staff", ["Home", "Voti", "Studenti", "Professori", "Esami", "Profilo"]],
+    ["staff", ["Home", "Voti", "Studenti", "Professori", "Esami", "Calendario", "Profilo"]],
     ["teacher", ["Home", "Classi", "Materie", "Esami", "Profilo"]],
     ["student", ["Home", "Voti", "Professori", "Materie", "Esami", "Profilo"]],
   ])("%s", (role, expected) => {

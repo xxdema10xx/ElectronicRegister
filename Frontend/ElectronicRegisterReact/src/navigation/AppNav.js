@@ -66,7 +66,8 @@ export default function AppNav({ user, onLogout }) {
     ...(role === "admin" || role === "staff" || role === "student" ? [{ key: "teachers", icon: "pencil-outline", label: "Professori" }] : []),
     ...(role !== "staff" ? [{ key: "subjects", icon: "library-outline", label: "Materie" }] : []),
     { key: "exams", icon: "document-text-outline", label: "Esami", dot: role === "student" && unseenCount > 0 },
-    ...(role === "admin" ? [{ key: "calendar", icon: "calendar-outline", label: "Calendario" }] : []),
+    // Calendario: import, pubblicazione e gestione delle lezioni anche per la segreteria (docs/api/INSTITUTION_CALENDAR.md)
+    ...(role === "admin" || role === "staff" ? [{ key: "calendar", icon: "calendar-outline", label: "Calendario" }] : []),
     ...(role === "admin" ? [{ key: "users", icon: "people-circle-outline", label: "Membri" }] : []),
     { key: "profile", icon: "person-circle-outline", label: "Profilo" },
   ];
@@ -98,7 +99,7 @@ export default function AppNav({ user, onLogout }) {
     subjects: <SubjectsScreen />,
     exams: role === "student" ? <StudentExamsScreen /> : <ExamsScreen />,
     users: <UsersScreen />,
-    calendar: role === "admin" ? <CalendarScreen role={role} /> : null,
+    calendar: role === "admin" || role === "staff" ? <CalendarScreen role={role} /> : null,
     profile: <ProfileScreen onLogout={logout} />,
   };
 

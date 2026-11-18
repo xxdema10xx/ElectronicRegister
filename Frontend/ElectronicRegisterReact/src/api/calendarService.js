@@ -131,3 +131,11 @@ export function rescheduleError({ date, startsAt, endsAt }) {
   if (endsAt <= startsAt) return "L'ora di fine deve essere dopo l'ora di inizio.";
   return null;
 }
+
+// ── Impostazioni del calendario (admin e staff) ─────────────────────────────────────────────
+// Prima configurazione con expectedRevision -1, poi con la revisione letta. Il fuso non si cambia più
+// dopo che esistono lezioni (lo decide il server).
+export async function saveCalendarSettings({ eventId, expectedRevision, timeZoneId, approvalLeadDays, reason }, token) {
+  const body = { eventId, expectedRevision, timeZoneId, approvalLeadDays, reason };
+  return (await axiosClient.put(`${BASE}/settings`, body, { headers: authHeader(token) })).data;
+}

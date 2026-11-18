@@ -171,6 +171,7 @@ export default function DashboardScreen({ navigate }) {
     ...(role === "staff" ? [
       nav("school-outline", "Studenti", "students"), nav("pencil-outline", "Professori", "teachers"),
       nav("ribbon-outline", "Voti", "grades"), nav("document-text-outline", "Esami", "exams"),
+      nav("calendar-outline", "Calendario", "calendar"),
     ] : []),
   ];
 

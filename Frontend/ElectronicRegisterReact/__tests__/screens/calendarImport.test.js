@@ -12,6 +12,8 @@ jest.mock("../../src/api/calendarImportService", () => ({
   getCalendarSettings: jest.fn(), previewImport: jest.fn(), confirmImport: jest.fn(), getMonthStatus: jest.fn(), publishPeriod: jest.fn(),
 }));
 jest.mock("../../src/api/lessonService");
+jest.mock("../../src/api/calendarService", () => ({ ...jest.requireActual("../../src/api/calendarService"), saveCalendarSettings: jest.fn() }));
+const calendarService = require("../../src/api/calendarService");
 jest.mock("../../src/api/teacherService");
 
 const file = { name: "orario.xlsx", uri: "file:///orario.xlsx", size: 1000 };
@@ -29,10 +31,32 @@ async function chooseClassAndFile() {
   await act(async () => { fireEvent.press(screen.getByText("Scegli file")); });
 }
 
-test("calendario non configurato: avviso e anteprima disattivata", async () => {
-  cal.getCalendarSettings.mockResolvedValue(null);
-  renderAs("admin", <CalendarImportScreen />);
+test("calendario non configurato: modulo di configurazione, prima volta con expectedRevision -1", async () => {
+  cal.getCalendarSettings.mockResolvedValueOnce(null).mockResolvedValue({ timeZoneId: "Europe/Rome", approvalLeadDays: 7, revision: 0 });
+  renderAs("staff", <CalendarImportScreen />);
+  expect((await screen.findAllByText("Configura il calendario")).length).toBe(2); // titolo e pulsante
+  expect(screen.getByText(/Il fuso orario non si può più cambiare/)).toBeTruthy();
+  expect(screen.getByLabelText("Fuso orario (es. Europe/Rome)").props.value).toBe("Europe/Rome");
+  // il fuso proposto va confermato
+  fireEvent.changeText(screen.getByLabelText("Giorni di anticipo per l'approvazione del mese (0–366)"), "7");
+  fireEvent.changeText(screen.getByLabelText("Motivo (obbligatorio, resta nello storico)"), "Prima configurazione");
+  await act(async () => { fireEvent.press(screen.getAllByText("Configura il calendario").at(-1)); });
+  expect(calendarService.saveCalendarSettings).not.toHaveBeenCalled();
+  expect(screen.getByText("Conferma il fuso orario.")).toBeTruthy();
+  fireEvent.press(screen.getByText("Confermo il fuso orario Europe/Rome"));
+  await act(async () => { fireEvent.press(screen.getAllByText("Configura il calendario").at(-1)); });
+  expect(calendarService.saveCalendarSettings).toHaveBeenCalledWith(
+    { eventId: expect.any(String), expectedRevision: -1, timeZoneId: "Europe/Rome", approvalLeadDays: 7, reason: "Prima configurazione" }, "tok");
+  await flush();
+  expect(cal.getCalendarSettings).toHaveBeenCalledTimes(2); // riletto dopo il salvataggio
+  expect(screen.queryByText("Configura il calendario")).toBeNull();
+});
+
+test("calendario non raggiungibile (403): messaggio chiaro, niente modulo", async () => {
+  cal.getCalendarSettings.mockRejectedValue(Object.assign(new Error("x"), { status: 403 }));
+  renderAs("staff", <CalendarImportScreen />);
   expect(await screen.findByText("Calendario non disponibile")).toBeTruthy();
+  expect(screen.getByText(/Non hai i permessi/)).toBeTruthy();
 });
 
 test("ID dei docenti visibili a richiesta", async () => {
@@ -50,17 +74,18 @@ test("file non supportato o troppo grande", async () => {
   await act(async () => { fireEvent.press(screen.getByText("Scegli file")); });
   expect(await screen.findByText("Scegli un file .xlsx o .csv.")).toBeTruthy();
   await pressDialog("OK");
-  // D-10: tra 10 e 12 MB il server rifiuta il file: il client avvisa prima dell'invio
-  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "x.csv", size: 11 * 1024 * 1024 }] });
+  // Nginx in produzione accetta 1 MB (EXPO_PUBLIC_CALENDAR_MAX_UPLOAD_MB): il client avvisa prima dell'invio
+  expect(screen.getByText(/al massimo 1 MB e 2000 righe/)).toBeTruthy();
+  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "x.csv", size: 2 * 1024 * 1024 }] });
   await act(async () => { fireEvent.press(screen.getByText("Scegli file")); });
-  expect(await screen.findByText("Il file può essere al massimo di 10 MB.")).toBeTruthy();
+  expect(await screen.findByText("Il file può essere al massimo di 1 MB. File troppo grande per il server: dividilo per classe o salvalo in CSV.")).toBeTruthy();
   await pressDialog("OK");
   // su web la dimensione può arrivare solo dal File
-  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "y.csv", file: { size: 10 * 1024 * 1024 + 1 } }] });
+  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "y.csv", file: { size: 1024 * 1024 + 1 } }] });
   await act(async () => { fireEvent.press(screen.getByText("Scegli file")); });
-  expect(await screen.findByText("Il file può essere al massimo di 10 MB.")).toBeTruthy();
+  expect(await screen.findByText("Il file può essere al massimo di 1 MB. File troppo grande per il server: dividilo per classe o salvalo in CSV.")).toBeTruthy();
   await pressDialog("OK");
-  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "ok.csv", size: 10 * 1024 * 1024 }] });
+  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "ok.csv", size: 1024 * 1024 }] });
   await act(async () => { fireEvent.press(screen.getByText("Scegli file")); });
   expect(screen.queryByText("File troppo grande")).toBeNull();
 });
@@ -107,7 +132,7 @@ test("anteprima con avvisi: conferma solo dopo la spunta; poi lezioni in bozza",
   fireEvent.changeText(screen.getByPlaceholderText(/Es\. Orario di/), "Orario");
   await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
   expect(screen.getByText("⚠ Colonna non riconosciuta, verrà ignorata")).toBeTruthy(); // avviso comune, una volta sola
-  expect(screen.getByText("11h su 10h (+1h)")).toBeTruthy();
+  expect(screen.getByText("Ore oltre il previsto: 11h su 10h (+1h)")).toBeTruthy();
   fireEvent.press(screen.getByText("Crea 2 lezioni in bozza"));
   expect(cal.confirmImport).not.toHaveBeenCalled();
   fireEvent.press(screen.getByText("Ho letto gli avvisi e voglio procedere"));
@@ -137,4 +162,39 @@ test("stato del mese non leggibile: errore sulla riga della classe", async () =>
   renderAs("admin", <CalendarImportScreen />);
   fireEvent.press(await screen.findByText("SW-25B"));
   expect(await screen.findByText(/non è attivo per questo istituto/)).toBeTruthy();
+});
+
+test("anteprima: 413 o connessione chiusa da Nginx → file troppo grande per il server", async () => {
+  renderAs("admin", <CalendarImportScreen />);
+  await chooseClassAndFile();
+  fireEvent.changeText(screen.getByLabelText("Motivazione (obbligatoria, resta nello storico)"), "Orario");
+  cal.previewImport.mockRejectedValueOnce(Object.assign(new Error("Payload Too Large"), { status: 413 }));
+  await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
+  expect(await screen.findByText("File troppo grande per il server: dividilo per classe o salvalo in CSV.")).toBeTruthy();
+  await pressDialog("OK");
+  cal.previewImport.mockRejectedValueOnce(Object.assign(new Error("Impossibile contattare il server."), { status: undefined }));
+  await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
+  expect(await screen.findByText(/File troppo grande per il server.*controlla la connessione/)).toBeTruthy();
+});
+
+test("anteprima: classe senza piano formativo pubblicato", async () => {
+  renderAs("admin", <CalendarImportScreen />);
+  await chooseClassAndFile();
+  fireEvent.changeText(screen.getByLabelText("Motivazione (obbligatoria, resta nello storico)"), "Orario");
+  cal.previewImport.mockRejectedValueOnce(Object.assign(new Error("x"), { status: 409, code: "calendar.teaching-configuration-required" }));
+  await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
+  expect(await screen.findByText(/non ha un piano formativo pubblicato: chiedi all'amministrazione/)).toBeTruthy();
+});
+
+test("riga con docente non titolare: messaggio comprensibile", async () => {
+  cal.previewImport.mockResolvedValue({
+    id: "p1", revision: 0, digest: "d", expiresAtUtc: "2026-11-20T10:00:00Z", canConfirm: false, replaced: 0, totalRows: 1, validRows: 0, invalidRows: 1,
+    rows: [{ rowNumber: 2, lesson: null, teacherReference: "t9", issues: [{ code: "calendar.reason-required", field: "Teacher", warning: false }], conflicts: [] }], hours: [],
+  });
+  renderAs("admin", <CalendarImportScreen />);
+  await chooseClassAndFile();
+  fireEvent.changeText(screen.getByLabelText("Motivazione (obbligatoria, resta nello storico)"), "Orario");
+  await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
+  expect(await screen.findByText(/Il docente non è il titolare di questa materia nella classe: importa la lezione con il titolare e poi usa «Sostituisci docente»/)).toBeTruthy();
+  expect(screen.queryByText(/Indica una motivazione/)).toBeNull();
 });
