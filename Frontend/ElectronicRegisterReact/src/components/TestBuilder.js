@@ -5,6 +5,7 @@
 //      a destra l'editor ampio della domanda scelta. Su schermi stretti i due pannelli si impilano;
 //   3. Studenti — chi deve svolgere l'esame, con eventuale tempo aggiuntivo.
 // Il passo corrente è salvato nella bozza (draft.step), così si riprende da dove si era rimasti.
+import { plural, pluralWord } from "../utils/plural";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -204,7 +205,7 @@ export function passingPointsLabel(totalPoints, percent) {
   if (!(totalPoints > 0) || !(p > 0 && p < 100)) return null;
   const n = Math.round(totalPoints * p) / 100; // punti esatti
   const shown = Math.round(n * 10) / 10;
-  return `= ${String(shown).replace(".", ",")} punti su ${String(totalPoints).replace(".", ",")}`;
+  return `= ${String(shown).replace(".", ",")} ${pluralWord(shown, "punto", "punti")} su ${String(totalPoints).replace(".", ",")}`;
 }
 
 const field = { backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, color: C.text, fontSize: 15 };
@@ -736,7 +737,7 @@ export default function TestBuilder({ visible = true, contextLabel, draft, onCha
         <View style={{ flex: 1 }}>
           <Text style={{ color: C.text, fontWeight: "800", fontSize: 16 }} numberOfLines={2}>{env?.draftName}</Text>
           {!!draft.description.trim() && <Text style={[s.itemSub, { marginTop: 2 }]} numberOfLines={2}>{draft.description}</Text>}
-          <Text style={[s.itemSub, { marginTop: 2 }]}>{draft.students.length} studenti assegnati · {draft.durationMinutes} min</Text>
+          <Text style={[s.itemSub, { marginTop: 2 }]}>{plural(draft.students.length, "studente assegnato", "studenti assegnati")} · {draft.durationMinutes} min</Text>
         </View>
         <Ionicons name="create-outline" size={20} color={C.primary} />
       </TouchableOpacity>

@@ -141,19 +141,24 @@ export async function saveCalendarSettings({ eventId, expectedRevision, timeZone
 }
 
 // ── Monte ore ───────────────────────────────────────────────────────────────────────────────
-// Minuti → "12 h 30 min" · "45 min" · "12 h". Nessun arrotondamento: 599 minuti restano "9 h 59 min".
+// Unico formatter delle durate del calendario (monte ore, "Le mie ore", anteprima dell'import).
+// Minuti → "12 h 30 min" · "45 min" · "12 h" · "0 h" (lo zero in ore come gli altri valori).
+// Nessun arrotondamento: 599 minuti restano "9 h 59 min".
 export function formatMinutes(minutes) {
   const n = Number(minutes) || 0;
-  const sign = n < 0 ? "-" : "";
   const abs = Math.abs(Math.trunc(n));
+  const sign = n < 0 && abs ? "-" : "";
   const h = Math.floor(abs / 60), m = abs % 60;
+  if (!abs) return "0 h";
   if (!h) return `${sign}${m} min`;
   return m ? `${sign}${h} h ${m} min` : `${sign}${h} h`;
 }
 
+// Unica mappa degli avvisi del monte ore: la usano l'anteprima dell'import e la sezione "Monte ore",
+// così lo stesso codice ha sempre lo stesso testo
 export const HOURS_WARNING_LABELS = {
-  "calendar.under-scheduled": "Ore da programmare",
-  "calendar.over-scheduled": "Programmate oltre il previsto",
+  "calendar.under-scheduled": "Ore sotto il previsto",
+  "calendar.over-scheduled": "Ore oltre il previsto",
   "calendar.delivery-incomplete": "Ore ancora da svolgere",
   "calendar.over-delivered": "Svolte oltre il previsto",
 };
@@ -166,17 +171,33 @@ export async function getClassHours(classId, token) {
 // Nomi di moduli e unità formative dalla versione del piano usata dal report (admin e staff).
 // Se il piano non si legge (rollout spento, permessi) si restituiscono mappe vuote: i nomi mancanti
 // diventano "Modulo" / "Unità formativa".
+// order: posizione di unità e moduli nel piano (displayOrder, poi codice), per mostrarli nello stesso ordine
+// del piano invece che in quello della risposta del monte ore.
+const byPlanOrder = (a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0) || String(a.code || "").localeCompare(String(b.code || ""), "it", { numeric: true });
+
 export async function getPlanNames(versionId, token) {
-  const names = { modules: {}, units: {} };
+  const names = { modules: {}, units: {}, order: { modules: {}, units: {} } };
   if (!versionId) return names;
   try {
     const { data } = await axiosClient.get(`/institution/formative-plan-versions/${versionId}`, { headers: authHeader(token) });
-    for (const u of data?.units || []) {
+    let unitRank = 0, moduleRank = 0;
+    for (const u of (data?.units || []).slice().sort(byPlanOrder)) {
       names.units[u.id] = [u.code, u.name].filter(Boolean).join(" · ") || null;
-      for (const m of u.modules || []) names.modules[m.id] = [m.code, m.name].filter(Boolean).join(" · ") || null;
+      names.order.units[u.id] = unitRank++;
+      for (const m of (u.modules || []).slice().sort(byPlanOrder)) {
+        names.modules[m.id] = [m.code, m.name].filter(Boolean).join(" · ") || null;
+        names.order.modules[m.id] = moduleRank++;
+      }
     }
   } catch { /* nomi facoltativi */ }
   return names;
+}
+
+// Elementi del monte ore nell'ordine del piano; quelli che il piano non conosce restano in fondo,
+// nell'ordine ricevuto
+export function sortByPlan(items, idKey, rank = {}) {
+  const pos = (x) => (Number.isFinite(rank[x[idKey]]) ? rank[x[idKey]] : Infinity);
+  return items.map((x, i) => ({ x, i })).sort((a, b) => (pos(a.x) - pos(b.x)) || a.i - b.i).map(e => e.x);
 }
 
 // Anno scolastico corrente: 1 settembre – 31 agosto (al massimo 366 giorni, limite del server)

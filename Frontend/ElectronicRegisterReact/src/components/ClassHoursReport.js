@@ -7,7 +7,7 @@ import { Text, View } from "react-native";
 import { C, s } from "../constants/theme";
 import { useAuth } from "../hooks/useAuth";
 import StatusChip from "./StatusChip";
-import { HOURS_WARNING_LABELS, formatMinutes, getClassHours, getPlanNames } from "../api/calendarService";
+import { HOURS_WARNING_LABELS, formatMinutes, getClassHours, getPlanNames, sortByPlan } from "../api/calendarService";
 import { TEACHING_PLAN_MESSAGE, calendarErrorMessage } from "../api/calendarImportService";
 import { MONTHS } from "../api/lessonService";
 
@@ -72,8 +72,9 @@ export default function ClassHoursReport({ classId }) {
   if (state.error) return <Text accessibilityRole="alert" style={{ color: C.danger, fontSize: 14 }}>{state.error}</Text>;
 
   const { report, names } = state;
-  const modules = report?.modules || [];
-  const units = report?.units || [];
+  // Ordine del piano (UF1 prima di UF2, M1 prima di M2…), non quello della risposta del server
+  const modules = sortByPlan(report?.modules || [], "moduleId", names?.order?.modules);
+  const units = sortByPlan(report?.units || [], "unitId", names?.order?.units);
   const months = (report?.months || []).slice().sort((a, b) => a.year - b.year || a.month - b.month);
   const total = (k) => report?.[k] ?? modules.reduce((sum, m) => sum + (m[k] || 0), 0);
 

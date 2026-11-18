@@ -83,3 +83,26 @@ test("monte ore: vista con la classe scelta", async () => {
   await flush();
   expect(screen.getByText(/Contano tutti i docenti, titolari e supplenti/)).toBeTruthy();
 });
+
+test("«Mostra annullate» resta attivo cambiando settimana, classe e scheda", async () => {
+  renderAs("admin", <CalendarScreen role="admin" />);
+  await flush();
+  fireEvent.press(screen.getByText("Mostra annullate"));
+  await flush();
+  const last = () => lessonService.getSchedule.mock.calls.at(-1)[0];
+  expect(last().includeCancelled).toBe(true);
+  const week = last().from;
+  await act(async () => { fireEvent.press(screen.getByLabelText("Settimana successiva")); });
+  await flush();
+  expect(last().from).not.toBe(week);
+  expect(last().includeCancelled).toBe(true);
+  fireEvent.press(screen.getByText("SW-25A")); // apre la scelta della classe
+  fireEvent.press(screen.getAllByText("SW-25B").at(-1));
+  await flush();
+  expect(last()).toEqual(expect.objectContaining({ classId: "c2", includeCancelled: true }));
+  fireEvent.press(screen.getByText("Monte ore"));
+  await flush();
+  fireEvent.press(screen.getByText("Lezioni"));
+  await flush();
+  expect(last().includeCancelled).toBe(true);
+});

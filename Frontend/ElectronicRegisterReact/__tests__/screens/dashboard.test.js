@@ -154,3 +154,14 @@ test("toccando una lezione si apre il dettaglio", async () => {
   await flush();
   expect(screen.getByText("Subnetting")).toBeTruthy();
 });
+
+test("orario in Home su una riga sua, a tutta larghezza, per studente, docente e admin", async () => {
+  for (const role of ["student", "teacher", "admin"]) {
+    const { unmount } = renderAs(role, <DashboardScreen navigate={jest.fn()} />);
+    await flush();
+    const panel = screen.getByTestId("home-lessons-panel");
+    expect(panel.props.style).toEqual({ width: "100%" });
+    expect(screen.getByText("Orario delle lezioni")).toBeTruthy();
+    unmount();
+  }
+});

@@ -2,6 +2,7 @@
 // Riquadro di un esame nell'elenco docente/admin. Gerarchia: stato a colpo d'occhio (barra laterale e
 // chip), dettagli come pillole con icona, azioni nel piè di pagina: quelle di consultazione a sinistra,
 // quelle che cambiano lo stato dell'esame (Pubblica, Elimina, Annulla) in basso a destra.
+import { plural, pluralWord } from "../utils/plural";
 import { ActivityIndicator, Platform, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
@@ -98,8 +99,8 @@ export default function ExamCard({ exam, status, displayName, busy, onPress, hre
           <Pill icon="calendar-outline" text={windowLabel(exam.availableFrom, exam.availableUntil)} />
           <Pill icon="time-outline" text={`${exam.durationMinutes} min`} />
           <Pill icon="flag-outline" text={`Soglia ${exam.passingPercent}%`} />
-          <Pill icon="star-outline" text={`${exam.totalPoints} punti`} />
-          <Pill icon="people-outline" text={`${exam.assignedStudentsCount} ${exam.assignedStudentsCount === 1 ? "studente" : "studenti"}`} />
+          <Pill icon="star-outline" text={`${exam.totalPoints} ${pluralWord(exam.totalPoints, "punto", "punti")}`} />
+          <Pill icon="people-outline" text={plural(exam.assignedStudentsCount, "studente", "studenti")} />
         </View>
         </TouchableOpacity>
 

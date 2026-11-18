@@ -103,7 +103,7 @@ test("consegna volontaria con conferma", async () => {
   fireEvent.press(screen.getAllByText("POST")[0]);
   fireEvent.press(screen.getByText("Consegna (1/3)"));
   expect(screen.getByText("Domande senza risposta (evidenziate): 2, 3.")).toBeTruthy();
-  expect(screen.getByText(/Hai risposto a 1 domande su 3/)).toBeTruthy();
+  expect(screen.getByText(/Hai risposto a 1 domanda su 3/)).toBeTruthy();
   await act(async () => { fireEvent.press(screen.getByText("Sì, consegna")); });
   expect(api.submitExam).toHaveBeenCalledWith("sub1", { clientRevision: 2, answers: [{ questionId: "q1", openText: null, selectedOptionIds: ["o1"] }] });
   expect(onFinish).toHaveBeenCalledWith({ result: { status: "graded" }, auto: false, reason: null, violations: 0 });

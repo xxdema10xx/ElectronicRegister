@@ -7,9 +7,14 @@ import { Platform } from "react-native";
 export const CALENDAR_TEMPLATE_HEADERS = ["Data", "Ora inizio", "Ora fine", "Classe", "Modulo", "Docente", "Aula", "Descrizione"];
 const BOM = "﻿";
 
+// Formula injection: Excel esegue come formula una cella che inizia con = + - @ (anche tab o CR davanti).
+// Si antepone un apostrofo, che Excel mostra come testo; va fatto prima delle virgolette.
+const FORMULA_START = /^[=+\-@\t\r]/;
+export const neutralizeCell = (v) => (FORMULA_START.test(v) ? `'${v}` : v);
+
 // Un valore con ; " o a capo va tra virgolette, con le virgolette raddoppiate
 export function csvCell(value) {
-  const v = value === null || value === undefined ? "" : String(value);
+  const v = neutralizeCell(value === null || value === undefined ? "" : String(value));
   return /[;"\r\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
 }
 

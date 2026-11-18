@@ -5,7 +5,7 @@
 //  - Importa: caricamento del mese da file e pubblicazione (CalendarImportScreen).
 //  - Monte ore: ore previste, programmate e svolte per modulo della classe (ClassHoursReport).
 //  - Impostazioni: fuso orario e giorni di anticipo (CalendarSettingsForm).
-// Su web vista, classe e settimana stanno nell'URL (?vista=…&classe=…&settimana=…).
+// Su web vista, classe, settimana e "Mostra annullate" stanno nell'URL (?vista=…&classe=…&settimana=…&annullate=1).
 import { useCallback, useEffect, useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { C, s } from "../constants/theme";
@@ -70,10 +70,11 @@ function Tabs({ value, onChange, views }) {
   );
 }
 
-function LessonsView({ role, classes, classId, setClassId, teachers }) {
+// showCancelled vive nella pagina (e su web nell'URL, ?annullate=1): resta attivo cambiando settimana,
+// classe o scheda e dopo una ricarica
+function LessonsView({ role, classes, classId, setClassId, teachers, showCancelled, setShowCancelled }) {
   const { token } = useAuth();
   const { week, prev, next, today } = useWeek();
-  const [showCancelled, setShowCancelled] = useState(false);
   const [openLessonId, setOpenLessonId] = useState(null);
   const [detailKey, setDetailKey] = useState(0);
   const { lessons, error, reload } = useLessons(
@@ -112,6 +113,11 @@ export default function CalendarScreen({ role }) {
   const [classes, setClasses] = useState([]);
   const [classId, setClassId] = useState(initial.classe || null);
   const [teachers, setTeachers] = useState([]);
+  const [showCancelled, setShowCancelled] = useState(initial.annullate === "1");
+  // La vista Importa resta montata (nascosta) dopo la prima apertura: cambiando scheda non si perdono
+  // mese, classi, motivazione, file e anteprima. Prima si smontava e ogni ritorno ripartiva da zero.
+  const [importOpened, setImportOpened] = useState(view === "importa");
+  useEffect(() => { if (view === "importa") setImportOpened(true); }, [view]);
 
   useEffect(() => {
     let alive = true;
@@ -122,16 +128,28 @@ export default function CalendarScreen({ role }) {
     return () => { alive = false; };
   }, [token]);
 
-  useEffect(() => { replaceSearchParams({ vista: view === "lezioni" ? null : view, classe: view === "lezioni" || view === "ore" ? classId : null }); }, [view, classId]);
+  useEffect(() => {
+    replaceSearchParams({
+      vista: view === "lezioni" ? null : view,
+      classe: view === "lezioni" || view === "ore" ? classId : null,
+      annullate: view === "lezioni" && showCancelled ? "1" : null,
+    });
+  }, [view, classId, showCancelled]);
 
   return (
     <View style={{ flex: 1 }}>
       <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
         <Tabs value={view} onChange={setView} views={views} />
       </View>
-      {view === "importa" ? <CalendarImportScreen /> : (
+      {(importOpened || view === "importa") && (
+        <View style={{ flex: 1, display: view === "importa" ? "flex" : "none" }} accessibilityElementsHidden={view !== "importa"} importantForAccessibility={view === "importa" ? "auto" : "no-hide-descendants"}>
+          <CalendarImportScreen />
+        </View>
+      )}
+      {view !== "importa" && (
         <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 32 }}>
-          {view === "lezioni" && <LessonsView role={role} classes={classes} classId={classId} setClassId={setClassId} teachers={teachers} />}
+          {view === "lezioni" && <LessonsView role={role} classes={classes} classId={classId} setClassId={setClassId} teachers={teachers}
+            showCancelled={showCancelled} setShowCancelled={setShowCancelled} />}
           {view === "ore" && (
             <Card>
               <Text style={s.sectionTitle}>Monte ore</Text>

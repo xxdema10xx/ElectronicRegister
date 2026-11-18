@@ -1,9 +1,10 @@
 import axiosClient from "../../src/api/axiosClient";
 import { session } from "../../src/api/session";
 import {
-  calendarErrorMessage, confirmImport, conflictMessage, getCalendarSettings, getMonthStatus, getPeriod, issueMessage, monthRange,
-  previewImport, publishPeriod,
+  DELIMITER_MESSAGE, HOUR_WARNING_LABELS, NO_LESSONS_MESSAGE, calendarErrorMessage, confirmImport, confirmLabel, conflictMessage,
+  getCalendarSettings, getMonthStatus, getPeriod, issueMessage, issueParts, monthRange, precheckCalendarCsv, previewImport, publishPeriod, readFileText,
 } from "../../src/api/calendarImportService";
+import { HOURS_WARNING_LABELS } from "../../src/api/calendarService";
 
 const ok = (data) => Promise.resolve({ data });
 const err = (props) => Promise.reject(Object.assign(new Error("x"), props));
@@ -107,8 +108,9 @@ describe("messaggi", () => {
     expect(issueMessage({ code: "InvalidValue", field: "Date" })).toBe("Data: valore non valido");
     expect(issueMessage({ code: "calendar.invalid-time", field: "StartsAt" })).toBe("Ora non valida: usa HH:mm");
     expect(issueMessage({ code: "IgnoredColumn", field: "2" }, ["Data", "Classe", "Note"])).toBe("Colonna non riconosciuta, verrà ignorata: \"Note\"");
-    expect(issueMessage({ code: "Sconosciuto", message: "Testo del server" })).toBe("Testo del server");
-    expect(issueMessage({ code: "Sconosciuto" })).toBe("Sconosciuto");
+    // codice sconosciuto: mai grezzo da solo, né il testo generico del server ("Riferimenti o intervallo non validi.")
+    expect(issueMessage({ code: "Sconosciuto", message: "Testo del server" })).toBe("Valore non accettato (Sconosciuto)");
+    expect(issueMessage({ code: "Sconosciuto" })).toBe("Valore non accettato (Sconosciuto)");
   });
 
   test("conflitti come numero o come nome", () => {
@@ -116,4 +118,100 @@ describe("messaggi", () => {
     expect(conflictMessage({ kind: "TeacherOverlap" })).toBe("Il docente ha già un'altra lezione");
     expect(conflictMessage({ kind: 99 })).toBe("Conflitto di orario");
   });
+});
+
+describe("codici del lettore dei file", () => {
+  test("EmptyFile, MalformedCsv, InvalidHeader tradotti; col tab InvalidHeader diventa il messaggio sul separatore", () => {
+    expect(calendarErrorMessage({ status: 400, code: "EmptyFile", message: "EmptyFile" })).toBe("Il file è vuoto.");
+    expect(calendarErrorMessage({ status: 400, code: "MalformedCsv", message: "MalformedCsv" })).toBe("Il CSV non è leggibile: controlla virgolette e separatori.");
+    expect(calendarErrorMessage({ status: 400, code: "InvalidHeader" })).toBe("Intestazioni non riconosciute: usa il modello.");
+    expect(calendarErrorMessage({ status: 400, code: "InvalidHeader" }, { tabSeparated: true })).toBe(DELIMITER_MESSAGE);
+  });
+
+  test("tutti i codici del lettore hanno un messaggio, mai il codice grezzo", () => {
+    ["ColumnCountMismatch", "InvalidDelimiter", "InvalidParsingOptions", "RecordTooLong", "CellTooLong", "TooManyColumns", "TooManyRows",
+      "MalformedWorkbook", "UnsupportedWorkbook", "HostileWorkbook", "ZipLimitExceeded", "XmlLimitExceeded", "TooManySharedStrings",
+      "FormulaNotAllowed", "ExternalReferenceNotAllowed", "WorksheetSelectionRequired", "UnsupportedCellType", "AmbiguousCalendarCell",
+      "DelimiterNotDetected", "AmbiguousDelimiter", "InvalidEncoding", "UnsupportedEncoding", "UnsupportedFormat", "FileTooLarge"]
+      .forEach(code => {
+        const text = calendarErrorMessage({ status: 400, code, message: code });
+        expect(text).not.toContain(code);
+        expect(text).not.toContain("Il server ha rifiutato");
+      });
+  });
+
+  test("codice sconosciuto: testo generico con il codice tra parentesi, mai il codice da solo", () => {
+    expect(calendarErrorMessage({ status: 400, code: "NuovoCodice", message: "NuovoCodice" })).toBe("Il server ha rifiutato l'operazione. (NuovoCodice)");
+  });
+});
+
+describe("messaggi di riga per codice", () => {
+  test("righe rifiutate: un messaggio per ciascun codice, non il testo generico del server", () => {
+    const generic = "Riferimenti o intervallo non validi.";
+    const row = (code) => issueMessage({ field: "Row", code, message: generic });
+    expect(row("calendar.row-outside-month")).toBe("Data fuori dal mese selezionato");
+    expect(row("calendar.teacher-unavailable")).toBe("Docente non trovato: usa l'ID del docente");
+    expect(row("calendar.module-unavailable")).toBe("Modulo non trovato nel piano formativo della classe");
+    expect(row("calendar.ambiguous-module")).toBe("Più moduli con questo nome");
+    expect(row("calendar.reason-required")).toMatch(/non è il titolare.*«Sostituisci docente»/);
+    expect(row("calendar.class-unavailable")).toBe("Classe non trovata");
+  });
+
+  test("testo che inizia con = + - @: spiegazione della protezione dalle formule", () => {
+    expect(issueMessage({ field: "Description", code: "InvalidValue" })).toBe("Descrizione: il testo non può iniziare con = + - @ (protezione dalle formule di Excel)");
+    expect(issueMessage({ field: "Room", code: "InvalidValue" })).toBe("Aula: il testo non può iniziare con = + - @ (protezione dalle formule di Excel)");
+    expect(issueMessage({ field: "Date", code: "InvalidValue" })).toBe("Data: valore non valido"); // date e ore restano generiche
+  });
+
+  test("issueParts separa il codice sconosciuto (da mostrare piccolo)", () => {
+    expect(issueParts({ field: "Row", code: "calendar.nuovo" })).toEqual({ text: "Valore non accettato", code: "calendar.nuovo" });
+    expect(issueParts({ field: "Row", code: "calendar.row-outside-month" })).toEqual({ text: "Data fuori dal mese selezionato", code: null });
+  });
+});
+
+describe("controlli del CSV prima dell'invio", () => {
+  const H = "Data;Ora inizio;Ora fine;Classe;Modulo;Docente;Aula;Descrizione";
+  test("file vuoto o con la sola intestazione (anche con righe ;;; di Excel)", () => {
+    expect(precheckCalendarCsv("")).toMatchObject({ ok: false, message: "Il file è vuoto." });
+    expect(precheckCalendarCsv("﻿\r\n  \r\n")).toMatchObject({ ok: false, message: "Il file è vuoto." });
+    expect(precheckCalendarCsv(`${H}\r\n`)).toMatchObject({ ok: false, message: NO_LESSONS_MESSAGE });
+    expect(precheckCalendarCsv(`﻿${H}\r\n;;;;;;;\r\n\r\n`)).toMatchObject({ ok: false, message: "Il file non contiene lezioni." });
+  });
+
+  test("intestazioni: alias del backend senza distinzione di maiuscole, con BOM, ; oppure ,", () => {
+    expect(precheckCalendarCsv(`﻿${H}\n2026-12-01;09:00;11:00;1A;M1;t1;;`)).toMatchObject({ ok: true, unknown: [] });
+    expect(precheckCalendarCsv("DATE,startsat,ENDSAT,class,Module,TEACHER\n2026-12-01,09:00,11:00,1A,M1,t1")).toMatchObject({ ok: true });
+    expect(precheckCalendarCsv("OraInizio;OraFine;Data;Classe;Modulo;Docente;Note\nx;x;x;x;x;x;x")).toMatchObject({ ok: true, unknown: ["Note"] });
+  });
+
+  test("colonne obbligatorie mancanti: elenco di mancanti e sconosciute, non si invia", () => {
+    const r = precheckCalendarCsv("Giorno;Ora inizio;Ora fine;Classe;Materia;Docente\n2026-12-01;09:00;11:00;1A;M1;t1");
+    expect(r.ok).toBe(false);
+    expect(r.missing).toEqual(["Date", "Module"]);
+    expect(r.message).toBe("Mancano le colonne obbligatorie: Data, Modulo. Colonne non riconosciute: Giorno, Materia. Usa le intestazioni del modello.");
+  });
+
+  test("file separato dal tab", () => {
+    expect(precheckCalendarCsv("Data\tOra inizio\tOra fine\tClasse\tModulo\tDocente\nx\tx\tx\tx\tx\tx")).toMatchObject({ ok: false, tabSeparated: true, message: DELIMITER_MESSAGE });
+  });
+
+  test("lettura del file: File del browser; se non si legge, null (decide il backend)", async () => {
+    expect(await readFileText({ name: "a.csv", file: { text: async () => "abc" } })).toBe("abc");
+    expect(await readFileText({ name: "a.csv", file: { text: async () => { throw new Error("no"); } } })).toBeNull();
+    expect(await readFileText({ name: "a.csv" })).toBeNull();
+  });
+});
+
+test("pulsante di conferma: 0 senza numeri, 1 al singolare, N al plurale", () => {
+  expect(confirmLabel(0)).toBe("Nessuna lezione da creare");
+  expect(confirmLabel(undefined)).toBe("Nessuna lezione da creare");
+  expect(confirmLabel(1)).toBe("Crea 1 lezione in bozza");
+  expect(confirmLabel(6)).toBe("Crea 6 lezioni in bozza");
+});
+
+test("avvisi del monte ore: una sola mappa per anteprima e sezione Monte ore", () => {
+  expect(HOUR_WARNING_LABELS).toBe(HOURS_WARNING_LABELS);
+  expect(issueMessage({ code: "calendar.under-scheduled" })).toBe(HOURS_WARNING_LABELS["calendar.under-scheduled"]);
+  expect(issueMessage({ code: "calendar.over-scheduled" })).toBe(HOURS_WARNING_LABELS["calendar.over-scheduled"]);
+  expect(HOURS_WARNING_LABELS["calendar.under-scheduled"]).toBe("Ore sotto il previsto");
 });

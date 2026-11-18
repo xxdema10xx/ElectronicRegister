@@ -1,5 +1,6 @@
 // src/components/TestViewer.js
 // Dettaglio in sola lettura di un esame (ExamDetailDto): dati, domande, opzioni con le risposte giuste, punti.
+import { plural, pluralWord } from "../utils/plural";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C, s } from "../constants/theme";
@@ -54,8 +55,8 @@ export default function TestViewer({ exam, displayName, contextLabel, onClose, a
                 {EXAM_STATUS_LABEL[status]} · {formatDateTime(exam.availableFrom)} → {formatDateTime(exam.availableUntil)}
               </Text>
               <Text style={{ color: C.text, marginTop: 4 }}>
-                {exam.durationMinutes} min · soglia {exam.passingPercent}% · {questions.length} domande ({closed} chiuse, {questions.length - closed} aperte) · {exam.totalPoints} punti
-                {exam.assignedStudents ? ` · ${exam.assignedStudents.length} studenti` : ""}
+                {exam.durationMinutes} min · soglia {exam.passingPercent}% · {plural(questions.length, "domanda", "domande")} ({plural(closed, "chiusa", "chiuse")}, {plural(questions.length - closed, "aperta", "aperte")}) · {exam.totalPoints} {pluralWord(exam.totalPoints, "punto", "punti")}
+                {exam.assignedStudents ? ` · ${plural(exam.assignedStudents.length, "studente", "studenti")}` : ""}
               </Text>
             </Card>
 

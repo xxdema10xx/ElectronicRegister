@@ -1,6 +1,7 @@
 // src/screens/MyClassesScreen.js
 // Solo insegnanti: elenco delle classi in cui insegnano (non tutti gli studenti del registro).
 // Toccando una classe si vedono le materie insegnate in quella classe e gli studenti che la frequentano.
+import { plural } from "../utils/plural";
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -239,7 +240,7 @@ export default function MyClassesScreen() {
               <View style={s.avatar}><Ionicons name="people-outline" size={20} color="#1D4ED8" /></View>
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.itemTitle}>{k.name}</Text>
-                <Text style={s.itemSub}>{k.students.length} studenti · {k.subjects.length} materie</Text>
+                <Text style={s.itemSub}>{plural(k.students.length, "studente", "studenti")} · {plural(k.subjects.length, "materia", "materie")}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={C.textLight} />
             </ListRow>
