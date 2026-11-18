@@ -55,7 +55,8 @@ export default function UsersScreen() {
   const [busy, setBusy] = useState(false);
   const [creating, setCreating] = useState(false); // modulo "Nuovo account"
   const [classOptions, setClassOptions] = useState([]); // per assegnare subito la classe a un nuovo studente
-  useEffect(() => { getClassesForPicker(token).then(setClassOptions).catch(() => setClassOptions([])); }, [token]);
+  // Il ruolo serve a scegliere la fonte dell'elenco: lo staff non può leggere il catalogo delle classi
+  useEffect(() => { getClassesForPicker(token, user?.role).then(setClassOptions).catch(() => setClassOptions([])); }, [token, user?.role]);
 
   const load = useCallback(async () => {
     setLoading(true);

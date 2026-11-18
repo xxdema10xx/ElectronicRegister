@@ -53,6 +53,26 @@ test("staff: dal dettaglio annulla e poi rilegge lezione e settimana", async () 
   expect(lessonService.getSchedule.mock.calls.length).toBeGreaterThan(weekCalls);
 });
 
+test("classi del selettore secondo il ruolo: admin e staff", async () => {
+  renderAs("admin", <CalendarScreen role="admin" />);
+  await flush();
+  expect(lessonService.getClassesForPicker).toHaveBeenLastCalledWith("tok", "admin");
+  renderAs("staff", <CalendarScreen role="staff" />);
+  await flush();
+  expect(lessonService.getClassesForPicker).toHaveBeenLastCalledWith("tok", "staff");
+  expect(screen.getAllByText("SW-25A").length).toBeGreaterThan(0);
+});
+
+test("403 sull'elenco delle classi: errore chiaro, non un elenco vuoto in silenzio", async () => {
+  lessonService.getClassesForPicker.mockRejectedValue(Object.assign(new Error("Non hai i permessi"), { status: 403 }));
+  renderAs("staff", <CalendarScreen role="staff" />);
+  await flush();
+  expect(screen.getByText(lessonService.CLASS_LIST_FORBIDDEN_MESSAGE)).toBeTruthy();
+  fireEvent.press(screen.getByText("Monte ore"));
+  await flush();
+  expect(screen.getByText(lessonService.CLASS_LIST_FORBIDDEN_MESSAGE)).toBeTruthy();
+});
+
 test("vista Importa", async () => {
   renderAs("admin", <CalendarScreen role="admin" />);
   await flush();
