@@ -1,9 +1,5 @@
 name: Historical er-quality-1 package and real SQL TLS
 on:
-  push:
-    branches:
-      - main
-
   workflow_dispatch:
     inputs:
       source_sha:
