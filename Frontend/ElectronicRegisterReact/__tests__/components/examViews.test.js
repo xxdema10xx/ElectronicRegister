@@ -61,7 +61,7 @@ describe("TestViewer", () => {
     expect(screen.getByText("2. Spiega REST *")).toBeTruthy();
     expect(screen.getAllByText("giusta")).toHaveLength(1);
     expect(screen.getByText("Risposta scritta dallo studente")).toBeTruthy();
-    expect(screen.getByText(/2 domande \(1 chiuse, 1 aperte\) · 20 punti · 2 studenti/)).toBeTruthy();
+    expect(screen.getByText(/2 domande \(1 chiusa, 1 aperta\) · 20 punti · 2 studenti/)).toBeTruthy();
   });
 
   test("azioni del dettaglio di una bozza", () => {

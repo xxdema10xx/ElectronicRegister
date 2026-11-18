@@ -8,6 +8,7 @@
 // risposte salvate (/submit-expired). Le risposte si salvano da sole sul server; la scadenza è quella decisa
 // dal server (deadlineAt), non un timer del dispositivo. Se il server risponde 409 perché la prova risulta già
 // consegnata (altra scheda, altro dispositivo) si legge l'esito e lo svolgimento si chiude.
+import { plural } from "../utils/plural";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Animated, AppState, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -345,7 +346,7 @@ export default function ExamTaker({ run, api, onFinish }) {
               <Card style={{ marginBottom: 32 }}>
                 <Text style={{ color: C.text, fontWeight: "600", marginBottom: 4 }}>Consegnare l'esame?</Text>
                 <Text style={{ color: C.textMuted, marginBottom: 12 }}>
-                  Hai risposto a {answered} domande su {questions.length}. Dopo la consegna non potrai modificare le risposte.
+                  Hai risposto a {plural(answered, "domanda", "domande")} su {questions.length}. Dopo la consegna non potrai modificare le risposte.
                 </Text>
                 <View style={{ gap: 8 }}>
                   <Btn label="Sì, consegna" variant="success" onPress={() => submit(false, null)} loading={submitting} />

@@ -1,4 +1,5 @@
 // src/screens/DashboardScreen.js
+import { plural } from "../utils/plural";
 import { useEffect, useState } from "react";
 import { Image, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -177,8 +178,10 @@ export default function DashboardScreen({ navigate }) {
 
   const name = user?.studentFirstName || user?.teacherFirstName || userDisplayName(user);
 
+  // Orario su una riga sua, a tutta larghezza: affiancato agli esami era troppo stretto e i giorni da
+  // giovedì in poi restavano nascosti. Su finestre strette LessonCalendar mette i giorni in colonna.
   const lessonsPanel = (
-    <View style={{ flexGrow: 1, flexBasis: 420 }}>
+    <View testID="home-lessons-panel" style={{ width: "100%" }}>
       <Card>
         <View style={s.sectionHeader}>
           <Text style={s.sectionTitle}>Orario delle lezioni</Text>
@@ -231,7 +234,7 @@ export default function DashboardScreen({ navigate }) {
             <Text style={s.itemTitle}>{c.name}</Text>
             <Text style={s.itemSub} numberOfLines={1}>{c.subjects.map(sb => sb.subjectName).join(", ") || "—"}</Text>
           </View>
-          <Text style={{ color: C.textMuted, fontWeight: "600" }}>{c.students.length} studenti</Text>
+          <Text style={{ color: C.textMuted, fontWeight: "600" }}>{plural(c.students.length, "studente", "studenti")}</Text>
         </TouchableOpacity>
       ))}
     </Panel>

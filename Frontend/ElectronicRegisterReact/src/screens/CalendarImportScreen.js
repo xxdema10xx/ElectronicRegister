@@ -316,7 +316,7 @@ export default function CalendarImportScreen() {
                   {(r.conflicts || []).map((c, k) => <Text key={`c${k}`} style={{ color: C.danger, fontSize: 13 }}>✕ {conflictMessage(c)}</Text>)}
                 </View>
               ))}
-              {errorRows.length > MAX_ROWS_SHOWN && <Note>… e altre {errorRows.length - MAX_ROWS_SHOWN} righe.</Note>}
+              {errorRows.length > MAX_ROWS_SHOWN && <Note>{errorRows.length - MAX_ROWS_SHOWN === 1 ? "… e un'altra riga." : `… e altre ${errorRows.length - MAX_ROWS_SHOWN} righe.`}</Note>}
             </View>
           )}
 

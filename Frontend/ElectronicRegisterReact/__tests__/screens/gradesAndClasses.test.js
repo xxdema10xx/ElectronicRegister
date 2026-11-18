@@ -244,7 +244,7 @@ describe("Classi del docente", () => {
 
   test("classi con conteggi, materie e studenti", async () => {
     renderAs("teacher", <MyClassesScreen />);
-    expect(await screen.findByText("2 studenti · 1 materie")).toBeTruthy();
+    expect(await screen.findByText("2 studenti · 1 materia")).toBeTruthy();
     expect(classService.getMyClasses).toHaveBeenCalledWith("t1", "tok");
     fireEvent.press(screen.getByText("SW-25A"));
     expect(screen.getByText("Classe SW-25A")).toBeTruthy();
