@@ -52,7 +52,7 @@ describe("monte ore della classe", () => {
     expect(calendarService.getPlanNames).toHaveBeenCalledWith("v1", "tok");
     expect(screen.getByText("M1 · Basi di dati")).toBeTruthy();
     expect(screen.getByText("Modulo")).toBeTruthy(); // nome non trovato
-    expect(screen.getByText("Programmate oltre il previsto")).toBeTruthy();
+    expect(screen.getByText("Ore oltre il previsto")).toBeTruthy();
     expect(screen.getAllByText("Ore ancora da svolgere")).toHaveLength(2);
     expect(screen.getByText("+30 min")).toBeTruthy();
     expect(screen.getByText("Programmate in eccesso")).toBeTruthy();

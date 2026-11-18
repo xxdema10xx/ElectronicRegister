@@ -151,9 +151,11 @@ export function formatMinutes(minutes) {
   return m ? `${sign}${h} h ${m} min` : `${sign}${h} h`;
 }
 
+// Unica mappa degli avvisi del monte ore: la usano l'anteprima dell'import e la sezione "Monte ore",
+// così lo stesso codice ha sempre lo stesso testo
 export const HOURS_WARNING_LABELS = {
-  "calendar.under-scheduled": "Ore da programmare",
-  "calendar.over-scheduled": "Programmate oltre il previsto",
+  "calendar.under-scheduled": "Ore sotto il previsto",
+  "calendar.over-scheduled": "Ore oltre il previsto",
   "calendar.delivery-incomplete": "Ore ancora da svolgere",
   "calendar.over-delivered": "Svolte oltre il previsto",
 };

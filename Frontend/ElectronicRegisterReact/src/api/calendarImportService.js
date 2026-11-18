@@ -6,6 +6,7 @@ import { Platform } from "react-native";
 import * as Crypto from "expo-crypto";
 import axiosClient, { authHeader } from "./axiosClient";
 import { CALENDAR_MAX_UPLOAD_MB } from "../appConfig";
+import { HOURS_WARNING_LABELS } from "./calendarService";
 
 const BASE = "/institution/calendar";
 const PAGE_SIZE = 100; // massimo ammesso da CalendarQuery.size
@@ -104,6 +105,8 @@ export const TEACHING_PLAN_MESSAGE = "La classe non ha un piano formativo pubbli
 export const FILE_TOO_LARGE_MESSAGE = "File troppo grande per il server: dividilo per classe o salvalo in CSV.";
 export const MAX_UPLOAD_BYTES = CALENDAR_MAX_UPLOAD_MB * 1024 * 1024;
 export const maxUploadLabel = () => `${String(CALENDAR_MAX_UPLOAD_MB).replace(".", ",")} MB`;
+export const DELIMITER_MESSAGE = "Separatore del CSV non riconosciuto: usa il punto e virgola o la virgola.";
+export const NO_LESSONS_MESSAGE = "Il file non contiene lezioni.";
 
 // ────────────────────────────────────────────────────────────────────────────────
 const CODE_MESSAGES = {
@@ -139,6 +142,17 @@ const CODE_MESSAGES = {
   "calendar.invalid-time": "Ora non valida: usa HH:mm.",
   "calendar.database-conflict": "Il calendario è occupato da un'altra operazione: riprova.",
   "calendar.range-limit": "Intervallo troppo ampio: al massimo 366 giorni.",
+  "calendar.invalid-text": "Un testo contiene caratteri non ammessi o è troppo lungo.",
+  "calendar.reference-required": "Manca un riferimento obbligatorio (classe, modulo o docente).",
+  "calendar.inconsistent-module-subject": "Il modulo non corrisponde alla materia della classe: controlla il piano formativo.",
+  "calendar.inconsistent-plan-binding": "Il piano formativo della classe è cambiato: ricarica e riprova.",
+  "calendar.invalid-plan-modules": "Il piano formativo della classe non ha moduli validi.",
+  "calendar.duplicate-identity": "Questa operazione è già stata registrata.",
+  "calendar.draft-required": "L'operazione è possibile solo sulle lezioni in bozza.",
+  "calendar.completed-required": "L'operazione è possibile solo sulle lezioni svolte.",
+  "calendar.invalid-delivered-minutes": "Minuti svolti non validi: da 1 a 1440.",
+  "calendar.invalid-recovery": "La lezione di recupero indicata non è valida.",
+  "calendar.invalid-period": "Mese non valido.",
   // Impostazioni
   "calendar.invalid-time-zone": "Fuso orario non riconosciuto dal server (es. Europe/Rome).",
   "calendar.invalid-approval-lead-days": "I giorni di anticipo devono essere tra 0 e 366.",
@@ -148,17 +162,46 @@ const CODE_MESSAGES = {
   NoDataRows: "Il file non contiene righe di dati.",
   InvalidEncoding: "Il file CSV non è in UTF-8.",
   UnsupportedEncoding: "Codifica del file non supportata.",
-  DelimiterNotDetected: "Separatore del CSV non riconosciuto: usa il punto e virgola o la virgola.",
+  DelimiterNotDetected: DELIMITER_MESSAGE,
   AmbiguousDelimiter: "Separatore del CSV ambiguo: usa un solo tipo di separatore.",
   StageTooLarge: "Il file contiene troppi dati.",
+  // Lettore dei file del backend (InstitutionImportFileReader*): rifiuti prima dell'anteprima
+  EmptyFile: "Il file è vuoto.",
+  MalformedCsv: "Il CSV non è leggibile: controlla virgolette e separatori.",
+  InvalidHeader: "Intestazioni non riconosciute: usa il modello.",
+  ColumnCountMismatch: "Alcune righe hanno un numero di colonne diverso dalle intestazioni: controlla il separatore.",
+  InvalidDelimiter: DELIMITER_MESSAGE,
+  InvalidParsingOptions: "Opzioni di lettura del file non valide.",
+  RecordTooLong: "Una riga del file è troppo lunga.",
+  CellTooLong: "Una cella del file è troppo lunga (al massimo 512 caratteri).",
+  TooManyColumns: "Il file ha troppe colonne (al massimo 16).",
+  TooManyRows: "Il file ha troppe righe (al massimo 2000).",
+  MalformedWorkbook: "Il file Excel è danneggiato o non è un .xlsx valido.",
+  UnsupportedWorkbook: "Il file Excel usa funzioni non supportate: salvalo in CSV.",
+  HostileWorkbook: "Il file Excel non è sicuro o è troppo complesso: salvalo in CSV.",
+  ZipLimitExceeded: "Il file Excel è troppo complesso: salvalo in CSV.",
+  XmlLimitExceeded: "Il file Excel è troppo complesso: salvalo in CSV.",
+  TooManySharedStrings: "Il file Excel è troppo complesso: salvalo in CSV.",
+  FormulaNotAllowed: "Il file Excel contiene formule: sostituiscile con i valori.",
+  ExternalReferenceNotAllowed: "Il file Excel contiene collegamenti esterni: rimuovili.",
+  WorksheetSelectionRequired: "Il file Excel ha più fogli: lasciane uno solo.",
+  UnsupportedCellType: "Il file Excel contiene celle di tipo non supportato: scrivi date e ore come testo.",
+  AmbiguousCalendarCell: "Data o ora numerica senza formato: scrivila come testo (AAAA-MM-GG, HH:mm) o in formato data/ora di Excel.",
 };
 
-export function calendarErrorMessage(e) {
+// Codice sconosciuto: mai il codice grezzo come messaggio. Testo generico, il codice resta tra parentesi.
+export const UNKNOWN_ERROR_MESSAGE = "Il server ha rifiutato l'operazione.";
+
+// ctx.tabSeparated: il file usa il tab. Il backend lo rifiuta come InvalidHeader (l'intestazione intera
+// diventa una sola colonna con dei tab), ma il problema vero è il separatore.
+export function calendarErrorMessage(e, ctx = {}) {
   if (e?.status === 413) return FILE_TOO_LARGE_MESSAGE;
+  if (e?.code === "InvalidHeader" && ctx.tabSeparated) return DELIMITER_MESSAGE;
   if (e?.code && CODE_MESSAGES[e.code]) return CODE_MESSAGES[e.code];
   if (e?.status === 403) return "Non hai i permessi per questa operazione sul calendario (o il calendario non è attivo per il tuo ruolo).";
   if (e?.status === 404) return "Il calendario non è attivo per questo istituto, o l'elemento non esiste.";
   if (e?.status === 409 && e?.code) return `Operazione non consentita (${e.code}).`;
+  if (e?.code) return `${UNKNOWN_ERROR_MESSAGE} (${e.code})`;
   return e?.message || "Errore imprevisto.";
 }
 
@@ -184,9 +227,12 @@ const ISSUE_MESSAGES = {
   "calendar.reason-required": "Il docente non è il titolare di questa materia nella classe: importa la lezione con il titolare e poi usa «Sostituisci docente»",
   "calendar.class-subject-required": "La materia del modulo non è assegnata a questa classe",
   "calendar.module-or-class-subject-unavailable": "Modulo o materia non disponibili per questa classe",
-  "calendar.under-scheduled": "Ore sotto il previsto",
-  "calendar.over-scheduled": "Ore oltre il previsto",
+  "calendar.under-scheduled": HOURS_WARNING_LABELS["calendar.under-scheduled"],
+  "calendar.over-scheduled": HOURS_WARNING_LABELS["calendar.over-scheduled"],
   "calendar.overlap": "Sovrapposta a un'altra lezione",
+  "calendar.invalid-text": "Testo non valido (caratteri non ammessi o troppo lungo)",
+  "calendar.reference-required": "Manca il riferimento a classe, modulo o docente",
+  "calendar.inconsistent-module-subject": "Il modulo non corrisponde alla materia assegnata alla classe",
   "calendar.nonexistent-local-time": "Orario inesistente per il cambio dell'ora legale",
   "calendar.ambiguous-local-time": "Orario ambiguo per il cambio dell'ora legale",
   "calendar.invalid-excel-date": "Data di Excel non valida: scrivila come testo (AAAA-MM-GG) o in formato data",
@@ -195,19 +241,111 @@ const ISSUE_MESSAGES = {
   "calendar.minute-precision-required": "Ora con secondi: usa ore e minuti (HH:mm)",
 };
 
-// Avviso del monte ore nell'anteprima (CalendarImportImpact.warning)
-export const HOUR_WARNING_LABELS = { "calendar.under-scheduled": "Ore sotto il previsto", "calendar.over-scheduled": "Ore oltre il previsto" };
+// Avviso del monte ore nell'anteprima (CalendarImportImpact.warning): stessa mappa della sezione "Monte ore"
+export const HOUR_WARNING_LABELS = HOURS_WARNING_LABELS;
 
 const GENERIC_ISSUES = ["RequiredColumnMissing", "RequiredFieldMissing", "InvalidValue", "AmbiguousMapping"];
 const FIELD_LABELS = { Date: "Data", StartsAt: "Ora inizio", EndsAt: "Ora fine", Class: "Classe", Module: "Modulo", Teacher: "Docente", Room: "Aula", Description: "Descrizione", ExternalReference: "Riferimento esterno" };
+// Testi liberi: il backend rifiuta quelli che iniziano con = + - @ (formula injection), con InvalidValue
+const TEXT_FIELDS = ["Room", "Description", "ExternalReference"];
+export const FORMULA_PREFIX_MESSAGE = "il testo non può iniziare con = + - @ (protezione dalle formule di Excel)";
+// Riga senza codice riconosciuto: messaggio generico, mai il codice grezzo da solo
+export const UNKNOWN_ISSUE_MESSAGE = "Valore non accettato";
+
+// Avviso di riga → { text, code }: code è valorizzato solo per i codici sconosciuti, da mostrare piccolo
+export function issueParts(issue, columns) {
+  if (issue.code === "InvalidValue" && TEXT_FIELDS.includes(issue.field)) return { text: `${FIELD_LABELS[issue.field]}: ${FORMULA_PREFIX_MESSAGE}`, code: null };
+  const known = ISSUE_MESSAGES[issue.code];
+  const text = known || UNKNOWN_ISSUE_MESSAGE;
+  const code = known ? null : issue.code || null;
+  // Per le colonne ignorate "field" è l'indice della colonna
+  if (issue.code === "IgnoredColumn" && columns && /^\d+$/.test(issue.field)) return { text: `${text}: "${columns[Number(issue.field)]}"`, code };
+  // Il nome del campo si aggiunge solo ai messaggi generici ("Data: valore non valido"), non a quelli che lo dicono già
+  const field = known && !GENERIC_ISSUES.includes(issue.code) ? null : FIELD_LABELS[issue.field];
+  return { text: field ? `${field}: ${text.charAt(0).toLowerCase()}${text.slice(1)}` : text, code };
+}
 
 export function issueMessage(issue, columns) {
-  const text = ISSUE_MESSAGES[issue.code] || issue.message || issue.code;
-  // Per le colonne ignorate "field" è l'indice della colonna
-  if (issue.code === "IgnoredColumn" && columns && /^\d+$/.test(issue.field)) return `${text}: "${columns[Number(issue.field)]}"`;
-  // Il nome del campo si aggiunge solo ai messaggi generici ("Data: valore non valido"), non a quelli che lo dicono già
-  const field = ISSUE_MESSAGES[issue.code] && !GENERIC_ISSUES.includes(issue.code) ? null : FIELD_LABELS[issue.field];
-  return field ? `${field}: ${text.charAt(0).toLowerCase()}${text.slice(1)}` : text;
+  const { text, code } = issueParts(issue, columns);
+  return code ? `${text} (${code})` : text;
+}
+
+// ── Controlli del CSV prima dell'invio ────────────────────────────────────────────────────
+// Ogni anteprima occupa uno dei 20 posti per utente (30 minuti, non annullabili): i file che il backend
+// rifiuterebbe di sicuro si fermano qui. Alias delle intestazioni = CalendarImportColumns del backend.
+const HEADER_ALIASES = {
+  data: "Date", date: "Date",
+  orainizio: "StartsAt", "ora inizio": "StartsAt", startsat: "StartsAt", "start time": "StartsAt",
+  orafine: "EndsAt", "ora fine": "EndsAt", endsat: "EndsAt", "end time": "EndsAt",
+  classe: "Class", class: "Class", modulo: "Module", module: "Module", docente: "Teacher", teacher: "Teacher",
+  aula: "Room", room: "Room", descrizione: "Description", description: "Description", argomento: "Description",
+  riferimentoesterno: "ExternalReference", externalreference: "ExternalReference",
+};
+const REQUIRED_FIELDS = ["Date", "StartsAt", "EndsAt", "Class", "Module", "Teacher"];
+
+// Una riga CSV in celle, con le virgolette doppie ("" dentro un valore tra virgolette)
+function splitCsvLine(line, delimiter) {
+  const cells = [];
+  let cur = "", quoted = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (quoted) {
+      if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+      else if (ch === '"') quoted = false;
+      else cur += ch;
+    } else if (ch === '"') quoted = true;
+    else if (ch === delimiter) { cells.push(cur); cur = ""; }
+    else cur += ch;
+  }
+  cells.push(cur);
+  return cells;
+}
+
+// text → { ok, message?, tabSeparated, missing, unknown }. Le colonne sconosciute da sole non bloccano
+// (il backend le ignora con un avviso); bloccano file vuoti, senza lezioni o senza colonne obbligatorie.
+export function precheckCalendarCsv(text) {
+  const body = String(text ?? "").replace(/^﻿/, "");
+  const lines = body.split(/\r\n|\n|\r/);
+  const header = lines.find(l => l.trim() !== "");
+  if (header === undefined) return { ok: false, message: "Il file è vuoto.", tabSeparated: false, missing: [], unknown: [] };
+  const tabSeparated = header.includes("\t") && !/[;,]/.test(header);
+  if (tabSeparated) return { ok: false, message: DELIMITER_MESSAGE, tabSeparated, missing: [], unknown: [] };
+  // Come il backend: si prova ";" e ","; vale il separatore che riconosce più colonne obbligatorie
+  const attempt = (d) => {
+    const names = splitCsvLine(header, d).map(h => h.trim());
+    const fields = names.map(h => HEADER_ALIASES[h.toLowerCase()] || null);
+    return { delimiter: d, names, missing: REQUIRED_FIELDS.filter(f => !fields.includes(f)), unknown: names.filter((h, i) => h && !fields[i]) };
+  };
+  const best = [attempt(";"), attempt(",")].sort((a, b) => a.missing.length - b.missing.length)[0];
+  const dataLines = lines.slice(lines.indexOf(header) + 1)
+    .filter(l => splitCsvLine(l, best.delimiter).some(c => c.trim() !== "")); // ";;;;" di Excel = riga vuota
+  if (best.missing.length > 0) {
+    const parts = [`Mancano le colonne obbligatorie: ${best.missing.map(f => FIELD_LABELS[f]).join(", ")}.`];
+    if (best.unknown.length) parts.push(`Colonne non riconosciute: ${best.unknown.join(", ")}.`);
+    parts.push("Usa le intestazioni del modello.");
+    return { ok: false, message: parts.join(" "), tabSeparated, missing: best.missing, unknown: best.unknown };
+  }
+  if (dataLines.length === 0) return { ok: false, message: NO_LESSONS_MESSAGE, tabSeparated, missing: [], unknown: best.unknown };
+  return { ok: true, tabSeparated, missing: [], unknown: best.unknown };
+}
+
+export const isCsvFile = (file) => /\.csv$/i.test(file?.name || "");
+
+// Testo del file scelto: su web il File del browser, sull'app l'uri locale (copiato in cache dal picker).
+// null se non si riesce a leggere: allora il controllo si salta e decide il backend.
+export async function readFileText(file) {
+  try {
+    if (file?.file && typeof file.file.text === "function") return await file.file.text();
+    if (file?.uri && typeof fetch === "function") return await (await fetch(file.uri)).text();
+  } catch { /* lettura facoltativa */ }
+  return null;
+}
+
+// Testo del pulsante di conferma: "Crea 1 lezione in bozza" / "Crea N lezioni in bozza"; senza righe pronte
+// nessun numero
+export function confirmLabel(n) {
+  if (!n) return "Nessuna lezione da creare";
+  return n === 1 ? "Crea 1 lezione in bozza" : `Crea ${n} lezioni in bozza`;
 }
 
 // CalendarConflictKind arriva come numero (enum senza convertitore) o, in futuro, come nome

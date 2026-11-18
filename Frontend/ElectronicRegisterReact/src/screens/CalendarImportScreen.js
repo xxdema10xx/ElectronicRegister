@@ -21,9 +21,11 @@ import { notify, confirmAction } from "../utils/dialogs";
 import { getClassesForPicker } from "../api/lessonService";
 import { getTeachers } from "../api/teacherService";
 import {
-  FILE_TOO_LARGE_MESSAGE, HOUR_WARNING_LABELS, IMPORT_MODES, MAX_UPLOAD_BYTES, calendarErrorMessage, confirmImport, conflictMessage,
-  getCalendarSettings, getMonthStatus, issueMessage, maxUploadLabel, previewImport, publishPeriod,
+  FILE_TOO_LARGE_MESSAGE, HOUR_WARNING_LABELS, IMPORT_MODES, MAX_UPLOAD_BYTES, calendarErrorMessage, confirmImport, confirmLabel, conflictMessage,
+  getCalendarSettings, getMonthStatus, isCsvFile, issueMessage, issueParts, maxUploadLabel, precheckCalendarCsv, previewImport, publishPeriod, readFileText,
 } from "../api/calendarImportService";
+import { formatMinutes } from "../api/calendarService";
+import { plural } from "../utils/plural";
 
 const MONTH_NAMES = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 const MAX_ROWS_SHOWN = 100;
@@ -40,10 +42,6 @@ function monthOptions(now = new Date()) {
   });
 }
 
-const hours = (minutes) => {
-  const h = Math.floor(Math.abs(minutes) / 60), m = Math.abs(minutes) % 60;
-  return `${minutes < 0 ? "-" : ""}${h}h${m ? ` ${String(m).padStart(2, "0")}m` : ""}`;
-};
 const formatDay = (date) => { const [y, m, d] = String(date).split("-"); return d && m ? `${d}/${m}/${y}` : String(date || ""); };
 const hasErrors = (row) => (row.issues || []).some(i => !i.warning) || (row.conflicts || []).length > 0;
 
@@ -130,30 +128,44 @@ export default function CalendarImportScreen() {
 
   const toggleClass = (id) => setClassIds(list => list.includes(id) ? list.filter(x => x !== id) : [...list, id]);
 
+  // Un nuovo file (anche rifiutato) sostituisce il precedente: anteprima e conferma degli avvisi si azzerano
+  const clearFile = () => { setFile(null); setPreview(null); setAck(false); };
+
   async function pickFile() {
     try {
       const res = await DocumentPicker.getDocumentAsync({ type: FILE_TYPES, multiple: false, copyToCacheDirectory: true });
       if (res.canceled || !res.assets?.length) return;
       const asset = res.assets[0];
-      if (!/\.(xlsx|csv)$/i.test(asset.name || "")) { notify("File non supportato", "Scegli un file .xlsx o .csv."); return; }
+      if (!/\.(xlsx|csv)$/i.test(asset.name || "")) { clearFile(); notify("File non supportato", "Scegli un file .xlsx o .csv."); return; }
       // Limite reale del server web (EXPO_PUBLIC_CALENDAR_MAX_UPLOAD_MB, default 1 MB): si avvisa prima
       // dell'invio invece di ricevere un 413 o una connessione chiusa
       const size = asset.size ?? asset.file?.size;
-      if (size && size > MAX_UPLOAD_BYTES) { notify("File troppo grande", `Il file può essere al massimo di ${maxUploadLabel()}. ${FILE_TOO_LARGE_MESSAGE}`); return; }
-      setFile(asset); setPreview(null); setAck(false);
-    } catch (e) { notify("Errore", e.message); }
+      if (size && size > MAX_UPLOAD_BYTES) { clearFile(); notify("File troppo grande", `Il file può essere al massimo di ${maxUploadLabel()}. ${FILE_TOO_LARGE_MESSAGE}`); return; }
+      clearFile(); setFile(asset);
+    } catch (e) { clearFile(); notify("Errore", e.message); }
   }
 
   async function runPreview() {
     if (!file) return notify("Attenzione", "Scegli il file con le lezioni.");
     if (classIds.length === 0) return notify("Attenzione", "Seleziona almeno una classe.");
-    if (!reason.trim()) return notify("Attenzione", "Indica una motivazione (es. \"Orario di novembre\").");
+    if (!reason.trim()) return notify("Attenzione", `Indica una motivazione (es. "Orario di ${monthName.toLowerCase()}").`);
+    // CSV: i file che il backend rifiuterebbe comunque non consumano una delle 20 anteprime
+    // (tabs: per tradurre l'InvalidHeader che il backend dà ai file separati dal tab)
+    let tabs = false;
+    if (isCsvFile(file)) {
+      const text = await readFileText(file);
+      if (text !== null) {
+        const check = precheckCalendarCsv(text);
+        tabs = check.tabSeparated;
+        if (!check.ok) return notify("File da correggere", check.message);
+      }
+    }
     setPreviewing(true); setPreview(null); setAck(false);
     try { setPreview(await previewImport({ file, year, month, classIds, mode, reason }, token)); }
     catch (e) {
       // Oltre il limite Nginx può chiudere la connessione senza risposta: sembra un errore di rete
       const closed = !e?.status && !/tempo/i.test(e?.message || "");
-      notify("Anteprima non riuscita", closed ? `${FILE_TOO_LARGE_MESSAGE} Se il file è piccolo, controlla la connessione.` : calendarErrorMessage(e));
+      notify("Anteprima non riuscita", closed ? `${FILE_TOO_LARGE_MESSAGE} Se il file è piccolo, controlla la connessione.` : calendarErrorMessage(e, { tabSeparated: tabs }));
     }
     finally { setPreviewing(false); }
   }
@@ -164,6 +176,8 @@ export default function CalendarImportScreen() {
   const hourWarnings = (preview?.hours || []).filter(h => h.publishedMinutes + h.draftMinutesAfterImport !== h.plannedMinutes);
   const needsAck = warningRows.length > 0 || rows.some(r => (r.issues || []).some(i => i.warning)) || hourWarnings.length > 0;
   const canConfirm = !!preview?.canConfirm && (!needsAck || ack);
+  const readyRows = preview ? (preview.validRows ?? rows.length - errorRows.length) : 0;
+  const underScheduled = hourWarnings.some(h => h.warning === "calendar.under-scheduled" || (!h.warning && h.publishedMinutes + h.draftMinutesAfterImport < h.plannedMinutes));
   // Avvisi uguali su tutte le righe (es. colonne ignorate): si mostrano una volta sola
   const commonWarnings = useMemo(() => {
     if (!rows.length) return [];
@@ -180,7 +194,7 @@ export default function CalendarImportScreen() {
       const receipt = await confirmImport(preview, { acknowledgeWarnings: ack, reason }, token);
       const n = receipt?.lessonIds?.length ?? preview.rows.length;
       setPreview(null); setAck(false); setFile(null);
-      notify("Lezioni caricate", `${n} lezioni create in bozza per ${monthName}. Per renderle visibili a docenti e studenti pubblica il mese qui sotto.`);
+      notify("Lezioni caricate", `${plural(n, "lezione creata", "lezioni create")} in bozza per ${monthName}. Per renderle visibili a docenti e studenti pubblica il mese qui sotto.`);
       loadStatus();
     } catch (e) {
       notify("Conferma non riuscita", calendarErrorMessage(e));
@@ -193,7 +207,9 @@ export default function CalendarImportScreen() {
     if (!reason.trim()) return notify("Attenzione", "Indica una motivazione nel campo \"Motivazione\" qui sopra.");
     if (!st?.period) return;
     confirmAction("Pubblica il calendario",
-      `Le ${st.drafts} lezioni in bozza di ${className(classId)} per ${monthName} diventeranno visibili a docenti e studenti.`,
+      st.drafts === 1
+        ? `La lezione in bozza di ${className(classId)} per ${monthName} diventerà visibile a docenti e studenti.`
+        : `Le ${st.drafts} lezioni in bozza di ${className(classId)} per ${monthName} diventeranno visibili a docenti e studenti.`,
       async () => {
         setPublishing(classId);
         try {
@@ -288,7 +304,15 @@ export default function CalendarImportScreen() {
                 <View key={r.rowNumber} style={[s.profileRow, { flexDirection: "column", alignItems: "flex-start" }]}>
                   <Text style={s.itemTitle}>Riga {r.rowNumber}</Text>
                   <Text style={s.itemSub}>{[r.lesson ? `${formatDay(r.lesson.date)} ${String(r.lesson.startsAt).slice(0, 5)}–${String(r.lesson.endsAt).slice(0, 5)}` : null, r.className || r.classReference, r.moduleName || r.moduleReference, r.teacherName || r.teacherReference].filter(Boolean).join(" · ")}</Text>
-                  {(r.issues || []).filter(i => !isCommon(i)).map((i, k) => <Text key={k} style={{ color: i.warning ? C.warning : C.danger, fontSize: 13 }}>{i.warning ? "⚠" : "✕"} {issueMessage(i, preview.columns)}</Text>)}
+                  {(r.issues || []).filter(i => !isCommon(i)).map((i, k) => {
+                    // Messaggio per codice; il codice compare (piccolo) solo se non è tra quelli tradotti
+                    const { text, code } = issueParts(i, preview.columns);
+                    return (
+                      <Text key={k} style={{ color: i.warning ? C.warning : C.danger, fontSize: 13 }}>
+                        {i.warning ? "⚠" : "✕"} {text}{code ? <Text style={{ fontSize: 11, color: C.textMuted }}> ({code})</Text> : null}
+                      </Text>
+                    );
+                  })}
                   {(r.conflicts || []).map((c, k) => <Text key={`c${k}`} style={{ color: C.danger, fontSize: 13 }}>✕ {conflictMessage(c)}</Text>)}
                 </View>
               ))}
@@ -317,7 +341,7 @@ export default function CalendarImportScreen() {
                   // flexWrap: su telefono le ore vanno sotto il nome del modulo invece di troncarlo
                   <View key={`${h.classId}-${h.moduleId}`} style={[s.profileRow, { flexWrap: "wrap", columnGap: 12, rowGap: 2 }]}>
                     <Text style={[s.profileKey, { flex: 1, minWidth: 200 }]}>{className(h.classId)} · {moduleNames[h.moduleId] || "Modulo"}</Text>
-                    <Text style={{ fontSize: 13, color: diff > 0 ? C.danger : C.textMuted }}>{HOUR_WARNING_LABELS[h.warning] || (diff > 0 ? "Ore oltre il previsto" : "Ore sotto il previsto")}: {hours(projected)} su {hours(h.plannedMinutes)} ({diff > 0 ? "+" : ""}{hours(diff)})</Text>
+                    <Text style={{ fontSize: 13, color: diff > 0 ? C.danger : C.textMuted }}>{HOUR_WARNING_LABELS[h.warning] || HOUR_WARNING_LABELS[diff > 0 ? "calendar.over-scheduled" : "calendar.under-scheduled"]}: {formatMinutes(projected)} su {formatMinutes(h.plannedMinutes)} ({diff > 0 ? "+" : ""}{formatMinutes(diff)})</Text>
                   </View>
                 );
               })}
@@ -328,9 +352,12 @@ export default function CalendarImportScreen() {
             {!preview.canConfirm ? (
               <Note color={C.danger}>Correggi le righe con errori nel file e genera di nuovo l'anteprima.</Note>
             ) : needsAck ? (
-              <CheckboxField label="Ho letto gli avvisi e voglio procedere" value={ack} onChange={setAck} />
+              <>
+                <CheckboxField label="Ho letto gli avvisi e voglio procedere" value={ack} onChange={setAck} />
+                {underScheduled && <Note>In un import di un solo mese è normale che i moduli risultino sotto il monte ore: l'avviso riguarda le ore di tutto il percorso.</Note>}
+              </>
             ) : null}
-            <Btn variant="success" label={`Crea ${rows.length} lezioni in bozza`} onPress={runConfirm} loading={confirming} disabled={!canConfirm} />
+            <Btn variant="success" label={confirmLabel(readyRows)} onPress={runConfirm} loading={confirming} disabled={!canConfirm || readyRows === 0} />
           </View>
         </Section>
       )}

@@ -115,7 +115,8 @@ test("anteprima con errori: righe da correggere, conferma bloccata", async () =>
   ["Righe da correggere nel file", "Riga 2", "✕ Data: valore non valido", "✕ Il docente ha già un'altra lezione", "01/12/2026 09:00–11:00 · SW-25A"]
     .forEach(t => expect(screen.getByText(t)).toBeTruthy());
   expect(screen.getByText(/Correggi le righe con errori/)).toBeTruthy();
-  fireEvent.press(screen.getByText("Crea 2 lezioni in bozza"));
+  // nessuna riga pronta: il pulsante non mostra numeri
+  fireEvent.press(screen.getByText("Nessuna lezione da creare"));
   expect(cal.confirmImport).not.toHaveBeenCalled();
 });
 
@@ -132,7 +133,7 @@ test("anteprima con avvisi: conferma solo dopo la spunta; poi lezioni in bozza",
   fireEvent.changeText(screen.getByPlaceholderText(/Es\. Orario di/), "Orario");
   await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
   expect(screen.getByText("⚠ Colonna non riconosciuta, verrà ignorata")).toBeTruthy(); // avviso comune, una volta sola
-  expect(screen.getByText("Ore oltre il previsto: 11h su 10h (+1h)")).toBeTruthy();
+  expect(screen.getByText("Ore oltre il previsto: 11 h su 10 h (+1 h)")).toBeTruthy();
   fireEvent.press(screen.getByText("Crea 2 lezioni in bozza"));
   expect(cal.confirmImport).not.toHaveBeenCalled();
   fireEvent.press(screen.getByText("Ho letto gli avvisi e voglio procedere"));
@@ -197,4 +198,131 @@ test("riga con docente non titolare: messaggio comprensibile", async () => {
   await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
   expect(await screen.findByText(/Il docente non è il titolare di questa materia nella classe: importa la lezione con il titolare e poi usa «Sostituisci docente»/)).toBeTruthy();
   expect(screen.queryByText(/Indica una motivazione/)).toBeNull();
+});
+
+// ── Correzioni dopo i test E2E sullo staging ─────────────────────────────────────────────
+const csvAsset = (name, text) => ({ name, uri: `file:///${name}`, size: text.length, file: { size: text.length, text: async () => text } });
+const VALID_CSV = "﻿Data;Ora inizio;Ora fine;Classe;Modulo;Docente\r\n2026-12-01;09:00;11:00;SW-25A;M1;t-guid\r\n";
+const isDisabled = (label) => screen.getByText(label).parent?.parent?.props?.accessibilityState?.disabled
+  ?? screen.getByRole("button", { name: label }).props.accessibilityState.disabled;
+
+async function fillReason(text = "Orario") {
+  fireEvent.changeText(screen.getByLabelText("Motivazione (obbligatoria, resta nello storico)"), text);
+}
+
+test("file rifiutato (.txt dopo un .csv valido): nessun file selezionato e anteprima disattivata", async () => {
+  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [csvAsset("orario.csv", VALID_CSV)] });
+  renderAs("admin", <CalendarImportScreen />);
+  fireEvent.press(await screen.findByText("SW-25A"));
+  await act(async () => { fireEvent.press(screen.getByText("Scegli file")); });
+  expect(screen.getByText("orario.csv")).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Genera anteprima" }).props.accessibilityState.disabled).toBe(false);
+  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "note.txt", uri: "file:///note.txt", size: 10 }] });
+  await act(async () => { fireEvent.press(screen.getByText("Cambia file")); });
+  expect(await screen.findByText("Scegli un file .xlsx o .csv.")).toBeTruthy();
+  await pressDialog("OK");
+  expect(screen.queryByText("orario.csv")).toBeNull();
+  expect(screen.getByText("Nessun file selezionato")).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Genera anteprima" }).props.accessibilityState.disabled).toBe(true);
+});
+
+test("file troppo grande dopo uno valido: anche l'anteprima già generata si azzera", async () => {
+  cal.previewImport.mockResolvedValue({ id: "p1", revision: 0, digest: "d", expiresAtUtc: new Date().toISOString(), canConfirm: true, replaced: 0, rows: [{ rowNumber: 2, issues: [] }], hours: [] });
+  renderAs("admin", <CalendarImportScreen />);
+  await chooseClassAndFile();
+  await fillReason();
+  await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
+  expect(screen.getByText("3. Anteprima")).toBeTruthy();
+  DocumentPicker.getDocumentAsync.mockResolvedValueOnce({ canceled: false, assets: [{ name: "grande.csv", size: 5 * 1024 * 1024 }] });
+  await act(async () => { fireEvent.press(screen.getByText("Cambia file")); });
+  await pressDialog("OK");
+  expect(screen.queryByText("3. Anteprima")).toBeNull();
+  expect(screen.getByText("Nessun file selezionato")).toBeTruthy();
+});
+
+test("CSV con la sola intestazione: avviso sul client, nessuna anteprima consumata", async () => {
+  DocumentPicker.getDocumentAsync.mockResolvedValue({ canceled: false, assets: [csvAsset("vuoto.csv", "﻿Data;Ora inizio;Ora fine;Classe;Modulo;Docente\r\n;;;;;\r\n")] });
+  renderAs("admin", <CalendarImportScreen />);
+  await chooseClassAndFile();
+  await fillReason();
+  await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
+  expect(await screen.findByText("Il file non contiene lezioni.")).toBeTruthy();
+  expect(cal.previewImport).not.toHaveBeenCalled();
+});
+
+test("CSV con intestazioni sbagliate: colonne mancanti e sconosciute elencate, nessun invio", async () => {
+  DocumentPicker.getDocumentAsync.mockResolvedValue({ canceled: false, assets: [csvAsset("x.csv", "Giorno;Ora inizio;Ora fine;Classe;Modulo;Docente\n2026-12-01;09:00;10:00;A;M1;t")] });
+  renderAs("admin", <CalendarImportScreen />);
+  await chooseClassAndFile();
+  await fillReason();
+  await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
+  expect(await screen.findByText(/Mancano le colonne obbligatorie: Data\. Colonne non riconosciute: Giorno\./)).toBeTruthy();
+  expect(cal.previewImport).not.toHaveBeenCalled();
+});
+
+test("CSV valido: il controllo lascia passare l'invio; EmptyFile dal server è tradotto", async () => {
+  DocumentPicker.getDocumentAsync.mockResolvedValue({ canceled: false, assets: [csvAsset("ok.csv", VALID_CSV)] });
+  cal.previewImport.mockRejectedValueOnce(Object.assign(new Error("EmptyFile"), { status: 400, code: "EmptyFile" }));
+  renderAs("admin", <CalendarImportScreen />);
+  await chooseClassAndFile();
+  await fillReason();
+  await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
+  expect(cal.previewImport).toHaveBeenCalledTimes(1);
+  expect(await screen.findByText("Il file è vuoto.")).toBeTruthy();
+  expect(screen.queryByText("EmptyFile")).toBeNull();
+});
+
+test("suggerimento della motivazione con il mese scelto, non un mese fisso", async () => {
+  renderAs("admin", <CalendarImportScreen />);
+  await chooseClassAndFile();
+  const selected = screen.getByText(/^(Gennaio|Febbraio|Marzo|Aprile|Maggio|Giugno|Luglio|Agosto|Settembre|Ottobre|Novembre|Dicembre) \d{4}$/).props.children;
+  const expected = `Orario di ${selected.toLowerCase()}`;
+  expect(screen.getByPlaceholderText(`Es. ${expected}`)).toBeTruthy();
+  fireEvent.press(screen.getByText("Genera anteprima"));
+  expect(await screen.findByText(`Indica una motivazione (es. "${expected}").`)).toBeTruthy();
+});
+
+test("una riga pronta: «Crea 1 lezione»; avviso sotto il monte ore spiegato accanto alla spunta", async () => {
+  cal.previewImport.mockResolvedValue({
+    id: "p1", revision: 0, digest: "d", expiresAtUtc: new Date().toISOString(), canConfirm: true, replaced: 0, totalRows: 1, validRows: 1, invalidRows: 0,
+    rows: [{ rowNumber: 2, issues: [], lesson: { moduleId: "m1" }, moduleName: "Basi di dati" }],
+    hours: [{ classId: "c1", moduleId: "m1", plannedMinutes: 4800, publishedMinutes: 0, draftMinutesAfterImport: 120, warning: "calendar.under-scheduled" }],
+  });
+  renderAs("admin", <CalendarImportScreen />);
+  await chooseClassAndFile();
+  await fillReason();
+  await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
+  expect(screen.getByText("Ore sotto il previsto: 2 h su 80 h (-78 h)")).toBeTruthy();
+  expect(screen.getByText(/In un import di un solo mese è normale che i moduli risultino sotto il monte ore/)).toBeTruthy();
+  expect(screen.getByText("Crea 1 lezione in bozza")).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Crea 1 lezione in bozza" }).props.accessibilityState.disabled).toBe(true); // serve la spunta
+  fireEvent.press(screen.getByText("Ho letto gli avvisi e voglio procedere"));
+  expect(screen.getByRole("button", { name: "Crea 1 lezione in bozza" }).props.accessibilityState.disabled).toBe(false);
+});
+
+test("righe rifiutate: «Riga N» e messaggio per codice; il codice sconosciuto compare piccolo, mai da solo", async () => {
+  const generic = "Riferimenti o intervallo non validi.";
+  cal.previewImport.mockResolvedValue({
+    id: "p1", revision: 0, digest: "d", expiresAtUtc: new Date().toISOString(), canConfirm: false, replaced: 0, totalRows: 4, validRows: 0, invalidRows: 4,
+    rows: [
+      { rowNumber: 2, issues: [{ field: "Row", code: "calendar.row-outside-month", message: generic }], conflicts: [], classReference: "SW-25A", moduleReference: "M1", teacherReference: "t-guid" },
+      { rowNumber: 3, issues: [{ field: "Row", code: "calendar.module-unavailable", message: generic }], conflicts: [], moduleReference: "M9" },
+      { rowNumber: 4, issues: [{ field: "Description", code: "InvalidValue", message: "Valore non valido." }], conflicts: [] },
+      { rowNumber: 5, issues: [{ field: "Row", code: "calendar.nuovo-codice", message: generic }], conflicts: [] },
+    ], hours: [],
+  });
+  renderAs("admin", <CalendarImportScreen />);
+  await chooseClassAndFile();
+  await fillReason();
+  await act(async () => { fireEvent.press(screen.getByText("Genera anteprima")); });
+  ["Riga 2", "Riga 3", "Riga 4", "Riga 5", "SW-25A · M1 · t-guid", "M9"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
+  expect(screen.getByText(/Data fuori dal mese selezionato/)).toBeTruthy();
+  expect(screen.getByText(/Modulo non trovato nel piano formativo della classe/)).toBeTruthy();
+  expect(screen.getByText(/Descrizione: il testo non può iniziare con = \+ - @ \(protezione dalle formule di Excel\)/)).toBeTruthy();
+  expect(screen.getByText(/Valore non accettato/)).toBeTruthy();
+  expect(screen.getByText(" (calendar.nuovo-codice)").props.style.fontSize).toBe(11);
+  expect(screen.queryByText(new RegExp(generic.replace(".", "\\.")))).toBeNull();
+  // nessuna data inventata per le righe senza lezione risolta
+  expect(screen.queryByText(/\d{2}\/\d{2}\/\d{4}/)).toBeNull();
+  expect(screen.getByText("Nessuna lezione da creare")).toBeTruthy();
 });
