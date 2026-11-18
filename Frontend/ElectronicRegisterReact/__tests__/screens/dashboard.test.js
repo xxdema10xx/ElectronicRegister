@@ -142,3 +142,15 @@ test("orario: settimana successiva e precedente, annullate incluse", async () =>
   await flush();
   expect(lessonService.getSchedule).toHaveBeenLastCalledWith(expect.objectContaining({ from }), "tok");
 });
+
+test("toccando una lezione si apre il dettaglio", async () => {
+  jest.spyOn(require("../../src/api/calendarService"), "getLesson").mockResolvedValue({
+    id: 1, date: "2026-11-16", startsAt: "09:00:00", endsAt: "11:00:00", status: "Scheduled", publication: "Published",
+    moduleName: "Reti", className: "SW-25A", description: "Subnetting", teacherId: "t1", originalTeacherId: "t1",
+  });
+  renderAs("student", <DashboardScreen navigate={jest.fn()} />);
+  await flush();
+  fireEvent.press(screen.getByLabelText(/Dettaglio lezione: Reti/));
+  await flush();
+  expect(screen.getByText("Subnetting")).toBeTruthy();
+});

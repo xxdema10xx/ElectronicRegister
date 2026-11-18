@@ -21,6 +21,7 @@ import { getExamInsights, retakeSummary } from "../api/examInsights";
 import { getClassesForPicker, getSchedule } from "../api/lessonService";
 import LessonCalendar from "../components/LessonCalendar";
 import WeekNavigator from "../components/WeekNavigator";
+import LessonDetail from "../components/LessonDetail";
 import { useLessons, useWeek } from "../hooks/useWeekSchedule";
 import SelectField from "../components/SelectField";
 
@@ -80,6 +81,7 @@ export default function DashboardScreen({ navigate }) {
   const [classOptions, setClassOptions] = useState([]);
   const [calClassId, setCalClassId] = useState(null);
   const { week, prev, next, today } = useWeek();
+  const [openLessonId, setOpenLessonId] = useState(null);
 
   // Ogni richiesta è indipendente: se una fallisce il riquadro resta vuoto, la home si apre comunque.
   useEffect(() => {
@@ -187,7 +189,7 @@ export default function DashboardScreen({ navigate }) {
         {role === "admin" && !calClassId ? <Empty text="Nessuna classe disponibile" /> : (
           <>
             <WeekNavigator week={week} onPrev={prev} onNext={next} onToday={today} />
-            <LessonCalendar lessons={lessons} week={week} />
+            <LessonCalendar lessons={lessons} week={week} onPressLesson={l => setOpenLessonId(l.id)} />
           </>
         )}
       </Card>
@@ -284,6 +286,7 @@ export default function DashboardScreen({ navigate }) {
           {role !== "teacher" && myClassesPanel}
           {role !== "staff" && lessonsPanel}
         </View>
+        <LessonDetail lessonId={openLessonId} role={role} onClose={() => setOpenLessonId(null)} />
 
         {/* Sezioni (solo senza sidebar) */}
         {!webPage && (
