@@ -20,6 +20,9 @@ const SCREEN_PATHS = {
   teachers: "/professori", subjects: "/materie", users: "/membri", profile: "/profilo", calendar: "/calendario",
 };
 
+// Sezioni il cui stato sta nella query (?settimana=…, ?vista=…): l'URL non viene ripulito
+const SEARCH_SCREENS = ["dashboard", "calendar"];
+
 function screenFromPath(pathname, role) {
   const first = `/${(pathname || "/").split("/").filter(Boolean)[0] || ""}`;
   if (first === "/classi") return role === "admin" ? "classes" : "myClasses";
@@ -77,7 +80,8 @@ export function useScreenUrl(screen, setScreen, allowedKeys, role) {
     }
     if (screen === "students" && pathname.startsWith("/studenti")) return; // il resto lo gestisce useStudentRoute
     const target = SCREEN_PATHS[screen] || "/";
-    if (pathname !== target || search) go(target);
+    // Home e Calendario tengono nella query la settimana (e la vista) scelta: una ricarica non la perde
+    if (pathname !== target || (search && !SEARCH_SCREENS.includes(screen))) go(target);
   }, [screen]);
 
   // "Indietro"/"avanti" verso un'altra sezione. Dentro la stessa sezione decidono le sue rotte (useRouteStack).
@@ -103,6 +107,22 @@ export function useScreenUrl(screen, setScreen, allowedKeys, role) {
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
+}
+
+// Parametri della query della pagina corrente (solo web; sull'app restituisce {}).
+export function readSearchParams() {
+  if (!isWeb) return {};
+  return Object.fromEntries(new URLSearchParams(window.location.search).entries());
+}
+
+// Aggiorna alcuni parametri della query senza nuova voce nella cronologia (null/"" li toglie).
+export function replaceSearchParams(updates) {
+  if (!isWeb) return;
+  const q = new URLSearchParams(window.location.search);
+  Object.entries(updates).forEach(([k, v]) => (v === null || v === undefined || v === "" ? q.delete(k) : q.set(k, String(v))));
+  const qs = q.toString();
+  const url = window.location.pathname + (qs ? `?${qs}` : "");
+  if (url !== here()) writeUrl("replace", window.history.state, url);
 }
 
 // ── Rotte degli esami ───────────────────────────────────────────────────────────────────────

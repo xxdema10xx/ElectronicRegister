@@ -1,5 +1,6 @@
 // src/screens/CalendarImportScreen.js
-// Calendario lato amministratore: carica le lezioni del mese da un file Excel/CSV e le pubblica.
+// Calendario di admin e staff: carica le lezioni del mese da un file Excel/CSV e le pubblica.
+// Se il calendario dell'istituto non è configurato mostra prima il modulo delle impostazioni.
 // 1. Anteprima del file (errori, conflitti di orario, impatto sul monte ore)
 // 2. Conferma: le lezioni diventano bozze
 // 3. Pubblicazione del mese per ogni classe: solo da qui docenti e studenti le vedono
@@ -14,17 +15,18 @@ import Input from "../components/Input";
 import SelectField from "../components/SelectField";
 import CheckboxField from "../components/CheckboxField";
 import Loader from "../components/Loader";
+import CalendarSettingsForm from "../components/CalendarSettingsForm";
+import { calendarTemplateCsv, canDownload, downloadCsv, teachersCsv } from "../utils/csvDownload";
 import { notify, confirmAction } from "../utils/dialogs";
 import { getClassesForPicker } from "../api/lessonService";
 import { getTeachers } from "../api/teacherService";
 import {
-  IMPORT_MODES, calendarErrorMessage, confirmImport, conflictMessage, getCalendarSettings, getMonthStatus,
-  issueMessage, previewImport, publishPeriod,
+  FILE_TOO_LARGE_MESSAGE, HOUR_WARNING_LABELS, IMPORT_MODES, MAX_UPLOAD_BYTES, calendarErrorMessage, confirmImport, conflictMessage,
+  getCalendarSettings, getMonthStatus, issueMessage, maxUploadLabel, previewImport, publishPeriod,
 } from "../api/calendarImportService";
 
 const MONTH_NAMES = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 const MAX_ROWS_SHOWN = 100;
-const MAX_FILE_BYTES = 10 * 1024 * 1024; // limite del server per l'import (10 MiB)
 const FILE_TYPES = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "text/comma-separated-values",
   "application/vnd.ms-excel", ".xlsx", ".csv",
@@ -72,6 +74,7 @@ export default function CalendarImportScreen() {
 
   const [settings, setSettings] = useState(undefined); // undefined: caricamento · null: da configurare
   const [settingsError, setSettingsError] = useState(null);
+  const [settingsVersion, setSettingsVersion] = useState(0);
   const [classes, setClasses] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [showTeacherIds, setShowTeacherIds] = useState(false);
@@ -96,8 +99,13 @@ export default function CalendarImportScreen() {
   useEffect(() => {
     let alive = true;
     getCalendarSettings(token)
-      .then(d => { if (alive) setSettings(d); })
+      .then(d => { if (alive) { setSettings(d); setSettingsError(null); } })
       .catch(e => { if (alive) { setSettings(null); setSettingsError(calendarErrorMessage(e)); } });
+    return () => { alive = false; };
+  }, [token, settingsVersion]);
+
+  useEffect(() => {
+    let alive = true;
     getClassesForPicker(token).then(d => { if (alive) setClasses(d); }).catch(() => {});
     getTeachers(token)
       .then(d => { if (alive) setTeachers((Array.isArray(d) ? d : []).slice().sort((a, b) => `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`))); })
@@ -128,9 +136,10 @@ export default function CalendarImportScreen() {
       if (res.canceled || !res.assets?.length) return;
       const asset = res.assets[0];
       if (!/\.(xlsx|csv)$/i.test(asset.name || "")) { notify("File non supportato", "Scegli un file .xlsx o .csv."); return; }
-      // Stesso limite del server (10 MiB): si avvisa prima dell'invio invece di ricevere un errore di rete
+      // Limite reale del server web (EXPO_PUBLIC_CALENDAR_MAX_UPLOAD_MB, default 1 MB): si avvisa prima
+      // dell'invio invece di ricevere un 413 o una connessione chiusa
       const size = asset.size ?? asset.file?.size;
-      if (size && size > MAX_FILE_BYTES) { notify("File troppo grande", "Il file può essere al massimo di 10 MB."); return; }
+      if (size && size > MAX_UPLOAD_BYTES) { notify("File troppo grande", `Il file può essere al massimo di ${maxUploadLabel()}. ${FILE_TOO_LARGE_MESSAGE}`); return; }
       setFile(asset); setPreview(null); setAck(false);
     } catch (e) { notify("Errore", e.message); }
   }
@@ -141,7 +150,11 @@ export default function CalendarImportScreen() {
     if (!reason.trim()) return notify("Attenzione", "Indica una motivazione (es. \"Orario di novembre\").");
     setPreviewing(true); setPreview(null); setAck(false);
     try { setPreview(await previewImport({ file, year, month, classIds, mode, reason }, token)); }
-    catch (e) { notify("Anteprima non riuscita", calendarErrorMessage(e)); }
+    catch (e) {
+      // Oltre il limite Nginx può chiudere la connessione senza risposta: sembra un errore di rete
+      const closed = !e?.status && !/tempo/i.test(e?.message || "");
+      notify("Anteprima non riuscita", closed ? `${FILE_TOO_LARGE_MESSAGE} Se il file è piccolo, controlla la connessione.` : calendarErrorMessage(e));
+    }
     finally { setPreviewing(false); }
   }
 
@@ -192,13 +205,19 @@ export default function CalendarImportScreen() {
   }
 
   if (settings === undefined) return <Loader />;
+  const downloads = canDownload();
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 32 }}>
-      {settings === null && (
+      {settings === null && settingsError && (
         <Card style={{ borderLeftWidth: 4, borderLeftColor: C.warning }}>
           <Text style={s.itemTitle}>Calendario non disponibile</Text>
-          <Text style={s.itemSub}>{settingsError || "Il calendario dell'istituto non è ancora configurato (fuso orario e scadenze di pubblicazione). Finché non lo è non si possono caricare lezioni."}</Text>
+          <Text style={s.itemSub}>{settingsError}</Text>
+        </Card>
+      )}
+      {settings === null && !settingsError && (
+        <Card style={{ borderLeftWidth: 4, borderLeftColor: C.warning }}>
+          <CalendarSettingsForm settings={null} onSaved={() => setSettingsVersion(v => v + 1)} />
         </Card>
       )}
 
@@ -218,9 +237,18 @@ export default function CalendarImportScreen() {
         <Input label="Motivazione (obbligatoria, resta nello storico)" value={reason} onChangeText={setReason} maxLength={500} placeholder={`Es. Orario di ${monthName.toLowerCase()}`} />
       </Section>
 
-      <Section title="2. Carica il file" subtitle="File .xlsx o .csv, al massimo 10 MB e 2000 righe. La prima riga contiene le intestazioni.">
+      <Section title="2. Carica il file" subtitle={`File .xlsx o .csv, al massimo ${maxUploadLabel()} e 2000 righe. La prima riga contiene le intestazioni.`}>
         <Note>Colonne obbligatorie: <Text style={{ fontWeight: "700" }}>Data</Text> (AAAA-MM-GG), <Text style={{ fontWeight: "700" }}>Ora inizio</Text> e <Text style={{ fontWeight: "700" }}>Ora fine</Text> (HH:mm), <Text style={{ fontWeight: "700" }}>Classe</Text> (nome), <Text style={{ fontWeight: "700" }}>Modulo</Text> (codice o nome del modulo del piano formativo), <Text style={{ fontWeight: "700" }}>Docente</Text>.</Note>
         <Note>Facoltative: Aula, Descrizione, RiferimentoEsterno. Le altre colonne vengono ignorate.</Note>
+        <Note>Esempio di riga: <Text style={{ fontFamily: "monospace" }}>2026-12-01;09:00;11:00;SW-25A;Basi di dati;ID del docente;Lab 1;Introduzione a SQL</Text></Note>
+        <Note>Nei file .xlsx date e ore vanno scritte come testo (<Text style={{ fontFamily: "monospace" }}>2026-12-01</Text>, <Text style={{ fontFamily: "monospace" }}>09:00</Text>) oppure nei formati data e ora standard di Excel. Formule e più fogli non sono ammessi.</Note>
+        <Note>Il docente deve essere il titolare della materia del modulo nella classe; per un supplente importa la lezione con il titolare e poi usa «Sostituisci docente» nella vista Lezioni.</Note>
+        {downloads && (
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
+            <Btn variant="ghost" label="Scarica modello" accessibilityLabel="Scarica il modello CSV" onPress={() => downloadCsv("modello-calendario.csv", calendarTemplateCsv())} style={{ paddingVertical: 8 }} />
+            <Btn variant="ghost" label="Scarica elenco docenti" accessibilityLabel="Scarica l'elenco dei docenti con ID" onPress={() => downloadCsv("docenti.csv", teachersCsv(teachers))} style={{ paddingVertical: 8 }} disabled={teachers.length === 0} />
+          </View>
+        )}
         <Note color={C.text}>Il docente si indica con il suo <Text style={{ fontWeight: "700" }}>ID</Text> (o con un riferimento esterno già registrato), non con il nome.</Note>
         <Btn variant="ghost" label={showTeacherIds ? "Nascondi ID dei docenti" : "Mostra ID dei docenti"} onPress={() => setShowTeacherIds(v => !v)} style={{ alignSelf: "flex-start", paddingVertical: 8, marginBottom: 10 }} />
         {showTeacherIds && (
@@ -281,6 +309,7 @@ export default function CalendarImportScreen() {
             <View style={{ marginTop: 12 }}>
               <Text style={[s.itemTitle, { marginBottom: 2 }]}>Monte ore dopo l'import</Text>
               <Note>Ore pubblicate + bozze rispetto alle ore previste dal piano formativo (su tutto il percorso).</Note>
+              {/* l'etichetta dell'avviso accompagna sempre il colore */}
               {hourWarnings.map(h => {
                 const projected = h.publishedMinutes + h.draftMinutesAfterImport;
                 const diff = projected - h.plannedMinutes;
@@ -288,7 +317,7 @@ export default function CalendarImportScreen() {
                   // flexWrap: su telefono le ore vanno sotto il nome del modulo invece di troncarlo
                   <View key={`${h.classId}-${h.moduleId}`} style={[s.profileRow, { flexWrap: "wrap", columnGap: 12, rowGap: 2 }]}>
                     <Text style={[s.profileKey, { flex: 1, minWidth: 200 }]}>{className(h.classId)} · {moduleNames[h.moduleId] || "Modulo"}</Text>
-                    <Text style={{ fontSize: 13, color: diff > 0 ? C.danger : C.textMuted }}>{hours(projected)} su {hours(h.plannedMinutes)} ({diff > 0 ? "+" : ""}{hours(diff)})</Text>
+                    <Text style={{ fontSize: 13, color: diff > 0 ? C.danger : C.textMuted }}>{HOUR_WARNING_LABELS[h.warning] || (diff > 0 ? "Ore oltre il previsto" : "Ore sotto il previsto")}: {hours(projected)} su {hours(h.plannedMinutes)} ({diff > 0 ? "+" : ""}{hours(diff)})</Text>
                   </View>
                 );
               })}

@@ -123,5 +123,34 @@ test("un servizio che non risponde non blocca la home", async () => {
   renderAs("admin", <DashboardScreen navigate={jest.fn()} />);
   await flush();
   expect(screen.getByText(/Benvenuto/)).toBeTruthy();
-  expect(await screen.findByText("Orario non ancora disponibile")).toBeTruthy();
+  expect(await screen.findByText("Nessuna lezione in questa settimana")).toBeTruthy();
+});
+
+test("orario: settimana successiva e precedente, annullate incluse", async () => {
+  renderAs("student", <DashboardScreen navigate={jest.fn()} />);
+  await flush();
+  const { from } = lessonService.currentWeek();
+  expect(lessonService.getSchedule).toHaveBeenLastCalledWith(expect.objectContaining({ role: "student", from, includeCancelled: true }), "tok");
+  fireEvent.press(screen.getByLabelText("Settimana successiva"));
+  await flush();
+  expect(lessonService.getSchedule).toHaveBeenLastCalledWith(expect.objectContaining(lessonService.shiftWeek(from, 1)), "tok");
+  fireEvent.press(screen.getByLabelText("Settimana precedente"));
+  fireEvent.press(screen.getByLabelText("Settimana precedente"));
+  await flush();
+  expect(lessonService.getSchedule).toHaveBeenLastCalledWith(expect.objectContaining(lessonService.shiftWeek(from, -1)), "tok");
+  fireEvent.press(screen.getByLabelText("Torna alla settimana corrente"));
+  await flush();
+  expect(lessonService.getSchedule).toHaveBeenLastCalledWith(expect.objectContaining({ from }), "tok");
+});
+
+test("toccando una lezione si apre il dettaglio", async () => {
+  jest.spyOn(require("../../src/api/calendarService"), "getLesson").mockResolvedValue({
+    id: 1, date: "2026-11-16", startsAt: "09:00:00", endsAt: "11:00:00", status: "Scheduled", publication: "Published",
+    moduleName: "Reti", className: "SW-25A", description: "Subnetting", teacherId: "t1", originalTeacherId: "t1",
+  });
+  renderAs("student", <DashboardScreen navigate={jest.fn()} />);
+  await flush();
+  fireEvent.press(screen.getByLabelText(/Dettaglio lezione: Reti/));
+  await flush();
+  expect(screen.getByText("Subnetting")).toBeTruthy();
 });

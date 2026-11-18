@@ -85,6 +85,13 @@ Non esiste la registrazione: gli account li crea l'istituto (Membri, oppure Stud
 al primo accesso con la password temporanea l'app chiede subito di sceglierne una nuova. La creazione degli
 account richiede i flag `SchoolApi`, `MembershipWriteApi` e `PlatformIdentity` attivi sul server.
 
+## Import del calendario: dimensione massima del file
+
+`EXPO_PUBLIC_CALENDAR_MAX_UPLOAD_MB` (default `1`) è il limite, in MB, del file caricato in Calendario → Importa.
+Il backend accetterebbe 10 MiB, ma Nginx in produzione chiude le richieste oltre 1 MB: alzarlo solo se il server
+web è configurato di conseguenza. Non è in `.env.example` perché quel file è tra quelli con hash nel manifest di
+release (`migrations/mysql84-remediation/manifest.json`).
+
 ## Test
 
 Jest con `jest-expo` e React Native Testing Library. I test sono in [`__tests__/`](__tests__/README.md).

@@ -46,6 +46,7 @@ jest.mock("../../src/screens/ClassesScreen", () => require("../helpers/placehold
 jest.mock("../../src/screens/TeachersScreen", () => require("../helpers/placeholder")("Teachers"));
 jest.mock("../../src/screens/SubjectsScreen", () => require("../helpers/placeholder")("Subjects"));
 jest.mock("../../src/screens/CalendarImportScreen", () => require("../helpers/placeholder")("CalendarImport"));
+jest.mock("../../src/screens/CalendarScreen", () => require("../helpers/placeholder")("Calendar"));
 jest.mock("../../src/data/studentExams", () => ({ useStudentExams: () => ({ unseenCount: 0 }) }));
 let mockWidth = 1280;
 jest.mock("react-native/Libraries/Utilities/useWindowDimensions", () => ({
@@ -179,5 +180,36 @@ describe("sezioni nell'URL (AppNav)", () => {
     expect(screen.getByText("Nuovo esame")).toBeTruthy();
     fireEvent.press(screen.getByLabelText("Torna a Electronic Register"));
     expect(onBack).toHaveBeenCalled();
+  });
+});
+
+describe("settimana del calendario nell'URL", () => {
+  test("la settimana si legge dall'URL, si aggiorna con replace e la corrente non si scrive", () => {
+    const { useWeek } = require("../../src/hooks/useWeekSchedule");
+    const { currentWeek } = require("../../src/api/lessonService");
+    browserAt("/?settimana=2026-12-09");
+    const { result } = renderHook(() => useWeek());
+    expect(result.current.week).toEqual({ from: "2026-12-07", to: "2026-12-13" });
+    expect(url()).toBe("/?settimana=2026-12-07"); // normalizzata al lunedì
+    act(() => result.current.next());
+    expect(url()).toBe("/?settimana=2026-12-14");
+    expect(entries).toHaveLength(1); // nessuna nuova voce nella cronologia
+    act(() => result.current.today());
+    expect(result.current.week).toEqual(currentWeek());
+    expect(url()).toBe("/");
+  });
+
+  test("data non valida nell'URL: settimana corrente", () => {
+    const { useWeek } = require("../../src/hooks/useWeekSchedule");
+    const { currentWeek } = require("../../src/api/lessonService");
+    browserAt("/?settimana=2026-02-30");
+    const { result } = renderHook(() => useWeek());
+    expect(result.current.week).toEqual(currentWeek());
+  });
+
+  test("ricaricando la Home con la settimana nell'URL la query resta", () => {
+    browserAt("/?settimana=2026-12-07");
+    render(<AuthContext.Provider value={{ token: "t", user: USERS.student }}><AppNav user={USERS.student} onLogout={jest.fn()} /></AuthContext.Provider>);
+    expect(url()).toBe("/?settimana=2026-12-07");
   });
 });

@@ -19,6 +19,7 @@ jest.mock("../../src/screens/ExamsScreen", () => require("../helpers/placeholder
 jest.mock("../../src/screens/ClassesScreen", () => require("../helpers/placeholder")("Classes"));
 jest.mock("../../src/screens/StudentExamsScreen", () => require("../helpers/placeholder")("StudentExams"));
 jest.mock("../../src/screens/CalendarImportScreen", () => require("../helpers/placeholder")("CalendarImport"));
+jest.mock("../../src/screens/CalendarScreen", () => require("../helpers/placeholder")("Calendar"));
 jest.mock("../../src/data/studentExams", () => ({ useStudentExams: () => ({ unseenCount: 0 }) }));
 
 // Larghezza della finestra: sidebar da 900 px in su (useLayout)
@@ -47,7 +48,7 @@ const labels = () => ["Home", "Voti", "Classi", "Studenti", "Professori", "Mater
 describe("sidebar per ruolo (schermo largo)", () => {
   test.each([
     ["admin", ["Home", "Voti", "Classi", "Studenti", "Professori", "Materie", "Esami", "Calendario", "Membri", "Profilo"]],
-    ["staff", ["Home", "Voti", "Studenti", "Professori", "Esami", "Profilo"]],
+    ["staff", ["Home", "Voti", "Studenti", "Professori", "Esami", "Calendario", "Profilo"]],
     ["teacher", ["Home", "Classi", "Materie", "Esami", "Profilo"]],
     ["student", ["Home", "Voti", "Professori", "Materie", "Esami", "Profilo"]],
   ])("%s", (role, expected) => {

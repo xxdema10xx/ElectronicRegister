@@ -4,7 +4,7 @@ import { session } from "../../src/api/session";
 import {
   getActiveBienni, getAllClasses, getClassDetail, getClasses, getMyClasses, getStudentClassSubjects, getStudyAreas, getStudyPaths,
 } from "../../src/api/classService";
-import { DAYS, currentWeek, getClassesForPicker, getSchedule, toLesson } from "../../src/api/lessonService";
+import { DAYS, currentWeek, formatWeekRange, getClassesForPicker, getSchedule, lessonLabels, parseYmd, shiftWeek, toLesson, weekOf } from "../../src/api/lessonService";
 
 // Server finto: path → dati (o funzione dei params)
 function serve(routes) {
@@ -107,7 +107,8 @@ describe("orario delle lezioni", () => {
 
   test("lezione del server → lezione dell'orario", () => {
     expect(toLesson({ id: 1, date: "2026-11-19", startsAt: "09:00:00", endsAt: "11:00:00", moduleName: "Reti", className: "SW", room: "A1" }, "Anna Neri"))
-      .toEqual({ id: 1, day: 4, start: "09:00", end: "11:00", title: "Reti", teacherName: "Anna Neri", className: "SW", room: "A1" });
+      .toEqual({ id: 1, date: "2026-11-19", day: 4, start: "09:00", end: "11:00", title: "Reti", teacherName: "Anna Neri", className: "SW", room: "A1",
+        status: "Scheduled", publication: "Published", substitute: false, recovery: false });
     expect(toLesson({ id: 2, date: "2026-11-22", startsAt: "08:00", endsAt: "09:00" }).title).toBe("Lezione");
     expect(DAYS).toHaveLength(7);
   });
@@ -141,6 +142,50 @@ describe("orario delle lezioni", () => {
   test("studente: proprio orario", async () => {
     serve({ "/institution/calendar/students/me": [{ id: 1, date: "2026-11-16", startsAt: "08:00", endsAt: "09:00" }] });
     await expect(getSchedule({ role: "student" }, "tok")).resolves.toHaveLength(1);
+  });
+
+  test("weekOf: bordi di settimana, mese, anno e ora legale", () => {
+    expect(weekOf("2026-11-22")).toEqual({ from: "2026-11-16", to: "2026-11-22" }); // domenica: resta nella sua settimana
+    expect(weekOf("2026-11-23")).toEqual({ from: "2026-11-23", to: "2026-11-29" }); // lunedì
+    expect(weekOf("2026-12-02")).toEqual({ from: "2026-11-30", to: "2026-12-06" }); // cambio mese
+    expect(weekOf("2027-01-01")).toEqual({ from: "2026-12-28", to: "2027-01-03" }); // cambio anno
+    expect(weekOf("2026-03-29")).toEqual({ from: "2026-03-23", to: "2026-03-29" }); // domenica dell'ora legale
+    expect(weekOf("2026-10-25")).toEqual({ from: "2026-10-19", to: "2026-10-25" }); // domenica del ritorno all'ora solare
+    expect(weekOf(new Date(2026, 10, 18, 23, 59))).toEqual({ from: "2026-11-16", to: "2026-11-22" });
+  });
+
+  test("shiftWeek attraversa ora legale e cambio d'anno senza perdere giorni", () => {
+    expect(shiftWeek("2026-03-23", 1)).toEqual({ from: "2026-03-30", to: "2026-04-05" });
+    expect(shiftWeek("2026-10-26", -1)).toEqual({ from: "2026-10-19", to: "2026-10-25" });
+    expect(shiftWeek("2026-12-28", 1)).toEqual({ from: "2027-01-04", to: "2027-01-10" });
+    expect(shiftWeek("2026-11-16", -52).from).toBe("2025-11-17");
+  });
+
+  test("intervallo mostrato e date non valide", () => {
+    expect(formatWeekRange({ from: "2026-11-16", to: "2026-11-22" })).toBe("16–22 novembre 2026");
+    expect(formatWeekRange({ from: "2026-11-30", to: "2026-12-06" })).toBe("30 novembre – 6 dicembre 2026");
+    expect(formatWeekRange({ from: "2026-12-28", to: "2027-01-03" })).toBe("28 dicembre 2026 – 3 gennaio 2027");
+    expect(parseYmd("2026-02-30")).toBeNull();
+    expect(parseYmd("16/11/2026")).toBeNull();
+  });
+
+  test("etichette di stato: annullata, svolta, supplenza, recupero, bozza solo se richiesta", () => {
+    const l = toLesson({ id: 1, date: "2026-11-16", startsAt: "08:00", endsAt: "09:00", status: "Cancelled", publication: "Draft",
+      teacherId: "t2", originalTeacherId: "t1", recoveryOfLessonId: "x" });
+    expect(lessonLabels(l).map(x => x.label)).toEqual(["Annullata", "Supplenza", "Recupero"]);
+    expect(lessonLabels(l, { showDraft: true }).map(x => x.label)).toContain("Bozza");
+    const done = toLesson({ id: 2, date: "2026-11-16", startsAt: "08:00", endsAt: "09:00", status: "Completed", teacherId: "t1", originalTeacherId: "t1" });
+    expect(lessonLabels(done).map(x => x.label)).toEqual(["Svolta"]);
+  });
+
+  test("intervallo scelto, annullate incluse, tutte le pagine; gestione senza filtro di pubblicazione", async () => {
+    const page1 = Array.from({ length: 100 }, (_, i) => ({ id: `l${i}`, date: "2026-12-01", startsAt: "08:00", endsAt: "09:00" }));
+    serve({ "/institution/calendar/classes/c1": (p) => (p.page === 1 ? page1 : [{ id: "last", date: "2026-12-02", startsAt: "08:00", endsAt: "09:00" }]) });
+    const out = await getSchedule({ role: "staff", classId: "c1", from: "2026-11-30", to: "2026-12-06", includeCancelled: true, publication: null }, "tok");
+    expect(out).toHaveLength(101);
+    const [first, second] = axiosClient.get.mock.calls.map(c => c[1].params);
+    expect(first).toEqual({ from: "2026-11-30", to: "2026-12-06", includeCancelled: true, page: 1, size: 100 });
+    expect(second.page).toBe(2);
   });
 
   test("classi per il selettore: solo id e nome, in ordine", async () => {

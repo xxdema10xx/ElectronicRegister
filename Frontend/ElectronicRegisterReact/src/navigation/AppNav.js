@@ -15,7 +15,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import ExamsScreen from "../screens/ExamsScreen";
 import ClassesScreen from "../screens/ClassesScreen";
 import StudentExamsScreen from "../screens/StudentExamsScreen";
-import CalendarImportScreen from "../screens/CalendarImportScreen";
+import CalendarScreen from "../screens/CalendarScreen";
 import NotificationDot from "../components/NotificationDot";
 import Badge from "../components/Badge";
 import { useStudentExams } from "../data/studentExams";
@@ -66,7 +66,8 @@ export default function AppNav({ user, onLogout }) {
     ...(role === "admin" || role === "staff" || role === "student" ? [{ key: "teachers", icon: "pencil-outline", label: "Professori" }] : []),
     ...(role !== "staff" ? [{ key: "subjects", icon: "library-outline", label: "Materie" }] : []),
     { key: "exams", icon: "document-text-outline", label: "Esami", dot: role === "student" && unseenCount > 0 },
-    ...(role === "admin" ? [{ key: "calendar", icon: "calendar-outline", label: "Calendario" }] : []),
+    // Calendario: import, pubblicazione e gestione delle lezioni anche per la segreteria (docs/api/INSTITUTION_CALENDAR.md)
+    ...(role === "admin" || role === "staff" ? [{ key: "calendar", icon: "calendar-outline", label: "Calendario" }] : []),
     ...(role === "admin" ? [{ key: "users", icon: "people-circle-outline", label: "Membri" }] : []),
     { key: "profile", icon: "person-circle-outline", label: "Profilo" },
   ];
@@ -81,6 +82,9 @@ export default function AppNav({ user, onLogout }) {
     if (key !== screen) return setScreen(key);
     if (isWeb && key === "exams") window.history.replaceState(null, "", "/esami");
     if (isWeb && key === "students") window.history.replaceState(null, "", "/studenti");
+    // Home e Calendario ripartono dalla settimana corrente e dalla vista iniziale
+    if (isWeb && key === "dashboard") window.history.replaceState(null, "", "/");
+    if (isWeb && key === "calendar") window.history.replaceState(null, "", "/calendario");
     setVisit(v => v + 1);
   });
   const logout = () => guardedNavigate(onLogout);
@@ -95,7 +99,7 @@ export default function AppNav({ user, onLogout }) {
     subjects: <SubjectsScreen />,
     exams: role === "student" ? <StudentExamsScreen /> : <ExamsScreen />,
     users: <UsersScreen />,
-    calendar: role === "admin" ? <CalendarImportScreen /> : null,
+    calendar: role === "admin" || role === "staff" ? <CalendarScreen role={role} /> : null,
     profile: <ProfileScreen onLogout={logout} />,
   };
 

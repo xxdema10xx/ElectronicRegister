@@ -94,7 +94,9 @@ describe("mese della classe", () => {
 
 describe("messaggi", () => {
   test("codici noti, 404, 409 con codice e messaggio di ripiego", () => {
-    expect(calendarErrorMessage({ code: "FileTooLarge" })).toMatch(/10 MB/);
+    expect(calendarErrorMessage({ code: "FileTooLarge" })).toBe("File troppo grande per il server: dividilo per classe o salvalo in CSV.");
+    expect(calendarErrorMessage({ status: 413 })).toMatch(/dividilo per classe/);
+    expect(calendarErrorMessage({ status: 409, code: "calendar.teaching-configuration-required" })).toMatch(/chiedi all'amministrazione/);
     expect(calendarErrorMessage({ status: 404 })).toMatch(/non è attivo/);
     expect(calendarErrorMessage({ status: 409, code: "calendar.altro" })).toBe("Operazione non consentita (calendar.altro).");
     expect(calendarErrorMessage({ message: "Boom" })).toBe("Boom");

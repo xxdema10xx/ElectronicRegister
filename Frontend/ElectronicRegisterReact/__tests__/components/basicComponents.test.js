@@ -15,6 +15,7 @@ import ClassFilter from "../../src/components/ClassFilter";
 import DateTimeField from "../../src/components/DateTimeField";
 import FormModal from "../../src/components/FormModal";
 import LessonCalendar from "../../src/components/LessonCalendar";
+import WeekNavigator from "../../src/components/WeekNavigator";
 import ListRow, { listProps } from "../../src/components/ListRow";
 import IconButton from "../../src/components/IconButton";
 import RouteLink from "../../src/components/RouteLink";
@@ -148,7 +149,7 @@ describe("LessonCalendar", () => {
     const { rerender } = render(<LessonCalendar lessons={null} />);
     expect(screen.getByText("Caricamento…")).toBeTruthy();
     rerender(<LessonCalendar lessons={[]} />);
-    expect(screen.getByText("Orario non ancora disponibile")).toBeTruthy();
+    expect(screen.getByText("Nessuna lezione in questa settimana")).toBeTruthy();
   });
 
   test("da lunedì a venerdì; sabato solo se ci sono lezioni", () => {
@@ -160,6 +161,37 @@ describe("LessonCalendar", () => {
     ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "09:00–11:00", "Reti", "Anna Neri", "SW · A1", "Laboratorio"].forEach(t => expect(screen.getByText(t)).toBeTruthy());
     expect(screen.queryByText("Dom")).toBeNull();
     expect(screen.getAllByText("Nessuna lezione")).toHaveLength(4);
+  });
+});
+
+describe("LessonCalendar: stati e dettaglio", () => {
+  test("annullata, supplenza, bozza solo se richiesta; date nelle intestazioni; tocco apre il dettaglio", () => {
+    const onPress = jest.fn();
+    const lessons = [
+      { id: 1, date: "2026-11-16", day: 1, start: "09:00", end: "11:00", title: "Reti", teacherName: "", className: "", room: "", status: "Cancelled", publication: "Published" },
+      { id: 2, date: "2026-11-17", day: 2, start: "08:00", end: "10:00", title: "Java", teacherName: "Luca Bianchi", className: "", room: "", status: "Scheduled", publication: "Draft", substitute: true },
+    ];
+    const { rerender } = render(<LessonCalendar lessons={lessons} week={{ from: "2026-11-16", to: "2026-11-22" }} onPressLesson={onPress} />);
+    expect(screen.getByText("Lun 16/11")).toBeTruthy();
+    expect(screen.getByText("Annullata")).toBeTruthy();
+    expect(screen.getByText("Supplenza")).toBeTruthy();
+    expect(screen.queryByText("Bozza")).toBeNull();
+    fireEvent.press(screen.getByLabelText(/Dettaglio lezione: Java/));
+    expect(onPress).toHaveBeenCalledWith(lessons[1]);
+    rerender(<LessonCalendar lessons={lessons} showDraft />);
+    expect(screen.getByText("Bozza")).toBeTruthy();
+  });
+});
+
+describe("WeekNavigator", () => {
+  test("precedente, oggi, successiva e intervallo", () => {
+    const onPrev = jest.fn(), onNext = jest.fn(), onToday = jest.fn();
+    render(<WeekNavigator week={{ from: "2026-11-30", to: "2026-12-06" }} onPrev={onPrev} onNext={onNext} onToday={onToday} />);
+    expect(screen.getByText("30 novembre – 6 dicembre 2026")).toBeTruthy();
+    fireEvent.press(screen.getByLabelText("Settimana precedente"));
+    fireEvent.press(screen.getByLabelText("Settimana successiva"));
+    fireEvent.press(screen.getByLabelText("Torna alla settimana corrente"));
+    expect([onPrev, onNext, onToday].map(f => f.mock.calls.length)).toEqual([1, 1, 1]);
   });
 });
 
